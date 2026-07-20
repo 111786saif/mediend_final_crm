@@ -17,6 +17,7 @@ const approveSchema = z.object({
 /**
  * POST /api/hr/onboarding/approve
  * Approve one or more employees (or all pending approval).
+ * Notifies the new hire + broadcasts a company-wide welcome (with photo via relatedId).
  */
 export async function POST(request: NextRequest) {
   try {
@@ -42,7 +43,14 @@ export async function POST(request: NextRequest) {
       select: {
         id: true,
         userId: true,
-        user: { select: { id: true, name: true } },
+        department: { select: { name: true } },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true,
+          },
+        },
         leaveBalances: { select: { id: true }, take: 1 },
       },
     })
@@ -72,6 +80,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
+      // Notify the new hires themselves
       await prisma.notification.createMany({
         data: pending.map((emp) => ({
           userId: emp.userId,
@@ -79,10 +88,48 @@ export async function POST(request: NextRequest) {
           title: 'Welcome aboard!',
           message: 'HR has approved your onboarding. You can now use Mediend Workspace normally.',
           link: '/home',
+          relatedId: emp.id,
         })),
       })
+
+      // Company-wide welcome for every other active user
+      const recipients = await prisma.user.findMany({
+        where: {
+          id: { notIn: pending.map((p) => p.userId) },
+          OR: [
+            { employee: null },
+            { employee: { status: { notIn: ['TERMINATED', 'ABSCONDED'] } } },
+          ],
+        },
+        select: { id: true },
+      })
+
+      if (recipients.length > 0) {
+        const welcomeRows = pending.flatMap((emp) => {
+          const dept = emp.department?.name
+          const message = dept
+            ? `Please welcome ${emp.user.name} to the ${dept} team!`
+            : `Please welcome ${emp.user.name} to Mediend!`
+          return recipients.map((r) => ({
+            userId: r.id,
+            type: 'NEW_HIRE_WELCOME' as const,
+            title: `Welcome ${emp.user.name}!`,
+            message,
+            link: '/home',
+            relatedId: emp.userId,
+          }))
+        })
+
+        // Batch insert in chunks to avoid oversized payloads
+        const chunkSize = 500
+        for (let i = 0; i < welcomeRows.length; i += chunkSize) {
+          await prisma.notification.createMany({
+            data: welcomeRows.slice(i, i + chunkSize),
+          })
+        }
+      }
     } catch (notifErr) {
-      console.error('Failed to notify employees of onboarding approval:', notifErr)
+      console.error('Failed to send onboarding / new-hire notifications:', notifErr)
     }
 
     return successResponse({

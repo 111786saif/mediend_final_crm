@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils'
 import { useMDTeamOverview } from '@/hooks/use-md-team'
 import type { HRDashboardFilters } from './md-hr-filter-drawer'
 import type { HRAnalytics } from '@/components/hr/hr-dashboard'
+import { isActiveHeadcountEmployee } from '@/lib/hrms/headcount'
 
 interface LeaveBalanceEntry {
   employeeId: string
@@ -64,6 +65,7 @@ interface EmployeeItem {
   id: string
   employeeCode: string
   departmentId: string | null
+  status?: string
   user: { name: string }
   department: { name: string; id: string } | null
 }
@@ -209,7 +211,7 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
     if (!analytics) return null
     const today = todayAttendance?.data ?? []
     const monthData = monthAttendance?.data ?? []
-    const allEmployees = employees ?? []
+    const allEmployees = (employees ?? []).filter((e) => isActiveHeadcountEmployee(e.status))
     const deptFilter = filters.departments.length > 0 ? new Set(filters.departments) : null
 
     // Exclude MD (code 1000)

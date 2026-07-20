@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 
 export async function GET(
   request: NextRequest,
@@ -73,7 +74,13 @@ export async function GET(
       },
     })
 
-    // Get all employees in this department
+    // Active employees in this department (for headcount stats)
+    const activeEmployees = await prisma.employee.findMany({
+      where: { departmentId: id, ...headcountEmployeeWhere },
+      select: { id: true, teamId: true },
+    })
+
+    // All employees in this department (for hierarchy display)
     const employees = await prisma.employee.findMany({
       where: { departmentId: id },
       include: {
@@ -96,6 +103,7 @@ export async function GET(
 
     // Get employees not assigned to any team
     const unassignedEmployees = employees.filter((e) => !e.teamId)
+    const activeUnassigned = activeEmployees.filter((e) => !e.teamId)
 
     // Build hierarchy with teams
     const hierarchy = {
@@ -128,9 +136,9 @@ export async function GET(
         employeeCode: e.employeeCode,
       })),
       stats: {
-        totalEmployees: employees.length,
+        totalEmployees: activeEmployees.length,
         teams: teams.length,
-        unassigned: unassignedEmployees.length,
+        unassigned: activeUnassigned.length,
       },
     }
 

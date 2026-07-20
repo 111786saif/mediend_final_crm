@@ -95,6 +95,8 @@ export async function GET(request: NextRequest) {
       byCircleCompleted,
       byTreatmentAll,
       byTreatmentCompleted,
+      byCategoryAll,
+      byCategoryCompleted,
       bySourceAll,
       bySourceCompleted,
       byCampaignAll,
@@ -105,6 +107,8 @@ export async function GET(request: NextRequest) {
       prisma.lead.groupBy({ by: ['circle'], where: completedWhere, _count: { id: true } }),
       prisma.lead.groupBy({ by: ['treatment'], where: { ...allLeadsWhere, treatment: { not: null } }, _count: { id: true } }),
       prisma.lead.groupBy({ by: ['treatment'], where: { ...completedWhere, treatment: { not: null } }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['category'], where: allLeadsWhere, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['category'], where: completedWhere, _count: { id: true } }),
       prisma.lead.groupBy({ by: ['source'], where: { ...allLeadsWhere, source: { not: null } }, _count: { id: true } }),
       prisma.lead.groupBy({ by: ['source'], where: { ...completedWhere, source: { not: null } }, _count: { id: true } }),
       prisma.lead.groupBy({ by: ['campaignName'], where: { ...allLeadsWhere, campaignName: { not: null } }, _count: { id: true } }),
@@ -127,6 +131,14 @@ export async function GET(request: NextRequest) {
       const total = t._count.id
       const converted = completedTreatmentMap.get(t.treatment) ?? 0
       return { disease: t.treatment ?? 'Unknown', totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
+    }).sort((a, b) => b.totalLeads - a.totalLeads)
+
+    const completedCategoryMap = new Map(byCategoryCompleted.map((c) => [c.category ?? 'Uncategorized', c._count.id]))
+    const byCategory = byCategoryAll.map((c) => {
+      const category = c.category?.trim() || 'Uncategorized'
+      const total = c._count.id
+      const converted = completedCategoryMap.get(c.category ?? 'Uncategorized') ?? completedCategoryMap.get(category) ?? 0
+      return { category, totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
     }).sort((a, b) => b.totalLeads - a.totalLeads)
 
     const completedSourceMap = new Map(bySourceCompleted.map((s) => [s.source, s._count.id]))
@@ -195,7 +207,7 @@ export async function GET(request: NextRequest) {
       conversionRate: ageBuckets[key].total > 0 ? (ageBuckets[key].converted / ageBuckets[key].total) * 100 : 0,
     }))
 
-    return successResponse({ byCircle, byDisease, bySource, byCampaign, byTeam, leadAgeBreakdown })
+    return successResponse({ byCircle, byDisease, byCategory, bySource, byCampaign, byTeam, leadAgeBreakdown })
   } catch (error) {
     console.error('Leads breakdown error:', error)
     return errorResponse('Failed to fetch leads breakdown', 500)

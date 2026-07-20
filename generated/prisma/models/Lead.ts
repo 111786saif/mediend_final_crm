@@ -1169,6 +1169,9 @@ export type LeadWhereInput = {
   paymentInstallments?: Prisma.PaymentInstallmentListRelationFilter
   invoiceRequests?: Prisma.InvoiceRequestListRelationFilter
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestListRelationFilter
+  leadRemarkEntries?: Prisma.LeadRemarkEntryListRelationFilter
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogListRelationFilter
 }
 
 export type LeadOrderByWithRelationInput = {
@@ -1301,6 +1304,9 @@ export type LeadOrderByWithRelationInput = {
   paymentInstallments?: Prisma.PaymentInstallmentOrderByRelationAggregateInput
   invoiceRequests?: Prisma.InvoiceRequestOrderByRelationAggregateInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestOrderByRelationAggregateInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryOrderByRelationAggregateInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogOrderByRelationAggregateInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogOrderByRelationAggregateInput
 }
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
@@ -1436,6 +1442,9 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   paymentInstallments?: Prisma.PaymentInstallmentListRelationFilter
   invoiceRequests?: Prisma.InvoiceRequestListRelationFilter
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestListRelationFilter
+  leadRemarkEntries?: Prisma.LeadRemarkEntryListRelationFilter
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogListRelationFilter
 }, "id" | "leadRef">
 
 export type LeadOrderByWithAggregationInput = {
@@ -1794,6 +1803,9 @@ export type LeadCreateInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateInput = {
@@ -1922,6 +1934,9 @@ export type LeadUncheckedCreateInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUpdateInput = {
@@ -2050,6 +2065,9 @@ export type LeadUpdateInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateInput = {
@@ -2178,6 +2196,9 @@ export type LeadUncheckedUpdateInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateManyInput = {
@@ -3120,6 +3141,34 @@ export type LeadUpdateOneRequiredWithoutCallNotesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutCallNotesInput, Prisma.LeadUpdateWithoutCallNotesInput>, Prisma.LeadUncheckedUpdateWithoutCallNotesInput>
 }
 
+export type LeadCreateNestedOneWithoutLeadRemarkEntriesInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutLeadRemarkEntriesInput, Prisma.LeadUncheckedCreateWithoutLeadRemarkEntriesInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutLeadRemarkEntriesInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneRequiredWithoutLeadRemarkEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutLeadRemarkEntriesInput, Prisma.LeadUncheckedCreateWithoutLeadRemarkEntriesInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutLeadRemarkEntriesInput
+  upsert?: Prisma.LeadUpsertWithoutLeadRemarkEntriesInput
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutLeadRemarkEntriesInput, Prisma.LeadUpdateWithoutLeadRemarkEntriesInput>, Prisma.LeadUncheckedUpdateWithoutLeadRemarkEntriesInput>
+}
+
+export type LeadCreateNestedOneWithoutQrCallAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutQrCallAuditLogsInput, Prisma.LeadUncheckedCreateWithoutQrCallAuditLogsInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutQrCallAuditLogsInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneRequiredWithoutQrCallAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutQrCallAuditLogsInput, Prisma.LeadUncheckedCreateWithoutQrCallAuditLogsInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutQrCallAuditLogsInput
+  upsert?: Prisma.LeadUpsertWithoutQrCallAuditLogsInput
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutQrCallAuditLogsInput, Prisma.LeadUpdateWithoutQrCallAuditLogsInput>, Prisma.LeadUncheckedUpdateWithoutQrCallAuditLogsInput>
+}
+
 export type LeadCreateNestedOneWithoutStageEventsInput = {
   create?: Prisma.XOR<Prisma.LeadCreateWithoutStageEventsInput, Prisma.LeadUncheckedCreateWithoutStageEventsInput>
   connectOrCreate?: Prisma.LeadCreateOrConnectWithoutStageEventsInput
@@ -3204,6 +3253,20 @@ export type LeadUpdateOneRequiredWithoutKypSubmissionNestedInput = {
   upsert?: Prisma.LeadUpsertWithoutKypSubmissionInput
   connect?: Prisma.LeadWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutKypSubmissionInput, Prisma.LeadUpdateWithoutKypSubmissionInput>, Prisma.LeadUncheckedUpdateWithoutKypSubmissionInput>
+}
+
+export type LeadCreateNestedOneWithoutCrmAssignmentPreviewLogsInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutCrmAssignmentPreviewLogsInput, Prisma.LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutCrmAssignmentPreviewLogsInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneRequiredWithoutCrmAssignmentPreviewLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutCrmAssignmentPreviewLogsInput, Prisma.LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutCrmAssignmentPreviewLogsInput
+  upsert?: Prisma.LeadUpsertWithoutCrmAssignmentPreviewLogsInput
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutCrmAssignmentPreviewLogsInput, Prisma.LeadUpdateWithoutCrmAssignmentPreviewLogsInput>, Prisma.LeadUncheckedUpdateWithoutCrmAssignmentPreviewLogsInput>
 }
 
 export type LeadCreateNestedOneWithoutAdmissionRecordInput = {
@@ -3513,6 +3576,9 @@ export type LeadCreateWithoutCreatedByInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutCreatedByInput = {
@@ -3640,6 +3706,9 @@ export type LeadUncheckedCreateWithoutCreatedByInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutCreatedByInput = {
@@ -3777,6 +3846,9 @@ export type LeadCreateWithoutBdInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutBdInput = {
@@ -3904,6 +3976,9 @@ export type LeadUncheckedCreateWithoutBdInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutBdInput = {
@@ -4041,6 +4116,9 @@ export type LeadCreateWithoutUpdatedByInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutUpdatedByInput = {
@@ -4168,6 +4246,9 @@ export type LeadUncheckedCreateWithoutUpdatedByInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutUpdatedByInput = {
@@ -4467,6 +4548,9 @@ export type LeadCreateWithoutCallNotesInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutCallNotesInput = {
@@ -4594,6 +4678,9 @@ export type LeadUncheckedCreateWithoutCallNotesInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutCallNotesInput = {
@@ -4737,6 +4824,9 @@ export type LeadUpdateWithoutCallNotesInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutCallNotesInput = {
@@ -4864,6 +4954,1081 @@ export type LeadUncheckedUpdateWithoutCallNotesInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadCreateWithoutLeadRemarkEntriesInput = {
+  id?: string
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdDate?: Date | string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
+  stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutLeadRemarkEntriesInput = {
+  id?: string
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  bdId: string
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdById: string
+  createdDate?: Date | string
+  updatedById: string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutLeadRemarkEntriesInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutLeadRemarkEntriesInput, Prisma.LeadUncheckedCreateWithoutLeadRemarkEntriesInput>
+}
+
+export type LeadUpsertWithoutLeadRemarkEntriesInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutLeadRemarkEntriesInput, Prisma.LeadUncheckedUpdateWithoutLeadRemarkEntriesInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutLeadRemarkEntriesInput, Prisma.LeadUncheckedCreateWithoutLeadRemarkEntriesInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutLeadRemarkEntriesInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutLeadRemarkEntriesInput, Prisma.LeadUncheckedUpdateWithoutLeadRemarkEntriesInput>
+}
+
+export type LeadUpdateWithoutLeadRemarkEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
+  stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutLeadRemarkEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadCreateWithoutQrCallAuditLogsInput = {
+  id?: string
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdDate?: Date | string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
+  stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutQrCallAuditLogsInput = {
+  id?: string
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  bdId: string
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdById: string
+  createdDate?: Date | string
+  updatedById: string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutQrCallAuditLogsInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutQrCallAuditLogsInput, Prisma.LeadUncheckedCreateWithoutQrCallAuditLogsInput>
+}
+
+export type LeadUpsertWithoutQrCallAuditLogsInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutQrCallAuditLogsInput, Prisma.LeadUncheckedUpdateWithoutQrCallAuditLogsInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutQrCallAuditLogsInput, Prisma.LeadUncheckedCreateWithoutQrCallAuditLogsInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutQrCallAuditLogsInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutQrCallAuditLogsInput, Prisma.LeadUncheckedUpdateWithoutQrCallAuditLogsInput>
+}
+
+export type LeadUpdateWithoutQrCallAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
+  stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutQrCallAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutStageEventsInput = {
@@ -4991,6 +6156,9 @@ export type LeadCreateWithoutStageEventsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutStageEventsInput = {
@@ -5118,6 +6286,9 @@ export type LeadUncheckedCreateWithoutStageEventsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutStageEventsInput = {
@@ -5261,6 +6432,9 @@ export type LeadUpdateWithoutStageEventsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutStageEventsInput = {
@@ -5388,6 +6562,9 @@ export type LeadUncheckedUpdateWithoutStageEventsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutInsuranceCaseInput = {
@@ -5515,6 +6692,9 @@ export type LeadCreateWithoutInsuranceCaseInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutInsuranceCaseInput = {
@@ -5642,6 +6822,9 @@ export type LeadUncheckedCreateWithoutInsuranceCaseInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutInsuranceCaseInput = {
@@ -5785,6 +6968,9 @@ export type LeadUpdateWithoutInsuranceCaseInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutInsuranceCaseInput = {
@@ -5912,6 +7098,9 @@ export type LeadUncheckedUpdateWithoutInsuranceCaseInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutPlRecordInput = {
@@ -6039,6 +7228,9 @@ export type LeadCreateWithoutPlRecordInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutPlRecordInput = {
@@ -6166,6 +7358,9 @@ export type LeadUncheckedCreateWithoutPlRecordInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutPlRecordInput = {
@@ -6309,6 +7504,9 @@ export type LeadUpdateWithoutPlRecordInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutPlRecordInput = {
@@ -6436,6 +7634,9 @@ export type LeadUncheckedUpdateWithoutPlRecordInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutInvoiceRequestsInput = {
@@ -6563,6 +7764,9 @@ export type LeadCreateWithoutInvoiceRequestsInput = {
   callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutInvoiceRequestsInput = {
@@ -6690,6 +7894,9 @@ export type LeadUncheckedCreateWithoutInvoiceRequestsInput = {
   callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutInvoiceRequestsInput = {
@@ -6833,6 +8040,9 @@ export type LeadUpdateWithoutInvoiceRequestsInput = {
   callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutInvoiceRequestsInput = {
@@ -6960,6 +8170,9 @@ export type LeadUncheckedUpdateWithoutInvoiceRequestsInput = {
   callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutDoctorPayoffRequestsInput = {
@@ -7087,6 +8300,9 @@ export type LeadCreateWithoutDoctorPayoffRequestsInput = {
   callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutDoctorPayoffRequestsInput = {
@@ -7214,6 +8430,9 @@ export type LeadUncheckedCreateWithoutDoctorPayoffRequestsInput = {
   callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutDoctorPayoffRequestsInput = {
@@ -7357,6 +8576,9 @@ export type LeadUpdateWithoutDoctorPayoffRequestsInput = {
   callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutDoctorPayoffRequestsInput = {
@@ -7484,6 +8706,9 @@ export type LeadUncheckedUpdateWithoutDoctorPayoffRequestsInput = {
   callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutKypSubmissionInput = {
@@ -7611,6 +8836,9 @@ export type LeadCreateWithoutKypSubmissionInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutKypSubmissionInput = {
@@ -7738,6 +8966,9 @@ export type LeadUncheckedCreateWithoutKypSubmissionInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutKypSubmissionInput = {
@@ -7881,6 +9112,9 @@ export type LeadUpdateWithoutKypSubmissionInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutKypSubmissionInput = {
@@ -8008,6 +9242,545 @@ export type LeadUncheckedUpdateWithoutKypSubmissionInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadCreateWithoutCrmAssignmentPreviewLogsInput = {
+  id?: string
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdDate?: Date | string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutLeadsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
+  stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput = {
+  id?: string
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  bdId: string
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
+  atsAmount?: number | null
+  atsStatus?: $Enums.ATSStatus | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdById: string
+  createdDate?: Date | string
+  updatedById: string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  assignedDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutCrmAssignmentPreviewLogsInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutCrmAssignmentPreviewLogsInput, Prisma.LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput>
+}
+
+export type LeadUpsertWithoutCrmAssignmentPreviewLogsInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutCrmAssignmentPreviewLogsInput, Prisma.LeadUncheckedUpdateWithoutCrmAssignmentPreviewLogsInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutCrmAssignmentPreviewLogsInput, Prisma.LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutCrmAssignmentPreviewLogsInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutCrmAssignmentPreviewLogsInput, Prisma.LeadUncheckedUpdateWithoutCrmAssignmentPreviewLogsInput>
+}
+
+export type LeadUpdateWithoutCrmAssignmentPreviewLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutLeadsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
+  stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutCrmAssignmentPreviewLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  atsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsStatus?: Prisma.NullableEnumATSStatusFieldUpdateOperationsInput | $Enums.ATSStatus | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
+  workflowResetLogs?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
+  paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
+  invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
+  doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutAdmissionRecordInput = {
@@ -8135,6 +9908,9 @@ export type LeadCreateWithoutAdmissionRecordInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutAdmissionRecordInput = {
@@ -8262,6 +10038,9 @@ export type LeadUncheckedCreateWithoutAdmissionRecordInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutAdmissionRecordInput = {
@@ -8405,6 +10184,9 @@ export type LeadUpdateWithoutAdmissionRecordInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutAdmissionRecordInput = {
@@ -8532,6 +10314,9 @@ export type LeadUncheckedUpdateWithoutAdmissionRecordInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutInsuranceInitiateFormInput = {
@@ -8659,6 +10444,9 @@ export type LeadCreateWithoutInsuranceInitiateFormInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutInsuranceInitiateFormInput = {
@@ -8786,6 +10574,9 @@ export type LeadUncheckedCreateWithoutInsuranceInitiateFormInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutInsuranceInitiateFormInput = {
@@ -8929,6 +10720,9 @@ export type LeadUpdateWithoutInsuranceInitiateFormInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutInsuranceInitiateFormInput = {
@@ -9056,6 +10850,9 @@ export type LeadUncheckedUpdateWithoutInsuranceInitiateFormInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutCaseStageHistoryInput = {
@@ -9183,6 +10980,9 @@ export type LeadCreateWithoutCaseStageHistoryInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutCaseStageHistoryInput = {
@@ -9310,6 +11110,9 @@ export type LeadUncheckedCreateWithoutCaseStageHistoryInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutCaseStageHistoryInput = {
@@ -9453,6 +11256,9 @@ export type LeadUpdateWithoutCaseStageHistoryInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutCaseStageHistoryInput = {
@@ -9580,6 +11386,9 @@ export type LeadUncheckedUpdateWithoutCaseStageHistoryInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutWorkflowResetLogsInput = {
@@ -9707,6 +11516,9 @@ export type LeadCreateWithoutWorkflowResetLogsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutWorkflowResetLogsInput = {
@@ -9834,6 +11646,9 @@ export type LeadUncheckedCreateWithoutWorkflowResetLogsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutWorkflowResetLogsInput = {
@@ -9977,6 +11792,9 @@ export type LeadUpdateWithoutWorkflowResetLogsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutWorkflowResetLogsInput = {
@@ -10104,6 +11922,9 @@ export type LeadUncheckedUpdateWithoutWorkflowResetLogsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutCaseChatMessagesInput = {
@@ -10231,6 +12052,9 @@ export type LeadCreateWithoutCaseChatMessagesInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutCaseChatMessagesInput = {
@@ -10358,6 +12182,9 @@ export type LeadUncheckedCreateWithoutCaseChatMessagesInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutCaseChatMessagesInput = {
@@ -10501,6 +12328,9 @@ export type LeadUpdateWithoutCaseChatMessagesInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutCaseChatMessagesInput = {
@@ -10628,6 +12458,9 @@ export type LeadUncheckedUpdateWithoutCaseChatMessagesInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutChatReadReceiptsInput = {
@@ -10755,6 +12588,9 @@ export type LeadCreateWithoutChatReadReceiptsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutChatReadReceiptsInput = {
@@ -10882,6 +12718,9 @@ export type LeadUncheckedCreateWithoutChatReadReceiptsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutChatReadReceiptsInput = {
@@ -11025,6 +12864,9 @@ export type LeadUpdateWithoutChatReadReceiptsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutChatReadReceiptsInput = {
@@ -11152,6 +12994,9 @@ export type LeadUncheckedUpdateWithoutChatReadReceiptsInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutDischargeSheetInput = {
@@ -11279,6 +13124,9 @@ export type LeadCreateWithoutDischargeSheetInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutDischargeSheetInput = {
@@ -11406,6 +13254,9 @@ export type LeadUncheckedCreateWithoutDischargeSheetInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutDischargeSheetInput = {
@@ -11549,6 +13400,9 @@ export type LeadUpdateWithoutDischargeSheetInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutDischargeSheetInput = {
@@ -11676,6 +13530,9 @@ export type LeadUncheckedUpdateWithoutDischargeSheetInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutOutstandingCaseInput = {
@@ -11803,6 +13660,9 @@ export type LeadCreateWithoutOutstandingCaseInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutOutstandingCaseInput = {
@@ -11930,6 +13790,9 @@ export type LeadUncheckedCreateWithoutOutstandingCaseInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutOutstandingCaseInput = {
@@ -12073,6 +13936,9 @@ export type LeadUpdateWithoutOutstandingCaseInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutOutstandingCaseInput = {
@@ -12200,6 +14066,9 @@ export type LeadUncheckedUpdateWithoutOutstandingCaseInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutPaymentInstallmentsInput = {
@@ -12327,6 +14196,9 @@ export type LeadCreateWithoutPaymentInstallmentsInput = {
   callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutPaymentInstallmentsInput = {
@@ -12454,6 +14326,9 @@ export type LeadUncheckedCreateWithoutPaymentInstallmentsInput = {
   callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutPaymentInstallmentsInput = {
@@ -12597,6 +14472,9 @@ export type LeadUpdateWithoutPaymentInstallmentsInput = {
   callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutPaymentInstallmentsInput = {
@@ -12724,6 +14602,9 @@ export type LeadUncheckedUpdateWithoutPaymentInstallmentsInput = {
   callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutComplianceCallInput = {
@@ -12851,6 +14732,9 @@ export type LeadCreateWithoutComplianceCallInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutComplianceCallInput = {
@@ -12978,6 +14862,9 @@ export type LeadUncheckedCreateWithoutComplianceCallInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutComplianceCallInput = {
@@ -13121,6 +15008,9 @@ export type LeadUpdateWithoutComplianceCallInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutComplianceCallInput = {
@@ -13248,6 +15138,9 @@ export type LeadUncheckedUpdateWithoutComplianceCallInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutTreatmentMasterInput = {
@@ -13375,6 +15268,9 @@ export type LeadCreateWithoutTreatmentMasterInput = {
   paymentInstallments?: Prisma.PaymentInstallmentCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutTreatmentMasterInput = {
@@ -13502,6 +15398,9 @@ export type LeadUncheckedCreateWithoutTreatmentMasterInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutLeadInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutLeadInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutLeadInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutLeadInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutLeadInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutTreatmentMasterInput = {
@@ -13985,6 +15884,9 @@ export type LeadUpdateWithoutCreatedByInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutCreatedByInput = {
@@ -14112,6 +16014,9 @@ export type LeadUncheckedUpdateWithoutCreatedByInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutCreatedByInput = {
@@ -14349,6 +16254,9 @@ export type LeadUpdateWithoutBdInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutBdInput = {
@@ -14476,6 +16384,9 @@ export type LeadUncheckedUpdateWithoutBdInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutBdInput = {
@@ -14713,6 +16624,9 @@ export type LeadUpdateWithoutUpdatedByInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutUpdatedByInput = {
@@ -14840,6 +16754,9 @@ export type LeadUncheckedUpdateWithoutUpdatedByInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutUpdatedByInput = {
@@ -15187,6 +17104,9 @@ export type LeadUpdateWithoutTreatmentMasterInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutTreatmentMasterInput = {
@@ -15314,6 +17234,9 @@ export type LeadUncheckedUpdateWithoutTreatmentMasterInput = {
   paymentInstallments?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutLeadNestedInput
   invoiceRequests?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutLeadNestedInput
   doctorPayoffRequests?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutLeadNestedInput
+  leadRemarkEntries?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutLeadNestedInput
+  qrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  crmAssignmentPreviewLogs?: Prisma.CrmAssignmentPreviewLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutTreatmentMasterInput = {
@@ -15441,6 +17364,9 @@ export type LeadCountOutputType = {
   paymentInstallments: number
   invoiceRequests: number
   doctorPayoffRequests: number
+  leadRemarkEntries: number
+  qrCallAuditLogs: number
+  crmAssignmentPreviewLogs: number
 }
 
 export type LeadCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -15453,6 +17379,9 @@ export type LeadCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   paymentInstallments?: boolean | LeadCountOutputTypeCountPaymentInstallmentsArgs
   invoiceRequests?: boolean | LeadCountOutputTypeCountInvoiceRequestsArgs
   doctorPayoffRequests?: boolean | LeadCountOutputTypeCountDoctorPayoffRequestsArgs
+  leadRemarkEntries?: boolean | LeadCountOutputTypeCountLeadRemarkEntriesArgs
+  qrCallAuditLogs?: boolean | LeadCountOutputTypeCountQrCallAuditLogsArgs
+  crmAssignmentPreviewLogs?: boolean | LeadCountOutputTypeCountCrmAssignmentPreviewLogsArgs
 }
 
 /**
@@ -15526,6 +17455,27 @@ export type LeadCountOutputTypeCountInvoiceRequestsArgs<ExtArgs extends runtime.
  */
 export type LeadCountOutputTypeCountDoctorPayoffRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DoctorPayoffRequestWhereInput
+}
+
+/**
+ * LeadCountOutputType without action
+ */
+export type LeadCountOutputTypeCountLeadRemarkEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadRemarkEntryWhereInput
+}
+
+/**
+ * LeadCountOutputType without action
+ */
+export type LeadCountOutputTypeCountQrCallAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadQrCallAuditLogWhereInput
+}
+
+/**
+ * LeadCountOutputType without action
+ */
+export type LeadCountOutputTypeCountCrmAssignmentPreviewLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmAssignmentPreviewLogWhereInput
 }
 
 
@@ -15659,6 +17609,9 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   paymentInstallments?: boolean | Prisma.Lead$paymentInstallmentsArgs<ExtArgs>
   invoiceRequests?: boolean | Prisma.Lead$invoiceRequestsArgs<ExtArgs>
   doctorPayoffRequests?: boolean | Prisma.Lead$doctorPayoffRequestsArgs<ExtArgs>
+  leadRemarkEntries?: boolean | Prisma.Lead$leadRemarkEntriesArgs<ExtArgs>
+  qrCallAuditLogs?: boolean | Prisma.Lead$qrCallAuditLogsArgs<ExtArgs>
+  crmAssignmentPreviewLogs?: boolean | Prisma.Lead$crmAssignmentPreviewLogsArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -16026,6 +17979,9 @@ export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   paymentInstallments?: boolean | Prisma.Lead$paymentInstallmentsArgs<ExtArgs>
   invoiceRequests?: boolean | Prisma.Lead$invoiceRequestsArgs<ExtArgs>
   doctorPayoffRequests?: boolean | Prisma.Lead$doctorPayoffRequestsArgs<ExtArgs>
+  leadRemarkEntries?: boolean | Prisma.Lead$leadRemarkEntriesArgs<ExtArgs>
+  qrCallAuditLogs?: boolean | Prisma.Lead$qrCallAuditLogsArgs<ExtArgs>
+  crmAssignmentPreviewLogs?: boolean | Prisma.Lead$crmAssignmentPreviewLogsArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LeadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -16065,6 +18021,9 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     paymentInstallments: Prisma.$PaymentInstallmentPayload<ExtArgs>[]
     invoiceRequests: Prisma.$InvoiceRequestPayload<ExtArgs>[]
     doctorPayoffRequests: Prisma.$DoctorPayoffRequestPayload<ExtArgs>[]
+    leadRemarkEntries: Prisma.$LeadRemarkEntryPayload<ExtArgs>[]
+    qrCallAuditLogs: Prisma.$LeadQrCallAuditLogPayload<ExtArgs>[]
+    crmAssignmentPreviewLogs: Prisma.$CrmAssignmentPreviewLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -16590,6 +18549,9 @@ export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Typ
   paymentInstallments<T extends Prisma.Lead$paymentInstallmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$paymentInstallmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentInstallmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoiceRequests<T extends Prisma.Lead$invoiceRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$invoiceRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   doctorPayoffRequests<T extends Prisma.Lead$doctorPayoffRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$doctorPayoffRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorPayoffRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leadRemarkEntries<T extends Prisma.Lead$leadRemarkEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$leadRemarkEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadRemarkEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qrCallAuditLogs<T extends Prisma.Lead$qrCallAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$qrCallAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrCallAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  crmAssignmentPreviewLogs<T extends Prisma.Lead$crmAssignmentPreviewLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$crmAssignmentPreviewLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmAssignmentPreviewLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17512,6 +19474,78 @@ export type Lead$doctorPayoffRequestsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.DoctorPayoffRequestScalarFieldEnum | Prisma.DoctorPayoffRequestScalarFieldEnum[]
+}
+
+/**
+ * Lead.leadRemarkEntries
+ */
+export type Lead$leadRemarkEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadRemarkEntry
+   */
+  select?: Prisma.LeadRemarkEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeadRemarkEntry
+   */
+  omit?: Prisma.LeadRemarkEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadRemarkEntryInclude<ExtArgs> | null
+  where?: Prisma.LeadRemarkEntryWhereInput
+  orderBy?: Prisma.LeadRemarkEntryOrderByWithRelationInput | Prisma.LeadRemarkEntryOrderByWithRelationInput[]
+  cursor?: Prisma.LeadRemarkEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadRemarkEntryScalarFieldEnum | Prisma.LeadRemarkEntryScalarFieldEnum[]
+}
+
+/**
+ * Lead.qrCallAuditLogs
+ */
+export type Lead$qrCallAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadQrCallAuditLog
+   */
+  select?: Prisma.LeadQrCallAuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeadQrCallAuditLog
+   */
+  omit?: Prisma.LeadQrCallAuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadQrCallAuditLogInclude<ExtArgs> | null
+  where?: Prisma.LeadQrCallAuditLogWhereInput
+  orderBy?: Prisma.LeadQrCallAuditLogOrderByWithRelationInput | Prisma.LeadQrCallAuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.LeadQrCallAuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadQrCallAuditLogScalarFieldEnum | Prisma.LeadQrCallAuditLogScalarFieldEnum[]
+}
+
+/**
+ * Lead.crmAssignmentPreviewLogs
+ */
+export type Lead$crmAssignmentPreviewLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmAssignmentPreviewLog
+   */
+  select?: Prisma.CrmAssignmentPreviewLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmAssignmentPreviewLog
+   */
+  omit?: Prisma.CrmAssignmentPreviewLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmAssignmentPreviewLogInclude<ExtArgs> | null
+  where?: Prisma.CrmAssignmentPreviewLogWhereInput
+  orderBy?: Prisma.CrmAssignmentPreviewLogOrderByWithRelationInput | Prisma.CrmAssignmentPreviewLogOrderByWithRelationInput[]
+  cursor?: Prisma.CrmAssignmentPreviewLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmAssignmentPreviewLogScalarFieldEnum | Prisma.CrmAssignmentPreviewLogScalarFieldEnum[]
 }
 
 /**

@@ -298,6 +298,8 @@ export type DepartmentWhereInput = {
   supportTickets?: Prisma.SupportTicketListRelationFilter
   notices?: Prisma.NoticeListRelationFilter
   meets?: Prisma.MeetListRelationFilter
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleListRelationFilter
+  crmCampaigns?: Prisma.CrmCampaignListRelationFilter
 }
 
 export type DepartmentOrderByWithRelationInput = {
@@ -319,6 +321,8 @@ export type DepartmentOrderByWithRelationInput = {
   supportTickets?: Prisma.SupportTicketOrderByRelationAggregateInput
   notices?: Prisma.NoticeOrderByRelationAggregateInput
   meets?: Prisma.MeetOrderByRelationAggregateInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleOrderByRelationAggregateInput
+  crmCampaigns?: Prisma.CrmCampaignOrderByRelationAggregateInput
 }
 
 export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -343,6 +347,8 @@ export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
   supportTickets?: Prisma.SupportTicketListRelationFilter
   notices?: Prisma.NoticeListRelationFilter
   meets?: Prisma.MeetListRelationFilter
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleListRelationFilter
+  crmCampaigns?: Prisma.CrmCampaignListRelationFilter
 }, "id">
 
 export type DepartmentOrderByWithAggregationInput = {
@@ -401,6 +407,8 @@ export type DepartmentCreateInput = {
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateInput = {
@@ -421,6 +429,8 @@ export type DepartmentUncheckedCreateInput = {
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetUncheckedCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUpdateInput = {
@@ -441,6 +451,8 @@ export type DepartmentUpdateInput = {
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateInput = {
@@ -461,6 +473,8 @@ export type DepartmentUncheckedUpdateInput = {
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateManyInput = {
@@ -710,6 +724,38 @@ export type DepartmentUpdateOneWithoutNoticesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutNoticesInput, Prisma.DepartmentUpdateWithoutNoticesInput>, Prisma.DepartmentUncheckedUpdateWithoutNoticesInput>
 }
 
+export type DepartmentCreateNestedOneWithoutCrmAssignmentRulesInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutCrmAssignmentRulesInput, Prisma.DepartmentUncheckedCreateWithoutCrmAssignmentRulesInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutCrmAssignmentRulesInput
+  connect?: Prisma.DepartmentWhereUniqueInput
+}
+
+export type DepartmentUpdateOneWithoutCrmAssignmentRulesNestedInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutCrmAssignmentRulesInput, Prisma.DepartmentUncheckedCreateWithoutCrmAssignmentRulesInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutCrmAssignmentRulesInput
+  upsert?: Prisma.DepartmentUpsertWithoutCrmAssignmentRulesInput
+  disconnect?: Prisma.DepartmentWhereInput | boolean
+  delete?: Prisma.DepartmentWhereInput | boolean
+  connect?: Prisma.DepartmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutCrmAssignmentRulesInput, Prisma.DepartmentUpdateWithoutCrmAssignmentRulesInput>, Prisma.DepartmentUncheckedUpdateWithoutCrmAssignmentRulesInput>
+}
+
+export type DepartmentCreateNestedOneWithoutCrmCampaignsInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutCrmCampaignsInput, Prisma.DepartmentUncheckedCreateWithoutCrmCampaignsInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutCrmCampaignsInput
+  connect?: Prisma.DepartmentWhereUniqueInput
+}
+
+export type DepartmentUpdateOneWithoutCrmCampaignsNestedInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutCrmCampaignsInput, Prisma.DepartmentUncheckedCreateWithoutCrmCampaignsInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutCrmCampaignsInput
+  upsert?: Prisma.DepartmentUpsertWithoutCrmCampaignsInput
+  disconnect?: Prisma.DepartmentWhereInput | boolean
+  delete?: Prisma.DepartmentWhereInput | boolean
+  connect?: Prisma.DepartmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutCrmCampaignsInput, Prisma.DepartmentUpdateWithoutCrmCampaignsInput>, Prisma.DepartmentUncheckedUpdateWithoutCrmCampaignsInput>
+}
+
 export type DepartmentCreateWithoutHeadInput = {
   id?: string
   name: string
@@ -727,6 +773,8 @@ export type DepartmentCreateWithoutHeadInput = {
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutHeadInput = {
@@ -746,6 +794,8 @@ export type DepartmentUncheckedCreateWithoutHeadInput = {
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetUncheckedCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutHeadInput = {
@@ -809,6 +859,8 @@ export type DepartmentCreateWithoutTeamsInput = {
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutTeamsInput = {
@@ -828,6 +880,8 @@ export type DepartmentUncheckedCreateWithoutTeamsInput = {
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetUncheckedCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutTeamsInput = {
@@ -863,6 +917,8 @@ export type DepartmentUpdateWithoutTeamsInput = {
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutTeamsInput = {
@@ -882,6 +938,8 @@ export type DepartmentUncheckedUpdateWithoutTeamsInput = {
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutEmployeesInput = {
@@ -901,6 +959,8 @@ export type DepartmentCreateWithoutEmployeesInput = {
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutEmployeesInput = {
@@ -920,6 +980,8 @@ export type DepartmentUncheckedCreateWithoutEmployeesInput = {
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetUncheckedCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutEmployeesInput = {
@@ -955,6 +1017,8 @@ export type DepartmentUpdateWithoutEmployeesInput = {
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutEmployeesInput = {
@@ -974,6 +1038,8 @@ export type DepartmentUncheckedUpdateWithoutEmployeesInput = {
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutMeetsInput = {
@@ -993,6 +1059,8 @@ export type DepartmentCreateWithoutMeetsInput = {
   teams?: Prisma.DepartmentTeamCreateNestedManyWithoutDepartmentInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeCreateNestedManyWithoutTargetDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutMeetsInput = {
@@ -1012,6 +1080,8 @@ export type DepartmentUncheckedCreateWithoutMeetsInput = {
   teams?: Prisma.DepartmentTeamUncheckedCreateNestedManyWithoutDepartmentInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutTargetDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutMeetsInput = {
@@ -1047,6 +1117,8 @@ export type DepartmentUpdateWithoutMeetsInput = {
   teams?: Prisma.DepartmentTeamUpdateManyWithoutDepartmentNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUpdateManyWithoutTargetDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutMeetsInput = {
@@ -1066,6 +1138,8 @@ export type DepartmentUncheckedUpdateWithoutMeetsInput = {
   teams?: Prisma.DepartmentTeamUncheckedUpdateManyWithoutDepartmentNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutTargetDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutSupportTicketsInput = {
@@ -1085,6 +1159,8 @@ export type DepartmentCreateWithoutSupportTicketsInput = {
   teams?: Prisma.DepartmentTeamCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutSupportTicketsInput = {
@@ -1104,6 +1180,8 @@ export type DepartmentUncheckedCreateWithoutSupportTicketsInput = {
   teams?: Prisma.DepartmentTeamUncheckedCreateNestedManyWithoutDepartmentInput
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutTargetDepartmentInput
   meets?: Prisma.MeetUncheckedCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutSupportTicketsInput = {
@@ -1139,6 +1217,8 @@ export type DepartmentUpdateWithoutSupportTicketsInput = {
   teams?: Prisma.DepartmentTeamUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutSupportTicketsInput = {
@@ -1158,6 +1238,8 @@ export type DepartmentUncheckedUpdateWithoutSupportTicketsInput = {
   teams?: Prisma.DepartmentTeamUncheckedUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutNoticesInput = {
@@ -1177,6 +1259,8 @@ export type DepartmentCreateWithoutNoticesInput = {
   teams?: Prisma.DepartmentTeamCreateNestedManyWithoutDepartmentInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutDepartmentInput
   meets?: Prisma.MeetCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutNoticesInput = {
@@ -1196,6 +1280,8 @@ export type DepartmentUncheckedCreateWithoutNoticesInput = {
   teams?: Prisma.DepartmentTeamUncheckedCreateNestedManyWithoutDepartmentInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutDepartmentInput
   meets?: Prisma.MeetUncheckedCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutNoticesInput = {
@@ -1231,6 +1317,8 @@ export type DepartmentUpdateWithoutNoticesInput = {
   teams?: Prisma.DepartmentTeamUpdateManyWithoutDepartmentNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutDepartmentNestedInput
   meets?: Prisma.MeetUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutNoticesInput = {
@@ -1250,6 +1338,208 @@ export type DepartmentUncheckedUpdateWithoutNoticesInput = {
   teams?: Prisma.DepartmentTeamUncheckedUpdateManyWithoutDepartmentNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutDepartmentNestedInput
   meets?: Prisma.MeetUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentCreateWithoutCrmAssignmentRulesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  shiftStartHour?: number
+  shiftStartMinute?: number
+  grace1Minutes?: number
+  grace2Minutes?: number
+  penaltyMinutes?: number
+  penaltyAmount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  head?: Prisma.UserCreateNestedOneWithoutDepartmentHeadOfInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutDepartmentInput
+  teams?: Prisma.DepartmentTeamCreateNestedManyWithoutDepartmentInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutDepartmentInput
+  notices?: Prisma.NoticeCreateNestedManyWithoutTargetDepartmentInput
+  meets?: Prisma.MeetCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentUncheckedCreateWithoutCrmAssignmentRulesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  headId?: string | null
+  shiftStartHour?: number
+  shiftStartMinute?: number
+  grace1Minutes?: number
+  grace2Minutes?: number
+  penaltyMinutes?: number
+  penaltyAmount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
+  teams?: Prisma.DepartmentTeamUncheckedCreateNestedManyWithoutDepartmentInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutDepartmentInput
+  notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutTargetDepartmentInput
+  meets?: Prisma.MeetUncheckedCreateNestedManyWithoutDepartmentInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentCreateOrConnectWithoutCrmAssignmentRulesInput = {
+  where: Prisma.DepartmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutCrmAssignmentRulesInput, Prisma.DepartmentUncheckedCreateWithoutCrmAssignmentRulesInput>
+}
+
+export type DepartmentUpsertWithoutCrmAssignmentRulesInput = {
+  update: Prisma.XOR<Prisma.DepartmentUpdateWithoutCrmAssignmentRulesInput, Prisma.DepartmentUncheckedUpdateWithoutCrmAssignmentRulesInput>
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutCrmAssignmentRulesInput, Prisma.DepartmentUncheckedCreateWithoutCrmAssignmentRulesInput>
+  where?: Prisma.DepartmentWhereInput
+}
+
+export type DepartmentUpdateToOneWithWhereWithoutCrmAssignmentRulesInput = {
+  where?: Prisma.DepartmentWhereInput
+  data: Prisma.XOR<Prisma.DepartmentUpdateWithoutCrmAssignmentRulesInput, Prisma.DepartmentUncheckedUpdateWithoutCrmAssignmentRulesInput>
+}
+
+export type DepartmentUpdateWithoutCrmAssignmentRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftStartHour?: Prisma.IntFieldUpdateOperationsInput | number
+  shiftStartMinute?: Prisma.IntFieldUpdateOperationsInput | number
+  grace1Minutes?: Prisma.IntFieldUpdateOperationsInput | number
+  grace2Minutes?: Prisma.IntFieldUpdateOperationsInput | number
+  penaltyMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  penaltyAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  head?: Prisma.UserUpdateOneWithoutDepartmentHeadOfNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutDepartmentNestedInput
+  teams?: Prisma.DepartmentTeamUpdateManyWithoutDepartmentNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutDepartmentNestedInput
+  notices?: Prisma.NoticeUpdateManyWithoutTargetDepartmentNestedInput
+  meets?: Prisma.MeetUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentUncheckedUpdateWithoutCrmAssignmentRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftStartHour?: Prisma.IntFieldUpdateOperationsInput | number
+  shiftStartMinute?: Prisma.IntFieldUpdateOperationsInput | number
+  grace1Minutes?: Prisma.IntFieldUpdateOperationsInput | number
+  grace2Minutes?: Prisma.IntFieldUpdateOperationsInput | number
+  penaltyMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  penaltyAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
+  teams?: Prisma.DepartmentTeamUncheckedUpdateManyWithoutDepartmentNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutDepartmentNestedInput
+  notices?: Prisma.NoticeUncheckedUpdateManyWithoutTargetDepartmentNestedInput
+  meets?: Prisma.MeetUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentCreateWithoutCrmCampaignsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  shiftStartHour?: number
+  shiftStartMinute?: number
+  grace1Minutes?: number
+  grace2Minutes?: number
+  penaltyMinutes?: number
+  penaltyAmount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  head?: Prisma.UserCreateNestedOneWithoutDepartmentHeadOfInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutDepartmentInput
+  teams?: Prisma.DepartmentTeamCreateNestedManyWithoutDepartmentInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutDepartmentInput
+  notices?: Prisma.NoticeCreateNestedManyWithoutTargetDepartmentInput
+  meets?: Prisma.MeetCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentUncheckedCreateWithoutCrmCampaignsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  headId?: string | null
+  shiftStartHour?: number
+  shiftStartMinute?: number
+  grace1Minutes?: number
+  grace2Minutes?: number
+  penaltyMinutes?: number
+  penaltyAmount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
+  teams?: Prisma.DepartmentTeamUncheckedCreateNestedManyWithoutDepartmentInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutDepartmentInput
+  notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutTargetDepartmentInput
+  meets?: Prisma.MeetUncheckedCreateNestedManyWithoutDepartmentInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentCreateOrConnectWithoutCrmCampaignsInput = {
+  where: Prisma.DepartmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutCrmCampaignsInput, Prisma.DepartmentUncheckedCreateWithoutCrmCampaignsInput>
+}
+
+export type DepartmentUpsertWithoutCrmCampaignsInput = {
+  update: Prisma.XOR<Prisma.DepartmentUpdateWithoutCrmCampaignsInput, Prisma.DepartmentUncheckedUpdateWithoutCrmCampaignsInput>
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutCrmCampaignsInput, Prisma.DepartmentUncheckedCreateWithoutCrmCampaignsInput>
+  where?: Prisma.DepartmentWhereInput
+}
+
+export type DepartmentUpdateToOneWithWhereWithoutCrmCampaignsInput = {
+  where?: Prisma.DepartmentWhereInput
+  data: Prisma.XOR<Prisma.DepartmentUpdateWithoutCrmCampaignsInput, Prisma.DepartmentUncheckedUpdateWithoutCrmCampaignsInput>
+}
+
+export type DepartmentUpdateWithoutCrmCampaignsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftStartHour?: Prisma.IntFieldUpdateOperationsInput | number
+  shiftStartMinute?: Prisma.IntFieldUpdateOperationsInput | number
+  grace1Minutes?: Prisma.IntFieldUpdateOperationsInput | number
+  grace2Minutes?: Prisma.IntFieldUpdateOperationsInput | number
+  penaltyMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  penaltyAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  head?: Prisma.UserUpdateOneWithoutDepartmentHeadOfNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutDepartmentNestedInput
+  teams?: Prisma.DepartmentTeamUpdateManyWithoutDepartmentNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutDepartmentNestedInput
+  notices?: Prisma.NoticeUpdateManyWithoutTargetDepartmentNestedInput
+  meets?: Prisma.MeetUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentUncheckedUpdateWithoutCrmCampaignsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  headId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftStartHour?: Prisma.IntFieldUpdateOperationsInput | number
+  shiftStartMinute?: Prisma.IntFieldUpdateOperationsInput | number
+  grace1Minutes?: Prisma.IntFieldUpdateOperationsInput | number
+  grace2Minutes?: Prisma.IntFieldUpdateOperationsInput | number
+  penaltyMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  penaltyAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
+  teams?: Prisma.DepartmentTeamUncheckedUpdateManyWithoutDepartmentNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutDepartmentNestedInput
+  notices?: Prisma.NoticeUncheckedUpdateManyWithoutTargetDepartmentNestedInput
+  meets?: Prisma.MeetUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateManyHeadInput = {
@@ -1283,6 +1573,8 @@ export type DepartmentUpdateWithoutHeadInput = {
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutHeadInput = {
@@ -1302,6 +1594,8 @@ export type DepartmentUncheckedUpdateWithoutHeadInput = {
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutDepartmentNestedInput
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutTargetDepartmentNestedInput
   meets?: Prisma.MeetUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmAssignmentRules?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutDepartmentNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateManyWithoutHeadInput = {
@@ -1329,6 +1623,8 @@ export type DepartmentCountOutputType = {
   supportTickets: number
   notices: number
   meets: number
+  crmAssignmentRules: number
+  crmCampaigns: number
 }
 
 export type DepartmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1337,6 +1633,8 @@ export type DepartmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extens
   supportTickets?: boolean | DepartmentCountOutputTypeCountSupportTicketsArgs
   notices?: boolean | DepartmentCountOutputTypeCountNoticesArgs
   meets?: boolean | DepartmentCountOutputTypeCountMeetsArgs
+  crmAssignmentRules?: boolean | DepartmentCountOutputTypeCountCrmAssignmentRulesArgs
+  crmCampaigns?: boolean | DepartmentCountOutputTypeCountCrmCampaignsArgs
 }
 
 /**
@@ -1384,6 +1682,20 @@ export type DepartmentCountOutputTypeCountMeetsArgs<ExtArgs extends runtime.Type
   where?: Prisma.MeetWhereInput
 }
 
+/**
+ * DepartmentCountOutputType without action
+ */
+export type DepartmentCountOutputTypeCountCrmAssignmentRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmAssignmentRuleWhereInput
+}
+
+/**
+ * DepartmentCountOutputType without action
+ */
+export type DepartmentCountOutputTypeCountCrmCampaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignWhereInput
+}
+
 
 export type DepartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1404,6 +1716,8 @@ export type DepartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   supportTickets?: boolean | Prisma.Department$supportTicketsArgs<ExtArgs>
   notices?: boolean | Prisma.Department$noticesArgs<ExtArgs>
   meets?: boolean | Prisma.Department$meetsArgs<ExtArgs>
+  crmAssignmentRules?: boolean | Prisma.Department$crmAssignmentRulesArgs<ExtArgs>
+  crmCampaigns?: boolean | Prisma.Department$crmCampaignsArgs<ExtArgs>
   _count?: boolean | Prisma.DepartmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["department"]>
 
@@ -1462,6 +1776,8 @@ export type DepartmentInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   supportTickets?: boolean | Prisma.Department$supportTicketsArgs<ExtArgs>
   notices?: boolean | Prisma.Department$noticesArgs<ExtArgs>
   meets?: boolean | Prisma.Department$meetsArgs<ExtArgs>
+  crmAssignmentRules?: boolean | Prisma.Department$crmAssignmentRulesArgs<ExtArgs>
+  crmCampaigns?: boolean | Prisma.Department$crmCampaignsArgs<ExtArgs>
   _count?: boolean | Prisma.DepartmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1480,6 +1796,8 @@ export type $DepartmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     supportTickets: Prisma.$SupportTicketPayload<ExtArgs>[]
     notices: Prisma.$NoticePayload<ExtArgs>[]
     meets: Prisma.$MeetPayload<ExtArgs>[]
+    crmAssignmentRules: Prisma.$CrmAssignmentRulePayload<ExtArgs>[]
+    crmCampaigns: Prisma.$CrmCampaignPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1894,6 +2212,8 @@ export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends runti
   supportTickets<T extends Prisma.Department$supportTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$supportTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notices<T extends Prisma.Department$noticesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$noticesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meets<T extends Prisma.Department$meetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$meetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  crmAssignmentRules<T extends Prisma.Department$crmAssignmentRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$crmAssignmentRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmAssignmentRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  crmCampaigns<T extends Prisma.Department$crmCampaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$crmCampaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2472,6 +2792,54 @@ export type Department$meetsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.MeetScalarFieldEnum | Prisma.MeetScalarFieldEnum[]
+}
+
+/**
+ * Department.crmAssignmentRules
+ */
+export type Department$crmAssignmentRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmAssignmentRule
+   */
+  select?: Prisma.CrmAssignmentRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmAssignmentRule
+   */
+  omit?: Prisma.CrmAssignmentRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmAssignmentRuleInclude<ExtArgs> | null
+  where?: Prisma.CrmAssignmentRuleWhereInput
+  orderBy?: Prisma.CrmAssignmentRuleOrderByWithRelationInput | Prisma.CrmAssignmentRuleOrderByWithRelationInput[]
+  cursor?: Prisma.CrmAssignmentRuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmAssignmentRuleScalarFieldEnum | Prisma.CrmAssignmentRuleScalarFieldEnum[]
+}
+
+/**
+ * Department.crmCampaigns
+ */
+export type Department$crmCampaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaign
+   */
+  select?: Prisma.CrmCampaignSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaign
+   */
+  omit?: Prisma.CrmCampaignOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignWhereInput
+  orderBy?: Prisma.CrmCampaignOrderByWithRelationInput | Prisma.CrmCampaignOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignScalarFieldEnum | Prisma.CrmCampaignScalarFieldEnum[]
 }
 
 /**

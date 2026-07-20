@@ -252,7 +252,7 @@ export default function HROnboardingPage() {
                           aria-label={`Select ${item.user.name}`}
                         />
                       )}
-                      <Avatar className="h-11 w-11 mt-0.5">
+                      <Avatar className="h-14 w-14 mt-0.5 ring-2 ring-violet-500/20">
                         <AvatarImage src={item.user.profilePicture || undefined} />
                         <AvatarFallback>{initials}</AvatarFallback>
                       </Avatar>
@@ -306,6 +306,17 @@ export default function HROnboardingPage() {
 
                   {expanded && (
                     <div className="mt-4 border-t pt-4 space-y-4">
+                      <div className="flex items-center gap-4 rounded-xl border bg-muted/20 p-4">
+                        <Avatar className="size-24 ring-2 ring-violet-500/30">
+                          <AvatarImage src={item.user.profilePicture || undefined} alt={item.user.name} />
+                          <AvatarFallback className="text-xl">{initials}</AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-lg">{item.user.name}</p>
+                          <p className="text-sm text-muted-foreground truncate">{item.user.email}</p>
+                        </div>
+                      </div>
+
                       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                         <Detail label="Phone" value={item.user.phoneNumber} />
                         <Detail label="Role" value={item.user.role.replace(/_/g, ' ')} />

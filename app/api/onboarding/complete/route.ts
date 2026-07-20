@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
             name: true,
             email: true,
             phoneNumber: true,
+            profilePicture: true,
           },
         },
       },

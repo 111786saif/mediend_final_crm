@@ -9,9 +9,12 @@ import { useBackClose } from "@/providers/back-close-provider"
 function Drawer({
   open,
   onOpenChange,
+  skipBackOnCloseRef,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Root>) {
-  useBackClose(open, onOpenChange)
+}: React.ComponentProps<typeof DrawerPrimitive.Root> & {
+  skipBackOnCloseRef?: React.RefObject<boolean>
+}) {
+  useBackClose(open, onOpenChange, skipBackOnCloseRef)
   return (
     <DrawerPrimitive.Root
       data-slot="drawer"

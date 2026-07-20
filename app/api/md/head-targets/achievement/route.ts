@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { parseDepartmentTargets } from '../dept-target-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 
 const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'EXECUTIVE_ASSISTANT'] as const
 
@@ -226,7 +227,7 @@ export async function GET(request: NextRequest) {
         prisma.employee.groupBy({
           by: ['departmentId'],
           _count: { id: true },
-          where: { departmentId: { not: null } },
+          where: { departmentId: { not: null }, ...headcountEmployeeWhere },
         }),
         prisma.employee.groupBy({
           by: ['departmentId'],

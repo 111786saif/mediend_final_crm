@@ -11,6 +11,8 @@
 
 export const UserRole = {
   MD: 'MD',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  CRM_ADMIN: 'CRM_ADMIN',
   EXECUTIVE_ASSISTANT: 'EXECUTIVE_ASSISTANT',
   SALES_HEAD: 'SALES_HEAD',
   CATEGORY_MANAGER: 'CATEGORY_MANAGER',
@@ -369,6 +371,7 @@ export const NotificationType = {
   EMPLOYEE_ONBOARDED: 'EMPLOYEE_ONBOARDED',
   ONBOARDING_SUBMITTED: 'ONBOARDING_SUBMITTED',
   ONBOARDING_APPROVED: 'ONBOARDING_APPROVED',
+  NEW_HIRE_WELCOME: 'NEW_HIRE_WELCOME',
   LEAVE_BALANCE_EDIT_REQUESTED: 'LEAVE_BALANCE_EDIT_REQUESTED',
   LEAVE_BALANCE_EDIT_RESOLVED: 'LEAVE_BALANCE_EDIT_RESOLVED',
   GRACE2_MONTHLY_LIMIT_EXCEEDED: 'GRACE2_MONTHLY_LIMIT_EXCEEDED',
@@ -732,6 +735,15 @@ export const InventoryTransactionStatus = {
 } as const
 
 export type InventoryTransactionStatus = (typeof InventoryTransactionStatus)[keyof typeof InventoryTransactionStatus]
+
+
+export const CrmAssignmentStrategy = {
+  TARGET_BALANCED: 'TARGET_BALANCED',
+  ROUND_ROBIN: 'ROUND_ROBIN',
+  MANUAL_POOL_ORDER: 'MANUAL_POOL_ORDER'
+} as const
+
+export type CrmAssignmentStrategy = (typeof CrmAssignmentStrategy)[keyof typeof CrmAssignmentStrategy]
 
 
 export const ResourceType = {

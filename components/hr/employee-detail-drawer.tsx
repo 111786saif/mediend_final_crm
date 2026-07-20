@@ -39,7 +39,7 @@ import { differenceInCalendarDays } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import { EmployeeActionDialog, type EmployeeActionType } from './employee-action-dialog'
-import { useState } from 'react'
+import { useState, type RefObject } from 'react'
 
 function maskPan(pan: string) {
   if (pan.length < 5) return pan
@@ -310,6 +310,7 @@ function StatusDetailsSection({ employee }: { employee: EmployeeData }) {
 export interface EmployeeDetailDrawerProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  skipBackOnCloseRef?: RefObject<boolean>
   employeeId: string | null
   canEdit: boolean
   onEditRequest?: (employee: unknown) => void
@@ -319,6 +320,7 @@ export interface EmployeeDetailDrawerProps {
 export function EmployeeDetailDrawer({
   open,
   onOpenChange,
+  skipBackOnCloseRef,
   employeeId,
   canEdit,
   onEditRequest,
@@ -350,7 +352,7 @@ export function EmployeeDetailDrawer({
 
   return (
     <>
-      <Drawer open={open} onOpenChange={onOpenChange} direction="right">
+      <Drawer open={open} onOpenChange={onOpenChange} skipBackOnCloseRef={skipBackOnCloseRef} direction="right">
         <DrawerContent className="h-full max-h-dvh w-[60vw] max-w-4xl ml-auto rounded-l-2xl rounded-r-none flex flex-col overflow-hidden">
           <DrawerHeader className="shrink-0 border-b">
             <DrawerTitle className="flex items-center gap-4">
