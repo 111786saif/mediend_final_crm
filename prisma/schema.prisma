@@ -481,6 +481,9 @@ model User {
   plRecords                         PLRecord[]
   employee                          Employee?
   approvedLeaves                    LeaveRequest[]            @relation("LeaveApprover")
+  doctorLeaveRequestsReviewed       DoctorLeaveRequest[]      @relation("DoctorLeaveReviewer")
+  doctorCabRequestsReviewed         DoctorCabRequest[]        @relation("DoctorCabReviewer")
+  doctorCabRequestsVendorAssigned   DoctorCabRequest[]        @relation("DoctorCabVendorAssigner")
   leaveBalanceEditRequestsRequested LeaveBalanceEditRequest[] @relation("LeaveBalanceEditRequestedBy")
   leaveBalanceEditRequestsReviewed  LeaveBalanceEditRequest[] @relation("LeaveBalanceEditReviewedBy")
 
@@ -3859,6 +3862,7 @@ model DoctorMaster {
   treatment String?
   age       Int?
   sex       String?
+  phoneNumber String? @unique
   aadhaarNumber String?
   aadhaarCardUrl String?
   panNumber String?
@@ -3876,9 +3880,165 @@ model DoctorMaster {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  appAccount DoctorAppAccount?
+  leaveRequests DoctorLeaveRequest[]
+  cabRequests   DoctorCabRequest[]
+
   @@index([name])
   @@index([isActive])
   @@index([category])
+  @@index([phoneNumber])
+}
+
+model ImplantMaster {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  code         String?  @unique
+  category     String?
+  manufacturer String?
+  unitCost     Float?
+  description  String?  @db.Text
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([name])
+  @@index([code])
+  @@index([isActive])
+}
+
+model SurgeryRemarkMaster {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  label        String
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([displayOrder])
+  @@index([isActive])
+}
+
+model ReasonNoSurgeryMaster {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  label        String
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([displayOrder])
+  @@index([isActive])
+}
+
+model FollowUpReasonMaster {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  label        String
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([displayOrder])
+  @@index([isActive])
+}
+
+model DoctorAppAccount {
+  id           String   @id @default(cuid())
+  doctorId     String   @unique
+  doctor       DoctorMaster @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  email        String   @unique
+  phoneNumber  String?  @unique
+  passwordHash String
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  refreshTokens DoctorAppRefreshToken[]
+  whatsappOtps  DoctorAppWhatsappOtp[]
+
+  @@index([isActive])
+}
+
+model DoctorAppRefreshToken {
+  id         String   @id @default(cuid())
+  accountId  String
+  account    DoctorAppAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  jti        String   @unique
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([accountId])
+  @@index([expiresAt])
+}
+
+model DoctorAppWhatsappOtp {
+  id         String   @id @default(cuid())
+  accountId  String
+  account    DoctorAppAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  phoneNumber String
+  otp        String
+  expiresAt  DateTime
+  verifiedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([accountId])
+  @@index([phoneNumber])
+  @@index([expiresAt])
+}
+
+model DoctorLeaveRequest {
+  id          String             @id @default(cuid())
+  doctorId    String
+  doctor      DoctorMaster       @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  startDate   DateTime
+  endDate     DateTime
+  reason      String?            @db.Text
+  status      LeaveRequestStatus @default(PENDING)
+  reviewedById String?
+  reviewedBy   User?             @relation("DoctorLeaveReviewer", fields: [reviewedById], references: [id])
+  reviewedAt  DateTime?
+  reviewNotes String?            @db.Text
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([doctorId, createdAt])
+  @@index([status])
+  @@index([startDate, endDate])
+}
+
+model DoctorCabRequest {
+  id                 String            @id @default(cuid())
+  doctorId           String
+  doctor             DoctorMaster      @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  pickup             String
+  drop               String
+  pickupLat          Float?
+  pickupLng          Float?
+  dropLat            Float?
+  dropLng            Float?
+  scheduledFor       DateTime
+  status             AppointmentStatus @default(PENDING)
+  reviewNotes        String?           @db.Text
+  reviewedById       String?
+  reviewedBy         User?             @relation("DoctorCabReviewer", fields: [reviewedById], references: [id])
+  reviewedAt         DateTime?
+  vendorName         String?
+  vendorPhone        String?
+  assignedVendorById String?
+  assignedVendorBy   User?             @relation("DoctorCabVendorAssigner", fields: [assignedVendorById], references: [id])
+  assignedVendorAt   DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  @@index([doctorId, createdAt])
+  @@index([status])
+  @@index([scheduledFor])
 }
 
 model TPAMaster {

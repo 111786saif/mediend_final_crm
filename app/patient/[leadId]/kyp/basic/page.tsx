@@ -6,7 +6,7 @@ import { apiGet } from '@/lib/api-client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
-import { useRouter, useParams } from 'next/navigation'
+import { useRouter, useParams, useSearchParams } from 'next/navigation'
 import { format } from 'date-fns'
 import { useMemo } from 'react'
 import Link from 'next/link'
@@ -57,8 +57,17 @@ const ALLOWED_STAGES: CaseStage[] = [
 export default function KYPBasicSubmitPage() {
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const leadId = params.leadId as string
+  const returnToParam = searchParams.get('returnTo')
+  const returnHref = useMemo(
+    () =>
+      typeof returnToParam === 'string' && returnToParam.startsWith('/')
+        ? returnToParam
+        : `/patient/${leadId}`,
+    [leadId, returnToParam]
+  )
 
   const { data: lead, isLoading } = useQuery<Lead>({
     queryKey: ['lead', leadId],
@@ -120,7 +129,7 @@ export default function KYPBasicSubmitPage() {
     return (
       <AuthenticatedLayout>
         <div className="space-y-6">
-          <Button variant="ghost" onClick={() => router.push(`/patient/${leadId}`)}>
+          <Button variant="ghost" onClick={() => router.push(returnHref)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
@@ -138,7 +147,7 @@ export default function KYPBasicSubmitPage() {
     return (
       <AuthenticatedLayout>
         <div className="space-y-6">
-          <Button variant="ghost" onClick={() => router.push(`/patient/${leadId}`)}>
+          <Button variant="ghost" onClick={() => router.push(returnHref)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
@@ -149,7 +158,7 @@ export default function KYPBasicSubmitPage() {
             </CardHeader>
             <CardContent>
               <Button asChild variant="outline">
-                <Link href={`/patient/${leadId}`}>Back to patient</Link>
+                <Link href={returnHref}>Back</Link>
               </Button>
             </CardContent>
           </Card>
@@ -162,7 +171,7 @@ export default function KYPBasicSubmitPage() {
     return (
       <AuthenticatedLayout>
         <div className="space-y-6">
-          <Button variant="ghost" onClick={() => router.push(`/patient/${leadId}`)}>
+          <Button variant="ghost" onClick={() => router.push(returnHref)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
@@ -175,7 +184,7 @@ export default function KYPBasicSubmitPage() {
             </CardHeader>
             <CardContent>
               <Button asChild variant="outline">
-                <Link href={`/patient/${leadId}`}>Back to patient</Link>
+                <Link href={returnHref}>Back</Link>
               </Button>
             </CardContent>
           </Card>
@@ -188,7 +197,7 @@ export default function KYPBasicSubmitPage() {
     return (
       <AuthenticatedLayout>
         <div className="space-y-6">
-          <Button variant="ghost" onClick={() => router.push(`/patient/${leadId}`)}>
+          <Button variant="ghost" onClick={() => router.push(returnHref)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
@@ -209,7 +218,7 @@ export default function KYPBasicSubmitPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push(`/patient/${leadId}`)}
+            onClick={() => router.push(returnHref)}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -246,9 +255,9 @@ export default function KYPBasicSubmitPage() {
                 queryClient.invalidateQueries({ queryKey: ['kyp-submission', leadId] })
                 queryClient.invalidateQueries({ queryKey: ['case-chat', leadId] })
                 queryClient.invalidateQueries({ queryKey: ['stage-history', leadId] })
-                router.push(`/patient/${leadId}`)
+                router.push(returnHref)
               }}
-              onCancel={() => router.push(`/patient/${leadId}`)}
+              onCancel={() => router.push(returnHref)}
             />
           </CardContent>
         </Card>

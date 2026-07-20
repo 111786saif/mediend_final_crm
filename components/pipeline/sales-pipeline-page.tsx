@@ -55,7 +55,7 @@ import {
   SlidersHorizontal,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useMemo, useState, memo } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -319,6 +319,8 @@ function PipelinePageFallback({ variant }: { variant: 'bd' | 'team-lead' }) {
 function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const { user } = useAuth()
   useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const { state, setState, campaignSelection } = usePipelineUrlState()
   const { data, isLoading, isFetching } = usePipelinePage()
@@ -545,6 +547,10 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1
   const rangeEnd = Math.min(page * pageSize, total)
   const isBackgroundRefetching = isFetching && !isLoading
+  const pipelineReturnTo = useMemo(() => {
+    const query = searchParams.toString()
+    return query ? `${pathname}?${query}` : pathname
+  }, [pathname, searchParams])
 
   const startDate = state.from ? new Date(state.from) : undefined
   const endDate = state.to ? new Date(state.to) : undefined
@@ -981,6 +987,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           <PipelineRow
                             key={lead.id}
                             lead={lead}
+                            returnTo={pipelineReturnTo}
                             noteCount={noteCounts[lead.id]}
                             onClick={handleRowClick}
                             onEdit={handleEditLead}
@@ -1148,7 +1155,15 @@ function getPipelineIpdScheduleHref(lead: Lead) {
     : `/patient/${lead.id}?action=ipd-schedule`
 }
 
-function getPipelineCaseActions(lead: Lead): PipelineCaseAction[] {
+function appendReturnTo(href: string, returnTo: string) {
+  const [pathname, rawQuery = ''] = href.split('?')
+  const params = new URLSearchParams(rawQuery)
+  params.set('returnTo', returnTo)
+  const query = params.toString()
+  return query ? `${pathname}?${query}` : pathname
+}
+
+function getPipelineCaseActions(lead: Lead, returnTo: string): PipelineCaseAction[] {
   const actions: PipelineCaseAction[] = []
   const showInsuranceActions = isInsuranceModeOfPayment(lead.modeOfPayment)
   const showCashActions = isCashModeOfPayment(lead.modeOfPayment)
@@ -1157,7 +1172,7 @@ function getPipelineCaseActions(lead: Lead): PipelineCaseAction[] {
     actions.push({
       id: 'opd-schedule',
       label: 'OPD Schedule',
-      href: `/patient/${lead.id}`,
+      href: appendReturnTo(`/patient/${lead.id}/opd-schedule`, returnTo),
     })
   }
 
@@ -1166,7 +1181,7 @@ function getPipelineCaseActions(lead: Lead): PipelineCaseAction[] {
       actions.push({
         id: 'card-upload',
         label: 'Card Upload',
-        href: `/patient/${lead.id}/kyp/basic`,
+        href: appendReturnTo(`/patient/${lead.id}/kyp/basic`, returnTo),
       })
     }
 
@@ -1174,7 +1189,7 @@ function getPipelineCaseActions(lead: Lead): PipelineCaseAction[] {
       actions.push({
         id: 'pre-auth-raised',
         label: 'Pre-Auth Raised',
-        href: `/patient/${lead.id}/raise-preauth`,
+        href: appendReturnTo(`/patient/${lead.id}/raise-preauth`, returnTo),
       })
     }
   }
@@ -1183,7 +1198,7 @@ function getPipelineCaseActions(lead: Lead): PipelineCaseAction[] {
     actions.push({
       id: 'ipd-schedule',
       label: 'IPD Schedule',
-      href: getPipelineIpdScheduleHref(lead),
+      href: appendReturnTo(getPipelineIpdScheduleHref(lead), returnTo),
     })
   }
 
@@ -1252,6 +1267,7 @@ function HeaderCell({
 
 const PipelineRow = memo(function PipelineRow({
   lead,
+  returnTo,
   noteCount,
   onClick,
   onEdit,
@@ -1261,6 +1277,7 @@ const PipelineRow = memo(function PipelineRow({
   visibleColumns,
 }: {
   lead: Lead
+  returnTo: string
   noteCount?: number
   onClick: (id: string) => void
   onEdit: (id: string) => void
@@ -1290,7 +1307,7 @@ const PipelineRow = memo(function PipelineRow({
     typeof lead.diseaseDetails === 'string' && lead.diseaseDetails.trim().length > 0
       ? lead.diseaseDetails.trim()
       : '—'
-  const caseActions = getPipelineCaseActions(lead)
+  const caseActions = getPipelineCaseActions(lead, returnTo)
   const teamLeadText =
     (typeof lead.plRecord?.managerName === 'string' && lead.plRecord.managerName.trim()) ||
     (lead.teamLeadId != null ? String(lead.teamLeadId) : '—')
@@ -1328,7 +1345,13 @@ const PipelineRow = memo(function PipelineRow({
             {caseActions.length > 0 ? (
               caseActions.map((action) => (
                 <DropdownMenuItem key={action.id} asChild>
-                  <Link href={action.href} onClick={() => onMarkOpened(lead.id)}>
+                  <Link
+                    href={action.href}
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      onMarkOpened(lead.id)
+                    }}
+                  >
                     {action.label}
                   </Link>
                 </DropdownMenuItem>
@@ -1514,7 +1537,10 @@ const PipelineRow = memo(function PipelineRow({
             <Link
               href={`/patient/${lead.id}`}
               aria-label="Open lead"
-              onClick={() => onMarkOpened(lead.id)}
+              onClick={(event) => {
+                event.stopPropagation()
+                onMarkOpened(lead.id)
+              }}
             >
               <ExternalLink className="h-4 w-4" />
             </Link>

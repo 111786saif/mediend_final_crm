@@ -5,6 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { successResponse, errorResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-utils'
 import { doctorMasterPatchSchema, emptyToNull } from '@/lib/masters/schemas'
+import { normalizeIndianPhone } from '@/lib/doctor-app/phone'
+import { syncDoctorAppAccountFromMaster } from '@/lib/doctor-app/master-sync'
 
 export async function PATCH(
   request: NextRequest,
@@ -30,11 +32,13 @@ export async function PATCH(
 
   const d = parsed.data
   const data: Prisma.DoctorMasterUpdateInput = {}
+  const phoneNumber = d.phoneNumber === undefined ? undefined : normalizeIndianPhone(d.phoneNumber)
   if (d.name !== undefined) data.name = d.name.trim()
   if (d.category !== undefined) data.category = emptyToNull(d.category)
   if (d.treatment !== undefined) data.treatment = emptyToNull(d.treatment)
   if (d.age !== undefined) data.age = d.age
   if (d.sex !== undefined) data.sex = emptyToNull((d.sex as string | null | undefined) ?? null)
+  if (phoneNumber !== undefined) data.phoneNumber = phoneNumber
   if (d.aadhaarNumber !== undefined) data.aadhaarNumber = emptyToNull(d.aadhaarNumber)
   if (d.aadhaarCardUrl !== undefined) data.aadhaarCardUrl = emptyToNull(d.aadhaarCardUrl)
   if (d.panNumber !== undefined) data.panNumber = emptyToNull(d.panNumber)
@@ -49,17 +53,43 @@ export async function PATCH(
   if (d.isActive !== undefined) data.isActive = d.isActive
 
   try {
-    const updated = await prisma.doctorMaster.update({
-      where: { id },
-      data,
+    const updated = await prisma.$transaction(async (tx) => {
+      const result = await tx.doctorMaster.updateMany({
+        where: { id },
+        data,
+      })
+
+      if (result.count === 0) {
+        return null
+      }
+
+      const doctor = await tx.doctorMaster.findUnique({
+        where: { id },
+      })
+
+      if (!doctor) {
+        return null
+      }
+
+      if (phoneNumber !== undefined || d.isActive !== undefined) {
+        await syncDoctorAppAccountFromMaster(tx, {
+          doctorId: doctor.id,
+          phoneNumber: phoneNumber !== undefined ? phoneNumber : doctor.phoneNumber,
+          isActive: doctor.isActive,
+        })
+      }
+
+      return doctor
     })
-    return successResponse({ item: updated })
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') {
+
+    if (!updated) {
       return errorResponse('Doctor not found', 404)
     }
+
+    return successResponse({ item: updated })
+  } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-      return errorResponse('A doctor with this name already exists', 409)
+      return errorResponse('A doctor with this name or phone number already exists', 409)
     }
     throw e
   }

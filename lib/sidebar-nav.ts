@@ -135,6 +135,12 @@ export const navItems: NavItem[] = [
     roles: ['EXECUTIVE_ASSISTANT', 'MD', 'ADMIN', 'TESTER', 'PL_HEAD'],
   },
   {
+    title: 'Doctor Admin',
+    url: '/executive-assistant/doctor-admin',
+    icon: Stethoscope,
+    roles: ['EXECUTIVE_ASSISTANT'],
+  },
+  {
     title: 'DM Dashboard',
     url: '/digital-marketing/dashboard',
     icon: Megaphone,
