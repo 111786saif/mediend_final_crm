@@ -96,9 +96,14 @@ export function useMyTargetProgress() {
     queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthKey}`),
     enabled: !!user?.id && isTargetRole,
   })
+const all = progress ?? []
+const myOwn = all.filter((t) => t.targetForId === user?.id)
 
-  const monthly = pickBest(progress ?? [], 'MONTH')
-  const weekly = pickBest(progress ?? [], 'WEEK')
+// Team Leads have no individual target of their own — fall back to team target
+const teamFallback = user?.role === 'TEAM_LEAD' ? all.filter((t) => t.targetType === 'TEAM') : []
+
+const monthly = pickBest(myOwn, 'MONTH') ?? pickBest(teamFallback, 'MONTH')
+const weekly = pickBest(myOwn, 'WEEK') ?? pickBest(teamFallback, 'WEEK')
 
   return { isTargetRole, monthly, weekly }
 }
