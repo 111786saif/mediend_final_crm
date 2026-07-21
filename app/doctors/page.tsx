@@ -225,7 +225,7 @@ export default function DoctorsListPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen w-full min-w-0 bg-gradient-to-br from-slate-50 via-cyan-50/40 to-teal-50/40 p-6 dark:from-slate-950 dark:via-cyan-950/20 dark:to-slate-900">
+      <div className="min-h-screen w-full min-w-0 bg-white p-6 dark:bg-slate-950">
         <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
@@ -240,7 +240,7 @@ export default function DoctorsListPage() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex flex-wrap gap-1 rounded-lg border border-cyan-200/60 bg-cyan-50/80 p-1 shadow-sm dark:border-cyan-800/40 dark:bg-cyan-950/30">
+              <div className="flex flex-wrap gap-1 rounded-lg border border-cyan-200 bg-white p-1 shadow-sm dark:border-cyan-800 dark:bg-slate-900">
                 {(
                   [
                     ['all', 'All time'],
@@ -265,9 +265,9 @@ export default function DoctorsListPage() {
               </div>
               {preset === 'custom' && (
                 <div className="flex items-center gap-2">
-                  <Input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)} className="w-[140px]" />
+                  <Input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)} className="w-[140px] bg-white border-slate-300 dark:bg-slate-900 dark:border-slate-700 text-slate-900 dark:text-slate-100" />
                   <span className="text-muted-foreground text-sm">to</span>
-                  <Input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className="w-[140px]" />
+                  <Input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className="w-[140px] bg-white border-slate-300 dark:bg-slate-900 dark:border-slate-700 text-slate-900 dark:text-slate-100" />
                 </div>
               )}
             </div>
@@ -279,47 +279,47 @@ export default function DoctorsListPage() {
               label="Total Doctors"
               value={kpis.totalDoctors}
               icon={Users}
-              className="border-cyan-200/50 dark:border-cyan-800/30"
+              className="border-cyan-200 dark:border-cyan-800/60"
             />
             <KpiTile
               label="Total Cases"
               value={kpis.totalCases}
               icon={Activity}
-              className="border-cyan-200/50 dark:border-cyan-800/30"
+              className="border-cyan-200 dark:border-cyan-800/60"
             />
             <KpiTile
               label="Total Bill"
               value={formatPlRupee(kpis.totalBill)}
               icon={ReceiptText}
-              className="border-cyan-200/50 dark:border-cyan-800/30"
+              className="border-cyan-200 dark:border-cyan-800/60"
             />
             <KpiTile
               label="Doctor Share"
               value={formatPlRupee(kpis.doctorShare)}
               icon={UserCheck}
-              className="border-cyan-200/50 dark:border-cyan-800/30"
+              className="border-cyan-200 dark:border-cyan-800/60"
             />
             <KpiTile
               label="MediEND Share"
               value={formatPlRupee(kpis.mediendShare)}
               icon={TrendingUp}
-              className="border-cyan-200/50 dark:border-cyan-800/30"
+              className="border-cyan-200 dark:border-cyan-800/60"
             />
             <KpiTile
               label="Pending Payouts"
               value={formatPlRupee(kpis.amountPending)}
               icon={AlertCircle}
-              className={`border-cyan-200/50 dark:border-cyan-800/30 ${
-                kpis.amountPending > 0 ? 'bg-rose-50/50 dark:bg-rose-950/10' : ''
+              className={`border-cyan-200 dark:border-cyan-800/60 ${
+                kpis.amountPending > 0 ? 'bg-rose-50 border-rose-200 dark:bg-rose-950/40 dark:border-rose-800' : ''
               }`}
             />
           </div>
 
-          <Card className="min-w-0 w-full overflow-hidden border-cyan-200/50 shadow-md dark:border-cyan-800/40">
-            <CardHeader className="border-b bg-gradient-to-r from-cyan-500/10 to-teal-500/8">
+          <Card className="min-w-0 w-full overflow-hidden border-cyan-200 bg-white shadow-md dark:border-cyan-800/60 dark:bg-slate-900">
+            <CardHeader className="border-b border-cyan-100 bg-slate-50 dark:border-cyan-800/60 dark:bg-slate-950">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/10 to-teal-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 shadow-sm shrink-0">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 dark:bg-cyan-950/80 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 shadow-sm shrink-0">
                     <Stethoscope className="h-5 w-5" />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -354,7 +354,7 @@ export default function DoctorsListPage() {
                     placeholder="Search by doctor name"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-8"
+                    className="pl-8 bg-white border-slate-300 dark:bg-slate-900 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                   />
                 </div>
               </div>
@@ -362,7 +362,7 @@ export default function DoctorsListPage() {
             <CardContent className="overflow-x-auto p-0">
               <Table className="[&_td]:px-[20px] [&_th]:px-[20px]">
                 <TableHeader>
-                  <TableRow className="bg-slate-100/85 hover:bg-slate-100/85 dark:bg-slate-900/60 border-b border-cyan-100 dark:border-cyan-950/40">
+                  <TableRow className="bg-slate-100 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-950 border-b border-cyan-200 dark:border-cyan-800/80">
                     <TableHead className="w-[280px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">Doctor</span>
@@ -483,7 +483,7 @@ export default function DoctorsListPage() {
                       return (
                         <TableRow
                           key={d.name}
-                          className="cursor-pointer transition-colors duration-150 hover:bg-cyan-50/20 dark:hover:bg-cyan-950/10 border-b border-cyan-100/40 dark:border-cyan-950/30"
+                          className="cursor-pointer transition-colors duration-150 hover:bg-cyan-50/50 dark:hover:bg-cyan-950/20 border-b border-cyan-100/60 dark:border-cyan-950/50"
                           onClick={() => {
                             const qs = dateRange.start && dateRange.end
                               ? `?startDate=${dateRange.start}&endDate=${dateRange.end}`
@@ -493,7 +493,7 @@ export default function DoctorsListPage() {
                         >
                           <TableCell className="py-3 font-medium">
                             <div className="flex items-center gap-3">
-                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500/10 to-teal-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-bold border border-cyan-500/20 shadow-sm shrink-0">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-cyan-50 text-cyan-700 dark:bg-cyan-950/60 dark:text-cyan-400 text-xs font-bold border border-cyan-200 dark:border-cyan-800 shadow-sm shrink-0">
                                 {initials}
                               </div>
                               <span className="text-slate-900 dark:text-slate-100 hover:text-cyan-600 dark:hover:text-cyan-400">
@@ -551,15 +551,15 @@ function KpiTile({
     <Card className={`overflow-hidden shadow-sm transition-all duration-200 hover:shadow-md bg-white dark:bg-slate-900 ${className}`}>
       <CardContent className="p-3.5">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             {label}
           </span>
-          <div className="rounded-md bg-slate-50 dark:bg-slate-950 p-1 text-cyan-600 dark:text-cyan-400">
+          <div className="rounded-md bg-cyan-50 dark:bg-cyan-950 p-1 text-cyan-600 dark:text-cyan-400">
             <Icon className="h-4 w-4" />
           </div>
         </div>
         <div className="mt-2">
-          <div className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50 tabular-nums">
+          <div className="text-base font-bold tracking-tight text-slate-900 dark:text-slate-50 tabular-nums">
             {value}
           </div>
         </div>

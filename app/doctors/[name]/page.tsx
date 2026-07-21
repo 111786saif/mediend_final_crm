@@ -390,7 +390,7 @@ export default function DoctorDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen w-full min-w-0 bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
+      <div className="min-h-screen w-full min-w-0 bg-white dark:bg-[#07112f] text-slate-900 dark:text-[#dce1ff] p-6 font-sans">
         <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -398,27 +398,27 @@ export default function DoctorDetailPage() {
                 variant="outline"
                 size="icon"
                 asChild
-                className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
+                className="h-9 w-9 rounded-full border-slate-200 bg-white text-cyan-600 shadow-sm transition-all duration-200 hover:bg-slate-100 dark:border-[#283150] dark:bg-[#191D2E]/80 dark:text-[#22d3ee] dark:hover:bg-[#283150] shrink-0"
               >
                 <Link href="/doctors" aria-label="Back to doctor list">
                   <ArrowLeft className="h-4 w-4" />
                 </Link>
               </Button>
               <div>
-                <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
-                  <Link href="/doctors" className="hover:text-[#22d3ee] transition-colors">
+                <nav className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-[#c7c6cd]/60 mb-1 leading-none">
+                  <Link href="/doctors" className="hover:text-cyan-600 dark:hover:text-[#22d3ee] transition-colors">
                     Doctor List
                   </Link>
                   <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
-                  <span className="text-[#dce1ff] font-semibold">{name}</span>
+                  <span className="text-slate-900 dark:text-[#dce1ff] font-semibold">{name}</span>
                 </nav>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
+                  <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-[#dce1ff] leading-none">
                     {name}
                   </h1>
                   {startDate && endDate && (
-                    <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
-                      <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
+                    <div className="inline-flex items-center gap-1 rounded-full bg-cyan-50 dark:bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-cyan-700 dark:text-[#22d3ee] border border-cyan-200 dark:border-[#22d3ee]/20 shrink-0 ml-1">
+                      <span className="h-1 w-1 rounded-full bg-cyan-500 dark:bg-[#22d3ee] animate-pulse" />
                       Filtered: {startDate} → {endDate}
                     </div>
                   )}
@@ -441,14 +441,14 @@ export default function DoctorDetailPage() {
                   router.push(`?${urlParams.toString()}`)
                 }}
                 trigger={
-                  <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
+                  <Button variant="outline" className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 dark:bg-[#191D2E]/80 dark:border-[#283150] dark:text-[#dce1ff] dark:hover:bg-[#283150] h-9 text-xs">
                     <Calendar className="mr-2 h-3.5 w-3.5" />
                     Date Range
                   </Button>
                 }
               />
               {canRequestPayoff && (
-                <Button className="bg-[#25E8FF] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#25E8FF]/20">
+                <Button className="bg-cyan-600 text-white hover:bg-cyan-700 font-bold h-9 text-xs shadow-md dark:bg-[#25E8FF] dark:text-[#07112f]">
                   Add Document
                 </Button>
               )}
@@ -477,15 +477,15 @@ export default function DoctorDetailPage() {
           )}
 
           {/* Cases Table Component Container (UI preserved as requested, wrapper styled) */}
-          <div className="min-w-0 w-full bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl overflow-hidden shadow-lg">
-            <div className="px-6 py-4 border-b border-[#283150] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[#191D2E]/80">
+          <div className="min-w-0 w-full bg-white border border-slate-200 rounded-xl overflow-hidden shadow-md dark:bg-[#191D2E]/60 dark:border-[#283150] dark:shadow-lg">
+            <div className="px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50 dark:border-[#283150] dark:bg-[#191D2E]/80">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/20 shadow-sm shrink-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 border border-cyan-200 dark:bg-[#22d3ee]/10 dark:text-[#22d3ee] dark:border-[#22d3ee]/20 shadow-sm shrink-0">
                   <Activity className="h-5 w-5 animate-pulse" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-sm font-bold text-white tracking-tight leading-none">
+                    <h2 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight leading-none">
                       Cases
                     </h2>
                     {activeFilterCount > 0 && (
@@ -493,14 +493,14 @@ export default function DoctorDetailPage() {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-6 text-[10px] text-rose-400 hover:text-rose-300 font-medium px-2 py-0"
+                        className="h-6 text-[10px] text-rose-500 hover:text-rose-600 dark:text-rose-400 font-medium px-2 py-0"
                         onClick={clearFilters}
                       >
                         Clear Filters ({activeFilterCount})
                       </Button>
                     )}
                   </div>
-                  <span className="text-xs font-normal text-[#c7c6cd]/70 flex items-center gap-1.5 leading-none">
+                  <span className="text-xs font-normal text-slate-500 dark:text-[#c7c6cd]/70 flex items-center gap-1.5 leading-none">
                     <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
@@ -514,7 +514,7 @@ export default function DoctorDetailPage() {
                   <Button
                     disabled={selectedLeads.length === 0}
                     onClick={() => setRequestDialogOpen(true)}
-                    className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
+                    className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150 dark:bg-[#22d3ee] dark:text-[#07112f]"
                   >
                     <FileText className="h-4 w-4" />
                     Request Payoff {selectedLeads.length > 0 && `(${selectedLeads.length})`}
@@ -525,10 +525,10 @@ export default function DoctorDetailPage() {
             <div className="overflow-x-auto p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-[#191D2E]/90 hover:bg-[#191D2E]/90 border-b border-[#283150]">
+                  <TableRow className="bg-slate-100 hover:bg-slate-100 border-b border-slate-200 dark:bg-[#191D2E]/90 dark:hover:bg-[#191D2E]/90 dark:border-[#283150]">
                     <TableHead className="w-[50px] pl-4">
                       <Checkbox
-                        className="border-[#283150] data-[state=checked]:bg-[#22d3ee] data-[state=checked]:text-[#07112f]"
+                        className="border-slate-300 data-[state=checked]:bg-cyan-600 data-[state=checked]:text-white dark:border-[#283150] dark:data-[state=checked]:bg-[#22d3ee] dark:data-[state=checked]:text-[#07112f]"
                         checked={
                           !!data?.cases && data.cases.length > 0 && selectedLeads.length === data.cases.length
                         }
@@ -543,7 +543,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Lead Ref</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Lead Ref</span>
                         <ColumnFilter
                           type="search"
                           value={leadRefFilter}
@@ -554,7 +554,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[180px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Patient</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Patient</span>
                         <ColumnFilter
                           type="search"
                           value={patientNameFilter}
@@ -565,7 +565,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="min-w-[180px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Hospital</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Hospital</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.hospitals}
@@ -576,7 +576,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Month</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Month</span>
                         <ColumnFilter
                           type="dateRange"
                           value={monthFilter}
@@ -586,7 +586,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Surgery</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Surgery</span>
                         <ColumnFilter
                           type="dateRange"
                           value={surgeryDateFilter}
@@ -596,7 +596,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Status</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Status</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.statuses}
@@ -607,7 +607,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-[#c7c6cd]">Bill</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Bill</span>
                         <ColumnFilter
                           type="numberRange"
                           value={billAmountFilter}
@@ -619,7 +619,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[150px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-[#c7c6cd]">Doctor Charges</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Doctor Charges</span>
                         <ColumnFilter
                           type="numberRange"
                           value={doctorChargesFilter}
@@ -631,7 +631,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-[#c7c6cd]">Paid</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Paid</span>
                         <ColumnFilter
                           type="numberRange"
                           value={doctorPaidFilter}
@@ -643,7 +643,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-[#c7c6cd]">Pending</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Pending</span>
                         <ColumnFilter
                           type="numberRange"
                           value={doctorAmountPendingFilter}
@@ -655,7 +655,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Payout</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Payout</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.doctorPayoutStatuses}
@@ -665,21 +665,21 @@ export default function DoctorDetailPage() {
                       </div>
                     </TableHead>
                     <TableHead className="w-[140px]">
-                      <span className="font-semibold text-[#c7c6cd]">Payoff Request</span>
+                      <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Payoff Request</span>
                     </TableHead>
-                    <TableHead className="text-right font-semibold text-[#c7c6cd] w-[180px] pr-4">Action</TableHead>
+                    <TableHead className="text-right font-semibold text-slate-700 dark:text-[#c7c6cd] w-[180px] pr-4">Action</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody className="divide-y divide-[#283150]/30">
+                <TableBody className="divide-y divide-slate-200 dark:divide-[#283150]/30">
                   {isLoading ? (
-                    <TableRow className="border-b border-[#283150]/20">
-                      <TableCell colSpan={14} className="text-center py-8 text-[#c7c6cd]/55">
+                    <TableRow className="border-b border-slate-200 dark:border-[#283150]/20">
+                      <TableCell colSpan={14} className="text-center py-8 text-slate-500 dark:text-[#c7c6cd]/55">
                         Loading…
                       </TableCell>
                     </TableRow>
                   ) : !data?.cases?.length ? (
-                    <TableRow className="border-b border-[#283150]/20">
-                      <TableCell colSpan={14} className="text-center py-8 text-[#c7c6cd]/55">
+                    <TableRow className="border-b border-slate-200 dark:border-[#283150]/20">
+                      <TableCell colSpan={14} className="text-center py-8 text-slate-500 dark:text-[#c7c6cd]/55">
                         No cases yet
                       </TableCell>
                     </TableRow>
@@ -687,12 +687,12 @@ export default function DoctorDetailPage() {
                     data.cases.map((c) => (
                       <TableRow
                         key={c.leadId}
-                        className="cursor-pointer transition-colors duration-150 hover:bg-[#22d3ee]/5 border-b border-[#283150]/20"
+                        className="cursor-pointer transition-colors duration-150 hover:bg-slate-50 dark:hover:bg-[#22d3ee]/5 border-b border-slate-100 dark:border-[#283150]/20"
                         onClick={() => (window.location.href = `/pl/outstanding/${c.leadId}`)}
                       >
                         <TableCell className="w-[50px] pl-4" onClick={(e) => e.stopPropagation()}>
                           <Checkbox
-                            className="border-[#283150] data-[state=checked]:bg-[#22d3ee] data-[state=checked]:text-[#07112f]"
+                            className="border-slate-300 data-[state=checked]:bg-cyan-600 data-[state=checked]:text-white dark:border-[#283150] dark:data-[state=checked]:bg-[#22d3ee] dark:data-[state=checked]:text-[#07112f]"
                             checked={selectedLeads.includes(c.leadId)}
                             onCheckedChange={(checked) => {
                               setSelectedLeads((prev) =>
@@ -703,20 +703,20 @@ export default function DoctorDetailPage() {
                             }}
                           />
                         </TableCell>
-                        <TableCell className="whitespace-nowrap font-medium text-white">{c.leadRef ?? '—'}</TableCell>
-                        <TableCell className="text-[#dce1ff]">{c.patientName ?? '—'}</TableCell>
-                        <TableCell className="text-[#c7c6cd]">{c.hospitalName ?? '—'}</TableCell>
-                        <TableCell className="tabular-nums text-[#c7c6cd]/80">{formatPlMonth(c.month ? new Date(c.month) : null)}</TableCell>
-                        <TableCell className="tabular-nums text-[#c7c6cd]/80">{formatPlDate(c.surgeryDate ? new Date(c.surgeryDate) : null)}</TableCell>
+                        <TableCell className="whitespace-nowrap font-medium text-slate-900 dark:text-white">{c.leadRef ?? '—'}</TableCell>
+                        <TableCell className="text-slate-800 dark:text-[#dce1ff]">{c.patientName ?? '—'}</TableCell>
+                        <TableCell className="text-slate-600 dark:text-[#c7c6cd]">{c.hospitalName ?? '—'}</TableCell>
+                        <TableCell className="tabular-nums text-slate-500 dark:text-[#c7c6cd]/80">{formatPlMonth(c.month ? new Date(c.month) : null)}</TableCell>
+                        <TableCell className="tabular-nums text-slate-500 dark:text-[#c7c6cd]/80">{formatPlDate(c.surgeryDate ? new Date(c.surgeryDate) : null)}</TableCell>
                         <TableCell>
-                          <span className="inline-flex items-center rounded-md bg-[#07112f] px-2 py-0.5 text-xs font-semibold text-[#c7c6cd] border border-[#283150]">
+                          <span className="inline-flex items-center rounded-md bg-slate-100 text-slate-700 border border-slate-200 dark:bg-[#07112f] dark:text-[#c7c6cd] dark:border-[#283150] px-2 py-0.5 text-xs font-semibold">
                             {c.status ?? '—'}
                           </span>
                         </TableCell>
-                        <TableCell className="text-right tabular-nums text-[#c7c6cd]">{renderCellAmount(c.billAmount)}</TableCell>
-                        <TableCell className="text-right tabular-nums text-white font-bold">{renderCellAmount(c.doctorCharges)}</TableCell>
-                        <TableCell className="text-right tabular-nums text-emerald-400 font-semibold">{renderCellAmount(c.doctorPaid, 'text-emerald-400')}</TableCell>
-                        <TableCell className="text-right tabular-nums text-rose-400 font-semibold">{renderCellAmount(c.doctorAmountPending, 'text-rose-400')}</TableCell>
+                        <TableCell className="text-right tabular-nums text-slate-700 dark:text-[#c7c6cd]">{renderCellAmount(c.billAmount)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-slate-900 font-bold dark:text-white">{renderCellAmount(c.doctorCharges)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-emerald-600 dark:text-emerald-400 font-semibold">{renderCellAmount(c.doctorPaid, 'text-emerald-600 dark:text-emerald-400')}</TableCell>
+                        <TableCell className="text-right tabular-nums text-rose-600 dark:text-rose-400 font-semibold">{renderCellAmount(c.doctorAmountPending, 'text-rose-600 dark:text-rose-400')}</TableCell>
                         <TableCell>
                           <Badge
                             className={`border ${c.doctorPayoutStatus === 'PAID'
@@ -766,21 +766,21 @@ export default function DoctorDetailPage() {
             />
 
             {/* Right Side Widget: P&L Health */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-lg">
+            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-sm dark:shadow-lg">
               <div className="relative w-20 h-20 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90">
-                  <circle className="text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
-                  <circle className="text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
+                  <circle className="text-slate-200 dark:text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
+                  <circle className="text-cyan-500 dark:text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
                 </svg>
                 <div className="absolute flex flex-col items-center">
-                  <span className="text-base font-bold text-white">80%</span>
-                  <span className="text-[7px] font-bold text-[#c7c6cd] uppercase tracking-wider">COLLECTION</span>
+                  <span className="text-base font-bold text-slate-900 dark:text-white">80%</span>
+                  <span className="text-[7px] font-bold text-slate-500 dark:text-[#c7c6cd] uppercase tracking-wider">COLLECTION</span>
                 </div>
               </div>
               <div>
-                <h4 className="font-bold text-xs text-[#dce1ff]">Collection & Health Score</h4>
-                <p className="text-[11px] text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">Your doctor portfolio is performing above average for this cluster.</p>
-                <button className="mt-1.5 border border-[#22d3ee]/40 text-[#22d3ee] px-3 py-0.5 rounded-full text-[10px] hover:bg-[#22d3ee]/10 transition-all font-semibold">
+                <h4 className="font-bold text-xs text-slate-900 dark:text-[#dce1ff]">Collection & Health Score</h4>
+                <p className="text-[11px] text-slate-500 dark:text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">Your doctor portfolio is performing above average for this cluster.</p>
+                <button className="mt-1.5 border border-cyan-500/40 text-cyan-600 dark:border-[#22d3ee]/40 dark:text-[#22d3ee] px-3 py-0.5 rounded-full text-[10px] hover:bg-cyan-50 dark:hover:bg-[#22d3ee]/10 transition-all font-semibold">
                   Full Analysis
                 </button>
               </div>
@@ -1013,28 +1013,37 @@ function KpiTile({
 
   return (
     <div
-      className={`bg-[#191D2E]/60 backdrop-blur-md border ${isPending
-        ? 'border-rose-500/30 shadow-lg shadow-rose-950/5'
-        : 'border-[#283150]'
-        } p-3.5 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200 ${className}`}
+      className={`bg-white border transition-all duration-200 p-3.5 rounded-xl flex flex-col gap-2 shadow-sm hover:shadow-md ${
+        isPending
+          ? 'border-rose-200 dark:border-rose-500/30 bg-rose-50/40 dark:bg-rose-950/20'
+          : 'border-slate-200 dark:border-[#283150] dark:bg-[#191D2E]/80'
+      } ${className}`}
     >
       <div className="flex items-center justify-between gap-1.5">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#c7c6cd]/75">{label}</span>
-        <div className={`p-1 rounded shrink-0 ${isPending
-          ? 'bg-rose-500/10 text-rose-400'
-          : isPaid
-            ? 'bg-emerald-500/10 text-emerald-400'
-            : 'bg-[#22d3ee]/10 text-[#22d3ee]'
-          }`}>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-[#c7c6cd]">
+          {label}
+        </span>
+        <div
+          className={`p-1.5 rounded-md shrink-0 ${
+            isPending
+              ? 'bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400'
+              : isPaid
+              ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400'
+              : 'bg-cyan-50 text-cyan-600 dark:bg-[#22d3ee]/10 dark:text-[#22d3ee]'
+          }`}
+        >
           <Icon className="h-3.5 w-3.5" />
         </div>
       </div>
-      <div className={`text-base font-bold tabular-nums leading-none ${isPending
-        ? 'text-rose-400'
-        : isPaid
-          ? 'text-emerald-400'
-          : 'text-white'
-        }`}>
+      <div
+        className={`text-base font-bold tabular-nums leading-none ${
+          isPending
+            ? 'text-rose-600 dark:text-rose-400'
+            : isPaid
+            ? 'text-emerald-600 dark:text-emerald-400'
+            : 'text-slate-900 dark:text-white'
+        }`}
+      >
         {value ?? '—'}
       </div>
     </div>

@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     if (!paidOn || Number.isNaN(paidOn.getTime())) return errorResponse('paidOn is required', 400)
 
     const mode = body.mode ? (body.mode as InstallmentMode) : null
-    if (mode && !MODES.includes(mode)) return errorResponse('Invalid mode', 400)
+    if (!mode || !MODES.includes(mode)) return errorResponse('Payment mode is required', 400)
 
     const lead = await prisma.lead.findUnique({ where: { id: leadId }, select: { id: true } })
     if (!lead) return errorResponse('Lead not found', 404)

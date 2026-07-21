@@ -121,6 +121,10 @@ export function PaymentInstallmentsCard({
       toast.error('Pick a payment date')
       return
     }
+    if (!mode) {
+      toast.error('Please select a payment mode')
+      return
+    }
     createMutation.mutate()
   }
 
@@ -185,13 +189,14 @@ export function PaymentInstallmentsCard({
               </Select>
             </div>
             <div className="sm:col-span-1">
-              <Label className="text-xs">Mode</Label>
-              <Select value={mode || 'unset'} onValueChange={(v) => setMode(v === 'unset' ? '' : (v as Mode))}>
+              <Label className="text-xs">
+                Mode <span className="text-destructive">*</span>
+              </Label>
+              <Select value={mode} onValueChange={(v) => setMode(v as Mode)}>
                 <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="—" />
+                  <SelectValue placeholder="Select mode" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="unset">—</SelectItem>
                   {MODES.map((m) => (
                     <SelectItem key={m} value={m}>
                       {m}
