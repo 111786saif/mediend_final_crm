@@ -11,7 +11,6 @@ import { ChatMessage, type ChatMessageData } from '@/components/chat/chat-messag
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { Send, Paperclip, Loader2, MessageSquare } from 'lucide-react'
 import { toast } from 'sonner'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface ChatInterfaceProps {
   leadId: string
@@ -97,26 +96,29 @@ export function ChatInterface({ leadId }: ChatInterfaceProps) {
   if (!user) return null
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-background">
       {/* Chat Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-        <div className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-          <h2 className="text-lg font-semibold">Chat</h2>
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-card/50">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+          <MessageSquare className="h-4 w-4 text-primary" />
         </div>
+        <h2 className="text-sm font-semibold text-foreground">Chat</h2>
       </div>
 
       {/* Messages Area */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
+      <ScrollArea className="flex-1 px-4 py-3">
+        <div className="space-y-3">
           {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <div className="flex items-center justify-center py-10">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           ) : messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <MessageSquare className="h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">No messages yet. Start the conversation.</p>
+            <div className="flex flex-col items-center justify-center py-14 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted mb-3">
+                <MessageSquare className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <p className="text-sm font-medium text-foreground">No messages yet</p>
+              <p className="text-xs text-muted-foreground mt-1">Start the conversation below.</p>
             </div>
           ) : (
             messages.map((msg) => (
@@ -128,8 +130,8 @@ export function ChatInterface({ leadId }: ChatInterfaceProps) {
       </ScrollArea>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-800">
-        <div className="flex gap-2">
+      <div className="p-3 border-t border-border bg-card/50">
+        <div className="flex items-end gap-2 rounded-3xl border border-border bg-background px-2 py-2 shadow-sm focus-within:ring-1 focus-within:ring-primary transition-shadow">
           <input
             type="file"
             id={`chat-file-${leadId}`}
@@ -140,8 +142,9 @@ export function ChatInterface({ leadId }: ChatInterfaceProps) {
           />
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             size="icon"
+            className="flex-shrink-0 rounded-full text-muted-foreground hover:text-foreground"
             onClick={() => document.getElementById(`chat-file-${leadId}`)?.click()}
             disabled={uploading || sending}
             title="Attach file"
@@ -162,13 +165,14 @@ export function ChatInterface({ leadId }: ChatInterfaceProps) {
                 handleSend()
               }
             }}
-            rows={2}
-            className="min-h-[44px] resize-none"
+            rows={1}
+            className="min-h-[36px] max-h-32 resize-none border-0 shadow-none focus-visible:ring-0 px-1 py-1.5 bg-transparent"
             disabled={sending}
           />
           <Button
             type="button"
             size="icon"
+            className="flex-shrink-0 rounded-full"
             onClick={handleSend}
             disabled={!input.trim() || sending}
             title="Send"

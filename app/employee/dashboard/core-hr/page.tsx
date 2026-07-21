@@ -631,6 +631,24 @@ function AttendanceTab() {
         </div>
       </div>
 
+      <SectionContainer title="Attendance records">
+        {isLoading ? (
+          <div className="text-center py-8 text-muted-foreground">Loading...</div>
+        ) : (attendance.length > 0 || leaveDays.length > 0) ? (
+          <AttendanceHeatmap
+            attendance={attendance as HeatmapAttendanceDay[]}
+            fromDate={fromDate}
+            toDate={toDate}
+            leaveDays={leaveDays}
+            holidayDays={holidayDays}
+          />
+        ) : (
+          <div className="text-center py-8 text-muted-foreground">
+            No attendance records found
+          </div>
+        )}
+      </SectionContainer>
+
       {stats && (
         <AttendanceStatsList stats={stats} />
       )}
@@ -723,23 +741,7 @@ function AttendanceTab() {
         </div>
       </div>
 
-      <SectionContainer title="Attendance records">
-        {isLoading ? (
-          <div className="text-center py-8 text-muted-foreground">Loading...</div>
-        ) : (attendance.length > 0 || leaveDays.length > 0) ? (
-          <AttendanceHeatmap
-            attendance={attendance as HeatmapAttendanceDay[]}
-            fromDate={fromDate}
-            toDate={toDate}
-            leaveDays={leaveDays}
-            holidayDays={holidayDays}
-          />
-        ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            No attendance records found
-          </div>
-        )}
-      </SectionContainer>
+      
     </div>
   )
 }
