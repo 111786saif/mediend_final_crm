@@ -3,7 +3,10 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Loader2 } from 'lucide-react'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
+import { getAvatarColor } from '@/lib/avatar-colors'
+import { CheckCircle2, CircleDot, Loader2, MessageSquareQuote, PhoneCall, UserRoundPlus } from 'lucide-react'
 import { toast } from 'sonner'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
@@ -104,6 +107,40 @@ type LeadOwnershipMeta = {
   assignableUsers: LeadOwnershipUser[]
 }
 
+type LeadRemarkHistoryItem = {
+  id: string
+  content: string
+  createdAt: string
+  createdBy: {
+    id: string
+    name: string | null
+  }
+}
+
+type LeadRemarksResponse = {
+  canEditRemarks: boolean
+  canAddRemarks: boolean
+  latestRemark: LeadRemarkHistoryItem | null
+  remarks: LeadRemarkHistoryItem[]
+}
+
+type LeadActivityItem = {
+  id: string
+  action: string
+  summary: string
+  actorRole: string | null
+  createdAt: string
+  actorUser: {
+    id: string
+    name: string | null
+    email: string | null
+  } | null
+}
+
+type LeadActivityResponse = {
+  logs: LeadActivityItem[]
+}
+
 function ReadonlyField({
   label,
   value,
@@ -117,6 +154,50 @@ function ReadonlyField({
       <div className="rounded-lg border bg-muted/20 px-3 py-2.5 text-sm">{value}</div>
     </div>
   )
+}
+
+function formatRoleLabel(role: string | null | undefined) {
+  if (!role) return null
+  return role
+    .split('_')
+    .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
+    .join(' ')
+}
+
+function getInitials(name: string) {
+  const parts = name
+    .split(/\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .slice(0, 2)
+
+  if (parts.length === 0) return '?'
+  return parts.map((part) => part[0]?.toUpperCase() ?? '').join('')
+}
+
+function ActivityIcon({ action }: { action: string }) {
+  const normalizedAction = action.toUpperCase()
+
+  if (normalizedAction.includes('CREATED')) {
+    return <CircleDot className="h-4 w-4 text-cyan-400" />
+  }
+  if (normalizedAction.includes('STATUS_CHANGED')) {
+    return <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+  }
+  if (normalizedAction.includes('CALL_NOTE') || normalizedAction.includes('CALL')) {
+    return <PhoneCall className="h-4 w-4 text-amber-400" />
+  }
+  if (normalizedAction.includes('REMARK')) {
+    return <MessageSquareQuote className="h-4 w-4 text-sky-400" />
+  }
+  if (normalizedAction.includes('QR')) {
+    return <PhoneCall className="h-4 w-4 text-amber-400" />
+  }
+  if (normalizedAction.includes('REASSIGNED') || normalizedAction.includes('ASSIGNED')) {
+    return <UserRoundPlus className="h-4 w-4 text-violet-400" />
+  }
+
+  return <CircleDot className="h-4 w-4 text-muted-foreground" />
 }
 
 export function LeadEditDrawer({
@@ -155,6 +236,20 @@ export function LeadEditDrawer({
     retry: false,
   })
 
+  const { data: remarksData, isLoading: isLoadingRemarks } = useQuery<LeadRemarksResponse, Error>({
+    queryKey: ['lead-remarks', leadId],
+    queryFn: () => apiGet<LeadRemarksResponse>(`/api/leads/${leadId}/remarks`),
+    enabled: open && !!leadId,
+    retry: false,
+  })
+
+  const { data: activityData, isLoading: isLoadingActivity } = useQuery<LeadActivityResponse, Error>({
+    queryKey: ['lead-activity', leadId],
+    queryFn: () => apiGet<LeadActivityResponse>(`/api/leads/${leadId}/activity`),
+    enabled: open && !!leadId,
+    retry: false,
+  })
+
   const effectivePatientName = patientNameDraft ?? lead?.patientName ?? ''
   const effectiveWhatsapp = whatsappDraft ?? (lead?.whatsapp ?? '')
   const effectiveSurgeryDate = surgeryDateDraft ?? toDateInputValue(lead?.surgeryDate)
@@ -180,6 +275,8 @@ export function LeadEditDrawer({
   const currentFollowUpDate = toDateInputValue(lead?.followUpDate)
   const currentModeOfPayment = lead?.modeOfPayment ?? ''
   const trimmedStatusChangeRemark = statusChangeRemarkDraft.trim()
+  const previousRemark = remarksData?.latestRemark ?? null
+  const activityLogs = activityData?.logs ?? []
 
   const statusChanged = effectiveLeadStatus !== currentStatus
   const followUpDateChanged = effectiveFollowUpDate !== currentFollowUpDate
@@ -368,6 +465,8 @@ export function LeadEditDrawer({
       queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
       queryClient.invalidateQueries({ queryKey: ['lead-edit-drawer', leadId] })
       queryClient.invalidateQueries({ queryKey: ['lead-ownership-meta', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['lead-remarks', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['lead-activity', leadId] })
       onOpenChange(false)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update lead')
@@ -605,6 +704,107 @@ export function LeadEditDrawer({
                       }
                       rows={4}
                     />
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-3">
+                    <div>
+                      <h3 className="text-sm font-semibold">Previous Remark (Last)</h3>
+                      <p className="text-xs text-muted-foreground">
+                        The most recent saved remark for this lead.
+                      </p>
+                    </div>
+
+                    {isLoadingRemarks ? (
+                      <div className="rounded-xl border bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
+                        Loading previous remark...
+                      </div>
+                    ) : previousRemark ? (
+                      <div className="rounded-xl border border-primary/30 bg-muted/20 px-4 py-4">
+                        <div className="flex items-start gap-3">
+                          <span className="select-none text-3xl font-bold leading-none text-foreground/80">
+                            &ldquo;
+                          </span>
+                          <p className="pt-1 whitespace-pre-wrap text-sm leading-6 text-foreground">
+                            {previousRemark.content}
+                          </p>
+                        </div>
+                        <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
+                          <Avatar className="h-8 w-8 shrink-0">
+                            <AvatarFallback
+                              className={`${getAvatarColor(previousRemark.createdBy?.name ?? 'System').bg} ${getAvatarColor(previousRemark.createdBy?.name ?? 'System').text} text-[10px] font-semibold`}
+                            >
+                              {getInitials(previousRemark.createdBy?.name ?? 'System')}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0">
+                            <p className="font-medium text-foreground">
+                              {previousRemark.createdBy?.name ?? 'System'}
+                            </p>
+                            <p>{format(new Date(previousRemark.createdAt), 'd MMM yyyy, h:mm a')}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="rounded-xl border bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
+                        No previous remarks yet.
+                      </div>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-3">
+                    <div>
+                      <h3 className="text-sm font-semibold">Activity Logs</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Recent lead status, remark, call, and assignment activity.
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl border bg-muted/20">
+                      {isLoadingActivity ? (
+                        <div className="px-4 py-6 text-sm text-muted-foreground">
+                          Loading activity logs...
+                        </div>
+                      ) : activityLogs.length === 0 ? (
+                        <div className="px-4 py-6 text-sm text-muted-foreground">
+                          No activity logs available yet.
+                        </div>
+                      ) : (
+                        <div className="divide-y">
+                          {activityLogs.map((activityLog) => {
+                            const actorName =
+                              activityLog.actorUser?.name ||
+                              activityLog.actorUser?.email ||
+                              'System'
+                            const actorRole = formatRoleLabel(activityLog.actorRole)
+
+                            return (
+                              <div
+                                key={activityLog.id}
+                                className="flex items-start gap-3 px-4 py-3"
+                              >
+                                <div className="mt-0.5 shrink-0 rounded-full border border-border/70 bg-background/60 p-2">
+                                  <ActivityIcon action={activityLog.action} />
+                                </div>
+                                <div className="min-w-0 flex-1 space-y-1">
+                                  <p className="text-sm leading-6 text-foreground">
+                                    {activityLog.summary}
+                                  </p>
+                                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                                    <span className="font-medium text-foreground">{actorName}</span>
+                                    {actorRole ? <span>{actorRole}</span> : null}
+                                    <span>{format(new Date(activityLog.createdAt), 'd MMM yyyy, h:mm a')}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
