@@ -19,11 +19,11 @@ const postBody = z.object({
 export async function GET(request: NextRequest) {
   const user = getSessionFromRequest(request)
   if (!user) return unauthorizedResponse()
-  if (!hasPermission(user, 'masters:read')) return forbiddenResponse()
 
   const sp = request.nextUrl.searchParams
   const search = sp.get('search')?.trim() || ''
-  const includeInactive = sp.get('includeInactive') === 'true'
+  const includeInactive =
+    sp.get('includeInactive') === 'true' && hasPermission(user, 'masters:read')
   const category = sp.get('category')?.trim() || ''
 
   const where: Prisma.TreatmentMasterWhereInput = {}
