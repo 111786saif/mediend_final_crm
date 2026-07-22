@@ -263,9 +263,6 @@ export type UserWhereInput = {
   plRecords?: Prisma.PLRecordListRelationFilter
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   approvedLeaves?: Prisma.LeaveRequestListRelationFilter
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestListRelationFilter
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestListRelationFilter
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestListRelationFilter
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestListRelationFilter
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestListRelationFilter
   createdLedgerEntries?: Prisma.LedgerEntryListRelationFilter
@@ -397,9 +394,6 @@ export type UserOrderByWithRelationInput = {
   plRecords?: Prisma.PLRecordOrderByRelationAggregateInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
   approvedLeaves?: Prisma.LeaveRequestOrderByRelationAggregateInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestOrderByRelationAggregateInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestOrderByRelationAggregateInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestOrderByRelationAggregateInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestOrderByRelationAggregateInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestOrderByRelationAggregateInput
   createdLedgerEntries?: Prisma.LedgerEntryOrderByRelationAggregateInput
@@ -534,9 +528,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   plRecords?: Prisma.PLRecordListRelationFilter
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   approvedLeaves?: Prisma.LeaveRequestListRelationFilter
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestListRelationFilter
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestListRelationFilter
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestListRelationFilter
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestListRelationFilter
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestListRelationFilter
   createdLedgerEntries?: Prisma.LedgerEntryListRelationFilter
@@ -710,9 +701,6 @@ export type UserCreateInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -844,9 +832,6 @@ export type UserUncheckedCreateInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -978,9 +963,6 @@ export type UserUpdateInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -1112,9 +1094,6 @@ export type UserUncheckedUpdateInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2905,54 +2884,6 @@ export type UserUpdateOneRequiredWithoutPushSubscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPushSubscriptionsInput, Prisma.UserUpdateWithoutPushSubscriptionsInput>, Prisma.UserUncheckedUpdateWithoutPushSubscriptionsInput>
 }
 
-export type UserCreateNestedOneWithoutDoctorLeaveRequestsReviewedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDoctorLeaveRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDoctorLeaveRequestsReviewedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneWithoutDoctorLeaveRequestsReviewedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDoctorLeaveRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDoctorLeaveRequestsReviewedInput
-  upsert?: Prisma.UserUpsertWithoutDoctorLeaveRequestsReviewedInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDoctorLeaveRequestsReviewedInput, Prisma.UserUpdateWithoutDoctorLeaveRequestsReviewedInput>, Prisma.UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput>
-}
-
-export type UserCreateNestedOneWithoutDoctorCabRequestsReviewedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDoctorCabRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDoctorCabRequestsReviewedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserCreateNestedOneWithoutDoctorCabRequestsVendorAssignedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDoctorCabRequestsVendorAssignedInput, Prisma.UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDoctorCabRequestsVendorAssignedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneWithoutDoctorCabRequestsReviewedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDoctorCabRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDoctorCabRequestsReviewedInput
-  upsert?: Prisma.UserUpsertWithoutDoctorCabRequestsReviewedInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDoctorCabRequestsReviewedInput, Prisma.UserUpdateWithoutDoctorCabRequestsReviewedInput>, Prisma.UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput>
-}
-
-export type UserUpdateOneWithoutDoctorCabRequestsVendorAssignedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutDoctorCabRequestsVendorAssignedInput, Prisma.UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDoctorCabRequestsVendorAssignedInput
-  upsert?: Prisma.UserUpsertWithoutDoctorCabRequestsVendorAssignedInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDoctorCabRequestsVendorAssignedInput, Prisma.UserUpdateWithoutDoctorCabRequestsVendorAssignedInput>, Prisma.UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput>
-}
-
 export type UserCreateNestedOneWithoutItProjectsCreatedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutItProjectsCreatedInput, Prisma.UserUncheckedCreateWithoutItProjectsCreatedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutItProjectsCreatedInput
@@ -3082,9 +3013,6 @@ export type UserCreateWithoutStatusesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -3215,9 +3143,6 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3364,9 +3289,6 @@ export type UserUpdateWithoutStatusesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -3497,9 +3419,6 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3629,9 +3548,6 @@ export type UserCreateWithoutAssignedLeadsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -3762,9 +3678,6 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3900,9 +3813,6 @@ export type UserCreateWithoutCreatedLeadsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -4033,9 +3943,6 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4171,9 +4078,6 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -4304,9 +4208,6 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4453,9 +4354,6 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -4586,9 +4484,6 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4730,9 +4625,6 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -4863,9 +4755,6 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5007,9 +4896,6 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -5140,9 +5026,6 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5274,9 +5157,6 @@ export type UserCreateWithoutLeadCallNotesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -5407,9 +5287,6 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5556,9 +5433,6 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -5689,9 +5563,6 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5822,9 +5693,6 @@ export type UserCreateWithoutLeadRemarkEntriesAuthoredInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -5955,9 +5823,6 @@ export type UserUncheckedCreateWithoutLeadRemarkEntriesAuthoredInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6104,9 +5969,6 @@ export type UserUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -6237,9 +6099,6 @@ export type UserUncheckedUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6370,9 +6229,6 @@ export type UserCreateWithoutLeadQrCallAuditLogsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -6503,9 +6359,6 @@ export type UserUncheckedCreateWithoutLeadQrCallAuditLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6652,9 +6505,6 @@ export type UserUpdateWithoutLeadQrCallAuditLogsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -6785,9 +6635,6 @@ export type UserUncheckedUpdateWithoutLeadQrCallAuditLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6917,9 +6764,6 @@ export type UserCreateWithoutLeadStageEventsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -7050,9 +6894,6 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7199,9 +7040,6 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -7332,9 +7170,6 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -7465,9 +7300,6 @@ export type UserCreateWithoutCreatedTargetsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -7598,9 +7430,6 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7747,9 +7576,6 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -7880,9 +7706,6 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8014,9 +7837,6 @@ export type UserCreateWithoutCreatedTierDefinitionsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -8147,9 +7967,6 @@ export type UserUncheckedCreateWithoutCreatedTierDefinitionsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8296,9 +8113,6 @@ export type UserUpdateWithoutCreatedTierDefinitionsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -8429,9 +8243,6 @@ export type UserUncheckedUpdateWithoutCreatedTierDefinitionsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8561,9 +8372,6 @@ export type UserCreateWithoutInsuranceCasesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -8694,9 +8502,6 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8843,9 +8648,6 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -8976,9 +8778,6 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -9109,9 +8908,6 @@ export type UserCreateWithoutPlRecordsInput = {
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -9242,9 +9038,6 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9391,9 +9184,6 @@ export type UserUpdateWithoutPlRecordsInput = {
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -9524,9 +9314,6 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -9658,9 +9445,6 @@ export type UserCreateWithoutInvoiceRequestsSubmittedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -9791,9 +9575,6 @@ export type UserUncheckedCreateWithoutInvoiceRequestsSubmittedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9929,9 +9710,6 @@ export type UserCreateWithoutInvoiceRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -10062,9 +9840,6 @@ export type UserUncheckedCreateWithoutInvoiceRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10211,9 +9986,6 @@ export type UserUpdateWithoutInvoiceRequestsSubmittedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -10344,9 +10116,6 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsSubmittedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10488,9 +10257,6 @@ export type UserUpdateWithoutInvoiceRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -10621,9 +10387,6 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10754,9 +10517,6 @@ export type UserCreateWithoutInvoiceRequestActivitiesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -10887,9 +10647,6 @@ export type UserUncheckedCreateWithoutInvoiceRequestActivitiesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11036,9 +10793,6 @@ export type UserUpdateWithoutInvoiceRequestActivitiesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -11169,9 +10923,6 @@ export type UserUncheckedUpdateWithoutInvoiceRequestActivitiesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11302,9 +11053,6 @@ export type UserCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -11435,9 +11183,6 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11573,9 +11318,6 @@ export type UserCreateWithoutDoctorPayoffRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -11706,9 +11448,6 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11855,9 +11594,6 @@ export type UserUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -11988,9 +11724,6 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12132,9 +11865,6 @@ export type UserUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -12265,9 +11995,6 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12398,9 +12125,6 @@ export type UserCreateWithoutDoctorPayoffRequestActivitiesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -12531,9 +12255,6 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestActivitiesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12680,9 +12401,6 @@ export type UserUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -12813,9 +12531,6 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12946,9 +12661,6 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -13079,9 +12791,6 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13228,9 +12937,6 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -13361,9 +13067,6 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13493,9 +13196,6 @@ export type UserCreateWithoutEmployeeInput = {
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -13626,9 +13326,6 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13765,9 +13462,6 @@ export type UserCreateWithoutOnboardingApprovalsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -13898,9 +13592,6 @@ export type UserUncheckedCreateWithoutOnboardingApprovalsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14036,9 +13727,6 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -14169,9 +13857,6 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14317,9 +14002,6 @@ export type UserUpdateWithoutEmployeeInput = {
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -14450,9 +14132,6 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14595,9 +14274,6 @@ export type UserUpdateWithoutOnboardingApprovalsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -14728,9 +14404,6 @@ export type UserUncheckedUpdateWithoutOnboardingApprovalsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14872,9 +14545,6 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -15005,9 +14675,6 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15137,9 +14804,6 @@ export type UserCreateWithoutApprovedLeavesInput = {
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -15270,9 +14934,6 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -15419,9 +15080,6 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -15552,9 +15210,6 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15686,9 +15341,6 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
   approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
@@ -15819,9 +15471,6 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
   approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
@@ -15957,9 +15606,6 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
   approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
@@ -16090,9 +15736,6 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
   approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
@@ -16239,9 +15882,6 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
   approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
@@ -16372,9 +16012,6 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -16516,9 +16153,6 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
   approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
@@ -16649,9 +16283,6 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -16782,9 +16413,6 @@ export type UserCreateWithoutMeetsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -16915,9 +16543,6 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17064,9 +16689,6 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -17197,9 +16819,6 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17330,9 +16949,6 @@ export type UserCreateWithoutMeetParticipationsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -17463,9 +17079,6 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17612,9 +17225,6 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -17745,9 +17355,6 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17878,9 +17485,6 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -18011,9 +17615,6 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18149,9 +17750,6 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -18282,9 +17880,6 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18420,9 +18015,6 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -18553,9 +18145,6 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18691,9 +18280,6 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -18824,9 +18410,6 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18962,9 +18545,6 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -19095,9 +18675,6 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19233,9 +18810,6 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
@@ -19366,9 +18940,6 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
@@ -19504,9 +19075,6 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -19637,9 +19205,6 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19786,9 +19351,6 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -19919,9 +19481,6 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20063,9 +19622,6 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -20196,9 +19752,6 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20340,9 +19893,6 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -20473,9 +20023,6 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20617,9 +20164,6 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -20750,9 +20294,6 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20894,9 +20435,6 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -21027,9 +20565,6 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21171,9 +20706,6 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
@@ -21304,9 +20836,6 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -21448,9 +20977,6 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -21581,9 +21107,6 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21714,9 +21237,6 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -21847,9 +21367,6 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -21996,9 +21513,6 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -22129,9 +21643,6 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22262,9 +21773,6 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -22395,9 +21903,6 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22544,9 +22049,6 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -22677,9 +22179,6 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22810,9 +22309,6 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -22943,9 +22439,6 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23092,9 +22585,6 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -23225,9 +22715,6 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23358,9 +22845,6 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -23491,9 +22975,6 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23640,9 +23121,6 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -23773,9 +23251,6 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23906,9 +23381,6 @@ export type UserCreateWithoutIssuesReceivedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -24039,9 +23511,6 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24177,9 +23646,6 @@ export type UserCreateWithoutIssuesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -24310,9 +23776,6 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24459,9 +23922,6 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -24592,9 +24052,6 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24736,9 +24193,6 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -24869,9 +24323,6 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -25002,9 +24453,6 @@ export type UserCreateWithoutKypSubmissionsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -25135,9 +24583,6 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25284,9 +24729,6 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -25417,9 +24859,6 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -25550,9 +24989,6 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -25683,9 +25119,6 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25821,9 +25254,6 @@ export type UserCreateWithoutPreAuthHandledInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -25954,9 +25384,6 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -26092,9 +25519,6 @@ export type UserCreateWithoutPreAuthHeldInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -26225,9 +25649,6 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -26374,9 +25795,6 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -26507,9 +25925,6 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -26651,9 +26066,6 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -26784,9 +26196,6 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -26928,9 +26337,6 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -27061,9 +26467,6 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -27194,9 +26597,6 @@ export type UserCreateWithoutNotificationsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -27327,9 +26727,6 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27476,9 +26873,6 @@ export type UserUpdateWithoutNotificationsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -27609,9 +27003,6 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -27742,9 +27133,6 @@ export type UserCreateWithoutNoticesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -27875,9 +27263,6 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -28024,9 +27409,6 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -28157,9 +27539,6 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28290,9 +27669,6 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -28423,9 +27799,6 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -28572,9 +27945,6 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -28705,9 +28075,6 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28838,9 +28205,6 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -28971,9 +28335,6 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29109,9 +28470,6 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -29242,9 +28600,6 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29380,9 +28735,6 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -29513,9 +28865,6 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29662,9 +29011,6 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -29795,9 +29141,6 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -29939,9 +29282,6 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -30072,9 +29412,6 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30216,9 +29553,6 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -30349,9 +29683,6 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30482,9 +29813,6 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -30615,9 +29943,6 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30753,9 +30078,6 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -30886,9 +30208,6 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -31035,9 +30354,6 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -31168,9 +30484,6 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -31312,9 +30625,6 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -31445,9 +30755,6 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -31578,9 +30885,6 @@ export type UserCreateWithoutCrmPermissionsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -31711,9 +31015,6 @@ export type UserUncheckedCreateWithoutCrmPermissionsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -31849,9 +31150,6 @@ export type UserCreateWithoutCrmPermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -31982,9 +31280,6 @@ export type UserUncheckedCreateWithoutCrmPermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -32131,9 +31426,6 @@ export type UserUpdateWithoutCrmPermissionsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -32264,9 +31556,6 @@ export type UserUncheckedUpdateWithoutCrmPermissionsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32408,9 +31697,6 @@ export type UserUpdateWithoutCrmPermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -32541,9 +31827,6 @@ export type UserUncheckedUpdateWithoutCrmPermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32674,9 +31957,6 @@ export type UserCreateWithoutCrmAssignmentRulesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -32807,9 +32087,6 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -32945,9 +32222,6 @@ export type UserCreateWithoutCrmAssignmentRulesUpdatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -33078,9 +32352,6 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -33227,9 +32498,6 @@ export type UserUpdateWithoutCrmAssignmentRulesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -33360,9 +32628,6 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -33504,9 +32769,6 @@ export type UserUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -33637,9 +32899,6 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -33770,9 +33029,6 @@ export type UserCreateWithoutCampaignTeamLeadAssignmentsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -33903,9 +33159,6 @@ export type UserUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -34052,9 +33305,6 @@ export type UserUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -34185,9 +33435,6 @@ export type UserUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -34318,9 +33565,6 @@ export type UserCreateWithoutCrmActivityLogsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -34451,9 +33695,6 @@ export type UserUncheckedCreateWithoutCrmActivityLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -34600,9 +33841,6 @@ export type UserUpdateWithoutCrmActivityLogsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -34733,9 +33971,6 @@ export type UserUncheckedUpdateWithoutCrmActivityLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -34866,9 +34101,6 @@ export type UserCreateWithoutPermissionSubjectsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -34999,9 +34231,6 @@ export type UserUncheckedCreateWithoutPermissionSubjectsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -35137,9 +34366,6 @@ export type UserCreateWithoutPermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -35270,9 +34496,6 @@ export type UserUncheckedCreateWithoutPermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -35419,9 +34642,6 @@ export type UserUpdateWithoutPermissionSubjectsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -35552,9 +34772,6 @@ export type UserUncheckedUpdateWithoutPermissionSubjectsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -35696,9 +34913,6 @@ export type UserUpdateWithoutPermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -35829,9 +35043,6 @@ export type UserUncheckedUpdateWithoutPermissionsGrantedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -35962,9 +35173,6 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -36095,9 +35303,6 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -36244,9 +35449,6 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -36377,9 +35579,6 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -36510,9 +35709,6 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -36643,9 +35839,6 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -36792,9 +35985,6 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -36925,9 +36115,6 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -37058,9 +36245,6 @@ export type UserCreateWithoutQueriesRaisedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -37191,9 +36375,6 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -37329,9 +36510,6 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -37462,9 +36640,6 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -37611,9 +36786,6 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -37744,9 +36916,6 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -37888,9 +37057,6 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -38021,9 +37187,6 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -38154,9 +37317,6 @@ export type UserCreateWithoutPdfsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -38287,9 +37447,6 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -38436,9 +37593,6 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -38569,9 +37723,6 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -38702,9 +37853,6 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -38835,9 +37983,6 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -38984,9 +38129,6 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -39117,9 +38259,6 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -39250,9 +38389,6 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -39383,9 +38519,6 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -39532,9 +38665,6 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -39665,9 +38795,6 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -39798,9 +38925,6 @@ export type UserCreateWithoutCaseStageChangesInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -39931,9 +39055,6 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -40080,9 +39201,6 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -40213,9 +39331,6 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -40346,9 +39461,6 @@ export type UserCreateWithoutWorkflowResetsPerformedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -40479,9 +39591,6 @@ export type UserUncheckedCreateWithoutWorkflowResetsPerformedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -40628,9 +39737,6 @@ export type UserUpdateWithoutWorkflowResetsPerformedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -40761,9 +39867,6 @@ export type UserUncheckedUpdateWithoutWorkflowResetsPerformedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -40894,9 +39997,6 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -41027,9 +40127,6 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -41176,9 +40273,6 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -41309,9 +40403,6 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -41442,9 +40533,6 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -41575,9 +40663,6 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -41724,9 +40809,6 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -41857,9 +40939,6 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -41990,9 +41069,6 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -42123,9 +41199,6 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -42261,9 +41334,6 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -42394,9 +41464,6 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -42532,9 +41599,6 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -42665,9 +41729,6 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -42814,9 +41875,6 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -42947,9 +42005,6 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -43091,9 +42146,6 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -43224,9 +42276,6 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -43368,9 +42417,6 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -43501,9 +42547,6 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -43634,9 +42677,6 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -43767,9 +42807,6 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -43916,9 +42953,6 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -44049,9 +43083,6 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -44182,9 +43213,6 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -44315,9 +43343,6 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -44464,9 +43489,6 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -44597,9 +43619,6 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -44730,9 +43749,6 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -44863,9 +43879,6 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -45012,9 +44025,6 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -45145,9 +44155,6 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -45278,9 +44285,6 @@ export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -45411,9 +44415,6 @@ export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -45560,9 +44561,6 @@ export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -45693,9 +44691,6 @@ export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -45826,9 +44821,6 @@ export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -45959,9 +44951,6 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -46097,9 +45086,6 @@ export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -46230,9 +45216,6 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -46379,9 +45362,6 @@ export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -46512,9 +45492,6 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -46656,9 +45633,6 @@ export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -46789,9 +45763,6 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -46922,9 +45893,6 @@ export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -47055,9 +46023,6 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47193,9 +46158,6 @@ export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -47326,9 +46288,6 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47475,9 +46434,6 @@ export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -47608,9 +46564,6 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -47752,9 +46705,6 @@ export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -47885,9 +46835,6 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -48018,9 +46965,6 @@ export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -48151,9 +47095,6 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -48289,9 +47230,6 @@ export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -48422,9 +47360,6 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -48571,9 +47506,6 @@ export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -48704,9 +47636,6 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -48848,9 +47777,6 @@ export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -48981,9 +47907,6 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -49114,9 +48037,6 @@ export type UserCreateWithoutSeatingMiscCostHistoryInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -49247,9 +48167,6 @@ export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -49396,9 +48313,6 @@ export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -49529,9 +48443,6 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -49662,9 +48573,6 @@ export type UserCreateWithoutSalesTeamBulkCostsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -49795,9 +48703,6 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -49933,9 +48838,6 @@ export type UserCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -50066,9 +48968,6 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -50215,9 +49114,6 @@ export type UserUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -50348,9 +49244,6 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -50492,9 +49385,6 @@ export type UserUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -50625,9 +49515,6 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -50758,9 +49645,6 @@ export type UserCreateWithoutSalesTeamBulkCostHistoryInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -50891,9 +49775,6 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostHistoryInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -51040,9 +49921,6 @@ export type UserUpdateWithoutSalesTeamBulkCostHistoryInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -51173,9 +50051,6 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostHistoryInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -51306,9 +50181,6 @@ export type UserCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -51439,9 +50311,6 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -51588,9 +50457,6 @@ export type UserUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -51721,9 +50587,6 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -51854,9 +50717,6 @@ export type UserCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -51987,9 +50847,6 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -52136,9 +50993,6 @@ export type UserUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -52269,9 +51123,6 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -52402,9 +51253,6 @@ export type UserCreateWithoutTasksAssignedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -52535,9 +51383,6 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -52673,9 +51518,6 @@ export type UserCreateWithoutTasksCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -52806,9 +51648,6 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -52944,9 +51783,6 @@ export type UserCreateWithoutTasksCompletedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -53077,9 +51913,6 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -53226,9 +52059,6 @@ export type UserUpdateWithoutTasksAssignedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -53359,9 +52189,6 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -53503,9 +52330,6 @@ export type UserUpdateWithoutTasksCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -53636,9 +52460,6 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -53780,9 +52601,6 @@ export type UserUpdateWithoutTasksCompletedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -53913,9 +52731,6 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -54046,9 +52861,6 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -54179,9 +52991,6 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -54328,9 +53137,6 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -54461,9 +53267,6 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -54594,9 +53397,6 @@ export type UserCreateWithoutUserTaskSeenInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -54727,9 +53527,6 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -54876,9 +53673,6 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -55009,9 +53803,6 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -55142,9 +53933,6 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -55275,9 +54063,6 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -55413,9 +54198,6 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -55546,9 +54328,6 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -55695,9 +54474,6 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -55828,9 +54604,6 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -55972,9 +54745,6 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -56105,9 +54875,6 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -56238,9 +55005,6 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -56371,9 +55135,6 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -56520,9 +55281,6 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -56653,9 +55411,6 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -56786,9 +55541,6 @@ export type UserCreateWithoutTaskCommentsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -56919,9 +55671,6 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -57068,9 +55817,6 @@ export type UserUpdateWithoutTaskCommentsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -57201,9 +55947,6 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -57334,9 +56077,6 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -57467,9 +56207,6 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -57616,9 +56353,6 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -57749,9 +56483,6 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -57882,9 +56613,6 @@ export type UserCreateWithoutWarningsReceivedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -58015,9 +56743,6 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -58153,9 +56878,6 @@ export type UserCreateWithoutWarningsIssuedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -58286,9 +57008,6 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -58435,9 +57154,6 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -58568,9 +57284,6 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -58712,9 +57425,6 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -58845,9 +57555,6 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -58978,9 +57685,6 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -59111,9 +57815,6 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -59260,9 +57961,6 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -59393,9 +58091,6 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -59526,9 +58221,6 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -59659,9 +58351,6 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -59808,9 +58497,6 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -59941,9 +58627,6 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -60074,9 +58757,6 @@ export type UserCreateWithoutWorkLogsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -60207,9 +58887,6 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -60356,9 +59033,6 @@ export type UserUpdateWithoutWorkLogsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -60489,9 +59163,6 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -60622,9 +59293,6 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -60755,9 +59423,6 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -60904,9 +59569,6 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -61037,9 +59699,6 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -61086,1650 +59745,6 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
   taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
   workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
-  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
-  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
-  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
-  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
-  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
-  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
-  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserCreateWithoutDoctorLeaveRequestsReviewedInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  gender?: string | null
-  emergencyContactName?: string | null
-  emergencyContactPhone?: string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
-  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
-  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
-  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
-  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
-  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
-  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
-  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
-  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
-  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
-  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
-  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
-  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
-  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
-  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
-  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
-  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  gender?: string | null
-  emergencyContactName?: string | null
-  emergencyContactPhone?: string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
-  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
-  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
-  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
-  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
-  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
-  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
-  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
-  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
-  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
-  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
-  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutDoctorLeaveRequestsReviewedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutDoctorLeaveRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput>
-}
-
-export type UserUpsertWithoutDoctorLeaveRequestsReviewedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutDoctorLeaveRequestsReviewedInput, Prisma.UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutDoctorLeaveRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutDoctorLeaveRequestsReviewedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutDoctorLeaveRequestsReviewedInput, Prisma.UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput>
-}
-
-export type UserUpdateWithoutDoctorLeaveRequestsReviewedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
-  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
-  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
-  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
-  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
-  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
-  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
-  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
-  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
-  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
-  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
-  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
-  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
-  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
-  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
-  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
-  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
-  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
-  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
-  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
-  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
-  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserCreateWithoutDoctorCabRequestsReviewedInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  gender?: string | null
-  emergencyContactName?: string | null
-  emergencyContactPhone?: string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
-  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
-  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
-  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
-  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
-  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
-  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
-  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
-  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
-  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
-  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
-  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
-  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
-  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
-  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
-  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
-  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  gender?: string | null
-  emergencyContactName?: string | null
-  emergencyContactPhone?: string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
-  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
-  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
-  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
-  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
-  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
-  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
-  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
-  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
-  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
-  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
-  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutDoctorCabRequestsReviewedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutDoctorCabRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput>
-}
-
-export type UserCreateWithoutDoctorCabRequestsVendorAssignedInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  gender?: string | null
-  emergencyContactName?: string | null
-  emergencyContactPhone?: string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
-  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
-  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
-  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
-  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
-  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
-  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
-  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
-  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
-  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
-  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
-  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
-  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
-  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
-  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
-  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
-  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  gender?: string | null
-  emergencyContactName?: string | null
-  emergencyContactPhone?: string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
-  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
-  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
-  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
-  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
-  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
-  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
-  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
-  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
-  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
-  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
-  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutDoctorCabRequestsVendorAssignedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutDoctorCabRequestsVendorAssignedInput, Prisma.UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput>
-}
-
-export type UserUpsertWithoutDoctorCabRequestsReviewedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutDoctorCabRequestsReviewedInput, Prisma.UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutDoctorCabRequestsReviewedInput, Prisma.UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutDoctorCabRequestsReviewedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutDoctorCabRequestsReviewedInput, Prisma.UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput>
-}
-
-export type UserUpdateWithoutDoctorCabRequestsReviewedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
-  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
-  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
-  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
-  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
-  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
-  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
-  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
-  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
-  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
-  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
-  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
-  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
-  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
-  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
-  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
-  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
-  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
-  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
-  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
-  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
-  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUpsertWithoutDoctorCabRequestsVendorAssignedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutDoctorCabRequestsVendorAssignedInput, Prisma.UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutDoctorCabRequestsVendorAssignedInput, Prisma.UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutDoctorCabRequestsVendorAssignedInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutDoctorCabRequestsVendorAssignedInput, Prisma.UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput>
-}
-
-export type UserUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
-  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
-  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
-  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
-  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
-  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
-  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
-  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
-  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
-  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
-  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
-  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
-  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
-  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
-  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
-  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
-  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
-  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
-  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
-  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
-  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
-  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
-  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
-  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
-  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
-  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
-  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
-  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
-  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
-  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
-  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
-  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
-  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
-  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
-  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
-  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
-  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
-  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
-  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
-  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
-  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
-  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
-  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
-  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
-  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
-  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
-  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
   mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
   mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
   warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -62814,9 +59829,6 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -62947,9 +59959,6 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63096,9 +60105,6 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -63229,9 +60235,6 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -63362,9 +60365,6 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -63495,9 +60495,6 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63644,9 +60641,6 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -63777,9 +60771,6 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -63910,9 +60901,6 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -64043,9 +61031,6 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -64192,9 +61177,6 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -64325,9 +61307,6 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64458,9 +61437,6 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -64591,9 +61567,6 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -64740,9 +61713,6 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -64873,9 +61843,6 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -65006,9 +61973,6 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -65139,9 +62103,6 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65288,9 +62249,6 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -65421,9 +62379,6 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -65554,9 +62509,6 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -65687,9 +62639,6 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65836,9 +62785,6 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -65969,9 +62915,6 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66102,9 +63045,6 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
@@ -66235,9 +63175,6 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -66384,9 +63321,6 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
@@ -66517,9 +63451,6 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
-  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
   leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
   leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66639,9 +63570,6 @@ export type UserCountOutputType = {
   insuranceCases: number
   plRecords: number
   approvedLeaves: number
-  doctorLeaveRequestsReviewed: number
-  doctorCabRequestsReviewed: number
-  doctorCabRequestsVendorAssigned: number
   leaveBalanceEditRequestsRequested: number
   leaveBalanceEditRequestsReviewed: number
   createdLedgerEntries: number
@@ -66757,9 +63685,6 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   insuranceCases?: boolean | UserCountOutputTypeCountInsuranceCasesArgs
   plRecords?: boolean | UserCountOutputTypeCountPlRecordsArgs
   approvedLeaves?: boolean | UserCountOutputTypeCountApprovedLeavesArgs
-  doctorLeaveRequestsReviewed?: boolean | UserCountOutputTypeCountDoctorLeaveRequestsReviewedArgs
-  doctorCabRequestsReviewed?: boolean | UserCountOutputTypeCountDoctorCabRequestsReviewedArgs
-  doctorCabRequestsVendorAssigned?: boolean | UserCountOutputTypeCountDoctorCabRequestsVendorAssignedArgs
   leaveBalanceEditRequestsRequested?: boolean | UserCountOutputTypeCountLeaveBalanceEditRequestsRequestedArgs
   leaveBalanceEditRequestsReviewed?: boolean | UserCountOutputTypeCountLeaveBalanceEditRequestsReviewedArgs
   createdLedgerEntries?: boolean | UserCountOutputTypeCountCreatedLedgerEntriesArgs
@@ -66930,27 +63855,6 @@ export type UserCountOutputTypeCountPlRecordsArgs<ExtArgs extends runtime.Types.
  */
 export type UserCountOutputTypeCountApprovedLeavesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LeaveRequestWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountDoctorLeaveRequestsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DoctorLeaveRequestWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountDoctorCabRequestsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DoctorCabRequestWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountDoctorCabRequestsVendorAssignedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DoctorCabRequestWhereInput
 }
 
 /**
@@ -67707,9 +64611,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   plRecords?: boolean | Prisma.User$plRecordsArgs<ExtArgs>
   employee?: boolean | Prisma.User$employeeArgs<ExtArgs>
   approvedLeaves?: boolean | Prisma.User$approvedLeavesArgs<ExtArgs>
-  doctorLeaveRequestsReviewed?: boolean | Prisma.User$doctorLeaveRequestsReviewedArgs<ExtArgs>
-  doctorCabRequestsReviewed?: boolean | Prisma.User$doctorCabRequestsReviewedArgs<ExtArgs>
-  doctorCabRequestsVendorAssigned?: boolean | Prisma.User$doctorCabRequestsVendorAssignedArgs<ExtArgs>
   leaveBalanceEditRequestsRequested?: boolean | Prisma.User$leaveBalanceEditRequestsRequestedArgs<ExtArgs>
   leaveBalanceEditRequestsReviewed?: boolean | Prisma.User$leaveBalanceEditRequestsReviewedArgs<ExtArgs>
   createdLedgerEntries?: boolean | Prisma.User$createdLedgerEntriesArgs<ExtArgs>
@@ -67882,9 +64783,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   plRecords?: boolean | Prisma.User$plRecordsArgs<ExtArgs>
   employee?: boolean | Prisma.User$employeeArgs<ExtArgs>
   approvedLeaves?: boolean | Prisma.User$approvedLeavesArgs<ExtArgs>
-  doctorLeaveRequestsReviewed?: boolean | Prisma.User$doctorLeaveRequestsReviewedArgs<ExtArgs>
-  doctorCabRequestsReviewed?: boolean | Prisma.User$doctorCabRequestsReviewedArgs<ExtArgs>
-  doctorCabRequestsVendorAssigned?: boolean | Prisma.User$doctorCabRequestsVendorAssignedArgs<ExtArgs>
   leaveBalanceEditRequestsRequested?: boolean | Prisma.User$leaveBalanceEditRequestsRequestedArgs<ExtArgs>
   leaveBalanceEditRequestsReviewed?: boolean | Prisma.User$leaveBalanceEditRequestsReviewedArgs<ExtArgs>
   createdLedgerEntries?: boolean | Prisma.User$createdLedgerEntriesArgs<ExtArgs>
@@ -68006,9 +64904,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     plRecords: Prisma.$PLRecordPayload<ExtArgs>[]
     employee: Prisma.$EmployeePayload<ExtArgs> | null
     approvedLeaves: Prisma.$LeaveRequestPayload<ExtArgs>[]
-    doctorLeaveRequestsReviewed: Prisma.$DoctorLeaveRequestPayload<ExtArgs>[]
-    doctorCabRequestsReviewed: Prisma.$DoctorCabRequestPayload<ExtArgs>[]
-    doctorCabRequestsVendorAssigned: Prisma.$DoctorCabRequestPayload<ExtArgs>[]
     leaveBalanceEditRequestsRequested: Prisma.$LeaveBalanceEditRequestPayload<ExtArgs>[]
     leaveBalanceEditRequestsReviewed: Prisma.$LeaveBalanceEditRequestPayload<ExtArgs>[]
     createdLedgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
@@ -68533,9 +65428,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   plRecords<T extends Prisma.User$plRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$plRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PLRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employee<T extends Prisma.User$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   approvedLeaves<T extends Prisma.User$approvedLeavesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedLeavesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  doctorLeaveRequestsReviewed<T extends Prisma.User$doctorLeaveRequestsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$doctorLeaveRequestsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorLeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  doctorCabRequestsReviewed<T extends Prisma.User$doctorCabRequestsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$doctorCabRequestsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorCabRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  doctorCabRequestsVendorAssigned<T extends Prisma.User$doctorCabRequestsVendorAssignedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$doctorCabRequestsVendorAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorCabRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaveBalanceEditRequestsRequested<T extends Prisma.User$leaveBalanceEditRequestsRequestedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leaveBalanceEditRequestsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveBalanceEditRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaveBalanceEditRequestsReviewed<T extends Prisma.User$leaveBalanceEditRequestsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leaveBalanceEditRequestsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveBalanceEditRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdLedgerEntries<T extends Prisma.User$createdLedgerEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdLedgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -69285,78 +66177,6 @@ export type User$approvedLeavesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.LeaveRequestScalarFieldEnum | Prisma.LeaveRequestScalarFieldEnum[]
-}
-
-/**
- * User.doctorLeaveRequestsReviewed
- */
-export type User$doctorLeaveRequestsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DoctorLeaveRequest
-   */
-  select?: Prisma.DoctorLeaveRequestSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DoctorLeaveRequest
-   */
-  omit?: Prisma.DoctorLeaveRequestOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorLeaveRequestInclude<ExtArgs> | null
-  where?: Prisma.DoctorLeaveRequestWhereInput
-  orderBy?: Prisma.DoctorLeaveRequestOrderByWithRelationInput | Prisma.DoctorLeaveRequestOrderByWithRelationInput[]
-  cursor?: Prisma.DoctorLeaveRequestWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DoctorLeaveRequestScalarFieldEnum | Prisma.DoctorLeaveRequestScalarFieldEnum[]
-}
-
-/**
- * User.doctorCabRequestsReviewed
- */
-export type User$doctorCabRequestsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DoctorCabRequest
-   */
-  select?: Prisma.DoctorCabRequestSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DoctorCabRequest
-   */
-  omit?: Prisma.DoctorCabRequestOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorCabRequestInclude<ExtArgs> | null
-  where?: Prisma.DoctorCabRequestWhereInput
-  orderBy?: Prisma.DoctorCabRequestOrderByWithRelationInput | Prisma.DoctorCabRequestOrderByWithRelationInput[]
-  cursor?: Prisma.DoctorCabRequestWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DoctorCabRequestScalarFieldEnum | Prisma.DoctorCabRequestScalarFieldEnum[]
-}
-
-/**
- * User.doctorCabRequestsVendorAssigned
- */
-export type User$doctorCabRequestsVendorAssignedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DoctorCabRequest
-   */
-  select?: Prisma.DoctorCabRequestSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DoctorCabRequest
-   */
-  omit?: Prisma.DoctorCabRequestOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorCabRequestInclude<ExtArgs> | null
-  where?: Prisma.DoctorCabRequestWhereInput
-  orderBy?: Prisma.DoctorCabRequestOrderByWithRelationInput | Prisma.DoctorCabRequestOrderByWithRelationInput[]
-  cursor?: Prisma.DoctorCabRequestWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DoctorCabRequestScalarFieldEnum | Prisma.DoctorCabRequestScalarFieldEnum[]
 }
 
 /**

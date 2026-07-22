@@ -47,7 +47,6 @@ export type DoctorMasterMinAggregateOutputType = {
   treatment: string | null
   age: number | null
   sex: string | null
-  phoneNumber: string | null
   aadhaarNumber: string | null
   aadhaarCardUrl: string | null
   panNumber: string | null
@@ -70,7 +69,6 @@ export type DoctorMasterMaxAggregateOutputType = {
   treatment: string | null
   age: number | null
   sex: string | null
-  phoneNumber: string | null
   aadhaarNumber: string | null
   aadhaarCardUrl: string | null
   panNumber: string | null
@@ -93,7 +91,6 @@ export type DoctorMasterCountAggregateOutputType = {
   treatment: number
   age: number
   sex: number
-  phoneNumber: number
   aadhaarNumber: number
   aadhaarCardUrl: number
   panNumber: number
@@ -133,7 +130,6 @@ export type DoctorMasterMinAggregateInputType = {
   treatment?: true
   age?: true
   sex?: true
-  phoneNumber?: true
   aadhaarNumber?: true
   aadhaarCardUrl?: true
   panNumber?: true
@@ -156,7 +152,6 @@ export type DoctorMasterMaxAggregateInputType = {
   treatment?: true
   age?: true
   sex?: true
-  phoneNumber?: true
   aadhaarNumber?: true
   aadhaarCardUrl?: true
   panNumber?: true
@@ -179,7 +174,6 @@ export type DoctorMasterCountAggregateInputType = {
   treatment?: true
   age?: true
   sex?: true
-  phoneNumber?: true
   aadhaarNumber?: true
   aadhaarCardUrl?: true
   panNumber?: true
@@ -290,7 +284,6 @@ export type DoctorMasterGroupByOutputType = {
   treatment: string | null
   age: number | null
   sex: string | null
-  phoneNumber: string | null
   aadhaarNumber: string | null
   aadhaarCardUrl: string | null
   panNumber: string | null
@@ -337,7 +330,6 @@ export type DoctorMasterWhereInput = {
   treatment?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   age?: Prisma.IntNullableFilter<"DoctorMaster"> | number | null
   sex?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
-  phoneNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   aadhaarNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   aadhaarCardUrl?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   panNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
@@ -352,9 +344,6 @@ export type DoctorMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"DoctorMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"DoctorMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorMaster"> | Date | string
-  appAccount?: Prisma.XOR<Prisma.DoctorAppAccountNullableScalarRelationFilter, Prisma.DoctorAppAccountWhereInput> | null
-  leaveRequests?: Prisma.DoctorLeaveRequestListRelationFilter
-  cabRequests?: Prisma.DoctorCabRequestListRelationFilter
 }
 
 export type DoctorMasterOrderByWithRelationInput = {
@@ -364,7 +353,6 @@ export type DoctorMasterOrderByWithRelationInput = {
   treatment?: Prisma.SortOrderInput | Prisma.SortOrder
   age?: Prisma.SortOrderInput | Prisma.SortOrder
   sex?: Prisma.SortOrderInput | Prisma.SortOrder
-  phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   aadhaarCardUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -379,15 +367,11 @@ export type DoctorMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  appAccount?: Prisma.DoctorAppAccountOrderByWithRelationInput
-  leaveRequests?: Prisma.DoctorLeaveRequestOrderByRelationAggregateInput
-  cabRequests?: Prisma.DoctorCabRequestOrderByRelationAggregateInput
 }
 
 export type DoctorMasterWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   name?: string
-  phoneNumber?: string
   AND?: Prisma.DoctorMasterWhereInput | Prisma.DoctorMasterWhereInput[]
   OR?: Prisma.DoctorMasterWhereInput[]
   NOT?: Prisma.DoctorMasterWhereInput | Prisma.DoctorMasterWhereInput[]
@@ -409,10 +393,7 @@ export type DoctorMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"DoctorMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"DoctorMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorMaster"> | Date | string
-  appAccount?: Prisma.XOR<Prisma.DoctorAppAccountNullableScalarRelationFilter, Prisma.DoctorAppAccountWhereInput> | null
-  leaveRequests?: Prisma.DoctorLeaveRequestListRelationFilter
-  cabRequests?: Prisma.DoctorCabRequestListRelationFilter
-}, "id" | "name" | "phoneNumber">
+}, "id" | "name">
 
 export type DoctorMasterOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -421,7 +402,6 @@ export type DoctorMasterOrderByWithAggregationInput = {
   treatment?: Prisma.SortOrderInput | Prisma.SortOrder
   age?: Prisma.SortOrderInput | Prisma.SortOrder
   sex?: Prisma.SortOrderInput | Prisma.SortOrder
-  phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   aadhaarCardUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -453,7 +433,6 @@ export type DoctorMasterScalarWhereWithAggregatesInput = {
   treatment?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
   age?: Prisma.IntNullableWithAggregatesFilter<"DoctorMaster"> | number | null
   sex?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
-  phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
   aadhaarNumber?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
   aadhaarCardUrl?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
   panNumber?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
@@ -477,7 +456,6 @@ export type DoctorMasterCreateInput = {
   treatment?: string | null
   age?: number | null
   sex?: string | null
-  phoneNumber?: string | null
   aadhaarNumber?: string | null
   aadhaarCardUrl?: string | null
   panNumber?: string | null
@@ -492,9 +470,6 @@ export type DoctorMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  appAccount?: Prisma.DoctorAppAccountCreateNestedOneWithoutDoctorInput
-  leaveRequests?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutDoctorInput
-  cabRequests?: Prisma.DoctorCabRequestCreateNestedManyWithoutDoctorInput
 }
 
 export type DoctorMasterUncheckedCreateInput = {
@@ -504,7 +479,6 @@ export type DoctorMasterUncheckedCreateInput = {
   treatment?: string | null
   age?: number | null
   sex?: string | null
-  phoneNumber?: string | null
   aadhaarNumber?: string | null
   aadhaarCardUrl?: string | null
   panNumber?: string | null
@@ -519,9 +493,6 @@ export type DoctorMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  appAccount?: Prisma.DoctorAppAccountUncheckedCreateNestedOneWithoutDoctorInput
-  leaveRequests?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutDoctorInput
-  cabRequests?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutDoctorInput
 }
 
 export type DoctorMasterUpdateInput = {
@@ -531,7 +502,6 @@ export type DoctorMasterUpdateInput = {
   treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -546,9 +516,6 @@ export type DoctorMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appAccount?: Prisma.DoctorAppAccountUpdateOneWithoutDoctorNestedInput
-  leaveRequests?: Prisma.DoctorLeaveRequestUpdateManyWithoutDoctorNestedInput
-  cabRequests?: Prisma.DoctorCabRequestUpdateManyWithoutDoctorNestedInput
 }
 
 export type DoctorMasterUncheckedUpdateInput = {
@@ -558,7 +525,6 @@ export type DoctorMasterUncheckedUpdateInput = {
   treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -573,9 +539,6 @@ export type DoctorMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appAccount?: Prisma.DoctorAppAccountUncheckedUpdateOneWithoutDoctorNestedInput
-  leaveRequests?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutDoctorNestedInput
-  cabRequests?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutDoctorNestedInput
 }
 
 export type DoctorMasterCreateManyInput = {
@@ -585,7 +548,6 @@ export type DoctorMasterCreateManyInput = {
   treatment?: string | null
   age?: number | null
   sex?: string | null
-  phoneNumber?: string | null
   aadhaarNumber?: string | null
   aadhaarCardUrl?: string | null
   panNumber?: string | null
@@ -609,7 +571,6 @@ export type DoctorMasterUpdateManyMutationInput = {
   treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -633,7 +594,6 @@ export type DoctorMasterUncheckedUpdateManyInput = {
   treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -657,7 +617,6 @@ export type DoctorMasterCountOrderByAggregateInput = {
   treatment?: Prisma.SortOrder
   age?: Prisma.SortOrder
   sex?: Prisma.SortOrder
-  phoneNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   aadhaarCardUrl?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
@@ -688,7 +647,6 @@ export type DoctorMasterMaxOrderByAggregateInput = {
   treatment?: Prisma.SortOrder
   age?: Prisma.SortOrder
   sex?: Prisma.SortOrder
-  phoneNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   aadhaarCardUrl?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
@@ -711,7 +669,6 @@ export type DoctorMasterMinOrderByAggregateInput = {
   treatment?: Prisma.SortOrder
   age?: Prisma.SortOrder
   sex?: Prisma.SortOrder
-  phoneNumber?: Prisma.SortOrder
   aadhaarNumber?: Prisma.SortOrder
   aadhaarCardUrl?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
@@ -734,451 +691,6 @@ export type DoctorMasterSumOrderByAggregateInput = {
   ratingCount?: Prisma.SortOrder
 }
 
-export type DoctorMasterScalarRelationFilter = {
-  is?: Prisma.DoctorMasterWhereInput
-  isNot?: Prisma.DoctorMasterWhereInput
-}
-
-export type DoctorMasterCreateNestedOneWithoutAppAccountInput = {
-  create?: Prisma.XOR<Prisma.DoctorMasterCreateWithoutAppAccountInput, Prisma.DoctorMasterUncheckedCreateWithoutAppAccountInput>
-  connectOrCreate?: Prisma.DoctorMasterCreateOrConnectWithoutAppAccountInput
-  connect?: Prisma.DoctorMasterWhereUniqueInput
-}
-
-export type DoctorMasterUpdateOneRequiredWithoutAppAccountNestedInput = {
-  create?: Prisma.XOR<Prisma.DoctorMasterCreateWithoutAppAccountInput, Prisma.DoctorMasterUncheckedCreateWithoutAppAccountInput>
-  connectOrCreate?: Prisma.DoctorMasterCreateOrConnectWithoutAppAccountInput
-  upsert?: Prisma.DoctorMasterUpsertWithoutAppAccountInput
-  connect?: Prisma.DoctorMasterWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DoctorMasterUpdateToOneWithWhereWithoutAppAccountInput, Prisma.DoctorMasterUpdateWithoutAppAccountInput>, Prisma.DoctorMasterUncheckedUpdateWithoutAppAccountInput>
-}
-
-export type DoctorMasterCreateNestedOneWithoutLeaveRequestsInput = {
-  create?: Prisma.XOR<Prisma.DoctorMasterCreateWithoutLeaveRequestsInput, Prisma.DoctorMasterUncheckedCreateWithoutLeaveRequestsInput>
-  connectOrCreate?: Prisma.DoctorMasterCreateOrConnectWithoutLeaveRequestsInput
-  connect?: Prisma.DoctorMasterWhereUniqueInput
-}
-
-export type DoctorMasterUpdateOneRequiredWithoutLeaveRequestsNestedInput = {
-  create?: Prisma.XOR<Prisma.DoctorMasterCreateWithoutLeaveRequestsInput, Prisma.DoctorMasterUncheckedCreateWithoutLeaveRequestsInput>
-  connectOrCreate?: Prisma.DoctorMasterCreateOrConnectWithoutLeaveRequestsInput
-  upsert?: Prisma.DoctorMasterUpsertWithoutLeaveRequestsInput
-  connect?: Prisma.DoctorMasterWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DoctorMasterUpdateToOneWithWhereWithoutLeaveRequestsInput, Prisma.DoctorMasterUpdateWithoutLeaveRequestsInput>, Prisma.DoctorMasterUncheckedUpdateWithoutLeaveRequestsInput>
-}
-
-export type DoctorMasterCreateNestedOneWithoutCabRequestsInput = {
-  create?: Prisma.XOR<Prisma.DoctorMasterCreateWithoutCabRequestsInput, Prisma.DoctorMasterUncheckedCreateWithoutCabRequestsInput>
-  connectOrCreate?: Prisma.DoctorMasterCreateOrConnectWithoutCabRequestsInput
-  connect?: Prisma.DoctorMasterWhereUniqueInput
-}
-
-export type DoctorMasterUpdateOneRequiredWithoutCabRequestsNestedInput = {
-  create?: Prisma.XOR<Prisma.DoctorMasterCreateWithoutCabRequestsInput, Prisma.DoctorMasterUncheckedCreateWithoutCabRequestsInput>
-  connectOrCreate?: Prisma.DoctorMasterCreateOrConnectWithoutCabRequestsInput
-  upsert?: Prisma.DoctorMasterUpsertWithoutCabRequestsInput
-  connect?: Prisma.DoctorMasterWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DoctorMasterUpdateToOneWithWhereWithoutCabRequestsInput, Prisma.DoctorMasterUpdateWithoutCabRequestsInput>, Prisma.DoctorMasterUncheckedUpdateWithoutCabRequestsInput>
-}
-
-export type DoctorMasterCreateWithoutAppAccountInput = {
-  id?: string
-  name: string
-  category?: string | null
-  treatment?: string | null
-  age?: number | null
-  sex?: string | null
-  phoneNumber?: string | null
-  aadhaarNumber?: string | null
-  aadhaarCardUrl?: string | null
-  panNumber?: string | null
-  panCardUrl?: string | null
-  agreementUrl?: string | null
-  experienceYears?: number | null
-  experienceNotes?: string | null
-  feeStructure?: string | null
-  ratingAverage?: number | null
-  ratingCount?: number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  leaveRequests?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutDoctorInput
-  cabRequests?: Prisma.DoctorCabRequestCreateNestedManyWithoutDoctorInput
-}
-
-export type DoctorMasterUncheckedCreateWithoutAppAccountInput = {
-  id?: string
-  name: string
-  category?: string | null
-  treatment?: string | null
-  age?: number | null
-  sex?: string | null
-  phoneNumber?: string | null
-  aadhaarNumber?: string | null
-  aadhaarCardUrl?: string | null
-  panNumber?: string | null
-  panCardUrl?: string | null
-  agreementUrl?: string | null
-  experienceYears?: number | null
-  experienceNotes?: string | null
-  feeStructure?: string | null
-  ratingAverage?: number | null
-  ratingCount?: number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  leaveRequests?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutDoctorInput
-  cabRequests?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutDoctorInput
-}
-
-export type DoctorMasterCreateOrConnectWithoutAppAccountInput = {
-  where: Prisma.DoctorMasterWhereUniqueInput
-  create: Prisma.XOR<Prisma.DoctorMasterCreateWithoutAppAccountInput, Prisma.DoctorMasterUncheckedCreateWithoutAppAccountInput>
-}
-
-export type DoctorMasterUpsertWithoutAppAccountInput = {
-  update: Prisma.XOR<Prisma.DoctorMasterUpdateWithoutAppAccountInput, Prisma.DoctorMasterUncheckedUpdateWithoutAppAccountInput>
-  create: Prisma.XOR<Prisma.DoctorMasterCreateWithoutAppAccountInput, Prisma.DoctorMasterUncheckedCreateWithoutAppAccountInput>
-  where?: Prisma.DoctorMasterWhereInput
-}
-
-export type DoctorMasterUpdateToOneWithWhereWithoutAppAccountInput = {
-  where?: Prisma.DoctorMasterWhereInput
-  data: Prisma.XOR<Prisma.DoctorMasterUpdateWithoutAppAccountInput, Prisma.DoctorMasterUncheckedUpdateWithoutAppAccountInput>
-}
-
-export type DoctorMasterUpdateWithoutAppAccountInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  leaveRequests?: Prisma.DoctorLeaveRequestUpdateManyWithoutDoctorNestedInput
-  cabRequests?: Prisma.DoctorCabRequestUpdateManyWithoutDoctorNestedInput
-}
-
-export type DoctorMasterUncheckedUpdateWithoutAppAccountInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  leaveRequests?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutDoctorNestedInput
-  cabRequests?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutDoctorNestedInput
-}
-
-export type DoctorMasterCreateWithoutLeaveRequestsInput = {
-  id?: string
-  name: string
-  category?: string | null
-  treatment?: string | null
-  age?: number | null
-  sex?: string | null
-  phoneNumber?: string | null
-  aadhaarNumber?: string | null
-  aadhaarCardUrl?: string | null
-  panNumber?: string | null
-  panCardUrl?: string | null
-  agreementUrl?: string | null
-  experienceYears?: number | null
-  experienceNotes?: string | null
-  feeStructure?: string | null
-  ratingAverage?: number | null
-  ratingCount?: number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  appAccount?: Prisma.DoctorAppAccountCreateNestedOneWithoutDoctorInput
-  cabRequests?: Prisma.DoctorCabRequestCreateNestedManyWithoutDoctorInput
-}
-
-export type DoctorMasterUncheckedCreateWithoutLeaveRequestsInput = {
-  id?: string
-  name: string
-  category?: string | null
-  treatment?: string | null
-  age?: number | null
-  sex?: string | null
-  phoneNumber?: string | null
-  aadhaarNumber?: string | null
-  aadhaarCardUrl?: string | null
-  panNumber?: string | null
-  panCardUrl?: string | null
-  agreementUrl?: string | null
-  experienceYears?: number | null
-  experienceNotes?: string | null
-  feeStructure?: string | null
-  ratingAverage?: number | null
-  ratingCount?: number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  appAccount?: Prisma.DoctorAppAccountUncheckedCreateNestedOneWithoutDoctorInput
-  cabRequests?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutDoctorInput
-}
-
-export type DoctorMasterCreateOrConnectWithoutLeaveRequestsInput = {
-  where: Prisma.DoctorMasterWhereUniqueInput
-  create: Prisma.XOR<Prisma.DoctorMasterCreateWithoutLeaveRequestsInput, Prisma.DoctorMasterUncheckedCreateWithoutLeaveRequestsInput>
-}
-
-export type DoctorMasterUpsertWithoutLeaveRequestsInput = {
-  update: Prisma.XOR<Prisma.DoctorMasterUpdateWithoutLeaveRequestsInput, Prisma.DoctorMasterUncheckedUpdateWithoutLeaveRequestsInput>
-  create: Prisma.XOR<Prisma.DoctorMasterCreateWithoutLeaveRequestsInput, Prisma.DoctorMasterUncheckedCreateWithoutLeaveRequestsInput>
-  where?: Prisma.DoctorMasterWhereInput
-}
-
-export type DoctorMasterUpdateToOneWithWhereWithoutLeaveRequestsInput = {
-  where?: Prisma.DoctorMasterWhereInput
-  data: Prisma.XOR<Prisma.DoctorMasterUpdateWithoutLeaveRequestsInput, Prisma.DoctorMasterUncheckedUpdateWithoutLeaveRequestsInput>
-}
-
-export type DoctorMasterUpdateWithoutLeaveRequestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appAccount?: Prisma.DoctorAppAccountUpdateOneWithoutDoctorNestedInput
-  cabRequests?: Prisma.DoctorCabRequestUpdateManyWithoutDoctorNestedInput
-}
-
-export type DoctorMasterUncheckedUpdateWithoutLeaveRequestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appAccount?: Prisma.DoctorAppAccountUncheckedUpdateOneWithoutDoctorNestedInput
-  cabRequests?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutDoctorNestedInput
-}
-
-export type DoctorMasterCreateWithoutCabRequestsInput = {
-  id?: string
-  name: string
-  category?: string | null
-  treatment?: string | null
-  age?: number | null
-  sex?: string | null
-  phoneNumber?: string | null
-  aadhaarNumber?: string | null
-  aadhaarCardUrl?: string | null
-  panNumber?: string | null
-  panCardUrl?: string | null
-  agreementUrl?: string | null
-  experienceYears?: number | null
-  experienceNotes?: string | null
-  feeStructure?: string | null
-  ratingAverage?: number | null
-  ratingCount?: number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  appAccount?: Prisma.DoctorAppAccountCreateNestedOneWithoutDoctorInput
-  leaveRequests?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutDoctorInput
-}
-
-export type DoctorMasterUncheckedCreateWithoutCabRequestsInput = {
-  id?: string
-  name: string
-  category?: string | null
-  treatment?: string | null
-  age?: number | null
-  sex?: string | null
-  phoneNumber?: string | null
-  aadhaarNumber?: string | null
-  aadhaarCardUrl?: string | null
-  panNumber?: string | null
-  panCardUrl?: string | null
-  agreementUrl?: string | null
-  experienceYears?: number | null
-  experienceNotes?: string | null
-  feeStructure?: string | null
-  ratingAverage?: number | null
-  ratingCount?: number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  appAccount?: Prisma.DoctorAppAccountUncheckedCreateNestedOneWithoutDoctorInput
-  leaveRequests?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutDoctorInput
-}
-
-export type DoctorMasterCreateOrConnectWithoutCabRequestsInput = {
-  where: Prisma.DoctorMasterWhereUniqueInput
-  create: Prisma.XOR<Prisma.DoctorMasterCreateWithoutCabRequestsInput, Prisma.DoctorMasterUncheckedCreateWithoutCabRequestsInput>
-}
-
-export type DoctorMasterUpsertWithoutCabRequestsInput = {
-  update: Prisma.XOR<Prisma.DoctorMasterUpdateWithoutCabRequestsInput, Prisma.DoctorMasterUncheckedUpdateWithoutCabRequestsInput>
-  create: Prisma.XOR<Prisma.DoctorMasterCreateWithoutCabRequestsInput, Prisma.DoctorMasterUncheckedCreateWithoutCabRequestsInput>
-  where?: Prisma.DoctorMasterWhereInput
-}
-
-export type DoctorMasterUpdateToOneWithWhereWithoutCabRequestsInput = {
-  where?: Prisma.DoctorMasterWhereInput
-  data: Prisma.XOR<Prisma.DoctorMasterUpdateWithoutCabRequestsInput, Prisma.DoctorMasterUncheckedUpdateWithoutCabRequestsInput>
-}
-
-export type DoctorMasterUpdateWithoutCabRequestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appAccount?: Prisma.DoctorAppAccountUpdateOneWithoutDoctorNestedInput
-  leaveRequests?: Prisma.DoctorLeaveRequestUpdateManyWithoutDoctorNestedInput
-}
-
-export type DoctorMasterUncheckedUpdateWithoutCabRequestsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
-  documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appAccount?: Prisma.DoctorAppAccountUncheckedUpdateOneWithoutDoctorNestedInput
-  leaveRequests?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutDoctorNestedInput
-}
-
-
-/**
- * Count Type DoctorMasterCountOutputType
- */
-
-export type DoctorMasterCountOutputType = {
-  leaveRequests: number
-  cabRequests: number
-}
-
-export type DoctorMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  leaveRequests?: boolean | DoctorMasterCountOutputTypeCountLeaveRequestsArgs
-  cabRequests?: boolean | DoctorMasterCountOutputTypeCountCabRequestsArgs
-}
-
-/**
- * DoctorMasterCountOutputType without action
- */
-export type DoctorMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DoctorMasterCountOutputType
-   */
-  select?: Prisma.DoctorMasterCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * DoctorMasterCountOutputType without action
- */
-export type DoctorMasterCountOutputTypeCountLeaveRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DoctorLeaveRequestWhereInput
-}
-
-/**
- * DoctorMasterCountOutputType without action
- */
-export type DoctorMasterCountOutputTypeCountCabRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DoctorCabRequestWhereInput
-}
 
 
 export type DoctorMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1188,7 +700,6 @@ export type DoctorMasterSelect<ExtArgs extends runtime.Types.Extensions.Internal
   treatment?: boolean
   age?: boolean
   sex?: boolean
-  phoneNumber?: boolean
   aadhaarNumber?: boolean
   aadhaarCardUrl?: boolean
   panNumber?: boolean
@@ -1203,10 +714,6 @@ export type DoctorMasterSelect<ExtArgs extends runtime.Types.Extensions.Internal
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  appAccount?: boolean | Prisma.DoctorMaster$appAccountArgs<ExtArgs>
-  leaveRequests?: boolean | Prisma.DoctorMaster$leaveRequestsArgs<ExtArgs>
-  cabRequests?: boolean | Prisma.DoctorMaster$cabRequestsArgs<ExtArgs>
-  _count?: boolean | Prisma.DoctorMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["doctorMaster"]>
 
 export type DoctorMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1216,7 +723,6 @@ export type DoctorMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   treatment?: boolean
   age?: boolean
   sex?: boolean
-  phoneNumber?: boolean
   aadhaarNumber?: boolean
   aadhaarCardUrl?: boolean
   panNumber?: boolean
@@ -1240,7 +746,6 @@ export type DoctorMasterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   treatment?: boolean
   age?: boolean
   sex?: boolean
-  phoneNumber?: boolean
   aadhaarNumber?: boolean
   aadhaarCardUrl?: boolean
   panNumber?: boolean
@@ -1264,7 +769,6 @@ export type DoctorMasterSelectScalar = {
   treatment?: boolean
   age?: boolean
   sex?: boolean
-  phoneNumber?: boolean
   aadhaarNumber?: boolean
   aadhaarCardUrl?: boolean
   panNumber?: boolean
@@ -1281,23 +785,11 @@ export type DoctorMasterSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DoctorMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "treatment" | "age" | "sex" | "phoneNumber" | "aadhaarNumber" | "aadhaarCardUrl" | "panNumber" | "panCardUrl" | "agreementUrl" | "experienceYears" | "experienceNotes" | "feeStructure" | "ratingAverage" | "ratingCount" | "documents" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["doctorMaster"]>
-export type DoctorMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  appAccount?: boolean | Prisma.DoctorMaster$appAccountArgs<ExtArgs>
-  leaveRequests?: boolean | Prisma.DoctorMaster$leaveRequestsArgs<ExtArgs>
-  cabRequests?: boolean | Prisma.DoctorMaster$cabRequestsArgs<ExtArgs>
-  _count?: boolean | Prisma.DoctorMasterCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type DoctorMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type DoctorMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type DoctorMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "treatment" | "age" | "sex" | "aadhaarNumber" | "aadhaarCardUrl" | "panNumber" | "panCardUrl" | "agreementUrl" | "experienceYears" | "experienceNotes" | "feeStructure" | "ratingAverage" | "ratingCount" | "documents" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["doctorMaster"]>
 
 export type $DoctorMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DoctorMaster"
-  objects: {
-    appAccount: Prisma.$DoctorAppAccountPayload<ExtArgs> | null
-    leaveRequests: Prisma.$DoctorLeaveRequestPayload<ExtArgs>[]
-    cabRequests: Prisma.$DoctorCabRequestPayload<ExtArgs>[]
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -1305,7 +797,6 @@ export type $DoctorMasterPayload<ExtArgs extends runtime.Types.Extensions.Intern
     treatment: string | null
     age: number | null
     sex: string | null
-    phoneNumber: string | null
     aadhaarNumber: string | null
     aadhaarCardUrl: string | null
     panNumber: string | null
@@ -1720,9 +1211,6 @@ readonly fields: DoctorMasterFieldRefs;
  */
 export interface Prisma__DoctorMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  appAccount<T extends Prisma.DoctorMaster$appAccountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorMaster$appAccountArgs<ExtArgs>>): Prisma.Prisma__DoctorAppAccountClient<runtime.Types.Result.GetResult<Prisma.$DoctorAppAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  leaveRequests<T extends Prisma.DoctorMaster$leaveRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorMaster$leaveRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorLeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  cabRequests<T extends Prisma.DoctorMaster$cabRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorMaster$cabRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorCabRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1758,7 +1246,6 @@ export interface DoctorMasterFieldRefs {
   readonly treatment: Prisma.FieldRef<"DoctorMaster", 'String'>
   readonly age: Prisma.FieldRef<"DoctorMaster", 'Int'>
   readonly sex: Prisma.FieldRef<"DoctorMaster", 'String'>
-  readonly phoneNumber: Prisma.FieldRef<"DoctorMaster", 'String'>
   readonly aadhaarNumber: Prisma.FieldRef<"DoctorMaster", 'String'>
   readonly aadhaarCardUrl: Prisma.FieldRef<"DoctorMaster", 'String'>
   readonly panNumber: Prisma.FieldRef<"DoctorMaster", 'String'>
@@ -1790,10 +1277,6 @@ export type DoctorMasterFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
-  /**
    * Filter, which DoctorMaster to fetch.
    */
   where: Prisma.DoctorMasterWhereUniqueInput
@@ -1812,10 +1295,6 @@ export type DoctorMasterFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
-  /**
    * Filter, which DoctorMaster to fetch.
    */
   where: Prisma.DoctorMasterWhereUniqueInput
@@ -1833,10 +1312,6 @@ export type DoctorMasterFindFirstArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the DoctorMaster
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
   /**
    * Filter, which DoctorMaster to fetch.
    */
@@ -1886,10 +1361,6 @@ export type DoctorMasterFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Exten
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
-  /**
    * Filter, which DoctorMaster to fetch.
    */
   where?: Prisma.DoctorMasterWhereInput
@@ -1937,10 +1408,6 @@ export type DoctorMasterFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the DoctorMaster
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
   /**
    * Filter, which DoctorMasters to fetch.
    */
@@ -1990,10 +1457,6 @@ export type DoctorMasterCreateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
-  /**
    * The data needed to create a DoctorMaster.
    */
   data: Prisma.XOR<Prisma.DoctorMasterCreateInput, Prisma.DoctorMasterUncheckedCreateInput>
@@ -2041,10 +1504,6 @@ export type DoctorMasterUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the DoctorMaster
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
   /**
    * The data needed to update a DoctorMaster.
    */
@@ -2112,10 +1571,6 @@ export type DoctorMasterUpsertArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
-  /**
    * The filter to search for the DoctorMaster to update in case it exists.
    */
   where: Prisma.DoctorMasterWhereUniqueInput
@@ -2142,10 +1597,6 @@ export type DoctorMasterDeleteArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
-  /**
    * Filter which DoctorMaster to delete.
    */
   where: Prisma.DoctorMasterWhereUniqueInput
@@ -2166,73 +1617,6 @@ export type DoctorMasterDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * DoctorMaster.appAccount
- */
-export type DoctorMaster$appAccountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DoctorAppAccount
-   */
-  select?: Prisma.DoctorAppAccountSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DoctorAppAccount
-   */
-  omit?: Prisma.DoctorAppAccountOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorAppAccountInclude<ExtArgs> | null
-  where?: Prisma.DoctorAppAccountWhereInput
-}
-
-/**
- * DoctorMaster.leaveRequests
- */
-export type DoctorMaster$leaveRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DoctorLeaveRequest
-   */
-  select?: Prisma.DoctorLeaveRequestSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DoctorLeaveRequest
-   */
-  omit?: Prisma.DoctorLeaveRequestOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorLeaveRequestInclude<ExtArgs> | null
-  where?: Prisma.DoctorLeaveRequestWhereInput
-  orderBy?: Prisma.DoctorLeaveRequestOrderByWithRelationInput | Prisma.DoctorLeaveRequestOrderByWithRelationInput[]
-  cursor?: Prisma.DoctorLeaveRequestWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DoctorLeaveRequestScalarFieldEnum | Prisma.DoctorLeaveRequestScalarFieldEnum[]
-}
-
-/**
- * DoctorMaster.cabRequests
- */
-export type DoctorMaster$cabRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DoctorCabRequest
-   */
-  select?: Prisma.DoctorCabRequestSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DoctorCabRequest
-   */
-  omit?: Prisma.DoctorCabRequestOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorCabRequestInclude<ExtArgs> | null
-  where?: Prisma.DoctorCabRequestWhereInput
-  orderBy?: Prisma.DoctorCabRequestOrderByWithRelationInput | Prisma.DoctorCabRequestOrderByWithRelationInput[]
-  cursor?: Prisma.DoctorCabRequestWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DoctorCabRequestScalarFieldEnum | Prisma.DoctorCabRequestScalarFieldEnum[]
-}
-
-/**
  * DoctorMaster without action
  */
 export type DoctorMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2244,8 +1628,4 @@ export type DoctorMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the DoctorMaster
    */
   omit?: Prisma.DoctorMasterOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DoctorMasterInclude<ExtArgs> | null
 }

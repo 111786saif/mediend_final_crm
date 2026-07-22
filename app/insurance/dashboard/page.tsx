@@ -2,7 +2,7 @@
 
 import { ProtectedRoute } from '@/components/protected-route'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { InsurancePatientTable } from '@/components/insurance/insurance-patient-table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
@@ -12,12 +12,17 @@ import { useRouter } from 'next/navigation'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useState, useMemo, useEffect } from 'react'
 import {
-  FileText, AlertCircle, CheckCircle2, ArrowRight,
+  FileText, AlertCircle, CheckCircle2, Clock, ArrowRight,
   Receipt, Activity, Search, LayoutList, CalendarDays, BarChart3,
   AlertTriangle, CalendarCheck, X, Stethoscope,
 } from 'lucide-react'
 import { PreAuthStatus } from '@/generated/prisma/enums'
+import { useAuth } from '@/hooks/use-auth'
+import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { getLatestActivityTime } from '@/lib/lead-activity'
+import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { canViewPhoneNumber } from '@/lib/case-permissions'
+import { getPhoneDisplay } from '@/lib/phone-utils'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -39,32 +44,12 @@ interface LeadWithStage {
   patientName: string
   phoneNumber: string
   circle?: string | null
-  category?: string | null
   hospitalName: string
   treatment?: string
-  flowType?: string | null
   caseStage: CaseStage
   surgeryDate?: string | null
-  ipdDrName?: string | null
-  surgeonName?: string | null
-  billAmount?: number | null
-  settledTotal?: number | null
-  copay?: number | null
-  deduction?: number | null
-  arrivalDate?: string | null
   bdId?: string | null
-  bd?: {
-    id: string
-    name: string
-    role?: string
-    employee?: {
-      team?: {
-        teamLead?: { user?: { name?: string } }
-        department?: { head?: { name?: string } }
-      }
-      manager?: { user?: { name?: string } }
-    }
-  } | null
+  bd?: { id: string; name: string } | null
   createdDate: string
   updatedDate: string
   kypSubmission?: {
@@ -89,7 +74,6 @@ interface LeadWithStage {
       tpa?: string | null
       hospitalNameSuggestion?: string | null
       hospitalSuggestions?: string[] | null
-      suggestedHospitals?: Array<{ hospitalName?: string; suggestedDoctor?: string }> | null
       roomTypes?: Array<{ name: string; rent: string }> | null
       handledAt?: string | null
       approvalStatus?: PreAuthStatus
@@ -109,16 +93,9 @@ interface LeadWithStage {
     initiatedAt?: string
     surgeryDate?: string | null
   } | null
-  dischargeSheet?: {
-    id?: string
-    isFinalized?: boolean
-    dischargeDate?: string | null
-    markedAt?: string | null
-    updatedAt?: string
-    [key: string]: unknown
-  } | null
+  dischargeSheet?: { id: string; isFinalized?: boolean; dischargeDate?: string | null; markedAt?: string | null; updatedAt?: string } | null
   insuranceInitiateForm?: { id: string; updatedAt?: string } | null
-  plRecord?: Record<string, unknown> | null
+  plRecord?: { updatedAt?: string } | null
   caseStageHistory?: { changedAt?: string }[]
   caseChatMessages?: { createdAt?: string }[]
 }
@@ -179,7 +156,31 @@ const FILTER_STORAGE_KEY = 'insurance-dashboard-filters-v1'
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const ANY_VALUE = '__any__'
 
+function getIpdMarkBadgeClass(status: string | null | undefined): string {
+  switch (status) {
+    case 'ADMITTED_DONE': return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-800'
+    case 'IPD_DONE': return 'bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 border-teal-200 dark:border-teal-800'
+    case 'POSTPONED': return 'bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-800'
+    case 'CANCELLED': return 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border-red-200 dark:border-red-800'
+    case 'DISCHARGED': return 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800'
+    default: return 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'
+  }
+}
+
+function getIpdMarkLabel(status: string | null | undefined): string {
+  if (!status) return '–'
+  switch (status) {
+    case 'ADMITTED_DONE': return 'Admitted'
+    case 'IPD_DONE': return 'Surgery Done'
+    case 'POSTPONED': return 'Postponed'
+    case 'CANCELLED': return 'Cancelled'
+    case 'DISCHARGED': return 'Discharged'
+    default: return status.replace(/_/g, ' ')
+  }
+}
+
 export default function InsuranceDashboardPage() {
+  const { user } = useAuth()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<TabKey>('kyp-review')
   const [searchQuery, setSearchQuery] = useState('')
@@ -451,6 +452,12 @@ export default function InsuranceDashboardPage() {
       l.kypSubmission?.preAuthData?.bdSuggestedHospital
     )
   }, [scopedLeads])
+
+  // ── Components ─────────────────────────────────────────────────────────────
+  const getStageBadge = (stage: CaseStage) => {
+    const { className, label } = getCaseStageBadgeConfig(stage)
+    return <Badge variant="secondary" className={className}>{label}</Badge>
+  }
 
   const tabs: { id: TabKey; label: string; icon: React.FC<{ className?: string }>; value: number; gradient: string; bgGradient: string; iconColor: string; borderColor: string }[] = [
     { id: 'kyp-review', label: 'Card Details', icon: FileText, value: stats.kypReview, gradient: 'from-blue-500 to-cyan-500', bgGradient: 'from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950', iconColor: 'text-blue-600 dark:text-blue-400', borderColor: 'border-blue-200 dark:border-blue-800' },
@@ -870,109 +877,218 @@ export default function InsuranceDashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="p-0">
-              <InsurancePatientTable
-                leads={filteredLeads}
-                isLoading={isLoading}
-                emptyMessage={error ? `Error loading leads: ${error instanceof Error ? error.message : 'Unknown error'}` : 'No cases found'}
-                onRowClick={(lead) => router.push(`/patient/${lead.id}`)}
-                renderActions={(lead) => {
-                  const tier = getPriorityTier(lead as LeadWithStage)
-                  const isSuggestionPending = tier === 3
-                  const isMarkUrgent = needsMarkDischarged(lead as LeadWithStage)
-                  const isFillUrgent = needsSheetFilled(lead as LeadWithStage)
-                  const isInitialFormUrgent = tier === 2
-                  const record = lead as LeadWithStage
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <div className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
+                    <span className="text-lg">Loading cases...</span>
+                  </div>
+                </div>
+              ) : error ? (
+                <div className="text-center py-12">
+                  <div className="inline-flex flex-col items-center gap-2 p-4 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800">
+                    <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+                    <span className="text-red-700 dark:text-red-300 font-semibold">
+                      Error loading leads: {error instanceof Error ? error.message : 'Unknown error'}
+                    </span>
+                  </div>
+                </div>
+              ) : filteredLeads.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="inline-flex flex-col items-center gap-2 p-6 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+                    <Clock className="w-12 h-12 text-gray-500 dark:text-gray-400" />
+                    <span className="text-gray-700 dark:text-gray-300 font-semibold text-lg">No cases found</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 dark:hover:from-gray-800 dark:hover:to-gray-900">
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Lead Ref</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Patient</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Hospital</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Doctor</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Treatment</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Stage</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">IPD Mark</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Last Modified</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredLeads.map((lead, index) => {
+                        const tier = getPriorityTier(lead)
+                        const isSuggestionPending = tier === 3
+                        const isMarkUrgent = needsMarkDischarged(lead)
+                        const isFillUrgent = needsSheetFilled(lead)
+                        const isDischargeUrgent = isMarkUrgent || isFillUrgent
+                        const isInitialFormUrgent = tier === 2
+                        const isRejected = lead.kypSubmission?.preAuthData?.approvalStatus === PreAuthStatus.REJECTED
+                        const { hospital: resolvedHospital, doctor: resolvedDoctor } = resolveLeadHospitalDoctor(lead)
 
-                  return (
-                    <>
-                      {isSuggestionPending && (
-                        <Button
-                          variant="default"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/patient/${record.id}/pre-auth`)
-                          }}
-                          className="bg-amber-600 hover:bg-amber-700 text-white shadow-md"
-                        >
-                          <ArrowRight className="w-4 h-4 mr-1" />
-                          Update Hospitals
-                        </Button>
-                      )}
-                      {record.caseStage === CaseStage.PREAUTH_RAISED && (
-                        <Button
-                          variant="default"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/patient/${record.id}/pre-auth`)
-                          }}
-                          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md"
-                        >
-                          <CheckCircle2 className="w-4 h-4 mr-1" />
-                          Complete Pre-Auth
-                        </Button>
-                      )}
-                      {record.caseStage === CaseStage.PREAUTH_COMPLETE && !record.insuranceInitiateForm && (
-                        <Button
-                          variant="default"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/patient/${record.id}/pre-auth`)
-                          }}
-                          className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white shadow-md"
-                        >
-                          <FileText className="w-4 h-4 mr-1" />
-                          Fill Initial Form
-                        </Button>
-                      )}
-                      {isMarkUrgent && (
-                        <Button
-                          variant="default"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/patient/${record.id}/discharge`)
-                          }}
-                          className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md"
-                        >
-                          <CalendarCheck className="w-4 h-4 mr-1" />
-                          Mark Discharged
-                        </Button>
-                      )}
-                      {isFillUrgent && (
-                        <Button
-                          variant="default"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/patient/${record.id}/discharge`)
-                          }}
-                          className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white shadow-md"
-                        >
-                          <Receipt className="w-4 h-4 mr-1" />
-                          Fill Sheet
-                        </Button>
-                      )}
-                      {record.dischargeSheet?.isFinalized === true && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            router.push(`/patient/${record.id}/discharge`)
-                          }}
-                          className="border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950"
-                        >
-                          <Receipt className="w-4 h-4 mr-1" />
-                          View Sheet
-                        </Button>
-                      )}
-                    </>
-                  )
-                }}
-              />
+                        const rowBg = isRejected
+                          ? 'bg-red-50/60 dark:bg-red-950/20'
+                          : isSuggestionPending
+                          ? 'bg-amber-50/60 dark:bg-amber-950/20'
+                          : isDischargeUrgent
+                          ? 'bg-amber-50/60 dark:bg-amber-950/20'
+                          : isInitialFormUrgent
+                          ? 'bg-purple-50/60 dark:bg-purple-950/20'
+                          : index % 2 === 0
+                          ? 'bg-white dark:bg-gray-950'
+                          : 'bg-gray-50/50 dark:bg-gray-900/50'
+
+                        const borderLeft = isRejected
+                          ? 'border-l-4 border-l-red-500'
+                          : isSuggestionPending
+                          ? 'border-l-4 border-l-amber-500'
+                          : isDischargeUrgent
+                          ? 'border-l-4 border-l-orange-500'
+                          : isInitialFormUrgent
+                          ? 'border-l-4 border-l-purple-500'
+                          : 'border-l-4 border-l-transparent'
+
+                        return (
+                          <TableRow
+                            key={lead.id}
+                            className={`transition-colors cursor-pointer hover:brightness-95 ${rowBg} ${borderLeft}`}
+                            onClick={() => router.push(`/patient/${lead.id}`)}
+                          >
+                            <TableCell className="font-semibold text-gray-900 dark:text-gray-100">
+                              <span className="px-2 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-sm font-mono">
+                                {lead.leadRef}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <div className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-1">
+                                  {lead.patientName}
+                                  {isRejected && (
+                                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-[10px] font-bold">
+                                      <AlertCircle className="w-2.5 h-2.5" /> Rejected
+                                    </span>
+                                  )}
+                                  {isSuggestionPending && (
+                                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-[10px] font-bold">
+                                      <AlertTriangle className="w-2.5 h-2.5" /> Hospital Suggestion Pending
+                                    </span>
+                                  )}
+                                  {isMarkUrgent && (
+                                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 text-[10px] font-bold">
+                                      <AlertTriangle className="w-2.5 h-2.5" /> Mark Discharged
+                                    </span>
+                                  )}
+                                  {isFillUrgent && (
+                                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-[10px] font-bold">
+                                      <AlertTriangle className="w-2.5 h-2.5" /> Fill Sheet
+                                    </span>
+                                  )}
+                                  {isInitialFormUrgent && (
+                                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-[10px] font-bold">
+                                      <AlertTriangle className="w-2.5 h-2.5" /> Fill Initial Form
+                                    </span>
+                                  )}
+                                </div>
+                                {canViewPhoneNumber(user) && <div className="text-sm text-gray-600 dark:text-gray-400">{lead.phoneNumber}</div>}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-gray-700 dark:text-gray-300">{resolvedHospital || <span className="text-gray-400">-</span>}</TableCell>
+                            <TableCell className="text-gray-700 dark:text-gray-300">{resolvedDoctor || <span className="text-gray-400">-</span>}</TableCell>
+                            <TableCell className="text-gray-700 dark:text-gray-300">{lead.treatment || <span className="text-gray-400">-</span>}</TableCell>
+                            <TableCell>{getStageBadge(lead.caseStage)}</TableCell>
+                            <TableCell>
+                              {lead.admissionRecord?.ipdStatus ? (
+                                <Badge variant="outline" className={getIpdMarkBadgeClass(lead.admissionRecord.ipdStatus)}>
+                                  {getIpdMarkLabel(lead.admissionRecord.ipdStatus)}
+                                </Badge>
+                              ) : (
+                                <span className="text-muted-foreground text-sm">–</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-gray-600 dark:text-gray-400">
+                              {(() => {
+                                const t = getLatestActivityTime(lead)
+                                return t ? format(new Date(t), 'MMM dd, HH:mm') : '-'
+                              })()}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                                {isSuggestionPending && (
+                                  <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/pre-auth`) }}
+                                    className="bg-amber-600 hover:bg-amber-700 text-white shadow-md"
+                                  >
+                                    <ArrowRight className="w-4 h-4 mr-1" />
+                                    Update Hospitals
+                                  </Button>
+                                )}
+                                {lead.caseStage === CaseStage.PREAUTH_RAISED && (
+                                  <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/pre-auth`) }}
+                                    className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md"
+                                  >
+                                    <CheckCircle2 className="w-4 h-4 mr-1" />
+                                    Complete Pre-Auth
+                                  </Button>
+                                )}
+                                {lead.caseStage === CaseStage.PREAUTH_COMPLETE && !lead.insuranceInitiateForm && (
+                                  <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/pre-auth`) }}
+                                    className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white shadow-md"
+                                  >
+                                    <FileText className="w-4 h-4 mr-1" />
+                                    Fill Initial Form
+                                  </Button>
+                                )}
+                                {isMarkUrgent && (
+                                  <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/discharge`) }}
+                                    className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md"
+                                  >
+                                    <CalendarCheck className="w-4 h-4 mr-1" />
+                                    Mark Discharged
+                                  </Button>
+                                )}
+                                {isFillUrgent && (
+                                  <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/discharge`) }}
+                                    className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white shadow-md"
+                                  >
+                                    <Receipt className="w-4 h-4 mr-1" />
+                                    Fill Sheet
+                                  </Button>
+                                )}
+                                {lead.dischargeSheet?.isFinalized === true && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/discharge`) }}
+                                    className="border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950"
+                                  >
+                                    <Receipt className="w-4 h-4 mr-1" />
+                                    View Sheet
+                                  </Button>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

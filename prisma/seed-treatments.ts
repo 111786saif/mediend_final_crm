@@ -79,16 +79,6 @@ const treatments = [
 async function main() {
   console.log('🌱 Starting treatment master seed...\n')
 
-  const categories = [...new Set(treatments.map((t) => t.category))]
-  for (const name of categories) {
-    await prisma.treatmentCategoryMaster.upsert({
-      where: { name },
-      update: {},
-      create: { name },
-    })
-    console.log(`✓ category: ${name}`)
-  }
-
   for (const treatment of treatments) {
     await prisma.treatmentMaster.upsert({
       where: { name: treatment.name },
