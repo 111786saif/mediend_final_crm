@@ -88,24 +88,6 @@ export async function POST(
         },
       })
 
-      await tx.leadAudit.create({
-        data: {
-          leadId: id,
-          action: 'cash_review',
-          userId: user.id,
-          details: {
-            action,
-            reason: reason || null,
-            treatmentName: lead.treatment,
-            treatmentId: lead.treatmentMasterId,
-            atsAmount: lead.atsAmount,
-            approvedAmount: lead.settledTotal,
-            atsStatus: newAtsStatus,
-            caseStage: newStage,
-          },
-        },
-      })
-
       await tx.caseChatMessage.create({
         data: {
           leadId: id,
