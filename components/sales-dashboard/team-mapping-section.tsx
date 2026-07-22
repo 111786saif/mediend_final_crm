@@ -29,17 +29,17 @@ export interface SourceTeamRow {
 
 function formatConversion(pct: number) {
   if (pct === 0) return (
-    <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-semibold bg-[#c2c6d6]/5 text-[#c2c6d6]/40 border border-[#c2c6d6]/10">
+    <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-semibold bg-muted text-muted-foreground border border-border">
       0.0%
     </span>
   )
   if (pct < 30) return (
-    <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20">
+    <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
       {pct.toFixed(1)}%
     </span>
   )
   return (
-    <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-[#4edea3]/10 text-[#4edea3] border border-[#4edea3]/20 shadow-sm shadow-[#4edea3]/5">
+    <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
       {pct.toFixed(1)}%
     </span>
   )
@@ -47,9 +47,9 @@ function formatConversion(pct: number) {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center bg-[#131b2e] border border-dashed border-[#424754]/30 rounded-xl">
-      <Users className="h-8 w-8 text-[#c2c6d6]/30 mb-2" />
-      <p className="text-sm text-[#c2c6d6]/50">{message}</p>
+    <div className="flex flex-col items-center justify-center py-12 text-center bg-card border border-dashed border-border rounded-xl">
+      <Users className="h-8 w-8 text-muted-foreground/40 mb-2" />
+      <p className="text-sm text-muted-foreground">{message}</p>
     </div>
   )
 }
@@ -90,11 +90,11 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
         <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
           <Button
             variant="ghost"
-            className="p-0 hover:bg-transparent text-xs font-bold text-[#c2c6d6]/80 uppercase"
+            className="p-0 hover:bg-transparent text-xs font-bold text-muted-foreground uppercase"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             {view === 'campaign' ? 'Campaign Name' : 'Source Name'}
-            <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-[#c2c6d6]/60" />
+            <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-muted-foreground" />
           </Button>
           <ColumnFilter
             type="search"
@@ -108,7 +108,7 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
         const name = (view === 'campaign' 
           ? (row.original.campaignName || row.original.campaign) 
           : (row.original.sourceName || row.original.source)) || '—'
-        return <span className="font-bold text-[#dae2fd] text-sm">{name}</span>
+        return <span className="font-bold text-foreground text-sm">{name}</span>
       },
     }
 
@@ -118,7 +118,7 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
         accessorKey: 'team',
         header: () => (
           <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[120px]">
-            <span className="text-xs font-bold text-[#c2c6d6]/80 uppercase">Team</span>
+            <span className="text-xs font-bold text-muted-foreground uppercase">Team</span>
             <ColumnFilter
               type="multiSelect"
               options={teamOptions}
@@ -131,8 +131,8 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
           <span className={cn(
             "px-3.5 py-1.5 rounded text-[11px] font-semibold border tracking-wide",
             row.original.team === 'Independent'
-              ? "bg-[#c2c6d6]/5 text-[#c2c6d6]/70 border-[#c2c6d6]/20"
-              : "bg-[#adc6ff]/10 text-[#adc6ff] border-[#adc6ff]/40 shadow-sm shadow-[#adc6ff]/5"
+              ? "bg-muted text-muted-foreground border-border"
+              : "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30"
           )}>
             {row.original.team}
           </span>
@@ -144,16 +144,16 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
           <div className="text-right w-full">
             <Button
               variant="ghost"
-              className="p-0 hover:bg-transparent text-xs font-bold text-[#c2c6d6]/80 uppercase"
+              className="p-0 hover:bg-transparent text-xs font-bold text-muted-foreground uppercase"
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               Leads
-              <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-[#c2c6d6]/60" />
+              <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-muted-foreground" />
             </Button>
           </div>
         ),
         cell: ({ row }) => (
-          <div className="text-right w-full font-semibold text-[#dae2fd] text-sm pr-4">
+          <div className="text-right w-full font-semibold text-foreground text-sm pr-4">
             {row.original.leads}
           </div>
         ),
@@ -164,11 +164,11 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
           <div className="text-right w-full pr-4">
             <Button
               variant="ghost"
-              className="p-0 hover:bg-transparent text-xs font-bold text-[#c2c6d6]/80 uppercase"
+              className="p-0 hover:bg-transparent text-xs font-bold text-muted-foreground uppercase"
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               Conversion %
-              <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-[#c2c6d6]/60" />
+              <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-muted-foreground" />
             </Button>
           </div>
         ),
@@ -184,17 +184,17 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
           <div className="text-right w-full">
             <Button
               variant="ghost"
-              className="p-0 hover:bg-transparent text-xs font-bold text-[#c2c6d6]/80 uppercase"
+              className="p-0 hover:bg-transparent text-xs font-bold text-muted-foreground uppercase"
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               CPL
-              <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-[#c2c6d6]/60" />
+              <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-muted-foreground" />
             </Button>
           </div>
         ),
         cell: ({ row }) => (
           <div className={cn("w-full", row.original.cpl != null ? "text-right" : "text-center")}>
-            <span className={cn("text-sm", row.original.cpl != null ? "text-[#ffb4ab] font-medium" : "text-[#c2c6d6]/40")}>
+            <span className={cn("text-sm", row.original.cpl != null ? "text-amber-600 dark:text-amber-400 font-medium" : "text-muted-foreground/40")}>
               {row.original.cpl != null ? `₹${row.original.cpl.toLocaleString('en-IN')}` : '—'}
             </span>
           </div>
@@ -206,17 +206,17 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
           <div className="text-right w-full">
             <Button
               variant="ghost"
-              className="p-0 hover:bg-transparent text-xs font-bold text-[#c2c6d6]/80 uppercase"
+              className="p-0 hover:bg-transparent text-xs font-bold text-muted-foreground uppercase"
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               Amount Spend
-              <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-[#c2c6d6]/60" />
+              <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-muted-foreground" />
             </Button>
           </div>
         ),
         cell: ({ row }) => (
           <div className={cn("w-full", row.original.amountSpend != null ? "text-right" : "text-center")}>
-            <span className={cn("text-sm", row.original.amountSpend != null ? "text-[#dae2fd] font-medium" : "text-[#c2c6d6]/40")}>
+            <span className={cn("text-sm", row.original.amountSpend != null ? "text-foreground font-medium" : "text-muted-foreground/40")}>
               {row.original.amountSpend != null ? `₹${row.original.amountSpend.toLocaleString('en-IN')}` : '—'}
             </span>
           </div>
@@ -226,13 +226,13 @@ export function TeamMappingSection({ view, data }: TeamMappingSectionProps) {
   }, [view, selectedTeams, searchName, teamOptions])
 
   return (
-    <Card className="bg-[#131b2e] border border-[#424754]/30 overflow-hidden rounded-xl hover:shadow-lg hover:border-[#adc6ff]/20 transition-all duration-300">
-      <CardHeader className="pb-4 border-b border-[#424754]/30 bg-[#1b253b]/30">
-        <CardTitle className="text-sm font-bold text-[#dae2fd] uppercase tracking-wider flex items-center gap-2">
-          <Users className="h-4 w-4 text-[#adc6ff]" />
+    <Card className="bg-card border border-border overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+      <CardHeader className="pb-4 border-b border-border bg-muted/30">
+        <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
+          <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           {view === 'source' ? 'Source to Team Mapping' : 'Campaign to Team Mapping'}
         </CardTitle>
-        <p className="text-xs text-[#c2c6d6]/60 mt-1 font-medium">
+        <p className="text-xs text-muted-foreground mt-1 font-medium">
           {view === 'source'
             ? 'Shows source performance broken down by team.'
             : 'Shows campaign performance broken down by team.'}
