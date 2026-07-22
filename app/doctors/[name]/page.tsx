@@ -465,16 +465,6 @@ export default function DoctorDetailPage() {
             <KpiTile label="MediEND share" value={formatPlRupee(data?.kpis.mediendShare ?? null)} icon={TrendingUp} />
           </div>
 
-          {/* Payout UI Section — PL outstanding action, not for Finance */}
-          {canRequestPayoff && (
-            <RecordPaymentForm
-              title="Record Doctor Payout"
-              amountLabel="Amount Paid"
-              onSubmit={(amount) => {
-                toast.success(`Payout of ₹${amount || '0'} recorded successfully!`)
-              }}
-            />
-          )}
 
           {/* Cases Table Component Container (UI preserved as requested, wrapper styled) */}
           <div className="min-w-0 w-full bg-white border border-slate-200 rounded-xl overflow-hidden shadow-md dark:bg-[#191D2E]/60 dark:border-[#283150] dark:shadow-lg">
@@ -766,25 +756,32 @@ export default function DoctorDetailPage() {
             />
 
             {/* Right Side Widget: P&L Health */}
-            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-sm dark:shadow-lg">
-              <div className="relative w-20 h-20 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle className="text-slate-200 dark:text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
-                  <circle className="text-cyan-500 dark:text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
-                </svg>
-                <div className="absolute flex flex-col items-center">
-                  <span className="text-base font-bold text-slate-900 dark:text-white">80%</span>
-                  <span className="text-[7px] font-bold text-slate-500 dark:text-[#c7c6cd] uppercase tracking-wider">COLLECTION</span>
+            {(() => {
+              const totalPayable = data?.kpis.totalPayable ?? 0
+              const amountPaid = data?.kpis.amountPaid ?? 0
+              const paidPercentage = totalPayable > 0 ? Math.round((amountPaid / totalPayable) * 100) : 0
+              const strokeDashoffset = 213.6 * (1 - Math.min(100, Math.max(0, paidPercentage)) / 100)
+              return (
+                <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-sm dark:shadow-lg">
+                  <div className="relative w-20 h-20 flex items-center justify-center">
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle className="text-slate-200 dark:text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
+                      <circle className="text-cyan-500 dark:text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset={strokeDashoffset} strokeWidth="4"></circle>
+                    </svg>
+                    <div className="absolute flex flex-col items-center">
+                      <span className="text-base font-bold text-slate-900 dark:text-white">{paidPercentage}%</span>
+                      <span className="text-[7px] font-bold text-slate-500 dark:text-[#c7c6cd] uppercase tracking-wider">PAID</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-slate-900 dark:text-[#dce1ff]">Collection & Health Score</h4>
+                    <p className="text-[11px] text-slate-500 dark:text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">
+                      ₹{amountPaid.toLocaleString('en-IN')} paid of ₹{totalPayable.toLocaleString('en-IN')} total payable.
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <h4 className="font-bold text-xs text-slate-900 dark:text-[#dce1ff]">Collection & Health Score</h4>
-                <p className="text-[11px] text-slate-500 dark:text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">Your doctor portfolio is performing above average for this cluster.</p>
-                <button className="mt-1.5 border border-cyan-500/40 text-cyan-600 dark:border-[#22d3ee]/40 dark:text-[#22d3ee] px-3 py-0.5 rounded-full text-[10px] hover:bg-cyan-50 dark:hover:bg-[#22d3ee]/10 transition-all font-semibold">
-                  Full Analysis
-                </button>
-              </div>
-            </div>
+              )
+            })()}
           </section>
         </div>
       </div>
