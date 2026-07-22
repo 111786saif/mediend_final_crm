@@ -200,12 +200,14 @@ export default function InsuranceCashCasesPage() {
     } catch { /* ignore */ }
   }, [hydrated, activityMonth, activityYear, bdFilter, circleFilter, treatmentFilter])
 
-  // Build server query
+  // Build server query (activity month + optional BD filter)
   const leadsQueryString = useMemo(() => {
     const params = new URLSearchParams()
+    params.set('activityMonth', String(activityMonth))
+    params.set('activityYear', String(activityYear))
     if (bdFilter) params.set('bdId', bdFilter)
     return params.toString()
-  }, [bdFilter])
+  }, [activityMonth, activityYear, bdFilter])
 
   const { data: leads, isLoading, error } = useQuery<LeadWithStage[]>({
     queryKey: ['leads', 'insurance', 'cash', leadsQueryString],
@@ -220,6 +222,31 @@ export default function InsuranceCashCasesPage() {
     },
     enabled: hydrated,
   })
+
+  // Always include pending review / on-hold cash cases even if outside the activity month
+  const { data: pendingReviewLeads } = useQuery<LeadWithStage[]>({
+    queryKey: ['leads', 'insurance', 'cash', 'pending-review', bdFilter],
+    queryFn: async () => {
+      try {
+        const params = new URLSearchParams({
+          caseStage: `${CaseStage.CASH_IPD_SUBMITTED},${CaseStage.CASH_ON_HOLD}`,
+        })
+        if (bdFilter) params.set('bdId', bdFilter)
+        const data = await apiGet<LeadWithStage[]>(`/api/leads?${params.toString()}`)
+        return (data || []).filter(l => l.flowType === FlowType.CASH)
+      } catch {
+        return []
+      }
+    },
+    enabled: hydrated,
+  })
+
+  const mergedCashLeads = useMemo(() => {
+    const byId = new Map<string, LeadWithStage>()
+    for (const lead of leads ?? []) byId.set(lead.id, lead)
+    for (const lead of pendingReviewLeads ?? []) byId.set(lead.id, lead)
+    return Array.from(byId.values())
+  }, [leads, pendingReviewLeads])
 
   // Universe for dropdown options
   const { data: universeLeads } = useQuery<Pick<LeadWithStage, 'bdId' | 'bd' | 'circle' | 'treatment'>[]>({
@@ -272,23 +299,14 @@ export default function InsuranceCashCasesPage() {
     activityYear !== now.getFullYear() ||
     !!bdFilter || !!circleFilter || !!treatmentFilter
 
-  // Apply client-side circle + treatment + surgery-month filters
+  // Apply client-side circle + treatment filters
   const scopedLeads = useMemo(() => {
-    if (!leads) return []
-    const monthStart = new Date(activityYear, activityMonth - 1, 1)
-    const monthEnd = new Date(activityYear, activityMonth, 1)
-    return leads.filter(l => {
+    return mergedCashLeads.filter(l => {
       if (circleFilter && l.circle !== circleFilter) return false
       if (treatmentFilter && l.treatment !== treatmentFilter) return false
-
-      // Filter by surgery date falling in the selected month
-      const surgeryDate = l.admissionRecord?.surgeryDate
-        ? new Date(l.admissionRecord.surgeryDate).getTime()
-        : null
-      if (surgeryDate == null) return false
-      return surgeryDate >= monthStart.getTime() && surgeryDate < monthEnd.getTime()
+      return true
     })
-  }, [leads, circleFilter, treatmentFilter, activityMonth, activityYear])
+  }, [mergedCashLeads, circleFilter, treatmentFilter])
 
   // Stats
   const stats = useMemo(() => {
@@ -399,7 +417,7 @@ export default function InsuranceCashCasesPage() {
       setSelectedLeadId(null)
       setReviewAction(null)
       setReviewReason('')
-      queryClient.invalidateQueries({ queryKey: ['leads', 'insurance', 'cash', leadsQueryString] })
+      queryClient.invalidateQueries({ queryKey: ['leads', 'insurance', 'cash'] })
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Failed to submit review')
     } finally {
