@@ -356,21 +356,31 @@ export async function POST(
       })
     })
 
-    await postCaseChatSystemMessage(
-      leadId,
-      `Workflow reset from ${previousStep.label} to ${targetStep.label} by Executive Assistant (${user.name}). Reason: ${reason}`,
-    )
+    // The reset is already committed above. Post-commit side effects must not
+    // turn a successful reset into a 500 — log and continue if they fail.
+    try {
+      await postCaseChatSystemMessage(
+        leadId,
+        `Workflow reset from ${previousStep.label} to ${targetStep.label} by Executive Assistant (${user.name}). Reason: ${reason}`,
+      )
+    } catch (sideEffectError) {
+      console.error('reset-stepper: failed to post case chat message', sideEffectError)
+    }
 
-    await notifyResetRecipients({
-      leadId,
-      bdId: lead.bdId,
-      patientName: lead.patientName,
-      leadRef: lead.leadRef,
-      actorId: user.id,
-      actorName: user.name,
-      targetStep,
-      reason,
-    })
+    try {
+      await notifyResetRecipients({
+        leadId,
+        bdId: lead.bdId,
+        patientName: lead.patientName,
+        leadRef: lead.leadRef,
+        actorId: user.id,
+        actorName: user.name,
+        targetStep,
+        reason,
+      })
+    } catch (sideEffectError) {
+      console.error('reset-stepper: failed to notify reset recipients', sideEffectError)
+    }
 
     return successResponse(
       {
@@ -429,7 +439,7 @@ async function notifyResetRecipients(args: {
 
   if (args.targetStep.owner === 'INSURANCE') {
     const insuranceUsers = await prisma.user.findMany({
-      where: { role: { in: ['INSURANCE', 'INSURANCE_HEAD'] } },
+      where: { role: { in: ['INSURANCE_HEAD'] } },
       select: { id: true },
     })
     insuranceUsers.forEach((u) => recipients.add(u.id))

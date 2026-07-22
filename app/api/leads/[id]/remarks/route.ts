@@ -10,6 +10,21 @@ import {
   canUserViewLeadOwner,
 } from '@/lib/lead-ownership'
 
+type MergedLeadRemark = {
+  id: string
+  content: string
+  createdAt: Date
+  createdBy: {
+    id: string
+    name: string | null
+  }
+  source: 'workspace' | 'legacy' | 'lead'
+}
+
+function normalizeRemarkContent(value: string | null | undefined) {
+  return typeof value === 'string' ? value.replace(/\x00/g, '').trim() : ''
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -32,6 +47,21 @@ export async function GET(
         bdId: true,
         leadRef: true,
         patientName: true,
+        remarks: true,
+        createdDate: true,
+        updatedDate: true,
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        updatedBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         leadRemarkEntries: {
           orderBy: { createdAt: 'desc' },
           include: {
@@ -54,10 +84,110 @@ export async function GET(
       return errorResponse('Forbidden', 403)
     }
 
+    const legacyRemarks = await prisma.leadRemark.findMany({
+      where: {
+        leadRef: lead.leadRef,
+      },
+      orderBy: { updateDate: 'desc' },
+    })
+
     const [canAddRemarks, canRemoveRemarks] = await Promise.all([
       canUserAddLeadRemarks(user, lead.bdId),
       canUserRemoveLeadRemarks(user, lead.bdId),
     ])
+
+    const legacyUpdateByIds = Array.from(
+      new Set(
+        legacyRemarks
+          .map((remark) => remark.updateBy)
+          .filter((value): value is number => typeof value === 'number')
+      )
+    )
+
+    const legacyUsers = legacyUpdateByIds.length
+      ? await prisma.employee.findMany({
+          where: {
+            bdNumber: {
+              in: legacyUpdateByIds,
+            },
+          },
+          select: {
+            bdNumber: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        })
+      : []
+
+    const legacyUserMap = new Map(
+      legacyUsers
+        .filter((employee): employee is typeof employee & { bdNumber: number } => employee.bdNumber != null)
+        .map((employee) => [employee.bdNumber, employee.user] as const)
+    )
+
+    const mergedRemarks: MergedLeadRemark[] = [
+      ...lead.leadRemarkEntries
+        .map((remark) => {
+          const content = normalizeRemarkContent(remark.content)
+          if (!content) return null
+
+          return {
+            id: remark.id,
+            content,
+            createdAt: remark.createdAt,
+            createdBy: {
+              id: remark.createdBy.id,
+              name: remark.createdBy.name,
+            },
+            source: 'workspace' as const,
+          }
+        })
+        .filter((remark): remark is MergedLeadRemark => remark !== null),
+      ...legacyRemarks
+        .map((remark) => {
+          const content = normalizeRemarkContent(remark.remarks)
+          if (!content) return null
+
+          const mappedUser = remark.updateBy != null ? legacyUserMap.get(remark.updateBy) : null
+
+          return {
+            id: `legacy-${remark.id}`,
+            content,
+            createdAt: remark.updateDate,
+            createdBy: {
+              id: mappedUser?.id ?? `legacy-user-${remark.updateBy ?? 'unknown'}`,
+              name: mappedUser?.name ?? 'Unknown user',
+            },
+            source: 'legacy' as const,
+          }
+        })
+        .filter((remark): remark is MergedLeadRemark => remark !== null),
+    ]
+
+    const normalizedExistingContents = new Set(
+      mergedRemarks.map((remark) => normalizeRemarkContent(remark.content))
+    )
+    const leadRemarksFallback = normalizeRemarkContent(lead.remarks)
+
+    if (leadRemarksFallback && !normalizedExistingContents.has(leadRemarksFallback)) {
+      const fallbackAuthor = lead.updatedBy ?? lead.createdBy
+      mergedRemarks.push({
+        id: `lead-remarks-${lead.id}`,
+        content: leadRemarksFallback,
+        createdAt: lead.updatedDate ?? lead.createdDate,
+        createdBy: {
+          id: fallbackAuthor?.id ?? 'lead-remarks-legacy',
+          name: fallbackAuthor?.name ?? 'Unknown user',
+        },
+        source: 'lead',
+      })
+    }
+
+    mergedRemarks.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
     return successResponse({
       lead: {
@@ -68,8 +198,8 @@ export async function GET(
       canEditRemarks: canAddRemarks,
       canAddRemarks,
       canRemoveRemarks,
-      latestRemark: lead.leadRemarkEntries[0] ?? null,
-      remarks: lead.leadRemarkEntries,
+      latestRemark: mergedRemarks[0] ?? null,
+      remarks: mergedRemarks,
     })
   } catch (error) {
     console.error('GET /api/leads/[id]/remarks', error)

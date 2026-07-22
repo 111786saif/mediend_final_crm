@@ -36,7 +36,12 @@ import { apiGet } from '@/lib/api-client'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { formatLeadAgeSex, resolveLeadCity, resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { getStatusColor } from '@/lib/lead-status-colors'
-import { getLeadReceiptDate, normalizeLeadStatus, type LeadAgeFilter } from '@/lib/pipeline-lead-buckets'
+import {
+  getLeadAgeInfo,
+  getLeadReceiptDate,
+  normalizeLeadStatus,
+  type LeadAgeFilter,
+} from '@/lib/pipeline-lead-buckets'
 import type { PipelineSortDir, PipelineSortField } from '@/lib/pipeline/server-query'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
@@ -70,6 +75,15 @@ interface Target {
   targetValue: number
 }
 
+type NamedMasterItem = {
+  id: string
+  name: string
+}
+
+type MasterListResponse<TItem> = {
+  items: TItem[]
+}
+
 function useDebouncedValue<T>(value: T, ms: number): T {
   const [debounced, setDebounced] = useState(value)
   useEffect(() => {
@@ -100,6 +114,10 @@ function uniqueSorted(values: (string | null | undefined)[]): string[] {
     if (s) set.add(s)
   }
   return Array.from(set).sort((a, b) => a.localeCompare(b))
+}
+
+function mergeUniqueSortedLists(...lists: Array<readonly string[] | undefined>) {
+  return uniqueSorted(lists.flatMap((list) => list ?? []))
 }
 
 function normalizedText(value: unknown, fallback: string): string {
@@ -292,6 +310,124 @@ function formatMonthCell(value: unknown) {
   return formatTableDate(value)
 }
 
+function getLeadStageLabel(lead: Lead) {
+  return lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage))?.label ?? '—' : '—'
+}
+
+function getLeadLastRemarksText(lead: Lead) {
+  return typeof lead.remarks === 'string' && lead.remarks.trim().length > 0 ? lead.remarks.trim() : '—'
+}
+
+function getLeadNewRemarksText(lead: Lead) {
+  return typeof lead.latestRemark?.content === 'string' && lead.latestRemark.content.trim().length > 0
+    ? lead.latestRemark.content.trim()
+    : '—'
+}
+
+function getLeadPlanningTreatmentText(lead: Lead) {
+  return typeof lead.diseaseDetails === 'string' && lead.diseaseDetails.trim().length > 0
+    ? lead.diseaseDetails.trim()
+    : '—'
+}
+
+function getLeadTeamLeadText(lead: Lead) {
+  return (
+    (typeof lead.plRecord?.managerName === 'string' && lead.plRecord.managerName.trim()) ||
+    (lead.teamLeadId != null ? String(lead.teamLeadId) : '—')
+  )
+}
+
+function getLeadBdmText(lead: Lead) {
+  return typeof lead.plRecord?.bdmName === 'string' && lead.plRecord.bdmName.trim().length > 0
+    ? lead.plRecord.bdmName.trim()
+    : '—'
+}
+
+function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): string {
+  const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
+  const preferredLocation = resolveLeadCity(lead) ?? normalizedText(lead.circle, '—')
+  const receipt = getLeadReceiptDate(lead)
+
+  switch (columnId) {
+    case 'id':
+      return lead.id
+    case 'leadRef':
+      return typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
+    case 'assignDate':
+      return formatTableDate(lead.assignedDate)
+    case 'leadDate':
+      return receipt ? format(receipt, 'dd MMM yyyy') : '—'
+    case 'patient':
+      return typeof lead.patientName === 'string' ? lead.patientName : '—'
+    case 'month':
+      return formatMonthCell(lead.month)
+    case 'age':
+      return lead.age != null ? String(lead.age) : '—'
+    case 'sex':
+      return normalizedText(lead.sex, '—')
+    case 'ageSex':
+      return formatLeadAgeSex(lead)
+    case 'circle':
+      return normalizedText(lead.circle, 'Unknown')
+    case 'city':
+      return resolveLeadCity(lead) ?? '—'
+    case 'category':
+      return normalizedText(lead.category, '—')
+    case 'treatment':
+      return normalizedText(lead.treatment, '—')
+    case 'planningTreatment':
+      return getLeadPlanningTreatmentText(lead)
+    case 'profession':
+      return normalizedText(lead.profession, '—')
+    case 'tl':
+      return getLeadTeamLeadText(lead)
+    case 'bdm':
+      return getLeadBdmText(lead)
+    case 'hospital':
+      return hospital || '—'
+    case 'doctor':
+      return doctor || '—'
+    case 'status':
+      return normalizeLeadStatus(lead.status)
+    case 'stage':
+      return getLeadStageLabel(lead)
+    case 'mop':
+      return normalizedText(lead.modeOfPayment, '—')
+    case 'lastRemarks':
+      return getLeadLastRemarksText(lead)
+    case 'newRemarks':
+      return getLeadNewRemarksText(lead)
+    case 'followUpDate':
+      return formatTableDate(lead.followUpDate)
+    case 'subStatus':
+      return lead.subStatus != null ? String(lead.subStatus) : '—'
+    case 'surgeryDate':
+      return formatTableDate(lead.surgeryDate)
+    case 'healthInsurance':
+      return normalizedText(lead.insuranceName, '—')
+    case 'preferredLocation':
+      return preferredLocation
+    case 'source':
+      return normalizedText(lead.source, '—')
+    case 'leadSource':
+      return lead.leadSource != null && String(lead.leadSource).trim().length > 0 ? String(lead.leadSource) : '—'
+    case 'createDate':
+      return formatTableDate(lead.createdDate)
+    case 'modifyBy':
+      return lead.updatedBy?.name ?? '—'
+    case 'modifyDate':
+      return formatTableDate(lead.updatedDate)
+    case 'dupCount':
+      return lead.duplCount != null ? String(lead.duplCount) : '0'
+    case 'recency':
+      return getLeadAgeInfo(lead).label
+    case 'bd':
+      return lead.bd?.name ?? '—'
+    default:
+      return '—'
+  }
+}
+
 export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) {
   return (
     <Suspense fallback={<PipelinePageFallback variant={variant} />}>
@@ -391,6 +527,34 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     enabled: variant === 'bd' && !!user?.id,
   })
 
+  const { data: treatmentMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
+    queryKey: ['pipeline-master-filter', 'treatments'],
+    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/treatments?includeInactive=true'),
+    staleTime: 5 * 60_000,
+    retry: false,
+  })
+
+  const { data: hospitalMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
+    queryKey: ['pipeline-master-filter', 'hospitals'],
+    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/hospitals?includeInactive=true'),
+    staleTime: 5 * 60_000,
+    retry: false,
+  })
+
+  const { data: doctorMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
+    queryKey: ['pipeline-master-filter', 'doctors'],
+    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/doctors?includeInactive=true'),
+    staleTime: 5 * 60_000,
+    retry: false,
+  })
+
+  const { data: insuranceMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
+    queryKey: ['pipeline-master-filter', 'insurance'],
+    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/insurance?includeInactive=true'),
+    staleTime: 5 * 60_000,
+    retry: false,
+  })
+
   const targetProgress = useMemo(() => {
     if (variant !== 'bd' || !targets?.length || !data) return null
     const now = new Date()
@@ -415,71 +579,64 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const rawPageLeads: Lead[] = useMemo(() => data?.leads ?? [], [data?.leads])
 
   // Column filter dropdown option lists — built from the current page only.
-  const leadRefOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => String(l.leadRef ?? ''))), [rawPageLeads])
-  const patientOptions = useMemo(
-    () => uniqueSorted(rawPageLeads.map((l) => (typeof l.patientName === 'string' ? l.patientName : ''))),
-    [rawPageLeads]
+  const columnFilterOptions = useMemo(() => {
+    const options = Object.fromEntries(
+      availableColumns.map((column) => [
+        column.id,
+        uniqueSorted(rawPageLeads.map((lead) => getPipelineColumnFilterValue(lead, column.id))),
+      ])
+    ) as Record<PipelineColumnId, string[]>
+
+    const treatmentMasterOptions = uniqueSorted(
+      (treatmentMasterData?.items ?? []).map((item) => item.name)
+    )
+    const hospitalMasterOptions = uniqueSorted(
+      (hospitalMasterData?.items ?? []).map((item) => item.name)
+    )
+    const doctorMasterOptions = uniqueSorted(
+      (doctorMasterData?.items ?? []).map((item) => item.name)
+    )
+    const insuranceMasterOptions = uniqueSorted(
+      (insuranceMasterData?.items ?? []).map((item) => item.name)
+    )
+
+    options.treatment = mergeUniqueSortedLists(treatmentMasterOptions, options.treatment)
+    options.hospital = mergeUniqueSortedLists(hospitalMasterOptions, options.hospital)
+    options.doctor = mergeUniqueSortedLists(doctorMasterOptions, options.doctor)
+    options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
+
+    return options
+  }, [
+    availableColumns,
+    rawPageLeads,
+    treatmentMasterData,
+    hospitalMasterData,
+    doctorMasterData,
+    insuranceMasterData,
+  ])
+
+  const getHeaderFilterProps = useCallback(
+    (columnId: PipelineColumnId) => ({
+      filterValue: columnFilters[columnId] ?? [],
+      filterOptions: columnFilterOptions[columnId] ?? [],
+      onFilterChange: (values: string[]) => handleColumnFilterChange(columnId, values),
+    }),
+    [columnFilterOptions, columnFilters, handleColumnFilterChange]
   )
-  const treatmentOptions = useMemo(
-    () => uniqueSorted(rawPageLeads.map((l) => (typeof l.treatment === 'string' ? l.treatment : ''))),
-    [rawPageLeads]
-  )
-  const statusOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => normalizeLeadStatus(l.status))), [rawPageLeads])
-  const stageOptions = useMemo(
-    () =>
-      uniqueSorted(
-        rawPageLeads.map((l) => (l.caseStage ? getCaseStageBadgeConfig(String(l.caseStage))?.label ?? '' : ''))
-      ),
-    [rawPageLeads]
-  )
-  const categoryColOptions = useMemo(
-    () => uniqueSorted(rawPageLeads.map((l) => (typeof l.category === 'string' ? l.category : ''))),
-    [rawPageLeads]
-  )
-  const ageSexOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => formatLeadAgeSex(l))), [rawPageLeads])
-  const circleColOptions = useMemo(
-    () => uniqueSorted(rawPageLeads.map((l) => normalizedText(l.circle, 'Unknown'))),
-    [rawPageLeads]
-  )
-  const bdmOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => l.plRecord?.bdmName ?? '')), [rawPageLeads])
-  const hospitalOptions = useMemo(
-    () => uniqueSorted(rawPageLeads.map((l) => resolveLeadHospitalDoctor(l).hospital ?? '')),
-    [rawPageLeads]
-  )
-  const doctorOptions = useMemo(
-    () => uniqueSorted(rawPageLeads.map((l) => resolveLeadHospitalDoctor(l).doctor ?? '')),
-    [rawPageLeads]
-  )
-  const bdNameOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => l.bd?.name ?? '')), [rawPageLeads])
 
   // Apply column filters on top of the current page's rows.
   const tableRows: Lead[] = useMemo(() => {
     let result = rawPageLeads
-    const cf = columnFilters
 
-    if (cf.leadRef?.length) result = result.filter((l) => cf.leadRef.includes(String(l.leadRef ?? '')))
-    if (cf.patient?.length)
-      result = result.filter((l) => cf.patient.includes(typeof l.patientName === 'string' ? l.patientName : ''))
-    if (cf.treatment?.length)
-      result = result.filter((l) => cf.treatment.includes(typeof l.treatment === 'string' ? l.treatment : ''))
-    if (cf.category?.length)
-      result = result.filter((l) => cf.category.includes(typeof l.category === 'string' ? l.category : ''))
-    if (cf.status?.length) result = result.filter((l) => cf.status.includes(normalizeLeadStatus(l.status)))
-    if (cf.stage?.length) {
-      result = result.filter((l) =>
-        cf.stage.includes(l.caseStage ? getCaseStageBadgeConfig(String(l.caseStage))?.label ?? '' : '')
-      )
+    for (const column of availableColumns) {
+      const selected = columnFilters[column.id]
+      if (!selected?.length) continue
+
+      result = result.filter((lead) => selected.includes(getPipelineColumnFilterValue(lead, column.id)))
     }
-    if (cf.ageSex?.length) result = result.filter((l) => cf.ageSex.includes(formatLeadAgeSex(l)))
-    if (cf.circle?.length) result = result.filter((l) => cf.circle.includes(normalizedText(l.circle, 'Unknown')))
-    if (cf.bdm?.length) result = result.filter((l) => cf.bdm.includes(l.plRecord?.bdmName ?? ''))
-    if (cf.hospital?.length)
-      result = result.filter((l) => cf.hospital.includes(resolveLeadHospitalDoctor(l).hospital ?? ''))
-    if (cf.doctor?.length) result = result.filter((l) => cf.doctor.includes(resolveLeadHospitalDoctor(l).doctor ?? ''))
-    if (cf.bd?.length) result = result.filter((l) => cf.bd.includes(l.bd?.name ?? ''))
 
     return result
-  }, [rawPageLeads, columnFilters])
+  }, [availableColumns, rawPageLeads, columnFilters])
 
   const noteCountKey = useMemo(() => [...tableRows.map((l) => l.id)].sort().join(','), [tableRows])
 
@@ -780,7 +937,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             activeColumnFilterCount > 0 ? ` · ${tableRows.length} match column filters on this page` : ''
                           }`
                         : 'Loading…'}{' '}
-                      &middot; filters apply on top of campaign + status card
                     </p>
                   </div>
                   <DropdownMenu>
@@ -841,21 +997,19 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           <th className="h-10 w-12 px-2 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                             Flow
                           </th>
-                          {isColumnVisible('id') && <HeaderCell label="id" />}
+                          {isColumnVisible('id') && <HeaderCell label="id" {...getHeaderFilterProps('id')} />}
                           {isColumnVisible('leadRef') && (
                             <HeaderCell
                               label="Lead Ref"
                               sortField="leadRef"
                               state={state}
                               onSort={handleSort}
-                              filterValue={columnFilters.leadRef}
-                              filterOptions={leadRefOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('leadRef', v)}
+                              {...getHeaderFilterProps('leadRef')}
                             />
                           )}
-                          {isColumnVisible('assignDate') && <HeaderCell label="Assign Date" />}
+                          {isColumnVisible('assignDate') && <HeaderCell label="Assign Date" {...getHeaderFilterProps('assignDate')} />}
                           {isColumnVisible('leadDate') && (
-                            <HeaderCell label="Lead Date" sortField="date" state={state} onSort={handleSort} />
+                            <HeaderCell label="Lead Date" sortField="date" state={state} onSort={handleSort} {...getHeaderFilterProps('leadDate')} />
                           )}
                           {isColumnVisible('patient') && (
                             <HeaderCell
@@ -863,72 +1017,56 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               sortField="patient"
                               state={state}
                               onSort={handleSort}
-                              filterValue={columnFilters.patient}
-                              filterOptions={patientOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('patient', v)}
+                              {...getHeaderFilterProps('patient')}
                             />
                           )}
-                          {isColumnVisible('month') && <HeaderCell label="Month" />}
-                          {isColumnVisible('age') && <HeaderCell label="Age" />}
-                          {isColumnVisible('sex') && <HeaderCell label="Sex" />}
+                          {isColumnVisible('month') && <HeaderCell label="Month" {...getHeaderFilterProps('month')} />}
+                          {isColumnVisible('age') && <HeaderCell label="Age" {...getHeaderFilterProps('age')} />}
+                          {isColumnVisible('sex') && <HeaderCell label="Sex" {...getHeaderFilterProps('sex')} />}
                           {isColumnVisible('ageSex') && (
                             <HeaderCell
                               label="Age/Sex"
-                              filterValue={columnFilters.ageSex}
-                              filterOptions={ageSexOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('ageSex', v)}
+                              {...getHeaderFilterProps('ageSex')}
                             />
                           )}
                           {isColumnVisible('circle') && (
                             <HeaderCell
                               label="Circle"
-                              filterValue={columnFilters.circle}
-                              filterOptions={circleColOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('circle', v)}
+                              {...getHeaderFilterProps('circle')}
                             />
                           )}
-                          {isColumnVisible('city') && <HeaderCell label="City" />}
+                          {isColumnVisible('city') && <HeaderCell label="City" {...getHeaderFilterProps('city')} />}
                           {isColumnVisible('category') && (
                             <HeaderCell
                               label="Category"
-                              filterValue={columnFilters.category}
-                              filterOptions={categoryColOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('category', v)}
+                              {...getHeaderFilterProps('category')}
                             />
                           )}
                           {isColumnVisible('treatment') && (
                             <HeaderCell
                               label="Treatment"
-                              filterValue={columnFilters.treatment}
-                              filterOptions={treatmentOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('treatment', v)}
+                              {...getHeaderFilterProps('treatment')}
                             />
                           )}
-                          {isColumnVisible('planningTreatment') && <HeaderCell label="Planning Treatment" />}
-                          {isColumnVisible('profession') && <HeaderCell label="Profession" />}
-                          {isColumnVisible('tl') && <HeaderCell label="TL" />}
+                          {isColumnVisible('planningTreatment') && <HeaderCell label="Planning Treatment" {...getHeaderFilterProps('planningTreatment')} />}
+                          {isColumnVisible('profession') && <HeaderCell label="Profession" {...getHeaderFilterProps('profession')} />}
+                          {isColumnVisible('tl') && <HeaderCell label="TL" {...getHeaderFilterProps('tl')} />}
                           {isColumnVisible('bdm') && (
                             <HeaderCell
                               label="BDM (Assign)"
-                              filterValue={columnFilters.bdm}
-                              filterOptions={bdmOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('bdm', v)}
+                              {...getHeaderFilterProps('bdm')}
                             />
                           )}
                           {isColumnVisible('hospital') && (
                             <HeaderCell
                               label="Hospital"
-                              filterValue={columnFilters.hospital}
-                              filterOptions={hospitalOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('hospital', v)}
+                              {...getHeaderFilterProps('hospital')}
                             />
                           )}
                           {isColumnVisible('doctor') && (
                             <HeaderCell
                               label="Doctor"
-                              filterValue={columnFilters.doctor}
-                              filterOptions={doctorOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('doctor', v)}
+                              {...getHeaderFilterProps('doctor')}
                             />
                           )}
                           {isColumnVisible('status') && (
@@ -937,43 +1075,37 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               sortField="status"
                               state={state}
                               onSort={handleSort}
-                              filterValue={columnFilters.status}
-                              filterOptions={statusOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('status', v)}
+                              {...getHeaderFilterProps('status')}
                             />
                           )}
                           {isColumnVisible('stage') && (
                             <HeaderCell
                               label="Stage"
-                              filterValue={columnFilters.stage}
-                              filterOptions={stageOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('stage', v)}
+                              {...getHeaderFilterProps('stage')}
                             />
                           )}
-                          {isColumnVisible('mop') && <HeaderCell label="MOP" />}
-                          {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remarks" />}
-                          {isColumnVisible('newRemarks') && <HeaderCell label="New Remarks" />}
-                          {isColumnVisible('followUpDate') && <HeaderCell label="Follow Up Date" />}
-                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" />}
-                          {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" />}
-                          {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" />}
-                          {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" />}
-                          {isColumnVisible('source') && <HeaderCell label="Source" />}
-                          {isColumnVisible('leadSource') && <HeaderCell label="Lead Source" />}
-                          {isColumnVisible('createDate') && <HeaderCell label="Create Date" />}
-                          {isColumnVisible('modifyBy') && <HeaderCell label="Modify By" />}
-                          {isColumnVisible('modifyDate') && <HeaderCell label="Modify Date" />}
-                          {isColumnVisible('dupCount') && <HeaderCell label="Dupl Count" />}
-                          {isColumnVisible('recency') && <HeaderCell label="Recency" />}
+                          {isColumnVisible('mop') && <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />}
+                          {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remarks" {...getHeaderFilterProps('lastRemarks')} />}
+                          {isColumnVisible('newRemarks') && <HeaderCell label="New Remarks" {...getHeaderFilterProps('newRemarks')} />}
+                          {isColumnVisible('followUpDate') && <HeaderCell label="Follow Up Date" {...getHeaderFilterProps('followUpDate')} />}
+                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" {...getHeaderFilterProps('subStatus')} />}
+                          {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />}
+                          {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" {...getHeaderFilterProps('healthInsurance')} />}
+                          {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" {...getHeaderFilterProps('preferredLocation')} />}
+                          {isColumnVisible('source') && <HeaderCell label="Source" {...getHeaderFilterProps('source')} />}
+                          {isColumnVisible('leadSource') && <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />}
+                          {isColumnVisible('createDate') && <HeaderCell label="Create Date" {...getHeaderFilterProps('createDate')} />}
+                          {isColumnVisible('modifyBy') && <HeaderCell label="Modify By" {...getHeaderFilterProps('modifyBy')} />}
+                          {isColumnVisible('modifyDate') && <HeaderCell label="Modify Date" {...getHeaderFilterProps('modifyDate')} />}
+                          {isColumnVisible('dupCount') && <HeaderCell label="Dupl Count" {...getHeaderFilterProps('dupCount')} />}
+                          {isColumnVisible('recency') && <HeaderCell label="Recency" {...getHeaderFilterProps('recency')} />}
                           {isColumnVisible('bd') && (
                             <HeaderCell
                               label="BD"
                               sortField="bd"
                               state={state}
                               onSort={handleSort}
-                              filterValue={columnFilters.bd}
-                              filterOptions={bdNameOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('bd', v)}
+                              {...getHeaderFilterProps('bd')}
                             />
                           )}
                           <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
