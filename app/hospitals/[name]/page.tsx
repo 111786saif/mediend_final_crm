@@ -379,7 +379,7 @@ export default function HospitalDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen w-full min-w-0 bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
+      <div className="min-h-screen w-full min-w-0 bg-white dark:bg-[#07112f] text-slate-900 dark:text-[#dce1ff] p-6 font-sans">
         <div className="w-full min-w-0 space-y-6">
           {/* Header & Navigation */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -388,27 +388,27 @@ export default function HospitalDetailPage() {
                 variant="outline"
                 size="icon"
                 asChild
-                className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
+                className="h-9 w-9 rounded-full border-slate-200 bg-white text-cyan-600 shadow-sm transition-all duration-200 hover:bg-slate-100 dark:border-[#283150] dark:bg-[#191D2E]/80 dark:text-[#22d3ee] dark:hover:bg-[#283150] shrink-0"
               >
                 <Link href="/hospitals" aria-label="Back to hospital list">
                   <ArrowLeft className="h-4 w-4" />
                 </Link>
               </Button>
               <div>
-                <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
-                  <Link href="/hospitals" className="hover:text-[#22d3ee] transition-colors">
+                <nav className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-[#c7c6cd]/60 mb-1 leading-none">
+                  <Link href="/hospitals" className="hover:text-cyan-600 dark:hover:text-[#22d3ee] transition-colors">
                     Hospital List
                   </Link>
                   <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
-                  <span className="text-[#dce1ff] font-semibold">{name}</span>
+                  <span className="text-slate-900 dark:text-[#dce1ff] font-semibold">{name}</span>
                 </nav>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
+                  <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-[#dce1ff] leading-none">
                     {name}
                   </h1>
                   {startDate && endDate && (
-                    <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
-                      <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
+                    <div className="inline-flex items-center gap-1 rounded-full bg-cyan-50 dark:bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-cyan-700 dark:text-[#22d3ee] border border-cyan-200 dark:border-[#22d3ee]/20 shrink-0 ml-1">
+                      <span className="h-1 w-1 rounded-full bg-cyan-500 dark:bg-[#22d3ee] animate-pulse" />
                       Filtered: {startDate} → {endDate}
                     </div>
                   )}
@@ -431,7 +431,7 @@ export default function HospitalDetailPage() {
                   router.push(`?${urlParams.toString()}`)
                 }}
                 trigger={
-                  <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
+                  <Button variant="outline" className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 dark:bg-[#191D2E]/80 dark:border-[#283150] dark:text-[#dce1ff] dark:hover:bg-[#283150] h-9 text-xs">
                     <Calendar className="mr-2 h-3.5 w-3.5" />
                     Date Range
                   </Button>
@@ -439,10 +439,10 @@ export default function HospitalDetailPage() {
               />
               {canRequestInvoice && (
                 <>
-                  <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
+                  <Button variant="outline" className="bg-white border-slate-300 text-slate-700 hover:bg-slate-50 dark:bg-[#191D2E]/80 dark:border-[#283150] dark:text-[#dce1ff] dark:hover:bg-[#283150] h-9 text-xs">
                     Add Document
                   </Button>
-                  <Button className="bg-[#22d3ee] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#22d3ee]/20">
+                  <Button className="bg-cyan-600 text-white hover:bg-cyan-700 font-bold h-9 text-xs shadow-md dark:bg-[#22d3ee] dark:text-[#07112f]">
                     Request Invoice
                   </Button>
                 </>
@@ -453,86 +453,86 @@ export default function HospitalDetailPage() {
           {/* Summary Cards (Bento Grid) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Tile 1: Cases */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-sm dark:shadow-lg transition-all duration-200">
               <div className="flex justify-between items-start">
-                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Cases</span>
-                <div className="p-1 bg-[#22d3ee]/10 text-[#22d3ee] rounded">
+                <span className="font-semibold text-xs tracking-wider text-slate-500 dark:text-[#c7c6cd] uppercase">Cases</span>
+                <div className="p-1 bg-cyan-50 text-cyan-600 dark:bg-[#22d3ee]/10 dark:text-[#22d3ee] rounded">
                   <Activity className="h-3.5 w-3.5 animate-pulse" />
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-bold tracking-tight text-white">{data?.kpis.totalCases ?? 0}</h2>
-                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Active patient cases</p>
+                <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{data?.kpis.totalCases ?? 0}</h2>
+                <p className="text-[10px] text-slate-500 dark:text-[#c7c6cd]/60 mt-0.5">Active patient cases</p>
               </div>
             </div>
 
             {/* Tile 2: Total Bill Amount */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-cyan-500/5 transition-all duration-200">
+            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-sm dark:shadow-lg transition-all duration-200">
               <div className="flex justify-between items-start">
-                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Total Bill Amount</span>
-                <div className="p-1 bg-cyan-500/10 text-cyan-400 rounded">
+                <span className="font-semibold text-xs tracking-wider text-slate-500 dark:text-[#c7c6cd] uppercase">Total Bill Amount</span>
+                <div className="p-1 bg-cyan-50 text-cyan-600 dark:bg-cyan-500/10 dark:text-cyan-400 rounded">
                   <FileText className="h-3.5 w-3.5" />
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-bold tracking-tight text-white">{formatPlRupee(totalBillAmount)}</h2>
-                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Total billing across cases</p>
+                <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{formatPlRupee(totalBillAmount)}</h2>
+                <p className="text-[10px] text-slate-500 dark:text-[#c7c6cd]/60 mt-0.5">Total billing across cases</p>
               </div>
             </div>
 
             {/* Tile 3: Pending Outstanding */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-sm dark:shadow-lg transition-all duration-200">
               <div className="flex justify-between items-start">
-                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Pending Outstanding</span>
-                <div className="p-1 bg-rose-500/10 text-rose-400 rounded">
+                <span className="font-semibold text-xs tracking-wider text-slate-500 dark:text-[#c7c6cd] uppercase">Pending Outstanding</span>
+                <div className="p-1 bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 rounded">
                   <AlertCircle className="h-3.5 w-3.5" />
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-bold tracking-tight text-rose-400">{formatPlRupee(totalPendingOutstanding)}</h2>
-                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Awaiting collection</p>
+                <h2 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">{formatPlRupee(totalPendingOutstanding)}</h2>
+                <p className="text-[10px] text-slate-500 dark:text-[#c7c6cd]/60 mt-0.5">Awaiting collection</p>
               </div>
             </div>
 
             {/* Tile 4: Total MediEND Share */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-sm dark:shadow-lg transition-all duration-200">
               <div className="flex justify-between items-start">
-                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Total MediEND Share</span>
-                <div className="p-1 bg-indigo-500/10 text-[#c7bfff] rounded">
+                <span className="font-semibold text-xs tracking-wider text-slate-500 dark:text-[#c7c6cd] uppercase">Total MediEND Share</span>
+                <div className="p-1 bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-[#c7bfff] rounded">
                   <ReceiptText className="h-3.5 w-3.5" />
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-bold tracking-tight text-white">{formatPlRupee(data?.kpis.mediendShare ?? null)}</h2>
-                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Projected contract share</p>
+                <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{formatPlRupee(data?.kpis.mediendShare ?? null)}</h2>
+                <p className="text-[10px] text-slate-500 dark:text-[#c7c6cd]/60 mt-0.5">Projected contract share</p>
               </div>
             </div>
 
             {/* Tile 5: Amount Received */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-sm dark:shadow-lg transition-all duration-200">
               <div className="flex justify-between items-start">
-                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Amount Received</span>
-                <div className="p-1 bg-emerald-500/10 text-emerald-400 rounded">
+                <span className="font-semibold text-xs tracking-wider text-slate-500 dark:text-[#c7c6cd] uppercase">Amount Received</span>
+                <div className="p-1 bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 rounded">
                   <TrendingUp className="h-3.5 w-3.5" />
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-bold tracking-tight text-[#22d3ee]">{formatPlRupee(amountReceivedDisplay)}</h2>
-                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Reconciled payments</p>
+                <h2 className="text-2xl font-bold tracking-tight text-cyan-600 dark:text-[#22d3ee]">{formatPlRupee(amountReceivedDisplay)}</h2>
+                <p className="text-[10px] text-slate-500 dark:text-[#c7c6cd]/60 mt-0.5">Reconciled payments</p>
               </div>
             </div>
 
             {/* Tile 6: Unsettled Received */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-orange-500/5 transition-all duration-200">
+            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-sm dark:shadow-lg transition-all duration-200">
               <div className="flex justify-between items-start">
-                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Unsettled Received</span>
-                <div className="p-1 bg-orange-500/10 text-orange-400 rounded">
+                <span className="font-semibold text-xs tracking-wider text-slate-500 dark:text-[#c7c6cd] uppercase">Unsettled Received</span>
+                <div className="p-1 bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400 rounded">
                   <TrendingUp className="h-3.5 w-3.5" />
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-bold tracking-tight text-orange-400">{formatPlRupee(unsettledReceived)}</h2>
-                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Payments on unverified cases</p>
+                <h2 className="text-2xl font-bold tracking-tight text-orange-600 dark:text-orange-400">{formatPlRupee(unsettledReceived)}</h2>
+                <p className="text-[10px] text-slate-500 dark:text-[#c7c6cd]/60 mt-0.5">Payments on unverified cases</p>
               </div>
             </div>
           </div>
@@ -568,10 +568,10 @@ export default function HospitalDetailPage() {
             />
           )}
 
-          <Card className="min-w-0 w-full overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
-            <CardHeader className="border-b bg-gradient-to-r from-sky-500/10 to-indigo-500/8 flex flex-row items-center justify-between">
+          <Card className="min-w-0 w-full overflow-hidden border-slate-200 bg-white shadow-md dark:border-sky-800/40 dark:bg-slate-900">
+            <CardHeader className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-sky-950 dark:text-sky-100">Cases</CardTitle>
+                <CardTitle className="text-slate-900 dark:text-sky-100">Cases</CardTitle>
                 <CardDescription>
                   Click a case to open its outstanding record. Use Invoice to request PDF from Finance.
                 </CardDescription>
@@ -580,7 +580,7 @@ export default function HospitalDetailPage() {
                 <Button
                   disabled={selectedLeads.length === 0}
                   onClick={handleBatchInvoiceRequest}
-                  className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
+                  className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150 dark:bg-[#22d3ee] dark:text-[#07112f]"
                 >
                   <FileText className="h-4 w-4" />
                   Request Invoice {selectedLeads.length > 0 && `(${selectedLeads.length})`}
@@ -590,10 +590,10 @@ export default function HospitalDetailPage() {
             <CardContent className="overflow-x-auto p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-[#191D2E]/90 hover:bg-[#191D2E]/90 border-b border-[#283150]">
+                  <TableRow className="bg-slate-100 hover:bg-slate-100 border-b border-slate-200 dark:bg-[#191D2E]/90 dark:hover:bg-[#191D2E]/90 dark:border-[#283150]">
                     <TableHead className="w-[50px] pl-4">
                       <Checkbox
-                        className="border-[#283150] data-[state=checked]:bg-[#22d3ee] data-[state=checked]:text-[#07112f]"
+                        className="border-slate-300 data-[state=checked]:bg-cyan-600 data-[state=checked]:text-white dark:border-[#283150] dark:data-[state=checked]:bg-[#22d3ee] dark:data-[state=checked]:text-[#07112f]"
                         checked={
                           !!data?.cases && data.cases.length > 0 && selectedLeads.length === data.cases.length
                         }
@@ -608,7 +608,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Lead Ref</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Lead Ref</span>
                         <ColumnFilter
                           type="search"
                           value={leadRefFilter}
@@ -619,7 +619,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[180px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Patient</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Patient</span>
                         <ColumnFilter
                           type="search"
                           value={patientNameFilter}
@@ -630,7 +630,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[180px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Doctor</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Doctor</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.doctors}
@@ -641,7 +641,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Month</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Month</span>
                         <ColumnFilter
                           type="dateRange"
                           value={monthFilter}
@@ -651,7 +651,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Surgery</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Surgery</span>
                         <ColumnFilter
                           type="dateRange"
                           value={surgeryDateFilter}
@@ -661,7 +661,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Status</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Status</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.statuses}
@@ -672,7 +672,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-[#c7c6cd]">Bill</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Bill</span>
                         <ColumnFilter
                           type="numberRange"
                           value={billAmountFilter}
@@ -684,7 +684,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[150px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-[#c7c6cd]">MediEND share</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">MediEND share</span>
                         <ColumnFilter
                           type="numberRange"
                           value={mediendShareAmountFilter}
@@ -696,7 +696,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-[#c7c6cd]">Received</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Received</span>
                         <ColumnFilter
                           type="numberRange"
                           value={mediendReceivedFilter}
@@ -708,7 +708,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-[#c7c6cd]">Outstanding</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Outstanding</span>
                         <ColumnFilter
                           type="numberRange"
                           value={hospitalAmountPendingFilter}
@@ -720,7 +720,7 @@ export default function HospitalDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-[#c7c6cd]">Invoice</span>
+                        <span className="font-semibold text-slate-700 dark:text-[#c7c6cd]">Invoice</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.mediendInvoiceStatuses}
@@ -729,19 +729,19 @@ export default function HospitalDetailPage() {
                         />
                       </div>
                     </TableHead>
-                    <TableHead className="text-right font-semibold text-[#c7c6cd] w-[180px] pr-4">Action</TableHead>
+                    <TableHead className="text-right font-semibold text-slate-700 dark:text-[#c7c6cd] w-[180px] pr-4">Action</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody className="divide-y divide-[#283150]/30">
+                <TableBody className="divide-y divide-slate-200 dark:divide-[#283150]/30">
                   {isLoading ? (
-                    <TableRow className="border-b border-[#283150]/20">
-                      <TableCell colSpan={13} className="text-center py-8 text-[#c7c6cd]/50">
+                    <TableRow className="border-b border-slate-200 dark:border-[#283150]/20">
+                      <TableCell colSpan={13} className="text-center py-8 text-slate-500 dark:text-[#c7c6cd]/50">
                         Loading…
                       </TableCell>
                     </TableRow>
                   ) : !data?.cases?.length ? (
-                    <TableRow className="border-b border-[#283150]/20">
-                      <TableCell colSpan={13} className="text-center py-8 text-[#c7c6cd]/50">
+                    <TableRow className="border-b border-slate-200 dark:border-[#283150]/20">
+                      <TableCell colSpan={13} className="text-center py-8 text-slate-500 dark:text-[#c7c6cd]/50">
                         No cases yet
                       </TableCell>
                     </TableRow>
@@ -751,7 +751,7 @@ export default function HospitalDetailPage() {
                       return (
                         <TableRow
                           key={c.leadId}
-                          className="cursor-pointer hover:bg-sky-50/30 dark:hover:bg-sky-950/15"
+                          className="cursor-pointer hover:bg-slate-50 dark:hover:bg-sky-950/15 border-b border-slate-200 dark:border-[#283150]/20"
                           onClick={() => (window.location.href = `/pl/outstanding/${c.leadId}`)}
                         >
                           {/* Checkbox col */}
@@ -829,21 +829,21 @@ export default function HospitalDetailPage() {
             />
 
             {/* Right Side Widget: P&L Health */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-lg">
+            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-sm dark:shadow-lg">
               <div className="relative w-20 h-20 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90">
-                  <circle className="text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
-                  <circle className="text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
+                  <circle className="text-slate-200 dark:text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
+                  <circle className="text-cyan-500 dark:text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
                 </svg>
                 <div className="absolute flex flex-col items-center">
-                  <span className="text-base font-bold text-white">80%</span>
-                  <span className="text-[7px] font-bold text-[#c7c6cd] uppercase tracking-wider">COLLECTION</span>
+                  <span className="text-base font-bold text-slate-900 dark:text-white">80%</span>
+                  <span className="text-[7px] font-bold text-slate-500 dark:text-[#c7c6cd] uppercase tracking-wider">COLLECTION</span>
                 </div>
               </div>
               <div>
-                <h4 className="font-bold text-xs text-[#dce1ff]">Collection & Health Score</h4>
-                <p className="text-[11px] text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">Your hospital is performing above average for City General cluster.</p>
-                <button className="mt-1.5 border border-[#22d3ee]/40 text-[#22d3ee] px-3 py-0.5 rounded-full text-[10px] hover:bg-[#22d3ee]/10 transition-all font-semibold">
+                <h4 className="font-bold text-xs text-slate-900 dark:text-[#dce1ff]">Collection & Health Score</h4>
+                <p className="text-[11px] text-slate-500 dark:text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">Your hospital is performing above average for City General cluster.</p>
+                <button className="mt-1.5 border border-cyan-500/40 text-cyan-600 dark:border-[#22d3ee]/40 dark:text-[#22d3ee] px-3 py-0.5 rounded-full text-[10px] hover:bg-cyan-50 dark:hover:bg-[#22d3ee]/10 transition-all font-semibold">
                   Full Analysis
                 </button>
               </div>

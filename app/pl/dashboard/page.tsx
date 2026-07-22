@@ -1349,17 +1349,17 @@ export default function PLLedgerPage() {
           <div className="flex flex-wrap gap-3 w-full">
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'admitted'
-                  ? "border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20"
-                  : "border-indigo-500/20 bg-indigo-950/10 hover:border-indigo-500/40"
+                  ? "border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-50/50 dark:bg-indigo-950/40"
+                  : "border-indigo-100 bg-white hover:border-indigo-300 dark:border-indigo-900/50 dark:bg-slate-900 dark:hover:border-indigo-800"
               )}
               onClick={() => {
                 setSelectedStage(prev => prev === 'admitted' ? null : 'admitted')
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-300">
                   Admitted
                 </span>
                 {selectedStage === 'admitted' ? (
@@ -1374,7 +1374,7 @@ export default function PLLedgerPage() {
                     <X className="h-3 w-3" />
                   </button>
                 ) : (
-                  <div className="flex h-5 w-5 items-center justify-center rounded bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
                     <Users className="h-3 w-3" />
                   </div>
                 )}
@@ -1383,22 +1383,22 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
                   {pipelineStats?.admitted ?? '—'}
                 </div>
-                <p className="text-[10px] text-indigo-800/70 dark:text-indigo-200/60 mt-0.5">By admission date</p>
+                <p className="text-xs text-indigo-700 dark:text-indigo-400 mt-0.5">By admission date</p>
               </div>
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'ipd_done'
-                  ? "border-cyan-500 ring-2 ring-cyan-500/30 bg-cyan-950/20"
-                  : "border-cyan-500/20 bg-cyan-950/10 hover:border-cyan-500/40"
+                  ? "border-cyan-500 ring-2 ring-cyan-500/30 bg-cyan-50/50 dark:bg-cyan-950/40"
+                  : "border-cyan-100 bg-white hover:border-cyan-300 dark:border-cyan-900/50 dark:bg-slate-900 dark:hover:border-cyan-800"
               )}
               onClick={() => {
                 setSelectedStage(prev => prev === 'ipd_done' ? null : 'ipd_done')
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400 dark:text-cyan-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-cyan-600 dark:text-cyan-300">
                   IPD done
                 </span>
                 {selectedStage === 'ipd_done' ? (
@@ -1413,7 +1413,7 @@ export default function PLLedgerPage() {
                     <X className="h-3 w-3" />
                   </button>
                 ) : (
-                  <div className="flex h-5 w-5 items-center justify-center rounded bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-cyan-50 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300">
                     <Activity className="h-3 w-3" />
                   </div>
                 )}
@@ -1422,22 +1422,22 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
                   {records?.length ?? '—'}
                 </div>
-                <p className="text-[10px] text-cyan-800/70 dark:text-cyan-200/60 mt-0.5">Status update in range</p>
+                <p className="text-xs text-cyan-700 dark:text-cyan-400 mt-0.5">Status update in range</p>
               </div>
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'discharged'
-                  ? "border-emerald-500 ring-2 ring-emerald-500/30 bg-emerald-950/20"
-                  : "border-emerald-500/20 bg-emerald-950/10 hover:border-emerald-500/40"
+                  ? "border-emerald-500 ring-2 ring-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/40"
+                  : "border-emerald-100 bg-white hover:border-emerald-300 dark:border-emerald-900/50 dark:bg-slate-900 dark:hover:border-emerald-800"
               )}
               onClick={() => {
                 setSelectedStage(prev => prev === 'discharged' ? null : 'discharged')
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400 dark:text-emerald-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-300">
                   Discharged
                 </span>
                 {selectedStage === 'discharged' ? (
@@ -1452,7 +1452,7 @@ export default function PLLedgerPage() {
                     <X className="h-3 w-3" />
                   </button>
                 ) : (
-                  <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">
                     <CheckCircle2 className="h-3 w-3" />
                   </div>
                 )}
@@ -1461,22 +1461,22 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
                   {pipelineStats?.discharged ?? '—'}
                 </div>
-                <p className="text-[10px] text-emerald-800/70 dark:text-emerald-200/60 mt-0.5">Discharge date</p>
+                <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-0.5">Discharge date</p>
               </div>
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'scheduled'
-                  ? "border-blue-500 ring-2 ring-blue-500/30 bg-blue-950/20"
-                  : "border-blue-500/20 bg-blue-950/10 hover:border-blue-500/40"
+                  ? "border-blue-500 ring-2 ring-blue-500/30 bg-blue-50/50 dark:bg-blue-950/40"
+                  : "border-blue-100 bg-white hover:border-blue-300 dark:border-blue-900/50 dark:bg-slate-900 dark:hover:border-blue-800"
               )}
               onClick={() => {
                 setSelectedStage(prev => prev === 'scheduled' ? null : 'scheduled')
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 dark:text-blue-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-300">
                   IPD Scheduled
                 </span>
                 {selectedStage === 'scheduled' ? (
@@ -1491,7 +1491,7 @@ export default function PLLedgerPage() {
                     <X className="h-3 w-3" />
                   </button>
                 ) : (
-                  <div className="flex h-5 w-5 items-center justify-center rounded bg-blue-500/15 text-blue-700 dark:text-blue-300">
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
                     <Calendar className="h-3 w-3" />
                   </div>
                 )}
@@ -1500,22 +1500,22 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-blue-950 dark:text-blue-50">
                   {pipelineStats?.surgeryScheduled ?? '—'}
                 </div>
-                <p className="text-[10px] text-blue-800/70 dark:text-blue-200/60 mt-0.5">By surgery date</p>
+                <p className="text-xs text-blue-700 dark:text-blue-400 mt-0.5">By surgery date</p>
               </div>
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'posted'
-                  ? "border-sky-500 ring-2 ring-sky-500/30 bg-sky-950/20"
-                  : "border-sky-500/20 bg-sky-950/10 hover:border-sky-500/40"
+                  ? "border-sky-500 ring-2 ring-sky-500/30 bg-sky-50/50 dark:bg-sky-950/40"
+                  : "border-sky-100 bg-white hover:border-sky-300 dark:border-sky-900/50 dark:bg-slate-900 dark:hover:border-sky-800"
               )}
               onClick={() => {
                 setSelectedStage(prev => prev === 'posted' ? null : 'posted')
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-sky-400 dark:text-sky-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-300">
                   Posted
                 </span>
                 {selectedStage === 'posted' ? (
@@ -1530,7 +1530,7 @@ export default function PLLedgerPage() {
                     <X className="h-3 w-3" />
                   </button>
                 ) : (
-                  <div className="flex h-5 w-5 items-center justify-center rounded bg-sky-500/15 text-sky-700 dark:text-sky-300">
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-sky-50 dark:bg-sky-950 text-sky-700 dark:text-sky-300">
                     <Calendar className="h-3 w-3" />
                   </div>
                 )}
@@ -1539,22 +1539,22 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-sky-950 dark:text-sky-50">
                   {pipelineStats?.posted ?? '—'}
                 </div>
-                <p className="text-[10px] text-sky-800/70 dark:text-sky-200/60 mt-0.5">By surgery date</p>
+                <p className="text-xs text-sky-700 dark:text-sky-400 mt-0.5">By surgery date</p>
               </div>
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'cancelled'
-                  ? "border-rose-500 ring-2 ring-rose-500/30 bg-rose-950/20"
-                  : "border-rose-500/20 bg-rose-950/10 hover:border-rose-500/40"
+                  ? "border-rose-500 ring-2 ring-rose-500/30 bg-rose-50/50 dark:bg-rose-950/40"
+                  : "border-rose-100 bg-white hover:border-rose-300 dark:border-rose-900/50 dark:bg-slate-900 dark:hover:border-rose-800"
               )}
               onClick={() => {
                 setSelectedStage(prev => prev === 'cancelled' ? null : 'cancelled')
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-rose-400 dark:text-rose-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-rose-600 dark:text-rose-300">
                   Cancelled
                 </span>
                 {selectedStage === 'cancelled' ? (
@@ -1569,7 +1569,7 @@ export default function PLLedgerPage() {
                     <X className="h-3 w-3" />
                   </button>
                 ) : (
-                  <div className="flex h-5 w-5 items-center justify-center rounded bg-rose-500/15 text-rose-700 dark:text-rose-300">
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300">
                     <X className="h-3 w-3" />
                   </div>
                 )}
@@ -1578,20 +1578,20 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-rose-950 dark:text-rose-50">
                   {pipelineStats?.cancelled ?? '—'}
                 </div>
-                <p className="text-[10px] text-rose-800/70 dark:text-rose-200/60 mt-0.5">Cancelled status</p>
+                <p className="text-xs text-rose-700 dark:text-rose-400 mt-0.5">Cancelled status</p>
               </div>
             </Card>
           </div>
 
           <div className="flex flex-wrap gap-3 w-full">
             <Card
-              className="overflow-hidden border border-violet-500/20 bg-violet-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
+              className="overflow-hidden border border-violet-100 bg-white hover:border-violet-300 dark:border-violet-900/50 dark:bg-slate-900 dark:hover:border-violet-800 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-violet-400 dark:text-violet-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-300">
                   ATS
                 </span>
-                <div className="flex h-5 w-5 items-center justify-center rounded bg-violet-500/15 text-violet-700 dark:text-violet-300">
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-violet-50 dark:bg-violet-950 text-violet-700 dark:text-violet-300">
                   <ReceiptText className="h-3 w-3" />
                 </div>
               </div>
@@ -1601,17 +1601,17 @@ export default function PLLedgerPage() {
                     ? `₹${Math.round(columnTotals.amountPaid / tableRecords.length).toLocaleString('en-IN')}`
                     : '—'}
                 </div>
-                <p className="text-[10px] text-violet-800/70 dark:text-violet-200/60 mt-0.5">Amount paid per case</p>
+                <p className="text-xs text-violet-700 dark:text-violet-400 mt-0.5">Amount paid per case</p>
               </div>
             </Card>
             <Card
-              className="overflow-hidden border border-emerald-500/20 bg-emerald-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
+              className="overflow-hidden border border-emerald-100 bg-white hover:border-emerald-300 dark:border-emerald-900/50 dark:bg-slate-900 dark:hover:border-emerald-800 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400 dark:text-emerald-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-300">
                   Total net profit
                 </span>
-                <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">
                   <DollarSign className="h-3 w-3" />
                 </div>
               </div>
@@ -1619,17 +1619,17 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
                   ₹{totalProfit.toLocaleString('en-IN')}
                 </div>
-                <p className="text-[10px] text-emerald-800/70 dark:text-emerald-200/60 mt-0.5">In filtered rows</p>
+                <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-0.5">In filtered rows</p>
               </div>
             </Card>
             <Card
-              className="overflow-hidden border border-teal-500/20 bg-teal-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
+              className="overflow-hidden border border-teal-100 bg-white hover:border-teal-300 dark:border-teal-900/50 dark:bg-slate-900 dark:hover:border-teal-800 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-teal-400 dark:text-teal-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-teal-600 dark:text-teal-300">
                   Avg ticket size
                 </span>
-                <div className="flex h-5 w-5 items-center justify-center rounded bg-teal-500/15 text-teal-700 dark:text-teal-300">
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300">
                   <TrendingUp className="h-3 w-3" />
                 </div>
               </div>
@@ -1637,33 +1637,33 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-teal-950 dark:text-teal-50">
                   ₹{avgTicketSize.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </div>
-                <p className="text-[10px] text-teal-800/70 dark:text-teal-200/60 mt-0.5">Average per case</p>
+                <p className="text-xs text-teal-700 dark:text-teal-400 mt-0.5">Average per case</p>
               </div>
             </Card>
             <Card
-              className="overflow-hidden border border-blue-500/20 bg-blue-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
+              className="overflow-hidden border border-blue-100 bg-white hover:border-blue-300 dark:border-blue-900/50 dark:bg-slate-900 dark:hover:border-blue-800 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 dark:text-blue-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-300">
                   Total cases
                 </span>
-                <div className="flex h-5 w-5 items-center justify-center rounded bg-blue-500/15 text-blue-700 dark:text-blue-300">
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
                   <CheckCircle className="h-3 w-3" />
                 </div>
               </div>
               <div className="mt-1">
                 <div className="text-base font-bold tabular-nums text-blue-950 dark:text-blue-50">{tableRecords?.length || 0}</div>
-                <p className="text-[10px] text-blue-800/70 dark:text-blue-200/60 mt-0.5">Rows in table</p>
+                <p className="text-xs text-blue-700 dark:text-blue-400 mt-0.5">Rows in table</p>
               </div>
             </Card>
             <Card
-              className="overflow-hidden border border-indigo-500/20 bg-indigo-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
+              className="overflow-hidden border border-indigo-100 bg-white hover:border-indigo-300 dark:border-indigo-900/50 dark:bg-slate-900 dark:hover:border-indigo-800 rounded-xl shadow-sm p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-300">
+                <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-300">
                   MediEND Share
                 </span>
-                <div className="flex h-5 w-5 items-center justify-center rounded bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
                   <ReceiptText className="h-3 w-3" />
                 </div>
               </div>
@@ -1671,7 +1671,7 @@ export default function PLLedgerPage() {
                 <div className="text-base font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
                   ₹{totalMediendShare.toLocaleString('en-IN')}
                 </div>
-                <p className="text-[10px] text-indigo-800/70 dark:text-indigo-200/60 mt-0.5">Total share sum</p>
+                <p className="text-xs text-indigo-700 dark:text-indigo-400 mt-0.5">Total share sum</p>
               </div>
             </Card>
           </div>

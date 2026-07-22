@@ -170,7 +170,7 @@ export default function HospitalsListPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen w-full min-w-0 bg-gradient-to-br from-slate-50 via-sky-50/40 to-indigo-50/40 p-6 dark:from-slate-950 dark:via-sky-950/20 dark:to-slate-900">
+      <div className="min-h-screen w-full min-w-0 bg-white p-6 dark:bg-slate-950">
         <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
@@ -185,7 +185,7 @@ export default function HospitalsListPage() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex flex-wrap gap-1 rounded-lg border border-sky-200/60 bg-sky-50/80 p-1 shadow-sm dark:border-sky-800/40 dark:bg-sky-950/30">
+              <div className="flex flex-wrap gap-1 rounded-lg border border-sky-200 bg-white p-1 shadow-sm dark:border-sky-800 dark:bg-slate-900">
                 {(
                   [
                     ['all', 'All time'],
@@ -210,16 +210,16 @@ export default function HospitalsListPage() {
               </div>
               {preset === 'custom' && (
                 <div className="flex items-center gap-2">
-                  <Input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)} className="w-[140px]" />
+                  <Input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)} className="w-[140px] bg-white border-slate-300 dark:bg-slate-900 dark:border-slate-700 text-slate-900 dark:text-slate-100" />
                   <span className="text-muted-foreground text-sm">to</span>
-                  <Input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className="w-[140px]" />
+                  <Input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className="w-[140px] bg-white border-slate-300 dark:bg-slate-900 dark:border-slate-700 text-slate-900 dark:text-slate-100" />
                 </div>
               )}
             </div>
           </div>
 
-          <Card className="min-w-0 w-full overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
-            <CardHeader className="border-b bg-gradient-to-r from-sky-500/10 to-indigo-500/8">
+          <Card className="min-w-0 w-full overflow-hidden border-sky-200 bg-white shadow-md dark:border-sky-800/60 dark:bg-slate-900">
+            <CardHeader className="border-b border-sky-100 bg-slate-50 dark:border-sky-800/60 dark:bg-slate-950">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
                   <CardTitle className="flex items-center gap-2 text-sky-950 dark:text-sky-100">
@@ -245,7 +245,7 @@ export default function HospitalsListPage() {
                     placeholder="Search by hospital name"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-8"
+                    className="pl-8 bg-white border-slate-300 dark:bg-slate-900 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                   />
                 </div>
               </div>
@@ -253,7 +253,7 @@ export default function HospitalsListPage() {
             <CardContent className="overflow-x-auto p-0">
               <Table className="[&_td]:px-[20px] [&_th]:px-[20px]">
                 <TableHeader>
-                  <TableRow className="bg-sky-50/40 hover:bg-sky-50/40 dark:bg-sky-950/20">
+                  <TableRow className="bg-slate-100 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-950 border-b border-sky-200 dark:border-sky-800/80">
                     <TableHead className="w-[280px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">Hospital</span>
@@ -332,7 +332,7 @@ export default function HospitalsListPage() {
                     rows.map((h) => (
                       <TableRow
                         key={h.name}
-                        className="cursor-pointer hover:bg-sky-50/40 dark:hover:bg-sky-950/15"
+                        className="cursor-pointer transition-colors duration-150 hover:bg-sky-50/50 dark:hover:bg-sky-950/20 border-b border-sky-100/60 dark:border-sky-950/50"
                         onClick={() => {
                           const qs = dateRange.start && dateRange.end
                             ? `?startDate=${dateRange.start}&endDate=${dateRange.end}`
@@ -340,11 +340,11 @@ export default function HospitalsListPage() {
                           router.push(`/hospitals/${encodeURIComponent(h.name)}${qs}`)
                         }}
                       >
-                        <TableCell className="font-medium">{h.name}</TableCell>
-                        <TableCell className="text-right tabular-nums">{h.totalCases}</TableCell>
-                        <TableCell className="text-right tabular-nums">{formatPlRupee(h.amountReceived || null)}</TableCell>
-                        <TableCell className="text-right tabular-nums">{formatPlRupee(h.pendingOutstanding || null)}</TableCell>
-                        <TableCell className="text-right tabular-nums">{formatPlRupee(h.mediendShare || null)}</TableCell>
+                        <TableCell className="font-medium text-slate-900 dark:text-slate-100">{h.name}</TableCell>
+                        <TableCell className="text-right tabular-nums text-slate-700 dark:text-slate-300">{h.totalCases}</TableCell>
+                        <TableCell className="text-right tabular-nums text-slate-600 dark:text-slate-400">{formatPlRupee(h.amountReceived || null)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-slate-600 dark:text-slate-400">{formatPlRupee(h.pendingOutstanding || null)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-slate-600 dark:text-slate-400">{formatPlRupee(h.mediendShare || null)}</TableCell>
                       </TableRow>
                     ))
                   )}
