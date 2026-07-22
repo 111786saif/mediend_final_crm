@@ -31,6 +31,8 @@ import {
   CheckCircle2,
   AlertTriangle,
   Pencil,
+  Eye,
+  Users,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -148,6 +150,84 @@ function SummaryStats({ targets }: { targets: TargetProgress[] }) {
   )
 }
 
+// ─── BD Details Dialog ────────────────────────────────────────────────────────
+
+function BdDetailsDialog({
+  target,
+  open,
+  onOpenChange,
+}: {
+  target: TargetProgress
+  open: boolean
+  onOpenChange: (v: boolean) => void
+}) {
+  const sortedBDs = useMemo(
+    () => [...target.bdBreakdown].sort((a, b) => b.actual - a.actual),
+    [target.bdBreakdown]
+  )
+  const topActual = sortedBDs[0]?.actual ?? 0
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-violet-500" />
+            {target.entityName} · All BDs
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="flex items-center justify-between rounded-xl border border-border bg-muted/40 px-4 py-3">
+          <div className="text-sm">
+            <span className="font-bold tabular-nums text-lg">{target.actual}</span>
+            <span className="text-muted-foreground"> / {target.targetValue} IPDs</span>
+          </div>
+          <Badge variant="outline" className="text-xs">{sortedBDs.length} BDs</Badge>
+        </div>
+
+        <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+          {sortedBDs.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-8">No BDs in this team.</p>
+          )}
+          {sortedBDs.map((bd, idx) => {
+            const RankIcon = RANK_ICONS[idx]
+            const bac = getAvatarColor(bd.name)
+            const barPct = topActual > 0 ? Math.round((bd.actual / topActual) * 100) : 0
+            return (
+              <div key={bd.id} className="flex items-center gap-3 rounded-xl border border-border/70 p-3">
+                <div className="w-6 shrink-0 flex justify-center">
+                  {RankIcon ? (
+                    <RankIcon className={cn('h-4 w-4', RANK_COLORS[idx])} />
+                  ) : (
+                    <span className="text-xs font-semibold text-muted-foreground tabular-nums">{idx + 1}</span>
+                  )}
+                </div>
+                <Avatar className="h-8 w-8 shrink-0">
+                  {bd.profilePicture && <AvatarImage src={bd.profilePicture} />}
+                  <AvatarFallback className={cn(bac.bg, bac.text, 'text-[10px] font-bold')}>{getInitials(bd.name)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{bd.name}</p>
+                  <div className="mt-1 h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all"
+                      style={{ width: `${barPct}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-sm font-bold tabular-nums">{bd.actual}</p>
+                  <p className="text-[11px] text-muted-foreground tabular-nums">{Math.round(bd.percentage)}%</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 // ─── Team Target Card ─────────────────────────────────────────────────────────
 
 function TeamTargetCard({
@@ -159,6 +239,7 @@ function TeamTargetCard({
   onSetTarget: () => void
   readOnly?: boolean
 }) {
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const pct = Math.min(target.percentage, 100)
   const sc = STATUS_CONFIG[target.status]
   const StatusIcon = sc.icon
@@ -238,8 +319,18 @@ function TeamTargetCard({
         )}
 
         {/* Footer */}
-        {!readOnly && (
-          <div className="pt-1 flex justify-end">
+        <div className="pt-1 flex justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 h-8 text-xs"
+            onClick={() => setDetailsOpen(true)}
+            disabled={target.bdBreakdown.length === 0}
+          >
+            <Eye className="h-3 w-3" />
+            View
+          </Button>
+          {!readOnly && (
             <Button
               variant="outline"
               size="sm"
@@ -249,9 +340,11 @@ function TeamTargetCard({
               <Pencil className="h-3 w-3" />
               Edit Target
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </CardContent>
+
+      <BdDetailsDialog target={target} open={detailsOpen} onOpenChange={setDetailsOpen} />
     </Card>
   )
 }
