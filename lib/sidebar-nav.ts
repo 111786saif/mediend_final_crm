@@ -245,6 +245,12 @@ export const navItems: NavItem[] = [
     roles: ['SALES_HEAD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
+    title: 'Blue Print Dashboard',
+    url: '/sales/blueprint',
+    icon: LayoutDashboard,
+    roles: ['SALES_HEAD'],
+  },
+  {
     title: 'Sales P&L',
     url: '/sales/pnl',
     icon: PieChart,

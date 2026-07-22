@@ -218,8 +218,16 @@ export function DataTable<TData, TValue>({
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      style={{ width: header.column.columnDef.size }}
-                      className="text-muted-foreground font-semibold px-4 py-3"
+                      colSpan={header.colSpan}
+                      style={{ 
+                        width: header.column.columnDef.size, 
+                        ...((header.column.columnDef.meta as any)?.headerStyle) 
+                      }}
+                      className={cn(
+                        "text-muted-foreground font-semibold px-4 py-3",
+                        header.colSpan > 1 && "text-center border-x border-border", // Grouped header centering
+                        (header.column.columnDef.meta as any)?.headerClassName
+                      )}
                     >
                       {header.isPlaceholder
                         ? null
@@ -255,7 +263,14 @@ export function DataTable<TData, TValue>({
                     onClick={() => onRowClick?.(row.original)}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="px-4 py-3 text-sm font-normal text-foreground">
+                      <TableCell 
+                        key={cell.id} 
+                        className={cn(
+                          "px-4 py-3 text-sm font-normal text-foreground",
+                          (cell.column.columnDef.meta as any)?.cellClassName
+                        )}
+                        style={(cell.column.columnDef.meta as any)?.cellStyle}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
