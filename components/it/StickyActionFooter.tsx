@@ -19,10 +19,10 @@ export function StickyActionFooter({
   if (!isDirty) return null
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 h-20 bg-[#151e3c]/90 backdrop-blur-xl border-t border-[#283150] z-50 flex items-center shadow-lg transition-all duration-300">
+    <footer className="fixed bottom-0 left-0 right-0 h-20 bg-card/95 backdrop-blur-xl border-t border-border text-card-foreground z-50 flex items-center shadow-lg transition-all duration-300">
       <div className="max-w-[1440px] mx-auto px-6 w-full flex justify-between items-center">
-        <div className="flex items-center gap-2 text-xs text-indigo-300">
-          <AlertCircle className="h-4 w-4" />
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <AlertCircle className="h-4 w-4 text-amber-500" />
           <span>You have unsaved access overrides pending save.</span>
         </div>
         <div className="flex gap-4">
@@ -30,7 +30,7 @@ export function StickyActionFooter({
             variant="outline"
             onClick={onDiscard}
             disabled={isSaving}
-            className="border-[#385076] hover:bg-[#1f2847]"
+            className="border-border bg-background text-foreground hover:bg-muted"
           >
             <RotateCcw className="mr-2 h-4 w-4" />
             Discard Changes
@@ -38,11 +38,11 @@ export function StickyActionFooter({
           <Button
             onClick={onSave}
             disabled={isSaving}
-            className="bg-[#6366f1] hover:bg-[#4f46e5] text-white"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {isSaving ? (
               <>
-                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent"></div>
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent"></div>
                 Saving Access Profile...
               </>
             ) : (

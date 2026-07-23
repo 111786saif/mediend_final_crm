@@ -237,7 +237,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
           </div>
         ),
         cell: ({ row }) => (
-          <span className="font-mono text-xs font-bold text-[#adc6ff]">
+          <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400">
             {row.original.leadRef}
           </span>
         ),
@@ -251,7 +251,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
           </div>
         ),
         cell: ({ row }) => (
-          <span className="text-sm font-bold text-[#dae2fd]">
+          <span className="text-sm font-bold text-foreground">
             {row.original.patientName}
           </span>
         ),
@@ -262,7 +262,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
         cell: ({ row }) => {
           const dateVal = row.original.leadEntryDate || row.original.createdDate
           return (
-            <span className="text-xs text-[#c2c6d6]">
+            <span className="text-xs text-muted-foreground">
               {dateVal ? format(new Date(dateVal), 'dd MMM yyyy') : '—'}
             </span>
           )
@@ -277,7 +277,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
           </div>
         ),
         cell: ({ row }) => (
-          <span className="inline-block px-3 py-1 rounded-full bg-[#2d3449] text-[10px] font-bold text-[#c2c6d6] border border-[#424754]/50">
+          <span className="inline-block px-3 py-1 rounded-full bg-muted text-[10px] font-bold text-foreground border border-border">
             {row.original.source || '—'}
           </span>
         ),
@@ -291,7 +291,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
           </div>
         ),
         cell: ({ row }) => (
-          <span className="text-xs text-[#c2c6d6]">
+          <span className="text-xs text-muted-foreground">
             {row.original.category || '—'}
           </span>
         ),
@@ -305,7 +305,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
           </div>
         ),
         cell: ({ row }) => (
-          <span className="text-xs text-[#c2c6d6] truncate max-w-[120px] inline-block">
+          <span className="text-xs text-muted-foreground truncate max-w-[120px] inline-block">
             {row.original.treatment || '—'}
           </span>
         ),
@@ -319,7 +319,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
           </div>
         ),
         cell: ({ row }) => (
-          <span className="text-xs text-[#c2c6d6] italic">
+          <span className="text-xs text-muted-foreground italic">
             {row.original.inactive || 'N/A'}
           </span>
         ),
@@ -341,10 +341,10 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
             <span className={cn(
               "px-3 py-1 rounded-full text-[10px] font-bold uppercase border",
               isStagnant 
-                ? "bg-[#ffb4ab]/15 text-[#ffb4ab] border-[#ffb4ab]/30" 
+                ? "bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30" 
                 : isUnassigned 
-                  ? "bg-[#adc6ff]/15 text-[#adc6ff] border-[#adc6ff]/30" 
-                  : "bg-[#4edea3]/15 text-[#4edea3] border-[#4edea3]/30"
+                  ? "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30" 
+                  : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
             )}>
               {status}
             </span>
@@ -359,7 +359,7 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 bg-[#adc6ff]/10 text-[#adc6ff] border border-[#adc6ff]/30 hover:bg-[#adc6ff] hover:text-[#002e6a] transition-all gap-1 text-xs px-4 font-bold rounded-lg"
+              className="h-8 bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-500/30 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all gap-1 text-xs px-4 font-bold rounded-lg"
               onClick={() => handleAssignClick(row.original)}
               disabled={assignLeadMutation.isPending && selectedLead?.id === row.original.id}
             >
@@ -389,19 +389,19 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
-          <AlertCircle className="h-5 w-5 text-[#ffb4ab] animate-pulse" />
-          <h3 className="text-sm font-semibold text-[#dae2fd] uppercase tracking-wider">
+          <AlertCircle className="h-5 w-5 text-rose-500 animate-pulse" />
+          <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">
             Untouched Leads Alerts
           </h3>
         </div>
         {totalLeads > 0 && (
-          <span className="text-[10px] bg-[#ffb4ab]/15 text-[#ffb4ab] border border-[#ffb4ab]/30 rounded px-2.5 py-0.5 font-bold uppercase tracking-wider">
+          <span className="text-[10px] bg-rose-500/15 text-rose-700 dark:text-rose-400 border border-rose-500/30 rounded px-2.5 py-0.5 font-bold uppercase tracking-wider">
             {totalLeads} ACTION{totalLeads > 1 ? 'S' : ''} REQUIRED
           </span>
         )}
       </div>
 
-      <div className="bg-[#171f33]/45 border border-white/5 backdrop-blur-md shadow-[inset_0_0.5px_0_0_rgba(255,255,255,0.06)] rounded-xl overflow-hidden shadow-sm p-1">
+      <div className="bg-card border border-border shadow-sm rounded-xl overflow-hidden p-1">
         <DataTable
           columns={columns}
           data={leads}
@@ -418,34 +418,34 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
 
       {/* Assignment Modal */}
       <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
-        <DialogContent className="max-w-md bg-[#131b2e] border border-[#424754]/40 text-[#dae2fd]">
+        <DialogContent className="max-w-md bg-card border border-border text-card-foreground">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-[#dae2fd]">
-              <UserPlus className="h-5 w-5 text-[#adc6ff]" />
+            <DialogTitle className="flex items-center gap-2 text-foreground">
+              <UserPlus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               Assign Lead {selectedLead?.leadRef}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 mt-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#c2c6d6]/50" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search BDE or Team Lead..."
-                className="pl-9 bg-[#0b1326] border-[#424754]/40 text-[#dae2fd] focus-visible:ring-0 focus-visible:border-[#adc6ff]"
+                className="pl-9 bg-background border-border text-foreground focus-visible:ring-1 focus-visible:ring-ring"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
             <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-1">
-              <Label className="text-xs font-semibold text-[#c2c6d6] uppercase tracking-wider block mb-2 px-1">
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2 px-1">
                 Active BDE Directory
               </Label>
 
               {filteredBDs.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-8 text-center bg-[#0b1326]/20 border border-dashed border-[#424754]/30 rounded-lg">
-                  <HelpCircle className="h-8 w-8 text-[#c2c6d6]/30 mb-2" />
-                  <p className="text-xs text-[#c2c6d6]/50">No matching BDEs found</p>
+                <div className="flex flex-col items-center justify-center py-8 text-center bg-muted/30 border border-dashed border-border rounded-lg">
+                  <HelpCircle className="h-8 w-8 text-muted-foreground/40 mb-2" />
+                  <p className="text-xs text-muted-foreground">No matching BDEs found</p>
                 </div>
               ) : (
                 filteredBDs.map((bd) => {
@@ -454,26 +454,26 @@ export function UntouchedLeadsTable({ teams }: UntouchedLeadsTableProps) {
                     <button
                       key={bd.id}
                       onClick={() => handleConfirmAssignment(bd.name, bd.id)}
-                      className="w-full flex items-center justify-between p-2.5 rounded-lg border border-[#424754]/30 bg-[#0b1326]/30 hover:border-[#adc6ff]/50 hover:bg-[#adc6ff]/5 transition-all text-left"
+                      className="w-full flex items-center justify-between p-2.5 rounded-lg border border-border bg-card hover:border-blue-500/50 hover:bg-blue-500/5 transition-all text-left"
                       disabled={assignLeadMutation.isPending}
                     >
                       <div className="flex items-center gap-2.5">
-                        <Avatar className="h-8 w-8 border border-[#424754]">
+                        <Avatar className="h-8 w-8 border border-border">
                           {bd.profilePicture && <AvatarImage src={bd.profilePicture} />}
                           <AvatarFallback className={cn(bdColor.bg, bdColor.text, 'font-bold text-[10px]')}>
                             {getInitials(bd.name)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-semibold text-[#dae2fd] leading-none">
+                          <p className="text-sm font-semibold text-foreground leading-none">
                             {bd.name}
                           </p>
-                          <p className="text-[10px] text-[#c2c6d6]/60 mt-1">
+                          <p className="text-[10px] text-muted-foreground mt-1">
                             Team Lead: {bd.teamLead}
                           </p>
                         </div>
                       </div>
-                      <span className="text-[9px] bg-[#adc6ff]/10 text-[#adc6ff] border border-[#adc6ff]/20 font-bold uppercase rounded px-1.5 py-0.5">
+                      <span className="text-[9px] bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-500/20 font-bold uppercase rounded px-1.5 py-0.5">
                         BD
                       </span>
                     </button>

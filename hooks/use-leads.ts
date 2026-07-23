@@ -121,6 +121,7 @@ export interface Lead {
     bdmName?: string
     closedAt?: string | null
     updatedAt?: string | Date
+    outstandingStatus?: string
   }
   [key: string]: unknown
 }
