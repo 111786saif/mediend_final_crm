@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { MasterFileField } from '@/components/master-data/master-file-field'
@@ -48,15 +48,23 @@ import type { MasterItem, MasterType } from '@/components/ui/master-combobox'
 import type { DoctorDocument } from '@/lib/masters/schemas'
 import Link from 'next/link'
 
-type TabKey = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia' | 'insurance' | 'treatments'
+type TabKey =
+  | 'hospitals'
+  | 'doctors'
+  | 'tpas'
+  | 'anesthesia'
+  | 'insurance'
+  | 'treatments'
+  | 'treatment-categories'
 
-const TAB_TO_TYPE: Record<TabKey, MasterType> = {
-  hospitals: 'hospitals',
-  doctors: 'doctors',
-  tpas: 'tpas',
-  anesthesia: 'anesthesia',
-  insurance: 'insurance',
-  treatments: 'treatments',
+const TAB_API: Record<TabKey, string> = {
+  hospitals: '/api/masters/hospitals',
+  doctors: '/api/masters/doctors',
+  tpas: '/api/masters/tpas',
+  anesthesia: '/api/masters/anesthesia',
+  insurance: '/api/masters/insurance',
+  treatments: '/api/masters/treatments',
+  'treatment-categories': '/api/masters/treatment-categories',
 }
 
 const TAB_LABEL: Record<TabKey, string> = {
@@ -66,6 +74,7 @@ const TAB_LABEL: Record<TabKey, string> = {
   insurance: 'Insurance Company',
   anesthesia: 'Anesthesia Type',
   treatments: 'Treatment',
+  'treatment-categories': 'Treatment Category',
 }
 
 const API_BASE: Record<MasterType, string> = {
@@ -85,11 +94,10 @@ const DOC_TYPES: { value: DoctorDocument['type']; label: string }[] = [
 ]
 
 function useMasterList(tab: TabKey, search: string, enabled: boolean) {
-  const type = TAB_TO_TYPE[tab]
-  const base = API_BASE[type]
+  const base = TAB_API[tab]
   const q = search.trim()
   return useQuery({
-    queryKey: ['masters-admin', type, q],
+    queryKey: ['masters-admin', tab, q],
     enabled,
     queryFn: () =>
       apiGet<{ items: MasterItem[] }>(
@@ -172,6 +180,52 @@ export default function MasterDataPage() {
       apiGet<{ items: MasterItem[] }>('/api/masters/insurance?includeInactive=true'),
   })
 
+  const { data: treatmentMasterData } = useQuery({
+    queryKey: ['masters-admin', 'treatments', 'picker'],
+    enabled: canAccess && !authLoading && dialogOpen && tab === 'doctors',
+    queryFn: () =>
+      apiGet<{ items: MasterItem[] }>('/api/masters/treatments?includeInactive=true'),
+  })
+
+  const { data: treatmentCategoryData } = useQuery({
+    queryKey: ['masters-admin', 'treatment-categories', 'picker'],
+    enabled:
+      canAccess &&
+      !authLoading &&
+      dialogOpen &&
+      (tab === 'doctors' || tab === 'treatments'),
+    queryFn: () =>
+      apiGet<{ items: MasterItem[] }>('/api/masters/treatment-categories?includeInactive=true'),
+  })
+
+  const treatmentCategoryOptions = useMemo(() => {
+    const categories = new Set<string>()
+    for (const item of treatmentCategoryData?.items ?? []) {
+      const name = item.name?.trim()
+      if (name) categories.add(name)
+    }
+    const current =
+      tab === 'doctors' ? doctorForm.category.trim() : formCategory.trim()
+    if (current) categories.add(current)
+    return [...categories].sort((a, b) => a.localeCompare(b))
+  }, [treatmentCategoryData, doctorForm.category, formCategory, tab])
+
+  const treatmentOptions = useMemo(() => {
+    const selectedCategory = doctorForm.category.trim()
+    const items = (treatmentMasterData?.items ?? []).filter((item) => {
+      if (!selectedCategory) return true
+      return item.category?.trim() === selectedCategory
+    })
+    const names = new Set<string>()
+    for (const item of items) {
+      const name = item.name.trim()
+      if (name) names.add(name)
+    }
+    const current = doctorForm.treatment.trim()
+    if (current) names.add(current)
+    return [...names].sort((a, b) => a.localeCompare(b))
+  }, [treatmentMasterData, doctorForm.category, doctorForm.treatment])
+
   const insuranceOptions = insuranceData?.items ?? []
   const items = data?.items ?? []
 
@@ -241,11 +295,11 @@ export default function MasterDataPage() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const type = TAB_TO_TYPE[tab]
-      const base = API_BASE[type]
+      const base = TAB_API[tab]
       const buildPayload = (forEdit: boolean) => {
-        const status = forEdit || type === 'hospitals' || type === 'doctors' ? { isActive: formIsActive } : {}
-        if (type === 'hospitals') {
+        const status =
+          forEdit || tab === 'hospitals' || tab === 'doctors' ? { isActive: formIsActive } : {}
+        if (tab === 'hospitals') {
           const parseShare = (raw: string) => {
             const t = raw.trim()
             if (t === '') return null
@@ -265,7 +319,7 @@ export default function MasterDataPage() {
             ...status,
           }
         }
-        if (type === 'doctors') {
+        if (tab === 'doctors') {
           return {
             name: doctorForm.name.trim() || formName.trim(),
             category: doctorForm.category.trim() || null,
@@ -291,7 +345,7 @@ export default function MasterDataPage() {
             isActive: doctorForm.isActive,
           }
         }
-        if (type === 'treatments') {
+        if (tab === 'treatments') {
           return {
             name: formName.trim(),
             category: formCategory.trim(),
@@ -350,8 +404,8 @@ export default function MasterDataPage() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Master Data</h1>
               <p className="text-muted-foreground text-sm">
-                Hospitals, doctors, TPAs, insurance companies, and anesthesia types for forms and
-                dropdowns.
+                Hospitals, doctors, TPAs, insurance, anesthesia, treatments, and treatment categories
+                for forms and dropdowns.
               </p>
             </div>
           </div>
@@ -373,13 +427,14 @@ export default function MasterDataPage() {
         </div>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7">
             <TabsTrigger value="hospitals">Hospitals</TabsTrigger>
             <TabsTrigger value="doctors">Doctors</TabsTrigger>
             <TabsTrigger value="tpas">TPAs</TabsTrigger>
             <TabsTrigger value="insurance">Insurance</TabsTrigger>
             <TabsTrigger value="anesthesia">Anesthesia</TabsTrigger>
             <TabsTrigger value="treatments">Treatments</TabsTrigger>
+            <TabsTrigger value="treatment-categories">Treatment Category</TabsTrigger>
           </TabsList>
 
           <div className="mt-4 overflow-x-auto rounded-md border">
@@ -604,26 +659,57 @@ export default function MasterDataPage() {
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <Label htmlFor="doc-category">Category</Label>
-                      <Input
-                        id="doc-category"
-                        value={doctorForm.category}
-                        onChange={(e) =>
-                          setDoctorForm((p) => ({ ...p, category: e.target.value }))
-                        }
-                        placeholder="e.g. Cosmetic, Proctology"
-                      />
+                      <Label htmlFor="doc-category">Treatment category</Label>
+                      <Select
+                        value={doctorForm.category || 'unset'}
+                        onValueChange={(v) => {
+                          const category = v === 'unset' ? '' : v
+                          setDoctorForm((p) => {
+                            const next = { ...p, category }
+                            if (!category || !p.treatment.trim()) return next
+                            const match = (treatmentMasterData?.items ?? []).find(
+                              (item) => item.name.trim() === p.treatment.trim(),
+                            )
+                            if (match?.category?.trim() && match.category.trim() !== category) {
+                              next.treatment = ''
+                            }
+                            return next
+                          })
+                        }}
+                      >
+                        <SelectTrigger id="doc-category">
+                          <SelectValue placeholder="Select treatment category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unset">—</SelectItem>
+                          {treatmentCategoryOptions.map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div>
                       <Label htmlFor="doc-treatment">Treatment</Label>
-                      <Input
-                        id="doc-treatment"
-                        value={doctorForm.treatment}
-                        onChange={(e) =>
-                          setDoctorForm((p) => ({ ...p, treatment: e.target.value }))
+                      <Select
+                        value={doctorForm.treatment || 'unset'}
+                        onValueChange={(v) =>
+                          setDoctorForm((p) => ({ ...p, treatment: v === 'unset' ? '' : v }))
                         }
-                        placeholder="Primary treatment / specialty"
-                      />
+                      >
+                        <SelectTrigger id="doc-treatment">
+                          <SelectValue placeholder="Select treatment" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unset">—</SelectItem>
+                          {treatmentOptions.map((treatment) => (
+                            <SelectItem key={treatment} value={treatment}>
+                              {treatment}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div>
                       <Label htmlFor="doc-age">Age</Label>
@@ -908,12 +994,22 @@ export default function MasterDataPage() {
                 <>
                   <div>
                     <Label htmlFor="md-category">Category *</Label>
-                    <Input
-                      id="md-category"
-                      value={formCategory}
-                      onChange={(e) => setFormCategory(e.target.value)}
-                      placeholder="e.g. Cosmetic, Proctology, Vascular"
-                    />
+                    <Select
+                      value={formCategory || 'unset'}
+                      onValueChange={(v) => setFormCategory(v === 'unset' ? '' : v)}
+                    >
+                      <SelectTrigger id="md-category">
+                        <SelectValue placeholder="Select treatment category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unset">—</SelectItem>
+                        {treatmentCategoryOptions.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold">

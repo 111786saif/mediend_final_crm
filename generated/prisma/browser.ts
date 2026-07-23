@@ -619,6 +619,51 @@ export type HospitalMasterInsurance = Prisma.HospitalMasterInsuranceModel
  */
 export type DoctorMaster = Prisma.DoctorMasterModel
 /**
+ * Model ImplantMaster
+ * 
+ */
+export type ImplantMaster = Prisma.ImplantMasterModel
+/**
+ * Model SurgeryRemarkMaster
+ * 
+ */
+export type SurgeryRemarkMaster = Prisma.SurgeryRemarkMasterModel
+/**
+ * Model ReasonNoSurgeryMaster
+ * 
+ */
+export type ReasonNoSurgeryMaster = Prisma.ReasonNoSurgeryMasterModel
+/**
+ * Model FollowUpReasonMaster
+ * 
+ */
+export type FollowUpReasonMaster = Prisma.FollowUpReasonMasterModel
+/**
+ * Model DoctorAppAccount
+ * 
+ */
+export type DoctorAppAccount = Prisma.DoctorAppAccountModel
+/**
+ * Model DoctorAppRefreshToken
+ * 
+ */
+export type DoctorAppRefreshToken = Prisma.DoctorAppRefreshTokenModel
+/**
+ * Model DoctorAppWhatsappOtp
+ * 
+ */
+export type DoctorAppWhatsappOtp = Prisma.DoctorAppWhatsappOtpModel
+/**
+ * Model DoctorLeaveRequest
+ * 
+ */
+export type DoctorLeaveRequest = Prisma.DoctorLeaveRequestModel
+/**
+ * Model DoctorCabRequest
+ * 
+ */
+export type DoctorCabRequest = Prisma.DoctorCabRequestModel
+/**
  * Model TPAMaster
  * 
  */
@@ -633,6 +678,11 @@ export type AnesthesiaMaster = Prisma.AnesthesiaMasterModel
  * 
  */
 export type InsuranceMaster = Prisma.InsuranceMasterModel
+/**
+ * Model TreatmentCategoryMaster
+ * 
+ */
+export type TreatmentCategoryMaster = Prisma.TreatmentCategoryMasterModel
 /**
  * Model TreatmentMaster
  * 
