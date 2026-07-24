@@ -83,6 +83,7 @@ export const ModelName = {
   SalaryStructure: 'SalaryStructure',
   MonthlyPayroll: 'MonthlyPayroll',
   EmployeeDocument: 'EmployeeDocument',
+  DocumentTemplate: 'DocumentTemplate',
   Feedback: 'Feedback',
   AnonymousMessage: 'AnonymousMessage',
   MDAppointment: 'MDAppointment',
@@ -938,6 +939,7 @@ export const EmployeeDocumentScalarFieldEnum = {
   applicantName: 'applicantName',
   applicantEmail: 'applicantEmail',
   metadata: 'metadata',
+  contentHtml: 'contentHtml',
   generatedAt: 'generatedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -947,6 +949,18 @@ export const EmployeeDocumentScalarFieldEnum = {
 } as const
 
 export type EmployeeDocumentScalarFieldEnum = (typeof EmployeeDocumentScalarFieldEnum)[keyof typeof EmployeeDocumentScalarFieldEnum]
+
+
+export const DocumentTemplateScalarFieldEnum = {
+  id: 'id',
+  documentType: 'documentType',
+  name: 'name',
+  contentHtml: 'contentHtml',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentTemplateScalarFieldEnum = (typeof DocumentTemplateScalarFieldEnum)[keyof typeof DocumentTemplateScalarFieldEnum]
 
 
 export const FeedbackScalarFieldEnum = {

@@ -2,15 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import {
-  generateOfferLetterHTML,
-  generateIncrementLetterHTML,
-  generateExperienceLetterHTML,
-  generateRelievingLetterHTML,
-  generateInternshipOfferLetterHTML,
-  generateInternshipCompletionLetterHTML,
-  generateExitInterviewHTML,
-} from '@/lib/hrms/document-templates'
+import { resolveDocumentHtml } from '@/lib/hrms/document-render'
 
 export async function GET(
   request: NextRequest,
@@ -90,33 +82,13 @@ export async function GET(
 
     const metadata = document.metadata as Record<string, unknown> | null
 
-    let htmlContent: string
-
-    switch (document.documentType) {
-      case 'OFFER_LETTER':
-        htmlContent = generateOfferLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'INCREMENT_LETTER':
-        htmlContent = generateIncrementLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'EXPERIENCE_LETTER':
-        htmlContent = generateExperienceLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'RELIEVING_LETTER':
-        htmlContent = generateRelievingLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'INTERNSHIP_OFFER_LETTER':
-        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'INTERNSHIP_COMPLETION_LETTER':
-        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'EXIT_INTERVIEW_FORM':
-        htmlContent = generateExitInterviewHTML(employeeData, metadata || undefined)
-        break
-      default:
-        return errorResponse('Invalid document type', 400)
-    }
+    const htmlContent = await resolveDocumentHtml({
+      documentType: document.documentType,
+      contentHtml: document.contentHtml,
+      employee: employeeData,
+      metadata,
+      documentUrl: document.documentUrl,
+    })
 
     return successResponse({
       document,
@@ -175,9 +147,12 @@ export async function POST(
       },
     })
 
-    return successResponse({
-      document: updated,
-    }, 'Document acknowledged successfully')
+    return successResponse(
+      {
+        document: updated,
+      },
+      'Document acknowledged successfully'
+    )
   } catch (error) {
     console.error('Error acknowledging document:', error)
     return errorResponse('Failed to acknowledge document', 500)

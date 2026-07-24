@@ -178,6 +178,11 @@ export type MonthlyPayroll = Prisma.MonthlyPayrollModel
  */
 export type EmployeeDocument = Prisma.EmployeeDocumentModel
 /**
+ * Model DocumentTemplate
+ * 
+ */
+export type DocumentTemplate = Prisma.DocumentTemplateModel
+/**
  * Model Feedback
  * 
  */

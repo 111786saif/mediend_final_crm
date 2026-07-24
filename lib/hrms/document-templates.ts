@@ -21,7 +21,7 @@ interface CompanyData {
   cin: string
 }
 
-const COMPANY_DATA: CompanyData = {
+export const COMPANY_DATA: CompanyData = {
   name: 'Kundkund Healthcare Pvt. Ltd.',
   address: '6th Floor, Plot No. 56A/16, Block C, Phase 2, Industrial Area, Sector 62, Noida, Uttar Pradesh 201309',
   city: 'Noida',
@@ -55,6 +55,10 @@ function renderWatermark(): string {
 }
 
 function renderSignature(): string {
+  return getSignatureHtml()
+}
+
+export function getSignatureHtml(): string {
   const baseUrl = getBaseUrl()
   const stampUrl = `${baseUrl}/images/hr-sign-and-stamp.png`
   return `
@@ -74,7 +78,7 @@ function renderFooter(): string {
   </div>`
 }
 
-function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
@@ -82,7 +86,7 @@ function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
-function numberToWords(num: number): string {
+export function numberToWords(num: number): string {
   const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
     'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen']
   const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
@@ -96,7 +100,7 @@ function numberToWords(num: number): string {
   return numberToWords(Math.floor(num / 10000000)) + ' Crore' + (num % 10000000 ? ' ' + numberToWords(num % 10000000) : '')
 }
 
-const BASE_STYLES = `
+export const BASE_STYLES = `
   body { font-family: 'Times New Roman', serif; margin: 40px; line-height: 1.6; color: #333; position: relative; }
   .letterhead { margin-bottom: 24px; padding-bottom: 16px; }
   .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
@@ -114,6 +118,23 @@ const BASE_STYLES = `
   .footer-contact { margin: 4px 0; }
   @media print { .watermark { position: fixed; } }
 `
+
+/** Wrap editable body HTML with letterhead, watermark, styles, and footer. */
+export function buildDocumentHtml(bodyHtml: string, extraStyles = ''): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>${BASE_STYLES}${extraStyles}</style>
+</head>
+<body>
+  ${renderWatermark()}
+  ${renderLetterhead()}
+  ${bodyHtml}
+  ${renderFooter()}
+</body>
+</html>`
+}
 
 export function generateOfferLetterHTML(
   employee: EmployeeData,

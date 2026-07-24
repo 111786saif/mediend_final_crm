@@ -3,24 +3,26 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import {
-  generateOfferLetterHTML,
-  generateIncrementLetterHTML,
-  generateExperienceLetterHTML,
-  generateRelievingLetterHTML,
-  generateInternshipOfferLetterHTML,
-  generateInternshipCompletionLetterHTML,
-  generateExitInterviewHTML,
-} from '@/lib/hrms/document-templates'
+import { renderDocumentHtml, wrapEditedBody, type DocumentTypeKey } from '@/lib/hrms/document-render'
 import { z } from 'zod'
 import { DocumentType } from '@/generated/prisma/client'
 
 const generateDocumentSchema = z.object({
   employeeId: z.string().optional(),
-  documentType: z.enum(['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'INTERNSHIP_OFFER_LETTER', 'INTERNSHIP_COMPLETION_LETTER', 'EXIT_INTERVIEW_FORM']),
+  documentType: z.enum([
+    'OFFER_LETTER',
+    'INCREMENT_LETTER',
+    'EXPERIENCE_LETTER',
+    'RELIEVING_LETTER',
+    'INTERNSHIP_OFFER_LETTER',
+    'INTERNSHIP_COMPLETION_LETTER',
+    'EXIT_INTERVIEW_FORM',
+  ]),
   applicantName: z.string().optional(),
   applicantEmail: z.string().optional(),
   metadata: z.record(z.any()).optional(),
+  /** Optional pre-edited HTML from TipTap (skips template merge when provided) */
+  contentHtml: z.string().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -35,7 +37,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { employeeId, documentType, applicantName, applicantEmail, metadata } = generateDocumentSchema.parse(body)
+    const { employeeId, documentType, applicantName, applicantEmail, metadata, contentHtml: providedHtml } =
+      generateDocumentSchema.parse(body)
 
     let employeeData: {
       name: string
@@ -47,7 +50,6 @@ export async function POST(request: NextRequest) {
       designation?: string
     }
 
-    // For offer letters, applicant details can be provided directly (no employee needed)
     if ((documentType === 'OFFER_LETTER' || documentType === 'INTERNSHIP_OFFER_LETTER') && !employeeId) {
       if (!applicantName || !applicantEmail) {
         return errorResponse('Applicant name and email are required for offer letters', 400)
@@ -78,38 +80,21 @@ export async function POST(request: NextRequest) {
         department: employee.department?.name,
         joinDate: employee.joinDate,
         salary: employee.salary,
+        designation: employee.designation ?? undefined,
       }
     }
 
     let htmlContent: string
-
-    switch (documentType) {
-      case 'OFFER_LETTER':
-        htmlContent = generateOfferLetterHTML(employeeData, metadata)
-        break
-      case 'INCREMENT_LETTER':
-        htmlContent = generateIncrementLetterHTML(employeeData, metadata)
-        break
-      case 'EXPERIENCE_LETTER':
-        htmlContent = generateExperienceLetterHTML(employeeData, metadata)
-        break
-      case 'RELIEVING_LETTER':
-        htmlContent = generateRelievingLetterHTML(employeeData, metadata)
-        break
-      case 'INTERNSHIP_OFFER_LETTER':
-        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata)
-        break
-      case 'INTERNSHIP_COMPLETION_LETTER':
-        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata)
-        break
-      case 'EXIT_INTERVIEW_FORM':
-        htmlContent = generateExitInterviewHTML(employeeData, metadata)
-        break
-      default:
-        return errorResponse('Invalid document type', 400)
+    if (providedHtml?.trim()) {
+      const raw = providedHtml.trim()
+      htmlContent =
+        raw.includes('<!DOCTYPE') || raw.includes('<html')
+          ? raw
+          : wrapEditedBody(raw, documentType)
+    } else {
+      htmlContent = await renderDocumentHtml(documentType as DocumentTypeKey, employeeData, metadata)
     }
 
-    // Save document record
     const document = await prisma.employeeDocument.create({
       data: {
         employeeId: employeeId || null,
@@ -117,6 +102,7 @@ export async function POST(request: NextRequest) {
         applicantEmail: !employeeId ? applicantEmail : null,
         documentType: documentType as DocumentType,
         metadata: metadata || {},
+        contentHtml: htmlContent,
       },
       include: {
         employee: {
@@ -132,10 +118,13 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return successResponse({
-      document,
-      htmlContent,
-    }, 'Document generated successfully')
+    return successResponse(
+      {
+        document,
+        htmlContent,
+      },
+      'Document generated successfully'
+    )
   } catch (error) {
     if (error instanceof z.ZodError) {
       return errorResponse('Invalid request data', 400)
@@ -186,4 +175,3 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to fetch documents', 500)
   }
 }
-

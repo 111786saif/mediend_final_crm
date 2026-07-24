@@ -1,24 +1,27 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Printer, ArrowLeft, Download, Mail, ExternalLink } from 'lucide-react'
+import { Printer, ArrowLeft, Download, Mail, ExternalLink, Pencil } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
+import { EditDocumentDialog } from '@/components/hr/edit-document-dialog'
 
 interface DocumentData {
   document: {
     id: string
-    employeeId: string
+    employeeId: string | null
     documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'INTERNSHIP_OFFER_LETTER' | 'INTERNSHIP_COMPLETION_LETTER' | 'EXIT_INTERVIEW_FORM' | 'CUSTOM'
     documentUrl?: string | null
     title?: string | null
+    applicantName?: string | null
+    applicantEmail?: string | null
     generatedAt: string
     acknowledgedAt?: string | null
     metadata: Record<string, unknown>
@@ -28,7 +31,7 @@ interface DocumentData {
         name: string
         email: string
       }
-    }
+    } | null
   }
   htmlContent: string
 }
@@ -48,6 +51,8 @@ export default function DocumentViewPage() {
   const params = useParams()
   const router = useRouter()
   const documentId = params.id as string
+  const queryClient = useQueryClient()
+  const [editOpen, setEditOpen] = useState(false)
 
   const { data, isLoading, error } = useQuery<DocumentData>({
     queryKey: ['document', documentId],
@@ -91,6 +96,7 @@ export default function DocumentViewPage() {
   const documentTitle = data.document.title || DOCUMENT_TITLES[data.document.documentType]
   const isCustom = data.document.documentType === 'CUSTOM'
   const documentUrl = data.document.documentUrl
+  const canEdit = !isCustom && !data.document.acknowledgedAt
 
   if (isCustom && documentUrl) {
     return (
@@ -104,7 +110,9 @@ export default function DocumentViewPage() {
             <div>
               <h1 className="text-lg font-semibold">{documentTitle}</h1>
               <p className="text-sm text-muted-foreground">
-                {data.document.employee.user.name} ({data.document.employee.employeeCode})
+                {data.document.employee
+                  ? `${data.document.employee.user.name} (${data.document.employee.employeeCode})`
+                  : data.document.applicantName || 'Applicant'}
               </p>
             </div>
             <Button asChild>
@@ -148,14 +156,22 @@ export default function DocumentViewPage() {
             <div>
               <h1 className="text-lg font-semibold">{documentTitle}</h1>
               <p className="text-sm text-muted-foreground">
-                {data.document.employee.user.name} ({data.document.employee.employeeCode})
+                {data.document.employee
+                  ? `${data.document.employee.user.name} (${data.document.employee.employeeCode})`
+                  : data.document.applicantName || 'Applicant'}
               </p>
             </div>
           </div>
           <div className="flex gap-2">
+            {canEdit && (
+              <Button variant="outline" onClick={() => setEditOpen(true)}>
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            )}
             <EmailDocumentButton
               documentId={documentId}
-              defaultEmail={data.document.employee.user.email}
+              defaultEmail={data.document.employee?.user.email || data.document.applicantEmail || ''}
               documentType={data.document.documentType}
             />
             <Button onClick={handleDownload} variant="outline">
@@ -169,6 +185,17 @@ export default function DocumentViewPage() {
           </div>
         </div>
       </div>
+
+      <EditDocumentDialog
+        documentId={documentId}
+        open={editOpen}
+        onOpenChange={(open) => {
+          setEditOpen(open)
+          if (!open) {
+            queryClient.invalidateQueries({ queryKey: ['document', documentId] })
+          }
+        }}
+      />
 
       {/* Document Content */}
       <div className="min-h-screen bg-gray-50 p-8 print:p-0 print:bg-white">

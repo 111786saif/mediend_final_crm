@@ -518,9 +518,26 @@ export function canCreateRole(user: SessionUser | null, targetRole: UserRole): b
     return targetRole === 'TEAM_LEAD' || targetRole === 'USER' || targetRole === 'BD'
   }
 
-  // HR_HEAD can create department head roles when creating departments
+  // HR_HEAD can assign dept heads (except IT/Finance) and common staff roles — not Admin/Tester/EA
   if (user.role === 'HR_HEAD') {
-    return isDepartmentHead(targetRole) || targetRole === 'EXECUTIVE_ASSISTANT' || targetRole === 'CATEGORY_MANAGER' || targetRole === 'ASSISTANT_CATEGORY_MANAGER' || targetRole === 'TEAM_LEAD' || targetRole === 'USER' || targetRole === 'BD'
+    if (
+      targetRole === 'EXECUTIVE_ASSISTANT' ||
+      targetRole === 'IT_HEAD' ||
+      targetRole === 'FINANCE_HEAD' ||
+      targetRole === 'ADMIN' ||
+      targetRole === 'TESTER'
+    ) {
+      return false
+    }
+    return (
+      isDepartmentHead(targetRole) ||
+      targetRole === 'CATEGORY_MANAGER' ||
+      targetRole === 'ASSISTANT_CATEGORY_MANAGER' ||
+      targetRole === 'TEAM_LEAD' ||
+      targetRole === 'USER' ||
+      targetRole === 'BD' ||
+      targetRole === 'ACCESS_MATRIX'
+    )
   }
 
   // IT_HEAD can create IT_HEAD (for succession)
@@ -571,20 +588,17 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
     return ['TEAM_LEAD', 'USER', 'BD']
   }
 
-  // HR_HEAD can create department head roles
+  // HR_HEAD: dept heads + staff; exclude Admin, Tester, EA, IT Head, Finance Head
   if (user.role === 'HR_HEAD') {
     return [
       'INSURANCE_HEAD',
       'PL_HEAD',
       'SALES_HEAD',
       'HR_HEAD',
-      'FINANCE_HEAD',
       'OUTSTANDING_HEAD',
       'DIGITAL_MARKETING_HEAD',
-      'IT_HEAD',
       'LOAN_DEMAT_HEAD',
       'COMPLIANCE_HEAD',
-      'EXECUTIVE_ASSISTANT',
       'CATEGORY_MANAGER',
       'ASSISTANT_CATEGORY_MANAGER',
       'TEAM_LEAD',

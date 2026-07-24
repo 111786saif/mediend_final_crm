@@ -3,14 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import {
-  generateOfferLetterHTML,
-  generateIncrementLetterHTML,
-  generateExperienceLetterHTML,
-  generateRelievingLetterHTML,
-  generateInternshipOfferLetterHTML,
-  generateInternshipCompletionLetterHTML,
-} from '@/lib/hrms/document-templates'
+import { resolveDocumentHtml } from '@/lib/hrms/document-render'
 import { sendDocumentEmail } from '@/lib/resend'
 import { z } from 'zod'
 
@@ -92,54 +85,34 @@ export async function POST(
 
     const metadata = document.metadata as Record<string, unknown> | null
 
-    let htmlContent: string
+    let htmlContent = await resolveDocumentHtml({
+      documentType: document.documentType,
+      contentHtml: document.contentHtml,
+      employee: employeeData,
+      metadata,
+      documentUrl: document.documentUrl,
+    })
+
     let ackToken: string | null = null
 
-    switch (document.documentType) {
-      case 'OFFER_LETTER':
-        htmlContent = generateOfferLetterHTML(employeeData, metadata || undefined)
-        ackToken = crypto.randomUUID()
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mediend.com'
-        const ackUrl = `${baseUrl}/documents/acknowledge?token=${ackToken}`
-        const ackSection = `
+    if (
+      document.documentType === 'OFFER_LETTER' ||
+      document.documentType === 'INTERNSHIP_OFFER_LETTER'
+    ) {
+      ackToken = crypto.randomUUID()
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mediend.com'
+      const ackUrl = `${baseUrl}/documents/acknowledge?token=${ackToken}`
+      const label =
+        document.documentType === 'INTERNSHIP_OFFER_LETTER' ? 'internship offer' : 'offer'
+      const ackSection = `
     <br><br>
-    <p style="margin: 20px 0; font-size: 14px;">To acknowledge and accept this offer online, click the button below:</p>
+    <p style="margin: 20px 0; font-size: 14px;">To acknowledge and accept this ${label} online, click the button below:</p>
     <p style="margin: 16px 0;">
       <a href="${ackUrl}" style="display: inline-block; padding: 12px 24px; background: #1a365d; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">I Acknowledge & Accept</a>
     </p>
     <p style="margin: 12px 0; font-size: 12px; color: #666;">Or copy this link: ${ackUrl}</p>
     `
-        htmlContent = htmlContent.replace('<!-- ACK_PLACEHOLDER -->', ackSection)
-        break
-      case 'INCREMENT_LETTER':
-        htmlContent = generateIncrementLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'EXPERIENCE_LETTER':
-        htmlContent = generateExperienceLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'RELIEVING_LETTER':
-        htmlContent = generateRelievingLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'INTERNSHIP_OFFER_LETTER':
-        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata || undefined)
-        ackToken = crypto.randomUUID()
-        const internBaseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mediend.com'
-        const internAckUrl = `${internBaseUrl}/documents/acknowledge?token=${ackToken}`
-        const internAckSection = `
-    <br><br>
-    <p style="margin: 20px 0; font-size: 14px;">To acknowledge and accept this internship offer online, click the button below:</p>
-    <p style="margin: 16px 0;">
-      <a href="${internAckUrl}" style="display: inline-block; padding: 12px 24px; background: #1a365d; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">I Acknowledge & Accept</a>
-    </p>
-    <p style="margin: 12px 0; font-size: 12px; color: #666;">Or copy this link: ${internAckUrl}</p>
-    `
-        htmlContent = htmlContent.replace('<!-- ACK_PLACEHOLDER -->', internAckSection)
-        break
-      case 'INTERNSHIP_COMPLETION_LETTER':
-        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
-        break
-      default:
-        return errorResponse('Invalid document type', 400)
+      htmlContent = htmlContent.replace('<!-- ACK_PLACEHOLDER -->', ackSection)
     }
 
     if (ackToken) {
