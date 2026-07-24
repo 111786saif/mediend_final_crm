@@ -18,7 +18,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { FileText, Plus, ExternalLink, Mail, Upload, Search, ChevronRight, Check, Clock, Eye, ArrowLeft, Pencil, Settings2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
-import { ManageTemplatesDialog } from '@/components/hr/manage-templates-dialog'
+import Link from 'next/link'
 import { EditDocumentDialog } from '@/components/hr/edit-document-dialog'
 import { DocumentRichEditor } from '@/components/hr/document-rich-editor'
 import { extractBodyHtml } from '@/lib/hrms/document-merge'
@@ -110,7 +110,6 @@ export default function HRDocumentsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [sheetEmployee, setSheetEmployee] = useState<Employee | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [templatesOpen, setTemplatesOpen] = useState(false)
   const [richEditDocId, setRichEditDocId] = useState<string | null>(null)
   const [richEditOpen, setRichEditOpen] = useState(false)
   const queryClient = useQueryClient()
@@ -201,9 +200,11 @@ export default function HRDocumentsPage() {
           <p className="text-muted-foreground mt-1">Generate, edit, and manage employee documents</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => setTemplatesOpen(true)}>
-            <Settings2 className="h-4 w-4 mr-2" />
-            Manage Templates
+          <Button variant="outline" asChild>
+            <Link href="/hr/documents/templates">
+              <Settings2 className="h-4 w-4 mr-2" />
+              Manage Templates
+            </Link>
           </Button>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
@@ -230,7 +231,6 @@ export default function HRDocumentsPage() {
         </div>
       </div>
 
-      <ManageTemplatesDialog open={templatesOpen} onOpenChange={setTemplatesOpen} />
       <EditDocumentDialog
         documentId={richEditDocId}
         open={richEditOpen}

@@ -111,6 +111,7 @@ export function DocumentRichEditor({
       attributes: {
         class: 'document-rich-editor-prose focus:outline-none',
         style: `min-height: ${minHeight};`,
+        spellcheck: 'false',
       },
     },
   })
@@ -130,15 +131,21 @@ export function DocumentRichEditor({
 
   useEffect(() => {
     if (typeof document === 'undefined') return
-    if (document.getElementById('document-rich-editor-styles')) return
+    // Always refresh styles so theme fixes apply after deploys
+    const existing = document.getElementById('document-rich-editor-styles')
+    if (existing) existing.remove()
     const style = document.createElement('style')
     style.id = 'document-rich-editor-styles'
     style.textContent = `
       .document-rich-editor-prose {
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 15px;
-        line-height: 1.6;
-        color: #333;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 16px;
+        line-height: 1.7;
+        color: rgb(var(--foreground));
+        caret-color: rgb(var(--foreground));
+      }
+      .document-rich-editor-prose * {
+        color: inherit;
       }
       .document-rich-editor-prose p { margin: 0.75em 0; }
       .document-rich-editor-prose h2,
@@ -146,7 +153,9 @@ export function DocumentRichEditor({
       .document-rich-editor-prose h4 {
         font-weight: 700;
         margin: 1em 0 0.5em;
+        color: rgb(var(--foreground));
       }
+      .document-rich-editor-prose strong { font-weight: 700; }
       .document-rich-editor-prose ul,
       .document-rich-editor-prose ol {
         padding-left: 1.5em;
@@ -159,7 +168,7 @@ export function DocumentRichEditor({
       }
       .document-rich-editor-prose td,
       .document-rich-editor-prose th {
-        border: 1px solid #ddd;
+        border: 1px solid rgb(var(--border));
         padding: 8px 12px;
       }
       .document-rich-editor-prose img { max-width: 100%; height: auto; }
@@ -171,11 +180,14 @@ export function DocumentRichEditor({
       }
       .document-rich-editor-prose .date { text-align: right; }
       .document-rich-editor-prose p.is-editor-empty:first-child::before {
-        color: #94a3b8;
+        color: rgb(var(--muted-foreground));
         content: attr(data-placeholder);
         float: left;
         height: 0;
         pointer-events: none;
+      }
+      .document-rich-editor-surface .tiptap {
+        outline: none;
       }
     `
     document.head.appendChild(style)
@@ -183,7 +195,7 @@ export function DocumentRichEditor({
 
   if (!editor) {
     return (
-      <div className={cn('rounded-md border bg-muted/30 p-4 text-sm text-muted-foreground', className)}>
+      <div className={cn('rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground', className)}>
         Loading editor…
       </div>
     )
@@ -194,9 +206,9 @@ export function DocumentRichEditor({
   }
 
   return (
-    <div className={cn('rounded-md border bg-background', className)}>
+    <div className={cn('document-rich-editor-surface rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden', className)}>
       {editable && (
-        <div className="flex flex-wrap items-center gap-0.5 border-b bg-muted/40 px-2 py-1.5">
+        <div className="flex flex-wrap items-center gap-0.5 border-b border-border bg-muted/50 px-2 py-1.5">
           <ToolbarButton
             title="Bold"
             active={editor.isActive('bold')}
@@ -281,7 +293,7 @@ export function DocumentRichEditor({
             <>
               <div className="mx-1 h-5 w-px bg-border" />
               <Select onValueChange={insertPlaceholder}>
-                <SelectTrigger className="h-8 w-[180px] text-xs">
+                <SelectTrigger className="h-8 w-[180px] text-xs bg-background">
                   <SelectValue placeholder="Insert field…" />
                 </SelectTrigger>
                 <SelectContent>
@@ -296,7 +308,7 @@ export function DocumentRichEditor({
           )}
         </div>
       )}
-      <div className="overflow-auto p-4" style={{ maxHeight: '70vh' }}>
+      <div className="overflow-auto p-6 bg-card text-card-foreground" style={{ maxHeight: 'calc(100vh - 16rem)' }}>
         <EditorContent editor={editor} />
       </div>
     </div>
