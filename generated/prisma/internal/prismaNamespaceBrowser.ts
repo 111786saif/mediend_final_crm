@@ -83,6 +83,7 @@ export const ModelName = {
   SalaryStructure: 'SalaryStructure',
   MonthlyPayroll: 'MonthlyPayroll',
   EmployeeDocument: 'EmployeeDocument',
+  DocumentTemplate: 'DocumentTemplate',
   Feedback: 'Feedback',
   AnonymousMessage: 'AnonymousMessage',
   MDAppointment: 'MDAppointment',
@@ -171,9 +172,19 @@ export const ModelName = {
   HospitalMaster: 'HospitalMaster',
   HospitalMasterInsurance: 'HospitalMasterInsurance',
   DoctorMaster: 'DoctorMaster',
+  ImplantMaster: 'ImplantMaster',
+  SurgeryRemarkMaster: 'SurgeryRemarkMaster',
+  ReasonNoSurgeryMaster: 'ReasonNoSurgeryMaster',
+  FollowUpReasonMaster: 'FollowUpReasonMaster',
+  DoctorAppAccount: 'DoctorAppAccount',
+  DoctorAppRefreshToken: 'DoctorAppRefreshToken',
+  DoctorAppWhatsappOtp: 'DoctorAppWhatsappOtp',
+  DoctorLeaveRequest: 'DoctorLeaveRequest',
+  DoctorCabRequest: 'DoctorCabRequest',
   TPAMaster: 'TPAMaster',
   AnesthesiaMaster: 'AnesthesiaMaster',
   InsuranceMaster: 'InsuranceMaster',
+  TreatmentCategoryMaster: 'TreatmentCategoryMaster',
   TreatmentMaster: 'TreatmentMaster',
   AppSetting: 'AppSetting',
   ITProject: 'ITProject',
@@ -928,6 +939,7 @@ export const EmployeeDocumentScalarFieldEnum = {
   applicantName: 'applicantName',
   applicantEmail: 'applicantEmail',
   metadata: 'metadata',
+  contentHtml: 'contentHtml',
   generatedAt: 'generatedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -937,6 +949,18 @@ export const EmployeeDocumentScalarFieldEnum = {
 } as const
 
 export type EmployeeDocumentScalarFieldEnum = (typeof EmployeeDocumentScalarFieldEnum)[keyof typeof EmployeeDocumentScalarFieldEnum]
+
+
+export const DocumentTemplateScalarFieldEnum = {
+  id: 'id',
+  documentType: 'documentType',
+  name: 'name',
+  contentHtml: 'contentHtml',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentTemplateScalarFieldEnum = (typeof DocumentTemplateScalarFieldEnum)[keyof typeof DocumentTemplateScalarFieldEnum]
 
 
 export const FeedbackScalarFieldEnum = {
@@ -2499,6 +2523,7 @@ export const DoctorMasterScalarFieldEnum = {
   treatment: 'treatment',
   age: 'age',
   sex: 'sex',
+  phoneNumber: 'phoneNumber',
   aadhaarNumber: 'aadhaarNumber',
   aadhaarCardUrl: 'aadhaarCardUrl',
   panNumber: 'panNumber',
@@ -2516,6 +2541,143 @@ export const DoctorMasterScalarFieldEnum = {
 } as const
 
 export type DoctorMasterScalarFieldEnum = (typeof DoctorMasterScalarFieldEnum)[keyof typeof DoctorMasterScalarFieldEnum]
+
+
+export const ImplantMasterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  category: 'category',
+  manufacturer: 'manufacturer',
+  unitCost: 'unitCost',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImplantMasterScalarFieldEnum = (typeof ImplantMasterScalarFieldEnum)[keyof typeof ImplantMasterScalarFieldEnum]
+
+
+export const SurgeryRemarkMasterScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  label: 'label',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SurgeryRemarkMasterScalarFieldEnum = (typeof SurgeryRemarkMasterScalarFieldEnum)[keyof typeof SurgeryRemarkMasterScalarFieldEnum]
+
+
+export const ReasonNoSurgeryMasterScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  label: 'label',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReasonNoSurgeryMasterScalarFieldEnum = (typeof ReasonNoSurgeryMasterScalarFieldEnum)[keyof typeof ReasonNoSurgeryMasterScalarFieldEnum]
+
+
+export const FollowUpReasonMasterScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  label: 'label',
+  displayOrder: 'displayOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FollowUpReasonMasterScalarFieldEnum = (typeof FollowUpReasonMasterScalarFieldEnum)[keyof typeof FollowUpReasonMasterScalarFieldEnum]
+
+
+export const DoctorAppAccountScalarFieldEnum = {
+  id: 'id',
+  doctorId: 'doctorId',
+  email: 'email',
+  phoneNumber: 'phoneNumber',
+  passwordHash: 'passwordHash',
+  isActive: 'isActive',
+  lastLoginAt: 'lastLoginAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DoctorAppAccountScalarFieldEnum = (typeof DoctorAppAccountScalarFieldEnum)[keyof typeof DoctorAppAccountScalarFieldEnum]
+
+
+export const DoctorAppRefreshTokenScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  jti: 'jti',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type DoctorAppRefreshTokenScalarFieldEnum = (typeof DoctorAppRefreshTokenScalarFieldEnum)[keyof typeof DoctorAppRefreshTokenScalarFieldEnum]
+
+
+export const DoctorAppWhatsappOtpScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  phoneNumber: 'phoneNumber',
+  otp: 'otp',
+  expiresAt: 'expiresAt',
+  verifiedAt: 'verifiedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type DoctorAppWhatsappOtpScalarFieldEnum = (typeof DoctorAppWhatsappOtpScalarFieldEnum)[keyof typeof DoctorAppWhatsappOtpScalarFieldEnum]
+
+
+export const DoctorLeaveRequestScalarFieldEnum = {
+  id: 'id',
+  doctorId: 'doctorId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  reason: 'reason',
+  status: 'status',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  reviewNotes: 'reviewNotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DoctorLeaveRequestScalarFieldEnum = (typeof DoctorLeaveRequestScalarFieldEnum)[keyof typeof DoctorLeaveRequestScalarFieldEnum]
+
+
+export const DoctorCabRequestScalarFieldEnum = {
+  id: 'id',
+  doctorId: 'doctorId',
+  pickup: 'pickup',
+  drop: 'drop',
+  pickupLat: 'pickupLat',
+  pickupLng: 'pickupLng',
+  dropLat: 'dropLat',
+  dropLng: 'dropLng',
+  scheduledFor: 'scheduledFor',
+  status: 'status',
+  reviewNotes: 'reviewNotes',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  vendorName: 'vendorName',
+  vendorPhone: 'vendorPhone',
+  assignedVendorById: 'assignedVendorById',
+  assignedVendorAt: 'assignedVendorAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DoctorCabRequestScalarFieldEnum = (typeof DoctorCabRequestScalarFieldEnum)[keyof typeof DoctorCabRequestScalarFieldEnum]
 
 
 export const TPAMasterScalarFieldEnum = {
@@ -2549,6 +2711,17 @@ export const InsuranceMasterScalarFieldEnum = {
 } as const
 
 export type InsuranceMasterScalarFieldEnum = (typeof InsuranceMasterScalarFieldEnum)[keyof typeof InsuranceMasterScalarFieldEnum]
+
+
+export const TreatmentCategoryMasterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TreatmentCategoryMasterScalarFieldEnum = (typeof TreatmentCategoryMasterScalarFieldEnum)[keyof typeof TreatmentCategoryMasterScalarFieldEnum]
 
 
 export const TreatmentMasterScalarFieldEnum = {

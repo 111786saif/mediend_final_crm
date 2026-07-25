@@ -5,6 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess, getManagerGroups } from '@/lib/hierarchy'
+import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole, isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 const CLOSED_STATUS_CODES = [
@@ -47,9 +49,9 @@ export async function GET(request: NextRequest) {
     let scopeFilter: Prisma.LeadWhereInput = {}
     if (user.role === 'BD') {
       scopeFilter = { bdId: user.id }
-    } else if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      scopeFilter = { bdId: { in: [user.id, ...subIds] } }
+    } else if (isSubtreeScopedSalesRole(user.role)) {
+      const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+      if (bdIdFilter) scopeFilter = { bdId: { in: bdIdFilter } }
     }
 
     if (type === 'bd') {
@@ -168,8 +170,8 @@ export async function GET(request: NextRequest) {
       // Team lead leaderboard: each TEAM_LEAD user ranked by their group's performance
       const teamLeadUsers = await prisma.user.findMany({
         where: {
-          role: 'TEAM_LEAD',
-          ...(user.role === 'TEAM_LEAD' ? { id: user.id } : {}),
+          role: { in: ['TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER'] },
+          ...(isTeamLeadEquivalent(user.role) ? { id: user.id } : {}),
         },
         include: {
           employee: { select: { id: true } },

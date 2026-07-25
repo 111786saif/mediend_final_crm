@@ -1602,6 +1602,7 @@ model EmployeeDocument {
   applicantName  String?
   applicantEmail String?
   metadata       Json?
+  contentHtml    String?      @db.Text
   generatedAt    DateTime     @default(now())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -1611,6 +1612,16 @@ model EmployeeDocument {
 
   @@index([employeeId])
   @@index([documentType])
+}
+
+// Editable master templates for HR letters (one per DocumentType except CUSTOM)
+model DocumentTemplate {
+  id           String       @id @default(cuid())
+  documentType DocumentType @unique
+  name         String
+  contentHtml  String       @db.Text
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 // Feedback 360 - Employee submits, HR reviews
@@ -4104,6 +4115,17 @@ model InsuranceMaster {
   updatedAt DateTime @updatedAt
 
   hospitals HospitalMasterInsurance[]
+
+  @@index([name])
+  @@index([isActive])
+}
+
+model TreatmentCategoryMaster {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([name])
   @@index([isActive])

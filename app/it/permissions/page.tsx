@@ -259,11 +259,11 @@ export default function ITPermissionsPage() {
   // Get vibrant theme-matching gradient based on userId hash
   const getAvatarGradient = (userId: string) => {
     const gradients = [
-      { bg: 'from-cyan-500/20 to-blue-600/30 border-cyan-500/30 text-cyan-300', border: 'border-[#2fd9f4]' },
-      { bg: 'from-indigo-500/20 to-purple-600/30 border-indigo-500/30 text-indigo-300', border: 'border-indigo-400' },
-      { bg: 'from-teal-500/20 to-emerald-600/30 border-teal-500/30 text-teal-300', border: 'border-emerald-400' },
-      { bg: 'from-blue-500/20 to-violet-600/30 border-blue-500/30 text-blue-300', border: 'border-blue-400' },
-      { bg: 'from-violet-500/20 to-fuchsia-600/30 border-violet-500/30 text-violet-300', border: 'border-fuchsia-400' },
+      { bg: 'from-cyan-500/10 to-blue-500/20 text-cyan-700 dark:text-cyan-300', border: 'border-cyan-500' },
+      { bg: 'from-indigo-500/10 to-purple-500/20 text-indigo-700 dark:text-indigo-300', border: 'border-indigo-500' },
+      { bg: 'from-teal-500/10 to-emerald-500/20 text-teal-700 dark:text-teal-300', border: 'border-teal-500' },
+      { bg: 'from-blue-500/10 to-violet-500/20 text-blue-700 dark:text-blue-300', border: 'border-blue-500' },
+      { bg: 'from-violet-500/10 to-fuchsia-500/20 text-violet-700 dark:text-violet-300', border: 'border-fuchsia-500' },
     ]
     if (!userId) return gradients[0]
     let hash = 0
@@ -298,7 +298,7 @@ export default function ITPermissionsPage() {
         <>
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Shield className="h-8 w-8 text-[#2fd9f4]" />
+              <Shield className="h-8 w-8 text-cyan-600 dark:text-cyan-400" />
               IT Access Directory
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -328,19 +328,19 @@ export default function ITPermissionsPage() {
         <>
           {isTreeLoading ? (
             <div className="flex h-[50vh] flex-col items-center justify-center text-center">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#2fd9f4] border-r-transparent"></div>
-              <p className="mt-4 text-sm text-[#c7c6cd]">Retrieving access configuration tree...</p>
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cyan-600 dark:border-cyan-400 border-r-transparent"></div>
+              <p className="mt-4 text-sm text-muted-foreground">Retrieving access configuration tree...</p>
             </div>
           ) : (
             <div className="space-y-6">
               {/* Sticky Top Bar containing back button and user card */}
-              <div className="sticky top-0 z-20 bg-[#07112f] pt-2 pb-4 px-4 space-y-4 rounded-lg">
+              <div className="sticky top-0 z-20 bg-background pt-2 pb-4 px-4 space-y-4 rounded-lg">
                 <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedUserId(null)}
-                    className="text-[#c7c6cd] hover:text-white"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to Access Directory
@@ -348,22 +348,22 @@ export default function ITPermissionsPage() {
                 </div>
 
                 {/* User summary header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#151e3c] border border-[#283150] p-5 rounded-xl gap-4 shadow-md">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-card text-card-foreground border border-border p-5 rounded-xl gap-4 shadow-sm">
                   <div className="flex items-center gap-4">
-                    <div className={`w-14 h-14 rounded-full border-2 ${getAvatarGradient(permissionTreeData?.user?.id ?? '').border} flex items-center justify-center bg-gradient-to-br ${getAvatarGradient(permissionTreeData?.user?.id ?? '').bg} font-bold text-white text-base`}>
+                    <div className={`w-14 h-14 rounded-full border-2 ${getAvatarGradient(permissionTreeData?.user?.id ?? '').border} flex items-center justify-center bg-gradient-to-br ${getAvatarGradient(permissionTreeData?.user?.id ?? '').bg} font-bold text-base`}>
                       {getInitials(permissionTreeData?.user?.name ?? '')}
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-white">{permissionTreeData?.user?.name}</h2>
-                      <p className="text-sm text-[#c7c6cd] flex items-center gap-1 mt-0.5">
-                        <Building2 className="h-4 w-4 text-indigo-400" />
+                      <h2 className="text-2xl font-bold text-foreground">{permissionTreeData?.user?.name}</h2>
+                      <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
+                        <Building2 className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                         Role: {permissionTreeData?.user?.role}
                       </p>
                     </div>
                   </div>
                   <div className="sm:text-right">
-                    <span className="text-xs text-[#c7c6cd] block">User CUID</span>
-                    <code className="text-xs text-[#2fd9f4] bg-[#2fd9f4]/10 px-2.5 py-1 rounded font-mono mt-1 inline-block border border-[#2fd9f4]/20">
+                    <span className="text-xs text-muted-foreground block">User CUID</span>
+                    <code className="text-xs text-cyan-700 dark:text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded font-mono mt-1 inline-block border border-cyan-500/20">
                       {permissionTreeData?.user?.id}
                     </code>
                   </div>

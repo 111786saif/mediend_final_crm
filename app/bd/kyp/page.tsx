@@ -143,6 +143,7 @@ export default function CaseTrackerPage() {
 
   const [monthFilter, setMonthFilter] = useState(currentMonthKey)
   const [stageFilter, setStageFilter] = useState<BucketFilter>('all')
+  const [cmFilter, setCmFilter] = useState('all')
   const [teamFilter, setTeamFilter] = useState('all')
   const [bdFilter, setBdFilter] = useState<string[]>([])
   const [bdFilterSearch, setBdFilterSearch] = useState('')
@@ -323,8 +324,14 @@ export default function CaseTrackerPage() {
   const ageSexOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => formatLeadAgeSex(d.lead))), [monthFiltered])
   const stageOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => BUCKET_BADGE[d.bucket]?.label ?? '')), [monthFiltered])
 
-  const showBdFilter = user?.role === 'TEAM_LEAD' || user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
-  const showTeamFilter = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
+  const showBdFilter =
+    user?.role === 'TEAM_LEAD' ||
+    user?.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+    user?.role === 'CATEGORY_MANAGER' ||
+    user?.role === 'SALES_HEAD' ||
+    user?.role === 'EXECUTIVE_ASSISTANT'
+  const showTeamFilter = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT' || user?.role === 'CATEGORY_MANAGER'
+  const showCmFilter = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
 
   interface TeamData {
     id: string
@@ -332,26 +339,91 @@ export default function CaseTrackerPage() {
     name: string
     profilePicture: string | null
     employeeCode: string | null
+    role?: string
     memberCount: number
     members: { id: string; employeeId: string; name: string; profilePicture: string | null }[]
+    scopeUserIds?: string[]
   }
 
-  const { data: teamsData } = useQuery<TeamData[]>({
-    queryKey: ['targets', 'teams'],
-    queryFn: () => apiGet<TeamData[]>('/api/targets/teams'),
-    enabled: showTeamFilter && !!user,
+  interface TeamsWithCmResponse {
+    teams: TeamData[]
+    categoryManagers: TeamData[]
+  }
+
+  const { data: teamsPayload } = useQuery<TeamData[] | TeamsWithCmResponse>({
+    queryKey: ['targets', 'teams', 'includeCm'],
+    queryFn: () => apiGet<TeamData[] | TeamsWithCmResponse>('/api/targets/teams?includeCm=1'),
+    enabled: (showTeamFilter || showCmFilter) && !!user,
   })
+
+  const teamsData = useMemo(() => {
+    if (!teamsPayload) return []
+    if (Array.isArray(teamsPayload)) return teamsPayload
+    return teamsPayload.teams ?? []
+  }, [teamsPayload])
+
+  const categoryManagers = useMemo(() => {
+    if (!teamsPayload || Array.isArray(teamsPayload)) return []
+    return teamsPayload.categoryManagers ?? []
+  }, [teamsPayload])
+
+  // When logged in as CM, only show TL/ACM units inside their own recursive scope
+  const teamsForActor = useMemo(() => {
+    if (user?.role !== 'CATEGORY_MANAGER') return teamsData
+    const selfCm = categoryManagers.find((c) => c.userId === user.id)
+    if (!selfCm?.scopeUserIds?.length) return teamsData
+    const scope = new Set(selfCm.scopeUserIds)
+    return teamsData.filter((t) => scope.has(t.userId))
+  }, [teamsData, categoryManagers, user?.role, user?.id])
+
+  const teamsInCmScope = useMemo(() => {
+    const base = teamsForActor
+    if (cmFilter === 'all') return base
+    const cm = categoryManagers.find((c) => c.id === cmFilter)
+    if (!cm?.scopeUserIds?.length) return base
+    const scope = new Set(cm.scopeUserIds)
+    return base.filter((t) => scope.has(t.userId))
+  }, [teamsForActor, categoryManagers, cmFilter])
 
   const bdOptions = useMemo(() => {
     if (!showBdFilter) return []
     const map = new Map<string, string>()
-    if (showTeamFilter) {
-      const teams = teamsData ?? []
+    if (showTeamFilter || showCmFilter) {
+      const teams = teamsInCmScope
       const team = teamFilter !== 'all' ? teams.find((t) => t.id === teamFilter) : null
-      const sourceTeams = team ? [team] : teams
-      for (const t of sourceTeams) {
-        for (const member of t.members) {
+      if (team) {
+        // Prefer recursive scope when available (includes nested BDs)
+        if (team.scopeUserIds?.length) {
+          for (const { lead } of monthFiltered) {
+            const bd = lead.bd as { id?: string; name?: string } | undefined
+            if (bd?.id && bd.name && team.scopeUserIds.includes(bd.id)) {
+              map.set(bd.id, bd.name)
+            }
+          }
+        }
+        for (const member of team.members) {
           if (member.id && member.name) map.set(member.id, member.name)
+        }
+      } else if (cmFilter !== 'all') {
+        const cm = categoryManagers.find((c) => c.id === cmFilter)
+        if (cm?.scopeUserIds?.length) {
+          for (const { lead } of monthFiltered) {
+            const bd = lead.bd as { id?: string; name?: string } | undefined
+            if (bd?.id && bd.name && cm.scopeUserIds.includes(bd.id)) {
+              map.set(bd.id, bd.name)
+            }
+          }
+        }
+        for (const t of teams) {
+          for (const member of t.members) {
+            if (member.id && member.name) map.set(member.id, member.name)
+          }
+        }
+      } else {
+        for (const t of teams) {
+          for (const member of t.members) {
+            if (member.id && member.name) map.set(member.id, member.name)
+          }
         }
       }
     } else {
@@ -363,7 +435,7 @@ export default function CaseTrackerPage() {
     return Array.from(map.entries())
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([value, label]) => ({ value, label }))
-  }, [monthFiltered, showBdFilter, showTeamFilter, teamsData, teamFilter])
+  }, [monthFiltered, showBdFilter, showTeamFilter, showCmFilter, teamsInCmScope, teamFilter, cmFilter, categoryManagers])
 
   const counts = useMemo(() => {
     const base: Record<Bucket, number> = {
@@ -381,8 +453,18 @@ export default function CaseTrackerPage() {
   const filteredRows = useMemo(() => {
     let rows = monthFiltered
     if (stageFilter !== 'all') rows = rows.filter((d) => d.bucket === stageFilter)
+    if (cmFilter !== 'all') {
+      const cm = categoryManagers.find((c) => c.id === cmFilter)
+      const scopeIds = new Set(cm?.scopeUserIds ?? [])
+      rows = rows.filter((d) => scopeIds.has((d.lead.bd as { id?: string } | undefined)?.id ?? ''))
+    }
     if (teamFilter !== 'all') {
-      const teamBdIds = new Set(teamsData?.find((t) => t.id === teamFilter)?.members.map((m) => m.id) ?? [])
+      const team = teamsForActor.find((t) => t.id === teamFilter) ?? teamsData.find((t) => t.id === teamFilter)
+      const teamBdIds = new Set(
+        team?.scopeUserIds?.length
+          ? team.scopeUserIds
+          : (team?.members.map((m) => m.id) ?? [])
+      )
       rows = rows.filter((d) => teamBdIds.has((d.lead.bd as { id?: string } | undefined)?.id ?? ''))
     }
     if (bdFilter.length > 0) {
@@ -412,7 +494,7 @@ export default function CaseTrackerPage() {
       })
     }
     return [...rows].sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
-  }, [monthFiltered, stageFilter, teamFilter, bdFilter, columnFilters, debouncedSearch, phoneParsed, canViewPhone, teamsData])
+  }, [monthFiltered, stageFilter, cmFilter, teamFilter, bdFilter, columnFilters, debouncedSearch, phoneParsed, canViewPhone, teamsData, teamsForActor, categoryManagers])
 
   const columns = useMemo<ColumnDef<DecoratedLead>[]>(() => {
     const cols: ColumnDef<DecoratedLead>[] = [
@@ -673,6 +755,23 @@ export default function CaseTrackerPage() {
                     </SelectContent>
                   </Select>
 
+                  {showCmFilter && (
+                    <select
+                      value={cmFilter}
+                      onChange={(e) => {
+                        setCmFilter(e.target.value)
+                        setTeamFilter('all')
+                        setBdFilter([])
+                      }}
+                      className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none"
+                    >
+                      <option value="all">All CMs</option>
+                      {categoryManagers.map((c) => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                    </select>
+                  )}
+
                   {showTeamFilter && (
                     <select
                       value={teamFilter}
@@ -680,8 +779,10 @@ export default function CaseTrackerPage() {
                       className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none"
                     >
                       <option value="all">All teams</option>
-                      {(teamsData ?? []).map((t) => (
-                        <option key={t.id} value={t.id}>{t.name}</option>
+                      {teamsInCmScope.map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.name}{t.role === 'ASSISTANT_CATEGORY_MANAGER' ? ' (ACM)' : ''}
+                        </option>
                       ))}
                     </select>
                   )}

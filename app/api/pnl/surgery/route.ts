@@ -5,7 +5,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSeatCostPerEmployee } from '@/lib/pnl/pnl-config'
-import { getManagerGroups } from '@/lib/hierarchy'
+import { getSalesTeamUnits } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 import {
   allocateCplMarketingByBdAndGroup,
@@ -120,14 +120,41 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // Build manager groups lookup: bdUserId → managerId
-    const managerGroups = await getManagerGroups()
+    // TL/ACM units (recursive scope) + CM units for mid-layer rollups
+    const [tlUnits, cmUnits] = await Promise.all([
+      getSalesTeamUnits({ level: 'tl' }),
+      getSalesTeamUnits({ level: 'cm' }),
+    ])
+
     const bdToManagerId = new Map<string, string>()
-    const managerIdToGroup = new Map<string, typeof managerGroups[0]>()
-    for (const group of managerGroups) {
-      managerIdToGroup.set(group.managerId, group)
-      for (const sub of group.subordinates) {
-        bdToManagerId.set(sub.userId, group.managerId)
+    const managerIdToGroup = new Map<
+      string,
+      { managerId: string; managerName: string; managerUserId: string }
+    >()
+    for (const unit of tlUnits) {
+      managerIdToGroup.set(unit.id, {
+        managerId: unit.id,
+        managerName: unit.name,
+        managerUserId: unit.userId,
+      })
+      for (const uid of unit.scopeUserIds) {
+        bdToManagerId.set(uid, unit.id)
+      }
+    }
+
+    const bdToCmId = new Map<string, string>()
+    const cmIdToGroup = new Map<
+      string,
+      { managerId: string; managerName: string; managerUserId: string }
+    >()
+    for (const unit of cmUnits) {
+      cmIdToGroup.set(unit.id, {
+        managerId: unit.id,
+        managerName: unit.name,
+        managerUserId: unit.userId,
+      })
+      for (const uid of unit.scopeUserIds) {
+        bdToCmId.set(uid, unit.id)
       }
     }
 
@@ -136,6 +163,7 @@ export async function GET(request: NextRequest) {
       : await prisma.lead.count({ where: { surgeryDate: { not: null } } })
 
     const canonicalPerGroup = new Map<string, number>()
+    const canonicalPerCm = new Map<string, number>()
     const salesLeads = await prisma.lead.findMany({
       where: canonicalSalesCompletedWhere(
         Object.keys(surgeryRange).length > 0 ? surgeryRange : {},
@@ -145,6 +173,10 @@ export async function GET(request: NextRequest) {
     for (const l of salesLeads) {
       const gid = bdToManagerId.get(l.bdId) ?? 'unassigned'
       canonicalPerGroup.set(gid, (canonicalPerGroup.get(gid) ?? 0) + 1)
+      const cmId = bdToCmId.get(l.bdId)
+      if (cmId) {
+        canonicalPerCm.set(cmId, (canonicalPerCm.get(cmId) ?? 0) + 1)
+      }
     }
 
     const diseaseByGroup = new Map<string, Map<string, Bucket>>()
@@ -152,6 +184,10 @@ export async function GET(request: NextRequest) {
     const hospitalByGroup = new Map<string, Map<string, number>>()
 
     const groupMap = new Map<
+      string,
+      { groupId: string; groupName: string; managerName: string; surgeries: number; revenue: number; expenses: number; netProfit: number }
+    >()
+    const cmGroupMap = new Map<
       string,
       { groupId: string; groupName: string; managerName: string; surgeries: number; revenue: number; expenses: number; netProfit: number }
     >()
@@ -209,6 +245,29 @@ export async function GET(request: NextRequest) {
         groupMap.set(managerId, { groupId: managerId, groupName, managerName: groupManagerName, surgeries: 1, revenue: share, expenses: exp, netProfit: net })
       }
 
+      const cmId = bdToCmId.get(bdId)
+      if (cmId) {
+        const cmGroup = cmIdToGroup.get(cmId)
+        const cmName = cmGroup?.managerName ?? 'Category Manager'
+        const existingCm = cmGroupMap.get(cmId)
+        if (existingCm) {
+          existingCm.surgeries += 1
+          existingCm.revenue += share
+          existingCm.expenses += exp
+          existingCm.netProfit += net
+        } else {
+          cmGroupMap.set(cmId, {
+            groupId: cmId,
+            groupName: `${cmName}'s Category`,
+            managerName: cmName,
+            surgeries: 1,
+            revenue: share,
+            expenses: exp,
+            netProfit: net,
+          })
+        }
+      }
+
       const existingBd = bdAgg.get(bdId)
       if (existingBd) {
         existingBd.surgeries += 1
@@ -233,17 +292,23 @@ export async function GET(request: NextRequest) {
     const bdList = Array.from(bdAgg.values()).map((b) => ({ ...b, netProfit: b.revenue - b.expenses }))
     bdList.sort((a, b) => b.netProfit - a.netProfit)
     const groupBreakdown = Array.from(groupMap.values()).sort((a, b) => b.netProfit - a.netProfit)
+    const cmBreakdown = Array.from(cmGroupMap.values()).sort((a, b) => b.netProfit - a.netProfit)
 
     const seatRate = await getSeatCostPerEmployee()
 
-    // Member counts by manager group
+    // Member counts by TL/ACM and CM units (recursive BD leaves approx = scope size - 1)
     const memberCountByGroup = new Map<string, number>()
-    for (const group of managerGroups) {
-      memberCountByGroup.set(group.managerId, group.subordinates.length)
+    for (const unit of tlUnits) {
+      memberCountByGroup.set(unit.id, Math.max(unit.scopeUserIds.length - 1, unit.memberCount))
+    }
+    const memberCountByCm = new Map<string, number>()
+    for (const unit of cmUnits) {
+      memberCountByCm.set(unit.id, Math.max(unit.scopeUserIds.length - 1, 0))
     }
 
     const marketingCostPerBd: Record<string, number> = {}
     const marketingCostPerGroup: Record<string, number> = {}
+    const marketingCostPerCm: Record<string, number> = {}
 
     let monthsInRange: { month: number; year: number }[] = []
     if (startDate && endDate) {
@@ -273,9 +338,14 @@ export async function GET(request: NextRequest) {
         : []
 
     const leadCountByGroup = new Map<string, number>()
+    const leadCountByCm = new Map<string, number>()
     for (const row of leadCounts) {
       const gid = bdToManagerId.get(row.bdId) ?? 'unassigned'
       leadCountByGroup.set(gid, (leadCountByGroup.get(gid) ?? 0) + row._count._all)
+      const cmId = bdToCmId.get(row.bdId)
+      if (cmId) {
+        leadCountByCm.set(cmId, (leadCountByCm.get(cmId) ?? 0) + row._count._all)
+      }
     }
 
     let totalMarketingCostCpl = 0
@@ -299,6 +369,12 @@ export async function GET(request: NextRequest) {
       totalMarketingCostCpl = total
       Object.assign(marketingCostPerBd, perBd)
       Object.assign(marketingCostPerGroup, perGroup)
+      // Roll marketing to CM groups
+      for (const [bdId, cost] of Object.entries(perBd)) {
+        const cmId = bdToCmId.get(bdId)
+        if (!cmId) continue
+        marketingCostPerCm[cmId] = (marketingCostPerCm[cmId] ?? 0) + cost
+      }
     }
 
     function distToDiseaseArr(m: Map<string, Bucket> | undefined) {
@@ -325,6 +401,21 @@ export async function GET(request: NextRequest) {
       }
     })
 
+    const cmBreakdownEnriched = cmBreakdown.map((t) => {
+      const memberCount = memberCountByCm.get(t.groupId) ?? 0
+      return {
+        ...t,
+        memberCount,
+        seatCost: memberCount * seatRate,
+        leadCount: leadCountByCm.get(t.groupId) ?? 0,
+        marketingCost: marketingCostPerCm[t.groupId] ?? 0,
+        canonicalSalesCount: canonicalPerCm.get(t.groupId) ?? 0,
+        diseaseDistribution: [] as ReturnType<typeof distToDiseaseArr>,
+        circleDistribution: [] as ReturnType<typeof distToCountArr>,
+        hospitalDistribution: [] as ReturnType<typeof distToCountArr>,
+      }
+    })
+
     const bdBreakdownEnriched = bdList.map((b) => ({
       ...b,
       leadCount: leadCounts.find((x) => x.bdId === b.bdId)?._count._all ?? 0,
@@ -341,6 +432,7 @@ export async function GET(request: NextRequest) {
       avgPerCase: surgeryCount > 0 ? (totalRevenue - totalExpenses) / surgeryCount : 0,
       totalMarketingCostCpl,
       teamBreakdown: groupBreakdownEnriched,
+      cmBreakdown: cmBreakdownEnriched,
       seatCostPerEmployee: seatRate,
       bdBreakdown: bdBreakdownEnriched,
       topTeams: groupBreakdownEnriched.slice(0, 3),

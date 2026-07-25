@@ -68,6 +68,7 @@ export const RESOURCE_MAP = {
   "sales.campaign_cpl": { path: "/digital-marketing/cpl", component: "CampaignCPLPage" },
   "sales.sales_pipeline": { path: "/bd/pipeline", component: "SalesPipelinePage" },
   "sales.team_lead_pipeline": { path: "/team-lead/pipeline", component: "TeamLeadPipelinePage" },
+  "sales.blueprint_dashboard": { path: "/sales/blueprint", component: "BluePrintDashboardPage" },
 
   // Insurance Group Pages
   "insurance_pl.insurance": { path: "/insurance/dashboard", component: "InsurancePage" },
@@ -118,6 +119,16 @@ export const RESOURCE_MAP = {
   "sales.team_lead_pipeline.table.lead.column.alternateNumber": { label: "Alternate Phone Number", component: "AlternatePhoneNumber" },
   "sales.team_lead_pipeline.table.lead.column.patientEmail": { label: "Patient Email Address", component: "PatientEmailAddress" },
   "sales.team_lead_pipeline.table.lead.column.netProfit": { label: "Net Profit Amount", component: "NetProfitAmount" },
+
+  // Blueprint Dashboard Table Column Registry Map
+  "sales.blueprint_dashboard.table.blueprint.column.name": { label: "Blueprint: Name Column", component: "BlueprintNameColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.team": { label: "Blueprint: Team Column", component: "BlueprintTeamColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.teamSize": { label: "Blueprint: Team Size Column", component: "BlueprintTeamSizeColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.targetSalaryMin": { label: "Blueprint: Target (Salary Min) Column", component: "BlueprintTargetSalaryMinColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.target": { label: "Blueprint: Target Column", component: "BlueprintTargetColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.costTotalSpend": { label: "Blueprint: Cost Total Spend Column", component: "BlueprintCostTotalSpendColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.netProfitActual": { label: "Blueprint: Net Profit Actual Column", component: "BlueprintNetProfitActualColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.mediendProfit": { label: "Blueprint: MediEnd Profit Column", component: "BlueprintMediendProfitColumn" },
 
   // ============================================
   // NESTED LEVEL 3/4 MATRIX EXTENSIONS (ALL TABLES)

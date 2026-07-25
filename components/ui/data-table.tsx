@@ -209,17 +209,25 @@ export function DataTable<TData, TValue>({
       )}
 
       {/* Main Table Content */}
-      <div className="rounded-md border border-slate-200/60 dark:border-slate-800/40 bg-card overflow-hidden">
+      <div className="rounded-md border border-border bg-card overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-slate-50/60 hover:bg-slate-50/60 dark:bg-slate-900/30">
+            <TableHeader className="bg-muted/50 border-b border-border">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="border-b border-slate-200/50 dark:border-slate-800/30">
+                <TableRow key={headerGroup.id} className="border-b border-border">
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      style={{ width: header.column.columnDef.size }}
-                      className="text-slate-600 dark:text-slate-300 font-semibold px-4 py-3"
+                      colSpan={header.colSpan}
+                      style={{ 
+                        width: header.column.columnDef.size, 
+                        ...((header.column.columnDef.meta as any)?.headerStyle) 
+                      }}
+                      className={cn(
+                        "text-muted-foreground font-semibold px-4 py-3",
+                        header.colSpan > 1 && "text-center border-x border-border", // Grouped header centering
+                        (header.column.columnDef.meta as any)?.headerClassName
+                      )}
                     >
                       {header.isPlaceholder
                         ? null
@@ -236,10 +244,10 @@ export function DataTable<TData, TValue>({
               {isLoading ? (
                 // Loading Skeleton Rows
                 Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i} className="border-b border-slate-100 dark:border-slate-900/60">
+                  <TableRow key={i} className="border-b border-border">
                     {columns.map((col, j) => (
                       <TableCell key={j} className="h-12 px-4 py-3">
-                        <div className="h-4 bg-slate-100 dark:bg-slate-800/60 rounded animate-pulse w-full max-w-[85%]" />
+                        <div className="h-4 bg-muted rounded animate-pulse w-full max-w-[85%]" />
                       </TableCell>
                     ))}
                   </TableRow>
@@ -249,13 +257,20 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     className={cn(
-                      "border-b border-slate-100 dark:border-slate-900/40 transition-colors",
-                      onRowClick ? "cursor-pointer hover:bg-slate-50/30 dark:hover:bg-slate-900/20" : "hover:bg-transparent"
+                      "border-b border-border transition-colors",
+                      onRowClick ? "cursor-pointer hover:bg-muted/50" : "hover:bg-muted/30"
                     )}
                     onClick={() => onRowClick?.(row.original)}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="px-4 py-3 text-sm font-normal text-slate-800 dark:text-slate-200">
+                      <TableCell 
+                        key={cell.id} 
+                        className={cn(
+                          "px-4 py-3 text-sm font-normal text-foreground",
+                          (cell.column.columnDef.meta as any)?.cellClassName
+                        )}
+                        style={(cell.column.columnDef.meta as any)?.cellStyle}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -282,13 +297,13 @@ export function DataTable<TData, TValue>({
 
       {/* Pagination Controls Footer */}
       {enablePagination && !isLoading && table.getPageCount() > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-2 text-sm text-slate-500">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span>Show</span>
             <select
               value={table.getState().pagination.pageSize}
               onChange={(e) => table.setPageSize(Number(e.target.value))}
-              className="h-8 rounded border border-slate-200/80 bg-background px-2 text-sm focus:outline-none dark:border-slate-800"
+              className="h-8 rounded border border-border bg-background text-foreground px-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
             >
               {pageSizeOptions.map((size) => (
                 <option key={size} value={size}>
@@ -300,7 +315,7 @@ export function DataTable<TData, TValue>({
           </div>
 
           <div className="flex items-center gap-6">
-            <span className="text-sm font-medium">
+            <span className="text-sm font-medium text-muted-foreground">
               Page {table.getState().pagination.pageIndex + 1} of{" "}
               {table.getPageCount()}
             </span>
@@ -308,7 +323,7 @@ export function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8"
+                className="h-8 w-8 text-foreground"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
@@ -317,7 +332,7 @@ export function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8"
+                className="h-8 w-8 text-foreground"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >

@@ -79,7 +79,7 @@ export const navItems: NavItem[] = [
     title: 'IPD Calendar',
     url: '/ipd-calendar',
     icon: Stethoscope,
-    roles: ['BD', 'TEAM_LEAD'],
+    roles: ['BD', 'TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER'],
   },
   {
     title: 'Meets',
@@ -90,13 +90,29 @@ export const navItems: NavItem[] = [
     title: 'Dashboard',
     url: '/dashboard',
     icon: LayoutDashboard,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'DIGITAL_MARKETING_HEAD', 'ADMIN'],
+    roles: [
+      'SALES_HEAD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'DIGITAL_MARKETING_HEAD',
+      'ADMIN',
+    ],
   },
   {
     title: 'Sales Dashboard',
     url: '/md/sales',
     icon: TrendingUp,
-    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: [
+      'MD',
+      'ADMIN',
+      'SALES_HEAD',
+      'CATEGORY_MANAGER',
+      'DIGITAL_MARKETING_HEAD',
+      'EXECUTIVE_ASSISTANT',
+    ],
   },
   {
     title: 'Incentive',
@@ -194,7 +210,14 @@ export const navItems: NavItem[] = [
     title: 'CRM Churn Rules',
     url: '/crm/churn-rules',
     icon: Route,
-    roles: ['SUPER_ADMIN', 'CRM_ADMIN', 'ADMIN', 'SALES_HEAD', 'TEAM_LEAD'],
+    roles: [
+      'SUPER_ADMIN',
+      'CRM_ADMIN',
+      'ADMIN',
+      'SALES_HEAD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+    ],
   },
   // {
   //   title: 'CRM Assignment Rules',
@@ -224,25 +247,60 @@ export const navItems: NavItem[] = [
     title: 'Pipeline',
     url: '/pipeline',
     icon: ClipboardList,
-    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+      'EXECUTIVE_ASSISTANT',
+    ],
   },
   {
     title: 'Case Tracker',
     url: '/bd/kyp',
     icon: FileText,
-    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT', 'PL_HEAD'],
+    roles: [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+      'EXECUTIVE_ASSISTANT',
+      'PL_HEAD',
+    ],
   },
   {
     title: 'Pending Surgery',
     url: '/reports/patient-cards-pending-surgery',
     icon: ClipboardList,
-    roles: ['TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT', 'MD', 'ADMIN'],
+    roles: [
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+      'EXECUTIVE_ASSISTANT',
+      'MD',
+      'ADMIN',
+    ],
   },
   {
     title: 'Targets',
     url: '/sales/targets',
     icon: Target,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: [
+      'SALES_HEAD',
+      'CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'EXECUTIVE_ASSISTANT',
+    ],
+  },
+  {
+    title: 'Blue Print Dashboard',
+    url: '/sales/blueprint',
+    icon: LayoutDashboard,
+    roles: ['SALES_HEAD'],
   },
   {
     title: 'Sales P&L',
@@ -265,13 +323,45 @@ export const navItems: NavItem[] = [
     title: 'Chat',
     url: '/chat',
     icon: MessageSquare,
-    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+    roles: [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'INSURANCE',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'PL_ENTRY',
+      'PL_VIEWER',
+      'ACCOUNTS',
+      'ADMIN',
+      'TESTER',
+      'EXECUTIVE_ASSISTANT',
+      'COMPLIANCE_HEAD',
+      'DIGITAL_MARKETING_HEAD',
+    ],
   },
   {
     title: 'Training',
     url: '/training',
     icon: GraduationCap,
-    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+    roles: [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'INSURANCE',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'PL_ENTRY',
+      'PL_VIEWER',
+      'ACCOUNTS',
+      'ADMIN',
+      'TESTER',
+      'EXECUTIVE_ASSISTANT',
+      'COMPLIANCE_HEAD',
+      'DIGITAL_MARKETING_HEAD',
+    ],
   },
   {
     title: 'P/L Ledger',
@@ -556,7 +646,8 @@ export function getCampaignCplNavItem(): NavItem & { url: string } {
 
 export function getDashboardUrl(role: string): string {
   if (role === 'SALES_HEAD') return '/sales/dashboard'
-  if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
+  if (role === 'CATEGORY_MANAGER') return '/sales/dashboard'
+  if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') return '/team-lead/dashboard'
   if (role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
   if (role === 'DIGITAL_MARKETING_HEAD') return '/pl/dashboard'
   if (role === 'PL_HEAD') return '/pl/surgery-dashboard'
@@ -582,8 +673,11 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
   return navItems.filter((item) => {
     if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Calendar') return true
     if (item.title === 'Meets') return user.role !== 'BD'
-    // Sales Head: "Sales Dashboard" already points to /sales/dashboard; generic "Dashboard" would duplicate it
-    if (item.title === 'Dashboard' && user.role === 'SALES_HEAD') {
+    // Sales Head / CM: "Sales Dashboard" already covers dashboard; hide generic "Dashboard"
+    if (
+      item.title === 'Dashboard' &&
+      (user.role === 'SALES_HEAD' || user.role === 'CATEGORY_MANAGER')
+    ) {
       return false
     }
     // Company P&L (/finance/pnl): Finance Head, MD, Admin only (not TESTER / other roles with broad nav)
@@ -649,18 +743,27 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
     if (item.title === 'Dashboard') {
       return { ...item, url: getDashboardUrl(role) }
     }
-    if (item.title === 'Sales Dashboard' && role === 'SALES_HEAD') {
+    if (
+      item.title === 'Sales Dashboard' &&
+      (role === 'SALES_HEAD' || role === 'CATEGORY_MANAGER')
+    ) {
       return { ...item, url: '/sales/dashboard' }
     }
     if (item.title === 'Pipeline') {
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }
-      if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/pipeline' }
+      if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
+        return { ...item, url: '/team-lead/pipeline' }
+      }
+      if (role === 'CATEGORY_MANAGER') return { ...item, url: '/team-lead/pipeline' }
       if (role === 'SALES_HEAD') return { ...item, url: '/team-lead/pipeline' }
       if (role === 'EXECUTIVE_ASSISTANT') return { ...item, url: '/executive-assistant/pipeline' }
       if (role === 'ADMIN') return { ...item, url: '/bd/pipeline' }
     }
     if (item.title === 'Targets') {
-      if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/targets' }
+      if (role === 'CATEGORY_MANAGER') return { ...item, url: '/sales/targets' }
+      if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
+        return { ...item, url: '/team-lead/targets' }
+      }
       if (role === 'EXECUTIVE_ASSISTANT') return { ...item, url: '/executive-assistant/targets' }
     }
     return item

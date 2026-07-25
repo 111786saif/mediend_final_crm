@@ -5,8 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-
+import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
@@ -31,9 +31,9 @@ export async function GET(request: NextRequest) {
     // Role-based filtering
     if (user.role === 'BD') {
       where.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      where.bdId = { in: [user.id, ...subIds] }
+    } else if (isSubtreeScopedSalesRole(user.role)) {
+      const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+      if (bdIdFilter) where.bdId = { in: bdIdFilter }
     }
 
     // Financial Breakdown

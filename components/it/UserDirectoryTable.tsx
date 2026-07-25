@@ -87,7 +87,7 @@ export function UserDirectoryTable({
   itemsPerPage,
 }: UserDirectoryTableProps) {
   return (
-    <Card className="border border-[#283150] bg-[#151e3c]/60 backdrop-blur-md">
+    <Card className="border border-border bg-card text-card-foreground shadow-sm">
       <CardContent className="space-y-4 pt-5">
         {/* Search & Filter Toolbar */}
         <div className="flex flex-col sm:flex-row gap-4">
@@ -97,14 +97,14 @@ export function UserDirectoryTable({
               placeholder="Search directory by name or email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-12 h-12 bg-[#101a38] border-[#283150] text-[#dce1ff] placeholder:text-muted-foreground focus:ring-1 focus:ring-[#2fd9f4] focus:border-[#2fd9f4] text-sm"
+              className="pl-12 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring text-sm"
             />
           </div>
           <Select value={roleFilter} onValueChange={setRoleFilter}>
-            <SelectTrigger className="w-full sm:w-[240px] h-12 bg-[#101a38] border-[#283150] text-sm">
+            <SelectTrigger className="w-full sm:w-[240px] h-12 bg-background border-border text-foreground text-sm">
               <SelectValue placeholder="Filter by Role" />
             </SelectTrigger>
-            <SelectContent className="bg-[#151e3c] border-[#283150]">
+            <SelectContent className="bg-popover border-border text-popover-foreground">
               <SelectItem value="all">All Roles</SelectItem>
               {ROLES.map((role) => (
                 <SelectItem key={role.value} value={role.value}>
@@ -116,51 +116,51 @@ export function UserDirectoryTable({
         </div>
 
         {/* Directory Table */}
-        <div className="rounded-xl border border-[#283150] overflow-hidden bg-[#07112f]/90">
+        <div className="rounded-xl border border-border overflow-hidden bg-card text-card-foreground shadow-sm">
           <Table>
-            <TableHeader className="bg-[#1f2847]/40">
-              <TableRow className="border-b border-[#283150]">
-                <TableHead className="text-on-surface-variant px-6 py-4">User Profile</TableHead>
-                <TableHead className="text-on-surface-variant px-6 py-4">Role</TableHead>
-                <TableHead className="text-on-surface-variant px-6 py-4">Department</TableHead>
-                <TableHead className="text-on-surface-variant px-6 py-4">Status</TableHead>
-                <TableHead className="text-on-surface-variant px-6 py-4 text-center">Actions</TableHead>
+            <TableHeader className="bg-muted/50 border-b border-border">
+              <TableRow className="border-b border-border">
+                <TableHead className="text-muted-foreground font-semibold px-6 py-4">User Profile</TableHead>
+                <TableHead className="text-muted-foreground font-semibold px-6 py-4">Role</TableHead>
+                <TableHead className="text-muted-foreground font-semibold px-6 py-4">Department</TableHead>
+                <TableHead className="text-muted-foreground font-semibold px-6 py-4">Status</TableHead>
+                <TableHead className="text-muted-foreground font-semibold px-6 py-4 text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-12 text-muted-foreground border-b border-[#283150]">
-                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-[#2fd9f4] border-r-transparent"></div>
+                  <TableCell colSpan={5} className="text-center py-12 text-muted-foreground border-b border-border">
+                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-cyan-600 dark:border-cyan-400 border-r-transparent"></div>
                     <p className="mt-2 text-sm">Loading directory database...</p>
                   </TableCell>
                 </TableRow>
               ) : paginatedUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-12 text-muted-foreground border-b border-[#283150]">
-                    <AlertCircle className="h-8 w-8 mx-auto mb-2 text-[#919097]" />
+                  <TableCell colSpan={5} className="text-center py-12 text-muted-foreground border-b border-border">
+                    <AlertCircle className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                     <p className="text-sm">No users found matching search query.</p>
                   </TableCell>
                 </TableRow>
               ) : (
                 paginatedUsers.map((u) => (
-                  <TableRow key={u.id} className="border-b border-[#283150] hover:bg-[#1f2847]/30 transition-colors group">
+                  <TableRow key={u.id} className="border-b border-border hover:bg-muted/40 transition-colors group">
                     <TableCell className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br ${getAvatarGradient(u.id).bg} border font-bold text-sm`}>
                           {getInitials(u.name)}
                         </div>
                         <div>
-                          <div className="font-bold text-[#dce1ff] group-hover:text-[#2fd9f4] transition-colors">{u.name}</div>
-                          <div className="text-xs text-[#c7c6cd]">{u.email}</div>
+                          <div className="font-bold text-foreground group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">{u.name}</div>
+                          <div className="text-xs text-muted-foreground">{u.email}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="py-4 px-6">
-                      <div className="font-semibold text-[#dce1ff]">{u.role}</div>
+                      <div className="font-semibold text-foreground">{u.role}</div>
                     </TableCell>
                     <TableCell className="py-4 px-6">
-                      <div className="text-sm text-[#2fd9f4] flex items-center gap-1.5 mt-0.5">
+                      <div className="text-sm text-cyan-600 dark:text-cyan-400 font-medium flex items-center gap-1.5 mt-0.5">
                         {u.employee?.department?.name ? (
                           <>
                             <Building2 className="h-3.5 w-3.5" />
@@ -172,7 +172,7 @@ export function UserDirectoryTable({
                       </div>
                     </TableCell>
                     <TableCell className="py-4 px-6">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">
                         Active
                       </span>
                     </TableCell>
@@ -180,7 +180,7 @@ export function UserDirectoryTable({
                       <Button
                         variant="outline"
                         onClick={() => onManagePermissions(u.id)}
-                        className="border-[#385076] hover:border-[#2fd9f4] hover:text-[#2fd9f4] transition-colors text-sm font-semibold bg-[#101a38]/80 hover:bg-[#151e3c] px-5 py-2 h-10"
+                        className="border-border hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors text-sm font-semibold bg-background hover:bg-muted text-foreground px-5 py-2 h-10"
                       >
                         Manage Permissions
                       </Button>
@@ -194,8 +194,8 @@ export function UserDirectoryTable({
 
         {/* Pagination controls */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-4 border-t border-[#283150]/60">
-            <span className="text-xs text-[#c7c6cd]">
+          <div className="flex items-center justify-between pt-4 border-t border-border">
+            <span className="text-xs text-muted-foreground">
               Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalUsers)} of {totalUsers} users
             </span>
             <div className="flex gap-2">
@@ -204,7 +204,7 @@ export function UserDirectoryTable({
                 size="icon"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
-                className="h-8 w-8 border-[#283150] hover:bg-[#151e3c]"
+                className="h-8 w-8 border-border bg-background text-foreground hover:bg-muted"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -213,7 +213,7 @@ export function UserDirectoryTable({
                   key={idx}
                   variant={currentPage === idx + 1 ? 'default' : 'outline'}
                   onClick={() => setCurrentPage(idx + 1)}
-                  className={`h-8 w-8 text-xs ${currentPage === idx + 1 ? 'bg-[#6366f1] hover:bg-[#6366f1]' : 'border-[#283150] hover:bg-[#151e3c]'}`}
+                  className={`h-8 w-8 text-xs ${currentPage === idx + 1 ? 'bg-primary text-primary-foreground hover:bg-primary' : 'border-border bg-background text-foreground hover:bg-muted'}`}
                 >
                   {idx + 1}
                 </Button>
@@ -223,7 +223,7 @@ export function UserDirectoryTable({
                 size="icon"
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
-                className="h-8 w-8 border-[#283150] hover:bg-[#151e3c]"
+                className="h-8 w-8 border-border bg-background text-foreground hover:bg-muted"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>

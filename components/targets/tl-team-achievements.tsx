@@ -83,7 +83,9 @@ export function TLTeamAchievements() {
   const { data: targets, isLoading } = useQuery<TargetProgress[]>({
     queryKey: ['tl-team-achievements', month],
     queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${month}`),
-    enabled: !!user && user.role === 'TEAM_LEAD',
+    enabled:
+      !!user &&
+      (user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER'),
   })
 
   if (user?.role !== 'TEAM_LEAD') return null

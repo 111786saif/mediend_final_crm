@@ -76,6 +76,8 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'sales.campaign_cpl', label: 'Campaign CPL', type: 'SECTION', parentKey: 'sales', sortOrder: 7 },
   { key: 'sales.sales_pipeline', label: 'Sales Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 8 },
   { key: 'sales.team_lead_pipeline', label: 'Team Lead Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 9 },
+  { key: 'sales.blueprint_dashboard', label: 'Blue Print Dashboard', type: 'SECTION', parentKey: 'sales', sortOrder: 10 },
+
 
   // Under insurance_pl
   { key: 'insurance_pl.insurance', label: 'Insurance', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 1 },
@@ -116,6 +118,16 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'sales.case_tracker.table.lead.column.alternateNumber', label: 'Alternate Phone Number', type: 'ENTITY', parentKey: 'sales.case_tracker', sortOrder: 11 },
   { key: 'sales.case_tracker.table.lead.column.patientEmail', label: 'Patient Email Address', type: 'ENTITY', parentKey: 'sales.case_tracker', sortOrder: 12 },
   { key: 'sales.case_tracker.table.lead.column.netProfit', label: 'Net Profit Amount', type: 'ENTITY', parentKey: 'sales.case_tracker', sortOrder: 13 },
+
+  // Blueprint Dashboard Table Column Registry Map
+  { key: 'sales.blueprint_dashboard.table.blueprint.column.name', label: 'Blueprint Column: Name', type: 'ENTITY', parentKey: 'sales.blueprint_dashboard', sortOrder: 20 },
+  { key: 'sales.blueprint_dashboard.table.blueprint.column.team', label: 'Blueprint Column: Team', type: 'ENTITY', parentKey: 'sales.blueprint_dashboard', sortOrder: 21 },
+  { key: 'sales.blueprint_dashboard.table.blueprint.column.teamSize', label: 'Blueprint Column: Team Size', type: 'ENTITY', parentKey: 'sales.blueprint_dashboard', sortOrder: 22 },
+  { key: 'sales.blueprint_dashboard.table.blueprint.column.targetSalaryMin', label: 'Blueprint Column: Target (Salary Min)', type: 'ENTITY', parentKey: 'sales.blueprint_dashboard', sortOrder: 23 },
+  { key: 'sales.blueprint_dashboard.table.blueprint.column.target', label: 'Blueprint Column: Target', type: 'ENTITY', parentKey: 'sales.blueprint_dashboard', sortOrder: 24 },
+  { key: 'sales.blueprint_dashboard.table.blueprint.column.costTotalSpend', label: 'Blueprint Column: Cost Total Spend', type: 'ENTITY', parentKey: 'sales.blueprint_dashboard', sortOrder: 25 },
+  { key: 'sales.blueprint_dashboard.table.blueprint.column.netProfitActual', label: 'Blueprint Column: Net Profit Actual', type: 'ENTITY', parentKey: 'sales.blueprint_dashboard', sortOrder: 26 },
+  { key: 'sales.blueprint_dashboard.table.blueprint.column.mediendProfit', label: 'Blueprint Column: MediEnd Profit', type: 'ENTITY', parentKey: 'sales.blueprint_dashboard', sortOrder: 27 },
 
   // ============================================
   // NESTED LEVEL 3/4 MATRIX EXTENSIONS (ALL TABLES)

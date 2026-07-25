@@ -5,7 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 
 export async function GET(request: NextRequest) {
   try {
@@ -43,9 +44,9 @@ export async function GET(request: NextRequest) {
     // Role-based filtering
     if (user.role === 'BD') {
       baseWhere.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      baseWhere.bdId = { in: [user.id, ...subIds] }
+    } else if (isSubtreeScopedSalesRole(user.role)) {
+      const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+      if (bdIdFilter) baseWhere.bdId = { in: bdIdFilter }
     }
 
     // Lead Velocity - Stage transition times

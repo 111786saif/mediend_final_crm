@@ -16,7 +16,8 @@ const targetSchema = z.object({
   targetValue: z.number(),
 })
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getSalesTeamUnits } from '@/lib/hierarchy'
+import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,11 +41,24 @@ export async function GET(request: NextRequest) {
     if (user.role === 'BD') {
       where.targetType = 'BD'
       where.targetForId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
+    } else if (isTeamLeadEquivalent(user.role)) {
       const employee = await prisma.employee.findUnique({ where: { userId: user.id }, select: { id: true } })
       where.OR = [
         { targetType: 'BD', targetForId: user.id },
         ...(employee ? [{ targetType: 'TEAM' as TargetType, targetForId: employee.id }] : []),
+      ]
+    } else if (user.role === 'CATEGORY_MANAGER') {
+      const [tlUnits, cmUnits] = await Promise.all([
+        getSalesTeamUnits({ level: 'tl' }),
+        getSalesTeamUnits({ level: 'cm' }),
+      ])
+      const selfCm = cmUnits.find((c) => c.userId === user.id)
+      const scope = new Set(selfCm?.scopeUserIds ?? [])
+      const teamIds = tlUnits.filter((t) => scope.has(t.userId)).map((t) => t.id)
+      where.OR = [
+        { targetType: 'TEAM' as TargetType, targetForId: { in: teamIds } },
+        ...(selfCm ? [{ targetType: 'TEAM' as TargetType, targetForId: selfCm.id }] : []),
+        { targetType: 'BD' as TargetType, targetForId: { in: [...scope] } },
       ]
     }
 
@@ -88,6 +102,25 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const data = targetSchema.parse(body)
+
+    // CM may only assign TEAM targets to TL/ACM units in their subtree
+    if (user.role === 'CATEGORY_MANAGER') {
+      if (data.targetType !== 'TEAM') {
+        return errorResponse('Category Managers can only set team targets', 403)
+      }
+      const [tlUnits, cmUnits] = await Promise.all([
+        getSalesTeamUnits({ level: 'tl' }),
+        getSalesTeamUnits({ level: 'cm' }),
+      ])
+      const selfCm = cmUnits.find((c) => c.userId === user.id)
+      const scope = new Set(selfCm?.scopeUserIds ?? [])
+      const allowedTeamIds = new Set(
+        tlUnits.filter((t) => scope.has(t.userId)).map((t) => t.id)
+      )
+      if (!allowedTeamIds.has(data.targetForId)) {
+        return errorResponse('Forbidden: team is outside your category', 403)
+      }
+    }
 
     const target = await prisma.target.create({
       data: {

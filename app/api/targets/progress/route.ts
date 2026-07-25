@@ -5,6 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { calculateActual } from '@/lib/analytics/target-progress'
+import { getSalesTeamUnits } from '@/lib/hierarchy'
+import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 /**
  * GET /api/targets/progress
@@ -47,7 +49,7 @@ export async function GET(request: NextRequest) {
     if (user.role === 'BD') {
       where.targetType = 'BD'
       where.targetForId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
+    } else if (isTeamLeadEquivalent(user.role)) {
       const emp = await prisma.employee.findUnique({
         where: { userId: user.id },
         select: {
@@ -63,6 +65,23 @@ export async function GET(request: NextRequest) {
         where.OR = [
           { targetType: 'BD', targetForId: { in: [user.id, ...subordinateUserIds] } },
           ...(emp ? [{ targetType: 'TEAM' as const, targetForId: emp.id }] : []),
+        ]
+      }
+    } else if (user.role === 'CATEGORY_MANAGER') {
+      const [tlUnits, cmUnits] = await Promise.all([
+        getSalesTeamUnits({ level: 'tl' }),
+        getSalesTeamUnits({ level: 'cm' }),
+      ])
+      const selfCm = cmUnits.find((c) => c.userId === user.id)
+      const scope = new Set(selfCm?.scopeUserIds ?? [])
+      const teamIds = tlUnits.filter((t) => scope.has(t.userId)).map((t) => t.id)
+      if (teamId && !teamIds.includes(teamId)) {
+        return errorResponse('Forbidden', 403)
+      }
+      if (!teamId) {
+        where.OR = [
+          { targetType: 'TEAM' as const, targetForId: { in: teamIds } },
+          { targetType: 'BD' as const, targetForId: { in: [...scope] } },
         ]
       }
     }

@@ -5,8 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-
+import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
@@ -40,20 +40,19 @@ export async function GET(request: NextRequest) {
       ...leadEntryDateFilter,
     }
 
+    const subtreeBdIds = isSubtreeScopedSalesRole(user.role)
+      ? await getSalesDashboardBdIdFilter(user)
+      : undefined
     if (user.role === 'BD') {
       baseWhere.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      baseWhere.bdId = { in: [user.id, ...subIds] }
+    } else if (subtreeBdIds) {
+      baseWhere.bdId = { in: subtreeBdIds }
     }
 
     const completedWhere = canonicalSalesCompletedWhere(dateFilter)
 
     if (user.role === 'BD') completedWhere.bdId = user.id
-    else if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      completedWhere.bdId = { in: [user.id, ...subIds] }
-    }
+    else if (subtreeBdIds) completedWhere.bdId = { in: subtreeBdIds }
 
     // Treatment Performance
     const treatmentStats = await prisma.lead.groupBy({

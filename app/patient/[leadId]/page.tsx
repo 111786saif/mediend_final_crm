@@ -1433,8 +1433,8 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
-                {/* BD / TL Actions (Insurance Flow) — card details open after OPD is scheduled */}
-                {lead.flowType !== FlowType.CASH && hasScheduledOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') && (lead.caseStage === CaseStage.NEW_LEAD || lead.caseStage === CaseStage.KYP_BASIC_PENDING) && (
+                {/* BD / TL Actions (Insurance Flow) — show when at Card Details step (NEW_LEAD or KYP_BASIC_PENDING) */}
+                {lead.flowType !== FlowType.CASH && hasScheduledOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && (lead.caseStage === CaseStage.NEW_LEAD || lead.caseStage === CaseStage.KYP_BASIC_PENDING) && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
@@ -1445,7 +1445,7 @@ export default function PatientDetailsPage() {
                     </Link>
                   </Button>
                 )}
-                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') && lead.caseStage === CaseStage.KYP_BASIC_COMPLETE && (
+                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && lead.caseStage === CaseStage.KYP_BASIC_COMPLETE && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
@@ -1563,7 +1563,7 @@ export default function PatientDetailsPage() {
                     Print / Save as PDF
                   </Button>
                 )}
-                {lead.admissionRecord && ['BD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'ADMIN'].includes(user.role) && (
+                {lead.admissionRecord && ['BD', 'TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER', 'INSURANCE_HEAD', 'ADMIN'].includes(user.role) && (
                   <>
                     <Button
                       variant="outline"
@@ -1992,7 +1992,7 @@ export default function PatientDetailsPage() {
         )}
 
         {/* Discharge & patient info — inline read-only panel, hidden from BD and TL */}
-        {lead.dischargeSheet && user?.role !== 'BD' && user?.role !== 'TEAM_LEAD' && (
+        {lead.dischargeSheet && user?.role !== 'BD' && user?.role !== 'TEAM_LEAD' && user?.role !== 'ASSISTANT_CATEGORY_MANAGER' && user?.role !== 'CATEGORY_MANAGER' && (
           <Card>
             <CardHeader>
               <CardTitle>Discharge</CardTitle>

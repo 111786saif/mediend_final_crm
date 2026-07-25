@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import { formatLetterDate, LETTER_DATETIME_FORMAT } from '@/lib/hrms/document-merge'
 
 interface EmployeeData {
   name: string
@@ -21,7 +22,7 @@ interface CompanyData {
   cin: string
 }
 
-const COMPANY_DATA: CompanyData = {
+export const COMPANY_DATA: CompanyData = {
   name: 'Kundkund Healthcare Pvt. Ltd.',
   address: '6th Floor, Plot No. 56A/16, Block C, Phase 2, Industrial Area, Sector 62, Noida, Uttar Pradesh 201309',
   city: 'Noida',
@@ -55,6 +56,10 @@ function renderWatermark(): string {
 }
 
 function renderSignature(): string {
+  return getSignatureHtml()
+}
+
+export function getSignatureHtml(): string {
   const baseUrl = getBaseUrl()
   const stampUrl = `${baseUrl}/images/hr-sign-and-stamp.png`
   return `
@@ -74,7 +79,7 @@ function renderFooter(): string {
   </div>`
 }
 
-function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
@@ -82,7 +87,7 @@ function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
-function numberToWords(num: number): string {
+export function numberToWords(num: number): string {
   const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
     'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen']
   const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
@@ -96,7 +101,7 @@ function numberToWords(num: number): string {
   return numberToWords(Math.floor(num / 10000000)) + ' Crore' + (num % 10000000 ? ' ' + numberToWords(num % 10000000) : '')
 }
 
-const BASE_STYLES = `
+export const BASE_STYLES = `
   body { font-family: 'Times New Roman', serif; margin: 40px; line-height: 1.6; color: #333; position: relative; }
   .letterhead { margin-bottom: 24px; padding-bottom: 16px; }
   .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
@@ -114,6 +119,23 @@ const BASE_STYLES = `
   .footer-contact { margin: 4px 0; }
   @media print { .watermark { position: fixed; } }
 `
+
+/** Wrap editable body HTML with letterhead, watermark, styles, and footer. */
+export function buildDocumentHtml(bodyHtml: string, extraStyles = ''): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>${BASE_STYLES}${extraStyles}</style>
+</head>
+<body>
+  ${renderWatermark()}
+  ${renderLetterhead()}
+  ${bodyHtml}
+  ${renderFooter()}
+</body>
+</html>`
+}
 
 export function generateOfferLetterHTML(
   employee: EmployeeData,
@@ -143,15 +165,11 @@ export function generateOfferLetterHTML(
   const salesTarget = metadata?.salesTarget || 'As per performance plan'
   const monthlyTarget = metadata?.monthlyTarget || 'As per performance plan'
   const joiningDateRaw = metadata?.joiningDate || employee.joinDate
-  const joiningDate = joiningDateRaw
-    ? (typeof joiningDateRaw === 'string'
-        ? format(new Date(joiningDateRaw), "do MMMM, yyyy 'at 09:30 AM'")
-        : format(joiningDateRaw, "do MMMM, yyyy 'at 09:30 AM'"))
-    : 'To be confirmed'
-  const acceptanceDeadlineRaw = metadata?.acceptanceDeadline
-  const acceptanceDeadline = acceptanceDeadlineRaw
-    ? (typeof acceptanceDeadlineRaw === 'string' ? format(new Date(acceptanceDeadlineRaw), 'do MMMM, yyyy') : format(acceptanceDeadlineRaw, 'do MMMM, yyyy'))
-    : format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 'do MMMM, yyyy')
+  const joiningDate = formatLetterDate(joiningDateRaw, 'To be confirmed', LETTER_DATETIME_FORMAT)
+  const acceptanceDeadline = formatLetterDate(
+    metadata?.acceptanceDeadline,
+    formatLetterDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+  )
 
   const salesSection = isSales
     ? `
@@ -279,14 +297,8 @@ export function generateIncrementLetterHTML(
   const incrementPercentage = metadata?.incrementPercentage || 10
   const newSalary = metadata?.newSalary || Math.round(previousSalary * (1 + incrementPercentage / 100))
   const newMonthlySalary = Math.round(newSalary / 12)
-  const effectiveDateRaw = metadata?.effectiveDate
-  const effectiveDate = effectiveDateRaw
-    ? (typeof effectiveDateRaw === 'string' ? format(new Date(effectiveDateRaw), 'do MMMM, yyyy') : format(effectiveDateRaw, 'do MMMM, yyyy'))
-    : format(new Date(), 'do MMMM, yyyy')
-  const joinDateRaw = metadata?.joinDate || employee.joinDate
-  const joinDate = joinDateRaw
-    ? (typeof joinDateRaw === 'string' ? format(new Date(joinDateRaw), 'do MMMM, yyyy') : format(joinDateRaw, 'do MMMM, yyyy'))
-    : 'N/A'
+  const effectiveDate = formatLetterDate(metadata?.effectiveDate, today)
+  const joinDate = formatLetterDate(metadata?.joinDate || employee.joinDate, 'N/A')
 
   return `
 <!DOCTYPE html>
@@ -352,8 +364,8 @@ export function generateExperienceLetterHTML(
   const today = format(new Date(), 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Associate'
   const salutation = metadata?.salutation || 'Mr.'
-  const lastWorkingDate = metadata?.lastWorkingDate || today
-  const joinDateFormatted = employee.joinDate ? format(employee.joinDate, 'do MMMM, yyyy') : 'N/A'
+  const lastWorkingDate = formatLetterDate(metadata?.lastWorkingDate, today)
+  const joinDateFormatted = formatLetterDate(employee.joinDate, 'N/A')
 
   return `
 <!DOCTYPE html>
@@ -408,8 +420,11 @@ export function generateRelievingLetterHTML(
 ): string {
   const today = format(new Date(), 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Associate'
-  const lastWorkingDate = metadata?.lastWorkingDate || today
-  const resignationDate = metadata?.resignationDate || format(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), 'do MMMM, yyyy')
+  const lastWorkingDate = formatLetterDate(metadata?.lastWorkingDate, today)
+  const resignationDate = formatLetterDate(
+    metadata?.resignationDate,
+    formatLetterDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+  )
 
   return `
 <!DOCTYPE html>
@@ -438,7 +453,7 @@ export function generateRelievingLetterHTML(
 
     <p>With reference to your resignation letter dated <strong>${resignationDate}</strong>, we hereby confirm that you have been relieved from your duties as <strong>${designation}</strong> at ${COMPANY_DATA.name} with effect from <strong>${lastWorkingDate}</strong>.</p>
 
-    <p>During your tenure from <strong>${employee.joinDate ? format(employee.joinDate, 'do MMMM, yyyy') : 'N/A'}</strong> to <strong>${lastWorkingDate}</strong>, your services were found satisfactory.</p>
+    <p>During your tenure from <strong>${formatLetterDate(employee.joinDate, 'N/A')}</strong> to <strong>${lastWorkingDate}</strong>, your services were found satisfactory.</p>
 
     <p>You have completed all handover formalities and cleared all company dues. There are no financial or material obligations pending from your side.</p>
 
@@ -483,14 +498,11 @@ export function generateInternshipOfferLetterHTML(
   const guardianRelation = metadata?.guardianRelation || 'S/O'
   const address = metadata?.address || ''
   const salutation = metadata?.salutation || 'Mr.'
-  const startDateRaw = metadata?.startDate
-  const startDate = startDateRaw
-    ? format(new Date(startDateRaw), 'do MMMM, yyyy')
-    : 'To be confirmed'
-  const acceptanceDeadlineRaw = metadata?.acceptanceDeadline
-  const acceptanceDeadline = acceptanceDeadlineRaw
-    ? format(new Date(acceptanceDeadlineRaw), 'do MMMM, yyyy')
-    : format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 'do MMMM, yyyy')
+  const startDate = formatLetterDate(metadata?.startDate, 'To be confirmed')
+  const acceptanceDeadline = formatLetterDate(
+    metadata?.acceptanceDeadline,
+    formatLetterDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+  )
 
   return `
 <!DOCTYPE html>
@@ -579,14 +591,8 @@ export function generateInternshipCompletionLetterHTML(
   const designation = metadata?.designation || 'Intern'
   const salutation = metadata?.salutation || 'Mr.'
   const department = metadata?.department || employee.department || 'Operations'
-  const startDateRaw = metadata?.startDate
-  const startDate = startDateRaw
-    ? format(new Date(startDateRaw), 'do MMMM, yyyy')
-    : (employee.joinDate ? format(employee.joinDate, 'do MMMM, yyyy') : 'N/A')
-  const endDateRaw = metadata?.endDate
-  const endDate = endDateRaw
-    ? format(new Date(endDateRaw), 'do MMMM, yyyy')
-    : today
+  const startDate = formatLetterDate(metadata?.startDate || employee.joinDate, 'N/A')
+  const endDate = formatLetterDate(metadata?.endDate, today)
 
   return `
 <!DOCTYPE html>
@@ -717,8 +723,8 @@ export function generateExitInterviewHTML(
   const code = m.employeeCode || employee.employeeCode
   const dept = m.department || employee.department || '—'
   const position = m.position || employee.designation || '—'
-  const doj = m.dateOfJoining || (employee.joinDate ? format(new Date(employee.joinDate), 'do MMMM, yyyy') : '—')
-  const lwd = m.lastWorkingDay || '—'
+  const doj = formatLetterDate(m.dateOfJoining || employee.joinDate, '—')
+  const lwd = formatLetterDate(m.lastWorkingDay, '—')
 
   return `
 <!DOCTYPE html>

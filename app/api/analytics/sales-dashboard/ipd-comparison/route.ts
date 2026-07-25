@@ -3,8 +3,11 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+import {
+  canAccessSalesDashboard,
+  getSalesDashboardBdIdFilter,
+} from '@/lib/analytics/sales-dashboard-access'
 
 function daysInMonthUTC(year: number, month: number) {
   return new Date(Date.UTC(year, month + 1, 0)).getUTCDate()
@@ -15,22 +18,14 @@ export async function GET(request: NextRequest) {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
 
-    if (
-      user.role !== 'MD' &&
-      user.role !== 'ADMIN' &&
-      user.role !== 'SALES_HEAD' &&
-      user.role !== 'EXECUTIVE_ASSISTANT' &&
-      user.role !== 'TEAM_LEAD' &&
-      user.role !== 'DIGITAL_MARKETING_HEAD'
-    ) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 
-    let teamScope: import('@/generated/prisma/client').Prisma.LeadWhereInput = {}
-    if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      teamScope = { bdId: { in: [user.id, ...subIds] } }
-    }
+    const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+    const teamScope: import('@/generated/prisma/client').Prisma.LeadWhereInput = bdIdFilter
+      ? { bdId: { in: bdIdFilter } }
+      : {}
 
     const { searchParams } = new URL(request.url)
     const startParam = searchParams.get('startDate')

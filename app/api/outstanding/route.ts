@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
 
     let finalWhere: Prisma.LeadWhereInput = {
       pipelineStage: { in: ['PL', 'COMPLETED'] },
+      plRecord: { outstandingStatus: 'OUTSTANDING' },
     }
 
     if (startDate || endDate) {

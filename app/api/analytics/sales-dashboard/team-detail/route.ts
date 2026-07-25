@@ -3,21 +3,19 @@ import { prisma } from '@/lib/prisma'
 import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getSubordinates, resolveLeafBdUserIds } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
+import {
+  canAccessSalesDashboard,
+  canViewManagerTeamDetail,
+} from '@/lib/analytics/sales-dashboard-access'
+import { isTeamUnitRole } from '@/lib/sales-hierarchy-roles'
 
 export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
-    if (
-      user.role !== UserRole.MD &&
-      user.role !== UserRole.ADMIN &&
-      user.role !== UserRole.SALES_HEAD &&
-      user.role !== UserRole.EXECUTIVE_ASSISTANT &&
-      user.role !== UserRole.TEAM_LEAD &&
-      user.role !== UserRole.DIGITAL_MARKETING_HEAD
-    ) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -32,41 +30,35 @@ export async function GET(request: NextRequest) {
     const start = dateFilter.gte ?? new Date(new Date().getFullYear(), 0, 1)
     const end = dateFilter.lte ?? new Date()
 
-    // Resolve the manager's employee record
-    const managerEmp = await prisma.employee.findUnique({
-      where: { id: managerId },
-      select: {
-        id: true,
-        user: { select: { id: true, name: true, profilePicture: true } },
-        subordinates: {
-          select: {
-            id: true,
-            userId: true,
-            user: { select: { id: true, name: true, profilePicture: true } },
-          },
-          where: { user: { role: UserRole.BD } },
-        },
-      },
-    })
-
-    if (!managerEmp) return errorResponse('Manager not found', 404)
-
-    // Gate: TEAM_LEAD can only view their own team
-    if (user.role === UserRole.TEAM_LEAD) {
-      const managerEmpForUser = await prisma.employee.findUnique({
-        where: { userId: user.id },
-        select: { id: true },
-      })
-      if (!managerEmpForUser || managerEmpForUser.id !== managerId) {
-        return errorResponse('Forbidden', 403)
-      }
+    if (!(await canViewManagerTeamDetail(user, managerId))) {
+      return errorResponse('Forbidden', 403)
     }
 
-    const bdMembers = managerEmp.subordinates
-    const bdIds = bdMembers.map((m) => m.userId)
+    let scope
+    try {
+      scope = await resolveLeafBdUserIds(managerId)
+    } catch {
+      return errorResponse('Manager not found', 404)
+    }
 
-    // Include the manager themselves if they also do BD work
-    const allUserIds = [managerEmp.user.id, ...bdIds]
+    const { allUserIds, bdMembers, managerUserId, managerName, managerRole } = scope
+
+    const managerUser = await prisma.user.findUnique({
+      where: { id: managerUserId },
+      select: { id: true, name: true, profilePicture: true },
+    })
+    if (!managerUser) return errorResponse('Manager not found', 404)
+
+    // Nested TL/ACM units under a CM (for drill-down UI)
+    const directSubs = await getSubordinates(managerId, false)
+    const nestedTeamUnits = directSubs
+      .filter((s) => isTeamUnitRole(s.user.role) || s.user.role === UserRole.CATEGORY_MANAGER)
+      .map((s) => ({
+        id: s.id,
+        userId: s.userId,
+        name: s.user.name,
+        role: s.user.role,
+      }))
 
     const teamLeadDateWhere: Prisma.LeadWhereInput = {
       bdId: { in: allUserIds },
@@ -116,8 +108,8 @@ export async function GET(request: NextRequest) {
       const bill = ipdMap.get(m.userId)?._sum.billAmount ?? 0
       return {
         id: m.userId,
-        name: m.user.name,
-        profilePicture: m.user.profilePicture ?? null,
+        name: m.name,
+        profilePicture: m.profilePicture ?? null,
         leads,
         ipdDone: ipd,
         conversionRate: leads > 0 ? (ipd / leads) * 100 : 0,
@@ -126,26 +118,75 @@ export async function GET(request: NextRequest) {
       }
     }).sort((a, b) => b.ipdDone - a.ipdDone)
 
-    // Include team lead's own stats as a member (if they have BD data)
-    const tlLeads = leadsMap.get(managerEmp.user.id)?._count.id ?? 0
-    const tlIpd = ipdMap.get(managerEmp.user.id)?._count.id ?? 0
+    // Include manager's own stats (and nested non-BD owners who have lead/IPD data)
+    const ownerLabel = managerRole === UserRole.CATEGORY_MANAGER ? 'CM' : 'Lead'
+    const tlLeads = leadsMap.get(managerUserId)?._count.id ?? 0
+    const tlIpd = ipdMap.get(managerUserId)?._count.id ?? 0
     if (tlLeads > 0 || tlIpd > 0) {
       members.unshift({
-        id: managerEmp.user.id,
-        name: `${managerEmp.user.name} (Lead)`,
-        profilePicture: managerEmp.user.profilePicture ?? null,
+        id: managerUserId,
+        name: `${managerName} (${ownerLabel})`,
+        profilePicture: managerUser.profilePicture ?? null,
         leads: tlLeads,
         ipdDone: tlIpd,
         conversionRate: tlLeads > 0 ? (tlIpd / tlLeads) * 100 : 0,
-        netProfit: ipdMap.get(managerEmp.user.id)?._sum.netProfit ?? 0,
-        billAmount: ipdMap.get(managerEmp.user.id)?._sum.billAmount ?? 0,
+        netProfit: ipdMap.get(managerUserId)?._sum.netProfit ?? 0,
+        billAmount: ipdMap.get(managerUserId)?._sum.billAmount ?? 0,
       })
+    }
+
+    // Nested TL/ACM who personally own leads/IPD (already in allUserIds) — show if not already listed
+    const listedIds = new Set(members.map((m) => m.id))
+    for (const unit of nestedTeamUnits) {
+      if (listedIds.has(unit.userId)) continue
+      const leads = leadsMap.get(unit.userId)?._count.id ?? 0
+      const ipd = ipdMap.get(unit.userId)?._count.id ?? 0
+      if (leads === 0 && ipd === 0) continue
+      members.push({
+        id: unit.userId,
+        name: `${unit.name} (${unit.role === UserRole.ASSISTANT_CATEGORY_MANAGER ? 'ACM' : unit.role === UserRole.CATEGORY_MANAGER ? 'CM' : 'Lead'})`,
+        profilePicture: null,
+        leads,
+        ipdDone: ipd,
+        conversionRate: leads > 0 ? (ipd / leads) * 100 : 0,
+        netProfit: ipdMap.get(unit.userId)?._sum.netProfit ?? 0,
+        billAmount: ipdMap.get(unit.userId)?._sum.billAmount ?? 0,
+      })
+      listedIds.add(unit.userId)
     }
 
     const totalLeads = members.reduce((s, m) => s + m.leads, 0)
     const totalIpd = members.reduce((s, m) => s + m.ipdDone, 0)
     const totalProfit = members.reduce((s, m) => s + m.netProfit, 0)
     const totalBill = members.reduce((s, m) => s + m.billAmount, 0)
+
+    // For CM views, also compute nested team unit rollups (recursive under each TL/ACM)
+    const nestedTeams: Array<{
+      id: string
+      name: string
+      role: UserRole
+      totalLeads: number
+      totalIpd: number
+    }> = []
+    if (managerRole === UserRole.CATEGORY_MANAGER) {
+      for (const unit of nestedTeamUnits) {
+        const unitScope = await resolveLeafBdUserIds(unit.id)
+        let uLeads = 0
+        let uIpd = 0
+        for (const uid of unitScope.allUserIds) {
+          uLeads += leadsMap.get(uid)?._count.id ?? 0
+          uIpd += ipdMap.get(uid)?._count.id ?? 0
+        }
+        nestedTeams.push({
+          id: unit.id,
+          name: unit.name,
+          role: unit.role,
+          totalLeads: uLeads,
+          totalIpd: uIpd,
+        })
+      }
+      nestedTeams.sort((a, b) => b.totalIpd - a.totalIpd)
+    }
 
     const [leadsByMonth, ipdByMonth] = await Promise.all([
       prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
@@ -290,7 +331,6 @@ export async function GET(request: NextRequest) {
       })
       .sort((a, b) => b.ipdDone - a.ipdDone || b.leads - a.leads)
 
-    // Include IPD-only categories that had no leads in the lead-entry window
     for (const c of categoryIpd) {
       const category = c.category?.trim() || 'Uncategorized'
       if (byCategory.some((row) => row.category === category)) continue
@@ -308,8 +348,9 @@ export async function GET(request: NextRequest) {
     return successResponse({
       team: {
         id: managerId,
-        name: `${managerEmp.user.name}'s Team`,
-        manager: managerEmp.user,
+        name: `${managerName}'s Team`,
+        manager: managerUser,
+        managerRole,
       },
       kpis: {
         totalLeads,
@@ -319,6 +360,7 @@ export async function GET(request: NextRequest) {
         conversionRate: totalLeads > 0 ? (totalIpd / totalLeads) * 100 : 0,
       },
       members,
+      nestedTeams,
       byCategory,
       targets: targetsBreakdown,
       monthWise: {

@@ -3,20 +3,20 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import {
-  generateOfferLetterHTML,
-  generateIncrementLetterHTML,
-  generateExperienceLetterHTML,
-  generateRelievingLetterHTML,
-  generateInternshipOfferLetterHTML,
-  generateInternshipCompletionLetterHTML,
-  generateExitInterviewHTML,
-} from '@/lib/hrms/document-templates'
+import { renderDocumentHtml, type DocumentTypeKey } from '@/lib/hrms/document-render'
 import { z } from 'zod'
 
 const previewSchema = z.object({
   employeeId: z.string().optional(),
-  documentType: z.enum(['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'INTERNSHIP_OFFER_LETTER', 'INTERNSHIP_COMPLETION_LETTER', 'EXIT_INTERVIEW_FORM']),
+  documentType: z.enum([
+    'OFFER_LETTER',
+    'INCREMENT_LETTER',
+    'EXPERIENCE_LETTER',
+    'RELIEVING_LETTER',
+    'INTERNSHIP_OFFER_LETTER',
+    'INTERNSHIP_COMPLETION_LETTER',
+    'EXIT_INTERVIEW_FORM',
+  ]),
   applicantName: z.string().optional(),
   applicantEmail: z.string().optional(),
   metadata: z.record(z.any()).optional(),
@@ -29,7 +29,8 @@ export async function POST(request: NextRequest) {
     if (!hasPermission(user, 'hrms:employees:write')) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
-    const { employeeId, documentType, applicantName, applicantEmail, metadata } = previewSchema.parse(body)
+    const { employeeId, documentType, applicantName, applicantEmail, metadata } =
+      previewSchema.parse(body)
 
     let employeeData: {
       name: string
@@ -67,35 +68,15 @@ export async function POST(request: NextRequest) {
         department: employee.department?.name,
         joinDate: employee.joinDate,
         salary: employee.salary,
+        designation: employee.designation ?? undefined,
       }
     }
 
-    let htmlContent: string
-    switch (documentType) {
-      case 'OFFER_LETTER':
-        htmlContent = generateOfferLetterHTML(employeeData, metadata)
-        break
-      case 'INCREMENT_LETTER':
-        htmlContent = generateIncrementLetterHTML(employeeData, metadata)
-        break
-      case 'EXPERIENCE_LETTER':
-        htmlContent = generateExperienceLetterHTML(employeeData, metadata)
-        break
-      case 'RELIEVING_LETTER':
-        htmlContent = generateRelievingLetterHTML(employeeData, metadata)
-        break
-      case 'INTERNSHIP_OFFER_LETTER':
-        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata)
-        break
-      case 'INTERNSHIP_COMPLETION_LETTER':
-        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata)
-        break
-      case 'EXIT_INTERVIEW_FORM':
-        htmlContent = generateExitInterviewHTML(employeeData, metadata)
-        break
-      default:
-        return errorResponse('Invalid document type', 400)
-    }
+    const htmlContent = await renderDocumentHtml(
+      documentType as DocumentTypeKey,
+      employeeData,
+      metadata
+    )
 
     return successResponse({ htmlContent })
   } catch (error) {

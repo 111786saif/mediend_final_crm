@@ -1,14 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { errorResponse, successResponse } from '@/lib/api-utils'
-import {
-  generateOfferLetterHTML,
-  generateIncrementLetterHTML,
-  generateExperienceLetterHTML,
-  generateRelievingLetterHTML,
-  generateInternshipOfferLetterHTML,
-  generateInternshipCompletionLetterHTML,
-} from '@/lib/hrms/document-templates'
+import { resolveDocumentHtml } from '@/lib/hrms/document-render'
 import { z } from 'zod'
 import { format } from 'date-fns'
 
@@ -64,41 +57,22 @@ export async function GET(request: NextRequest) {
         }
     const metadata = document.metadata as Record<string, unknown> | null
 
-    let htmlContent: string
-    switch (document.documentType) {
-      case 'OFFER_LETTER':
-        htmlContent = generateOfferLetterHTML(employeeData, metadata || undefined)
-        htmlContent = htmlContent.replace(
-          '<!-- ACK_PLACEHOLDER -->',
-          '<br><br><p>Signature: _________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: _________________</p>'
-        )
-        break
-      case 'INCREMENT_LETTER':
-        htmlContent = generateIncrementLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'EXPERIENCE_LETTER':
-        htmlContent = generateExperienceLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'RELIEVING_LETTER':
-        htmlContent = generateRelievingLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'INTERNSHIP_OFFER_LETTER':
-        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata || undefined)
-        htmlContent = htmlContent.replace(
-          '<!-- ACK_PLACEHOLDER -->',
-          '<br><br><p>Signature: _________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: _________________</p>'
-        )
-        break
-      case 'INTERNSHIP_COMPLETION_LETTER':
-        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'CUSTOM':
-        htmlContent = document.documentUrl
-          ? `<div style="padding:2rem;text-align:center;"><p>Uploaded document.</p><p><a href="${document.documentUrl}" target="_blank" rel="noopener noreferrer">Open document</a></p></div>`
-          : '<div style="padding:2rem;text-align:center;"><p>No file linked.</p></div>'
-        break
-      default:
-        htmlContent = '<p>Document content unavailable.</p>'
+    let htmlContent = await resolveDocumentHtml({
+      documentType: document.documentType,
+      contentHtml: document.contentHtml,
+      employee: employeeData,
+      metadata,
+      documentUrl: document.documentUrl,
+    })
+
+    if (
+      document.documentType === 'OFFER_LETTER' ||
+      document.documentType === 'INTERNSHIP_OFFER_LETTER'
+    ) {
+      htmlContent = htmlContent.replace(
+        '<!-- ACK_PLACEHOLDER -->',
+        '<br><br><p>Signature: _________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: _________________</p>'
+      )
     }
 
     return successResponse({
@@ -143,7 +117,11 @@ export async function POST(request: NextRequest) {
 
     const forwardedFor = request.headers.get('x-forwarded-for')
     const realIp = request.headers.get('x-real-ip')
-    const acknowledgedIp = forwardedFor?.split(',')[0]?.trim() || realIp || request.headers.get('cf-connecting-ip') || null
+    const acknowledgedIp =
+      forwardedFor?.split(',')[0]?.trim() ||
+      realIp ||
+      request.headers.get('cf-connecting-ip') ||
+      null
 
     await prisma.employeeDocument.update({
       where: { id: document.id },

@@ -155,21 +155,25 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'incentive:write',
     'pl:read',
   ],
+  // Mid-layer: hierarchy-scoped leads/analytics; can assign targets to own teams (like Sales Head, scoped).
   CATEGORY_MANAGER: [
     'leads:read',
     'leads:write',
     'leads:assign',
     'targets:read',
+    'targets:write',
     'analytics:read',
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
   ],
+  // ACM is functionally identical to TEAM_LEAD (name only).
   ASSISTANT_CATEGORY_MANAGER: [
     'leads:read',
     'leads:write',
     'leads:assign',
     'targets:read',
+    'targets:write',
     'analytics:read',
     'hierarchy:read',
     'hierarchy:team:read',
@@ -441,7 +445,7 @@ export function hasPlOrFinanceWrite(user: SessionUser | null): boolean {
 export function canAccessLead(
   user: SessionUser | null,
   leadBdId: string,
-  /** When provided for TEAM_LEAD, allow if leadBdId is in this list (hierarchy-based access) */
+  /** When provided for TL/ACM/CM, allow if leadBdId is in this list (hierarchy-based access) */
   subordinateUserIds?: string[]
 ): boolean {
   if (!user) return false
@@ -451,8 +455,12 @@ export function canAccessLead(
     return true
   }
 
-  // Team Lead: own leads + hierarchy subordinates' leads
-  if (user.role === 'TEAM_LEAD') {
+  // TL, ACM (TL-equivalent), and CM: own leads + hierarchy subordinates' leads
+  if (
+    user.role === 'TEAM_LEAD' ||
+    user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+    user.role === 'CATEGORY_MANAGER'
+  ) {
     if (leadBdId === user.id) return true
     if (subordinateUserIds && subordinateUserIds.includes(leadBdId)) return true
     return false
@@ -518,9 +526,26 @@ export function canCreateRole(user: SessionUser | null, targetRole: UserRole): b
     return targetRole === 'TEAM_LEAD' || targetRole === 'USER' || targetRole === 'BD'
   }
 
-  // HR_HEAD can create department head roles when creating departments
+  // HR_HEAD can assign dept heads (except IT/Finance) and common staff roles — not Admin/Tester/EA
   if (user.role === 'HR_HEAD') {
-    return isDepartmentHead(targetRole) || targetRole === 'EXECUTIVE_ASSISTANT' || targetRole === 'CATEGORY_MANAGER' || targetRole === 'ASSISTANT_CATEGORY_MANAGER' || targetRole === 'TEAM_LEAD' || targetRole === 'USER' || targetRole === 'BD'
+    if (
+      targetRole === 'EXECUTIVE_ASSISTANT' ||
+      targetRole === 'IT_HEAD' ||
+      targetRole === 'FINANCE_HEAD' ||
+      targetRole === 'ADMIN' ||
+      targetRole === 'TESTER'
+    ) {
+      return false
+    }
+    return (
+      isDepartmentHead(targetRole) ||
+      targetRole === 'CATEGORY_MANAGER' ||
+      targetRole === 'ASSISTANT_CATEGORY_MANAGER' ||
+      targetRole === 'TEAM_LEAD' ||
+      targetRole === 'USER' ||
+      targetRole === 'BD' ||
+      targetRole === 'ACCESS_MATRIX'
+    )
   }
 
   // IT_HEAD can create IT_HEAD (for succession)
@@ -571,20 +596,17 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
     return ['TEAM_LEAD', 'USER', 'BD']
   }
 
-  // HR_HEAD can create department head roles
+  // HR_HEAD: dept heads + staff; exclude Admin, Tester, EA, IT Head, Finance Head
   if (user.role === 'HR_HEAD') {
     return [
       'INSURANCE_HEAD',
       'PL_HEAD',
       'SALES_HEAD',
       'HR_HEAD',
-      'FINANCE_HEAD',
       'OUTSTANDING_HEAD',
       'DIGITAL_MARKETING_HEAD',
-      'IT_HEAD',
       'LOAN_DEMAT_HEAD',
       'COMPLIANCE_HEAD',
-      'EXECUTIVE_ASSISTANT',
       'CATEGORY_MANAGER',
       'ASSISTANT_CATEGORY_MANAGER',
       'TEAM_LEAD',

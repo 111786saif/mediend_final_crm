@@ -147,7 +147,8 @@ export default function CrmChurnRulesPage() {
     user?.role === 'CRM_ADMIN' ||
     user?.role === 'ADMIN' ||
     user?.role === 'SALES_HEAD' ||
-    user?.role === 'TEAM_LEAD'
+    user?.role === 'TEAM_LEAD' ||
+    user?.role === 'ASSISTANT_CATEGORY_MANAGER'
 
   const { data, isLoading, error } = useQuery<ChurnRulesResponse, Error>({
     queryKey: ['crm-churn-rules'],
