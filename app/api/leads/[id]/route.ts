@@ -369,6 +369,13 @@ export async function PATCH(
       where: { id },
       include: {
         bd: { select: prismaBdEmployeeTeamSelect },
+        admissionRecord: {
+          select: {
+            id: true,
+            ipdStatus: true,
+            newSurgeryDate: true,
+          },
+        },
       },
     })
 
@@ -420,16 +427,17 @@ export async function PATCH(
     }
 
     if (
-      statusChanged &&
-      (requireStatusChangeRemark || statusChangeRemark) &&
-      !(await canUserAddLeadRemarks(user, lead.bdId))
+      (statusChanged && (requireStatusChangeRemark || statusChangeRemark)) ||
+      (!statusChanged && statusChangeRemark)
     ) {
+      if (!(await canUserAddLeadRemarks(user, lead.bdId))) {
       return errorResponse(
         requireStatusChangeRemark
           ? 'You do not have permission to add the required remark for this status change'
-          : 'You do not have permission to add a status-change remark for this lead',
+          : 'You do not have permission to add a remark for this lead',
         403
       )
+      }
     }
 
     if (leadProfileChanged && !(await canUserEditLeadProfile(user, lead.bdId))) {
@@ -715,8 +723,21 @@ export async function PATCH(
         },
       })
 
+      if (body.surgeryDate !== undefined && lead.admissionRecord?.id) {
+        const nextSurgeryDate = body.surgeryDate ? new Date(String(body.surgeryDate)) : null
+        await (tx as any).admissionRecord.update({
+          where: { leadId: id },
+          data: {
+            surgeryDate: nextSurgeryDate,
+            ...(lead.admissionRecord.newSurgeryDate || lead.admissionRecord.ipdStatus === 'POSTPONED'
+              ? { newSurgeryDate: nextSurgeryDate }
+              : {}),
+          },
+        })
+      }
+
       const statusRemarkEntry =
-        statusChanged && statusChangeRemark
+        statusChangeRemark
           ? await tx.leadRemarkEntry.create({
               data: {
                 leadId: lead.id,

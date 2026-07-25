@@ -537,6 +537,7 @@ model User {
   admissionsInitiated  AdmissionRecord[]  @relation("AdmissionInitiator")
   caseStageChanges     CaseStageHistory[] @relation("CaseStageChanger")
   workflowResetsPerformed WorkflowResetLog[] @relation("WorkflowResetPerformer")
+  bulkLeadReassignmentRuns BulkLeadReassignmentRun[] @relation("BulkLeadReassignmentActor")
   caseChatMessagesSent CaseChatMessage[]  @relation("CaseChatSender")
   chatReadReceipts     ChatReadReceipt[]  @relation("ChatReadUser")
 
@@ -771,6 +772,7 @@ model Lead {
   profession         String?
   qr                 String?
   removeRemarks      Boolean   @default(false)
+  remarksClearedAt   DateTime?
   adId               String?
   campaignId         String?
   formId             String?
@@ -2756,6 +2758,37 @@ model CrmActivityLog {
   @@index([entityType, createdAt])
   @@index([actorUserId, createdAt])
   @@index([action, createdAt])
+}
+
+model BulkLeadReassignmentRun {
+  id                    String   @id @default(cuid())
+  actorUserId           String
+  actorUser             User     @relation("BulkLeadReassignmentActor", fields: [actorUserId], references: [id], onDelete: Cascade)
+  leadIds               Json
+  bdUserIds             Json
+  pauseSeconds          Int
+  subStatus             Int?
+  removePreviousRemarks Boolean  @default(false)
+  status                String   @default("queued")
+  processedCount        Int      @default(0)
+  currentLeadIndex      Int      @default(0)
+  currentBdIndex        Int      @default(0)
+  currentCycleNumber    Int      @default(0)
+  totalLeads            Int
+  totalBds              Int
+  bullJobId             String?
+  nextRunAt             DateTime?
+  startedAt             DateTime?
+  completedAt           DateTime?
+  failedAt              DateTime?
+  errorMessage          String?  @db.Text
+  metadata              Json?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([actorUserId, createdAt])
+  @@index([status, createdAt])
+  @@index([nextRunAt])
 }
 
 // ==========================================

@@ -2,6 +2,7 @@ import { CaseStage, IpdStatus, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { uploadFileToS3 } from '@/lib/s3-client'
 import { DoctorAppSessionUser } from '@/lib/doctor-app/auth'
+import { isOpdScheduledStatus } from '@/lib/lead-opd-workflow'
 
 const DOCTOR_APP_SYSTEM_USER_ID = process.env.DOCTOR_APP_SYSTEM_USER_ID?.trim() || ''
 
@@ -305,6 +306,10 @@ function getAppointmentStatus(lead: DoctorAppointmentLead) {
   }
 
   if (lead.opdScheduleDate) {
+    return 'SCHEDULED'
+  }
+
+  if (isOpdScheduledStatus(lead.status)) {
     return 'SCHEDULED'
   }
 

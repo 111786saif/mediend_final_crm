@@ -1,4 +1,5 @@
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
+import { isOpdScheduledStatus, OPD_SCHEDULED_LABEL } from '@/lib/lead-opd-workflow'
 
 export type PipelineStatusBucket =
   | 'all'
@@ -27,6 +28,8 @@ const STATUS_NORMALIZE: Record<string, string> = {
   'call back next week': 'Call Back Next Week',
   'call back next month': 'Call Back Next Month',
   'ipd schedule': 'IPD Schedule',
+  opd_scheduled: OPD_SCHEDULED_LABEL,
+  'opd scheduled': OPD_SCHEDULED_LABEL,
   'ipd done': 'IPD Done',
   closed: 'Closed',
   'call done': 'Call Done',
@@ -53,6 +56,7 @@ const STATUS_NORMALIZE: Record<string, string> = {
 
 export function normalizeLeadStatus(status: string | null | undefined): string {
   if (!status) return 'New'
+  if (isOpdScheduledStatus(status)) return OPD_SCHEDULED_LABEL
   const mapped = mapStatusCode(status)
   const normalized = mapped.trim().toLowerCase()
   return STATUS_NORMALIZE[normalized] || mapped
@@ -82,6 +86,7 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
       'Out of Station',
       'Out of station follow-up',
       'IPD Schedule',
+      OPD_SCHEDULED_LABEL,
       'OPD Schedule',
     ].includes(s) ||
     lower.includes('follow') ||

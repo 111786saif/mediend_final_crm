@@ -18,6 +18,7 @@ interface WorkflowStep {
 }
 
 interface StepExtras {
+  hasOpdScheduled: boolean
   hasInitiateForm: boolean
   hasIpdMark: boolean
 }
@@ -50,59 +51,66 @@ function getStageIndex(stage: CaseStage): number {
 const WORKFLOW_STEPS: WorkflowStep[] = [
   {
     number: 1,
-    label: 'Insurance Card Details',
-    shortLabel: 'Card Details',
+    label: 'OPD Schedule',
+    shortLabel: 'OPD Schedule',
     owner: 'BD',
-    isDone: (si) => si >= 1,
+    isDone: (_si, ex) => ex.hasOpdScheduled,
   },
   {
     number: 2,
-    label: 'Suggest Hospitals',
-    shortLabel: 'Hospitals',
-    owner: 'INSURANCE',
-    isDone: (si) => si >= 2,
+    label: 'Insurance Card Details',
+    shortLabel: 'Card Details',
+    owner: 'BD',
+    isDone: (si, ex) => ex.hasOpdScheduled && si >= 1,
   },
   {
     number: 3,
-    label: 'Pre-Auth Raise',
-    shortLabel: 'Pre-Auth Raise',
-    owner: 'BD',
-    isDone: (si) => si >= 3,
+    label: 'Suggest Hospitals',
+    shortLabel: 'Hospitals',
+    owner: 'INSURANCE',
+    isDone: (si, ex) => ex.hasOpdScheduled && si >= 2,
   },
   {
     number: 4,
-    label: 'Pre-Auth Approval',
-    shortLabel: 'PA Approval',
-    owner: 'INSURANCE',
-    isDone: (si) => si >= 4,
+    label: 'Pre-Auth Raise',
+    shortLabel: 'Pre-Auth Raise',
+    owner: 'BD',
+    isDone: (si, ex) => ex.hasOpdScheduled && si >= 3,
   },
   {
     number: 5,
-    label: 'Insurance Initial Form',
-    shortLabel: 'Initial Form',
+    label: 'Pre-Auth Approval',
+    shortLabel: 'PA Approval',
     owner: 'INSURANCE',
-    isDone: (si, ex) => si >= 4 && ex.hasInitiateForm,
+    isDone: (si, ex) => ex.hasOpdScheduled && si >= 4,
   },
   {
     number: 6,
-    label: 'IPD Details',
-    shortLabel: 'IPD Details',
-    owner: 'BD',
-    isDone: (si) => si >= 5,
+    label: 'Insurance Initial Form',
+    shortLabel: 'Initial Form',
+    owner: 'INSURANCE',
+    isDone: (si, ex) => ex.hasOpdScheduled && si >= 4 && ex.hasInitiateForm,
   },
   {
     number: 7,
-    label: 'IPD Mark',
-    shortLabel: 'IPD Mark',
+    label: 'IPD Details',
+    shortLabel: 'IPD Details',
     owner: 'BD',
-    isDone: (si, ex) => si >= 5 && ex.hasIpdMark,
+    isDone: (si, ex) => ex.hasOpdScheduled && si >= 5,
   },
   {
     number: 8,
+    label: 'IPD Mark',
+    shortLabel: 'IPD Mark',
+    owner: 'BD',
+    isDone: (si, ex) => ex.hasOpdScheduled && si >= 5 && ex.hasIpdMark,
+  },
+  {
+    number: 9,
     label: 'Discharge Summary',
     shortLabel: 'Discharge',
     owner: 'INSURANCE',
-    isDone: (si) => si >= 6,
+    isDone: (si, ex) => ex.hasOpdScheduled && si >= 6,
   },
 ]
 
@@ -143,6 +151,7 @@ const DONE_COLORS = {
 
 export interface StageProgressProps {
   currentStage: CaseStage
+  hasOpdScheduled?: boolean
   hasInitiateForm?: boolean
   hasIpdMark?: boolean
   compact?: boolean
@@ -153,13 +162,14 @@ export interface StageProgressProps {
 
 export function StageProgress({
   currentStage,
+  hasOpdScheduled = false,
   hasInitiateForm = false,
   hasIpdMark = false,
   compact = false,
   className,
 }: StageProgressProps) {
   const stageIndex = getStageIndex(currentStage)
-  const extras: StepExtras = { hasInitiateForm, hasIpdMark }
+  const extras: StepExtras = { hasOpdScheduled, hasInitiateForm, hasIpdMark }
   const currentStepNumber = getCurrentStep(stageIndex, extras)
 
   if (compact) {

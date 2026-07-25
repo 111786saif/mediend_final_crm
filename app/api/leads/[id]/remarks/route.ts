@@ -5,6 +5,11 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
 import {
+  getVisibleLeadRemarksFallbackContent,
+  isLeadRemarkVisible,
+  normalizeLeadRemarkContent,
+} from '@/lib/lead-remark-visibility'
+import {
   canUserAddLeadRemarks,
   canUserRemoveLeadRemarks,
   canUserViewLeadOwner,
@@ -19,10 +24,6 @@ type MergedLeadRemark = {
     name: string | null
   }
   source: 'workspace' | 'legacy' | 'lead'
-}
-
-function normalizeRemarkContent(value: string | null | undefined) {
-  return typeof value === 'string' ? value.replace(/\x00/g, '').trim() : ''
 }
 
 export async function GET(
@@ -48,6 +49,9 @@ export async function GET(
         leadRef: true,
         patientName: true,
         remarks: true,
+        removeRemarks: true,
+        remarksClearedAt: true,
+        assignedDate: true,
         createdDate: true,
         updatedDate: true,
         createdBy: {
@@ -132,8 +136,8 @@ export async function GET(
     const mergedRemarks: MergedLeadRemark[] = [
       ...lead.leadRemarkEntries
         .map((remark) => {
-          const content = normalizeRemarkContent(remark.content)
-          if (!content) return null
+          const content = normalizeLeadRemarkContent(remark.content)
+          if (!content || !isLeadRemarkVisible(lead, remark.createdAt)) return null
 
           return {
             id: remark.id,
@@ -149,8 +153,8 @@ export async function GET(
         .filter((remark): remark is MergedLeadRemark => remark !== null),
       ...legacyRemarks
         .map((remark) => {
-          const content = normalizeRemarkContent(remark.remarks)
-          if (!content) return null
+          const content = normalizeLeadRemarkContent(remark.remarks)
+          if (!content || !isLeadRemarkVisible(lead, remark.updateDate)) return null
 
           const mappedUser = remark.updateBy != null ? legacyUserMap.get(remark.updateBy) : null
 
@@ -169,9 +173,9 @@ export async function GET(
     ]
 
     const normalizedExistingContents = new Set(
-      mergedRemarks.map((remark) => normalizeRemarkContent(remark.content))
+      mergedRemarks.map((remark) => normalizeLeadRemarkContent(remark.content))
     )
-    const leadRemarksFallback = normalizeRemarkContent(lead.remarks)
+    const leadRemarksFallback = getVisibleLeadRemarksFallbackContent(lead, lead.remarks)
 
     if (leadRemarksFallback && !normalizedExistingContents.has(leadRemarksFallback)) {
       const fallbackAuthor = lead.updatedBy ?? lead.createdBy
