@@ -1,6 +1,5 @@
 import { format } from 'date-fns'
-import { prisma } from '@/lib/prisma'
-import { mergeTemplatePlaceholders, extractBodyHtml } from '@/lib/hrms/document-merge'
+import { mergeTemplatePlaceholders, extractBodyHtml, formatLetterDate, LETTER_DATETIME_FORMAT } from '@/lib/hrms/document-merge'
 import {
   DEFAULT_TEMPLATE_BODIES,
   DOCUMENT_TEMPLATE_NAMES,
@@ -39,17 +38,6 @@ export type DocumentTypeKey =
   | 'INTERNSHIP_OFFER_LETTER'
   | 'INTERNSHIP_COMPLETION_LETTER'
   | 'EXIT_INTERVIEW_FORM'
-
-function formatDateValue(raw: string | Date | null | undefined, fallback: string, pattern = 'do MMMM, yyyy'): string {
-  if (!raw) return fallback
-  try {
-    const d = typeof raw === 'string' ? new Date(raw) : raw
-    if (Number.isNaN(d.getTime())) return fallback
-    return format(d, pattern)
-  } catch {
-    return fallback
-  }
-}
 
 function yesNo(val: unknown): string {
   if (val === 'yes') return 'Yes'
@@ -115,7 +103,7 @@ export function buildMergeVars(
     addressAcceptance,
     firstName,
     signatureHtml,
-    joinDate: formatDateValue(
+    joinDate: formatLetterDate(
       (m.joinDate as string) || (m.dateOfJoining as string) || employee.joinDate,
       'N/A'
     ),
@@ -145,14 +133,14 @@ export function buildMergeVars(
         ctc: ctc.toLocaleString('en-IN'),
         ctcWords: numberToWords(ctc),
         monthlySalary: monthlySalary.toLocaleString('en-IN'),
-        joiningDate: formatDateValue(
+        joiningDate: formatLetterDate(
           (m.joiningDate as string) || employee.joinDate,
           'To be confirmed',
-          "do MMMM, yyyy 'at 09:30 AM'"
+          LETTER_DATETIME_FORMAT
         ),
-        acceptanceDeadline: formatDateValue(
+        acceptanceDeadline: formatLetterDate(
           m.acceptanceDeadline as string,
-          format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 'do MMMM, yyyy')
+          formatLetterDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
         ),
         salesSection,
       }
@@ -172,7 +160,7 @@ export function buildMergeVars(
         newSalaryFormatted: formatCurrency(newSalary),
         newMonthlySalary: newMonthlySalary.toLocaleString('en-IN'),
         incrementPercentage: String(incrementPercentage),
-        effectiveDate: formatDateValue(m.effectiveDate as string, today),
+        effectiveDate: formatLetterDate(m.effectiveDate as string, today),
         remarks,
         remarksBlock: remarks ? `<p><strong>Remarks:</strong> ${remarks}</p>` : '',
       }
@@ -181,16 +169,17 @@ export function buildMergeVars(
       return {
         ...base,
         refNumber: `KUNDKUND/HR/EXP/${employee.employeeCode}/${year}`,
-        lastWorkingDate: (m.lastWorkingDate as string) || today,
+        lastWorkingDate: formatLetterDate(m.lastWorkingDate as string, today),
       }
     case 'RELIEVING_LETTER':
       return {
         ...base,
         refNumber: `KUNDKUND/HR/REL/${employee.employeeCode}/${year}`,
-        lastWorkingDate: (m.lastWorkingDate as string) || today,
-        resignationDate:
-          (m.resignationDate as string) ||
-          format(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), 'do MMMM, yyyy'),
+        lastWorkingDate: formatLetterDate(m.lastWorkingDate as string, today),
+        resignationDate: formatLetterDate(
+          m.resignationDate as string,
+          formatLetterDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+        ),
       }
     case 'INTERNSHIP_OFFER_LETTER': {
       const stipend = Number(m.stipend ?? 0)
@@ -200,14 +189,14 @@ export function buildMergeVars(
         stipend: stipend.toLocaleString('en-IN'),
         stipendDisplay: stipend > 0 ? `INR ${stipend.toLocaleString('en-IN')} per month` : 'Unpaid',
         duration: (m.duration as string) || '3 Months',
-        startDate: formatDateValue(m.startDate as string, 'To be confirmed'),
+        startDate: formatLetterDate(m.startDate as string, 'To be confirmed'),
         location:
           (m.location as string) ||
           '6th Floor, Plot No. 56A/16, Block C, Phase 2, Industrial Area, Sector 62, Noida, Uttar Pradesh 201309',
         internshipType: (m.internshipType as string) || 'Full-time',
-        acceptanceDeadline: formatDateValue(
+        acceptanceDeadline: formatLetterDate(
           m.acceptanceDeadline as string,
-          format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 'do MMMM, yyyy')
+          formatLetterDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
         ),
       }
     }
@@ -215,11 +204,11 @@ export function buildMergeVars(
       return {
         ...base,
         refNumber: `KUNDKUND/HR/INTERN-COMP/${employee.employeeCode}/${year}`,
-        startDate: formatDateValue(
+        startDate: formatLetterDate(
           (m.startDate as string) || employee.joinDate,
           'N/A'
         ),
-        endDate: formatDateValue(m.endDate as string, today),
+        endDate: formatLetterDate(m.endDate as string, today),
       }
     case 'EXIT_INTERVIEW_FORM': {
       const culture = m.companyCulture
@@ -255,7 +244,7 @@ export function buildMergeVars(
     </table>`
       return {
         ...base,
-        lastWorkingDate: (m.lastWorkingDay as string) || '—',
+        lastWorkingDate: formatLetterDate(m.lastWorkingDay as string, '—'),
         reasonForLeaving: (m.reasonForLeaving as string) || '—',
         jobRoleMatch: yesNo(m.jobRoleMatch),
         jobRoleComments: (m.jobRoleComments as string) || '—',

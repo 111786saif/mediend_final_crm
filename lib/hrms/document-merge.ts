@@ -1,3 +1,35 @@
+import { format } from 'date-fns'
+
+/** Standard date format for all HR letters, e.g. "16th May, 2025" */
+export const LETTER_DATE_FORMAT = 'do MMMM, yyyy' as const
+
+/** Joining datetime format for offer letters */
+export const LETTER_DATETIME_FORMAT = "do MMMM, yyyy 'at 09:30 AM'" as const
+
+/**
+ * Format a date for letter output. Accepts ISO strings, Date objects, or already-formatted text.
+ * Falls back when value is missing or unparseable.
+ */
+export function formatLetterDate(
+  raw: string | Date | null | undefined,
+  fallback = 'N/A',
+  pattern: string = LETTER_DATE_FORMAT
+): string {
+  if (raw === null || raw === undefined || raw === '') return fallback
+  if (raw instanceof Date) {
+    if (Number.isNaN(raw.getTime())) return fallback
+    return format(raw, pattern)
+  }
+  const trimmed = String(raw).trim()
+  if (!trimmed) return fallback
+  const parsed = new Date(trimmed)
+  if (!Number.isNaN(parsed.getTime())) {
+    return format(parsed, pattern)
+  }
+  // Already human-readable (e.g. "To be confirmed") — keep as-is
+  return trimmed
+}
+
 /**
  * Replace {{key}} placeholders in template HTML with values from vars.
  * Unknown placeholders are left as-is. Missing values become empty string.
