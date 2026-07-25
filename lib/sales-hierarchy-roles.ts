@@ -1,4 +1,4 @@
-import { UserRole } from '@/generated/prisma/client'
+import { UserRole } from '@/generated/prisma/enums'
 
 /** Team-unit managers: Team Lead and ACM (ACM is functionally identical to TL). */
 export const TEAM_UNIT_ROLES: UserRole[] = [
