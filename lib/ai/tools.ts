@@ -8,6 +8,7 @@ import { prisma } from '@/lib/prisma'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
 import { SessionUser } from '@/lib/auth'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 import { getTableInfo, getAllTables } from './schema-context'
 
 /**
@@ -32,7 +33,7 @@ export function createQueryLeadsTool(user: SessionUser) {
       // Role-based filtering
       if (user.role === 'BD') {
         where.bdId = user.id
-      } else if (user.role === 'TEAM_LEAD') {
+      } else if (isSubtreeScopedSalesRole(user.role)) {
         const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
         where.bdId = { in: [user.id, ...subIds] }
       }
@@ -117,7 +118,7 @@ export function createQueryAnalyticsTool(user: SessionUser) {
       // Role-based filtering
       if (user.role === 'BD') {
         baseWhere.bdId = user.id
-      } else if (user.role === 'TEAM_LEAD') {
+      } else if (isSubtreeScopedSalesRole(user.role)) {
         const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
         baseWhere.bdId = { in: [user.id, ...subIds] }
       }

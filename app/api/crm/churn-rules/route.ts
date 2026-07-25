@@ -17,6 +17,7 @@ import {
   type ChurnRuleScopeType,
 } from '@/lib/crm-churn-rules'
 import { logCrmActivity } from '@/lib/crm-activity'
+import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 import { getSessionWithFreshUser } from '@/lib/session'
 
 const createRuleSchema = z.object({
@@ -42,6 +43,10 @@ function canEditScope(
 
   if (actor.role === 'ADMIN' || actor.role === 'CRM_ADMIN') {
     return scopeType === 'ADMIN'
+  }
+
+  if (isTeamLeadEquivalent(actor.role)) {
+    return scopeType === 'TEAM_LEAD' && scopeUserId === actor.id
   }
 
   return scopeType === actor.role && scopeUserId === actor.id

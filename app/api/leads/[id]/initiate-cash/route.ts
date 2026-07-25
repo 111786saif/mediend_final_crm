@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 import { CaseStage, FlowType, NotificationType, ATSStatus } from '@/generated/prisma/client'
 
@@ -117,7 +118,7 @@ export async function POST(
     const user = await getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden', 403)
     }
 
@@ -261,7 +262,7 @@ export async function PATCH(
     const user = await getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden', 403)
     }
 

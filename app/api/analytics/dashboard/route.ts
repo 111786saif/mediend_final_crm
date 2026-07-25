@@ -5,7 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
@@ -44,20 +45,21 @@ export async function GET(request: NextRequest) {
     if (circle) where.circle = circle
 
     // Role-based filtering
+    const subtreeBdIds = isSubtreeScopedSalesRole(user.role)
+      ? await getSalesDashboardBdIdFilter(user)
+      : undefined
     if (user.role === 'BD') {
       where.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      where.bdId = { in: [user.id, ...subIds] }
+    } else if (subtreeBdIds) {
+      where.bdId = { in: subtreeBdIds }
     }
 
     const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter }
     if (circle) allLeadsWhere.circle = circle
     if (user.role === 'BD') {
       allLeadsWhere.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      allLeadsWhere.bdId = { in: [user.id, ...subIds] }
+    } else if (subtreeBdIds) {
+      allLeadsWhere.bdId = { in: subtreeBdIds }
     }
 
     const [totalSurgeries, totalProfit, avgTicketSize, totalLeads] = await Promise.all([

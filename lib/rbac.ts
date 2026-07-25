@@ -155,21 +155,25 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'incentive:write',
     'pl:read',
   ],
+  // Mid-layer: hierarchy-scoped leads/analytics; can assign targets to own teams (like Sales Head, scoped).
   CATEGORY_MANAGER: [
     'leads:read',
     'leads:write',
     'leads:assign',
     'targets:read',
+    'targets:write',
     'analytics:read',
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
   ],
+  // ACM is functionally identical to TEAM_LEAD (name only).
   ASSISTANT_CATEGORY_MANAGER: [
     'leads:read',
     'leads:write',
     'leads:assign',
     'targets:read',
+    'targets:write',
     'analytics:read',
     'hierarchy:read',
     'hierarchy:team:read',
@@ -441,7 +445,7 @@ export function hasPlOrFinanceWrite(user: SessionUser | null): boolean {
 export function canAccessLead(
   user: SessionUser | null,
   leadBdId: string,
-  /** When provided for TEAM_LEAD, allow if leadBdId is in this list (hierarchy-based access) */
+  /** When provided for TL/ACM/CM, allow if leadBdId is in this list (hierarchy-based access) */
   subordinateUserIds?: string[]
 ): boolean {
   if (!user) return false
@@ -451,8 +455,12 @@ export function canAccessLead(
     return true
   }
 
-  // Team Lead: own leads + hierarchy subordinates' leads
-  if (user.role === 'TEAM_LEAD') {
+  // TL, ACM (TL-equivalent), and CM: own leads + hierarchy subordinates' leads
+  if (
+    user.role === 'TEAM_LEAD' ||
+    user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+    user.role === 'CATEGORY_MANAGER'
+  ) {
     if (leadBdId === user.id) return true
     if (subordinateUserIds && subordinateUserIds.includes(leadBdId)) return true
     return false

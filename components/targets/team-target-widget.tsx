@@ -76,7 +76,12 @@ export function TeamTargetWidget() {
   const { data: targets } = useQuery<TargetProgress[]>({
     queryKey: ['target-progress-widget', month],
     queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${month}`),
-    enabled: !!user && (user.role === 'TEAM_LEAD' || user.role === 'SALES_HEAD'),
+    enabled:
+      !!user &&
+      (user.role === 'TEAM_LEAD' ||
+        user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+        user.role === 'CATEGORY_MANAGER' ||
+        user.role === 'SALES_HEAD'),
   })
 
   const teamTarget = targets?.find((t) => t.targetType === 'TEAM')
@@ -86,7 +91,10 @@ export function TeamTargetWidget() {
   const top3 = teamTarget.bdBreakdown.slice(0, 3)
   const memberCount = teamTarget.bdBreakdown.length
 
-  const href = user?.role === 'TEAM_LEAD' ? '/team-lead/targets' : '/sales/targets'
+  const href =
+    user?.role === 'TEAM_LEAD' || user?.role === 'ASSISTANT_CATEGORY_MANAGER'
+      ? '/team-lead/targets'
+      : '/sales/targets'
 
   return (
     <Link

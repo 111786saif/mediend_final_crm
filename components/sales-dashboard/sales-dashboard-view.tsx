@@ -99,6 +99,8 @@ interface BdMonthly {
     bdEmployeeId: string | null
     managerId: string | null
     managerName: string | null
+    cmManagerId: string | null
+    cmManagerName: string | null
     leads: Record<string, number>
     ipd: Record<string, number>
     totalLeads: number
@@ -123,9 +125,15 @@ interface ManagerGroup {
 }
 
 interface TeamDetail {
-  team: { id: string; name: string; manager: { id: string; name: string; profilePicture: string | null } | null }
+  team: {
+    id: string
+    name: string
+    manager: { id: string; name: string; profilePicture: string | null } | null
+    managerRole?: string
+  }
   kpis: { totalLeads: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
   members: Array<{ id: string; name: string; profilePicture: string | null; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
+  nestedTeams?: Array<{ id: string; name: string; role: string; totalLeads: number; totalIpd: number }>
   byCategory?: Array<{ category: string; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
   targets?: Array<{ metric: string; label: string; targetValue: number; achieved: number; percentage: number }>
   monthWise: { months: string[]; rows: Array<{ month: string; bdId: string; bdName: string; leadCount: number; ipdCount: number }> }
@@ -487,6 +495,7 @@ function TeamDetailSheet({
   dateParams,
   variant,
   dateRange,
+  onSelectNestedTeam,
 }: {
   teamId: string | null
   open: boolean
@@ -494,6 +503,7 @@ function TeamDetailSheet({
   dateParams: string
   variant: DashboardVariant
   dateRange?: DateRange
+  onSelectNestedTeam?: (managerId: string) => void
 }) {
   const { data, isLoading } = useQuery<TeamDetail>({
     queryKey: ['sales-dashboard', variant, 'team-detail', teamId, dateParams],
@@ -536,6 +546,12 @@ function TeamDetailSheet({
                     <SheetTitle className="text-xl">{data.team.name}</SheetTitle>
                     <div className="flex items-center gap-2 mt-1">
                       {data.team.manager && <Badge variant="secondary">Manager: {data.team.manager.name}</Badge>}
+                      {data.team.managerRole === 'CATEGORY_MANAGER' && (
+                        <Badge variant="outline">Category Manager</Badge>
+                      )}
+                      {data.team.managerRole === 'ASSISTANT_CATEGORY_MANAGER' && (
+                        <Badge variant="outline">ACM</Badge>
+                      )}
                     </div>
                   </div>
                 </SheetHeader>
@@ -548,6 +564,42 @@ function TeamDetailSheet({
                   <StatCard label="Net Profit" value={fmtK(data.kpis.totalProfit)} color="bg-amber-500/10 text-amber-900 dark:text-amber-100" />
                   <StatCard label="Bill Amount" value={fmtK(data.kpis.totalBill)} color="bg-slate-500/10" />
                 </div>
+
+                {data.nestedTeams && data.nestedTeams.length > 0 && (
+                  <div>
+                    <p className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Users className="h-4 w-4" /> Teams under this CM
+                    </p>
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {data.nestedTeams.map((nt) => {
+                        const conv = nt.totalLeads > 0 ? ((nt.totalIpd / nt.totalLeads) * 100).toFixed(1) : '0.0'
+                        return (
+                          <button
+                            key={nt.id}
+                            type="button"
+                            onClick={() => onSelectNestedTeam?.(nt.id)}
+                            className="text-left rounded-lg border bg-card p-3 hover:shadow-sm transition-shadow"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-sm font-medium">{nt.name}</p>
+                                <p className="text-[10px] text-muted-foreground">
+                                  {nt.role === 'ASSISTANT_CATEGORY_MANAGER' ? 'ACM' : nt.role === 'CATEGORY_MANAGER' ? 'CM' : 'Team Lead'}
+                                </p>
+                              </div>
+                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                            <div className="mt-2 flex gap-4 text-xs">
+                              <span>IPD <strong>{nt.totalIpd}</strong></span>
+                              <span>Leads <strong>{nt.totalLeads}</strong></span>
+                              <span>Conv <strong>{conv}%</strong></span>
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 {/* Target vs Achieved */}
                 {data.targets && data.targets.length > 0 && (
@@ -1031,28 +1083,44 @@ function TeamPerformanceTab({
 
   const teamSalaryMap = new Map((targetSalary?.teamSalaryBreakdown ?? []).map((t) => [t.managerId, t]))
 
-  // Build manager groups from bd-monthly data
+  // Build TL/ACM manager groups from immediate managerId
   const managerGroups = new Map<string, ManagerGroup>()
+  // Build CM groups from recursive CM ancestry (cmManagerId)
+  const cmGroups = new Map<string, ManagerGroup>()
   if (bdMonthly) {
     for (const bd of bdMonthly.bds) {
-      if (!bd.managerId || !bd.managerName) continue
-      const existing = managerGroups.get(bd.managerId)
-      if (existing) {
-        existing.totalIpd += bd.totalIpd
-        existing.totalLeads += bd.totalLeads
-      } else {
-        managerGroups.set(bd.managerId, {
-          managerId: bd.managerId,
-          managerName: bd.managerName,
-          totalIpd: bd.totalIpd,
-          totalLeads: bd.totalLeads,
-        })
+      if (bd.managerId && bd.managerName) {
+        const existing = managerGroups.get(bd.managerId)
+        if (existing) {
+          existing.totalIpd += bd.totalIpd
+          existing.totalLeads += bd.totalLeads
+        } else {
+          managerGroups.set(bd.managerId, {
+            managerId: bd.managerId,
+            managerName: bd.managerName,
+            totalIpd: bd.totalIpd,
+            totalLeads: bd.totalLeads,
+          })
+        }
+      }
+
+      if (bd.cmManagerId && bd.cmManagerName) {
+        const existingCm = cmGroups.get(bd.cmManagerId)
+        if (existingCm) {
+          existingCm.totalIpd += bd.totalIpd
+          existingCm.totalLeads += bd.totalLeads
+        } else {
+          cmGroups.set(bd.cmManagerId, {
+            managerId: bd.cmManagerId,
+            managerName: bd.cmManagerName,
+            totalIpd: bd.totalIpd,
+            totalLeads: bd.totalLeads,
+          })
+        }
       }
     }
 
-    // TL's own BD work should also count toward their own team card.
-    // Skip if the BD already contributed to this group in pass 1
-    // (happens when managerId == bdEmployeeId — self-reporting).
+    // TL/ACM's own BD work should also count toward their own team card.
     for (const bd of bdMonthly.bds) {
       if (!bd.bdEmployeeId) continue
       if (bd.managerId === bd.bdEmployeeId) continue
@@ -1062,8 +1130,27 @@ function TeamPerformanceTab({
         selfGroup.totalLeads += bd.totalLeads
       }
     }
+
+    // CM's own BD work counts toward CM card
+    for (const bd of bdMonthly.bds) {
+      if (!bd.bdEmployeeId) continue
+      const selfCm = cmGroups.get(bd.bdEmployeeId)
+      if (selfCm && bd.cmManagerId !== bd.bdEmployeeId) {
+        selfCm.totalIpd += bd.totalIpd
+        selfCm.totalLeads += bd.totalLeads
+      }
+    }
   }
+
+  // TL/ACM cards: exclude pure CM manager ids that only appear as CM (keep immediate managers)
+  const cmIds = new Set(cmGroups.keys())
   const groups = [...managerGroups.values()]
+    .filter((g) => g.managerName !== 'Hardeep Bhargav')
+    // If a CM is also someone's immediate manager (direct BDs), keep them in TL list only when not already shown as CM — show CM section separately
+    .filter((g) => !cmIds.has(g.managerId))
+    .sort((a, b) => b.totalIpd - a.totalIpd)
+
+  const cmGroupList = [...cmGroups.values()]
     .filter((g) => g.managerName !== 'Hardeep Bhargav')
     .sort((a, b) => b.totalIpd - a.totalIpd)
 
@@ -1133,10 +1220,54 @@ function TeamPerformanceTab({
         </div>
       </div>
 
-      {/* Team lead cards */}
+      {/* Category Manager cards (recursive rollup) */}
+      {cmGroupList.length > 0 && (
+        <div>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
+            <Users className="h-4 w-4" /> By Category Manager
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {cmGroupList.map((group) => {
+              const conv = group.totalLeads > 0 ? ((group.totalIpd / group.totalLeads) * 100).toFixed(1) : '0.0'
+              return (
+                <button
+                  key={`cm-${group.managerId}`}
+                  onClick={() => onSelectTeam(group.managerId)}
+                  className="text-left rounded-xl border border-border border-l-4 border-l-teal-500 bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow p-4 w-full"
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="font-semibold text-sm text-foreground">{group.managerName}&apos;s Category</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">CM: {group.managerName}</p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground mt-1" />
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-2">
+                    <div>
+                      <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{group.totalIpd}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase font-medium">IPD</p>
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-foreground">{group.totalLeads}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase font-medium">Leads</p>
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-violet-600 dark:text-violet-400">{conv}%</p>
+                      <p className="text-[10px] text-muted-foreground uppercase font-medium">Conv.</p>
+                    </div>
+                  </div>
+                  <Progress value={Math.min(Number(conv), 100)} className="mt-2 h-1.5" />
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Team lead / ACM cards */}
       <div>
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
-          <Users className="h-4 w-4" /> By Team
+          <Users className="h-4 w-4" /> By Team (TL / ACM)
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((group) => {
@@ -1184,7 +1315,9 @@ function TeamPerformanceTab({
               </button>
             )
           })}
-          {groups.length === 0 && <p className="col-span-full text-center text-muted-foreground py-6 text-sm">No team data in selected range</p>}
+          {groups.length === 0 && cmGroupList.length === 0 && (
+            <p className="col-span-full text-center text-muted-foreground py-6 text-sm">No team data in selected range</p>
+          )}
         </div>
       </div>
     </div>
@@ -1779,6 +1912,7 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
         dateParams={dateParams}
         variant={variant}
         dateRange={dateRange}
+        onSelectNestedTeam={(managerId) => setSelectedTeamId(managerId)}
       />
     </AuthenticatedLayout>
   )

@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canAccessLead, hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
+import { getLeadAccessSubordinateIds } from '@/lib/lead-access-api'
 
 const MAX_IDS = 2000
 
@@ -26,8 +26,7 @@ export async function GET(request: NextRequest) {
       return successResponse({} as Record<string, number>)
     }
 
-    const subordinateUserIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    const subordinateUserIds = await getLeadAccessSubordinateIds(user)
 
     const leads = await prisma.lead.findMany({
       where: { id: { in: leadIds } },

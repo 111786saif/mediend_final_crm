@@ -4,22 +4,18 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+import {
+  canAccessSalesDashboard,
+  getSalesDashboardBdIdFilter,
+} from '@/lib/analytics/sales-dashboard-access'
 
 export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
 
-    if (
-      user.role !== 'MD' &&
-      user.role !== 'ADMIN' &&
-      user.role !== 'SALES_HEAD' &&
-      user.role !== 'EXECUTIVE_ASSISTANT' &&
-      user.role !== 'TEAM_LEAD' &&
-      user.role !== 'DIGITAL_MARKETING_HEAD'
-    ) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -29,11 +25,10 @@ export async function GET(request: NextRequest) {
 
     const dateFilter = buildDateRange(startDate, endDate)
 
-    let teamScope: Prisma.LeadWhereInput = {}
-    if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      teamScope = { bdId: { in: [user.id, ...subIds] } }
-    }
+    const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+    const teamScope: Prisma.LeadWhereInput = bdIdFilter
+      ? { bdId: { in: bdIdFilter } }
+      : {}
 
     const completedWhere: Prisma.LeadWhereInput = {
       ...teamScope,

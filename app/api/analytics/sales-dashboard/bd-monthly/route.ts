@@ -3,8 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getManagementChain } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+import {
+  canAccessSalesDashboard,
+  getSalesDashboardBdIdFilter,
+} from '@/lib/analytics/sales-dashboard-access'
 
 interface LeadRow {
   month: string
@@ -20,15 +24,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
-
-    if (
-      user.role !== 'MD' &&
-      user.role !== 'ADMIN' &&
-      user.role !== 'SALES_HEAD' &&
-      user.role !== 'EXECUTIVE_ASSISTANT' &&
-      user.role !== 'TEAM_LEAD' &&
-      user.role !== 'DIGITAL_MARKETING_HEAD'
-    ) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -43,11 +39,7 @@ export async function GET(request: NextRequest) {
       ? new Date(endDate + 'T23:59:59.999Z')
       : new Date()
 
-    let bdIdFilter: string[] | undefined
-    if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      bdIdFilter = [user.id, ...subIds]
-    }
+    const bdIdFilter = await getSalesDashboardBdIdFilter(user)
 
     const leadDateWhere: Prisma.LeadWhereInput = bdIdFilter
       ? { bdId: { in: bdIdFilter } }
@@ -161,12 +153,39 @@ export async function GET(request: NextRequest) {
       entry.ipd[row.month] = (entry.ipd[row.month] ?? 0) + Number(row.ipdCount)
     }
 
+    // Resolve Category Manager ancestry for each BD (walk management chain)
+    const cmByBdEmployeeId = new Map<string, { cmManagerId: string; cmManagerName: string }>()
+    const uniqueBdEmployeeIds = [
+      ...new Set(
+        Array.from(bdMap.values())
+          .map((bd) => bd.bdEmployeeId)
+          .filter((id): id is string => !!id)
+      ),
+    ]
+    await Promise.all(
+      uniqueBdEmployeeIds.map(async (empId) => {
+        const chain = await getManagementChain(empId)
+        const cm = chain.find((e) => e.user.role === UserRole.CATEGORY_MANAGER)
+        if (cm) {
+          cmByBdEmployeeId.set(empId, {
+            cmManagerId: cm.id,
+            cmManagerName: cm.user.name,
+          })
+        }
+      })
+    )
+
     const bds = Array.from(bdMap.values())
-      .map((bd) => ({
-        ...bd,
-        totalLeads: Object.values(bd.leads).reduce((a, b) => a + b, 0),
-        totalIpd: Object.values(bd.ipd).reduce((a, b) => a + b, 0),
-      }))
+      .map((bd) => {
+        const cm = bd.bdEmployeeId ? cmByBdEmployeeId.get(bd.bdEmployeeId) : undefined
+        return {
+          ...bd,
+          cmManagerId: cm?.cmManagerId ?? null,
+          cmManagerName: cm?.cmManagerName ?? null,
+          totalLeads: Object.values(bd.leads).reduce((a, b) => a + b, 0),
+          totalIpd: Object.values(bd.ipd).reduce((a, b) => a + b, 0),
+        }
+      })
       .sort((a, b) => b.totalLeads - a.totalLeads)
 
     const monthLeadTotals: Record<string, number> = {}

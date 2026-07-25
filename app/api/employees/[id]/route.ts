@@ -7,6 +7,7 @@ import { getComputedBalancesForEmployee } from '@/lib/hrms/leave-policy-calculat
 import { z } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 import { UserRole } from '@/generated/prisma/enums'
+import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 const updateEmployeeSchema = z.object({
   employeeCode: z.string().optional(),
@@ -200,8 +201,8 @@ export async function PATCH(
         return errorResponse('Department heads cannot be assigned to team leads', 400)
       }
 
-      // Validation: Team Leads cannot be assigned to other team leads
-      if (currentEmployee.user.role === 'TEAM_LEAD') {
+      // Validation: Team Leads / ACM cannot be assigned to other team leads
+      if (isTeamLeadEquivalent(currentEmployee.user.role)) {
         return errorResponse('Team leads cannot be assigned to other team leads', 400)
       }
 
@@ -233,9 +234,9 @@ export async function PATCH(
           return errorResponse('Team lead not found', 404)
         }
 
-        // Validation: Team lead must have TEAM_LEAD role
-        if (teamLead.user.role !== 'TEAM_LEAD') {
-          return errorResponse('Assigned employee must have TEAM_LEAD role', 400)
+        // Validation: Team lead must have TEAM_LEAD or ACM role
+        if (!isTeamLeadEquivalent(teamLead.user.role)) {
+          return errorResponse('Assigned employee must have TEAM_LEAD or ACM role', 400)
         }
 
         // Validation: Team lead must be leading a team

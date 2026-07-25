@@ -25,8 +25,9 @@ const SALES_ROLES: UserRole[] = [
 ]
 
 const CHILD_ROLES: Record<SalesTeamCostRoleType, UserRole[]> = {
-  salesHead: [UserRole.CATEGORY_MANAGER, UserRole.ASSISTANT_CATEGORY_MANAGER, UserRole.TEAM_LEAD],
-  catManager: [UserRole.TEAM_LEAD],
+  salesHead: [UserRole.CATEGORY_MANAGER, UserRole.ASSISTANT_CATEGORY_MANAGER, UserRole.TEAM_LEAD, UserRole.BD],
+  // CM may have TL, ACM, or BDs directly under them
+  catManager: [UserRole.TEAM_LEAD, UserRole.ASSISTANT_CATEGORY_MANAGER, UserRole.BD],
   tl: [UserRole.BD],
   bd: [],
 }
@@ -43,8 +44,9 @@ function toRoleType(role: UserRole): SalesTeamCostRoleType {
     case UserRole.SALES_HEAD:
       return 'salesHead'
     case UserRole.CATEGORY_MANAGER:
-    case UserRole.ASSISTANT_CATEGORY_MANAGER:
       return 'catManager'
+    // ACM is functionally identical to Team Lead
+    case UserRole.ASSISTANT_CATEGORY_MANAGER:
     case UserRole.TEAM_LEAD:
       return 'tl'
     case UserRole.BD:
@@ -152,9 +154,7 @@ export async function buildSalesTeamCostHierarchy(
   let rootEmployees = salesHeads
 
   if (rootEmployees.length === 0) {
-    rootEmployees = employees.filter((e) =>
-      [UserRole.CATEGORY_MANAGER, UserRole.ASSISTANT_CATEGORY_MANAGER].includes(e.user.role),
-    )
+    rootEmployees = employees.filter((e) => e.user.role === UserRole.CATEGORY_MANAGER)
   }
 
   const hierarchyEmployeeIds = new Set<string>()

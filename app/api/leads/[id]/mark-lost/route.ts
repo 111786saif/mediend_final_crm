@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 import { PipelineStage } from '@/generated/prisma/client'
 
@@ -24,7 +25,11 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    if (!['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)) {
+    if (
+      !isSalesLeadWorkerRole(user.role) &&
+      user.role !== 'EXECUTIVE_ASSISTANT' &&
+      user.role !== 'ADMIN'
+    ) {
       return errorResponse('Forbidden: Only BD / TL / EA or Admin can mark a case as lost', 403)
     }
 

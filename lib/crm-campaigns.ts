@@ -241,7 +241,8 @@ export async function getCampaignManagementPageData(month: number, year: number)
       where: {
         status: EmployeeStatus.ACTIVE,
         user: {
-          role: UserRole.TEAM_LEAD,
+          // ACM is functionally identical to Team Lead for campaign assignment
+          role: { in: [UserRole.TEAM_LEAD, UserRole.ASSISTANT_CATEGORY_MANAGER] },
         },
       },
       include: {
@@ -348,7 +349,8 @@ async function chooseTeamLeadAssignment(campaign: CampaignWithRelations, receive
     (assignment) =>
       assignment.isActive &&
       assignment.teamLeadEmployee.status === EmployeeStatus.ACTIVE &&
-      assignment.teamLeadEmployee.user.role === UserRole.TEAM_LEAD &&
+      (assignment.teamLeadEmployee.user.role === UserRole.TEAM_LEAD ||
+        assignment.teamLeadEmployee.user.role === UserRole.ASSISTANT_CATEGORY_MANAGER) &&
       (!requiredDepartmentId || assignment.teamLeadEmployee.departmentId === requiredDepartmentId)
   )
 

@@ -90,7 +90,12 @@ export async function buildPipelineRoleWhere(
   if (user.role === 'BD') {
     return { where: { bdId: user.id } }
   }
-  if (user.role === 'TEAM_LEAD') {
+  // TL, ACM (TL-equivalent), and CM: self + recursive subordinates
+  if (
+    user.role === 'TEAM_LEAD' ||
+    user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+    user.role === 'CATEGORY_MANAGER'
+  ) {
     const subordinateUserIds = await getTeamLeadLeadAccessBdUserIds(user.id)
     return {
       where: { bdId: { in: [user.id, ...subordinateUserIds] } },

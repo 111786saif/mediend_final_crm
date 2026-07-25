@@ -1,6 +1,11 @@
 import { CaseStage, UserRole, FlowType } from '@/generated/prisma/enums'
 import { hasPermission } from '@/lib/rbac'
 import type { SessionUser } from '@/lib/auth'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
+
+function isBdTlAcmCmOrAdmin(role: UserRole | string): boolean {
+  return isSalesLeadWorkerRole(role) || role === 'ADMIN'
+}
 
 interface User {
   id: string
@@ -27,14 +32,12 @@ interface Lead {
   } | null
 }
 
-// BD (or Team Lead) can raise pre-auth when case is in HOSPITALS_SUGGESTED stage
+// BD / TL / ACM / CM can raise pre-auth when case is in HOSPITALS_SUGGESTED stage
 export function canRaisePreAuth(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
-  const isBDOrTeamLead = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
   const canRaiseStage = lead.caseStage === CaseStage.HOSPITALS_SUGGESTED
-
-  return isBDOrTeamLead && canRaiseStage
+  return isBdTlAcmCmOrAdmin(user.role) && canRaiseStage
 }
 
 // Insurance can add KYP details when case is in basic complete stage
@@ -57,53 +60,51 @@ export function canCompletePreAuth(user: User, lead: Lead): boolean {
   return isInsurance && isPreAuthRaised
 }
 
-// BD / TL can edit KYP when it's in basic complete or hospitals suggested states
+// BD / TL / ACM / CM can edit KYP when it's in basic complete or hospitals suggested states
 export function canEditKYP(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  
-  const isBDOrTL = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
+
   const canEditStages: CaseStage[] = [
     CaseStage.KYP_BASIC_COMPLETE,
     CaseStage.HOSPITALS_SUGGESTED
   ]
-  
-  return isBDOrTL && canEditStages.includes(lead.caseStage)
+
+  return isBdTlAcmCmOrAdmin(user.role) && canEditStages.includes(lead.caseStage)
 }
 
-// BD / TL can mark admitted when pre-auth is complete
+// BD / TL / ACM / CM can mark admitted when pre-auth is complete
 export function canInitiate(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  
-  const isBDOrTL = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
+
   const isPreAuthComplete = lead.caseStage === CaseStage.PREAUTH_COMPLETE
-  
-  return isBDOrTL && isPreAuthComplete
+  return isBdTlAcmCmOrAdmin(user.role) && isPreAuthComplete
 }
 
-// BD / TL can edit the (insurance) IPD details after marking admitted, until
+// BD / TL / ACM / CM can edit the (insurance) IPD details after marking admitted, until
 // IPD Done is marked. Manager-of-the-BD scoping is enforced server-side via
 // canMutateLead; this is the client-side role + stage gate.
 export function canEditIPDDetails(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
-  const isBDOrTL = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
   // Editable while admitted but before IPD Done is marked (INITIATED / ADMITTED).
   const editableStages: CaseStage[] = [CaseStage.INITIATED, CaseStage.ADMITTED]
-
-  return isBDOrTL && editableStages.includes(lead.caseStage)
+  return isBdTlAcmCmOrAdmin(user.role) && editableStages.includes(lead.caseStage)
 }
 
-// BD / TL / EA can mark IPD when initiated (insurance) or approved/submitted (cash).
+// BD / TL / ACM / CM / EA can mark IPD when initiated (insurance) or approved/submitted (cash).
 // Also allowed while ADMITTED - Admitted/Postponed/Cancelled never lock the case;
 // only Surgery Done (IPD_DONE) advances the case stage past this point.
 export function canMarkIPD(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
-  const isBDOrTL = ['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)
+  const canMark =
+    isSalesLeadWorkerRole(user.role) ||
+    user.role === 'EXECUTIVE_ASSISTANT' ||
+    user.role === 'ADMIN'
   const isInitiated = lead.caseStage === CaseStage.INITIATED || lead.caseStage === CaseStage.ADMITTED
   const isCashReady = lead.caseStage === CaseStage.CASH_APPROVED || lead.caseStage === CaseStage.CASH_IPD_SUBMITTED
 
-  return isBDOrTL && (isInitiated || isCashReady)
+  return canMark && (isInitiated || isCashReady)
 }
 
 // Insurance can generate/download PDF after pre-auth is raised
@@ -284,22 +285,32 @@ export function isDischargeSheetUnfinalized(lead: Lead): boolean {
   return lead.dischargeSheet.isFinalized === false
 }
 
-// Insurance, PL, Outstanding, BD, Admin can view initiate form details
+// Insurance, PL, Outstanding, BD, TL/ACM/CM, Admin can view initiate form details
 export function canViewInitiateForm(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  const allowedRoles = ['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN', 'FINANCE_HEAD', 'BD', 'TEAM_LEAD']
+  const allowedRoles = [
+    'INSURANCE',
+    'INSURANCE_HEAD',
+    'PL_HEAD',
+    'PL_ENTRY',
+    'ADMIN',
+    'FINANCE_HEAD',
+    'BD',
+    'TEAM_LEAD',
+    'ASSISTANT_CATEGORY_MANAGER',
+    'CATEGORY_MANAGER',
+  ]
   return allowedRoles.includes(user.role)
 }
 
 // ─── Cash Flow Permissions ──────────────────────────────────────────────────
 
-// BD can start cash mode if not already in cash mode and in early stages
+// BD / TL / ACM / CM can start cash mode if not already in cash mode and in early stages
 export function canStartCashMode(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  
-  const isBD = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
+
   const isNotCash = lead.flowType !== FlowType.CASH
-  
+
   // Allowed stages to switch to cash:
   // NEW_LEAD, KYP_BASIC_COMPLETE, HOSPITALS_SUGGESTED, PREAUTH_RAISED, PREAUTH_COMPLETE
   // Basically before admission in insurance flow
@@ -312,26 +323,24 @@ export function canStartCashMode(user: User, lead: Lead): boolean {
     CaseStage.KYP_PENDING,
     CaseStage.KYP_COMPLETE,
   ]
-  
-  return isBD && isNotCash && allowedStages.includes(lead.caseStage)
+
+  return isBdTlAcmCmOrAdmin(user.role) && isNotCash && allowedStages.includes(lead.caseStage)
 }
 
-// BD can revert to insurance flow if they haven't submitted the IPD cash form yet
+// BD / TL / ACM / CM can revert to insurance flow if they haven't submitted the IPD cash form yet
 export function canRevertCashMode(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  
-  const isBD = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
+
   const isCash = lead.flowType === FlowType.CASH
   const isPending = lead.caseStage === CaseStage.CASH_IPD_PENDING
-  
-  return isBD && isCash && isPending
+
+  return isBdTlAcmCmOrAdmin(user.role) && isCash && isPending
 }
 
-// BD can fill IPD Cash Form when pending or on hold
+// BD / TL / ACM / CM can fill IPD Cash Form when pending or on hold
 export function canFillIPDCashForm(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  
-  const isBD = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
+
   const isCash = lead.flowType === FlowType.CASH
   // Allow first fill while pending, and edits after submission/approval until
   // the case moves into the post-IPD/discharge stages.
@@ -341,8 +350,8 @@ export function canFillIPDCashForm(user: User, lead: Lead): boolean {
     CaseStage.CASH_ON_HOLD,
     CaseStage.CASH_APPROVED,
   ]
-  
-  return isBD && isCash && allowedStages.includes(lead.caseStage)
+
+  return isBdTlAcmCmOrAdmin(user.role) && isCash && allowedStages.includes(lead.caseStage)
 }
 
 // Insurance can review cash case when submitted

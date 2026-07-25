@@ -4,7 +4,7 @@ import { Prisma, PaidByParty } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { getManagerGroups } from '@/lib/hierarchy'
+import { getSalesTeamUnits, getTeamScopeUserIds } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 function mediendExpenseForPl(pl: {
@@ -49,16 +49,8 @@ export async function GET(request: NextRequest) {
     const extraWhere: Prisma.LeadWhereInput = {}
 
     if (managerId && managerId !== 'all') {
-      const managerEmp = await prisma.employee.findUnique({
-        where: { id: managerId },
-        select: { userId: true },
-      })
-      if (managerEmp) {
-        const subEmps = await prisma.employee.findMany({
-          where: { managerId },
-          select: { userId: true },
-        })
-        const teamUserIds = [managerEmp.userId, ...subEmps.map((e) => e.userId)]
+      const teamUserIds = await getTeamScopeUserIds(managerId)
+      if (teamUserIds.length > 0) {
         extraWhere.bdId = { in: teamUserIds }
       }
     }
@@ -197,15 +189,25 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Only Sales teams: managers with role TEAM_LEAD who have BD subordinates
-    const managerGroups = await getManagerGroups()
-    const salesGroups = managerGroups
-      .filter((g) => g.managerRole === 'TEAM_LEAD')
-      .map((g) => ({
-        id: g.managerId,
-        name: `${g.managerName}'s Team`,
-        managerName: g.managerName,
-      }))
+    // TL/ACM teams + CM units for filter tabs
+    const [tlUnits, cmUnits] = await Promise.all([
+      getSalesTeamUnits({ level: 'tl' }),
+      getSalesTeamUnits({ level: 'cm' }),
+    ])
+    const salesGroups = [
+      ...cmUnits.map((g) => ({
+        id: g.id,
+        name: `${g.name}'s Category`,
+        managerName: g.name,
+        role: g.role,
+      })),
+      ...tlUnits.map((g) => ({
+        id: g.id,
+        name: `${g.name}'s Team`,
+        managerName: g.name,
+        role: g.role,
+      })),
+    ]
 
     return successResponse({
       surgeryCount,
@@ -217,6 +219,11 @@ export async function GET(request: NextRequest) {
       hospitalDistribution,
       bdBreakdown,
       teams: salesGroups,
+      categoryManagers: cmUnits.map((g) => ({
+        id: g.id,
+        name: g.name,
+        role: g.role,
+      })),
     })
   } catch (error) {
     console.error('pl-surgery-dashboard error:', error)

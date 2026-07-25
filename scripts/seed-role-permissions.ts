@@ -76,13 +76,15 @@ const roleAllowedSections: Record<string, string[]> = {
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   CATEGORY_MANAGER: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets',
-    'sales.sales_dashboard', 'sales.case_tracker',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat',
+    'sales.sales_dashboard', 'sales.case_tracker', 'sales.campaign_cpl', 'sales.pending_surgery', 'sales.targets',
+    'sales.team_lead_pipeline',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
+  // ACM is functionally identical to TEAM_LEAD
   ASSISTANT_CATEGORY_MANAGER: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets',
-    'sales.sales_dashboard', 'sales.case_tracker',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat',
+    'sales.case_tracker', 'sales.campaign_cpl', 'sales.pending_surgery', 'sales.targets', 'sales.team_lead_pipeline',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   TEAM_LEAD: [

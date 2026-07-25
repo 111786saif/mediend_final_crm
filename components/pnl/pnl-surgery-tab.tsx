@@ -18,6 +18,7 @@ type SurgeryDash = {
 
 type PnlSurgery = {
   teamBreakdown: TeamRow[]
+  cmBreakdown?: TeamRow[]
   bdBreakdown: BdRow[]
   topBds: BdRow[]
   bottomBds: BdRow[]
@@ -120,13 +121,33 @@ export function PnlSurgeryTab({
         </Card>
       </div>
 
+      {pnl.cmBreakdown && pnl.cmBreakdown.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Category Manager P&amp;L</CardTitle>
+            <CardDescription>
+              Recursive rollup of all TL/ACM teams and BDs under each Category Manager.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="overflow-x-auto">
+            <SurgeryTeamTable
+              rows={pnl.cmBreakdown}
+              onRowClick={(r) => {
+                setTeamSel(r)
+                setTeamOpen(true)
+              }}
+            />
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
-          <CardTitle>Team-wise P&amp;L</CardTitle>
+          <CardTitle>Team-wise P&amp;L (TL / ACM)</CardTitle>
           <CardDescription>
             Marketing (CPL) is allocated per BD by leads received in the range: each lead with a campaign name
             uses the CPL for that campaign and calendar month (from Campaign CPL). Team column is the sum of
-            BDs in that manager group.
+            BDs in that TL/ACM recursive scope.
           </CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">

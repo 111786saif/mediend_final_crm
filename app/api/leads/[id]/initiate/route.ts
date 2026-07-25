@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 import { CaseStage } from '@/generated/prisma/client'
 
@@ -59,7 +60,11 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    if (!['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)) {
+    if (
+      !isSalesLeadWorkerRole(user.role) &&
+      user.role !== 'EXECUTIVE_ASSISTANT' &&
+      user.role !== 'ADMIN'
+    ) {
       return errorResponse('Forbidden: Only BD / TL / EA can initiate admission', 403)
     }
 
@@ -198,7 +203,7 @@ export async function PATCH(
       return unauthorizedResponse()
     }
 
-    if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden: Only BD / TL can edit IPD details', 403)
     }
 
@@ -266,10 +271,15 @@ export async function PATCH(
       },
     })
 
-    await postCaseChatSystemMessage(
-      leadId,
-      `${user.role === 'TEAM_LEAD' ? 'Team Lead' : 'BD'} updated IPD details.`
-    )
+    const actorLabel =
+      user.role === 'CATEGORY_MANAGER'
+        ? 'Category Manager'
+        : user.role === 'ASSISTANT_CATEGORY_MANAGER'
+          ? 'Assistant Category Manager'
+          : user.role === 'TEAM_LEAD'
+            ? 'Team Lead'
+            : 'BD'
+    await postCaseChatSystemMessage(leadId, `${actorLabel} updated IPD details.`)
 
     const updated = await prisma.admissionRecord.findUnique({ where: { leadId } })
     return successResponse(updated, 'IPD details updated successfully')
