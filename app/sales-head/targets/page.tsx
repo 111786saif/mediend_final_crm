@@ -16,8 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
-import { useAuth } from '@/hooks/use-auth'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
   Plus,
@@ -28,6 +27,7 @@ import {
   Award,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   CheckCircle2,
   AlertTriangle,
   Pencil,
@@ -40,24 +40,17 @@ import { format, addMonths, subMonths } from 'date-fns'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-interface TeamInfo {
+interface CmInfo {
   id: string
   userId: string
   name: string
   profilePicture: string | null
   employeeCode: string
-  memberCount: number
-  members: Array<{
-    id: string
-    employeeId: string
-    name: string
-    profilePicture: string | null
-  }>
 }
 
 interface TargetProgress {
   id: string
-  targetType: 'BD' | 'TEAM' | 'CATEGORY'
+  targetType: 'CATEGORY' | 'TEAM' | 'BD'
   targetForId: string
   entityName: string
   entityAvatar: string | null
@@ -124,9 +117,36 @@ function MonthPicker({ selectedMonth, onChange }: { selectedMonth: Date; onChang
   )
 }
 
-// ─── Team Details Dialog ────────────────────────────────────────────────────────
+// ─── Summary Stats ────────────────────────────────────────────────────────────
 
-function TeamDetailsDialog({
+function SummaryStats({ targets }: { targets: TargetProgress[] }) {
+  const totalTarget = targets.reduce((s, t) => s + t.targetValue, 0)
+  const totalActual = targets.reduce((s, t) => s + t.actual, 0)
+  const overallPct = totalTarget > 0 ? Math.round((totalActual / totalTarget) * 100) : 0
+  const onTrack = targets.filter((t) => t.status === 'completed' || t.status === 'on_track').length
+
+  const stats = [
+    { label: 'Category Target', value: totalTarget, color: '' },
+    { label: 'IPDs Done', value: totalActual, color: 'text-emerald-600 dark:text-emerald-400' },
+    { label: 'Overall', value: `${overallPct}%`, color: overallPct >= 60 ? 'text-blue-600 dark:text-blue-400' : 'text-red-500' },
+    { label: 'On Track', value: `${onTrack}/${targets.length}`, color: 'text-violet-600 dark:text-violet-400' },
+  ]
+
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {stats.map((s) => (
+        <div key={s.label} className="bg-card border border-border rounded-2xl p-4 shadow-sm">
+          <p className="text-xs text-muted-foreground font-medium mb-1">{s.label}</p>
+          <p className={cn('text-3xl font-bold tabular-nums', s.color)}>{s.value}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── Category Breakdown Dialog ──────────────────────────────────────────────────
+
+function CategoryBreakdownDialog({
   target,
   open,
   onOpenChange,
@@ -135,11 +155,11 @@ function TeamDetailsDialog({
   open: boolean
   onOpenChange: (v: boolean) => void
 }) {
-  const sortedBDs = useMemo(
+  const sortedTeams = useMemo(
     () => [...target.bdBreakdown].sort((a, b) => b.actual - a.actual),
     [target.bdBreakdown]
   )
-  const topActual = sortedBDs[0]?.actual ?? 0
+  const topActual = sortedTeams[0]?.actual ?? 0
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -147,7 +167,7 @@ function TeamDetailsDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className="h-5 w-5 text-violet-500" />
-            {target.entityName} · Members breakdown
+            {target.entityName} · Sub-Teams Performance
           </DialogTitle>
         </DialogHeader>
 
@@ -156,19 +176,19 @@ function TeamDetailsDialog({
             <span className="font-bold tabular-nums text-lg">{target.actual}</span>
             <span className="text-muted-foreground"> / {target.targetValue} IPDs</span>
           </div>
-          <Badge variant="outline" className="text-xs">{sortedBDs.length} members</Badge>
+          <Badge variant="outline" className="text-xs">{sortedTeams.length} Teams</Badge>
         </div>
 
         <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
-          {sortedBDs.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-8">No members in this team.</p>
+          {sortedTeams.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-8">No sub-teams in this category.</p>
           )}
-          {sortedBDs.map((bd, idx) => {
+          {sortedTeams.map((team, idx) => {
             const RankIcon = RANK_ICONS[idx]
-            const bac = getAvatarColor(bd.name)
-            const barPct = topActual > 0 ? Math.round((bd.actual / topActual) * 100) : 0
+            const bac = getAvatarColor(team.name)
+            const barPct = topActual > 0 ? Math.round((team.actual / topActual) * 100) : 0
             return (
-              <div key={bd.id} className="flex items-center gap-3 rounded-xl border border-border/70 p-3">
+              <div key={team.id} className="flex items-center gap-3 rounded-xl border border-border/70 p-3">
                 <div className="w-6 shrink-0 flex justify-center">
                   {RankIcon ? (
                     <RankIcon className={cn('h-4 w-4', RANK_COLORS[idx])} />
@@ -177,11 +197,11 @@ function TeamDetailsDialog({
                   )}
                 </div>
                 <Avatar className="h-8 w-8 shrink-0">
-                  {bd.profilePicture && <AvatarImage src={bd.profilePicture} />}
-                  <AvatarFallback className={cn(bac.bg, bac.text, 'text-[10px] font-bold')}>{getInitials(bd.name)}</AvatarFallback>
+                  {team.profilePicture && <AvatarImage src={team.profilePicture} />}
+                  <AvatarFallback className={cn(bac.bg, bac.text, 'text-[10px] font-bold')}>{getInitials(team.name)}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{bd.name}</p>
+                  <p className="text-sm font-medium truncate">{team.name}&apos;s Team</p>
                   <div className="mt-1 h-1.5 w-full bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all"
@@ -190,8 +210,8 @@ function TeamDetailsDialog({
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-sm font-bold tabular-nums">{bd.actual}</p>
-                  <p className="text-[11px] text-muted-foreground tabular-nums">{Math.round(bd.percentage)}%</p>
+                  <p className="text-sm font-bold tabular-nums">{team.actual}</p>
+                  <p className="text-[11px] text-muted-foreground tabular-nums">{Math.round(team.percentage)}%</p>
                 </div>
               </div>
             )
@@ -202,9 +222,9 @@ function TeamDetailsDialog({
   )
 }
 
-// ─── Team Target Card ─────────────────────────────────────────────────────────
+// ─── Category Target Card ────────────────────────────────────────────────────────
 
-function TeamTargetCard({
+function CategoryTargetCard({
   target,
   onSetTarget,
   readOnly,
@@ -218,7 +238,7 @@ function TeamTargetCard({
   const sc = STATUS_CONFIG[target.status] || STATUS_CONFIG.at_risk
   const StatusIcon = sc.icon
   const ac = getAvatarColor(target.entityName)
-  const topBDs = target.bdBreakdown.slice(0, 3)
+  const topTeams = target.bdBreakdown.slice(0, 3)
   const remaining = target.bdBreakdown.length - 3
 
   return (
@@ -233,7 +253,7 @@ function TeamTargetCard({
             </Avatar>
             <div>
               <h3 className="font-semibold text-base leading-tight">{target.entityName}</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">{target.bdBreakdown.length} members in team</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{target.bdBreakdown.length} sub-teams under category</p>
             </div>
           </div>
           <Badge className={cn('text-xs font-medium border-0 gap-1 shrink-0', sc.badge)}>
@@ -257,23 +277,23 @@ function TeamTargetCard({
           />
         </div>
 
-        {/* BD Mini-leaderboard */}
+        {/* Sub-Teams Mini-leaderboard */}
         {target.bdBreakdown.length > 0 && (
           <div className="space-y-2 pt-1 border-t border-border/60">
-            {topBDs.map((bd, idx) => {
+            {topTeams.map((team, idx) => {
               const RankIcon = RANK_ICONS[idx]
-              const bac = getAvatarColor(bd.name)
+              const bac = getAvatarColor(team.name)
               const barPct = target.bdBreakdown[0].actual > 0
-                ? Math.round((bd.actual / target.bdBreakdown[0].actual) * 100)
+                ? Math.round((team.actual / target.bdBreakdown[0].actual) * 100)
                 : 0
               return (
-                <div key={bd.id} className="flex items-center gap-2.5">
+                <div key={team.id} className="flex items-center gap-2.5">
                   <RankIcon className={cn('h-4 w-4 shrink-0', RANK_COLORS[idx])} />
                   <Avatar className="h-6 w-6 shrink-0">
-                    {bd.profilePicture && <AvatarImage src={bd.profilePicture} />}
-                    <AvatarFallback className={cn(bac.bg, bac.text, 'text-[9px] font-bold')}>{getInitials(bd.name)}</AvatarFallback>
+                    {team.profilePicture && <AvatarImage src={team.profilePicture} />}
+                    <AvatarFallback className={cn(bac.bg, bac.text, 'text-[9px] font-bold')}>{getInitials(team.name)}</AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium flex-1 truncate">{bd.name}</span>
+                  <span className="text-sm font-medium flex-1 truncate">{team.name}&apos;s Team</span>
                   <div className="flex items-center gap-2 shrink-0">
                     <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden hidden sm:block">
                       <div
@@ -281,13 +301,13 @@ function TeamTargetCard({
                         style={{ width: `${barPct}%` }}
                       />
                     </div>
-                    <span className="text-sm font-bold tabular-nums w-6 text-right">{bd.actual}</span>
+                    <span className="text-sm font-bold tabular-nums w-6 text-right">{team.actual}</span>
                   </div>
                 </div>
               )
             })}
             {remaining > 0 && (
-              <p className="text-xs text-muted-foreground pl-6">+{remaining} more members</p>
+              <p className="text-xs text-muted-foreground pl-6">+{remaining} more teams</p>
             )}
           </div>
         )}
@@ -302,7 +322,7 @@ function TeamTargetCard({
             disabled={target.bdBreakdown.length === 0}
           >
             <Eye className="h-3 w-3" />
-            View Breakdown
+            View Teams
           </Button>
           {!readOnly && (
             <Button
@@ -318,33 +338,31 @@ function TeamTargetCard({
         </div>
       </CardContent>
 
-      <TeamDetailsDialog target={target} open={detailsOpen} onOpenChange={setDetailsOpen} />
+      <CategoryBreakdownDialog target={target} open={detailsOpen} onOpenChange={setDetailsOpen} />
     </Card>
   )
 }
 
-// ─── Set Target Dialog ─────────────────────────────────────────────────────────
+// ─── Set Category Target Dialog ────────────────────────────────────────────────────────
 
-function SetTargetDialog({
-  teams,
+function SetCategoryTargetDialog({
+  categoryManagers,
   selectedMonth,
   existingTargets,
   onSubmit,
   isLoading,
   open,
   onOpenChange,
-  delegationRemaining,
 }: {
-  teams: TeamInfo[]
+  categoryManagers: CmInfo[]
   selectedMonth: Date
   existingTargets: TargetProgress[]
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
   open: boolean
   onOpenChange: (v: boolean) => void
-  delegationRemaining: number
 }) {
-  const [selectedTeamId, setSelectedTeamId] = useState('')
+  const [selectedCmId, setSelectedCmId] = useState('')
   const [targetValue, setTargetValue] = useState('')
 
   const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
@@ -352,131 +370,11 @@ function SetTargetDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedTeamId) { toast.error('Please select a team'); return }
-    const val = parseFloat(targetValue)
-    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
-    
-    // Check allocation limits
-    if (val > delegationRemaining) {
-      toast.error(`Value exceeds remaining team delegation budget (${delegationRemaining} IPDs)`)
-      return
-    }
-
-    onSubmit({
-      targetType: 'TEAM',
-      targetForId: selectedTeamId,
-      periodType: 'MONTH',
-      periodStartDate: periodStart.toISOString(),
-      periodEndDate: periodEnd.toISOString(),
-      metric: 'IPD_DONE',
-      targetValue: val,
-    })
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-violet-500" />
-            Set Team Target · {format(selectedMonth, 'MMMM yyyy')}
-          </DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-1">
-          <div>
-            <Label className="text-sm font-medium mb-2 block">Select Team Lead / ACM</Label>
-            <div className="grid gap-2 max-h-[220px] overflow-y-auto pr-1">
-              {teams.map((team) => {
-                const ac = getAvatarColor(team.name)
-                const isSelected = selectedTeamId === team.id
-                return (
-                  <button
-                    key={team.id}
-                    type="button"
-                    onClick={() => setSelectedTeamId(team.id)}
-                    className={cn(
-                      'flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left',
-                      isSelected ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20' :
-                        'border-border hover:border-muted-foreground/30'
-                    )}
-                  >
-                    <Avatar className="h-9 w-9">
-                      <AvatarFallback className={cn(ac.bg, ac.text, 'font-semibold text-xs')}>
-                        {getInitials(team.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{team.name}</p>
-                      <p className="text-xs text-muted-foreground">{team.memberCount} members</p>
-                    </div>
-                    {isSelected && (
-                      <div className="h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center shrink-0">
-                        <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                    )}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between items-center">
-              <Label className="text-sm font-medium">IPD Done Target</Label>
-              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Budget Limit: {delegationRemaining} IPDs</span>
-            </div>
-            <Input
-              type="number"
-              className="mt-1.5 text-lg font-semibold h-12"
-              value={targetValue}
-              onChange={(e) => setTargetValue(e.target.value)}
-              placeholder="e.g. 25"
-              min={1}
-              required
-            />
-            <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>
-          </div>
-          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading || !selectedTeamId}>
-            {isLoading ? 'Saving...' : 'Set Target'}
-          </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-// ─── Set Self Target Dialog ────────────────────────────────────────────────────
-
-function SetSelfTargetDialog({
-  selectedMonth,
-  onSubmit,
-  isLoading,
-  open,
-  onOpenChange,
-  initialValue = '',
-}: {
-  selectedMonth: Date
-  onSubmit: (data: Record<string, unknown>) => void
-  isLoading: boolean
-  open: boolean
-  onOpenChange: (v: boolean) => void
-  initialValue?: string
-}) {
-  const [targetValue, setTargetValue] = useState(initialValue)
-
-  useEffect(() => {
-    setTargetValue(initialValue)
-  }, [initialValue, open])
-
-  const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
-  const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    if (!selectedCmId) { toast.error('Please select a Category Manager'); return }
     if (!targetValue || Number(targetValue) <= 0) { toast.error('Enter a valid target'); return }
     onSubmit({
-      targetType: 'BD',
+      targetType: 'CATEGORY',
+      targetForId: selectedCmId,
       periodType: 'MONTH',
       periodStartDate: periodStart.toISOString(),
       periodEndDate: periodEnd.toISOString(),
@@ -491,10 +389,49 @@ function SetSelfTargetDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Target className="h-5 w-5 text-violet-500" />
-            Set My Individual Target · {format(selectedMonth, 'MMMM yyyy')}
+            Set Category Target · {format(selectedMonth, 'MMMM yyyy')}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-1">
+          <div>
+            <Label className="text-sm font-medium mb-2 block">Select Category Manager</Label>
+            <div className="grid gap-2 max-h-[220px] overflow-y-auto pr-1">
+              {categoryManagers.map((cm) => {
+                const ac = getAvatarColor(cm.name)
+                const isSelected = selectedCmId === cm.id
+                return (
+                  <button
+                    key={cm.id}
+                    type="button"
+                    onClick={() => setSelectedCmId(cm.id)}
+                    className={cn(
+                      'flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left',
+                      isSelected ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20' :
+                        'border-border hover:border-muted-foreground/30'
+                    )}
+                  >
+                    <Avatar className="h-9 w-9">
+                      {cm.profilePicture && <AvatarImage src={cm.profilePicture} />}
+                      <AvatarFallback className={cn(ac.bg, ac.text, 'font-semibold text-xs')}>
+                        {getInitials(cm.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{cm.name}</p>
+                      <p className="text-xs text-muted-foreground">Category Manager</p>
+                    </div>
+                    {isSelected && (
+                      <div className="h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center shrink-0">
+                        <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
           <div>
             <Label className="text-sm font-medium">IPD Done Target</Label>
             <Input
@@ -502,13 +439,13 @@ function SetSelfTargetDialog({
               className="mt-1.5 text-lg font-semibold h-12"
               value={targetValue}
               onChange={(e) => setTargetValue(e.target.value)}
-              placeholder="e.g. 10"
+              placeholder="e.g. 50"
               min={1}
               required
             />
-            <p className="text-xs text-muted-foreground mt-1">Your own target expected this month</p>
+            <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>
           </div>
-          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading}>
+          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading || !selectedCmId}>
             {isLoading ? 'Saving...' : 'Set Target'}
           </Button>
         </form>
@@ -519,62 +456,33 @@ function SetSelfTargetDialog({
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function CategorySalesTargetsPage({ readOnly = false }: { readOnly?: boolean }) {
-  const { user } = useAuth()
+export default function SalesHeadTargetsPage({ readOnly = false }: { readOnly?: boolean }) {
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
     return new Date(now.getFullYear(), now.getMonth(), 1)
   })
-  const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false)
-  const [isSelfDialogOpen, setIsSelfDialogOpen] = useState(false)
-  const [selfTargetValueInput, setSelfTargetValueInput] = useState('')
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const queryClient = useQueryClient()
   const monthStr = format(selectedMonth, 'yyyy-MM')
 
-  const { data: teams = [] } = useQuery<TeamInfo[]>({
-    queryKey: ['target-teams'],
-    queryFn: () => apiGet<TeamInfo[]>('/api/targets/teams'),
+  const { data: teamUnitsData } = useQuery<{ categoryManagers: CmInfo[] }>({
+    queryKey: ['target-teams-cm'],
+    queryFn: () => apiGet('/api/targets/teams?includeCm=1'),
   })
+  const categoryManagers = teamUnitsData?.categoryManagers ?? []
 
   const { data: targets = [], isLoading } = useQuery<TargetProgress[]>({
-    queryKey: ['target-progress', monthStr],
-    queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthStr}`),
+    queryKey: ['target-progress-category', monthStr],
+    queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthStr}&targetType=CATEGORY`),
   })
 
-  const teamTargets = useMemo(
-    () => targets.filter((t) => t.targetType === 'TEAM').sort((a, b) => b.percentage - a.percentage),
-    [targets]
-  )
-
-  const selfTarget = useMemo(
-    () => targets.find((t) => t.targetType === 'BD' && t.targetForId === user?.id),
-    [targets, user?.id]
-  )
-
-  const categoryTarget = useMemo(
-    () => targets.find((t) => t.targetType === 'CATEGORY'),
-    [targets]
-  )
-
-  const categoryTargetValue = categoryTarget?.targetValue ?? 0
-  const selfTargetValue = selfTarget?.targetValue ?? 0
-  const delegationBudget = Math.max(0, categoryTargetValue - selfTargetValue)
-  const totalTeamDelegated = teamTargets.reduce((sum, t) => sum + t.targetValue, 0)
-  const delegationRemaining = Math.max(0, delegationBudget - totalTeamDelegated)
-
   const createTargetMutation = useMutation({
-    mutationFn: (data: Record<string, unknown>) => {
-      if (data.targetType === 'BD' && !data.targetForId) {
-        data.targetForId = user?.id
-      }
-      return apiPost('/api/targets', data)
-    },
+    mutationFn: (data: Record<string, unknown>) => apiPost('/api/targets', data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['target-progress'] })
-      setIsTeamDialogOpen(false)
-      setIsSelfDialogOpen(false)
-      toast.success('Target set successfully')
+      queryClient.invalidateQueries({ queryKey: ['target-progress-category'] })
+      setIsDialogOpen(false)
+      toast.success('Category target set successfully')
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Failed to set target'),
   })
@@ -590,7 +498,7 @@ export default function CategorySalesTargetsPage({ readOnly = false }: { readOnl
               Category Sales Targets
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Sub-team delegation targets · {format(selectedMonth, 'MMMM yyyy')}
+              Top-level Category Target allocations · {format(selectedMonth, 'MMMM yyyy')}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -598,120 +506,44 @@ export default function CategorySalesTargetsPage({ readOnly = false }: { readOnl
           </div>
         </div>
 
-        {/* Hero Performance Cards at the Top */}
-        {!isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Card 1: Category Target */}
-            <Card className="rounded-2xl border border-blue-200 dark:border-blue-800/60 bg-gradient-to-br from-blue-50/50 to-indigo-50/20 dark:from-blue-950/20 dark:to-indigo-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
-              <div>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">My Category Target</p>
-                    <p className="text-muted-foreground text-[11px] mt-0.5">Assigned from top order</p>
-                  </div>
-                  <div className="h-6 w-6 shrink-0" />
-                </div>
-                <div className="flex items-baseline gap-1 mt-1">
-                  <span className="text-2xl font-extrabold tabular-nums text-blue-900 dark:text-blue-200">{categoryTargetValue}</span>
-                  <span className="text-[11px] font-medium text-muted-foreground">IPDs</span>
-                </div>
-              </div>
-              <p className="text-[11px] text-muted-foreground pt-2 border-t border-blue-100 dark:border-blue-900/50">
-                Progress: <span className="font-semibold text-blue-700 dark:text-blue-300">{categoryTarget?.actual ?? 0} Done ({categoryTarget ? Math.round(categoryTarget.percentage) : 0}%)</span>
-              </p>
-            </Card>
-
-            {/* Card 2: Self Target */}
-            <Card className="rounded-2xl border border-violet-200 dark:border-violet-800/60 bg-gradient-to-br from-violet-50/50 to-fuchsia-50/20 dark:from-violet-950/20 dark:to-fuchsia-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
-              <div>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">My Self Target</p>
-                    <p className="text-muted-foreground text-[11px] mt-0.5">Individual performance target</p>
-                  </div>
-                  {!readOnly && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-6 px-1.5 text-[10px] gap-1 border-violet-300 dark:border-violet-800 hover:bg-violet-100/50 dark:hover:bg-violet-900/30 shrink-0"
-                      onClick={() => {
-                        setSelfTargetValueInput(selfTargetValue > 0 ? selfTargetValue.toString() : '')
-                        setIsSelfDialogOpen(true)
-                      }}
-                    >
-                      <Pencil className="h-2.5 w-2.5" />
-                      {selfTargetValue > 0 ? 'Edit' : 'Set'}
-                    </Button>
-                  )}
-                </div>
-                <div className="flex items-baseline gap-1 mt-1">
-                  <span className="text-2xl font-extrabold tabular-nums text-violet-900 dark:text-violet-200">{selfTargetValue}</span>
-                  <span className="text-[11px] font-medium text-muted-foreground">IPDs</span>
-                </div>
-              </div>
-              <p className="text-[11px] text-muted-foreground pt-2 border-t border-violet-100 dark:border-violet-900/50">
-                Progress: <span className="font-semibold text-violet-700 dark:text-violet-300">{selfTarget?.actual ?? 0} Done ({selfTarget ? Math.round(selfTarget.percentage) : 0}%)</span>
-              </p>
-            </Card>
-
-            {/* Card 3: Delegation Budget */}
-            <Card className="rounded-2xl border border-emerald-200 dark:border-emerald-800/60 bg-gradient-to-br from-emerald-50/50 to-teal-50/20 dark:from-emerald-950/20 dark:to-teal-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
-              <div>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Team Delegation Budget</p>
-                    <p className="text-muted-foreground text-[11px] mt-0.5">For Team Leads & ACMs</p>
-                  </div>
-                  <div className="h-6 w-6 shrink-0" />
-                </div>
-                <div className="flex items-baseline gap-1 mt-1">
-                  <span className="text-2xl font-extrabold tabular-nums text-emerald-900 dark:text-emerald-200">{delegationBudget}</span>
-                  <span className="text-[11px] font-medium text-muted-foreground">IPDs ({categoryTargetValue} - {selfTargetValue})</span>
-                </div>
-              </div>
-              <p className="text-[11px] text-muted-foreground pt-2 border-t border-emerald-100 dark:border-emerald-900/50 flex justify-between">
-                <span>Allocated: <span className="font-semibold text-emerald-700 dark:text-emerald-300">{totalTeamDelegated}</span></span>
-                <span>Remaining: <span className="font-semibold text-emerald-700 dark:text-emerald-300">{delegationRemaining}</span></span>
-              </p>
-            </Card>
-          </div>
-        )}
-
-        {/* Team Targets Content */}
+        {/* Category Targets Content */}
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Team Level Performance
+              Category Level Performance
             </h2>
             {!readOnly && (
               <Button
                 className="gap-2 bg-violet-600 hover:bg-violet-700"
                 size="sm"
-                onClick={() => setIsTeamDialogOpen(true)}
+                onClick={() => setIsDialogOpen(true)}
               >
                 <Plus className="h-4 w-4" />
-                Set Team Target
+                Set Target
               </Button>
             )}
           </div>
 
+          {/* Summary */}
+          {targets.length > 0 && <SummaryStats targets={targets} />}
+
           {/* Content */}
           {isLoading ? (
             <div className="grid gap-4 md:grid-cols-2">
-              {[1, 2, 3, 4].map((i) => (
+              {[1, 2].map((i) => (
                 <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
               ))}
             </div>
-          ) : teamTargets.length === 0 ? (
+          ) : targets.length === 0 ? (
             <Card className="border-dashed rounded-2xl">
               <CardContent className="py-16 text-center">
                 <Target className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-1">No targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
                 <p className="text-sm text-muted-foreground mb-5">
-                  {readOnly ? 'No targets have been set yet.' : 'Set monthly delegation targets for each team lead / ACM to start tracking.'}
+                  {readOnly ? 'No category targets have been set yet.' : 'Assign monthly Category targets to Category Managers to start tracking.'}
                 </p>
                 {!readOnly && (
-                  <Button variant="outline" className="gap-2" onClick={() => setIsTeamDialogOpen(true)}>
+                  <Button variant="outline" className="gap-2" onClick={() => setIsDialogOpen(true)}>
                     <Plus className="h-4 w-4" />
                     Set First Target
                   </Button>
@@ -720,12 +552,12 @@ export default function CategorySalesTargetsPage({ readOnly = false }: { readOnl
             </Card>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
-              {teamTargets.map((t) => (
-                <TeamTargetCard
+              {targets.map((t) => (
+                <CategoryTargetCard
                   key={t.id}
                   target={t}
                   readOnly={readOnly}
-                  onSetTarget={() => setIsTeamDialogOpen(true)}
+                  onSetTarget={() => setIsDialogOpen(true)}
                 />
               ))}
             </div>
@@ -734,26 +566,14 @@ export default function CategorySalesTargetsPage({ readOnly = false }: { readOnl
       </div>
 
       {!readOnly && (
-        <SetTargetDialog
-          teams={teams}
+        <SetCategoryTargetDialog
+          categoryManagers={categoryManagers}
           selectedMonth={selectedMonth}
-          existingTargets={teamTargets}
+          existingTargets={targets}
           onSubmit={(data) => createTargetMutation.mutate(data)}
           isLoading={createTargetMutation.isPending}
-          open={isTeamDialogOpen}
-          onOpenChange={setIsTeamDialogOpen}
-          delegationRemaining={delegationRemaining}
-        />
-      )}
-
-      {!readOnly && (
-        <SetSelfTargetDialog
-          selectedMonth={selectedMonth}
-          onSubmit={(data) => createTargetMutation.mutate(data)}
-          isLoading={createTargetMutation.isPending}
-          open={isSelfDialogOpen}
-          onOpenChange={setIsSelfDialogOpen}
-          initialValue={selfTargetValueInput}
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
         />
       )}
     </AuthenticatedLayout>

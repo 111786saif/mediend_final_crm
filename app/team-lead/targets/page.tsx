@@ -13,11 +13,10 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Progress } from '@/components/ui/progress'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
   Plus,
@@ -31,6 +30,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Users,
+  Pencil,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -125,73 +125,6 @@ function MonthPicker({ selectedMonth, onChange }: { selectedMonth: Date; onChang
         <ChevronRight className="h-4 w-4" />
       </Button>
     </div>
-  )
-}
-
-// ─── Team Target Hero ─────────────────────────────────────────────────────────
-
-function TeamTargetHero({ target }: { target: TargetProgress }) {
-  const pct = Math.min(Math.round(target.percentage), 100)
-  const circumference = 2 * Math.PI * 48
-  const offset = circumference - (pct / 100) * circumference
-  const sc = STATUS_CONFIG[target.status]
-  const StatusIcon = sc.icon
-
-  return (
-    <Card className="rounded-2xl overflow-hidden bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 dark:from-violet-950/40 dark:via-card dark:to-fuchsia-950/20 border-violet-200 dark:border-violet-800">
-      <CardContent className="p-6">
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-          {/* Circular ring */}
-          <div className="relative shrink-0">
-            <svg width="112" height="112" className="-rotate-90">
-              <circle cx="56" cy="56" r="48" fill="none" stroke="currentColor" strokeWidth="8"
-                className="text-violet-100 dark:text-violet-900/50" />
-              <circle cx="56" cy="56" r="48" fill="none"
-                stroke={sc.ringColor} strokeWidth="8"
-                strokeLinecap="round"
-                strokeDasharray={circumference}
-                strokeDashoffset={offset}
-                className="transition-all duration-1000 ease-out"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold tabular-nums">{pct}%</span>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">done</span>
-            </div>
-          </div>
-
-          {/* Details */}
-          <div className="flex-1 text-center sm:text-left space-y-3">
-            <div>
-              <div className={cn('flex items-center gap-2 justify-center sm:justify-start mb-0.5', sc.color)}>
-                <StatusIcon className="h-4 w-4" />
-                <span className="text-sm font-semibold">{sc.label}</span>
-              </div>
-              <h2 className="text-lg font-bold text-foreground">Team IPD Target</h2>
-              <p className="text-xs text-muted-foreground">Monthly surgery target set by Sales Head</p>
-            </div>
-            <div className="flex items-baseline gap-3 justify-center sm:justify-start">
-              <div className="text-center sm:text-left">
-                <p className="text-4xl font-bold tabular-nums">{target.actual}</p>
-                <p className="text-xs text-muted-foreground">IPDs Done</p>
-              </div>
-              <div className="h-8 w-px bg-border" />
-              <div className="text-center sm:text-left">
-                <p className="text-4xl font-bold tabular-nums text-muted-foreground/50">{target.targetValue}</p>
-                <p className="text-xs text-muted-foreground">Target</p>
-              </div>
-              <div className="h-8 w-px bg-border" />
-              <div className="text-center sm:text-left">
-                <p className="text-4xl font-bold tabular-nums text-muted-foreground/50">
-                  {Math.max(0, target.targetValue - target.actual)}
-                </p>
-                <p className="text-xs text-muted-foreground">Remaining</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
   )
 }
 
@@ -321,6 +254,8 @@ export function AssignBDTargetDialog({
   isLoading,
   open,
   onOpenChange,
+  delegationRemaining,
+  currentUser,
 }: {
   members: TeamMember[]
   selectedMonth: Date
@@ -328,6 +263,8 @@ export function AssignBDTargetDialog({
   isLoading: boolean
   open: boolean
   onOpenChange: (v: boolean) => void
+  delegationRemaining: number
+  currentUser: { id: string; name: string } | null
 }) {
   const [selectedBdId, setSelectedBdId] = useState('')
   const [targetValue, setTargetValue] = useState('')
@@ -335,10 +272,25 @@ export function AssignBDTargetDialog({
   const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
   const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
 
+  const selectableMembers = useMemo(() => {
+    if (!currentUser) return members
+    return [
+      { id: currentUser.id, name: `${currentUser.name} (Self)`, employeeId: '', profilePicture: null },
+      ...members,
+    ]
+  }, [members, currentUser])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedBdId) { toast.error('Please select a BD'); return }
-    if (!targetValue || Number(targetValue) <= 0) { toast.error('Enter a valid target'); return }
+    if (!selectedBdId) { toast.error('Please select a team member'); return }
+    const val = parseFloat(targetValue)
+    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+
+    if (val > delegationRemaining) {
+      toast.error(`Value exceeds remaining team delegation budget (${delegationRemaining} IPDs)`)
+      return
+    }
+
     onSubmit({
       targetType: 'BD',
       targetForId: selectedBdId,
@@ -346,7 +298,7 @@ export function AssignBDTargetDialog({
       periodStartDate: periodStart.toISOString(),
       periodEndDate: periodEnd.toISOString(),
       metric: 'IPD_DONE',
-      targetValue: parseFloat(targetValue),
+      targetValue: val,
     })
   }
 
@@ -356,14 +308,14 @@ export function AssignBDTargetDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Target className="h-5 w-5 text-violet-500" />
-            Assign BD Target · {format(selectedMonth, 'MMMM yyyy')}
+            Assign Target · {format(selectedMonth, 'MMMM yyyy')}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-1">
           <div>
-            <Label className="text-sm font-medium mb-2 block">Select BD</Label>
+            <Label className="text-sm font-medium mb-2 block">Select Team Member</Label>
             <div className="grid gap-2 max-h-[220px] overflow-y-auto pr-1">
-              {members.map((m) => {
+              {selectableMembers.map((m) => {
                 const ac = getAvatarColor(m.name)
                 const isSelected = selectedBdId === m.id
                 return (
@@ -398,7 +350,10 @@ export function AssignBDTargetDialog({
             </div>
           </div>
           <div>
-            <Label className="text-sm font-medium">IPD Done Target</Label>
+            <div className="flex justify-between items-center">
+              <Label className="text-sm font-medium">IPD Done Target</Label>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Budget Limit: {delegationRemaining} IPDs</span>
+            </div>
             <Input
               type="number"
               className="mt-1.5 text-lg font-semibold h-12"
@@ -408,10 +363,81 @@ export function AssignBDTargetDialog({
               min={1}
               required
             />
-            <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected from this BD</p>
+            <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>
           </div>
           <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading || !selectedBdId}>
-            {isLoading ? 'Assigning...' : 'Assign Target'}
+            {isLoading ? 'Saving...' : 'Assign Target'}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// ─── Set Self Target Dialog ────────────────────────────────────────────────────
+
+function SetSelfTargetDialog({
+  selectedMonth,
+  onSubmit,
+  isLoading,
+  open,
+  onOpenChange,
+  initialValue = '',
+}: {
+  selectedMonth: Date
+  onSubmit: (data: Record<string, unknown>) => void
+  isLoading: boolean
+  open: boolean
+  onOpenChange: (v: boolean) => void
+  initialValue?: string
+}) {
+  const [targetValue, setTargetValue] = useState(initialValue)
+
+  useEffect(() => {
+    setTargetValue(initialValue)
+  }, [initialValue, open])
+
+  const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
+  const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!targetValue || Number(targetValue) <= 0) { toast.error('Enter a valid target'); return }
+    onSubmit({
+      targetType: 'BD',
+      periodType: 'MONTH',
+      periodStartDate: periodStart.toISOString(),
+      periodEndDate: periodEnd.toISOString(),
+      metric: 'IPD_DONE',
+      targetValue: parseFloat(targetValue),
+    })
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-violet-500" />
+            Set My Individual Target · {format(selectedMonth, 'MMMM yyyy')}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-1">
+          <div>
+            <Label className="text-sm font-medium">IPD Done Target</Label>
+            <Input
+              type="number"
+              className="mt-1.5 text-lg font-semibold h-12"
+              value={targetValue}
+              onChange={(e) => setTargetValue(e.target.value)}
+              placeholder="e.g. 10"
+              min={1}
+              required
+            />
+            <p className="text-xs text-muted-foreground mt-1">Your own target expected this month</p>
+          </div>
+          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading}>
+            {isLoading ? 'Saving...' : 'Set Target'}
           </Button>
         </form>
       </DialogContent>
@@ -428,6 +454,8 @@ export default function TeamLeadTargetsPage() {
     return new Date(now.getFullYear(), now.getMonth(), 1)
   })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isSelfDialogOpen, setIsSelfDialogOpen] = useState(false)
+  const [selfTargetValueInput, setSelfTargetValueInput] = useState('')
   const queryClient = useQueryClient()
 
   const monthStr = format(selectedMonth, 'yyyy-MM')
@@ -447,12 +475,34 @@ export default function TeamLeadTargetsPage() {
   const teamTarget = useMemo(() => targets.find((t) => t.targetType === 'TEAM'), [targets])
   const bdTargets = useMemo(() => targets.filter((t) => t.targetType === 'BD'), [targets])
 
+  const selfTarget = useMemo(
+    () => bdTargets.find((t) => t.targetForId === user?.id),
+    [bdTargets, user?.id]
+  )
+
+  const subordinateBdTargets = useMemo(
+    () => bdTargets.filter((t) => t.targetForId !== user?.id),
+    [bdTargets, user?.id]
+  )
+
+  const teamTargetValue = teamTarget?.targetValue ?? 0
+  const selfTargetValue = selfTarget?.targetValue ?? 0
+  const delegationBudget = Math.max(0, teamTargetValue - selfTargetValue)
+  const totalBdDelegated = subordinateBdTargets.reduce((sum, t) => sum + t.targetValue, 0)
+  const delegationRemaining = Math.max(0, delegationBudget - totalBdDelegated)
+
   const createTargetMutation = useMutation({
-    mutationFn: (data: Record<string, unknown>) => apiPost('/api/targets', data),
+    mutationFn: (data: Record<string, unknown>) => {
+      if (data.targetType === 'BD' && !data.targetForId) {
+        data.targetForId = user?.id
+      }
+      return apiPost('/api/targets', data)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['target-progress'] })
       setIsDialogOpen(false)
-      toast.success('Target assigned')
+      setIsSelfDialogOpen(false)
+      toast.success('Target assigned successfully')
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Failed to assign target'),
   })
@@ -488,28 +538,89 @@ export default function TeamLeadTargetsPage() {
           </div>
         </div>
 
+        {/* Hero Performance Cards at the Top */}
+        {!isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Card 1: Team Target */}
+            <Card className="rounded-2xl border border-blue-200 dark:border-blue-800/60 bg-gradient-to-br from-blue-50/50 to-indigo-50/20 dark:from-blue-950/20 dark:to-indigo-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
+              <div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">My Team Target</p>
+                    <p className="text-muted-foreground text-[11px] mt-0.5">Assigned from Category Manager</p>
+                  </div>
+                  <div className="h-6 w-6 shrink-0" />
+                </div>
+                <div className="flex items-baseline gap-1 mt-1">
+                  <span className="text-2xl font-extrabold tabular-nums text-blue-900 dark:text-blue-200">{teamTargetValue}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">IPDs</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-2 border-t border-blue-100 dark:border-blue-900/50">
+                Progress: <span className="font-semibold text-blue-700 dark:text-blue-300">{teamTarget?.actual ?? 0} Done ({teamTarget ? Math.round(teamTarget.percentage) : 0}%)</span>
+              </p>
+            </Card>
+
+            {/* Card 2: Self Target */}
+            <Card className="rounded-2xl border border-violet-200 dark:border-violet-800/60 bg-gradient-to-br from-violet-50/50 to-fuchsia-50/20 dark:from-violet-950/20 dark:to-fuchsia-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
+              <div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">My Self Target</p>
+                    <p className="text-muted-foreground text-[11px] mt-0.5">Individual performance target</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-6 px-1.5 text-[10px] gap-1 border-violet-300 dark:border-violet-800 hover:bg-violet-100/50 dark:hover:bg-violet-900/30 shrink-0"
+                    onClick={() => {
+                      setSelfTargetValueInput(selfTargetValue > 0 ? selfTargetValue.toString() : '')
+                      setIsSelfDialogOpen(true)
+                    }}
+                  >
+                    <Pencil className="h-2.5 w-2.5" />
+                    {selfTargetValue > 0 ? 'Edit' : 'Set'}
+                  </Button>
+                </div>
+                <div className="flex items-baseline gap-1 mt-1">
+                  <span className="text-2xl font-extrabold tabular-nums text-violet-900 dark:text-violet-200">{selfTargetValue}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">IPDs</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-2 border-t border-violet-100 dark:border-violet-900/50">
+                Progress: <span className="font-semibold text-violet-700 dark:text-violet-300">{selfTarget?.actual ?? 0} Done ({selfTarget ? Math.round(selfTarget.percentage) : 0}%)</span>
+              </p>
+            </Card>
+
+            {/* Card 3: BDE Budget */}
+            <Card className="rounded-2xl border border-emerald-200 dark:border-emerald-800/60 bg-gradient-to-br from-emerald-50/50 to-teal-50/20 dark:from-emerald-950/20 dark:to-teal-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
+              <div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">BDE Allocation Budget</p>
+                    <p className="text-muted-foreground text-[11px] mt-0.5">For BDE team members</p>
+                  </div>
+                  <div className="h-6 w-6 shrink-0" />
+                </div>
+                <div className="flex items-baseline gap-1 mt-1">
+                  <span className="text-2xl font-extrabold tabular-nums text-emerald-900 dark:text-emerald-200">{delegationBudget}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">IPDs ({teamTargetValue} - {selfTargetValue})</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-2 border-t border-emerald-100 dark:border-emerald-900/50 flex justify-between">
+                <span>Allocated: <span className="font-semibold text-emerald-700 dark:text-emerald-300">{totalBdDelegated}</span></span>
+                <span>Remaining: <span className="font-semibold text-emerald-700 dark:text-emerald-300">{delegationRemaining}</span></span>
+              </p>
+            </Card>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="space-y-4">
-            <div className="h-40 rounded-2xl bg-muted animate-pulse" />
             <div className="h-64 rounded-2xl bg-muted animate-pulse" />
           </div>
         ) : (
           <>
-            {/* Team target hero */}
-            {teamTarget ? (
-              <TeamTargetHero target={teamTarget} />
-            ) : (
-              <Card className="border-dashed border-violet-200 dark:border-violet-800 rounded-2xl">
-                <CardContent className="py-10 text-center">
-                  <Target className="h-10 w-10 text-violet-300 mx-auto mb-3" />
-                  <h3 className="font-semibold mb-1">No team target yet</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Your Sales Head will set your team&apos;s IPD target for {format(selectedMonth, 'MMMM yyyy')}.
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
             {/* BD Leaderboard */}
             {(bdTargets.length > 0 || (teamTarget && teamTarget.bdBreakdown.length > 0)) ? (
               <BDLeaderboard bdTargets={bdTargets} teamTarget={teamTarget ?? null} />
@@ -542,8 +653,19 @@ export default function TeamLeadTargetsPage() {
           isLoading={createTargetMutation.isPending}
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
+          delegationRemaining={delegationRemaining}
+          currentUser={user ? { id: user.id, name: user.name } : null}
         />
       )}
+
+      <SetSelfTargetDialog
+        selectedMonth={selectedMonth}
+        onSubmit={(data) => createTargetMutation.mutate(data)}
+        isLoading={createTargetMutation.isPending}
+        open={isSelfDialogOpen}
+        onOpenChange={setIsSelfDialogOpen}
+        initialValue={selfTargetValueInput}
+      />
     </AuthenticatedLayout>
   )
 }

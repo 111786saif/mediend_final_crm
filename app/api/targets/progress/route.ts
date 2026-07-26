@@ -5,7 +5,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { calculateActual } from '@/lib/analytics/target-progress'
-import { getSalesTeamUnits } from '@/lib/hierarchy'
+import { getSalesTeamUnits, getTeamScopeUserIds } from '@/lib/hierarchy'
 import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 /**
@@ -42,7 +42,6 @@ export async function GET(request: NextRequest) {
       periodEndDate: { gte: periodStart },
     }
 
-    if (targetType) where.targetType = targetType as Prisma.EnumTargetTypeFilter['equals']
     if (teamId) where.targetForId = teamId
 
     // Role-based filtering
@@ -81,7 +80,8 @@ export async function GET(request: NextRequest) {
       if (!teamId) {
         where.OR = [
           { targetType: 'TEAM' as const, targetForId: { in: teamIds } },
-          { targetType: 'BD' as const, targetForId: { in: [...scope] } },
+          { targetType: 'BD' as const, targetForId: { in: [...scope, user.id] } },
+          ...(selfCm ? [{ targetType: 'CATEGORY' as const, targetForId: selfCm.id }] : []),
         ]
       }
     }
@@ -122,8 +122,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Calculate direct BDE target adjustments for TEAM targets
-    // Only BDE targets created by SALES_HEAD, EXECUTIVE_ASSISTANT, MD, or ADMIN roles increase the team target
-    const allowedRoles: UserRole[] = [
+    // BDE targets created by CATEGORY_MANAGER and above roles increase the Team target
+    const allowedTeamRoles: UserRole[] = [
+      UserRole.CATEGORY_MANAGER,
       UserRole.SALES_HEAD,
       UserRole.EXECUTIVE_ASSISTANT,
       UserRole.MD,
@@ -136,7 +137,9 @@ export async function GET(request: NextRequest) {
     for (const t of targets) {
       if (t.targetType === 'BD') {
         const creatorRole = t.createdBy.role
-        if (allowedRoles.includes(creatorRole)) {
+        
+        // Team level adjustment
+        if (allowedTeamRoles.includes(creatorRole)) {
           const teamLeadId = bdToTeamLeadMap.get(t.targetForId)
           if (teamLeadId) {
             const current = teamAdjustmentMap.get(teamLeadId) || 0
@@ -195,11 +198,16 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const consolidatedTargets = Array.from(consolidatedMap.values())
+    let consolidatedTargets = Array.from(consolidatedMap.values())
+
+    if (targetType) {
+      consolidatedTargets = consolidatedTargets.filter(t => t.targetType === targetType)
+    }
 
     // Collect all unique targetForIds to resolve names and subordinates
     const teamTargetIds = consolidatedTargets.filter(t => t.targetType === 'TEAM').map(t => t.targetForId)
     const bdTargetIds = consolidatedTargets.filter(t => t.targetType === 'BD').map(t => t.targetForId)
+    const categoryTargetIds = consolidatedTargets.filter(t => t.targetType === 'CATEGORY').map(t => t.targetForId)
 
     // Resolve team leads and their subordinates
     const teamLeads = teamTargetIds.length > 0
@@ -222,6 +230,20 @@ export async function GET(request: NextRequest) {
       : []
 
     const teamLeadMap = new Map(teamLeads.map(tl => [tl.id, tl]))
+
+    // Resolve Category Managers
+    const categoryManagers = categoryTargetIds.length > 0
+      ? await prisma.employee.findMany({
+          where: { id: { in: categoryTargetIds } },
+          select: {
+            id: true,
+            userId: true,
+            user: { select: { id: true, name: true, profilePicture: true } },
+          },
+        })
+      : []
+
+    const categoryManagerMap = new Map(categoryManagers.map(cm => [cm.id, cm]))
 
     // Resolve BD names
     const bdUsers = bdTargetIds.length > 0
@@ -249,7 +271,47 @@ export async function GET(request: NextRequest) {
           percentage: number
         }> = []
 
-        if (target.targetType === 'TEAM') {
+        if (target.targetType === 'CATEGORY') {
+          const cm = categoryManagerMap.get(target.targetForId)
+          if (cm) {
+            entityName = `${cm.user.name}'s Category`
+            entityAvatar = cm.user.profilePicture
+            
+            const scopeUserIds = await getTeamScopeUserIds(cm.id)
+            bdIds = scopeUserIds
+
+            // Resolve Team Leads under this Category Manager for breakdown (direct reports who are TLs/ACMs)
+            const categoryTeams = await prisma.employee.findMany({
+              where: {
+                managerId: cm.id,
+                user: { role: { in: [UserRole.TEAM_LEAD, UserRole.ASSISTANT_CATEGORY_MANAGER] } },
+              },
+              select: {
+                id: true,
+                userId: true,
+                user: { select: { name: true, profilePicture: true } },
+              },
+            })
+
+            const teamActuals = await Promise.all(
+              categoryTeams.map(async (teamEmp) => {
+                const teamScopeUserIds = await getTeamScopeUserIds(teamEmp.id)
+                let actual = 0
+                for (const uid of teamScopeUserIds) {
+                  actual += await calculateActual(uid, target.metric, tStart, tEnd)
+                }
+                return {
+                  id: teamEmp.userId,
+                  name: teamEmp.user.name,
+                  profilePicture: teamEmp.user.profilePicture,
+                  actual,
+                  percentage: target.targetValue > 0 ? Math.round((actual / target.targetValue) * 100) : 0,
+                }
+              })
+            )
+            bdBreakdown = teamActuals.sort((a, b) => b.actual - a.actual)
+          }
+        } else if (target.targetType === 'TEAM') {
           const tl = teamLeadMap.get(target.targetForId)
           if (tl) {
             entityName = `${tl.user.name}'s Team`
@@ -285,11 +347,13 @@ export async function GET(request: NextRequest) {
           bdIds = [target.targetForId]
         }
 
-        // Calculate team-level actual
+        // Calculate team/category-level actual
         const totalActual =
           target.targetType === 'TEAM'
             ? bdBreakdown.reduce((sum, item) => sum + item.actual, 0)
-            : await calculateActual(target.targetForId, target.metric, tStart, tEnd)
+            : target.targetType === 'CATEGORY'
+              ? (await Promise.all(bdIds.map(uid => calculateActual(uid, target.metric, tStart, tEnd)))).reduce((sum, val) => sum + val, 0)
+              : await calculateActual(target.targetForId, target.metric, tStart, tEnd)
 
         const percentage = target.targetValue > 0
           ? Math.round((totalActual / target.targetValue) * 100 * 100) / 100

@@ -7,6 +7,14 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,7 +25,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { Badge } from '@/components/ui/badge'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Target } from 'lucide-react'
 import { toast } from 'sonner'
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
@@ -175,6 +183,8 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     consumables: 0,
     anesthesia: 0,
   })
+
+  const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false)
 
   const initialized = useRef(false)
   useEffect(() => {
@@ -533,6 +543,12 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       dcChecked: Object.fromEntries(Object.entries(dcChecked).filter(([, v]) => v)),
     }
     updateMutation.mutate(payload)
+  }
+
+  const handleConfirmSubmit = (status: 'DRAFT' | 'OUTSTANDING') => {
+    setIsSubmitConfirmOpen(false)
+    const mockEvent = { preventDefault: () => {} } as unknown as React.FormEvent
+    handleSubmit(mockEvent, status)
   }
 
   const bdNotes = record?.admissionRecord?.notes || ''
@@ -1177,7 +1193,10 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                     type="button"
                     variant="default"
                     disabled={updateMutation.isPending}
-                    onClick={(e) => handleSubmit(e as unknown as React.FormEvent, 'OUTSTANDING')}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setIsSubmitConfirmOpen(true)
+                    }}
                     className="bg-emerald-600 hover:bg-emerald-700"
                   >
                     {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -1192,6 +1211,43 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           </>
         )}
       </SheetContent>
+
+      <Dialog open={isSubmitConfirmOpen} onOpenChange={setIsSubmitConfirmOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold flex items-center gap-2 text-foreground">
+              <Target className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              Confirm Submission
+            </DialogTitle>
+            <DialogDescription className="text-sm mt-2">
+              Are you sure you want to submit? You can submit it to Outstanding or save it as a draft.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setIsSubmitConfirmOpen(false)}
+              disabled={updateMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleConfirmSubmit('DRAFT')}
+              disabled={updateMutation.isPending}
+            >
+              Save as Draft
+            </Button>
+            <Button
+              className="bg-emerald-600 hover:bg-emerald-700 text-white animate-pulse"
+              onClick={() => handleConfirmSubmit('OUTSTANDING')}
+              disabled={updateMutation.isPending}
+            >
+              Save & Move
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Sheet>
   )
 }
