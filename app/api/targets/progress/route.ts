@@ -89,15 +89,117 @@ export async function GET(request: NextRequest) {
     const targets = await prisma.target.findMany({
       where,
       include: {
-        createdBy: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, name: true, role: true } },
         bonusRules: true,
       },
       orderBy: { periodStartDate: 'desc' },
     })
 
+    // Fetch all team structures to map BD user IDs to their Team Lead employee IDs
+    const allTeamLeads = await prisma.employee.findMany({
+      where: {
+        user: { role: UserRole.TEAM_LEAD },
+      },
+      select: {
+        id: true, // Employee.id of Team Lead
+        userId: true, // User.id of Team Lead
+        user: { select: { name: true } },
+        subordinates: {
+          select: { userId: true },
+          where: { user: { role: UserRole.BD } },
+        },
+      },
+    })
+
+    // Map bdUserId -> Team Lead Employee.id
+    const bdToTeamLeadMap = new Map<string, string>()
+    for (const tl of allTeamLeads) {
+      if (tl.subordinates) {
+        for (const sub of tl.subordinates) {
+          bdToTeamLeadMap.set(sub.userId, tl.id)
+        }
+      }
+    }
+
+    // Calculate direct BDE target adjustments for TEAM targets
+    // Only BDE targets created by SALES_HEAD, EXECUTIVE_ASSISTANT, MD, or ADMIN roles increase the team target
+    const allowedRoles: UserRole[] = [
+      UserRole.SALES_HEAD,
+      UserRole.EXECUTIVE_ASSISTANT,
+      UserRole.MD,
+      UserRole.ADMIN,
+      UserRole.SUPER_ADMIN,
+      UserRole.CRM_ADMIN
+    ]
+
+    const teamAdjustmentMap = new Map<string, number>()
+    for (const t of targets) {
+      if (t.targetType === 'BD') {
+        const creatorRole = t.createdBy.role
+        if (allowedRoles.includes(creatorRole)) {
+          const teamLeadId = bdToTeamLeadMap.get(t.targetForId)
+          if (teamLeadId) {
+            const current = teamAdjustmentMap.get(teamLeadId) || 0
+            teamAdjustmentMap.set(teamLeadId, current + t.targetValue)
+          }
+        }
+      }
+    }
+
+    // Group and accumulate duplicate targets for the same entity in the same month
+    const consolidatedMap = new Map<string, typeof targets[0]>()
+    for (const t of targets) {
+      const key = `${t.targetType}_${t.targetForId}`
+      const existing = consolidatedMap.get(key)
+      if (existing) {
+        existing.targetValue += t.targetValue
+        if (t.bonusRules && t.bonusRules.length > 0) {
+          existing.bonusRules = [...(existing.bonusRules || []), ...t.bonusRules]
+        }
+      } else {
+        consolidatedMap.set(key, {
+          ...t,
+          bonusRules: t.bonusRules ? [...t.bonusRules] : [],
+        })
+      }
+    }
+
+    // Apply BDE target adjustments directly to consolidated TEAM targets
+    for (const [teamLeadId, adjustVal] of teamAdjustmentMap.entries()) {
+      const key = `TEAM_${teamLeadId}`
+      const existingTeamTarget = consolidatedMap.get(key)
+      if (existingTeamTarget) {
+        existingTeamTarget.targetValue += adjustVal
+      } else {
+        // If no TEAM target was created by a Team Lead yet, create a virtual TEAM target record
+        const tl = allTeamLeads.find((item) => item.id === teamLeadId)
+        if (tl) {
+          const firstTarget = targets[0]
+          consolidatedMap.set(key, {
+            id: `virtual_team_target_${teamLeadId}`,
+            targetType: 'TEAM',
+            targetForId: teamLeadId,
+            periodType: firstTarget?.periodType ?? 'MONTH',
+            periodStartDate: firstTarget?.periodStartDate ?? periodStart,
+            periodEndDate: firstTarget?.periodEndDate ?? periodEnd,
+            metric: firstTarget?.metric ?? 'IPD_DONE',
+            targetValue: adjustVal,
+            createdById: tl.userId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            departmentTargets: null,
+            createdBy: { id: tl.userId, name: tl.user.name, role: UserRole.TEAM_LEAD },
+            bonusRules: [],
+          })
+        }
+      }
+    }
+
+    const consolidatedTargets = Array.from(consolidatedMap.values())
+
     // Collect all unique targetForIds to resolve names and subordinates
-    const teamTargetIds = targets.filter(t => t.targetType === 'TEAM').map(t => t.targetForId)
-    const bdTargetIds = targets.filter(t => t.targetType === 'BD').map(t => t.targetForId)
+    const teamTargetIds = consolidatedTargets.filter(t => t.targetType === 'TEAM').map(t => t.targetForId)
+    const bdTargetIds = consolidatedTargets.filter(t => t.targetType === 'BD').map(t => t.targetForId)
 
     // Resolve team leads and their subordinates
     const teamLeads = teamTargetIds.length > 0
@@ -132,7 +234,7 @@ export async function GET(request: NextRequest) {
 
     // Calculate progress for each target
     const enrichedTargets = await Promise.all(
-      targets.map(async (target) => {
+      consolidatedTargets.map(async (target) => {
         const tStart = new Date(Math.max(periodStart.getTime(), target.periodStartDate.getTime()))
         const tEnd = new Date(Math.min(periodEnd.getTime(), target.periodEndDate.getTime()))
 
