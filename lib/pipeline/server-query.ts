@@ -353,6 +353,8 @@ export const pipelineTableSelect = {
   followUpDate: true,
   subStatus: true,
   surgeryDate: true,
+  removeRemarks: true,
+  remarksClearedAt: true,
   profession: true,
   teamLeadId: true,
   duplCount: true,

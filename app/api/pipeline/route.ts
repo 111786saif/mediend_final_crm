@@ -4,6 +4,10 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import {
+  getVisibleLatestLeadRemark,
+  getVisibleLeadRemarksFallbackContent,
+} from '@/lib/lead-remark-visibility'
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
 import {
   buildPipelineFiltersWhere,
@@ -94,10 +98,11 @@ export async function GET(request: NextRequest) {
       .sort((a, b) => a.name.localeCompare(b.name))
 
     const mappedLeads = leads.map((lead) => {
-      const latestRemark = lead.leadRemarkEntries?.[0] ?? null
+      const latestRemark = getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries) ?? null
       const base = {
         ...lead,
         latestRemark,
+        remarks: getVisibleLeadRemarksFallbackContent(lead, lead.remarks),
         status: mapStatusCode(lead.status),
       }
       delete (base as Record<string, unknown>).leadRemarkEntries

@@ -51,6 +51,8 @@ import {
 } from '@/lib/case-permissions'
 import { getKYPStatusLabel } from '@/lib/kyp-status-labels'
 import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
+import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
@@ -746,6 +748,26 @@ export default function PatientDetailsPage() {
   const canRevertCash = !readOnly && user && canRevertCashMode(user as any, lead)
   const canFillIPDCash = !readOnly && user && canFillIPDCashForm(user as any, lead)
   const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
+  const hasScheduledOpd = hasLeadOpdScheduled(lead)
+  const displayStatus = normalizeLeadStatus(lead.status)
+  const canManageInsuranceOpd =
+    lead.flowType !== FlowType.CASH &&
+    !!user &&
+    (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') &&
+    [
+      CaseStage.NEW_LEAD,
+      CaseStage.KYP_BASIC_PENDING,
+      CaseStage.KYP_BASIC_COMPLETE,
+      CaseStage.HOSPITALS_SUGGESTED,
+      CaseStage.PREAUTH_RAISED,
+      CaseStage.PREAUTH_COMPLETE,
+      CaseStage.INITIATED,
+      CaseStage.ADMITTED,
+      CaseStage.IPD_DONE,
+      CaseStage.DISCHARGED,
+      CaseStage.PL_PENDING,
+      CaseStage.OUTSTANDING,
+    ].includes(lead.caseStage)
 
   // Collect all uploaded documents for grid (KYP + PreAuth)
   const uploadedDocuments = (() => {
@@ -860,10 +882,10 @@ export default function PatientDetailsPage() {
                         <span className="font-mono text-xs">{lead.phoneNumber}</span>
                       </>
                     )}
-                    {lead.status && (
+                    {(lead.status || hasScheduledOpd) && (
                       <>
                         <span className="text-gray-300 dark:text-gray-700">·</span>
-                        <span className="text-gray-500 dark:text-gray-400">{lead.status}</span>
+                        <span className="text-gray-500 dark:text-gray-400">{displayStatus}</span>
                       </>
                     )}
                   </div>
@@ -910,7 +932,7 @@ export default function PatientDetailsPage() {
               const effectiveSurgeryDate =
                 isPostponed && rec?.newSurgeryDate
                   ? rec.newSurgeryDate
-                  : rec?.surgeryDate
+                  : rec?.surgeryDate || lead.surgeryDate
               const surgeryDateNode = effectiveSurgeryDate ? (
                 <span className="inline-flex items-center gap-1.5">
                   <span>
@@ -1180,6 +1202,7 @@ export default function PatientDetailsPage() {
             ) : (
               <StageProgress
                 currentStage={lead.caseStage}
+                hasOpdScheduled={hasScheduledOpd}
                 hasInitiateForm={!!lead.insuranceInitiateForm?.id}
                 hasIpdMark={!!lead.admissionRecord?.ipdStatus}
               />
@@ -1398,8 +1421,20 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
+                {canManageInsuranceOpd && (
+                  <Button
+                    asChild
+                    className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white border-0"
+                  >
+                    <Link href={`/patient/${leadId}/opd-schedule`}>
+                      {hasScheduledOpd ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                      {hasScheduledOpd ? 'Edit OPD Schedule' : 'Schedule OPD'}
+                    </Link>
+                  </Button>
+                )}
+
                 {/* BD / TL Actions (Insurance Flow) — show when at Card Details step (NEW_LEAD or KYP_BASIC_PENDING) */}
-                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && (lead.caseStage === CaseStage.NEW_LEAD || lead.caseStage === CaseStage.KYP_BASIC_PENDING) && (
+                {lead.flowType !== FlowType.CASH && hasScheduledOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && (lead.caseStage === CaseStage.NEW_LEAD || lead.caseStage === CaseStage.KYP_BASIC_PENDING) && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"

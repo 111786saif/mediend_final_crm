@@ -151,6 +151,7 @@ export async function GET(request: NextRequest) {
           'Out of Station',
           'Out of station follow-up',
           'IPD Schedule',
+          'OPD Scheduled',
           'OPD Schedule',
         ].includes(status) ||
         statusLower.includes('follow') ||

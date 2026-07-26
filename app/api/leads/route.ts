@@ -3,6 +3,10 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import {
+  getVisibleLatestLeadRemark,
+  getVisibleLeadRemarksFallbackContent,
+} from '@/lib/lead-remark-visibility'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { FlowType, Prisma, PipelineStage, CaseStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
@@ -164,7 +168,7 @@ export async function GET(request: NextRequest) {
           const filterConditions: Prisma.LeadWhereInput[] = []
 
           for (const f of parsedFilters) {
-            const { field, operator, value } = f
+            const { field, value } = f
             if (!field || value === undefined || value === null) continue
 
             // ── multiSelect / in ─────────────────────────────────────────
@@ -425,6 +429,8 @@ export async function GET(request: NextRequest) {
       assignedDate: true,
       createdDate: true,
       updatedDate: true,
+      removeRemarks: true,
+      remarksClearedAt: true,
       hospitalName: true,
       remarks: true,
       leadRemarkEntries: {
@@ -705,10 +711,13 @@ export async function GET(request: NextRequest) {
     // Mask phone numbers if user is not INSURANCE_HEAD or ADMIN
     const canViewPhone = user.role === 'ADMIN'
     const mappedLeads = accessibleLeads.map((lead) => {
-      const latestRemark = isPipelineView ? lead.leadRemarkEntries?.[0] ?? null : undefined
+      const latestRemark = isPipelineView
+        ? getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries) ?? null
+        : undefined
       const base = {
         ...lead,
         latestRemark,
+        remarks: isPipelineView ? getVisibleLeadRemarksFallbackContent(lead, lead.remarks) : lead.remarks,
         status: mapStatusCode(lead.status),
         source: lead.source ? mapSourceCode(lead.source) : lead.source,
       }

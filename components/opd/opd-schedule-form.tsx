@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { apiGet, apiPatch } from '@/lib/api-client'
+import { OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 
 const SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
@@ -251,7 +252,7 @@ export function OPDScheduleForm({
     }
 
     const scheduleDateTime = composeScheduleDateTime(formData.arrivalDate, formData.arrivalTime)
-    const nextStatus = 'OPD Schedule'
+    const nextStatus = OPD_SCHEDULED_STATUS
     const statusNeedsUpdate = normalizeStatus(currentStatus) !== normalizeStatus(nextStatus)
 
     const payload: Record<string, string | number | null> = {}

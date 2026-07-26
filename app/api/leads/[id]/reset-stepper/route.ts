@@ -6,6 +6,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { canResetStepper } from '@/lib/case-permissions'
+import { hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import {
   buildWorkflowResetTimelineNote,
   getCompletedResetTargets,
@@ -17,7 +18,7 @@ import {
 } from '@/lib/case/workflow-reset'
 
 const resetStepperSchema = z.object({
-  targetStep: z.number().int().min(1).max(8),
+  targetStep: z.number().int().min(1).max(9),
   reason: z.string().min(1, 'Reason is required').max(4000),
 })
 
@@ -37,6 +38,8 @@ export async function GET(
         caseStage: true,
         flowType: true,
         pipelineStage: true,
+        status: true,
+        opdScheduleDate: true,
         insuranceInitiateForm: { select: { id: true } },
         admissionRecord: { select: { ipdStatus: true } },
       },
@@ -47,6 +50,7 @@ export async function GET(
     }
 
     const extras: WorkflowStepExtras = {
+      hasOpdScheduled: hasLeadOpdScheduled(lead),
       hasInitiateForm: !!lead.insuranceInitiateForm?.id,
       hasIpdMark: !!lead.admissionRecord?.ipdStatus,
     }
@@ -103,6 +107,8 @@ export async function POST(
         caseStage: true,
         pipelineStage: true,
         flowType: true,
+        status: true,
+        opdScheduleDate: true,
         insuranceInitiateForm: { select: { id: true } },
         admissionRecord: { select: { id: true, ipdStatus: true } },
         kypSubmission: { select: { id: true } },
@@ -126,6 +132,7 @@ export async function POST(
     }
 
     const extras: WorkflowStepExtras = {
+      hasOpdScheduled: hasLeadOpdScheduled(lead),
       hasInitiateForm: !!lead.insuranceInitiateForm?.id,
       hasIpdMark: !!lead.admissionRecord?.ipdStatus,
     }
@@ -313,6 +320,17 @@ export async function POST(
         // Reinstate cases that were marked lost when EA resets the workflow.
         lostReason: null,
         lostAt: null,
+      }
+      if (config.clearOpdSchedule) {
+        leadUpdate.status = config.resetLeadStatus
+        leadUpdate.opdScheduleDate = null
+        leadUpdate.opdHospital = null
+        leadUpdate.opdDrName = null
+        leadUpdate.opdContactNo = null
+        leadUpdate.opdCharges = null
+        leadUpdate.opdMeeting = null
+      } else if (config.resetLeadStatus) {
+        leadUpdate.status = config.resetLeadStatus
       }
       if (config.clearAdmission) {
         leadUpdate.ipdDrName = null

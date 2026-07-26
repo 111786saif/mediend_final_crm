@@ -22,6 +22,25 @@ type ActivityLogItem = {
   actorUser: ActivityActor | null
 }
 
+function isLeadCreatedActivity(log: Pick<ActivityLogItem, 'action' | 'summary'>) {
+  const action = log.action.trim().toUpperCase()
+  const summary = log.summary.trim().toLowerCase()
+
+  if (summary === 'lead created') {
+    return true
+  }
+
+  return action.includes('LEAD') && action.includes('CREATED')
+}
+
+function getActivitySortPriority(log: Pick<ActivityLogItem, 'action' | 'summary'>) {
+  if (isLeadCreatedActivity(log)) {
+    return 1
+  }
+
+  return 0
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -163,13 +182,17 @@ export async function GET(
     )
 
     logs.sort((a, b) => {
-      const aIsCreated = a.action === 'CRM_LEAD_CREATED'
-      const bIsCreated = b.action === 'CRM_LEAD_CREATED'
+      const createdAtDelta = b.createdAt.getTime() - a.createdAt.getTime()
+      if (createdAtDelta !== 0) {
+        return createdAtDelta
+      }
 
-      if (aIsCreated && !bIsCreated) return -1
-      if (!aIsCreated && bIsCreated) return 1
+      const priorityDelta = getActivitySortPriority(a) - getActivitySortPriority(b)
+      if (priorityDelta !== 0) {
+        return priorityDelta
+      }
 
-      return b.createdAt.getTime() - a.createdAt.getTime()
+      return a.summary.localeCompare(b.summary)
     })
 
     const timeline = logs.slice(0, 30)
