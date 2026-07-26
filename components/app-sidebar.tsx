@@ -146,7 +146,7 @@ export function AppSidebar() {
     sales: false,
     insurancePl: false,
   })
-  const { hasAccess } = usePermissions()
+  const { hasAccess, permissionsReady } = usePermissions()
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({
@@ -157,6 +157,28 @@ export function AppSidebar() {
 
   if (!user) {
     return null
+  }
+
+  if (!permissionsReady) {
+    return (
+      <Sidebar>
+        <SidebarHeader className="border-b border-sidebar-border">
+          <div className="flex items-center gap-1 p-2">
+            <div className="relative h-8 w-32 shrink-0">
+              <Image
+                src={logo}
+                alt="Mediend"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <p className="text-md text-white font-bold">Workspace Beta</p>
+          </div>
+        </SidebarHeader>
+        <SidebarContent />
+      </Sidebar>
+    )
   }
 
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
