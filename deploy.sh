@@ -36,7 +36,7 @@ echo "===> Deploying commit $COMMIT..."
 
 # ── Build & (re)start the app, worker, and redis ───────────
 # Build sequentially — parallel Next.js builds can OOM a 4GB VPS.
-DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose build --no-parallel app
+DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose build app
 DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose build worker-bulk-reassign
 DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose up -d --remove-orphans redis app worker-bulk-reassign
 
