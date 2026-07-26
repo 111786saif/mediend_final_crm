@@ -28,6 +28,7 @@ import {
   Award,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   CheckCircle2,
   AlertTriangle,
   Pencil,
@@ -37,6 +38,7 @@ import {
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { format, addMonths, subMonths } from 'date-fns'
+import { BDLeaderboard, AssignBDTargetDialog } from '@/app/team-lead/targets/page'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -75,6 +77,7 @@ interface TargetProgress {
     actual: number
     percentage: number
   }>
+  createdById: string
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -419,8 +422,8 @@ function SetTargetDialog({
                     className={cn(
                       'flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left',
                       hasTarget ? 'border-border opacity-50 cursor-not-allowed' :
-                      isSelected ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20' :
-                      'border-border hover:border-muted-foreground/30'
+                        isSelected ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20' :
+                          'border-border hover:border-muted-foreground/30'
                     )}
                   >
                     <Avatar className="h-9 w-9">
@@ -474,7 +477,11 @@ export default function SalesTargetsPage({ readOnly = false }: { readOnly?: bool
     const now = new Date()
     return new Date(now.getFullYear(), now.getMonth(), 1)
   })
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false)
+  const [isBdDialogOpen, setIsBdDialogOpen] = useState(false)
+  const [selectedTeamFilter, setSelectedTeamFilter] = useState('all')
+  const [activeTab, setActiveTab] = useState<'team' | 'bd'>('team')
+
   const queryClient = useQueryClient()
 
   const monthStr = format(selectedMonth, 'yyyy-MM')
@@ -494,11 +501,97 @@ export default function SalesTargetsPage({ readOnly = false }: { readOnly?: bool
     [targets]
   )
 
+  const bdTargets = useMemo(
+    () => targets.filter((t) => t.targetType === 'BD'),
+    [targets]
+  )
+
+  // 1. Flatten all BD members from all teams for the BD target selection list
+  const allBDsFlat = useMemo(() => {
+    const list: Array<{ id: string; employeeId: string; name: string; profilePicture: string | null }> = []
+    const seen = new Set<string>()
+    for (const team of teams) {
+      if (team.members) {
+        for (const m of team.members) {
+          if (!seen.has(m.id)) {
+            seen.add(m.id)
+            list.push(m)
+          }
+        }
+      }
+    }
+    return list
+  }, [teams])
+
+  // 2. Build a virtual team target combining breakdown details for All Teams view
+  const virtualTeamTarget = useMemo(() => {
+    const combinedBreakdown: Array<{
+      id: string
+      name: string
+      profilePicture: string | null
+      actual: number
+      percentage: number
+    }> = []
+
+    const seen = new Set<string>()
+    for (const t of teamTargets) {
+      if (t.bdBreakdown) {
+        for (const bd of t.bdBreakdown) {
+          if (!seen.has(bd.id)) {
+            seen.add(bd.id)
+            combinedBreakdown.push({ ...bd })
+          } else {
+            const existing = combinedBreakdown.find(item => item.id === bd.id)
+            if (existing) {
+              existing.actual += bd.actual
+            }
+          }
+        }
+      }
+    }
+
+    return {
+      id: 'virtual',
+      targetType: 'TEAM' as const,
+      targetForId: 'virtual',
+      entityName: 'All Teams',
+      entityAvatar: null,
+      metric: 'IPD_DONE',
+      targetValue: teamTargets.reduce((sum, t) => sum + t.targetValue, 0),
+      actual: teamTargets.reduce((sum, t) => sum + t.actual, 0),
+      percentage: teamTargets.reduce((sum, t) => sum + t.targetValue, 0) > 0
+        ? (teamTargets.reduce((sum, t) => sum + t.actual, 0) / teamTargets.reduce((sum, t) => sum + t.targetValue, 0)) * 100
+        : 0,
+      status: 'completed' as const,
+      bdBreakdown: combinedBreakdown,
+    }
+  }, [teamTargets])
+
+  // 3. Resolve active team target depending on selected team filter
+  const selectedTeamTarget = useMemo(() => {
+    if (selectedTeamFilter === 'all') {
+      return virtualTeamTarget
+    }
+    return teamTargets.find(t => t.targetForId === selectedTeamFilter) || null
+  }, [selectedTeamFilter, teamTargets, virtualTeamTarget])
+
+  // 4. Resolve BD targets matching selected team filter members
+  const filteredBdTargetsForLeaderboard = useMemo(() => {
+    if (selectedTeamFilter === 'all') {
+      return bdTargets
+    }
+    const team = teams.find(t => t.id === selectedTeamFilter)
+    if (!team) return []
+    const memberUserIds = new Set(team.members.map(m => m.id))
+    return bdTargets.filter(t => memberUserIds.has(t.targetForId))
+  }, [bdTargets, selectedTeamFilter, teams])
+
   const createTargetMutation = useMutation({
     mutationFn: (data: Record<string, unknown>) => apiPost('/api/targets', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['target-progress'] })
-      setIsDialogOpen(false)
+      setIsTeamDialogOpen(false)
+      setIsBdDialogOpen(false)
       toast.success('Target set successfully')
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Failed to set target'),
@@ -520,54 +613,164 @@ export default function SalesTargetsPage({ readOnly = false }: { readOnly?: bool
           </div>
           <div className="flex items-center gap-3">
             <MonthPicker selectedMonth={selectedMonth} onChange={setSelectedMonth} />
-            {!readOnly && (
-              <Button
-                className="gap-2 bg-violet-600 hover:bg-violet-700"
-                onClick={() => setIsDialogOpen(true)}
-              >
-                <Plus className="h-4 w-4" />
-                Set Target
-              </Button>
-            )}
           </div>
         </div>
 
-        {/* Summary */}
-        {teamTargets.length > 0 && <SummaryStats targets={teamTargets} />}
+        {/* Custom Tabs Control */}
+        <div className="flex gap-2 border-b border-border/60 pb-px">
+          <button
+            onClick={() => setActiveTab('team')}
+            className={cn(
+              "px-5 py-2.5 text-sm font-bold border-b-2 transition-all flex items-center gap-2 select-none",
+              activeTab === 'team'
+                ? "border-violet-600 text-violet-600 dark:text-violet-400"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <Users className="h-4 w-4" />
+            Team Targets
+          </button>
+          <button
+            onClick={() => setActiveTab('bd')}
+            className={cn(
+              "px-5 py-2.5 text-sm font-bold border-b-2 transition-all flex items-center gap-2 select-none",
+              activeTab === 'bd'
+                ? "border-violet-600 text-violet-600 dark:text-violet-400"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <Target className="h-4 w-4" />
+            BD Targets
+          </button>
+        </div>
 
-        {/* Content */}
-        {isLoading ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
-            ))}
-          </div>
-        ) : teamTargets.length === 0 ? (
-          <Card className="border-dashed rounded-2xl">
-            <CardContent className="py-16 text-center">
-              <Target className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-1">No targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
-              <p className="text-sm text-muted-foreground mb-5">
-                {readOnly ? 'No targets have been set yet.' : 'Set monthly IPD targets for each team lead to start tracking.'}
-              </p>
+        {/* Tab 1: Team Targets Content */}
+        {activeTab === 'team' && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                Team Level Performance
+              </h2>
               {!readOnly && (
-                <Button variant="outline" className="gap-2" onClick={() => setIsDialogOpen(true)}>
+                <Button
+                  className="gap-2 bg-violet-600 hover:bg-violet-700"
+                  size="sm"
+                  onClick={() => setIsTeamDialogOpen(true)}
+                >
                   <Plus className="h-4 w-4" />
-                  Set First Target
+                  Set Team Target
                 </Button>
               )}
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {teamTargets.map((t) => (
-              <TeamTargetCard
-                key={t.id}
-                target={t}
-                readOnly={readOnly}
-                onSetTarget={() => setIsDialogOpen(true)}
-              />
-            ))}
+            </div>
+
+            {/* Summary */}
+            {teamTargets.length > 0 && <SummaryStats targets={teamTargets} />}
+
+            {/* Content */}
+            {isLoading ? (
+              <div className="grid gap-4 md:grid-cols-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
+                ))}
+              </div>
+            ) : teamTargets.length === 0 ? (
+              <Card className="border-dashed rounded-2xl">
+                <CardContent className="py-16 text-center">
+                  <Target className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-1">No targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
+                  <p className="text-sm text-muted-foreground mb-5">
+                    {readOnly ? 'No targets have been set yet.' : 'Set monthly IPD targets for each team lead to start tracking.'}
+                  </p>
+                  {!readOnly && (
+                    <Button variant="outline" className="gap-2" onClick={() => setIsTeamDialogOpen(true)}>
+                      <Plus className="h-4 w-4" />
+                      Set First Target
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                {teamTargets.map((t) => (
+                  <TeamTargetCard
+                    key={t.id}
+                    target={t}
+                    readOnly={readOnly}
+                    onSetTarget={() => setIsTeamDialogOpen(true)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab 2: BD Targets Content */}
+        {activeTab === 'bd' && (
+          <div className="space-y-6">
+            {/* Filter and Trigger header controls */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-2.5">
+                <span className="text-sm font-semibold text-muted-foreground">Filter by Team:</span>
+                <div className="relative">
+                  <select
+                    value={selectedTeamFilter}
+                    onChange={(e) => setSelectedTeamFilter(e.target.value)}
+                    className="appearance-none bg-background hover:bg-muted/50 border border-border/80 rounded-xl pl-3.5 pr-10 py-2 text-sm font-semibold shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-violet-500/25 focus:border-violet-500 cursor-pointer min-w-[180px]"
+                  >
+                    <option value="all">All Teams</option>
+                    {teams.map((team) => (
+                      <option key={team.id} value={team.id}>
+                        {team.name}&apos;s Team
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                    <ChevronDown className="h-4.5 w-4.5 text-muted-foreground" />
+                  </div>
+                </div>
+              </div>
+              {!readOnly && (
+                <Button
+                  className="gap-2 bg-violet-600 hover:bg-violet-700"
+                  size="sm"
+                  onClick={() => setIsBdDialogOpen(true)}
+                >
+                  <Plus className="h-4 w-4" />
+                  Assign BD Target
+                </Button>
+              )}
+            </div>
+
+            {/* BD Target Leaderboard */}
+            {isLoading ? (
+              <div className="space-y-4">
+                <div className="h-40 rounded-2xl bg-muted animate-pulse" />
+                <div className="h-64 rounded-2xl bg-muted animate-pulse" />
+              </div>
+            ) : filteredBdTargetsForLeaderboard.length === 0 ? (
+              <Card className="border-dashed rounded-2xl">
+                <CardContent className="py-16 text-center">
+                  <Users className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-1">No BD targets assigned for {format(selectedMonth, 'MMMM yyyy')}</h3>
+                  <p className="text-sm text-muted-foreground mb-5">
+                    {readOnly ? 'No BD targets have been assigned yet.' : 'Assign individual targets to BD members to start tracking.'}
+                  </p>
+                  {!readOnly && (
+                    <Button variant="outline" className="gap-2" onClick={() => setIsBdDialogOpen(true)}>
+                      <Plus className="h-4 w-4" />
+                      Assign First Target
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="max-w-3xl">
+                <BDLeaderboard
+                  bdTargets={filteredBdTargetsForLeaderboard}
+                  teamTarget={null}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -579,8 +782,19 @@ export default function SalesTargetsPage({ readOnly = false }: { readOnly?: bool
           existingTargets={teamTargets}
           onSubmit={(data) => createTargetMutation.mutate(data)}
           isLoading={createTargetMutation.isPending}
-          open={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
+          open={isTeamDialogOpen}
+          onOpenChange={setIsTeamDialogOpen}
+        />
+      )}
+
+      {!readOnly && (
+        <AssignBDTargetDialog
+          members={allBDsFlat}
+          selectedMonth={selectedMonth}
+          onSubmit={(data) => createTargetMutation.mutate(data)}
+          isLoading={createTargetMutation.isPending}
+          open={isBdDialogOpen}
+          onOpenChange={setIsBdDialogOpen}
         />
       )}
     </AuthenticatedLayout>
