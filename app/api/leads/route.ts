@@ -453,6 +453,7 @@ export async function GET(request: NextRequest) {
       source: true,
       netProfit: true,
       surgeryDate: true,
+      opdScheduleDate: true,
       flowType: true,
       atsAmount: true,
       atsStatus: true,

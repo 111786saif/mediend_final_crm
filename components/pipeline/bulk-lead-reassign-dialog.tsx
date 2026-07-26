@@ -66,6 +66,10 @@ export function BulkLeadReassignDialog({
   const [leadQuery, setLeadQuery] = useState('')
   const [bdPickerOpen, setBdPickerOpen] = useState(false)
   const [bdQuery, setBdQuery] = useState('')
+  const bdAssignableUsers = useMemo(
+    () => assignableUsers.filter((user) => user.role === 'BD'),
+    [assignableUsers]
+  )
 
   const selectedLeadSummary = useMemo(
     () =>
@@ -96,20 +100,20 @@ export function BulkLeadReassignDialog({
   const selectedBdUsers = useMemo(
     () =>
       selectedBdUserIds
-        .map((userId) => assignableUsers.find((user) => user.id === userId))
+        .map((userId) => bdAssignableUsers.find((user) => user.id === userId))
         .filter((user): user is AssignableUser => Boolean(user)),
-    [assignableUsers, selectedBdUserIds]
+    [bdAssignableUsers, selectedBdUserIds]
   )
 
   const filteredAssignableUsers = useMemo(() => {
     const query = bdQuery.trim().toLowerCase()
-    if (!query) return assignableUsers
+    if (!query) return bdAssignableUsers
 
-    return assignableUsers.filter((user) => {
+    return bdAssignableUsers.filter((user) => {
       const label = `${user.name} ${user.email} ${user.role}`.toLowerCase()
       return label.includes(query)
     })
-  }, [assignableUsers, bdQuery])
+  }, [bdAssignableUsers, bdQuery])
 
   const selectedBdButtonLabel = useMemo(() => {
     if (selectedBdUsers.length === 0) return 'Select BDs'
