@@ -8,7 +8,9 @@ WORKDIR /app
 COPY prisma.config.ts ./
 COPY prisma ./prisma/
 
-# Install Prisma CLI only — do not copy package.json (npm would resolve the full app tree).
-RUN npm install -g prisma@7.5.0
+# Prisma CLI + deps required by prisma.config.ts (dotenv, prisma/config).
+# Do not copy the app package.json — npm would resolve the full React tree.
+RUN npm install -g prisma@7.5.0 \
+  && npm install dotenv@16 prisma@7.5.0 --no-save --legacy-peer-deps
 
 CMD ["prisma", "migrate", "deploy"]
