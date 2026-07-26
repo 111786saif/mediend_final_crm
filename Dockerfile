@@ -57,6 +57,11 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
   CMD wget -qO- http://localhost:3000/api/health || exit 1
 CMD ["node", "server.js"]
 
+# Long-running BullMQ worker for bulk lead reassignment.
+FROM builder AS worker
+WORKDIR /app
+CMD ["bun", "run", "worker:bulk-reassign"]
+
 # Stage for running one-off migrations and tool scripts (full source + deps).
 # Examples: prisma migrate deploy, db:seed:masters, scripts under scripts/.
 FROM builder AS migrate

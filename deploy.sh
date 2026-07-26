@@ -34,9 +34,9 @@ TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 echo "===> Deploying commit $COMMIT..."
 
-# ── Build & (re)start the app ────────────────────────────────
-DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose build app
-DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose up -d --remove-orphans app
+# ── Build & (re)start the app, worker, and redis ───────────
+DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose build app worker-bulk-reassign
+DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose up -d --remove-orphans redis app worker-bulk-reassign
 
 # ── Wait for health check ───────────────────────────────────
 echo "--- Waiting for app to become healthy (max 120s)..."
