@@ -60,6 +60,8 @@ interface TargetProgress {
   targetForId: string
   entityName: string
   entityAvatar: string | null
+  periodStartDate: string
+  periodEndDate: string
   metric: string
   targetValue: number
   actual: number
@@ -72,6 +74,7 @@ interface TargetProgress {
     actual: number
     percentage: number
   }>
+  createdById: string
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -194,7 +197,7 @@ function TeamTargetHero({ target }: { target: TargetProgress }) {
 
 // ─── BD Leaderboard ───────────────────────────────────────────────────────────
 
-function BDLeaderboard({
+export function BDLeaderboard({
   bdTargets,
   teamTarget,
 }: {
@@ -311,7 +314,7 @@ function BDLeaderboard({
 
 // ─── Assign BD Target Dialog ──────────────────────────────────────────────────
 
-function AssignBDTargetDialog({
+export function AssignBDTargetDialog({
   members,
   selectedMonth,
   onSubmit,
