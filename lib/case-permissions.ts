@@ -1,4 +1,5 @@
 import { CaseStage, UserRole, FlowType } from '@/generated/prisma/enums'
+import { hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import { hasPermission } from '@/lib/rbac'
 import type { SessionUser } from '@/lib/auth'
 import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
@@ -19,6 +20,8 @@ interface Lead {
   caseStage: CaseStage
   pipelineStage: string
   flowType?: FlowType | null
+  status?: string | null
+  opdScheduleDate?: string | Date | null
   kypSubmission?: {
     id: string
     status: string
@@ -194,7 +197,7 @@ export function canResetPatient(user: User, lead: Lead): boolean {
 }
 
 /** Executive Assistant only — can reset the patient workflow stepper to a prior completed step. */
-export function canResetStepper(user: User, _lead?: Lead | null): boolean {
+export function canResetStepper(user: User): boolean {
   if (!user) return false
   return user.role === UserRole.EXECUTIVE_ASSISTANT
 }
@@ -342,6 +345,7 @@ export function canFillIPDCashForm(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
   const isCash = lead.flowType === FlowType.CASH
+  const hasCashOpdScheduled = hasLeadOpdScheduled(lead)
   // Allow first fill while pending, and edits after submission/approval until
   // the case moves into the post-IPD/discharge stages.
   const allowedStages: CaseStage[] = [
@@ -351,7 +355,12 @@ export function canFillIPDCashForm(user: User, lead: Lead): boolean {
     CaseStage.CASH_APPROVED,
   ]
 
-  return isBdTlAcmCmOrAdmin(user.role) && isCash && allowedStages.includes(lead.caseStage)
+  return (
+    isBdTlAcmCmOrAdmin(user.role) &&
+    isCash &&
+    allowedStages.includes(lead.caseStage) &&
+    (lead.caseStage !== CaseStage.CASH_IPD_PENDING || hasCashOpdScheduled)
+  )
 }
 
 // Insurance can review cash case when submitted

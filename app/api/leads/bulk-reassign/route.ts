@@ -40,7 +40,9 @@ export async function GET(request: NextRequest) {
     return errorResponse('Forbidden', 403)
   }
 
-  const assignableUsers = await getAssignableLeadUsersForActor(user)
+  const assignableUsers = (await getAssignableLeadUsersForActor(user)).filter(
+    (assignableUser) => assignableUser.role === 'BD'
+  )
 
   return successResponse({
     canBulkReassign: assignableUsers.length > 0,

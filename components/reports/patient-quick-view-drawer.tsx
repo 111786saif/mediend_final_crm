@@ -196,7 +196,10 @@ export function PatientQuickViewDrawer({
               </div>
               <div className="rounded-lg border border-border/60 bg-muted/20 p-3">
                 {lead.flowType === FlowType.CASH ? (
-                  <CashStageProgress currentStage={lead.caseStage} />
+                  <CashStageProgress
+                    currentStage={lead.caseStage}
+                    hasOpdScheduled={hasLeadOpdScheduled(lead)}
+                  />
                 ) : (
                   <StageProgress
                     currentStage={lead.caseStage}

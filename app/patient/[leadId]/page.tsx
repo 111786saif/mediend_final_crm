@@ -746,28 +746,40 @@ export default function PatientDetailsPage() {
   // Cash Flow Permissions
   const canStartCash = !readOnly && user && canStartCashMode(user as any, lead)
   const canRevertCash = !readOnly && user && canRevertCashMode(user as any, lead)
-  const canFillIPDCash = !readOnly && user && canFillIPDCashForm(user as any, lead)
-  const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
   const hasScheduledOpd = hasLeadOpdScheduled(lead)
+  const canFillIPDCash =
+    !readOnly &&
+    !!user &&
+    canFillIPDCashForm(user as any, lead) &&
+    (hasScheduledOpd || lead.caseStage !== CaseStage.CASH_IPD_PENDING)
+  const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
   const displayStatus = normalizeLeadStatus(lead.status)
-  const canManageInsuranceOpd =
-    lead.flowType !== FlowType.CASH &&
+  const canManageOpd =
     !!user &&
     (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') &&
-    [
-      CaseStage.NEW_LEAD,
-      CaseStage.KYP_BASIC_PENDING,
-      CaseStage.KYP_BASIC_COMPLETE,
-      CaseStage.HOSPITALS_SUGGESTED,
-      CaseStage.PREAUTH_RAISED,
-      CaseStage.PREAUTH_COMPLETE,
-      CaseStage.INITIATED,
-      CaseStage.ADMITTED,
-      CaseStage.IPD_DONE,
-      CaseStage.DISCHARGED,
-      CaseStage.PL_PENDING,
-      CaseStage.OUTSTANDING,
-    ].includes(lead.caseStage)
+    (
+      lead.flowType === FlowType.CASH
+        ? [
+            CaseStage.CASH_IPD_PENDING,
+            CaseStage.CASH_IPD_SUBMITTED,
+            CaseStage.CASH_ON_HOLD,
+            CaseStage.CASH_APPROVED,
+          ].includes(lead.caseStage)
+        : [
+            CaseStage.NEW_LEAD,
+            CaseStage.KYP_BASIC_PENDING,
+            CaseStage.KYP_BASIC_COMPLETE,
+            CaseStage.HOSPITALS_SUGGESTED,
+            CaseStage.PREAUTH_RAISED,
+            CaseStage.PREAUTH_COMPLETE,
+            CaseStage.INITIATED,
+            CaseStage.ADMITTED,
+            CaseStage.IPD_DONE,
+            CaseStage.DISCHARGED,
+            CaseStage.PL_PENDING,
+            CaseStage.OUTSTANDING,
+          ].includes(lead.caseStage)
+    )
 
   // Collect all uploaded documents for grid (KYP + PreAuth)
   const uploadedDocuments = (() => {
@@ -1183,7 +1195,11 @@ export default function PatientDetailsPage() {
                 {user &&
                   canResetStepper(user, lead) &&
                   lead.caseStage !== CaseStage.NEW_LEAD &&
-                  lead.caseStage !== CaseStage.CASH_IPD_PENDING && (
+                  !(
+                    lead.flowType === FlowType.CASH &&
+                    lead.caseStage === CaseStage.CASH_IPD_PENDING &&
+                    !hasScheduledOpd
+                  ) && (
                   <Button
                     type="button"
                     variant="outline"
@@ -1198,7 +1214,10 @@ export default function PatientDetailsPage() {
               </div>
             </div>
             {lead.flowType === FlowType.CASH ? (
-              <CashStageProgress currentStage={lead.caseStage} />
+              <CashStageProgress
+                currentStage={lead.caseStage}
+                hasOpdScheduled={hasScheduledOpd}
+              />
             ) : (
               <StageProgress
                 currentStage={lead.caseStage}
@@ -1421,7 +1440,7 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
-                {canManageInsuranceOpd && (
+                {canManageOpd && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white border-0"

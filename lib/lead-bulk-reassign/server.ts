@@ -168,7 +168,9 @@ export async function createBulkLeadReassignmentRun(
     throw new BulkLeadReassignError('Sub status must be zero or greater', 400)
   }
 
-  const assignableUsers = await getAssignableLeadUsersForActor(user)
+  const assignableUsers = (await getAssignableLeadUsersForActor(user)).filter(
+    (item) => item.role === 'BD'
+  )
   const assignableUserMap = new Map(assignableUsers.map((item) => [item.id, item]))
   const selectedBdUsers = bdUserIds.map((id) => assignableUserMap.get(id))
 
