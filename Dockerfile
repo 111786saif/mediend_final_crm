@@ -58,8 +58,14 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
 CMD ["node", "server.js"]
 
 # Long-running BullMQ worker for bulk lead reassignment.
-FROM builder AS worker
+# Source + deps only — skips Next.js build to keep deploy memory usage low.
+FROM base AS worker
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/generated ./generated
+COPY . .
+ENV NODE_ENV=production
 CMD ["bun", "run", "worker:bulk-reassign"]
 
 # Stage for running one-off migrations and tool scripts (full source + deps).
