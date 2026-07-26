@@ -1,5 +1,5 @@
-import SalesTargetsPage from '@/app/sales/targets/page'
+import SalesHeadTargetsPage from '@/app/sales-head/targets/page'
 
 export default function EATargetsPage() {
-  return <SalesTargetsPage readOnly />
+  return <SalesHeadTargetsPage />
 }

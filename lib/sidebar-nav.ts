@@ -294,6 +294,8 @@ export const navItems: NavItem[] = [
       'TEAM_LEAD',
       'ASSISTANT_CATEGORY_MANAGER',
       'EXECUTIVE_ASSISTANT',
+      'MD',
+      'ADMIN',
     ],
   },
   {
@@ -764,7 +766,9 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
       if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
         return { ...item, url: '/team-lead/targets' }
       }
-      if (role === 'EXECUTIVE_ASSISTANT') return { ...item, url: '/executive-assistant/targets' }
+      if (role === 'SALES_HEAD' || role === 'EXECUTIVE_ASSISTANT' || role === 'MD' || role === 'ADMIN') {
+        return { ...item, url: '/sales-head/targets' }
+      }
     }
     return item
   })

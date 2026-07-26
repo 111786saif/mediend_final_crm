@@ -329,8 +329,34 @@ function formatMonthCell(value: unknown) {
   return formatTableDate(value)
 }
 
+function isCashCaseStage(stage: Lead['caseStage']) {
+  return [
+    CaseStage.CASH_IPD_PENDING,
+    CaseStage.CASH_IPD_SUBMITTED,
+    CaseStage.CASH_ON_HOLD,
+    CaseStage.CASH_APPROVED,
+    CaseStage.CASH_IPD_DONE,
+    CaseStage.CASH_DISCHARGED,
+  ].includes(stage as CaseStage)
+}
+
+function getLeadStageBadge(lead: Lead) {
+  if (!lead.caseStage) return null
+
+  if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
+    return hasLeadOpdScheduled(lead)
+      ? getCaseStageBadgeConfig(String(lead.caseStage))
+      : {
+          className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
+          label: 'OPD Schedule',
+        }
+  }
+
+  return getCaseStageBadgeConfig(String(lead.caseStage))
+}
+
 function getLeadStageLabel(lead: Lead) {
-  return lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage))?.label ?? '—' : '—'
+  return getLeadStageBadge(lead)?.label ?? '—'
 }
 
 function getLeadLastRemarksText(lead: Lead) {
@@ -1382,7 +1408,7 @@ function isInsuranceModeOfPayment(modeOfPayment: unknown) {
 function canShowPipelineOpdSchedule(lead: Lead) {
   if (!lead.caseStage) return false
 
-  if (lead.flowType === 'CASH') {
+  if (isCashCaseStage(lead.caseStage)) {
     return [
       CaseStage.CASH_IPD_PENDING,
       CaseStage.CASH_IPD_SUBMITTED,
@@ -1408,22 +1434,25 @@ function canShowPipelineOpdSchedule(lead: Lead) {
 }
 
 function canShowPipelineCardUpload(lead: Lead) {
-  if (!lead.caseStage || lead.flowType === 'CASH') return false
+  if (!lead.caseStage || isCashCaseStage(lead.caseStage)) return false
   if (lead.caseStage === CaseStage.KYP_BASIC_COMPLETE) return true
   if (![CaseStage.NEW_LEAD, CaseStage.KYP_BASIC_PENDING].includes(lead.caseStage)) return false
   return hasLeadOpdScheduled(lead)
 }
 
 function canShowPipelinePreAuthRaised(lead: Lead) {
-  return lead.flowType !== 'CASH' && lead.caseStage === CaseStage.HOSPITALS_SUGGESTED
+  return !isCashCaseStage(lead.caseStage) && lead.caseStage === CaseStage.HOSPITALS_SUGGESTED
 }
 
 function canShowPipelineIpdSchedule(lead: Lead) {
   if (!lead.caseStage) return false
 
-  if (lead.flowType === 'CASH') {
+  if (isCashCaseStage(lead.caseStage)) {
+    if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
+      return hasLeadOpdScheduled(lead)
+    }
+
     return [
-      CaseStage.CASH_IPD_PENDING,
       CaseStage.CASH_IPD_SUBMITTED,
       CaseStage.CASH_ON_HOLD,
       CaseStage.CASH_APPROVED,
@@ -1434,7 +1463,7 @@ function canShowPipelineIpdSchedule(lead: Lead) {
 }
 
 function getPipelineIpdScheduleHref(lead: Lead) {
-  return lead.flowType === 'CASH'
+  return isCashCaseStage(lead.caseStage) || lead.flowType === 'CASH'
     ? `/patient/${lead.id}?action=ipd-cash`
     : `/patient/${lead.id}?action=ipd-schedule`
 }
@@ -1573,7 +1602,7 @@ const PipelineRow = memo(function PipelineRow({
   onToggleSelected: (leadId: string, checked: boolean) => void
   visibleColumns: Record<PipelineColumnId, boolean>
 }) {
-  const stage = lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage)) : null
+  const stage = getLeadStageBadge(lead)
   const st = normalizeLeadStatus(lead.status)
   const sc = getStatusColor(st)
   const statusClass = isOpened

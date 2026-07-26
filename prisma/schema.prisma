@@ -117,6 +117,7 @@ enum TargetType {
   BD
   TEAM
   DEPARTMENT_HEAD
+  CATEGORY
 }
 
 enum PeriodType {

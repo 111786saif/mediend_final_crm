@@ -4,7 +4,7 @@ import { CaseStage } from '@/generated/prisma/enums'
 import { cn } from '@/lib/utils'
 import { CheckCircle2, Clock } from 'lucide-react'
 
-// ─── Step definitions matching the 4-step cash workflow ─────────────────────
+// ─── Step definitions matching the cash workflow ────────────────────────────
 
 type StepOwner = 'BD' | 'INSURANCE'
 
@@ -18,7 +18,7 @@ interface WorkflowStep {
 }
 
 interface StepExtras {
-  // Add any extra flags if needed in future
+  hasOpdScheduled: boolean
 }
 
 // Map active CaseStage values to a linear index for ordering in Cash Flow
@@ -38,47 +38,54 @@ function getCashStageIndex(stage: CaseStage): number {
 const CASH_WORKFLOW_STEPS: WorkflowStep[] = [
   {
     number: 1,
-    label: 'IPD Cash Form',
-    shortLabel: 'IPD Form',
+    label: 'OPD Schedule',
+    shortLabel: 'OPD Schedule',
     owner: 'BD',
-    isDone: (si) => si >= 2, // Done when submitted (stage 2+)
+    isDone: (_si, extras) => extras.hasOpdScheduled,
   },
   {
     number: 2,
-    label: 'Insurance Review',
-    shortLabel: 'Review',
-    owner: 'INSURANCE',
-    isDone: (si) => si >= 3, // Done when approved (stage 3+)
+    label: 'IPD Cash Form',
+    shortLabel: 'IPD Form',
+    owner: 'BD',
+    isDone: (si, extras) => extras.hasOpdScheduled && si >= 2, // Done when submitted (stage 2+)
   },
   {
     number: 3,
-    label: 'Approved',
-    shortLabel: 'Approved',
+    label: 'Insurance Review',
+    shortLabel: 'Review',
     owner: 'INSURANCE',
-    isDone: (si) => si >= 4, // Done when IPD done (stage 4+)
+    isDone: (si, extras) => extras.hasOpdScheduled && si >= 3, // Done when approved (stage 3+)
   },
   {
     number: 4,
-    label: 'IPD Done',
-    shortLabel: 'IPD Done',
-    owner: 'BD',
-    isDone: (si) => si >= 5, // Done when discharged (stage 5+)
+    label: 'Approved',
+    shortLabel: 'Approved',
+    owner: 'INSURANCE',
+    isDone: (si, extras) => extras.hasOpdScheduled && si >= 4, // Done when IPD done (stage 4+)
   },
   {
     number: 5,
+    label: 'IPD Done',
+    shortLabel: 'IPD Done',
+    owner: 'BD',
+    isDone: (si, extras) => extras.hasOpdScheduled && si >= 5, // Done when discharged (stage 5+)
+  },
+  {
+    number: 6,
     label: 'Discharge',
     shortLabel: 'Discharge',
     owner: 'INSURANCE',
-    isDone: (si) => si >= 5, // Done when discharged (stage 5)
+    isDone: (si, extras) => extras.hasOpdScheduled && si >= 5, // Done when discharged (stage 5)
   },
 ]
 
-function getCurrentCashStep(stageIndex: number): number {
-  // Returns 1-based index of the current (in-progress) step.
-  // If all done, returns 4.
-  if (stageIndex >= 4) return 4
-  if (stageIndex === 0) return 1 // Default to step 1 if unknown
-  return stageIndex
+function getCurrentCashStep(stageIndex: number, extras: StepExtras): number {
+  for (const step of CASH_WORKFLOW_STEPS) {
+    if (!step.isDone(stageIndex, extras)) return step.number
+  }
+
+  return CASH_WORKFLOW_STEPS.length
 }
 
 // ─── Colour helpers ──────────────────────────────────────────────────────────
@@ -117,6 +124,7 @@ const HOLD_COLORS = {
 
 export interface CashStageProgressProps {
   currentStage: CaseStage
+  hasOpdScheduled?: boolean
   className?: string
 }
 
@@ -124,10 +132,12 @@ export interface CashStageProgressProps {
 
 export function CashStageProgress({
   currentStage,
+  hasOpdScheduled = false,
   className,
 }: CashStageProgressProps) {
   const stageIndex = getCashStageIndex(currentStage)
-  const currentStepNumber = getCurrentCashStep(stageIndex)
+  const extras: StepExtras = { hasOpdScheduled }
+  const currentStepNumber = getCurrentCashStep(stageIndex, extras)
   const isOnHold = currentStage === CaseStage.CASH_ON_HOLD
 
   return (
@@ -138,17 +148,19 @@ export function CashStageProgress({
         <div className="absolute top-4 left-4 right-4 h-0.5 bg-gray-200 dark:bg-gray-700 z-0" />
 
         {CASH_WORKFLOW_STEPS.map((step, idx) => {
-          const done = step.isDone(stageIndex, {})
+          const done = step.isDone(stageIndex, extras)
           const isCurrent = step.number === currentStepNumber
           
           // Determine colors
           let colors = step.owner === 'BD' ? BD_COLORS : INS_COLORS
-          if (isCurrent && isOnHold && step.number === 2) {
+          if (isCurrent && isOnHold && step.number === 3) {
              colors = HOLD_COLORS
           }
 
           const isLast = idx === CASH_WORKFLOW_STEPS.length - 1
-          const nextDone = idx < CASH_WORKFLOW_STEPS.length - 1 && CASH_WORKFLOW_STEPS[idx + 1].isDone(stageIndex, {})
+          const nextDone =
+            idx < CASH_WORKFLOW_STEPS.length - 1 &&
+            CASH_WORKFLOW_STEPS[idx + 1].isDone(stageIndex, extras)
 
           return (
             <div key={step.number} className="relative flex flex-col items-center flex-1 z-10">
@@ -208,13 +220,13 @@ export function CashStageProgress({
       </div>
 
       {/* Current step label */}
-      <div className="mt-3 flex items-center justify-center gap-2">
+          <div className="mt-3 flex items-center justify-center gap-2">
         {(() => {
           const step = CASH_WORKFLOW_STEPS[currentStepNumber - 1]
           if (!step) return null
           
           let colors = step.owner === 'BD' ? BD_COLORS : INS_COLORS
-          if (isOnHold && currentStepNumber === 2) {
+          if (isOnHold && currentStepNumber === 3) {
              colors = HOLD_COLORS
           }
 
