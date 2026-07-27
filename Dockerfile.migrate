@@ -5,11 +5,12 @@ FROM node:20-alpine
 RUN apk add --no-cache openssl
 
 WORKDIR /app
-COPY package.json ./
 COPY prisma.config.ts ./
 COPY prisma ./prisma/
 
-# Install only Prisma (enough for migrate deploy)
-RUN npm install prisma --no-save
+# Prisma CLI + deps required by prisma.config.ts (dotenv, prisma/config).
+# Do not copy the app package.json — npm would resolve the full React tree.
+RUN npm install -g prisma@7.5.0 \
+  && npm install dotenv@16 prisma@7.5.0 --no-save --legacy-peer-deps
 
-CMD ["npx", "prisma", "migrate", "deploy"]
+CMD ["prisma", "migrate", "deploy"]

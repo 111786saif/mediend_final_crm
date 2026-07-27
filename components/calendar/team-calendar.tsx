@@ -362,7 +362,7 @@ export function TeamCalendar({
         .team-calendar .cal-ev-interview { background: #ede9fe; border-left-color: #7c3aed; color: #4c1d95; }
         .team-calendar .cal-ev-md-appt   { background: #fef3c7; border-left-color: #d97706; color: #78350f; }
         .team-calendar .cal-ev-general   { background: #e0e7ff; border-left-color: #4f46e5; color: #312e81; }
-        .team-calendar .cal-ev-ipd       { background: #dcfce7; border-left-color: #16a34a; color: #14532d; }
+        .team-calendar .cal-ev-ipd       { background: rgb(var(--sidebar)); border-left-color: rgb(var(--sidebar-primary)) ;color: rgb(var(--sidebar-foreground)) ;font-weight: 600;}
 
         /* ── Event category colors — dark mode ──────────────────────────
            Translucent backgrounds over the dark card + brighter text keep
@@ -381,7 +381,7 @@ export function TeamCalendar({
         .tc-att-pill {
           position: absolute;
           top: 2px;
-          right: 2px;
+          left: 4px;
           font-size: 9px;
           font-weight: 600;
           padding: 1px 5px;
@@ -395,6 +395,13 @@ export function TeamCalendar({
         .dark .tc-att-pill.tc-att-in    { background: rgb(16 185 129 / 0.22); color: #86efac; }
         .dark .tc-att-pill.tc-att-out   { background: rgb(var(--muted-foreground) / 0.22); color: rgb(var(--muted-foreground)); }
         .dark .tc-att-pill.tc-att-leave { background: rgb(217 119 6 / 0.22); color: #fde68a; }
+
+
+        .team-calendar .fc .fc-daygrid-day-top {
+  flex-direction: row;
+  justify-content: flex-end;
+}
+        
 
         /* ── Custom IPD tooltip ──────────────────────────────────────────── */
         .cal-tooltip {

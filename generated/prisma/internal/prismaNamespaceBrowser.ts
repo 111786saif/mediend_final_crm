@@ -128,6 +128,7 @@ export const ModelName = {
   CrmCampaign: 'CrmCampaign',
   CrmCampaignTeamLeadAssignment: 'CrmCampaignTeamLeadAssignment',
   CrmActivityLog: 'CrmActivityLog',
+  BulkLeadReassignmentRun: 'BulkLeadReassignmentRun',
   Resource: 'Resource',
   PermissionAssignment: 'PermissionAssignment',
   PermissionAuditLog: 'PermissionAuditLog',
@@ -352,6 +353,7 @@ export const LeadScalarFieldEnum = {
   profession: 'profession',
   qr: 'qr',
   removeRemarks: 'removeRemarks',
+  remarksClearedAt: 'remarksClearedAt',
   adId: 'adId',
   campaignId: 'campaignId',
   formId: 'formId',
@@ -1739,6 +1741,35 @@ export const CrmActivityLogScalarFieldEnum = {
 } as const
 
 export type CrmActivityLogScalarFieldEnum = (typeof CrmActivityLogScalarFieldEnum)[keyof typeof CrmActivityLogScalarFieldEnum]
+
+
+export const BulkLeadReassignmentRunScalarFieldEnum = {
+  id: 'id',
+  actorUserId: 'actorUserId',
+  leadIds: 'leadIds',
+  bdUserIds: 'bdUserIds',
+  pauseSeconds: 'pauseSeconds',
+  subStatus: 'subStatus',
+  removePreviousRemarks: 'removePreviousRemarks',
+  status: 'status',
+  processedCount: 'processedCount',
+  currentLeadIndex: 'currentLeadIndex',
+  currentBdIndex: 'currentBdIndex',
+  currentCycleNumber: 'currentCycleNumber',
+  totalLeads: 'totalLeads',
+  totalBds: 'totalBds',
+  bullJobId: 'bullJobId',
+  nextRunAt: 'nextRunAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  failedAt: 'failedAt',
+  errorMessage: 'errorMessage',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BulkLeadReassignmentRunScalarFieldEnum = (typeof BulkLeadReassignmentRunScalarFieldEnum)[keyof typeof BulkLeadReassignmentRunScalarFieldEnum]
 
 
 export const ResourceScalarFieldEnum = {

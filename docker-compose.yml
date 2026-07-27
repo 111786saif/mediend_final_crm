@@ -219,6 +219,23 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/reset-password.js"]
 
+  # One-off: reset ALL users to the same password (default 12345678).
+  # Usage: docker compose --profile tools run --rm reset-all-passwords
+  #    or: docker compose --profile tools run --rm reset-all-passwords MyTempPass123
+  reset-all-passwords:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/reset-all-passwords.js"]
+
   # One-off: seed holidays from app/holidays.json
   # Usage: docker compose --profile tools run --rm seed-holidays
   seed-holidays:
