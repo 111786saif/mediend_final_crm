@@ -154,7 +154,8 @@ export type PipelineStage = (typeof PipelineStage)[keyof typeof PipelineStage]
 export const TargetType = {
   BD: 'BD',
   TEAM: 'TEAM',
-  DEPARTMENT_HEAD: 'DEPARTMENT_HEAD'
+  DEPARTMENT_HEAD: 'DEPARTMENT_HEAD',
+  CATEGORY: 'CATEGORY'
 } as const
 
 export type TargetType = (typeof TargetType)[keyof typeof TargetType]

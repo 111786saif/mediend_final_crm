@@ -299,6 +299,7 @@ export type UserWhereInput = {
   admissionsInitiated?: Prisma.AdmissionRecordListRelationFilter
   caseStageChanges?: Prisma.CaseStageHistoryListRelationFilter
   workflowResetsPerformed?: Prisma.WorkflowResetLogListRelationFilter
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunListRelationFilter
   caseChatMessagesSent?: Prisma.CaseChatMessageListRelationFilter
   chatReadReceipts?: Prisma.ChatReadReceiptListRelationFilter
   tasksAssigned?: Prisma.TaskListRelationFilter
@@ -433,6 +434,7 @@ export type UserOrderByWithRelationInput = {
   admissionsInitiated?: Prisma.AdmissionRecordOrderByRelationAggregateInput
   caseStageChanges?: Prisma.CaseStageHistoryOrderByRelationAggregateInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogOrderByRelationAggregateInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunOrderByRelationAggregateInput
   caseChatMessagesSent?: Prisma.CaseChatMessageOrderByRelationAggregateInput
   chatReadReceipts?: Prisma.ChatReadReceiptOrderByRelationAggregateInput
   tasksAssigned?: Prisma.TaskOrderByRelationAggregateInput
@@ -570,6 +572,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   admissionsInitiated?: Prisma.AdmissionRecordListRelationFilter
   caseStageChanges?: Prisma.CaseStageHistoryListRelationFilter
   workflowResetsPerformed?: Prisma.WorkflowResetLogListRelationFilter
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunListRelationFilter
   caseChatMessagesSent?: Prisma.CaseChatMessageListRelationFilter
   chatReadReceipts?: Prisma.ChatReadReceiptListRelationFilter
   tasksAssigned?: Prisma.TaskListRelationFilter
@@ -746,6 +749,7 @@ export type UserCreateInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -880,6 +884,7 @@ export type UserUncheckedCreateInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -1014,6 +1019,7 @@ export type UserUpdateInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -1148,6 +1154,7 @@ export type UserUncheckedUpdateInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -2209,6 +2216,20 @@ export type UserUpdateOneWithoutCrmActivityLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCrmActivityLogsInput, Prisma.UserUpdateWithoutCrmActivityLogsInput>, Prisma.UserUncheckedUpdateWithoutCrmActivityLogsInput>
 }
 
+export type UserCreateNestedOneWithoutBulkLeadReassignmentRunsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBulkLeadReassignmentRunsInput, Prisma.UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBulkLeadReassignmentRunsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBulkLeadReassignmentRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBulkLeadReassignmentRunsInput, Prisma.UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBulkLeadReassignmentRunsInput
+  upsert?: Prisma.UserUpsertWithoutBulkLeadReassignmentRunsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBulkLeadReassignmentRunsInput, Prisma.UserUpdateWithoutBulkLeadReassignmentRunsInput>, Prisma.UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput>
+}
+
 export type UserCreateNestedOneWithoutPermissionSubjectsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutPermissionSubjectsInput, Prisma.UserUncheckedCreateWithoutPermissionSubjectsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutPermissionSubjectsInput
@@ -3118,6 +3139,7 @@ export type UserCreateWithoutStatusesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -3251,6 +3273,7 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -3400,6 +3423,7 @@ export type UserUpdateWithoutStatusesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -3533,6 +3557,7 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -3665,6 +3690,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -3798,6 +3824,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -3936,6 +3963,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -4069,6 +4097,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -4207,6 +4236,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -4340,6 +4370,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -4489,6 +4520,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -4622,6 +4654,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -4766,6 +4799,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -4899,6 +4933,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -5043,6 +5078,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -5176,6 +5212,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -5310,6 +5347,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -5443,6 +5481,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -5592,6 +5631,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -5725,6 +5765,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -5858,6 +5899,7 @@ export type UserCreateWithoutLeadRemarkEntriesAuthoredInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -5991,6 +6033,7 @@ export type UserUncheckedCreateWithoutLeadRemarkEntriesAuthoredInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -6140,6 +6183,7 @@ export type UserUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -6273,6 +6317,7 @@ export type UserUncheckedUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -6406,6 +6451,7 @@ export type UserCreateWithoutLeadQrCallAuditLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -6539,6 +6585,7 @@ export type UserUncheckedCreateWithoutLeadQrCallAuditLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -6688,6 +6735,7 @@ export type UserUpdateWithoutLeadQrCallAuditLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -6821,6 +6869,7 @@ export type UserUncheckedUpdateWithoutLeadQrCallAuditLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -6953,6 +7002,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -7086,6 +7136,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -7235,6 +7286,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -7368,6 +7420,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -7501,6 +7554,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -7634,6 +7688,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -7783,6 +7838,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -7916,6 +7972,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -8050,6 +8107,7 @@ export type UserCreateWithoutCreatedTierDefinitionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -8183,6 +8241,7 @@ export type UserUncheckedCreateWithoutCreatedTierDefinitionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -8332,6 +8391,7 @@ export type UserUpdateWithoutCreatedTierDefinitionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -8465,6 +8525,7 @@ export type UserUncheckedUpdateWithoutCreatedTierDefinitionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -8597,6 +8658,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -8730,6 +8792,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -8879,6 +8942,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -9012,6 +9076,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -9145,6 +9210,7 @@ export type UserCreateWithoutPlRecordsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -9278,6 +9344,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -9427,6 +9494,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -9560,6 +9628,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -9694,6 +9763,7 @@ export type UserCreateWithoutInvoiceRequestsSubmittedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -9827,6 +9897,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsSubmittedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -9965,6 +10036,7 @@ export type UserCreateWithoutInvoiceRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -10098,6 +10170,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -10247,6 +10320,7 @@ export type UserUpdateWithoutInvoiceRequestsSubmittedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -10380,6 +10454,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsSubmittedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -10524,6 +10599,7 @@ export type UserUpdateWithoutInvoiceRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -10657,6 +10733,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -10790,6 +10867,7 @@ export type UserCreateWithoutInvoiceRequestActivitiesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -10923,6 +11001,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestActivitiesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -11072,6 +11151,7 @@ export type UserUpdateWithoutInvoiceRequestActivitiesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -11205,6 +11285,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestActivitiesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -11338,6 +11419,7 @@ export type UserCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -11471,6 +11553,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -11609,6 +11692,7 @@ export type UserCreateWithoutDoctorPayoffRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -11742,6 +11826,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -11891,6 +11976,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -12024,6 +12110,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -12168,6 +12255,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -12301,6 +12389,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -12434,6 +12523,7 @@ export type UserCreateWithoutDoctorPayoffRequestActivitiesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -12567,6 +12657,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestActivitiesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -12716,6 +12807,7 @@ export type UserUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -12849,6 +12941,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -12981,6 +13074,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -13114,6 +13208,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -13263,6 +13358,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -13396,6 +13492,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -13529,6 +13626,7 @@ export type UserCreateWithoutEmployeeInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -13662,6 +13760,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -13801,6 +13900,7 @@ export type UserCreateWithoutOnboardingApprovalsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -13934,6 +14034,7 @@ export type UserUncheckedCreateWithoutOnboardingApprovalsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -14072,6 +14173,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -14205,6 +14307,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -14353,6 +14456,7 @@ export type UserUpdateWithoutEmployeeInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -14486,6 +14590,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -14631,6 +14736,7 @@ export type UserUpdateWithoutOnboardingApprovalsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -14764,6 +14870,7 @@ export type UserUncheckedUpdateWithoutOnboardingApprovalsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -14908,6 +15015,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -15041,6 +15149,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -15173,6 +15282,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -15306,6 +15416,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -15455,6 +15566,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -15588,6 +15700,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -15721,6 +15834,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -15854,6 +15968,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -15992,6 +16107,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -16125,6 +16241,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -16274,6 +16391,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -16407,6 +16525,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -16551,6 +16670,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -16684,6 +16804,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -16818,6 +16939,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -16951,6 +17073,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -17100,6 +17223,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -17233,6 +17357,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -17366,6 +17491,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -17499,6 +17625,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -17648,6 +17775,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -17781,6 +17909,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -17913,6 +18042,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -18046,6 +18176,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -18184,6 +18315,7 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -18317,6 +18449,7 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -18455,6 +18588,7 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -18588,6 +18722,7 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -18726,6 +18861,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -18859,6 +18995,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -18997,6 +19134,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -19130,6 +19268,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -19268,6 +19407,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -19401,6 +19541,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -19539,6 +19680,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -19672,6 +19814,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -19821,6 +19964,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -19954,6 +20098,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -20098,6 +20243,7 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -20231,6 +20377,7 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -20375,6 +20522,7 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -20508,6 +20656,7 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -20652,6 +20801,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -20785,6 +20935,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -20929,6 +21080,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -21062,6 +21214,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -21206,6 +21359,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -21339,6 +21493,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -21483,6 +21638,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -21616,6 +21772,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -21749,6 +21906,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -21882,6 +22040,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -22031,6 +22190,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -22164,6 +22324,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -22297,6 +22458,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -22430,6 +22592,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -22579,6 +22742,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -22712,6 +22876,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -22845,6 +23010,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -22978,6 +23144,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -23127,6 +23294,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -23260,6 +23428,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -23393,6 +23562,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -23526,6 +23696,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -23675,6 +23846,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -23808,6 +23980,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -23941,6 +24114,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -24074,6 +24248,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -24212,6 +24387,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -24345,6 +24521,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -24494,6 +24671,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -24627,6 +24805,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -24771,6 +24950,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -24904,6 +25084,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -25037,6 +25218,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -25170,6 +25352,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -25319,6 +25502,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -25452,6 +25636,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -25585,6 +25770,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -25718,6 +25904,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -25856,6 +26043,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -25989,6 +26177,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -26127,6 +26316,7 @@ export type UserCreateWithoutPreAuthHeldInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -26260,6 +26450,7 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -26409,6 +26600,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -26542,6 +26734,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -26686,6 +26879,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -26819,6 +27013,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -26963,6 +27158,7 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -27096,6 +27292,7 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -27229,6 +27426,7 @@ export type UserCreateWithoutNotificationsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -27362,6 +27560,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -27511,6 +27710,7 @@ export type UserUpdateWithoutNotificationsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -27644,6 +27844,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -27778,6 +27979,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -27911,6 +28113,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -28060,6 +28263,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -28193,6 +28397,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -28326,6 +28531,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -28459,6 +28665,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -28608,6 +28815,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -28741,6 +28949,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -28874,6 +29083,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -29007,6 +29217,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -29145,6 +29356,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -29278,6 +29490,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -29416,6 +29629,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -29549,6 +29763,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -29698,6 +29913,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -29831,6 +30047,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -29975,6 +30192,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -30108,6 +30326,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -30252,6 +30471,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -30385,6 +30605,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -30518,6 +30739,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -30651,6 +30873,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -30789,6 +31012,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -30922,6 +31146,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -31071,6 +31296,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -31204,6 +31430,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -31348,6 +31575,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -31481,6 +31709,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -31614,6 +31843,7 @@ export type UserCreateWithoutCrmPermissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -31747,6 +31977,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -31885,6 +32116,7 @@ export type UserCreateWithoutCrmPermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -32018,6 +32250,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -32167,6 +32400,7 @@ export type UserUpdateWithoutCrmPermissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -32300,6 +32534,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -32444,6 +32679,7 @@ export type UserUpdateWithoutCrmPermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -32577,6 +32813,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -32710,6 +32947,7 @@ export type UserCreateWithoutCrmAssignmentRulesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -32843,6 +33081,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -32981,6 +33220,7 @@ export type UserCreateWithoutCrmAssignmentRulesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -33114,6 +33354,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -33263,6 +33504,7 @@ export type UserUpdateWithoutCrmAssignmentRulesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -33396,6 +33638,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -33540,6 +33783,7 @@ export type UserUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -33673,6 +33917,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -33806,6 +34051,7 @@ export type UserCreateWithoutCampaignTeamLeadAssignmentsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -33939,6 +34185,7 @@ export type UserUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -34088,6 +34335,7 @@ export type UserUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -34221,6 +34469,7 @@ export type UserUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -34354,6 +34603,7 @@ export type UserCreateWithoutCrmActivityLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -34487,6 +34737,7 @@ export type UserUncheckedCreateWithoutCrmActivityLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -34636,6 +34887,7 @@ export type UserUpdateWithoutCrmActivityLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -34769,6 +35021,7 @@ export type UserUncheckedUpdateWithoutCrmActivityLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -34799,6 +35052,558 @@ export type UserUncheckedUpdateWithoutCrmActivityLogsInput = {
   crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
   crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
   crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBulkLeadReassignmentRunsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBulkLeadReassignmentRunsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBulkLeadReassignmentRunsInput, Prisma.UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput>
+}
+
+export type UserUpsertWithoutBulkLeadReassignmentRunsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBulkLeadReassignmentRunsInput, Prisma.UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBulkLeadReassignmentRunsInput, Prisma.UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBulkLeadReassignmentRunsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBulkLeadReassignmentRunsInput, Prisma.UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput>
+}
+
+export type UserUpdateWithoutBulkLeadReassignmentRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
@@ -34902,6 +35707,7 @@ export type UserCreateWithoutPermissionSubjectsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -35035,6 +35841,7 @@ export type UserUncheckedCreateWithoutPermissionSubjectsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -35173,6 +35980,7 @@ export type UserCreateWithoutPermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -35306,6 +36114,7 @@ export type UserUncheckedCreateWithoutPermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -35455,6 +36264,7 @@ export type UserUpdateWithoutPermissionSubjectsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -35588,6 +36398,7 @@ export type UserUncheckedUpdateWithoutPermissionSubjectsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -35732,6 +36543,7 @@ export type UserUpdateWithoutPermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -35865,6 +36677,7 @@ export type UserUncheckedUpdateWithoutPermissionsGrantedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -35998,6 +36811,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -36131,6 +36945,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -36280,6 +37095,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -36413,6 +37229,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -36546,6 +37363,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -36679,6 +37497,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -36828,6 +37647,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -36961,6 +37781,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -37093,6 +37914,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -37226,6 +38048,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -37364,6 +38187,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -37497,6 +38321,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -37646,6 +38471,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -37779,6 +38605,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -37923,6 +38750,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -38056,6 +38884,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -38189,6 +39018,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -38322,6 +39152,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -38471,6 +39302,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -38604,6 +39436,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -38737,6 +39570,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -38870,6 +39704,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -39019,6 +39854,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -39152,6 +39988,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -39285,6 +40122,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -39418,6 +40256,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -39567,6 +40406,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -39700,6 +40540,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -39833,6 +40674,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -39966,6 +40808,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -40115,6 +40958,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -40248,6 +41092,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -40381,6 +41226,7 @@ export type UserCreateWithoutWorkflowResetsPerformedInput = {
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -40514,6 +41360,7 @@ export type UserUncheckedCreateWithoutWorkflowResetsPerformedInput = {
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -40663,6 +41510,7 @@ export type UserUpdateWithoutWorkflowResetsPerformedInput = {
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -40796,6 +41644,7 @@ export type UserUncheckedUpdateWithoutWorkflowResetsPerformedInput = {
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -40930,6 +41779,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -41063,6 +41913,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -41212,6 +42063,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -41345,6 +42197,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -41478,6 +42331,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -41611,6 +42465,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -41760,6 +42615,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -41893,6 +42749,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -42025,6 +42882,7 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -42158,6 +43016,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -42296,6 +43155,7 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -42429,6 +43289,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -42567,6 +43428,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -42700,6 +43562,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -42849,6 +43712,7 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -42982,6 +43846,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -43126,6 +43991,7 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -43259,6 +44125,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -43403,6 +44270,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -43536,6 +44404,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -43669,6 +44538,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -43802,6 +44672,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -43951,6 +44822,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -44084,6 +44956,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -44218,6 +45091,7 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -44351,6 +45225,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -44500,6 +45375,7 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -44633,6 +45509,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -44765,6 +45642,7 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -44898,6 +45776,7 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -45047,6 +45926,7 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -45180,6 +46060,7 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -45314,6 +46195,7 @@ export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -45447,6 +46329,7 @@ export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -45596,6 +46479,7 @@ export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -45729,6 +46613,7 @@ export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -45862,6 +46747,7 @@ export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -45995,6 +46881,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -46133,6 +47020,7 @@ export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -46266,6 +47154,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -46415,6 +47304,7 @@ export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -46548,6 +47438,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -46692,6 +47583,7 @@ export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -46825,6 +47717,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -46958,6 +47851,7 @@ export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -47091,6 +47985,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -47229,6 +48124,7 @@ export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -47362,6 +48258,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -47511,6 +48408,7 @@ export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -47644,6 +48542,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -47788,6 +48687,7 @@ export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -47921,6 +48821,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -48054,6 +48955,7 @@ export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -48187,6 +49089,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -48325,6 +49228,7 @@ export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -48458,6 +49362,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -48607,6 +49512,7 @@ export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -48740,6 +49646,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -48884,6 +49791,7 @@ export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -49017,6 +49925,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -49150,6 +50059,7 @@ export type UserCreateWithoutSeatingMiscCostHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -49283,6 +50193,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -49432,6 +50343,7 @@ export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -49565,6 +50477,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -49698,6 +50611,7 @@ export type UserCreateWithoutSalesTeamBulkCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -49831,6 +50745,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -49969,6 +50884,7 @@ export type UserCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -50102,6 +51018,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -50251,6 +51168,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -50384,6 +51302,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -50528,6 +51447,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -50661,6 +51581,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -50794,6 +51715,7 @@ export type UserCreateWithoutSalesTeamBulkCostHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -50927,6 +51849,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -51076,6 +51999,7 @@ export type UserUpdateWithoutSalesTeamBulkCostHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -51209,6 +52133,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -51342,6 +52267,7 @@ export type UserCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -51475,6 +52401,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -51624,6 +52551,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -51757,6 +52685,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -51890,6 +52819,7 @@ export type UserCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -52023,6 +52953,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -52172,6 +53103,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -52305,6 +53237,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -52438,6 +53371,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
@@ -52571,6 +53505,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
@@ -52709,6 +53644,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -52842,6 +53778,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -52980,6 +53917,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -53113,6 +54051,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -53262,6 +54201,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
@@ -53395,6 +54335,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -53539,6 +54480,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -53672,6 +54614,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -53816,6 +54759,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -53949,6 +54893,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -54082,6 +55027,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -54215,6 +55161,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -54364,6 +55311,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -54497,6 +55445,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -54630,6 +55579,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -54763,6 +55713,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -54912,6 +55863,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -55045,6 +55997,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -55178,6 +56131,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -55311,6 +56265,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -55449,6 +56404,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -55582,6 +56538,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -55731,6 +56688,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -55864,6 +56822,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -56008,6 +56967,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -56141,6 +57101,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -56274,6 +57235,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -56407,6 +57369,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -56556,6 +57519,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -56689,6 +57653,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -56822,6 +57787,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -56955,6 +57921,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -57104,6 +58071,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -57237,6 +58205,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -57370,6 +58339,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -57503,6 +58473,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -57652,6 +58623,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -57785,6 +58757,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -57918,6 +58891,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -58051,6 +59025,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -58189,6 +59164,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -58322,6 +59298,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -58471,6 +59448,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -58604,6 +59582,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -58748,6 +59727,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -58881,6 +59861,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -59014,6 +59995,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -59147,6 +60129,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -59296,6 +60279,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -59429,6 +60413,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -59562,6 +60547,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -59695,6 +60681,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -59844,6 +60831,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -59977,6 +60965,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -60110,6 +61099,7 @@ export type UserCreateWithoutWorkLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -60243,6 +61233,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -60392,6 +61383,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -60525,6 +61517,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -60658,6 +61651,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -60791,6 +61785,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -60940,6 +61935,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -61073,6 +62069,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -61205,6 +62202,7 @@ export type UserCreateWithoutDoctorLeaveRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -61338,6 +62336,7 @@ export type UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -61487,6 +62486,7 @@ export type UserUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -61620,6 +62620,7 @@ export type UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -61753,6 +62754,7 @@ export type UserCreateWithoutDoctorCabRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -61886,6 +62888,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -62024,6 +63027,7 @@ export type UserCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -62157,6 +63161,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -62306,6 +63311,7 @@ export type UserUpdateWithoutDoctorCabRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -62439,6 +63445,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -62583,6 +63590,7 @@ export type UserUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -62716,6 +63724,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -62850,6 +63859,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -62983,6 +63993,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -63132,6 +64143,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -63265,6 +64277,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -63398,6 +64411,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -63531,6 +64545,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -63680,6 +64695,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -63813,6 +64829,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -63946,6 +64963,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -64079,6 +65097,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -64228,6 +65247,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -64361,6 +65381,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -64494,6 +65515,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -64627,6 +65649,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -64776,6 +65799,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -64909,6 +65933,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -65042,6 +66067,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -65175,6 +66201,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -65324,6 +66351,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -65457,6 +66485,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -65590,6 +66619,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -65723,6 +66753,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -65872,6 +66903,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -66005,6 +67037,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -66138,6 +67171,7 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
@@ -66271,6 +67305,7 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
   tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
@@ -66420,6 +67455,7 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
@@ -66553,6 +67589,7 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
   caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
   caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
   chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
   tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
@@ -66675,6 +67712,7 @@ export type UserCountOutputType = {
   admissionsInitiated: number
   caseStageChanges: number
   workflowResetsPerformed: number
+  bulkLeadReassignmentRuns: number
   caseChatMessagesSent: number
   chatReadReceipts: number
   tasksAssigned: number
@@ -66793,6 +67831,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   admissionsInitiated?: boolean | UserCountOutputTypeCountAdmissionsInitiatedArgs
   caseStageChanges?: boolean | UserCountOutputTypeCountCaseStageChangesArgs
   workflowResetsPerformed?: boolean | UserCountOutputTypeCountWorkflowResetsPerformedArgs
+  bulkLeadReassignmentRuns?: boolean | UserCountOutputTypeCountBulkLeadReassignmentRunsArgs
   caseChatMessagesSent?: boolean | UserCountOutputTypeCountCaseChatMessagesSentArgs
   chatReadReceipts?: boolean | UserCountOutputTypeCountChatReadReceiptsArgs
   tasksAssigned?: boolean | UserCountOutputTypeCountTasksAssignedArgs
@@ -67182,6 +68221,13 @@ export type UserCountOutputTypeCountCaseStageChangesArgs<ExtArgs extends runtime
  */
 export type UserCountOutputTypeCountWorkflowResetsPerformedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WorkflowResetLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBulkLeadReassignmentRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BulkLeadReassignmentRunWhereInput
 }
 
 /**
@@ -67743,6 +68789,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   admissionsInitiated?: boolean | Prisma.User$admissionsInitiatedArgs<ExtArgs>
   caseStageChanges?: boolean | Prisma.User$caseStageChangesArgs<ExtArgs>
   workflowResetsPerformed?: boolean | Prisma.User$workflowResetsPerformedArgs<ExtArgs>
+  bulkLeadReassignmentRuns?: boolean | Prisma.User$bulkLeadReassignmentRunsArgs<ExtArgs>
   caseChatMessagesSent?: boolean | Prisma.User$caseChatMessagesSentArgs<ExtArgs>
   chatReadReceipts?: boolean | Prisma.User$chatReadReceiptsArgs<ExtArgs>
   tasksAssigned?: boolean | Prisma.User$tasksAssignedArgs<ExtArgs>
@@ -67918,6 +68965,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   admissionsInitiated?: boolean | Prisma.User$admissionsInitiatedArgs<ExtArgs>
   caseStageChanges?: boolean | Prisma.User$caseStageChangesArgs<ExtArgs>
   workflowResetsPerformed?: boolean | Prisma.User$workflowResetsPerformedArgs<ExtArgs>
+  bulkLeadReassignmentRuns?: boolean | Prisma.User$bulkLeadReassignmentRunsArgs<ExtArgs>
   caseChatMessagesSent?: boolean | Prisma.User$caseChatMessagesSentArgs<ExtArgs>
   chatReadReceipts?: boolean | Prisma.User$chatReadReceiptsArgs<ExtArgs>
   tasksAssigned?: boolean | Prisma.User$tasksAssignedArgs<ExtArgs>
@@ -68042,6 +69090,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     admissionsInitiated: Prisma.$AdmissionRecordPayload<ExtArgs>[]
     caseStageChanges: Prisma.$CaseStageHistoryPayload<ExtArgs>[]
     workflowResetsPerformed: Prisma.$WorkflowResetLogPayload<ExtArgs>[]
+    bulkLeadReassignmentRuns: Prisma.$BulkLeadReassignmentRunPayload<ExtArgs>[]
     caseChatMessagesSent: Prisma.$CaseChatMessagePayload<ExtArgs>[]
     chatReadReceipts: Prisma.$ChatReadReceiptPayload<ExtArgs>[]
     tasksAssigned: Prisma.$TaskPayload<ExtArgs>[]
@@ -68569,6 +69618,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   admissionsInitiated<T extends Prisma.User$admissionsInitiatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$admissionsInitiatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdmissionRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   caseStageChanges<T extends Prisma.User$caseStageChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$caseStageChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CaseStageHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   workflowResetsPerformed<T extends Prisma.User$workflowResetsPerformedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$workflowResetsPerformedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkflowResetLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bulkLeadReassignmentRuns<T extends Prisma.User$bulkLeadReassignmentRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bulkLeadReassignmentRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BulkLeadReassignmentRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   caseChatMessagesSent<T extends Prisma.User$caseChatMessagesSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$caseChatMessagesSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CaseChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   chatReadReceipts<T extends Prisma.User$chatReadReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatReadReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatReadReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasksAssigned<T extends Prisma.User$tasksAssignedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -70149,6 +71199,30 @@ export type User$workflowResetsPerformedArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.WorkflowResetLogScalarFieldEnum | Prisma.WorkflowResetLogScalarFieldEnum[]
+}
+
+/**
+ * User.bulkLeadReassignmentRuns
+ */
+export type User$bulkLeadReassignmentRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BulkLeadReassignmentRun
+   */
+  select?: Prisma.BulkLeadReassignmentRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BulkLeadReassignmentRun
+   */
+  omit?: Prisma.BulkLeadReassignmentRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BulkLeadReassignmentRunInclude<ExtArgs> | null
+  where?: Prisma.BulkLeadReassignmentRunWhereInput
+  orderBy?: Prisma.BulkLeadReassignmentRunOrderByWithRelationInput | Prisma.BulkLeadReassignmentRunOrderByWithRelationInput[]
+  cursor?: Prisma.BulkLeadReassignmentRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BulkLeadReassignmentRunScalarFieldEnum | Prisma.BulkLeadReassignmentRunScalarFieldEnum[]
 }
 
 /**

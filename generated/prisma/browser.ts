@@ -403,6 +403,11 @@ export type CrmCampaignTeamLeadAssignment = Prisma.CrmCampaignTeamLeadAssignment
  */
 export type CrmActivityLog = Prisma.CrmActivityLogModel
 /**
+ * Model BulkLeadReassignmentRun
+ * 
+ */
+export type BulkLeadReassignmentRun = Prisma.BulkLeadReassignmentRunModel
+/**
  * Model Resource
  * 
  */
