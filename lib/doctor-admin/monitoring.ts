@@ -1,4 +1,5 @@
 import { CaseStage, IpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
+import { hasLeadOpdDone } from '@/lib/lead-opd-workflow'
 import { prisma } from '@/lib/prisma'
 
 const monitoringLeadSelect = {
@@ -256,6 +257,7 @@ function getAppointmentDate(lead: MonitoringLead) {
 function getAppointmentStatusKey(lead: MonitoringLead) {
   if (isNoShowLead(lead)) return 'no_show'
   if (isCancelledLead(lead) || isLostLead(lead)) return 'cancelled'
+  if (hasLeadOpdDone(lead)) return 'done'
   if (isDischargedLead(lead)) return 'done'
   if (lead.admissionRecord?.ipdStatus === IpdStatus.IPD_DONE) return 'done'
   return 'scheduled'

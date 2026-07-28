@@ -6,6 +6,7 @@ const MASTER_TYPE_BY_SLUG: Record<string, CampaignMasterType> = {
   'lead-sources': 'leadSource',
   circles: 'circle',
   cities: 'city',
+  'sub-statuses': 'subStatus',
 }
 
 export default async function CrmMasterTypePage({

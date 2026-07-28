@@ -361,6 +361,8 @@ enum PLOutstandingStatus {
 
 enum CaseStage {
   NEW_LEAD
+  OPD_SCHEDULED
+  OPD_DONE
   KYP_BASIC_COMPLETE
   HOSPITALS_SUGGESTED
   PREAUTH_RAISED
@@ -371,6 +373,8 @@ enum CaseStage {
   OUTSTANDING
   // Cash Flow Stages
   CASH_IPD_PENDING
+  CASH_OPD_SCHEDULED
+  CASH_OPD_DONE
   CASH_IPD_SUBMITTED
   CASH_APPROVED
   CASH_ON_HOLD
@@ -773,6 +777,7 @@ model Lead {
   profession         String?
   qr                 String?
   removeRemarks      Boolean   @default(false)
+  isOldCrmLead       Boolean   @default(false)
   remarksClearedAt   DateTime?
   adId               String?
   campaignId         String?
@@ -2692,6 +2697,19 @@ model CrmCampaignCity {
   @@unique([circleId, name])
   @@index([name])
   @@index([circleId])
+  @@index([isActive])
+}
+
+model CrmSubStatusMaster {
+  id        String   @id @default(cuid())
+  key       Int      @unique
+  value     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([value])
   @@index([isActive])
 }
 

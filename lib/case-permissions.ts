@@ -1,5 +1,5 @@
 import { CaseStage, UserRole, FlowType } from '@/generated/prisma/enums'
-import { hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
+import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import { hasPermission } from '@/lib/rbac'
 import type { SessionUser } from '@/lib/auth'
 import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
@@ -315,10 +315,12 @@ export function canStartCashMode(user: User, lead: Lead): boolean {
   const isNotCash = lead.flowType !== FlowType.CASH
 
   // Allowed stages to switch to cash:
-  // NEW_LEAD, KYP_BASIC_COMPLETE, HOSPITALS_SUGGESTED, PREAUTH_RAISED, PREAUTH_COMPLETE
+  // NEW_LEAD, OPD_SCHEDULED, KYP_BASIC_COMPLETE, HOSPITALS_SUGGESTED, PREAUTH_RAISED, PREAUTH_COMPLETE
   // Basically before admission in insurance flow
   const allowedStages: CaseStage[] = [
     CaseStage.NEW_LEAD,
+    CaseStage.OPD_SCHEDULED,
+    CaseStage.OPD_DONE,
     CaseStage.KYP_BASIC_COMPLETE,
     CaseStage.HOSPITALS_SUGGESTED,
     CaseStage.PREAUTH_RAISED,
@@ -335,9 +337,30 @@ export function canRevertCashMode(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
   const isCash = lead.flowType === FlowType.CASH
-  const isPending = lead.caseStage === CaseStage.CASH_IPD_PENDING
+  const isPending =
+    lead.caseStage === CaseStage.CASH_IPD_PENDING ||
+    lead.caseStage === CaseStage.CASH_OPD_SCHEDULED ||
+    lead.caseStage === CaseStage.CASH_OPD_DONE
 
   return isBdTlAcmCmOrAdmin(user.role) && isCash && isPending
+}
+
+export function canMarkOpdDone(user: User, lead: Lead): boolean {
+  if (!user || !lead) return false
+  if (!isBdTlAcmCmOrAdmin(user.role)) return false
+  if (hasLeadOpdDone(lead)) return false
+
+  if (lead.flowType === FlowType.CASH) {
+    return (
+      lead.caseStage === CaseStage.CASH_OPD_SCHEDULED ||
+      (lead.caseStage === CaseStage.CASH_IPD_PENDING && hasLeadOpdScheduled(lead))
+    )
+  }
+
+  return (
+    lead.caseStage === CaseStage.OPD_SCHEDULED ||
+    (lead.caseStage === CaseStage.NEW_LEAD && hasLeadOpdScheduled(lead))
+  )
 }
 
 // BD / TL / ACM / CM can fill IPD Cash Form when pending or on hold
@@ -345,22 +368,26 @@ export function canFillIPDCashForm(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
   const isCash = lead.flowType === FlowType.CASH
-  const hasCashOpdScheduled = hasLeadOpdScheduled(lead)
   // Allow first fill while pending, and edits after submission/approval until
   // the case moves into the post-IPD/discharge stages.
   const allowedStages: CaseStage[] = [
     CaseStage.CASH_IPD_PENDING,
+    CaseStage.CASH_OPD_DONE,
+    CaseStage.CASH_OPD_SCHEDULED,
     CaseStage.CASH_IPD_SUBMITTED,
     CaseStage.CASH_ON_HOLD,
     CaseStage.CASH_APPROVED,
   ]
 
-  return (
-    isBdTlAcmCmOrAdmin(user.role) &&
-    isCash &&
-    allowedStages.includes(lead.caseStage) &&
-    (lead.caseStage !== CaseStage.CASH_IPD_PENDING || hasCashOpdScheduled)
-  )
+  if (!isBdTlAcmCmOrAdmin(user.role) || !isCash || !allowedStages.includes(lead.caseStage)) {
+    return false
+  }
+
+  if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
+    return hasLeadOpdDone(lead)
+  }
+
+  return lead.caseStage !== CaseStage.CASH_OPD_SCHEDULED || hasLeadOpdDone(lead)
 }
 
 // Insurance can review cash case when submitted

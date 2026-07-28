@@ -36,6 +36,9 @@ export type CreateBulkLeadReassignmentRunInput = {
   bdUserIds: string[]
   pauseSeconds: number
   removePreviousRemarks: boolean
+  leadStatus?: string
+  followUpDate?: string
+  modeOfPayment?: string
   subStatus?: number
 }
 

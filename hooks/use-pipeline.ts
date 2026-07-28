@@ -167,7 +167,10 @@ export function usePipelineUrlState() {
   return { state, setState, campaignSelection, setCampaignSelection }
 }
 
-export function usePipelinePage(enabled = true) {
+export function usePipelinePage(
+  options: { enabled?: boolean; filters?: string } = {}
+) {
+  const { enabled = true, filters = '' } = options
   const { state } = usePipelineUrlState()
 
   const queryString = useMemo(() => {
@@ -191,8 +194,9 @@ export function usePipelinePage(enabled = true) {
     p.set('groupBy', state.groupBy)
     p.set('sort', state.sort)
     p.set('dir', state.dir)
+    if (filters) p.set('filters', filters)
     return p.toString()
-  }, [state])
+  }, [filters, state])
 
   const query = useQuery({
     queryKey: ['pipeline', queryString],

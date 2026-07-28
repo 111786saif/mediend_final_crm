@@ -11,6 +11,7 @@ const employeeSelect = {
   userId: true,
   employeeCode: true,
   managerId: true,
+  status: true,
   departmentId: true,
   user: {
     select: {

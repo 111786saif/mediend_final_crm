@@ -37,6 +37,7 @@ import {
   canFillIPDCashForm,
   canGeneratePDF,
   canInitiate,
+  canMarkOpdDone,
   canMarkIPD,
   canMarkLost,
   canModifyHospitals,
@@ -51,7 +52,7 @@ import {
 } from '@/lib/case-permissions'
 import { getKYPStatusLabel } from '@/lib/kyp-status-labels'
 import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
-import { hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
+import { getNextStageAfterOpdDone, hasLeadOpdDone, hasLeadOpdScheduled, OPD_DONE_STATUS } from '@/lib/lead-opd-workflow'
 import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
@@ -127,6 +128,7 @@ interface Lead {
   status: string
   pipelineStage: string
   caseStage: CaseStage
+  isOldCrmLead?: boolean
   flowType?: FlowType | null
   collectedByMediend?: number | null
   collectedByHospital?: number | null
@@ -486,7 +488,9 @@ export default function PatientDetailsPage() {
     if (
       quickAction === 'ipd-schedule' &&
       lead.flowType !== FlowType.CASH &&
-      [CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED].includes(lead.caseStage)
+      ([CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED] as CaseStage[]).includes(
+        lead.caseStage as CaseStage
+      )
     ) {
       const timer = window.setTimeout(() => {
         setAdmitEditMode(lead.caseStage !== CaseStage.PREAUTH_COMPLETE)
@@ -499,7 +503,9 @@ export default function PatientDetailsPage() {
     if (
       quickAction === 'ipd-cash' &&
       lead.flowType === FlowType.CASH &&
-      [CaseStage.CASH_IPD_PENDING, CaseStage.CASH_IPD_SUBMITTED, CaseStage.CASH_ON_HOLD, CaseStage.CASH_APPROVED].includes(lead.caseStage)
+      ([CaseStage.CASH_OPD_DONE, CaseStage.CASH_IPD_SUBMITTED, CaseStage.CASH_ON_HOLD, CaseStage.CASH_APPROVED] as CaseStage[]).includes(
+        lead.caseStage as CaseStage
+      )
     ) {
       const timer = window.setTimeout(() => {
         setShowIPDCashModal(true)
@@ -557,6 +563,8 @@ export default function PatientDetailsPage() {
   const getStageBadgeColor = (stage: CaseStage) => {
     const colors: Record<CaseStage, string> = {
       [CaseStage.NEW_LEAD]: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-300',
+      [CaseStage.OPD_SCHEDULED]: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 border-cyan-300',
+      [CaseStage.OPD_DONE]: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300 border-teal-300',
       [CaseStage.KYP_BASIC_PENDING]: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300 border-amber-300',
       [CaseStage.KYP_BASIC_COMPLETE]: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300 border-emerald-300',
       [CaseStage.KYP_DETAILED_PENDING]: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300 border-amber-300',
@@ -574,6 +582,8 @@ export default function PatientDetailsPage() {
       [CaseStage.OUTSTANDING]: 'bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300 border-gray-300',
       // Cash Flow Stages
       [CaseStage.CASH_IPD_PENDING]: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300 border-amber-300',
+      [CaseStage.CASH_OPD_SCHEDULED]: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 border-cyan-300',
+      [CaseStage.CASH_OPD_DONE]: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300 border-teal-300',
       [CaseStage.CASH_IPD_SUBMITTED]: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-300',
       [CaseStage.CASH_APPROVED]: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 border-green-300',
       [CaseStage.CASH_ON_HOLD]: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 border-red-300',
@@ -747,11 +757,9 @@ export default function PatientDetailsPage() {
   const canStartCash = !readOnly && user && canStartCashMode(user as any, lead)
   const canRevertCash = !readOnly && user && canRevertCashMode(user as any, lead)
   const hasScheduledOpd = hasLeadOpdScheduled(lead)
-  const canFillIPDCash =
-    !readOnly &&
-    !!user &&
-    canFillIPDCashForm(user as any, lead) &&
-    (hasScheduledOpd || lead.caseStage !== CaseStage.CASH_IPD_PENDING)
+  const hasDoneOpd = hasLeadOpdDone(lead)
+  const canMarkOpd = !readOnly && !!user && canMarkOpdDone(user as any, lead)
+  const canFillIPDCash = !readOnly && !!user && canFillIPDCashForm(user as any, lead)
   const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
   const displayStatus = normalizeLeadStatus(lead.status)
   const canManageOpd =
@@ -759,14 +767,18 @@ export default function PatientDetailsPage() {
     (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') &&
     (
       lead.flowType === FlowType.CASH
-        ? [
+        ? ([
             CaseStage.CASH_IPD_PENDING,
+            CaseStage.CASH_OPD_SCHEDULED,
+            CaseStage.CASH_OPD_DONE,
             CaseStage.CASH_IPD_SUBMITTED,
             CaseStage.CASH_ON_HOLD,
             CaseStage.CASH_APPROVED,
-          ].includes(lead.caseStage)
-        : [
+          ] as CaseStage[]).includes(lead.caseStage as CaseStage)
+        : ([
             CaseStage.NEW_LEAD,
+            CaseStage.OPD_SCHEDULED,
+            CaseStage.OPD_DONE,
             CaseStage.KYP_BASIC_PENDING,
             CaseStage.KYP_BASIC_COMPLETE,
             CaseStage.HOSPITALS_SUGGESTED,
@@ -778,7 +790,7 @@ export default function PatientDetailsPage() {
             CaseStage.DISCHARGED,
             CaseStage.PL_PENDING,
             CaseStage.OUTSTANDING,
-          ].includes(lead.caseStage)
+          ] as CaseStage[]).includes(lead.caseStage as CaseStage)
     )
 
   // Collect all uploaded documents for grid (KYP + PreAuth)
@@ -924,6 +936,11 @@ export default function PatientDetailsPage() {
                 >
                   {lead.pipelineStage}
                 </Badge>
+                {lead.isOldCrmLead ? (
+                  <Badge className="border border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                    Old CRM Lead
+                  </Badge>
+                ) : null}
                 <Badge className={`border-2 ${getStageBadgeColor(lead.caseStage)}`}>
                   {lead.caseStage.replace(/_/g, ' ')}
                 </Badge>
@@ -1193,7 +1210,7 @@ export default function PatientDetailsPage() {
                   </Badge>
                 )}
                 {user &&
-                  canResetStepper(user, lead) &&
+                  canResetStepper(user as any) &&
                   lead.caseStage !== CaseStage.NEW_LEAD &&
                   !(
                     lead.flowType === FlowType.CASH &&
@@ -1217,11 +1234,13 @@ export default function PatientDetailsPage() {
               <CashStageProgress
                 currentStage={lead.caseStage}
                 hasOpdScheduled={hasScheduledOpd}
+                hasOpdDone={hasDoneOpd}
               />
             ) : (
               <StageProgress
                 currentStage={lead.caseStage}
                 hasOpdScheduled={hasScheduledOpd}
+                hasOpdDone={hasDoneOpd}
                 hasInitiateForm={!!lead.insuranceInitiateForm?.id}
                 hasIpdMark={!!lead.admissionRecord?.ipdStatus}
               />
@@ -1368,7 +1387,11 @@ export default function PatientDetailsPage() {
                       try {
                         await apiPatch(`/api/leads/${leadId}`, {
                           flowType: FlowType.CASH,
-                          caseStage: CaseStage.CASH_IPD_PENDING,
+                          caseStage: hasDoneOpd
+                            ? CaseStage.CASH_OPD_DONE
+                            : hasScheduledOpd
+                              ? CaseStage.CASH_OPD_SCHEDULED
+                              : CaseStage.CASH_IPD_PENDING,
                           stageChangeNote: 'Switched to Cash Mode'
                         })
                         toast.success('Switched to Cash Mode')
@@ -1398,7 +1421,13 @@ export default function PatientDetailsPage() {
                         // Or just set flowType to INSURANCE and let stage be what it was?
                         // Ideally we should track previous stage.
                         // For simplicity, let's set to KYP_BASIC_COMPLETE if kyp exists, else NEW_LEAD.
-                        const targetStage = lead.kypSubmission ? CaseStage.KYP_BASIC_COMPLETE : CaseStage.NEW_LEAD
+                        const targetStage = lead.kypSubmission
+                          ? CaseStage.KYP_BASIC_COMPLETE
+                          : hasDoneOpd
+                            ? CaseStage.OPD_DONE
+                            : hasScheduledOpd
+                              ? CaseStage.OPD_SCHEDULED
+                              : CaseStage.NEW_LEAD
                         await apiPatch(`/api/leads/${leadId}`, {
                           flowType: FlowType.INSURANCE,
                           caseStage: targetStage,
@@ -1452,8 +1481,39 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
-                {/* BD / TL Actions (Insurance Flow) — show when at Card Details step (NEW_LEAD or KYP_BASIC_PENDING) */}
-                {lead.flowType !== FlowType.CASH && hasScheduledOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && (lead.caseStage === CaseStage.NEW_LEAD || lead.caseStage === CaseStage.KYP_BASIC_PENDING) && (
+                {canMarkOpd && (
+                  <Button
+                    className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white border-0"
+                    onClick={async () => {
+                      const nextStage = getNextStageAfterOpdDone(lead)
+                      if (!nextStage) {
+                        toast.error('This case is not ready to mark OPD done')
+                        return
+                      }
+                      try {
+                        await apiPatch(`/api/leads/${leadId}`, {
+                          status: OPD_DONE_STATUS,
+                          caseStage: nextStage,
+                          stageChangeNote: 'OPD marked done',
+                          requireStatusChangeRemark: 'true',
+                          statusChangeRemark: 'OPD marked done',
+                        })
+                        toast.success('OPD marked done')
+                        queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+                        queryClient.invalidateQueries({ queryKey: ['leads'] })
+                        queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+                      } catch {
+                        toast.error('Failed to mark OPD done')
+                      }
+                    }}
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    Mark OPD Done
+                  </Button>
+                )}
+
+                {/* BD / TL Actions (Insurance Flow) — show when at Card Details step */}
+                {lead.flowType !== FlowType.CASH && hasDoneOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && ([CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage) && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
@@ -2032,7 +2092,7 @@ export default function PatientDetailsPage() {
         {/* Activity Timeline */}
         {stageHistory && <ActivityTimeline history={stageHistory} />}
 
-        {user && canResetStepper(user, lead) && (
+        {user && canResetStepper(user as any) && (
           <ResetStepperDialog
             leadId={leadId}
             open={showResetStepperDialog}

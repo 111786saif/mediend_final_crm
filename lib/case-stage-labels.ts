@@ -6,6 +6,8 @@ import { CaseStage } from '@/generated/prisma/enums'
  */
 export const CASE_STAGE_CONFIG: Record<CaseStage, { className: string; label: string }> = {
   [CaseStage.NEW_LEAD]: { className: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300', label: 'New Lead' },
+  [CaseStage.OPD_SCHEDULED]: { className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300', label: 'OPD Scheduled' },
+  [CaseStage.OPD_DONE]: { className: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300', label: 'OPD Done' },
   [CaseStage.KYP_BASIC_PENDING]: { className: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300', label: 'Card Details Pending' },
   [CaseStage.KYP_BASIC_COMPLETE]: { className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300', label: 'Card Details Added' },
   [CaseStage.KYP_DETAILED_PENDING]: { className: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300', label: 'Detailed Form Pending' },
@@ -22,6 +24,8 @@ export const CASE_STAGE_CONFIG: Record<CaseStage, { className: string; label: st
   [CaseStage.PL_PENDING]: { className: 'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300', label: 'PL Pending' },
   [CaseStage.OUTSTANDING]: { className: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300', label: 'Outstanding' },
   [CaseStage.CASH_IPD_PENDING]: { className: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300', label: 'Cash IPD Pending' },
+  [CaseStage.CASH_OPD_SCHEDULED]: { className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300', label: 'Cash OPD Scheduled' },
+  [CaseStage.CASH_OPD_DONE]: { className: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300', label: 'Cash OPD Done' },
   [CaseStage.CASH_IPD_SUBMITTED]: { className: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300', label: 'Cash IPD Submitted' },
   [CaseStage.CASH_APPROVED]: { className: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300', label: 'Cash Approved' },
   [CaseStage.CASH_ON_HOLD]: { className: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300', label: 'Cash On Hold' },

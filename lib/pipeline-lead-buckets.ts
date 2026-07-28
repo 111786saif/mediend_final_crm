@@ -1,5 +1,10 @@
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
-import { isOpdScheduledStatus, OPD_SCHEDULED_LABEL } from '@/lib/lead-opd-workflow'
+import {
+  isOpdDoneStatus,
+  isOpdScheduledStatus,
+  OPD_DONE_LABEL,
+  OPD_SCHEDULED_LABEL,
+} from '@/lib/lead-opd-workflow'
 
 export type PipelineStatusBucket =
   | 'all'
@@ -30,6 +35,8 @@ const STATUS_NORMALIZE: Record<string, string> = {
   'ipd schedule': 'IPD Schedule',
   opd_scheduled: OPD_SCHEDULED_LABEL,
   'opd scheduled': OPD_SCHEDULED_LABEL,
+  'opd done': OPD_DONE_LABEL,
+  opd_done: OPD_DONE_LABEL,
   'ipd done': 'IPD Done',
   closed: 'Closed',
   'call done': 'Call Done',
@@ -57,6 +64,7 @@ const STATUS_NORMALIZE: Record<string, string> = {
 export function normalizeLeadStatus(status: string | null | undefined): string {
   if (!status) return 'New'
   if (isOpdScheduledStatus(status)) return OPD_SCHEDULED_LABEL
+  if (isOpdDoneStatus(status)) return OPD_DONE_LABEL
   const mapped = mapStatusCode(status)
   const normalized = mapped.trim().toLowerCase()
   return STATUS_NORMALIZE[normalized] || mapped
@@ -87,6 +95,7 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
       'Out of station follow-up',
       'IPD Schedule',
       OPD_SCHEDULED_LABEL,
+      OPD_DONE_LABEL,
       'OPD Schedule',
     ].includes(s) ||
     lower.includes('follow') ||
@@ -102,7 +111,7 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
     return 'dnp'
   }
   if (
-    ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'OPD Done', 'Order Booked', 'Policy Booked', 'Policy Issued'].includes(s) ||
+    ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'Order Booked', 'Policy Booked', 'Policy Issued'].includes(s) ||
     lower.includes('closed') ||
     (lower.includes('done') && !lower.includes('ipd')) ||
     lower.includes('booked')

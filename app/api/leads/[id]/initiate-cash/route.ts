@@ -279,6 +279,7 @@ export async function PATCH(
 
     if (
       lead.caseStage !== CaseStage.CASH_IPD_PENDING &&
+      lead.caseStage !== CaseStage.CASH_OPD_SCHEDULED &&
       lead.caseStage !== CaseStage.CASH_ON_HOLD &&
       lead.caseStage !== CaseStage.CASH_IPD_SUBMITTED &&
       lead.caseStage !== CaseStage.CASH_APPROVED

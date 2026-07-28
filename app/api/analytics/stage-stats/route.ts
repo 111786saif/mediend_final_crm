@@ -153,6 +153,7 @@ export async function GET(request: NextRequest) {
           'IPD Schedule',
           'OPD Scheduled',
           'OPD Schedule',
+          'OPD Done',
         ].includes(status) ||
         statusLower.includes('follow') ||
         statusLower.includes('call back') ||
@@ -195,7 +196,7 @@ export async function GET(request: NextRequest) {
       }
       // Completed
       else if (
-        ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'OPD Done', 'Order Booked', 'Policy Booked', 'Policy Issued'].includes(status) ||
+        ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'Order Booked', 'Policy Booked', 'Policy Issued'].includes(status) ||
         statusLower.includes('closed') ||
         statusLower.includes('done') ||
         statusLower.includes('booked')
