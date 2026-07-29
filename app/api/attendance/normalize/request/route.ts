@@ -97,15 +97,19 @@ export async function POST(request: NextRequest) {
     })
 
     const empName = employee.user?.name ?? 'An employee'
-    await notifyNormalizationPendingReview({
-      subjectUserId: employee.userId,
-      message: `${empName} has requested attendance normalization for ${toCreate.length} day(s)`,
-      relatedEmployeeId: employee.id,
-    })
+    const routeToMd = await isUserInMDManagedCohort(employee.userId)
 
-    const pendingCopy = (await isUserInMDManagedCohort(employee.userId))
-      ? 'Pending MD approval.'
-      : 'Pending HR approval.'
+    // MD cohort: MD is the reviewer immediately (no manager gate).
+    // Non-MD: HR only acts after manager approval — notify then (manager-approve route).
+    if (routeToMd) {
+      await notifyNormalizationPendingReview({
+        subjectUserId: employee.userId,
+        message: `${empName} has requested attendance normalization for ${toCreate.length} day(s)`,
+        relatedEmployeeId: employee.id,
+      })
+    }
+
+    const pendingCopy = routeToMd ? 'Pending MD approval.' : 'Pending manager approval.'
 
     return successResponse(
       { created: toCreate.length, skipped: dayStarts.length - toCreate.length },

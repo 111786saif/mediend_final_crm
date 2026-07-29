@@ -64,7 +64,7 @@ export const navItems: NavItem[] = [
     title: 'MD Home',
     url: '/md/home',
     icon: LayoutDashboard,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Tasks',
@@ -125,7 +125,7 @@ export const navItems: NavItem[] = [
     title: 'Finance Dashboard',
     url: '/md/finance',
     icon: DollarSign,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD HR Dashboard',
@@ -137,13 +137,13 @@ export const navItems: NavItem[] = [
     title: 'MD Attendance',
     url: '/md/attendance',
     icon: CalendarCheck,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD Leave balances',
     url: '/md/leave-balances',
     icon: CalendarDays,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Master Data',
@@ -230,7 +230,7 @@ export const navItems: NavItem[] = [
     title: 'Dept Targets',
     url: '/md/targets',
     icon: Target,
-    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD'],
+    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'HR Dashboard',
@@ -361,25 +361,32 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    title: 'Training',
+    title: 'mediend AI',
     url: '/training',
     icon: GraduationCap,
     roles: [
-      'BD',
-      'TEAM_LEAD',
-      'ASSISTANT_CATEGORY_MANAGER',
+      'MD',
+      'SUPER_ADMIN',
+      'CRM_ADMIN',
+      'EXECUTIVE_ASSISTANT',
+      'SALES_HEAD',
       'CATEGORY_MANAGER',
-      'INSURANCE',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'BD',
       'INSURANCE_HEAD',
       'PL_HEAD',
-      'PL_ENTRY',
-      'PL_VIEWER',
-      'ACCOUNTS',
-      'ADMIN',
-      'TESTER',
-      'EXECUTIVE_ASSISTANT',
-      'COMPLIANCE_HEAD',
+      'OUTSTANDING_HEAD',
+      'HR_HEAD',
+      'FINANCE_HEAD',
       'DIGITAL_MARKETING_HEAD',
+      'IT_HEAD',
+      'LOAN_DEMAT_HEAD',
+      'COMPLIANCE_HEAD',
+      'ADMIN',
+      'USER',
+      'TESTER',
+      'ACCESS_MATRIX',
     ],
   },
   {
@@ -482,13 +489,13 @@ export const navItems: NavItem[] = [
     title: 'MD Messages',
     url: '/md/anonymous-messages',
     icon: Mail,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD Appointments',
     url: '/md/appointments',
     icon: CalendarCheck,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Fin Ledger',
@@ -554,7 +561,7 @@ export const navItems: NavItem[] = [
     title: 'MD Team Approvals',
     url: '/md/md-approvals',
     icon: CheckCircle,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Ask MD Approval',
@@ -608,7 +615,7 @@ export const navItems: NavItem[] = [
     title: 'MD P&L',
     url: '/md/pnl',
     icon: TrendingUp,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'IT P&L',
@@ -620,7 +627,7 @@ export const navItems: NavItem[] = [
     title: 'Loan & Demat Revenue',
     url: '/loan-demat/revenue',
     icon: IndianRupee,
-    roles: ['FINANCE_HEAD', 'MD', 'ADMIN'],
+    roles: ['FINANCE_HEAD', 'MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'IT Permissions',
@@ -638,13 +645,13 @@ export const navItems: NavItem[] = [
     title: 'MD Compliance',
     url: '/md/compliance',
     icon: Star,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD Outstanding',
     url: '/md/outstanding',
     icon: CreditCard,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Cumulative Report',
@@ -701,20 +708,20 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
     }
     // Company P&L (/finance/pnl): Finance Head, MD, Admin only (not TESTER / other roles with broad nav)
     if (item.title === 'Company P&L') {
-      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
+      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT'
     }
     // Targeted P&L: same access as Company P&L
     if (item.title === 'Targeted P&L') {
-      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
+      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT'
     }
     if (item.title === 'Sales P&L') {
       return hasPermission(user, 'sales:pnl:read')
     }
     // IT P&L overview: IT Head, Finance Head, MD, Admin only (not Sales Head / TESTER broad nav)
     if (item.title === 'IT P&L') {
-      return user.role === 'IT_HEAD' || user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
+      return user.role === 'IT_HEAD' || user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT'
     }
-    if (user.role === 'MD') {
+    if (user.role === 'MD' || user.role === 'EXECUTIVE_ASSISTANT') {
       return (
         item.title === 'Sales Dashboard' ||
         item.title === 'Finance Dashboard' ||
@@ -723,8 +730,13 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
         item.title === 'Loan & Demat Revenue' ||
         item.title === 'DM Dashboard' ||
         item.title === 'Targeted P&L' ||
+        item.title === 'P/L Ledger' ||
+        item.title === 'P/L Outstanding' ||
+        item.title === 'P/L Surgery' ||
+        item.title === 'Doctor List' ||
+        item.title === 'Hospital List' ||
         item.title.startsWith('MD ') ||
-        (item.title === 'Master Data' && item.roles?.includes('MD'))
+        (item.title === 'Master Data' && (item.roles?.includes('MD') || item.roles?.includes('EXECUTIVE_ASSISTANT')))
       )
     }
     // Doctor / Hospital lists: main nav for PL or Finance (not nested under Finance)
@@ -807,7 +819,7 @@ export function getFilteredNavItemsWithUrls(user: SessionUser | null): (NavItem 
 export function getFirstNavUrl(user: SessionUser | null): string {
   // MD/ADMIN land on the MD Command Center; everyone else on the generic home page
   if (user) {
-    if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
+    if (user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT') return '/md/home'
     if (String(user.role) === 'SUPER_ADMIN') return '/crm/campaigns'
     if (String(user.role) === 'CRM_ADMIN') return '/crm/access-matrix'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'

@@ -25,11 +25,18 @@ const roleAllowedSections: Record<string, string[]> = {
     'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions' // TESTER gets all
   ],
   EXECUTIVE_ASSISTANT: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.master_data', 'main.chat', 'main.compliance',
-    'main.md_hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.onboarding',
-    'hrm.compensation_docs', 'hrm.engagement',
+    'main.home', 'main.md_home', 'main.tasks', 'main.calendar', 'main.meets',
+    'main.dashboard', 'main.finance_dashboard', 'main.md_hr_dashboard', 'main.md_attendance',
+    'main.md_leave_balances', 'main.master_data', 'main.dept_targets', 'main.chat',
+    'main.md_messages', 'main.md_appointments', 'main.company_pnl', 'main.targeted_pnl',
+    'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue', 'main.it_permissions',
+    'main.compliance', 'main.md_compliance', 'main.md_outstanding', 'main.incentive', 'main.cumulative_report',
+    'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
-    'sales.sales_dashboard', 'sales.case_tracker', 'main.incentive', 'main.cumulative_report'
+    'sales.sales_dashboard', 'sales.dm_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl', 'sales.sales_pipeline', 'sales.team_lead_pipeline', 'sales.blueprint_dashboard',
+    'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger', 'insurance_pl.pl_surgery', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
+    'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports',
+    'actions'
   ],
   IT_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dept_targets', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'main.it_permissions', 'main.it_pnl', 'sales.campaign_cpl',

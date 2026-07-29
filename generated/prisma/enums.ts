@@ -492,6 +492,8 @@ export type PLOutstandingStatus = (typeof PLOutstandingStatus)[keyof typeof PLOu
 
 export const CaseStage = {
   NEW_LEAD: 'NEW_LEAD',
+  OPD_SCHEDULED: 'OPD_SCHEDULED',
+  OPD_DONE: 'OPD_DONE',
   KYP_BASIC_COMPLETE: 'KYP_BASIC_COMPLETE',
   HOSPITALS_SUGGESTED: 'HOSPITALS_SUGGESTED',
   PREAUTH_RAISED: 'PREAUTH_RAISED',
@@ -501,6 +503,8 @@ export const CaseStage = {
   PL_PENDING: 'PL_PENDING',
   OUTSTANDING: 'OUTSTANDING',
   CASH_IPD_PENDING: 'CASH_IPD_PENDING',
+  CASH_OPD_SCHEDULED: 'CASH_OPD_SCHEDULED',
+  CASH_OPD_DONE: 'CASH_OPD_DONE',
   CASH_IPD_SUBMITTED: 'CASH_IPD_SUBMITTED',
   CASH_APPROVED: 'CASH_APPROVED',
   CASH_ON_HOLD: 'CASH_ON_HOLD',
@@ -795,3 +799,20 @@ export const InstallmentMode = {
 } as const
 
 export type InstallmentMode = (typeof InstallmentMode)[keyof typeof InstallmentMode]
+
+
+export const KnowledgeSourceType = {
+  UPLOAD: 'UPLOAD',
+  TEXT: 'TEXT',
+  URL: 'URL'
+} as const
+
+export type KnowledgeSourceType = (typeof KnowledgeSourceType)[keyof typeof KnowledgeSourceType]
+
+
+export const KnowledgeVisibility = {
+  GENERAL: 'GENERAL',
+  RESTRICTED: 'RESTRICTED'
+} as const
+
+export type KnowledgeVisibility = (typeof KnowledgeVisibility)[keyof typeof KnowledgeVisibility]

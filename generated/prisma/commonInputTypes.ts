@@ -1680,6 +1680,40 @@ export type EnumPnLCategoryTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumPnLCategoryTypeFilter<$PrismaModel>
 }
 
+export type EnumKnowledgeSourceTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeSourceType | Prisma.EnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.KnowledgeSourceType[] | Prisma.ListEnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KnowledgeSourceType[] | Prisma.ListEnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKnowledgeSourceTypeFilter<$PrismaModel> | $Enums.KnowledgeSourceType
+}
+
+export type EnumKnowledgeVisibilityFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeVisibility | Prisma.EnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  in?: $Enums.KnowledgeVisibility[] | Prisma.ListEnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KnowledgeVisibility[] | Prisma.ListEnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKnowledgeVisibilityFilter<$PrismaModel> | $Enums.KnowledgeVisibility
+}
+
+export type EnumKnowledgeSourceTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeSourceType | Prisma.EnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.KnowledgeSourceType[] | Prisma.ListEnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KnowledgeSourceType[] | Prisma.ListEnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKnowledgeSourceTypeWithAggregatesFilter<$PrismaModel> | $Enums.KnowledgeSourceType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKnowledgeSourceTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKnowledgeSourceTypeFilter<$PrismaModel>
+}
+
+export type EnumKnowledgeVisibilityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeVisibility | Prisma.EnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  in?: $Enums.KnowledgeVisibility[] | Prisma.ListEnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KnowledgeVisibility[] | Prisma.ListEnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKnowledgeVisibilityWithAggregatesFilter<$PrismaModel> | $Enums.KnowledgeVisibility
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKnowledgeVisibilityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKnowledgeVisibilityFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -3281,6 +3315,40 @@ export type NestedEnumPnLCategoryTypeWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPnLCategoryTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPnLCategoryTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumKnowledgeSourceTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeSourceType | Prisma.EnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.KnowledgeSourceType[] | Prisma.ListEnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KnowledgeSourceType[] | Prisma.ListEnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKnowledgeSourceTypeFilter<$PrismaModel> | $Enums.KnowledgeSourceType
+}
+
+export type NestedEnumKnowledgeVisibilityFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeVisibility | Prisma.EnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  in?: $Enums.KnowledgeVisibility[] | Prisma.ListEnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KnowledgeVisibility[] | Prisma.ListEnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKnowledgeVisibilityFilter<$PrismaModel> | $Enums.KnowledgeVisibility
+}
+
+export type NestedEnumKnowledgeSourceTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeSourceType | Prisma.EnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.KnowledgeSourceType[] | Prisma.ListEnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KnowledgeSourceType[] | Prisma.ListEnumKnowledgeSourceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKnowledgeSourceTypeWithAggregatesFilter<$PrismaModel> | $Enums.KnowledgeSourceType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKnowledgeSourceTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKnowledgeSourceTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumKnowledgeVisibilityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeVisibility | Prisma.EnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  in?: $Enums.KnowledgeVisibility[] | Prisma.ListEnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.KnowledgeVisibility[] | Prisma.ListEnumKnowledgeVisibilityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumKnowledgeVisibilityWithAggregatesFilter<$PrismaModel> | $Enums.KnowledgeVisibility
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKnowledgeVisibilityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKnowledgeVisibilityFilter<$PrismaModel>
 }
 
 
