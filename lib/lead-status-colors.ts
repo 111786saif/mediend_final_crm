@@ -63,6 +63,11 @@ export const STATUS_COLORS: Record<string, { bg: string; border: string; text: s
     border: 'border-sky-200 dark:border-sky-800',
     text: 'text-sky-700 dark:text-sky-300',
   },
+  'OPD Done': {
+    bg: 'bg-cyan-100 dark:bg-cyan-950/40',
+    border: 'border-cyan-200 dark:border-cyan-800',
+    text: 'text-cyan-700 dark:text-cyan-300',
+  },
   // Completed
   'IPD Done': {
     bg: 'bg-emerald-100 dark:bg-emerald-950/40',

@@ -4,6 +4,7 @@ import {
   getDoctorAppContext,
   getDoctorScopedLeadWhere,
 } from '@/lib/doctor-app/context'
+import { hasLeadOpdDone } from '@/lib/lead-opd-workflow'
 import { prisma } from '@/lib/prisma'
 
 const dashboardLeadSelect = {
@@ -200,7 +201,12 @@ function getPendingTasksCutoff() {
 function getPendingTaskBuckets(leads: DashboardLead[]) {
   const cutoff = getPendingTasksCutoff()
   const overdueOpds = leads.filter(
-    lead => lead.opdScheduleDate && lead.opdScheduleDate <= cutoff && !isDischarged(lead) && !getAdmissionDate(lead)
+    lead =>
+      lead.opdScheduleDate &&
+      lead.opdScheduleDate <= cutoff &&
+      !hasLeadOpdDone(lead) &&
+      !isDischarged(lead) &&
+      !getAdmissionDate(lead)
   )
   const surgeryNotConfirmed = leads.filter(
     lead =>
@@ -239,7 +245,12 @@ export async function getDoctorDashboardSummary(user: DoctorAppSessionUser, filt
   const { context, leads } = await getDoctorDashboardLeads(user)
   const { start, end, scope } = getRange(filters)
 
-  const opdScheduled = leads.filter(lead => inRange(lead.opdScheduleDate, start, end)).length
+  const opdScheduled = leads.filter(lead => !hasLeadOpdDone(lead) && inRange(lead.opdScheduleDate, start, end)).length
+  const opdsDone = leads.filter(
+    lead =>
+      hasLeadOpdDone(lead) &&
+      (inRange(lead.opdScheduleDate, start, end) || inRange(lead.updatedDate, start, end))
+  ).length
   const followUpPending = leads.filter(lead => inRange(lead.followUpDate, start, end)).length
   const admitted = leads.filter(lead => inRange(getAdmissionDate(lead), start, end)).length
   const surgeryDue = leads.filter(
@@ -265,7 +276,7 @@ export async function getDoctorDashboardSummary(user: DoctorAppSessionUser, filt
     payoutPending,
     opdVisits: opdScheduled + followUpPending,
     ipdCases: admitted,
-    opdsDone: followUpPending,
+    opdsDone,
     preOp: opdScheduled,
     postOp: followUpPending,
     surgeryAdvised: surgeryDue,
@@ -285,7 +296,7 @@ export async function getDoctorDashboardDrilldown(
   let items: DashboardLead[] = []
 
   if (resolvedMetric === 'pre_op_opd' || resolvedMetric === 'opd_scheduled') {
-    items = leads.filter(lead => inRange(lead.opdScheduleDate, start, end))
+    items = leads.filter(lead => !hasLeadOpdDone(lead) && inRange(lead.opdScheduleDate, start, end))
   } else if (resolvedMetric === 'post_op_opd') {
     items = leads.filter(lead => inRange(lead.followUpDate, start, end))
   } else if (resolvedMetric === 'surgery_due') {

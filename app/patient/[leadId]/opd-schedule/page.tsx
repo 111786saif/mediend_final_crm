@@ -12,11 +12,14 @@ import Link from 'next/link'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { isReadOnlyPatientRole } from '@/lib/case-permissions'
 import { useMemo } from 'react'
+import { CaseStage, FlowType } from '@/generated/prisma/enums'
 
 interface Lead {
   id: string
   leadRef: string
   patientName: string
+  caseStage: CaseStage
+  flowType?: FlowType | null
   age?: number | null
   sex?: string | null
   phoneNumber: string
@@ -133,6 +136,8 @@ export default function OPDSchedulePage() {
             <OPDScheduleForm
               leadId={leadId}
               leadRef={lead.leadRef}
+              currentCaseStage={lead.caseStage}
+              flowType={lead.flowType}
               currentStatus={lead.status}
               patientName={lead.patientName}
               age={lead.age}

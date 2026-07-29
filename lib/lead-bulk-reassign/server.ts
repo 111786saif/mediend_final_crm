@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server'
+import type { JsonValue } from '@/generated/prisma/runtime/library'
 import type { SessionUser } from '@/lib/auth'
 import { logCrmActivity } from '@/lib/crm-activity'
 import {
@@ -6,7 +7,7 @@ import {
   canUserRemoveLeadRemarks,
   canUserUpdateLeadStatus,
   canUserViewLeadOwner,
-  getAssignableLeadUsersForActor,
+  getBulkReassignableBdUsersForActor,
 } from '@/lib/lead-ownership'
 import { enqueueLeadBulkReassignCycle } from '@/lib/lead-bulk-reassign/queue'
 import type {
@@ -14,6 +15,12 @@ import type {
   CreateBulkLeadReassignmentRunInput,
   LeadBulkReassignRunStatus,
 } from '@/lib/lead-bulk-reassign/shared'
+import { CRM_LEAD_STATUS_OPTIONS } from '@/lib/lead-status-options'
+import {
+  isStatusRequiringAgeSex,
+  isStatusRequiringFollowUpDate,
+  isStatusRequiringModeOfPayment,
+} from '@/lib/lead-status-rules'
 import { prisma } from '@/lib/prisma'
 
 export class BulkLeadReassignError extends Error {
@@ -43,6 +50,12 @@ type RunForResponse = {
   completedAt: Date | null
   failedAt: Date | null
   errorMessage: string | null
+}
+
+type BulkLeadReassignmentRunMetadata = {
+  leadStatus?: string | null
+  followUpDate?: string | null
+  modeOfPayment?: string | null
 }
 
 function normalizeOrderedIds(values: string[]) {
@@ -88,6 +101,32 @@ function normalizeRunStatus(status: string): LeadBulkReassignRunStatus {
   }
 
   return 'failed'
+}
+
+function parseRunMetadata(metadata: JsonValue | null | undefined): BulkLeadReassignmentRunMetadata {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
+    return {}
+  }
+
+  const record = metadata as Record<string, unknown>
+  const leadStatus =
+    typeof record.leadStatus === 'string' && record.leadStatus.trim().length > 0
+      ? record.leadStatus.trim()
+      : null
+  const followUpDate =
+    typeof record.followUpDate === 'string' && record.followUpDate.trim().length > 0
+      ? record.followUpDate.trim()
+      : null
+  const modeOfPayment =
+    typeof record.modeOfPayment === 'string' && record.modeOfPayment.trim().length > 0
+      ? record.modeOfPayment.trim()
+      : null
+
+  return {
+    leadStatus,
+    followUpDate,
+    modeOfPayment,
+  }
 }
 
 function mapRunToResponse(run: RunForResponse): BulkLeadReassignmentRunResponse {
@@ -151,6 +190,9 @@ export async function createBulkLeadReassignmentRun(
   const bdUserIds = normalizeOrderedIds(input.bdUserIds)
   const pauseSeconds = Number(input.pauseSeconds)
   const subStatus = input.subStatus
+  const leadStatus = input.leadStatus?.trim()
+  const followUpDate = input.followUpDate?.trim()
+  const modeOfPayment = input.modeOfPayment?.trim()
 
   if (leadIds.length === 0) {
     throw new BulkLeadReassignError('Select at least one lead', 400)
@@ -168,9 +210,58 @@ export async function createBulkLeadReassignmentRun(
     throw new BulkLeadReassignError('Sub status must be zero or greater', 400)
   }
 
-  const assignableUsers = (await getAssignableLeadUsersForActor(user)).filter(
-    (item) => item.role === 'BD'
-  )
+  if (subStatus !== undefined) {
+    const subStatusMaster = await prisma.crmSubStatusMaster.findUnique({
+      where: { key: subStatus },
+      select: {
+        key: true,
+        isActive: true,
+      },
+    })
+
+    if (!subStatusMaster || !subStatusMaster.isActive) {
+      throw new BulkLeadReassignError('Please select a valid active sub status', 400)
+    }
+  }
+
+  if (
+    leadStatus !== undefined &&
+    leadStatus.length > 0 &&
+    !CRM_LEAD_STATUS_OPTIONS.includes(leadStatus)
+  ) {
+    throw new BulkLeadReassignError('Please select a valid CRM lead status', 400)
+  }
+
+  if (leadStatus === undefined && (followUpDate || modeOfPayment)) {
+    throw new BulkLeadReassignError(
+      'Select a lead status before applying workflow fields',
+      400
+    )
+  }
+
+  if (leadStatus && isStatusRequiringFollowUpDate(leadStatus) && !followUpDate) {
+    throw new BulkLeadReassignError(
+      'Follow-up date is required for follow-up and DNP statuses',
+      400
+    )
+  }
+
+  if (leadStatus && isStatusRequiringModeOfPayment(leadStatus) && !modeOfPayment) {
+    throw new BulkLeadReassignError(
+      'Mode of payment is required for follow-up statuses',
+      400
+    )
+  }
+
+  let parsedFollowUpDate: Date | null = null
+  if (followUpDate) {
+    parsedFollowUpDate = new Date(followUpDate)
+    if (Number.isNaN(parsedFollowUpDate.getTime())) {
+      throw new BulkLeadReassignError('Please select a valid follow-up date', 400)
+    }
+  }
+
+  const assignableUsers = await getBulkReassignableBdUsersForActor(user)
   const assignableUserMap = new Map(assignableUsers.map((item) => [item.id, item]))
   const selectedBdUsers = bdUserIds.map((id) => assignableUserMap.get(id))
 
@@ -192,6 +283,10 @@ export async function createBulkLeadReassignmentRun(
       leadRef: true,
       patientName: true,
       bdId: true,
+      age: true,
+      sex: true,
+      modeOfPayment: true,
+      followUpDate: true,
       bd: {
         select: {
           id: true,
@@ -244,6 +339,46 @@ export async function createBulkLeadReassignmentRun(
         403
       )
     }
+
+    if (leadStatus && isStatusRequiringAgeSex(leadStatus)) {
+      if (!Number.isFinite(lead.age) || Number(lead.age) <= 0) {
+        throw new BulkLeadReassignError(
+          `Age is required for lead ${lead.leadRef} when applying ${leadStatus}`,
+          400
+        )
+      }
+
+      if (typeof lead.sex !== 'string' || lead.sex.trim().length === 0) {
+        throw new BulkLeadReassignError(
+          `Sex is required for lead ${lead.leadRef} when applying ${leadStatus}`,
+          400
+        )
+      }
+    }
+
+    if (
+      leadStatus &&
+      isStatusRequiringModeOfPayment(leadStatus) &&
+      typeof modeOfPayment !== 'string' &&
+      (typeof lead.modeOfPayment !== 'string' || lead.modeOfPayment.trim().length === 0)
+    ) {
+      throw new BulkLeadReassignError(
+        `Mode of payment is required for lead ${lead.leadRef} when applying ${leadStatus}`,
+        400
+      )
+    }
+
+    if (
+      leadStatus &&
+      isStatusRequiringFollowUpDate(leadStatus) &&
+      !parsedFollowUpDate &&
+      !lead.followUpDate
+    ) {
+      throw new BulkLeadReassignError(
+        `Follow-up date is required for lead ${lead.leadRef} when applying ${leadStatus}`,
+        400
+      )
+    }
   }
 
   const run = await prisma.bulkLeadReassignmentRun.create({
@@ -265,6 +400,10 @@ export async function createBulkLeadReassignmentRun(
           name: bd!.name,
           role: bd!.role,
         })),
+        leadStatus: leadStatus ?? null,
+        followUpDate:
+          parsedFollowUpDate?.toISOString() ?? (followUpDate ?? null),
+        modeOfPayment: modeOfPayment ?? null,
       },
     },
     select: {
@@ -296,6 +435,9 @@ export async function createBulkLeadReassignmentRun(
       bdUserIds,
       pauseSeconds,
       removePreviousRemarks: input.removePreviousRemarks,
+      leadStatus: leadStatus ?? null,
+      followUpDate: parsedFollowUpDate?.toISOString() ?? (followUpDate ?? null),
+      modeOfPayment: modeOfPayment ?? null,
       subStatus: subStatus ?? null,
     },
   })
@@ -331,6 +473,7 @@ export async function processBulkLeadReassignCycle(
       totalBds: true,
       bullJobId: true,
       startedAt: true,
+      metadata: true,
       actorUser: {
         select: {
           id: true,
@@ -351,6 +494,10 @@ export async function processBulkLeadReassignCycle(
 
   const leadIds = parseStoredIdArray(run.leadIds, 'leadIds')
   const bdUserIds = parseStoredIdArray(run.bdUserIds, 'bdUserIds')
+  const workflowMetadata = parseRunMetadata(run.metadata)
+  const workflowFollowUpDate = workflowMetadata.followUpDate
+    ? new Date(workflowMetadata.followUpDate)
+    : null
 
   if (leadIds.length !== run.totalLeads || bdUserIds.length !== run.totalBds) {
     throw new Error('Bulk lead reassignment run has inconsistent stored data')
@@ -451,6 +598,13 @@ export async function processBulkLeadReassignCycle(
             },
             updatedDate: assignedAt,
             ...buildLeadOwnershipTransferUpdate(nextOwnerUserId, assignedAt),
+            ...(workflowMetadata.leadStatus
+              ? { status: workflowMetadata.leadStatus }
+              : {}),
+            ...(workflowFollowUpDate ? { followUpDate: workflowFollowUpDate } : {}),
+            ...(workflowMetadata.modeOfPayment
+              ? { modeOfPayment: workflowMetadata.modeOfPayment }
+              : {}),
             ...(run!.subStatus != null ? { subStatus: run!.subStatus } : {}),
             ...(run!.removePreviousRemarks
               ? {
@@ -486,7 +640,9 @@ export async function processBulkLeadReassignCycle(
         actorRole: run.actorUser.role,
         route: '/workers/lead-bulk-reassign-worker',
         method: 'QUEUE',
-        summary: `Lead assigned to ${nextOwner.name}`,
+        summary: workflowMetadata.leadStatus
+          ? `Lead assigned to ${nextOwner.name} and status set to ${workflowMetadata.leadStatus}`
+          : `Lead assigned to ${nextOwner.name}`,
         metadata: {
           leadId: lead.id,
           leadRef: lead.leadRef,
@@ -495,6 +651,9 @@ export async function processBulkLeadReassignCycle(
           previousBdName: lead.bd?.name ?? null,
           nextBdId: nextOwner.id,
           nextBdName: nextOwner.name,
+          leadStatus: workflowMetadata.leadStatus ?? null,
+          followUpDate: workflowFollowUpDate?.toISOString() ?? null,
+          modeOfPayment: workflowMetadata.modeOfPayment ?? null,
           subStatus: run.subStatus ?? null,
           runId,
           cycleNumber,

@@ -49,7 +49,7 @@ interface KypForBasic {
 }
 
 const ALLOWED_STAGES: CaseStage[] = [
-  CaseStage.NEW_LEAD,
+  CaseStage.OPD_DONE,
   CaseStage.KYP_BASIC_PENDING,
   CaseStage.KYP_BASIC_COMPLETE,
 ]

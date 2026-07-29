@@ -11,7 +11,10 @@ import { toast } from 'sonner'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
-import { LEAD_STATUS_OPTIONS } from '@/lib/lead-status-options'
+import {
+  CRM_LEAD_STATUS_OPTIONS,
+  CRM_MODE_OF_PAYMENT_OPTIONS,
+} from '@/lib/lead-status-options'
 import {
   isStatusRequiringAgeSex,
   isStatusRequiringFollowUpDate,
@@ -38,19 +41,6 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 
 const CRM_LEAD_SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
-const MODE_OF_PAYMENT_OPTIONS = ['Cash', 'Cashless', 'EMI', 'Reimbursement'] as const
-const CRM_ADDITIONAL_STATUS_OPTIONS = [
-  'DNP-1',
-  'DNP-2',
-  'DNP-3',
-  'DNP-4',
-  'DNP-5',
-  'DNP Exhausted',
-] as const
-
-const CRM_EDIT_LEAD_STATUS_OPTIONS = [
-  ...new Set([...LEAD_STATUS_OPTIONS, ...CRM_ADDITIONAL_STATUS_OPTIONS]),
-]
 
 function formatDisplayValue(value: unknown, fallback = '—') {
   if (typeof value !== 'string') return fallback
@@ -315,16 +305,16 @@ export function LeadEditDrawer({
   const statusOptions = Array.from(
     new Set(
       effectiveLeadStatus && effectiveLeadStatus.trim().length > 0
-        ? [effectiveLeadStatus, ...CRM_EDIT_LEAD_STATUS_OPTIONS]
-        : CRM_EDIT_LEAD_STATUS_OPTIONS
+        ? [effectiveLeadStatus, ...CRM_LEAD_STATUS_OPTIONS]
+        : CRM_LEAD_STATUS_OPTIONS
     )
   )
 
   const modeOfPaymentOptions = Array.from(
     new Set(
       effectiveModeOfPayment && effectiveModeOfPayment.trim().length > 0
-        ? [effectiveModeOfPayment, ...MODE_OF_PAYMENT_OPTIONS]
-        : MODE_OF_PAYMENT_OPTIONS
+        ? [effectiveModeOfPayment, ...CRM_MODE_OF_PAYMENT_OPTIONS]
+        : CRM_MODE_OF_PAYMENT_OPTIONS
     )
   )
   const assigneeOptions = Array.from(
