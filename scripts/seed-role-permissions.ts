@@ -2,6 +2,9 @@ import 'dotenv/config'
 import { prisma } from '../lib/prisma'
 import { SubjectType, PermissionLevel } from '../generated/prisma/client'
 
+/** Available to every role except ACCESS_MATRIX (mediend AI / training chat). */
+const UNIVERSAL_SECTIONS = ['main.training'] as const
+
 // Predefined allowed sections/pages for each role
 const roleAllowedSections: Record<string, string[]> = {
   MD: [
@@ -169,8 +172,13 @@ async function main() {
   let seedCount = 0
 
   for (const [role, allowedKeys] of Object.entries(roleAllowedSections)) {
+    const keys =
+      role === 'ACCESS_MATRIX'
+        ? allowedKeys
+        : [...new Set([...allowedKeys, ...UNIVERSAL_SECTIONS])]
+
     const allowedResources = allResources.filter((res) => {
-      return allowedKeys.some((allowedKey) =>
+      return keys.some((allowedKey) =>
         res.key === allowedKey ||
         res.key.startsWith(allowedKey + '.') ||
         allowedKey.startsWith(res.key + '.')
