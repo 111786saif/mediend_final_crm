@@ -59,8 +59,7 @@ export async function POST(req: NextRequest) {
     const modelMessages = await convertToModelMessages(messages, { tools })
 
     const result = streamText({
-      // Command Code gateway returns LanguageModelV4; cast for AI SDK streamText typing.
-      model: chatModel() as never,
+      model: chatModel(),
       system,
       messages: modelMessages,
       tools,

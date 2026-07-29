@@ -14,6 +14,8 @@ AI_CHAT_MODEL=deepseek/deepseek-v4-flash
 
 Optional model IDs (see `opencode.json`): `deepseek/deepseek-v4-pro`, `Qwen/Qwen3.6-Plus`, `Qwen/Qwen3.7-Max`.
 
+The gateway is wired via `@ai-sdk/openai` (`lib/ai/provider.ts`), not `@ai-sdk/openai-compatible` — the compatible package v3.x returns model spec v4, which `ai@6` rejects.
+
 Apply the knowledge/audit migration (includes `tsvector` + GIN index):
 
 ```bash
