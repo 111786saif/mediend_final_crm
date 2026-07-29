@@ -11,6 +11,7 @@ export const RESOURCE_MAP = {
   "insurance_pl": { label: "Insurance & P/L", component: "InsurancePlGroup" },
   "finance": { label: "Finance & Accounts", component: "FinanceGroup" },
   "actions": { label: "System Actions", component: "SystemActionsGroup" },
+  "crm": { label: "CRM", component: "CrmGroup" },
 
   // SECTIONS / PAGES
 
@@ -28,6 +29,7 @@ export const RESOURCE_MAP = {
   "main.master_data": { path: "/master-data", component: "MasterDataPage" },
   "main.dept_targets": { path: "/md/targets", component: "DeptTargetsPage" },
   "main.chat": { path: "/chat", component: "ChatPage" },
+  "main.training": { path: "/training", component: "TrainingPage" },
   "main.md_messages": { path: "/md/anonymous-messages", component: "MDMessagesPage" },
   "main.md_appointments": { path: "/md/appointments", component: "MDAppointmentsPage" },
   "main.company_pnl": { path: "/finance/pnl", component: "CompanyPnLPage" },
@@ -41,9 +43,21 @@ export const RESOURCE_MAP = {
   "main.md_outstanding": { path: "/md/outstanding", component: "MDOutstandingPage" },
   "main.incentive": { path: "/incentives", component: "IncentivesPage" },
   "main.cumulative_report": { path: "/cumulative-report", component: "CumulativeReportPage" },
+  "main.ipd_calendar": { path: "/ipd-calendar", component: "IPDCalendarPage" },
+  "main.doctor_admin": { path: "/executive-assistant/doctor-admin", component: "DoctorAdminPage" },
+
+  // CRM Group Pages
+  "crm.campaigns": { path: "/crm/campaigns", component: "CrmCampaignsPage" },
+  "crm.incoming_leads": { path: "/crm/incoming-leads", component: "CrmIncomingLeadsPage" },
+  "crm.kpis": { path: "/crm/kpis", component: "CrmKpisPage" },
+  "crm.activity": { path: "/crm/activity", component: "CrmActivityPage" },
+  "crm.masters": { path: "/crm/masters", component: "CrmMastersPage" },
+  "crm.access_matrix": { path: "/crm/access-matrix", component: "CrmAccessMatrixPage" },
+  "crm.churn_rules": { path: "/crm/churn-rules", component: "CrmChurnRulesPage" },
 
 
   // HRM Group Pages
+  "hrm.hr_dashboard": { path: "/hr/dashboard", component: "HRDashboardPage" },
   "hrm.attendance_normalizations": { path: "/hr/attendance-leaves", component: "AttendanceLeavesPage" },
   "hrm.people_org": { path: "/hr/people", component: "PeopleOrgPage" },
   "hrm.onboarding": { path: "/hr/onboarding", component: "HROnboardingPage" },
@@ -60,14 +74,18 @@ export const RESOURCE_MAP = {
 
   // Sales Group Pages
   "sales.sales_dashboard": { path: "/sales/dashboard", component: "SalesDashboardPage" },
+  "sales.md_sales_dashboard": { path: "/md/sales", component: "SalesDashboardPage" },
   "sales.dm_dashboard": { path: "/digital-marketing/dashboard", component: "DMDashboardPage" },
   "sales.case_tracker": { path: "/bd/kyp", component: "CaseTrackerPage" },
   "sales.pending_surgery": { path: "/reports/patient-cards-pending-surgery", component: "PendingSurgeryPage" },
   "sales.targets": { path: "/sales/targets", component: "TargetsPage" },
+  "sales.team_lead_targets": { path: "/team-lead/targets", component: "TeamLeadTargetsPage" },
+  "sales.sales_head_targets": { path: "/sales-head/targets", component: "SalesHeadTargetsPage" },
   "sales.sales_pnl": { path: "/sales/pnl", component: "SalesPnLPage" },
   "sales.campaign_cpl": { path: "/digital-marketing/cpl", component: "CampaignCPLPage" },
   "sales.sales_pipeline": { path: "/bd/pipeline", component: "SalesPipelinePage" },
   "sales.team_lead_pipeline": { path: "/team-lead/pipeline", component: "TeamLeadPipelinePage" },
+  "sales.ea_pipeline": { path: "/executive-assistant/pipeline", component: "EAPipelinePage" },
   "sales.blueprint_dashboard": { path: "/sales/blueprint", component: "BluePrintDashboardPage" },
 
   // Insurance Group Pages
@@ -93,6 +111,10 @@ export const RESOURCE_MAP = {
   "finance.fin_team_approvals": { path: "/finance/team-approvals", component: "FinTeamApprovalsPage" },
   "finance.md_team_approvals": { path: "/md/md-approvals", component: "MDTeamApprovalsPage" },
   "finance.fin_reports": { path: "/finance/reports", component: "FinReportsPage" },
+  "finance.fin_invoice_requests": { path: "/finance/invoice-requests", component: "FinInvoiceRequestsPage" },
+  "finance.fin_doctor_payoff": { path: "/finance/doctor-payoff-requests", component: "FinDoctorPayoffPage" },
+  "finance.fin_sales_team_cost": { path: "/finance/sales-team-cost", component: "FinSalesTeamCostPage" },
+  "finance.master_seating_cost": { path: "/finance/master-seating-cost", component: "MasterSeatingCostPage" },
 
   // ENTITIES (Legacy Leaf Actions & static mapping)
   "leads.table.lead.column.phoneNumber": { component: "PhoneNumberColumn" },

@@ -6,8 +6,18 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch, apiDelete } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
-import { Shield, ArrowLeft, Lock, Building2 } from 'lucide-react'
+import { Shield, ArrowLeft, Lock, Building2, Search, AlertCircle, Users } from 'lucide-react'
 import { toast } from 'sonner'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 // Import modular sub-components
 import { UserDirectoryTable } from '@/components/it/UserDirectoryTable'
@@ -25,16 +35,51 @@ interface UserInList {
   } | null
 }
 
+const SYSTEM_ROLES = [
+  'MD',
+  'ADMIN',
+  'EXECUTIVE_ASSISTANT',
+  'SALES_HEAD',
+  'CATEGORY_MANAGER',
+  'TEAM_LEAD',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'BD',
+  'INSURANCE_HEAD',
+  'INSURANCE',
+  'PL_HEAD',
+  'PL_ENTRY',
+  'PL_VIEWER',
+  'OUTSTANDING_HEAD',
+  'HR_HEAD',
+  'FINANCE_HEAD',
+  'IT_HEAD',
+  'DIGITAL_MARKETING_HEAD',
+  'COMPLIANCE_HEAD',
+  'ACCOUNTS',
+  'SUPER_ADMIN',
+  'CRM_ADMIN',
+  'USER',
+  'TESTER',
+]
+
 export default function ITPermissionsPage() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
 
   // 1. Directory list state
+  const [activeTab, setActiveTab] = useState<'user' | 'role'>('user')
+  const [selectedRole, setSelectedRole] = useState<string | null>(null)
+  const [roleSearch, setRoleSearch] = useState('')
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
   const [currentPage, setCurrentPage] = useState(1)
   const ITEMS_PER_PAGE = 10
+
+  const filteredRoles = useMemo(() => {
+    if (!roleSearch) return SYSTEM_ROLES
+    return SYSTEM_ROLES.filter((r) => r.toLowerCase().includes(roleSearch.toLowerCase()))
+  }, [roleSearch])
 
   // 2. Editor state
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
@@ -57,6 +102,24 @@ export default function ITPermissionsPage() {
     return () => clearTimeout(handler)
   }, [search])
 
+  // Invalidate query caches to force fetching fresh trees on tab switches and resource selections
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['admin-permissions'] })
+    queryClient.invalidateQueries({ queryKey: ['role-permissions'] })
+  }, [activeTab, queryClient])
+
+  useEffect(() => {
+    if (selectedUserId) {
+      queryClient.invalidateQueries({ queryKey: ['admin-permissions', selectedUserId] })
+    }
+  }, [selectedUserId, queryClient])
+
+  useEffect(() => {
+    if (selectedRole) {
+      queryClient.invalidateQueries({ queryKey: ['role-permissions', selectedRole] })
+    }
+  }, [selectedRole, queryClient])
+
   // Fetch users matching search and filter
   const { data: usersResponse, isLoading: isUsersLoading } = useQuery<{ data: UserInList[]; total: number } | UserInList[]>({
     queryKey: ['it-permissions-users', debouncedSearch, roleFilter, currentPage],
@@ -68,7 +131,7 @@ export default function ITPermissionsPage() {
       params.set('limit', ITEMS_PER_PAGE.toString())
       return apiGet<any>(`/api/it/permissions?${params}`)
     },
-    enabled: !!canAccess,
+    enabled: !!canAccess && activeTab === 'user',
   })
 
   // Fetch specific user permission tree when selected
@@ -76,6 +139,13 @@ export default function ITPermissionsPage() {
     queryKey: ['admin-permissions', selectedUserId],
     queryFn: () => apiGet<{ user: any; resourceTree: any[] }>(`/api/admin/users/${selectedUserId}/permissions`),
     enabled: !!selectedUserId && !!canAccess,
+  })
+
+  // Fetch specific role permission tree when selected
+  const { data: rolePermissionTreeData, isLoading: isRoleTreeLoading } = useQuery({
+    queryKey: ['role-permissions', selectedRole],
+    queryFn: () => apiGet<{ role: string; resourceTree: any[] }>(`/api/admin/roles/${selectedRole}/permissions`),
+    enabled: !!selectedRole && !!canAccess,
   })
 
   // Initialize permissions state when target user tree loads
@@ -115,6 +185,38 @@ export default function ITPermissionsPage() {
       }
     }
   }, [permissionTreeData])
+
+  // Initialize permissions state when target role tree loads
+  useEffect(() => {
+    if (rolePermissionTreeData?.resourceTree) {
+      const flat: Record<string, { level: string; canGrant: boolean }> = {}
+
+      const traverse = (nodes: any[]) => {
+        for (const node of nodes) {
+          const defaultLevel = node.assignment?.permissionLevel ?? 'NONE'
+          const defaultCanGrant = node.assignment?.canGrant ?? false
+
+          flat[node.id] = {
+            level: defaultLevel,
+            canGrant: defaultCanGrant,
+          }
+          if (node.children && node.children.length > 0) {
+            traverse(node.children)
+          }
+        }
+      }
+
+      traverse(rolePermissionTreeData.resourceTree)
+      setEditedPermissions(flat)
+      setOriginalPermissions(flat)
+      setRoleDefaults({})
+
+      // Select first module automatically
+      if (rolePermissionTreeData.resourceTree.length > 0) {
+        setSelectedModuleKey(rolePermissionTreeData.resourceTree[0].key)
+      }
+    }
+  }, [rolePermissionTreeData])
 
   // Reset open accordion section when module switches
   useEffect(() => {
@@ -201,7 +303,7 @@ export default function ITPermissionsPage() {
 
   // Save changes via single batch PATCH call
   const handleSaveChanges = async () => {
-    if (!selectedUserId) return
+    if (!selectedUserId && !selectedRole) return
     setIsSaving(true)
 
     try {
@@ -220,16 +322,22 @@ export default function ITPermissionsPage() {
         canGrant: editedPermissions[id].canGrant,
       }))
 
-      // Single batch request instead of hundreds of individual PATCH calls
-      await apiPatch(`/api/admin/users/${selectedUserId}/permissions`, {
-        assignments,
-      })
-
-      toast.success('Permissions updated successfully!')
-
-      // Refresh cache
-      queryClient.invalidateQueries({ queryKey: ['admin-permissions', selectedUserId] })
-      queryClient.invalidateQueries({ queryKey: ['it-permissions-users'] })
+      if (selectedUserId) {
+        // Single batch request instead of hundreds of individual PATCH calls
+        await apiPatch(`/api/admin/users/${selectedUserId}/permissions`, {
+          assignments,
+        })
+        toast.success('User permissions updated successfully!')
+        queryClient.invalidateQueries({ queryKey: ['admin-permissions', selectedUserId] })
+        queryClient.invalidateQueries({ queryKey: ['it-permissions-users'] })
+      } else if (selectedRole) {
+        // Batch request for role-level permissions
+        await apiPatch(`/api/admin/roles/${selectedRole}/permissions`, {
+          assignments,
+        })
+        toast.success('Role permissions updated successfully!')
+        queryClient.invalidateQueries({ queryKey: ['role-permissions', selectedRole] })
+      }
 
       setOriginalPermissions({ ...editedPermissions })
     } catch (err: any) {
@@ -287,14 +395,18 @@ export default function ITPermissionsPage() {
   }
 
   // Find active module in loaded tree
-  const activeModule = permissionTreeData?.resourceTree?.find(
-    (m: any) => m.key === selectedModuleKey
-  )
+  const activeModule = selectedRole
+    ? rolePermissionTreeData?.resourceTree?.find((m: any) => m.key === selectedModuleKey)
+    : permissionTreeData?.resourceTree?.find((m: any) => m.key === selectedModuleKey)
+
+  const isEditing = !!selectedUserId || !!selectedRole
+  const isDataLoading = selectedRole ? isRoleTreeLoading : isTreeLoading
+  const activeResourceTree = selectedRole ? rolePermissionTreeData?.resourceTree : permissionTreeData?.resourceTree
 
   return (
     <div className="space-y-4 pb-24 relative">
-      {/* -------------------- VIEW 1: USER DIRECTORY LIST -------------------- */}
-      {!selectedUserId ? (
+      {/* -------------------- VIEW 1: USER & ROLE DIRECTORY LISTS -------------------- */}
+      {!isEditing ? (
         <>
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
@@ -302,31 +414,130 @@ export default function ITPermissionsPage() {
               IT Access Directory
             </h1>
             <p className="text-muted-foreground mt-1">
-              Audit institutional access permissions and manage security matrices across all profiles.
+              Audit institutional access permissions and manage security matrices across all profiles and system roles.
             </p>
           </div>
 
-          <UserDirectoryTable
-            search={search}
-            setSearch={setSearch}
-            roleFilter={roleFilter}
-            setRoleFilter={setRoleFilter}
-            isLoading={isUsersLoading}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            totalPages={totalPages}
-            paginatedUsers={paginatedUsers}
-            onManagePermissions={setSelectedUserId}
-            getInitials={getInitials}
-            getAvatarGradient={getAvatarGradient}
-            totalUsers={totalUsers}
-            itemsPerPage={ITEMS_PER_PAGE}
-          />
+          {/* Premium Pill Tabs Controller */}
+          <div className="flex justify-start mb-6">
+            <div className="inline-flex items-center rounded-xl bg-muted/60 p-1 border border-border/40 shadow-sm backdrop-blur-sm">
+              <button
+                onClick={() => setActiveTab('user')}
+                className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                  activeTab === 'user'
+                    ? 'bg-background text-cyan-600 dark:text-cyan-400 shadow-sm border border-border/20 font-bold'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/5'
+                }`}
+              >
+                <Users className="h-4.5 w-4.5" />
+                User Permissions
+              </button>
+              <button
+                onClick={() => setActiveTab('role')}
+                className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                  activeTab === 'role'
+                    ? 'bg-background text-cyan-600 dark:text-cyan-400 shadow-sm border border-border/20 font-bold'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/5'
+                }`}
+              >
+                <Shield className="h-4.5 w-4.5" />
+                Role Permissions
+              </button>
+            </div>
+          </div>
+
+          {activeTab === 'user' ? (
+            <UserDirectoryTable
+              search={search}
+              setSearch={setSearch}
+              roleFilter={roleFilter}
+              setRoleFilter={setRoleFilter}
+              isLoading={isUsersLoading}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+              paginatedUsers={paginatedUsers}
+              onManagePermissions={setSelectedUserId}
+              getInitials={getInitials}
+              getAvatarGradient={getAvatarGradient}
+              totalUsers={totalUsers}
+              itemsPerPage={ITEMS_PER_PAGE}
+            />
+          ) : (
+            /* Roles Table view */
+            <Card className="border border-border bg-card text-card-foreground shadow-sm">
+              <CardContent className="space-y-4 pt-5">
+                {/* Search Toolbar */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      placeholder="Search directory by role name..."
+                      value={roleSearch}
+                      onChange={(e) => setRoleSearch(e.target.value)}
+                      className="pl-12 h-12 bg-background border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-border overflow-hidden bg-card text-card-foreground shadow-sm">
+                  <Table>
+                    <TableHeader className="bg-muted/50 border-b border-border">
+                      <TableRow className="border-b border-border">
+                        <TableHead className="text-muted-foreground font-semibold px-6 py-4">Role Name</TableHead>
+                        <TableHead className="text-muted-foreground font-semibold px-6 py-4">Subject Type</TableHead>
+                        <TableHead className="text-muted-foreground font-semibold px-6 py-4 text-center">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredRoles.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={3} className="text-center py-12 text-muted-foreground border-b border-border">
+                            <AlertCircle className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                            <p className="text-sm">No roles found matching search query.</p>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredRoles.map((role) => (
+                          <TableRow key={role} className="border-b border-border hover:bg-muted/40 transition-colors group">
+                            <TableCell className="py-4 px-6">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-indigo-500/10 to-purple-500/20 text-indigo-700 dark:text-indigo-300 font-bold text-sm border border-indigo-500/20">
+                                  {role.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div>
+                                  <div className="font-bold text-foreground group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">{role}</div>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="py-4 px-6">
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">
+                                ROLE
+                              </span>
+                            </TableCell>
+                            <TableCell className="py-4 px-6 text-center">
+                              <Button
+                                variant="outline"
+                                onClick={() => setSelectedRole(role)}
+                                className="border-border hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors text-sm font-semibold bg-background hover:bg-muted text-foreground px-5 py-2 h-10"
+                              >
+                                Manage Permissions
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </>
       ) : (
         /* -------------------- VIEW 2: PERMISSIONS ACCESS MATRIX EDITOR -------------------- */
         <>
-          {isTreeLoading ? (
+          {isDataLoading ? (
             <div className="flex h-[50vh] flex-col items-center justify-center text-center">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cyan-600 dark:border-cyan-400 border-r-transparent"></div>
               <p className="mt-4 text-sm text-muted-foreground">Retrieving access configuration tree...</p>
@@ -339,7 +550,10 @@ export default function ITPermissionsPage() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setSelectedUserId(null)}
+                    onClick={() => {
+                      setSelectedUserId(null)
+                      setSelectedRole(null)
+                    }}
                     className="text-muted-foreground hover:text-foreground"
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -347,36 +561,58 @@ export default function ITPermissionsPage() {
                   </Button>
                 </div>
 
-                {/* User summary header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-card text-card-foreground border border-border p-5 rounded-xl gap-4 shadow-sm">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-14 h-14 rounded-full border-2 ${getAvatarGradient(permissionTreeData?.user?.id ?? '').border} flex items-center justify-center bg-gradient-to-br ${getAvatarGradient(permissionTreeData?.user?.id ?? '').bg} font-bold text-base`}>
-                      {getInitials(permissionTreeData?.user?.name ?? '')}
+                {/* Info Card: Adapts to either User or Role */}
+                {selectedUserId ? (
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-card text-card-foreground border border-border p-5 rounded-xl gap-4 shadow-sm">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-14 h-14 rounded-full border-2 ${getAvatarGradient(permissionTreeData?.user?.id ?? '').border} flex items-center justify-center bg-gradient-to-br ${getAvatarGradient(permissionTreeData?.user?.id ?? '').bg} font-bold text-base`}>
+                        {getInitials(permissionTreeData?.user?.name ?? '')}
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-foreground">{permissionTreeData?.user?.name}</h2>
+                        <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
+                          <Building2 className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                          Role: {permissionTreeData?.user?.role}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-foreground">{permissionTreeData?.user?.name}</h2>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
-                        <Building2 className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                        Role: {permissionTreeData?.user?.role}
-                      </p>
+                    <div className="sm:text-right">
+                      <span className="text-xs text-muted-foreground block">User CUID</span>
+                      <code className="text-xs text-cyan-700 dark:text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded font-mono mt-1 inline-block border border-cyan-500/20">
+                        {permissionTreeData?.user?.id}
+                      </code>
                     </div>
                   </div>
-                  <div className="sm:text-right">
-                    <span className="text-xs text-muted-foreground block">User CUID</span>
-                    <code className="text-xs text-cyan-700 dark:text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded font-mono mt-1 inline-block border border-cyan-500/20">
-                      {permissionTreeData?.user?.id}
-                    </code>
+                ) : (
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-card text-card-foreground border border-border p-5 rounded-xl gap-4 shadow-sm">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-full border-2 border-indigo-500 flex items-center justify-center bg-gradient-to-br from-indigo-500/10 to-purple-500/20 text-indigo-700 dark:text-indigo-300 font-bold text-base">
+                        {selectedRole?.substring(0, 2).toUpperCase()}
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-foreground">Role Matrix: {selectedRole}</h2>
+                        <p className="text-sm text-muted-foreground flex items-center gap-1 mt-0.5">
+                          <Lock className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                          Default permissions configuration for all users matching this role
+                        </p>
+                      </div>
+                    </div>
+                    <div className="sm:text-right">
+                      <span className="text-xs text-muted-foreground block">Subject Type</span>
+                      <code className="text-xs text-cyan-700 dark:text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded font-mono mt-1 inline-block border border-cyan-500/20">
+                        ROLE
+                      </code>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Master Split Grid */}
               <div className="flex flex-col lg:flex-row gap-6 items-start">
-
                 {/* Left Sidebar: Modules list */}
-                {permissionTreeData?.resourceTree && (
+                {activeResourceTree && (
                   <ModuleSidebar
-                    modules={permissionTreeData.resourceTree}
+                    modules={activeResourceTree}
                     selectedModuleKey={selectedModuleKey}
                     onSelectModule={setSelectedModuleKey}
                   />
@@ -392,6 +628,7 @@ export default function ITPermissionsPage() {
                     onUpdatePermission={handleUpdatePermission}
                     openSectionKey={openSectionKey}
                     setOpenSectionKey={setOpenSectionKey}
+                    isRole={!!selectedRole}
                   />
                 )}
               </div>
