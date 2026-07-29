@@ -169,6 +169,7 @@ async function main() {
   })
 
   console.log('Seeding role assignments...')
+  console.log(`Universal sections (all roles except ACCESS_MATRIX): ${UNIVERSAL_SECTIONS.join(', ')}`)
   let seedCount = 0
 
   for (const [role, allowedKeys] of Object.entries(roleAllowedSections)) {
@@ -205,6 +206,28 @@ async function main() {
   }
 
   console.log(`Successfully seeded ${seedCount} role-level permissions.`)
+
+  const trainingResource = await prisma.resource.findUnique({
+    where: { key: 'main.training' },
+    select: { id: true, isActive: true },
+  })
+  if (!trainingResource) {
+    console.warn('WARNING: Resource main.training is missing. Run scripts/seed-rbac.ts first.')
+  } else {
+    const trainingRoleGrants = await prisma.permissionAssignment.count({
+      where: {
+        subjectType: SubjectType.ROLE,
+        resourceId: trainingResource.id,
+        permissionLevel: { not: PermissionLevel.NONE },
+      },
+    })
+    console.log(
+      `main.training: resource=${trainingResource.isActive ? 'active' : 'inactive'}, role grants=${trainingRoleGrants}`
+    )
+    if (trainingRoleGrants === 0) {
+      console.warn('WARNING: No role has main.training — /training will show Access Denied for everyone.')
+    }
+  }
 }
 
 main()
