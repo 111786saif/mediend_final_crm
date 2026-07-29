@@ -36,12 +36,19 @@ const doctorAppointmentLeadSelect = {
   remarks: true,
   followUpDate: true,
   docUpload: true,
+  diseaseDetails: true,
   opdHospital: true,
   opdDrName: true,
   opdContactNo: true,
   opdCharges: true,
   opdScheduleDate: true,
   opdMeeting: true,
+  opdSurgeryAdvised: true,
+  opdSurgeryRemarkCode: true,
+  opdReasonNoSurgeryCode: true,
+  opdFollowUpReasonCode: true,
+  opdImplantRequired: true,
+  opdDiagnosis: true,
   ipdAdmissionDate: true,
   ipdHospital: true,
   ipdDrName: true,
@@ -76,6 +83,34 @@ const doctorAppointmentLeadSelect = {
     select: {
       id: true,
       prescriptionFileUrl: true,
+    },
+  },
+  opdSurgeryRemark: {
+    select: {
+      code: true,
+      label: true,
+    },
+  },
+  opdReasonNoSurgery: {
+    select: {
+      code: true,
+      label: true,
+    },
+  },
+  opdFollowUpReason: {
+    select: {
+      code: true,
+      label: true,
+    },
+  },
+  opdPrescriptionImages: {
+    orderBy: [{ sortOrder: 'asc' as const }, { createdAt: 'asc' as const }],
+    select: {
+      id: true,
+      fileName: true,
+      fileUrl: true,
+      storageKey: true,
+      sortOrder: true,
     },
   },
   dischargeSheet: {
@@ -148,6 +183,13 @@ export interface UpdateDoctorOpdInput {
   status?: string
   caseStage?: CaseStage
   markOpdDone?: boolean
+  surgeryAdvised?: string | null
+  surgeryRemarksType?: string | null
+  reasonNoSurgery?: string | null
+  followUpReason?: string | null
+  implantRequired?: boolean | null
+  diagnosis?: string | null
+  prescriptionImages?: File[] | null
 }
 
 export interface CancelDoctorOpdInput {
@@ -264,6 +306,106 @@ function normalizeText(value: string | null | undefined) {
 
   const trimmed = value.trim()
   return trimmed || null
+}
+
+function normalizeMasterCode(value: string | null | undefined) {
+  const normalized = normalizeText(value)
+  return normalized ? normalized.replace(/\s+/g, '_') : normalized
+}
+
+function normalizeSurgeryAdvised(value: string | null | undefined) {
+  const normalized = normalizeText(value)
+  if (!normalized) {
+    return normalized
+  }
+
+  const key = normalized.toLowerCase().replace(/[\s-]+/g, '_')
+
+  if (['yes', 'y', 'surgery_advised', 'advised'].includes(key)) {
+    return 'yes'
+  }
+
+  if (['no', 'n', 'no_surgery', 'not_advised'].includes(key)) {
+    return 'no'
+  }
+
+  if (['follow_up', 'followup', 'follow'].includes(key)) {
+    return 'follow_up'
+  }
+
+  return normalized
+}
+
+type StoredOpdPrescriptionImage = {
+  name: string
+  url: string
+  key?: string | null
+}
+
+type MasterOptionSummary = {
+  code: string
+  label: string
+}
+
+async function resolveMasterOptionByCode(
+  tx: Prisma.TransactionClient,
+  type: 'surgeryRemark' | 'reasonNoSurgery' | 'followUpReason',
+  value: string | null | undefined
+): Promise<MasterOptionSummary | null | undefined> {
+  const code = normalizeMasterCode(value)
+  if (code === undefined) {
+    return undefined
+  }
+
+  if (code === null) {
+    return null
+  }
+
+  if (type === 'surgeryRemark') {
+    const item = await tx.surgeryRemarkMaster.findFirst({
+      where: {
+        code: { equals: code, mode: 'insensitive' },
+        isActive: true,
+      },
+      select: { code: true, label: true },
+    })
+
+    if (!item) {
+      throw new DoctorAppApiError('Invalid surgery remark selected', 400)
+    }
+
+    return item
+  }
+
+  if (type === 'reasonNoSurgery') {
+    const item = await tx.reasonNoSurgeryMaster.findFirst({
+      where: {
+        code: { equals: code, mode: 'insensitive' },
+        isActive: true,
+      },
+      select: { code: true, label: true },
+    })
+
+    if (!item) {
+      throw new DoctorAppApiError('Invalid reason for no surgery selected', 400)
+    }
+
+    return item
+  }
+
+  const item = await tx.followUpReasonMaster.findFirst({
+    where: {
+      code: { equals: code, mode: 'insensitive' },
+      isActive: true,
+    },
+    select: { code: true, label: true },
+  })
+
+  if (!item) {
+    throw new DoctorAppApiError('Invalid follow-up reason selected', 400)
+  }
+
+  return item
 }
 
 function isIpdLead(lead: DoctorAppointmentLead) {
@@ -424,6 +566,11 @@ function matchesStatusFilter(lead: DoctorAppointmentLead, status?: string) {
 
 function mapAppointmentSummary(lead: DoctorAppointmentLead) {
   const type = getAppointmentType(lead)
+  const primaryPrescriptionFileUrl =
+    lead.opdPrescriptionImages[0]?.fileUrl ||
+    lead.kypSubmission?.prescriptionFileUrl ||
+    lead.docUpload ||
+    null
 
   return {
     id: lead.id,
@@ -477,13 +624,24 @@ function mapAppointmentSummary(lead: DoctorAppointmentLead) {
       dischargeDate: lead.admissionRecord?.ipdDischargeDate || lead.dischargeSheet?.dischargeDate || null,
     },
     prescription: {
-      fileUrl: lead.kypSubmission?.prescriptionFileUrl || lead.docUpload || null,
+      fileUrl: primaryPrescriptionFileUrl,
     },
     updatedAt: lead.updatedDate,
   }
 }
 
 function mapAppointmentDetail(lead: DoctorAppointmentLead) {
+  const prescriptionFiles = lead.opdPrescriptionImages.map((image) => ({
+    name: image.fileName,
+    url: image.fileUrl,
+    key: image.storageKey,
+  }))
+  const primaryPrescriptionFileUrl =
+    prescriptionFiles[0]?.url ||
+    lead.kypSubmission?.prescriptionFileUrl ||
+    lead.docUpload ||
+    null
+
   return {
     ...mapAppointmentSummary(lead),
     lead: {
@@ -500,8 +658,23 @@ function mapAppointmentDetail(lead: DoctorAppointmentLead) {
       hospitalName: lead.hospitalName,
       remarks: lead.remarks,
       followUpDate: lead.followUpDate,
+      diseaseDetails: lead.diseaseDetails,
       createdAt: lead.createdDate,
       updatedAt: lead.updatedDate,
+    },
+    prescription: {
+      fileUrl: primaryPrescriptionFileUrl,
+      files: prescriptionFiles,
+    },
+    opdRecording: {
+      surgeryAdvised: lead.opdSurgeryAdvised ?? null,
+      surgeryRemarksType: lead.opdSurgeryRemarkCode ?? null,
+      surgeryRemark: lead.opdSurgeryRemark ?? null,
+      reasonNoSurgery: lead.opdReasonNoSurgery ?? null,
+      followUpReason: lead.opdFollowUpReason ?? null,
+      implantRequired: lead.opdImplantRequired ?? null,
+      diagnosis: lead.opdDiagnosis ?? lead.diseaseDetails ?? null,
+      prescriptionImages: prescriptionFiles,
     },
     admissionRecord: lead.admissionRecord,
     dischargeSheet: lead.dischargeSheet,
@@ -653,8 +826,9 @@ export async function updateDoctorOpdAppointment(
 
   let targetCaseStage = input.caseStage
   let targetStatus = input.status?.trim()
+  const shouldMarkOpdDone = input.markOpdDone || isOpdDoneStatus(targetStatus)
 
-  if (input.markOpdDone) {
+  if (shouldMarkOpdDone) {
     if (hasLeadOpdDone(lead)) {
       throw new DoctorAppApiError('OPD is already marked done', 400)
     }
@@ -670,9 +844,78 @@ export async function updateDoctorOpdAppointment(
   const nextStage = targetCaseStage ?? lead.caseStage
   const stageChanged = nextStage !== lead.caseStage
   const changedById = stageChanged ? await requireSystemUserId() : null
+  const uploadedPrescriptionImages: StoredOpdPrescriptionImage[] = []
+
+  if (input.prescriptionImages?.length) {
+    for (const file of input.prescriptionImages) {
+      const arrayBuffer = await file.arrayBuffer()
+      const buffer = Buffer.from(arrayBuffer)
+      const upload = await uploadFileToS3(buffer, file.name, 'doctor-app/prescriptions')
+      uploadedPrescriptionImages.push({
+        name: file.name,
+        url: upload.url,
+        key: upload.key,
+      })
+    }
+  }
 
   const updatedLead = await prisma.$transaction(async (tx) => {
-    const updated = await tx.lead.update({
+    const resolvedSurgeryRemark = await resolveMasterOptionByCode(
+      tx,
+      'surgeryRemark',
+      input.surgeryRemarksType
+    )
+    const resolvedReasonNoSurgery = await resolveMasterOptionByCode(
+      tx,
+      'reasonNoSurgery',
+      input.reasonNoSurgery
+    )
+    const resolvedFollowUpReason = await resolveMasterOptionByCode(
+      tx,
+      'followUpReason',
+      input.followUpReason
+    )
+
+    const surgeryAdvised =
+      input.surgeryAdvised !== undefined
+        ? normalizeSurgeryAdvised(input.surgeryAdvised)
+        : lead.opdSurgeryAdvised ?? null
+
+    const nextSurgeryRemark =
+      resolvedSurgeryRemark !== undefined
+        ? resolvedSurgeryRemark
+        : lead.opdSurgeryRemark
+    const nextReasonNoSurgery =
+      resolvedReasonNoSurgery !== undefined
+        ? resolvedReasonNoSurgery
+        : lead.opdReasonNoSurgery
+    const nextFollowUpReason =
+      resolvedFollowUpReason !== undefined
+        ? resolvedFollowUpReason
+        : lead.opdFollowUpReason
+
+    const nextSurgeryRemarkCode =
+      surgeryAdvised === 'no' || surgeryAdvised === 'follow_up'
+        ? null
+        : nextSurgeryRemark?.code ?? lead.opdSurgeryRemarkCode ?? null
+    const nextReasonNoSurgeryCode =
+      surgeryAdvised === 'yes' || surgeryAdvised === 'follow_up'
+        ? null
+        : nextReasonNoSurgery?.code ?? lead.opdReasonNoSurgeryCode ?? null
+    const nextFollowUpReasonCode =
+      surgeryAdvised === 'yes' || surgeryAdvised === 'no'
+        ? null
+        : nextFollowUpReason?.code ?? lead.opdFollowUpReasonCode ?? null
+    const nextDiagnosis =
+      input.diagnosis !== undefined
+        ? normalizeText(input.diagnosis)
+        : lead.opdDiagnosis ?? lead.diseaseDetails ?? null
+    const nextImplantRequired =
+      input.implantRequired !== undefined
+        ? input.implantRequired
+        : lead.opdImplantRequired ?? null
+
+    await tx.lead.update({
       where: { id: leadId },
       data: {
         ...(input.opdHospital !== undefined ? { opdHospital: input.opdHospital.trim() } : {}),
@@ -686,11 +929,46 @@ export async function updateDoctorOpdAppointment(
           ? { followUpDate: parseOptionalDate(input.followUpDate, 'followUpDate') }
           : {}),
         ...(input.remarks !== undefined ? { remarks: normalizeText(input.remarks) } : {}),
+        opdSurgeryAdvised: surgeryAdvised,
+        opdSurgeryRemarkCode: nextSurgeryRemarkCode,
+        opdReasonNoSurgeryCode: nextReasonNoSurgeryCode,
+        opdFollowUpReasonCode: nextFollowUpReasonCode,
+        opdImplantRequired: nextImplantRequired,
+        opdDiagnosis: nextDiagnosis,
+        diseaseDetails: nextDiagnosis,
+        ...(uploadedPrescriptionImages.length > 0
+          ? { docUpload: uploadedPrescriptionImages[0]?.url ?? lead.docUpload }
+          : {}),
         ...(targetStatus !== undefined ? { status: targetStatus } : {}),
         ...(targetCaseStage !== undefined ? { caseStage: targetCaseStage } : {}),
       },
       select: doctorAppointmentLeadSelect,
     })
+
+    if (uploadedPrescriptionImages.length > 0) {
+      if (lead.kypSubmission?.id) {
+        await tx.kYPSubmission.update({
+          where: { leadId },
+          data: {
+            prescriptionFileUrl: uploadedPrescriptionImages[0]?.url ?? null,
+          },
+        })
+      }
+
+      await tx.leadOpdPrescriptionImage.deleteMany({
+        where: { leadId },
+      })
+
+      await tx.leadOpdPrescriptionImage.createMany({
+        data: uploadedPrescriptionImages.map((image, index) => ({
+          leadId,
+          fileName: image.name,
+          fileUrl: image.url,
+          storageKey: image.key ?? null,
+          sortOrder: index,
+        })),
+      })
+    }
 
     if (stageChanged) {
       await tx.caseStageHistory.create({
@@ -699,12 +977,17 @@ export async function updateDoctorOpdAppointment(
           fromStage: lead.caseStage,
           toStage: nextStage,
           changedById: changedById!,
-          note: input.markOpdDone ? 'OPD marked done by doctor app' : 'Doctor app updated OPD stage',
+          note: shouldMarkOpdDone
+            ? 'OPD marked done by doctor app'
+            : 'Doctor app updated OPD stage',
         },
       })
     }
 
-    return updated
+    return tx.lead.findUniqueOrThrow({
+      where: { id: leadId },
+      select: doctorAppointmentLeadSelect,
+    })
   })
 
   return mapAppointmentDetail(updatedLead)

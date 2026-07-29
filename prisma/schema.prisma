@@ -754,6 +754,12 @@ model Lead {
   opdCharges         Int       @default(0)
   opdScheduleDate    DateTime?
   opdMeeting         Int?
+  opdSurgeryAdvised  String?
+  opdSurgeryRemarkCode String?
+  opdReasonNoSurgeryCode String?
+  opdFollowUpReasonCode String?
+  opdImplantRequired Boolean?
+  opdDiagnosis       String?
   ipdAdmissionDate   DateTime?
   ipdHospital        String?
   ipdDrName          String?
@@ -810,6 +816,10 @@ model Lead {
   leadRemarkEntries     LeadRemarkEntry[]
   qrCallAuditLogs       LeadQrCallAuditLog[]
   crmAssignmentPreviewLogs CrmAssignmentPreviewLog[]
+  opdSurgeryRemark      SurgeryRemarkMaster?     @relation("LeadOpdSurgeryRemark", fields: [opdSurgeryRemarkCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  opdReasonNoSurgery    ReasonNoSurgeryMaster?   @relation("LeadOpdReasonNoSurgery", fields: [opdReasonNoSurgeryCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  opdFollowUpReason     FollowUpReasonMaster?    @relation("LeadOpdFollowUpReason", fields: [opdFollowUpReasonCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  opdPrescriptionImages LeadOpdPrescriptionImage[]
 
 
   @@index([bdId])
@@ -826,6 +836,23 @@ model Lead {
   @@index([leadEntryDate])
   @@index([assignedDate])
   @@index([followUpDate])
+  @@index([opdSurgeryRemarkCode])
+  @@index([opdReasonNoSurgeryCode])
+  @@index([opdFollowUpReasonCode])
+}
+
+model LeadOpdPrescriptionImage {
+  id         String   @id @default(cuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  fileName    String
+  fileUrl     String
+  storageKey  String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([leadId, sortOrder])
 }
 
 model CallNote {
@@ -3978,6 +4005,7 @@ model SurgeryRemarkMaster {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  opdLeads     Lead[]   @relation("LeadOpdSurgeryRemark")
 
   @@index([displayOrder])
   @@index([isActive])
@@ -3991,6 +4019,7 @@ model ReasonNoSurgeryMaster {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  opdLeads     Lead[]   @relation("LeadOpdReasonNoSurgery")
 
   @@index([displayOrder])
   @@index([isActive])
@@ -4004,6 +4033,7 @@ model FollowUpReasonMaster {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  opdLeads     Lead[]   @relation("LeadOpdFollowUpReason")
 
   @@index([displayOrder])
   @@index([isActive])
