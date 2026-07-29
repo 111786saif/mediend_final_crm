@@ -105,7 +105,11 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Error in AI chat:', error)
     return errorResponse(
-      error instanceof Error ? error.message : 'Failed to process chat request',
+      error instanceof Error
+        ? error.message.includes('authentication') || error.message.includes('Authorization')
+          ? `${error.message} — check AI_GATEWAY_API_KEY (Command Code Studio, usually user_… prefix) and recreate the app container after updating .env`
+          : error.message
+        : 'Failed to process chat request',
       500
     )
   }

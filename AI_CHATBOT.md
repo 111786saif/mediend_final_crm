@@ -8,9 +8,13 @@ Add to `.env`:
 
 ```bash
 AI_GATEWAY_BASE_URL=https://api.commandcode.ai/provider/v1
-AI_GATEWAY_API_KEY=your_command_code_api_key
+AI_GATEWAY_API_KEY=user_your_command_code_api_key
+# Or use the CLI env name:
+# COMMAND_CODE_API_KEY=user_your_command_code_api_key
 AI_CHAT_MODEL=deepseek/deepseek-v4-flash
 ```
+
+Generate the key in [Command Code Studio](https://commandcode.ai/docs/studio/api-keys). Keys typically start with `user_`. Provider plan or higher is required.
 
 Optional model IDs (see `opencode.json`): `deepseek/deepseek-v4-pro`, `Qwen/Qwen3.6-Plus`, `Qwen/Qwen3.7-Max`.
 
