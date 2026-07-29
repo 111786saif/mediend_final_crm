@@ -696,77 +696,7 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
   if (user.role === 'ACCESS_MATRIX') {
     return navItems.filter((item) => item.title === 'IT Permissions')
   }
-  return navItems.filter((item) => {
-    if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Calendar') return true
-    if (item.title === 'Meets') return user.role !== 'BD'
-    // Sales Head / CM: "Sales Dashboard" already covers dashboard; hide generic "Dashboard"
-    if (
-      item.title === 'Dashboard' &&
-      (user.role === 'SALES_HEAD' || user.role === 'CATEGORY_MANAGER')
-    ) {
-      return false
-    }
-    // Company P&L (/finance/pnl): Finance Head, MD, Admin only (not TESTER / other roles with broad nav)
-    if (item.title === 'Company P&L') {
-      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT'
-    }
-    // Targeted P&L: same access as Company P&L
-    if (item.title === 'Targeted P&L') {
-      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT'
-    }
-    if (item.title === 'Sales P&L') {
-      return hasPermission(user, 'sales:pnl:read')
-    }
-    // IT P&L overview: IT Head, Finance Head, MD, Admin only (not Sales Head / TESTER broad nav)
-    if (item.title === 'IT P&L') {
-      return user.role === 'IT_HEAD' || user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT'
-    }
-    if (user.role === 'MD' || user.role === 'EXECUTIVE_ASSISTANT') {
-      return (
-        item.title === 'Sales Dashboard' ||
-        item.title === 'Finance Dashboard' ||
-        item.title === 'MD HR Dashboard' ||
-        item.title === 'Recruitment' ||
-        item.title === 'Loan & Demat Revenue' ||
-        item.title === 'DM Dashboard' ||
-        item.title === 'Targeted P&L' ||
-        item.title === 'P/L Ledger' ||
-        item.title === 'P/L Outstanding' ||
-        item.title === 'P/L Surgery' ||
-        item.title === 'Doctor List' ||
-        item.title === 'Hospital List' ||
-        item.title.startsWith('MD ') ||
-        (item.title === 'Master Data' && (item.roles?.includes('MD') || item.roles?.includes('EXECUTIVE_ASSISTANT')))
-      )
-    }
-    // Doctor / Hospital lists: main nav for PL or Finance (not nested under Finance)
-    if (item.title === 'Doctor List' || item.title === 'Hospital List') {
-      return hasPlOrFinanceRead(user)
-    }
-    // Outstanding List is Finance Head main-nav label for /pl/outstanding (PL roles use P/L Outstanding)
-    if (item.title === 'Outstanding List') {
-      return user.role === 'FINANCE_HEAD' || user.role === 'ADMIN' || user.role === 'TESTER'
-    }
-    // USER role can only see Tasks + "My " prefixed pages (MyHRMS)
-    if (user.role === 'USER') {
-      return item.title === 'Tasks' || item.title.startsWith('My ')
-    }
-    if (item.title.startsWith('My ') || item.title.startsWith('Svc ')) {
-      return true
-    }
-    if (user.role === 'ADMIN' || user.role === 'TESTER') {
-      // Exclude HR_HEAD-only HR Dashboard to avoid duplicate (ADMIN sees MD HR Dashboard)
-      if (item.title === 'HR Dashboard' && item.url === '/hr/dashboard') return false
-      return true
-    }
-    if (item.roles) {
-      return item.roles.includes(user.role)
-    }
-    if (item.permission) {
-      return hasPermission(user, item.permission)
-    }
-    return false
-  })
+  return navItems
 }
 
 function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string })[] {

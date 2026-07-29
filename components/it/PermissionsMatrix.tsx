@@ -23,6 +23,7 @@ interface PermissionsMatrixProps {
   onUpdatePermission: (resourceId: string, updates: { level: string; canGrant: boolean }) => void
   openSectionKey: string | null
   setOpenSectionKey: (key: string | null) => void
+  isRole?: boolean
 }
 
 export function PermissionsMatrix({
@@ -33,6 +34,7 @@ export function PermissionsMatrix({
   onUpdatePermission,
   openSectionKey,
   setOpenSectionKey,
+  isRole = false,
 }: PermissionsMatrixProps) {
   return (
     <div className="flex-1 w-full space-y-4">
@@ -64,7 +66,7 @@ export function PermissionsMatrix({
       {/* Sections Accordions */}
       <div className="space-y-4">
         {activeModule.children?.map((sec: any) => {
-          const isOpen = openSectionKey === sec.key
+          const isOpen = !isRole && openSectionKey === sec.key
           const isSectionGranted = editedPermissions[sec.id]?.level !== 'NONE'
 
           return (
@@ -74,11 +76,20 @@ export function PermissionsMatrix({
             >
               {/* Accordion Trigger Header */}
               <div
-                className="flex items-center justify-between p-4 cursor-pointer bg-muted/40 hover:bg-muted/70 select-none"
-                onClick={() => setOpenSectionKey(isOpen ? null : sec.key)}
+                className={cn(
+                  "flex items-center justify-between p-4 bg-muted/40 select-none",
+                  !isRole && "cursor-pointer hover:bg-muted/70"
+                )}
+                onClick={() => {
+                  if (!isRole) {
+                    setOpenSectionKey(isOpen ? null : sec.key)
+                  }
+                }}
               >
                 <div className="flex items-center gap-2">
-                  <ChevronRight className={`h-4 w-4 text-cyan-600 dark:text-cyan-400 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
+                  {!isRole && (
+                    <ChevronRight className={`h-4 w-4 text-cyan-600 dark:text-cyan-400 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
+                  )}
                   <span className="font-semibold text-lg text-foreground">{sec.label}</span>
                 </div>
                 <div className="flex items-center gap-4" onClick={(e) => e.stopPropagation()}>

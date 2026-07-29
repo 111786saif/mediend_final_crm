@@ -24,7 +24,7 @@ const PERMISSION_RANKS: Record<PermissionLevel, number> = {
 export function usePermissions() {
   const { user } = useAuth()
   const activeRole =
-    user?.role === 'TESTER' && typeof window !== 'undefined'
+    (user?.role === 'TESTER' || user?.role === 'ADMIN' || user?.role === 'MD') && typeof window !== 'undefined'
       ? localStorage.getItem('mediend_tester_active_role')
       : null
 
