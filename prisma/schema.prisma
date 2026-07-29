@@ -3047,6 +3047,8 @@ model AdmissionRecord {
   // IPD Status tracking
   ipdStatus          IpdStatus?
   ipdStatusReason    String?
+  ipdImplantUsed     Boolean?
+  ipdNoShowReason    String?
   newSurgeryDate     DateTime?
   ipdDischargeDate   DateTime?
   ipdStatusNotes     String?    @db.Text
@@ -3057,8 +3059,40 @@ model AdmissionRecord {
   initiatedById String
   initiatedBy   User     @relation("AdmissionInitiator", fields: [initiatedById], references: [id])
   initiatedAt   DateTime @default(now())
+  implantUsages  AdmissionRecordImplantUsage[]
+  prescriptionImages AdmissionRecordPrescriptionImage[]
 
   @@index([leadId])
+}
+
+model AdmissionRecordImplantUsage {
+  id                String          @id @default(cuid())
+  admissionRecordId String
+  admissionRecord   AdmissionRecord @relation(fields: [admissionRecordId], references: [id], onDelete: Cascade)
+  implantId         String
+  implant           ImplantMaster   @relation(fields: [implantId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  quantity          Int             @default(1)
+  notes             String?         @db.Text
+  sortOrder         Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([admissionRecordId, sortOrder])
+  @@index([implantId])
+}
+
+model AdmissionRecordPrescriptionImage {
+  id                String          @id @default(cuid())
+  admissionRecordId String
+  admissionRecord   AdmissionRecord @relation(fields: [admissionRecordId], references: [id], onDelete: Cascade)
+  fileName          String
+  fileUrl           String
+  storageKey        String?
+  sortOrder         Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([admissionRecordId, sortOrder])
 }
 
 // ==========================================
@@ -3999,6 +4033,7 @@ model ImplantMaster {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  ipdUsages    AdmissionRecordImplantUsage[]
 
   @@index([name])
   @@index([code])
