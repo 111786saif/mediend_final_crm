@@ -19,6 +19,7 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'insurance_pl', label: 'Insurance & P/L', type: 'MODULE', parentKey: null, sortOrder: 5 },
   { key: 'finance', label: 'Finance & Accounts', type: 'MODULE', parentKey: null, sortOrder: 6 },
   { key: 'actions', label: 'System Actions', type: 'MODULE', parentKey: null, sortOrder: 7 },
+  { key: 'crm', label: 'CRM', type: 'MODULE', parentKey: null, sortOrder: 8 },
 
   // SECTIONS (individual pages or sub-sections)
   
@@ -49,9 +50,13 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'main.md_outstanding', label: 'MD Outstanding', type: 'SECTION', parentKey: 'main', sortOrder: 24 },
   { key: 'main.incentive', label: 'Incentive', type: 'SECTION', parentKey: 'main', sortOrder: 25 },
   { key: 'main.cumulative_report', label: 'Cumulative Report', type: 'SECTION', parentKey: 'main', sortOrder: 26 },
+  { key: 'main.ipd_calendar', label: 'IPD Calendar', type: 'SECTION', parentKey: 'main', sortOrder: 27 },
+  { key: 'main.doctor_admin', label: 'Doctor Admin', type: 'SECTION', parentKey: 'main', sortOrder: 28 },
+  { key: 'main.training', label: 'Training', type: 'SECTION', parentKey: 'main', sortOrder: 29 },
 
 
   // Under hrm
+  { key: 'hrm.hr_dashboard', label: 'HR Dashboard', type: 'SECTION', parentKey: 'hrm', sortOrder: 0 },
   { key: 'hrm.attendance_normalizations', label: 'Attendance & Normalizations', type: 'SECTION', parentKey: 'hrm', sortOrder: 1 },
   { key: 'hrm.people_org', label: 'People & Org', type: 'SECTION', parentKey: 'hrm', sortOrder: 2 },
   { key: 'hrm.onboarding', label: 'Onboarding', type: 'SECTION', parentKey: 'hrm', sortOrder: 3 },
@@ -68,15 +73,19 @@ const resourcesToSeed: ResourceSeedItem[] = [
 
   // Under sales
   { key: 'sales.sales_dashboard', label: 'Sales Dashboard', type: 'SECTION', parentKey: 'sales', sortOrder: 1 },
-  { key: 'sales.dm_dashboard', label: 'DM Dashboard', type: 'SECTION', parentKey: 'sales', sortOrder: 2 },
-  { key: 'sales.case_tracker', label: 'Case Tracker', type: 'SECTION', parentKey: 'sales', sortOrder: 3 },
-  { key: 'sales.pending_surgery', label: 'Pending Surgery', type: 'SECTION', parentKey: 'sales', sortOrder: 4 },
-  { key: 'sales.targets', label: 'Targets', type: 'SECTION', parentKey: 'sales', sortOrder: 5 },
-  { key: 'sales.sales_pnl', label: 'Sales P&L', type: 'SECTION', parentKey: 'sales', sortOrder: 6 },
-  { key: 'sales.campaign_cpl', label: 'Campaign CPL', type: 'SECTION', parentKey: 'sales', sortOrder: 7 },
-  { key: 'sales.sales_pipeline', label: 'Sales Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 8 },
-  { key: 'sales.team_lead_pipeline', label: 'Team Lead Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 9 },
-  { key: 'sales.blueprint_dashboard', label: 'Blue Print Dashboard', type: 'SECTION', parentKey: 'sales', sortOrder: 10 },
+  { key: 'sales.md_sales_dashboard', label: 'MD Sales Dashboard', type: 'SECTION', parentKey: 'sales', sortOrder: 2 },
+  { key: 'sales.dm_dashboard', label: 'DM Dashboard', type: 'SECTION', parentKey: 'sales', sortOrder: 3 },
+  { key: 'sales.case_tracker', label: 'Case Tracker', type: 'SECTION', parentKey: 'sales', sortOrder: 4 },
+  { key: 'sales.pending_surgery', label: 'Pending Surgery', type: 'SECTION', parentKey: 'sales', sortOrder: 5 },
+  { key: 'sales.targets', label: 'Targets', type: 'SECTION', parentKey: 'sales', sortOrder: 6 },
+  { key: 'sales.team_lead_targets', label: 'Team Lead Targets', type: 'SECTION', parentKey: 'sales', sortOrder: 7 },
+  { key: 'sales.sales_head_targets', label: 'Sales Head Targets', type: 'SECTION', parentKey: 'sales', sortOrder: 8 },
+  { key: 'sales.sales_pnl', label: 'Sales P&L', type: 'SECTION', parentKey: 'sales', sortOrder: 9 },
+  { key: 'sales.campaign_cpl', label: 'Campaign CPL', type: 'SECTION', parentKey: 'sales', sortOrder: 10 },
+  { key: 'sales.sales_pipeline', label: 'Sales Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 11 },
+  { key: 'sales.team_lead_pipeline', label: 'Team Lead Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 12 },
+  { key: 'sales.ea_pipeline', label: 'EA Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 13 },
+  { key: 'sales.blueprint_dashboard', label: 'Blue Print Dashboard', type: 'SECTION', parentKey: 'sales', sortOrder: 14 },
 
 
   // Under insurance_pl
@@ -102,6 +111,19 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'finance.fin_team_approvals', label: 'Fin Team Approvals', type: 'SECTION', parentKey: 'finance', sortOrder: 11 },
   { key: 'finance.md_team_approvals', label: 'MD Team Approvals', type: 'SECTION', parentKey: 'finance', sortOrder: 12 },
   { key: 'finance.fin_reports', label: 'Fin Reports', type: 'SECTION', parentKey: 'finance', sortOrder: 13 },
+  { key: 'finance.fin_invoice_requests', label: 'Fin Invoice Requests', type: 'SECTION', parentKey: 'finance', sortOrder: 14 },
+  { key: 'finance.fin_doctor_payoff', label: 'Fin Doctor Payoff', type: 'SECTION', parentKey: 'finance', sortOrder: 15 },
+  { key: 'finance.fin_sales_team_cost', label: 'Sales Team Cost', type: 'SECTION', parentKey: 'finance', sortOrder: 16 },
+  { key: 'finance.master_seating_cost', label: 'Master Seating Cost', type: 'SECTION', parentKey: 'finance', sortOrder: 17 },
+
+  // Under crm
+  { key: 'crm.campaigns', label: 'CRM Campaigns', type: 'SECTION', parentKey: 'crm', sortOrder: 1 },
+  { key: 'crm.incoming_leads', label: 'CRM Incoming Leads', type: 'SECTION', parentKey: 'crm', sortOrder: 2 },
+  { key: 'crm.kpis', label: 'CRM KPIs', type: 'SECTION', parentKey: 'crm', sortOrder: 3 },
+  { key: 'crm.activity', label: 'CRM Activity', type: 'SECTION', parentKey: 'crm', sortOrder: 4 },
+  { key: 'crm.masters', label: 'CRM Masters', type: 'SECTION', parentKey: 'crm', sortOrder: 5 },
+  { key: 'crm.access_matrix', label: 'CRM Access Matrix', type: 'SECTION', parentKey: 'crm', sortOrder: 6 },
+  { key: 'crm.churn_rules', label: 'CRM Churn Rules', type: 'SECTION', parentKey: 'crm', sortOrder: 7 },
 
   // ENTITIES (Legacy Leaf Actions & static mapping)
   { key: 'leads.table.lead.column.phoneNumber', label: 'Phone Number Column', type: 'ENTITY', parentKey: 'sales.case_tracker', sortOrder: 1 },

@@ -18,16 +18,12 @@ interface ResourceNodeWithAssignment {
     permissionLevel: string
     canGrant: boolean
   } | null
-  roleAssignment: {
-    permissionLevel: string
-    canGrant: boolean
-  } | null
   children: ResourceNodeWithAssignment[]
 }
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
+  { params }: { params: Promise<{ roleName: string }> }
 ) {
   try {
     const caller = getSessionFromRequest(request)
@@ -38,16 +34,7 @@ export async function GET(
       return errorResponse('Access denied. Insufficient administrative privileges.', 403)
     }
 
-    const { userId } = await params
-
-    const targetUser = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, name: true, email: true, role: true },
-    })
-
-    if (!targetUser) {
-      return errorResponse('User not found', 404)
-    }
+    const { roleName } = await params
 
     // Fetch all active resources
     const resources = await prisma.resource.findMany({
@@ -55,54 +42,29 @@ export async function GET(
       orderBy: { sortOrder: 'asc' },
     })
 
-    // Fetch the target user's custom permission assignments
-    const userAssignments = await prisma.permissionAssignment.findMany({
-      where: { userId },
+    // Fetch this role's permission assignments
+    const roleAssignments = await prisma.permissionAssignment.findMany({
+      where: {
+        subjectType: SubjectType.ROLE,
+        role: roleName,
+      },
       select: { resourceId: true, permissionLevel: true, canGrant: true },
     })
 
     const assignmentsMap = new Map<string, { permissionLevel: string; canGrant: boolean }>()
-    for (const assignment of userAssignments) {
+    for (const assignment of roleAssignments) {
       assignmentsMap.set(assignment.resourceId, {
         permissionLevel: assignment.permissionLevel,
         canGrant: assignment.canGrant,
       })
     }
 
-    // Fetch target user's role-level assignments
-    const roleAssignments = await prisma.permissionAssignment.findMany({
-      where: {
-        subjectType: SubjectType.ROLE,
-        role: targetUser.role,
-      },
-      select: { resourceId: true, permissionLevel: true, canGrant: true },
-    })
-
-    const allowedResourceIds = new Set<string>()
-    const roleAssignmentsMap = new Map<string, { permissionLevel: string; canGrant: boolean }>()
-    for (const ra of roleAssignments) {
-      if (ra.permissionLevel !== 'NONE') {
-        allowedResourceIds.add(ra.resourceId)
-      }
-      roleAssignmentsMap.set(ra.resourceId, {
-        permissionLevel: ra.permissionLevel,
-        canGrant: ra.canGrant,
-      })
-    }
-
-    // MD and ADMIN can configure/see everything. Otherwise, filter active resources by role scope or override presence
-    const isMdOrAdmin = targetUser.role === 'MD' || targetUser.role === 'ADMIN'
-    const filteredResources = resources.filter(
-      (res) => isMdOrAdmin || allowedResourceIds.has(res.id) || assignmentsMap.has(res.id)
-    )
-
     // Build the resource tree with assignments merged in
     const nodesMap = new Map<string, ResourceNodeWithAssignment>()
     const roots: ResourceNodeWithAssignment[] = []
 
-    for (const res of filteredResources) {
+    for (const res of resources) {
       const assignment = assignmentsMap.get(res.id) ?? null
-      const roleAssignment = roleAssignmentsMap.get(res.id) ?? null
       nodesMap.set(res.id, {
         id: res.id,
         key: res.key,
@@ -112,7 +74,6 @@ export async function GET(
         sortOrder: res.sortOrder,
         isActive: res.isActive,
         assignment,
-        roleAssignment,
         children: [],
       })
     }
@@ -142,20 +103,14 @@ export async function GET(
     sortChildren(roots)
 
     return successResponse({
-      user: targetUser,
+      role: roleName,
       resourceTree: roots,
     })
   } catch (error) {
-    console.error('Error fetching admin user permissions tree:', error)
-    return errorResponse('Failed to fetch user permissions tree', 500)
+    console.error('Error fetching role permissions tree:', error)
+    return errorResponse('Failed to fetch role permissions tree', 500)
   }
 }
-
-// ────────────────────────────────────────────────
-// PATCH  /api/admin/users/[userId]/permissions
-// Batch-upsert permission assignments for a user.
-// Body: { assignments: [{ resourceId, permissionLevel, canGrant }] }
-// ────────────────────────────────────────────────
 
 const batchUpdateSchema = z.object({
   assignments: z.array(
@@ -169,7 +124,7 @@ const batchUpdateSchema = z.object({
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
+  { params }: { params: Promise<{ roleName: string }> }
 ) {
   try {
     const actorUser = getSessionFromRequest(request)
@@ -184,16 +139,7 @@ export async function PATCH(
       return errorResponse('Forbidden', 403)
     }
 
-    const { userId } = await params
-
-    // Verify target user exists
-    const targetUser = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true },
-    })
-    if (!targetUser) {
-      return errorResponse('Target user not found', 404)
-    }
+    const { roleName } = await params
 
     const body = await request.json()
     const parsed = batchUpdateSchema.safeParse(body)
@@ -223,7 +169,8 @@ export async function PATCH(
     // Fetch existing assignments for comparison and audit log
     const existingAssignments = await prisma.permissionAssignment.findMany({
       where: {
-        userId,
+        subjectType: SubjectType.ROLE,
+        role: roleName,
         resourceId: { in: resourceIds },
       },
       select: { id: true, resourceId: true, permissionLevel: true, canGrant: true },
@@ -240,11 +187,11 @@ export async function PATCH(
       const existing = existingMap.get(item.resourceId)
 
       if (!existing) {
-        // Only create if level is not NONE or if canGrant is enabled
+        // Only create if the level is not NONE or if canGrant is enabled
         if (item.permissionLevel !== 'NONE' || item.canGrant) {
           toCreate.push({
-            subjectType: SubjectType.USER,
-            userId,
+            subjectType: SubjectType.ROLE,
+            role: roleName,
             resourceId: item.resourceId,
             permissionLevel: item.permissionLevel,
             canGrant: item.canGrant,
@@ -252,7 +199,7 @@ export async function PATCH(
           })
           auditLogs.push({
             actorId: actorUser.id,
-            targetUserId: userId,
+            targetUserId: `ROLE:${roleName}`,
             resourceId: item.resourceId,
             oldLevel: null,
             newLevel: item.permissionLevel,
@@ -273,7 +220,7 @@ export async function PATCH(
           })
           auditLogs.push({
             actorId: actorUser.id,
-            targetUserId: userId,
+            targetUserId: `ROLE:${roleName}`,
             resourceId: item.resourceId,
             oldLevel: existing.permissionLevel,
             newLevel: item.permissionLevel,
@@ -317,7 +264,7 @@ export async function PATCH(
 
     return successResponse({ count: auditLogs.length })
   } catch (error) {
-    console.error('Error batch updating permissions:', error)
-    return errorResponse('Failed to batch update permissions', 500)
+    console.error('Error batch updating role permissions:', error)
+    return errorResponse('Failed to batch update role permissions', 500)
   }
 }

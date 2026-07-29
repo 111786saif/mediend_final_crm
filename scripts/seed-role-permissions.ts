@@ -11,18 +11,18 @@ const roleAllowedSections: Record<string, string[]> = {
     'main.md_messages', 'main.md_appointments', 'main.company_pnl', 'main.targeted_pnl',
     'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue', 'main.it_permissions',
     'main.compliance', 'main.md_compliance', 'main.md_outstanding', 'main.incentive', 'main.cumulative_report',
-    'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
+    'hrm.hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_dashboard', 'sales.dm_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl', 'sales.sales_pipeline', 'sales.team_lead_pipeline', 'sales.blueprint_dashboard',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger', 'insurance_pl.pl_surgery', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports',
-    'actions'
+    'actions', 'crm'
   ],
   ADMIN: [
-    'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions' // ADMIN gets all
+    'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions', 'crm' // ADMIN gets all
   ],
   TESTER: [
-    'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions' // TESTER gets all
+    'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions', 'crm' // TESTER gets all
   ],
   EXECUTIVE_ASSISTANT: [
     'main.home', 'main.md_home', 'main.tasks', 'main.calendar', 'main.meets',
@@ -31,12 +31,12 @@ const roleAllowedSections: Record<string, string[]> = {
     'main.md_messages', 'main.md_appointments', 'main.company_pnl', 'main.targeted_pnl',
     'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue', 'main.it_permissions',
     'main.compliance', 'main.md_compliance', 'main.md_outstanding', 'main.incentive', 'main.cumulative_report',
-    'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
+    'hrm.hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_dashboard', 'sales.dm_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl', 'sales.sales_pipeline', 'sales.team_lead_pipeline', 'sales.blueprint_dashboard',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger', 'insurance_pl.pl_surgery', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
-    'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports',
-    'actions'
+    'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports', 'finance.fin_invoice_requests', 'finance.fin_doctor_payoff', 'finance.fin_sales_team_cost', 'finance.master_seating_cost',
+    'actions', 'main.doctor_admin'
   ],
   IT_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dept_targets', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'main.it_permissions', 'main.it_pnl', 'sales.campaign_cpl',
@@ -44,21 +44,22 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
   HR_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.md_hr_dashboard', 'main.md_attendance', 'main.md_leave_balances', 'sales.campaign_cpl',
-    'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
+    'hrm.hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.onboarding', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   FINANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.finance_dashboard', 'main.company_pnl', 'main.targeted_pnl', 'main.md_pnl', 'main.loan_demat_revenue',
-    'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports',
+    'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports', 'finance.fin_invoice_requests', 'finance.fin_doctor_payoff', 'finance.fin_sales_team_cost', 'finance.master_seating_cost',
     'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'insurance_pl.pl_ledger', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.people_org', 'hrm.onboarding',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   SALES_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.ipd_calendar',
     'sales.sales_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl', 'sales.sales_pipeline', 'sales.team_lead_pipeline', 'sales.blueprint_dashboard',
     'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
-    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval', 'main.incentive'
+    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval', 'main.incentive',
+    'crm.incoming_leads', 'crm.churn_rules'
   ],
   INSURANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
@@ -83,26 +84,30 @@ const roleAllowedSections: Record<string, string[]> = {
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   CATEGORY_MANAGER: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat', 'main.ipd_calendar',
     'sales.sales_dashboard', 'sales.case_tracker', 'sales.campaign_cpl', 'sales.pending_surgery', 'sales.targets',
     'sales.team_lead_pipeline',
-    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
+    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
+    'crm.incoming_leads'
   ],
   // ACM is functionally identical to TEAM_LEAD
   ASSISTANT_CATEGORY_MANAGER: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat', 'main.ipd_calendar',
     'sales.case_tracker', 'sales.campaign_cpl', 'sales.pending_surgery', 'sales.targets', 'sales.team_lead_pipeline',
-    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
+    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
+    'crm.incoming_leads', 'crm.churn_rules'
   ],
   TEAM_LEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat', 'main.ipd_calendar',
     'sales.case_tracker', 'sales.campaign_cpl', 'sales.pending_surgery', 'sales.targets', 'sales.team_lead_pipeline',
-    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
+    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
+    'crm.incoming_leads', 'crm.churn_rules'
   ],
   BD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.chat',
+    'main.home', 'main.tasks', 'main.calendar', 'main.chat', 'main.ipd_calendar',
     'sales.case_tracker', 'sales.campaign_cpl', 'sales.sales_pipeline',
-    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
+    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
+    'crm.incoming_leads'
   ],
   COMPLIANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.compliance', 'sales.campaign_cpl', 'main.cumulative_report',
@@ -118,6 +123,12 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
   ACCESS_MATRIX: [
     'main.it_permissions'
+  ],
+  SUPER_ADMIN: [
+    'main.home', 'main.tasks', 'main.calendar', 'crm'
+  ],
+  CRM_ADMIN: [
+    'main.home', 'main.tasks', 'main.calendar', 'crm'
   ]
 }
 
