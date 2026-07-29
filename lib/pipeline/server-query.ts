@@ -11,6 +11,20 @@ import { parsePhoneSearchQuery } from '@/lib/phone-search'
 export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd'
 export type PipelineSortDir = 'asc' | 'desc'
 
+export type PipelineServerColumnFilterField =
+  | 'assignDate'
+  | 'leadDate'
+  | 'followUpDate'
+  | 'surgeryDate'
+  | 'createDate'
+  | 'modifyDate'
+
+export interface PipelineServerColumnFilter {
+  field: PipelineServerColumnFilterField
+  operator: 'between'
+  value: [string, string]
+}
+
 export interface PipelineQueryParams {
   page: number
   pageSize: number
@@ -25,6 +39,7 @@ export interface PipelineQueryParams {
   leadAge: LeadAgeFilter
   startDate: string | null
   endDate: string | null
+  columnFilters: PipelineServerColumnFilter[]
   sortBy: PipelineSortField
   sortDir: PipelineSortDir
 }
@@ -74,8 +89,57 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
     leadAge,
     startDate: emptyToNull(searchParams.get('from')),
     endDate: emptyToNull(searchParams.get('to')),
+    columnFilters: parsePipelineColumnFilters(searchParams.get('filters')),
     sortBy,
     sortDir,
+  }
+}
+
+function parsePipelineColumnFilters(raw: string | null): PipelineServerColumnFilter[] {
+  if (!raw) return []
+
+  try {
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+
+    const allowedFields = new Set<PipelineServerColumnFilterField>([
+      'assignDate',
+      'leadDate',
+      'followUpDate',
+      'surgeryDate',
+      'createDate',
+      'modifyDate',
+    ])
+
+    return parsed.flatMap((item) => {
+      if (!item || typeof item !== 'object') return []
+
+      const field = (item as { field?: unknown }).field
+      const operator = (item as { operator?: unknown }).operator
+      const value = (item as { value?: unknown }).value
+
+      if (
+        typeof field !== 'string' ||
+        !allowedFields.has(field as PipelineServerColumnFilterField) ||
+        operator !== 'between' ||
+        !Array.isArray(value) ||
+        value.length !== 2 ||
+        typeof value[0] !== 'string' ||
+        typeof value[1] !== 'string'
+      ) {
+        return []
+      }
+
+      return [
+        {
+          field: field as PipelineServerColumnFilterField,
+          operator: 'between' as const,
+          value: [value[0], value[1]],
+        },
+      ]
+    })
+  } catch {
+    return []
   }
 }
 
@@ -128,6 +192,7 @@ export function statusBucketWhere(
               contains('call back'),
               contains('callback'),
               contains('schedule'),
+              contains('opd done'),
               contains('out of station'),
             ],
           },
@@ -162,7 +227,6 @@ export function statusBucketWhere(
               contains('c/w done'),
               contains('wa done'),
               contains('scan done'),
-              contains('opd done'),
               contains('booked'),
               contains('policy'),
             ],
@@ -290,7 +354,63 @@ export function buildPipelineFiltersWhere(
     }
   }
 
+  const columnFilterWhere = buildPipelineColumnFiltersWhere(params.columnFilters)
+  if (columnFilterWhere) and.push(columnFilterWhere)
+
   return and.length === 1 ? and[0]! : { AND: and }
+}
+
+function buildPipelineColumnFiltersWhere(
+  filters: PipelineServerColumnFilter[],
+): Prisma.LeadWhereInput | undefined {
+  if (filters.length === 0) return undefined
+
+  const and: Prisma.LeadWhereInput[] = []
+
+  for (const filter of filters) {
+    const from = new Date(filter.value[0])
+    const to = new Date(filter.value[1] || filter.value[0])
+    from.setHours(0, 0, 0, 0)
+    to.setHours(23, 59, 59, 999)
+
+    if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
+      continue
+    }
+
+    switch (filter.field) {
+      case 'assignDate':
+        and.push({ assignedDate: { gte: from, lte: to } })
+        break
+      case 'leadDate':
+        and.push({
+          OR: [
+            { leadEntryDate: { gte: from, lte: to } },
+            {
+              AND: [
+                { leadEntryDate: null },
+                { createdDate: { gte: from, lte: to } },
+              ],
+            },
+          ],
+        })
+        break
+      case 'followUpDate':
+        and.push({ followUpDate: { gte: from, lte: to } })
+        break
+      case 'surgeryDate':
+        and.push({ surgeryDate: { gte: from, lte: to } })
+        break
+      case 'createDate':
+        and.push({ createdDate: { gte: from, lte: to } })
+        break
+      case 'modifyDate':
+        and.push({ updatedDate: { gte: from, lte: to } })
+        break
+    }
+  }
+
+  if (and.length === 0) return undefined
+  return and.length === 1 ? and[0] : { AND: and }
 }
 
 export function pipelineOrderBy(

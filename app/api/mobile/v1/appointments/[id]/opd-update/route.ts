@@ -15,6 +15,7 @@ const opdUpdateSchema = z.object({
   remarks: z.string().trim().nullable().optional(),
   status: z.string().trim().min(1).optional(),
   caseStage: z.nativeEnum(CaseStage).optional(),
+  markOpdDone: z.boolean().optional(),
 })
 
 export async function PUT(

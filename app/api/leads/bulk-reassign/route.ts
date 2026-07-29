@@ -5,18 +5,38 @@ import {
   createBulkLeadReassignmentRun,
 } from '@/lib/lead-bulk-reassign/server'
 import type { CreateBulkLeadReassignmentRunInput } from '@/lib/lead-bulk-reassign/shared'
-import { getAssignableLeadUsersForActor } from '@/lib/lead-ownership'
+import { getBulkReassignableBdUsersForActor } from '@/lib/lead-ownership'
+import { prisma } from '@/lib/prisma'
 import { hasPermission } from '@/lib/rbac'
 import { getSessionFromRequest } from '@/lib/session'
 
 export const runtime = 'nodejs'
+
+type SubStatusOption = {
+  key: number
+  value: string
+}
 
 type BulkReassignBody = {
   leadIds?: unknown
   bdUserIds?: unknown
   pauseSeconds?: unknown
   removePreviousRemarks?: unknown
+  leadStatus?: unknown
+  followUpDate?: unknown
+  modeOfPayment?: unknown
   subStatus?: unknown
+}
+
+function parseOptionalText(value: unknown) {
+  if (value === undefined || value === null) return undefined
+
+  if (typeof value !== 'string') {
+    throw new Error('Please enter a valid value')
+  }
+
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : undefined
 }
 
 function parseOptionalInteger(value: unknown) {
@@ -40,13 +60,22 @@ export async function GET(request: NextRequest) {
     return errorResponse('Forbidden', 403)
   }
 
-  const assignableUsers = (await getAssignableLeadUsersForActor(user)).filter(
-    (assignableUser) => assignableUser.role === 'BD'
-  )
+  const assignableUsers = await getBulkReassignableBdUsersForActor(user)
+  const subStatusOptions = await prisma.crmSubStatusMaster.findMany({
+    where: {
+      isActive: true,
+    },
+    select: {
+      key: true,
+      value: true,
+    },
+    orderBy: [{ key: 'asc' }, { value: 'asc' }],
+  })
 
   return successResponse({
     canBulkReassign: assignableUsers.length > 0,
     assignableUsers,
+    subStatusOptions: subStatusOptions as SubStatusOption[],
   })
 }
 
@@ -63,6 +92,9 @@ export async function POST(request: NextRequest) {
 
     const body = (await request.json()) as BulkReassignBody
     const subStatus = parseOptionalInteger(body.subStatus)
+    const leadStatus = parseOptionalText(body.leadStatus)
+    const followUpDate = parseOptionalText(body.followUpDate)
+    const modeOfPayment = parseOptionalText(body.modeOfPayment)
     const payload: CreateBulkLeadReassignmentRunInput = {
       leadIds: Array.isArray(body.leadIds)
         ? body.leadIds.filter(
@@ -78,6 +110,9 @@ export async function POST(request: NextRequest) {
         : [],
       pauseSeconds: parseOptionalInteger(body.pauseSeconds) ?? 0,
       removePreviousRemarks: body.removePreviousRemarks === true,
+      ...(leadStatus !== undefined ? { leadStatus } : {}),
+      ...(followUpDate !== undefined ? { followUpDate } : {}),
+      ...(modeOfPayment !== undefined ? { modeOfPayment } : {}),
       ...(subStatus !== undefined ? { subStatus } : {}),
     }
 

@@ -9,8 +9,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { CaseStage, FlowType } from '@/generated/prisma/enums'
 import { apiGet, apiPatch } from '@/lib/api-client'
-import { OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
+import { getNextStageAfterOpdSchedule, OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 
 const SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
@@ -69,6 +70,8 @@ function mapOpdModeToPayload(value: string) {
 export interface OPDScheduleFormProps {
   leadId: string
   leadRef: string
+  currentCaseStage?: CaseStage | null
+  flowType?: FlowType | null
   currentStatus?: string | null
   patientName?: string | null
   age?: number | null
@@ -96,6 +99,8 @@ export interface OPDScheduleFormProps {
 export function OPDScheduleForm({
   leadId,
   leadRef,
+  currentCaseStage,
+  flowType,
   currentStatus,
   patientName = '',
   age,
@@ -237,7 +242,7 @@ export function OPDScheduleForm({
 
     const parsedAge =
       formData.age.trim().length > 0 ? Number.parseInt(formData.age.trim(), 10) : null
-    if (formData.age.trim().length > 0 && (!Number.isFinite(parsedAge) || parsedAge < 0)) {
+    if (formData.age.trim().length > 0 && (parsedAge == null || !Number.isFinite(parsedAge) || parsedAge < 0)) {
       toast.error('Age must be a valid number')
       return
     }
@@ -254,6 +259,10 @@ export function OPDScheduleForm({
     const scheduleDateTime = composeScheduleDateTime(formData.arrivalDate, formData.arrivalTime)
     const nextStatus = OPD_SCHEDULED_STATUS
     const statusNeedsUpdate = normalizeStatus(currentStatus) !== normalizeStatus(nextStatus)
+    const nextCaseStage = getNextStageAfterOpdSchedule({
+      caseStage: currentCaseStage,
+      flowType,
+    })
 
     const payload: Record<string, string | number | null> = {}
 
@@ -331,6 +340,11 @@ export function OPDScheduleForm({
         `${trimmedHospital}`,
         `for ${formData.arrivalDate}${formData.arrivalTime ? ` ${formData.arrivalTime}` : ''}`,
       ].join(' ')
+    }
+
+    if (nextCaseStage) {
+      payload.caseStage = nextCaseStage
+      payload.stageChangeNote = 'OPD scheduled'
     }
 
     if (Object.keys(payload).length === 0) {

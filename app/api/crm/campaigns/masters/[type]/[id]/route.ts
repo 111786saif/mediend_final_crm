@@ -6,14 +6,16 @@ import { isSuperAdmin } from '@/lib/crm-campaigns'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 
-const masterTypeSchema = z.enum(['source', 'leadSource', 'circle', 'city'])
+const masterTypeSchema = z.enum(['source', 'leadSource', 'circle', 'city', 'subStatus'])
 
 const masterPatchSchema = z.object({
-  name: z.string().trim().min(1).max(255),
   isActive: z.boolean().default(true),
+  name: z.string().trim().min(1).max(255).optional(),
   sourceId: z.string().min(1).optional(),
   circleId: z.string().min(1).optional(),
   cpl: z.number().finite().nonnegative().nullable().optional(),
+  key: z.number().int().min(1).optional(),
+  value: z.string().trim().min(1).max(255).optional(),
 })
 
 export async function PATCH(
@@ -40,6 +42,9 @@ export async function PATCH(
     const data = parsedBody.data
 
     if (parsedType.data === 'source') {
+      if (!data.name) {
+        return errorResponse('name is required for a source.', 400)
+      }
       const updated = await prisma.crmCampaignSource.update({
         where: { id },
         data: {
@@ -62,6 +67,9 @@ export async function PATCH(
     }
 
     if (parsedType.data === 'leadSource') {
+      if (!data.name) {
+        return errorResponse('name is required for a lead source.', 400)
+      }
       if (!data.sourceId) {
         return errorResponse('sourceId is required for a lead source.', 400)
       }
@@ -107,6 +115,9 @@ export async function PATCH(
     }
 
     if (parsedType.data === 'circle') {
+      if (!data.name) {
+        return errorResponse('name is required for a circle.', 400)
+      }
       const updated = await prisma.crmCampaignCircle.update({
         where: { id },
         data: {
@@ -128,6 +139,39 @@ export async function PATCH(
       return successResponse(updated, 'Circle updated successfully')
     }
 
+    if (parsedType.data === 'subStatus') {
+      if (data.key === undefined) {
+        return errorResponse('key is required for a sub status.', 400)
+      }
+      if (!data.value) {
+        return errorResponse('value is required for a sub status.', 400)
+      }
+
+      const updated = await prisma.crmSubStatusMaster.update({
+        where: { id },
+        data: {
+          key: data.key,
+          value: data.value,
+          isActive: data.isActive,
+        },
+      })
+      await logCrmActivity({
+        action: 'CRM_MASTER_UPDATED',
+        entityType: 'CRM_MASTER_SUB_STATUS',
+        entityId: updated.id,
+        entityLabel: `${updated.key} · ${updated.value}`,
+        actorUserId: currentUser.id,
+        actorRole: currentUser.role,
+        request,
+        summary: `Updated CRM sub status "${updated.value}"`,
+        metadata: updated,
+      })
+      return successResponse(updated, 'Sub status updated successfully')
+    }
+
+    if (!data.name) {
+      return errorResponse('name is required for a city.', 400)
+    }
     if (!data.circleId) {
       return errorResponse('circleId is required for a city.', 400)
     }

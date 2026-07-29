@@ -29,6 +29,8 @@ interface ActivityTimelineProps {
 
 const STAGE_LABELS: Record<CaseStage, string> = {
   [CaseStage.NEW_LEAD]: 'New Lead',
+  [CaseStage.OPD_SCHEDULED]: 'OPD Scheduled',
+  [CaseStage.OPD_DONE]: 'OPD Done',
   [CaseStage.KYP_BASIC_PENDING]: 'Card Details Pending',
   [CaseStage.KYP_BASIC_COMPLETE]: 'Card Details Submitted',
   [CaseStage.HOSPITALS_SUGGESTED]: 'Hospitals Suggested',
@@ -46,6 +48,8 @@ const STAGE_LABELS: Record<CaseStage, string> = {
   [CaseStage.OUTSTANDING]: 'Outstanding',
   // Cash Flow Stages
   [CaseStage.CASH_IPD_PENDING]: 'Cash IPD Pending',
+  [CaseStage.CASH_OPD_SCHEDULED]: 'Cash OPD Scheduled',
+  [CaseStage.CASH_OPD_DONE]: 'Cash OPD Done',
   [CaseStage.CASH_IPD_SUBMITTED]: 'Cash IPD Submitted',
   [CaseStage.CASH_APPROVED]: 'Cash Approved',
   [CaseStage.CASH_ON_HOLD]: 'Cash On Hold',
@@ -83,6 +87,22 @@ function getStageColor(stage: CaseStage): { bg: string; border: string; text: st
       dot: 'bg-blue-500 dark:bg-blue-400',
       connector: 'bg-blue-300 dark:bg-blue-700',
       icon: <FileText className="w-3 h-3" />,
+    },
+    [CaseStage.OPD_SCHEDULED]: {
+      bg: 'bg-cyan-50 dark:bg-cyan-950/30',
+      border: 'border-cyan-200 dark:border-cyan-800',
+      text: 'text-cyan-700 dark:text-cyan-300',
+      dot: 'bg-cyan-500 dark:bg-cyan-400',
+      connector: 'bg-cyan-300 dark:bg-cyan-700',
+      icon: <Clock className="w-3 h-3" />,
+    },
+    [CaseStage.OPD_DONE]: {
+      bg: 'bg-teal-50 dark:bg-teal-950/30',
+      border: 'border-teal-200 dark:border-teal-800',
+      text: 'text-teal-700 dark:text-teal-300',
+      dot: 'bg-teal-500 dark:bg-teal-400',
+      connector: 'bg-teal-300 dark:bg-teal-700',
+      icon: <CheckCircle2 className="w-3 h-3" />,
     },
     [CaseStage.KYP_BASIC_PENDING]: {
       bg: 'bg-amber-50 dark:bg-amber-950/30',
@@ -212,6 +232,22 @@ function getStageColor(stage: CaseStage): { bg: string; border: string; text: st
       dot: 'bg-amber-500 dark:bg-amber-400',
       connector: 'bg-amber-300 dark:bg-amber-700',
       icon: <Clock className="w-3 h-3" />,
+    },
+    [CaseStage.CASH_OPD_SCHEDULED]: {
+      bg: 'bg-cyan-50 dark:bg-cyan-950/30',
+      border: 'border-cyan-200 dark:border-cyan-800',
+      text: 'text-cyan-700 dark:text-cyan-300',
+      dot: 'bg-cyan-500 dark:bg-cyan-400',
+      connector: 'bg-cyan-300 dark:bg-cyan-700',
+      icon: <Clock className="w-3 h-3" />,
+    },
+    [CaseStage.CASH_OPD_DONE]: {
+      bg: 'bg-teal-50 dark:bg-teal-950/30',
+      border: 'border-teal-200 dark:border-teal-800',
+      text: 'text-teal-700 dark:text-teal-300',
+      dot: 'bg-teal-500 dark:bg-teal-400',
+      connector: 'bg-teal-300 dark:bg-teal-700',
+      icon: <CheckCircle2 className="w-3 h-3" />,
     },
     [CaseStage.CASH_IPD_SUBMITTED]: {
       bg: 'bg-blue-50 dark:bg-blue-950/30',

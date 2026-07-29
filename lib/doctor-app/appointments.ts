@@ -2,7 +2,13 @@ import { CaseStage, IpdStatus, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { uploadFileToS3 } from '@/lib/s3-client'
 import { DoctorAppSessionUser } from '@/lib/doctor-app/auth'
-import { isOpdScheduledStatus } from '@/lib/lead-opd-workflow'
+import {
+  getNextStageAfterOpdDone,
+  hasLeadOpdDone,
+  isOpdDoneStatus,
+  isOpdScheduledStatus,
+  OPD_DONE_STATUS,
+} from '@/lib/lead-opd-workflow'
 
 const DOCTOR_APP_SYSTEM_USER_ID = process.env.DOCTOR_APP_SYSTEM_USER_ID?.trim() || ''
 
@@ -141,6 +147,7 @@ export interface UpdateDoctorOpdInput {
   remarks?: string | null
   status?: string
   caseStage?: CaseStage
+  markOpdDone?: boolean
 }
 
 export interface CancelDoctorOpdInput {
@@ -303,6 +310,10 @@ function getAppointmentStatus(lead: DoctorAppointmentLead) {
 
   if (lead.followUpDate) {
     return 'FOLLOW_UP'
+  }
+
+  if (hasLeadOpdDone(lead) || isOpdDoneStatus(lead.status)) {
+    return 'DONE'
   }
 
   if (lead.opdScheduleDate) {
@@ -638,26 +649,62 @@ export async function updateDoctorOpdAppointment(
   leadId: string,
   input: UpdateDoctorOpdInput
 ) {
-  await findDoctorScopedLead(user, leadId)
+  const { lead } = await findDoctorScopedLead(user, leadId)
 
-  const updatedLead = await prisma.lead.update({
-    where: { id: leadId },
-    data: {
-      ...(input.opdHospital !== undefined ? { opdHospital: input.opdHospital.trim() } : {}),
-      ...(input.opdDrName !== undefined ? { opdDrName: input.opdDrName.trim() } : {}),
-      ...(input.opdContactNo !== undefined ? { opdContactNo: input.opdContactNo.trim() } : {}),
-      ...(input.opdCharges !== undefined ? { opdCharges: input.opdCharges } : {}),
-      ...(input.opdScheduleDate !== undefined
-        ? { opdScheduleDate: parseOptionalDate(input.opdScheduleDate, 'opdScheduleDate') }
-        : {}),
-      ...(input.followUpDate !== undefined
-        ? { followUpDate: parseOptionalDate(input.followUpDate, 'followUpDate') }
-        : {}),
-      ...(input.remarks !== undefined ? { remarks: normalizeText(input.remarks) } : {}),
-      ...(input.status !== undefined ? { status: input.status.trim() } : {}),
-      ...(input.caseStage !== undefined ? { caseStage: input.caseStage } : {}),
-    },
-    select: doctorAppointmentLeadSelect,
+  let targetCaseStage = input.caseStage
+  let targetStatus = input.status?.trim()
+
+  if (input.markOpdDone) {
+    if (hasLeadOpdDone(lead)) {
+      throw new DoctorAppApiError('OPD is already marked done', 400)
+    }
+
+    targetCaseStage = getNextStageAfterOpdDone(lead) ?? undefined
+    if (!targetCaseStage) {
+      throw new DoctorAppApiError('Appointment is not ready to mark as OPD done', 400)
+    }
+
+    targetStatus = OPD_DONE_STATUS
+  }
+
+  const nextStage = targetCaseStage ?? lead.caseStage
+  const stageChanged = nextStage !== lead.caseStage
+  const changedById = stageChanged ? await requireSystemUserId() : null
+
+  const updatedLead = await prisma.$transaction(async (tx) => {
+    const updated = await tx.lead.update({
+      where: { id: leadId },
+      data: {
+        ...(input.opdHospital !== undefined ? { opdHospital: input.opdHospital.trim() } : {}),
+        ...(input.opdDrName !== undefined ? { opdDrName: input.opdDrName.trim() } : {}),
+        ...(input.opdContactNo !== undefined ? { opdContactNo: input.opdContactNo.trim() } : {}),
+        ...(input.opdCharges !== undefined ? { opdCharges: input.opdCharges } : {}),
+        ...(input.opdScheduleDate !== undefined
+          ? { opdScheduleDate: parseOptionalDate(input.opdScheduleDate, 'opdScheduleDate') }
+          : {}),
+        ...(input.followUpDate !== undefined
+          ? { followUpDate: parseOptionalDate(input.followUpDate, 'followUpDate') }
+          : {}),
+        ...(input.remarks !== undefined ? { remarks: normalizeText(input.remarks) } : {}),
+        ...(targetStatus !== undefined ? { status: targetStatus } : {}),
+        ...(targetCaseStage !== undefined ? { caseStage: targetCaseStage } : {}),
+      },
+      select: doctorAppointmentLeadSelect,
+    })
+
+    if (stageChanged) {
+      await tx.caseStageHistory.create({
+        data: {
+          leadId,
+          fromStage: lead.caseStage,
+          toStage: nextStage,
+          changedById: changedById!,
+          note: input.markOpdDone ? 'OPD marked done by doctor app' : 'Doctor app updated OPD stage',
+        },
+      })
+    }
+
+    return updated
   })
 
   return mapAppointmentDetail(updatedLead)

@@ -16,7 +16,22 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import {
+  CRM_LEAD_STATUS_OPTIONS,
+  CRM_MODE_OF_PAYMENT_OPTIONS,
+} from '@/lib/lead-status-options'
+import {
+  isStatusRequiringFollowUpDate,
+  isStatusRequiringModeOfPayment,
+} from '@/lib/lead-status-rules'
 import { cn } from '@/lib/utils'
 
 type AssignableUser = {
@@ -40,6 +55,7 @@ export function BulkLeadReassignDialog({
   onSelectedLeadIdsChange,
   selectedLeads,
   assignableUsers,
+  subStatusOptions,
   isPending,
   onSubmit,
 }: {
@@ -50,16 +66,26 @@ export function BulkLeadReassignDialog({
   onSelectedLeadIdsChange: (leadIds: string[]) => void
   selectedLeads: SelectedLead[]
   assignableUsers: AssignableUser[]
+  subStatusOptions: Array<{
+    key: number
+    value: string
+  }>
   isPending: boolean
   onSubmit: (payload: {
     bdUserIds: string[]
     removePreviousRemarks: boolean
+    leadStatus?: string
+    followUpDate?: string
+    modeOfPayment?: string
     subStatus?: number
     pauseSeconds?: number
   }) => Promise<unknown> | void
 }) {
   const [selectedBdUserIds, setSelectedBdUserIds] = useState<string[]>([])
   const [removePreviousRemarks, setRemovePreviousRemarks] = useState(false)
+  const [leadStatus, setLeadStatus] = useState('')
+  const [followUpDate, setFollowUpDate] = useState('')
+  const [modeOfPayment, setModeOfPayment] = useState('')
   const [subStatus, setSubStatus] = useState('')
   const [pauseSeconds, setPauseSeconds] = useState('')
   const [leadPickerOpen, setLeadPickerOpen] = useState(false)
@@ -120,6 +146,20 @@ export function BulkLeadReassignDialog({
     if (selectedBdUsers.length === 1) return selectedBdUsers[0]?.name || '1 BD selected'
     return `${selectedBdUsers.length} BDs selected`
   }, [selectedBdUsers])
+  const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(leadStatus)
+  const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(leadStatus)
+
+  function handleLeadStatusChange(nextStatus: string) {
+    setLeadStatus(nextStatus)
+
+    if (!isStatusRequiringFollowUpDate(nextStatus)) {
+      setFollowUpDate('')
+    }
+
+    if (!isStatusRequiringModeOfPayment(nextStatus)) {
+      setModeOfPayment('')
+    }
+  }
 
   function toggleLead(leadId: string, checked: boolean) {
     if (checked) {
@@ -147,6 +187,13 @@ export function BulkLeadReassignDialog({
     await onSubmit({
       bdUserIds: selectedBdUserIds,
       removePreviousRemarks,
+      ...(leadStatus.trim().length > 0 ? { leadStatus: leadStatus.trim() } : {}),
+      ...(statusRequiresFollowUpDate && followUpDate.trim().length > 0
+        ? { followUpDate }
+        : {}),
+      ...(statusRequiresModeOfPayment && modeOfPayment.trim().length > 0
+        ? { modeOfPayment }
+        : {}),
       ...(subStatus.trim().length > 0 ? { subStatus: Number(subStatus) } : {}),
       ...(pauseSeconds.trim().length > 0 ? { pauseSeconds: Number(pauseSeconds) } : {}),
     })
@@ -157,6 +204,9 @@ export function BulkLeadReassignDialog({
     if (!nextOpen) {
       setSelectedBdUserIds([])
       setRemovePreviousRemarks(false)
+      setLeadStatus('')
+      setFollowUpDate('')
+      setModeOfPayment('')
       setSubStatus('')
       setPauseSeconds('')
       setLeadPickerOpen(false)
@@ -349,28 +399,107 @@ export function BulkLeadReassignDialog({
             />
           </div>
 
-          <div className="flex items-center gap-3 rounded-lg border px-3 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-50 px-3 py-3 dark:border-slate-700 dark:bg-slate-900/40">
             <Checkbox
               id="bulk-reassign-remove-remarks"
               checked={removePreviousRemarks}
               onCheckedChange={(checked) => setRemovePreviousRemarks(checked === true)}
+              className="border-slate-400 bg-white data-[state=checked]:border-primary dark:border-slate-500 dark:bg-slate-950"
             />
-            <Label htmlFor="bulk-reassign-remove-remarks" className="cursor-pointer">
+            <Label htmlFor="bulk-reassign-remove-remarks" className="cursor-pointer font-medium text-slate-900 dark:text-slate-100">
               Remove previous remarks
             </Label>
+          </div>
+
+          <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="bulk-reassign-lead-status">Lead status</Label>
+                <Select
+                  value={leadStatus || '__none__'}
+                  onValueChange={(value) =>
+                    handleLeadStatusChange(value === '__none__' ? '' : value)
+                  }
+                >
+                  <SelectTrigger id="bulk-reassign-lead-status">
+                    <SelectValue placeholder="Leave unchanged" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">Leave unchanged</SelectItem>
+                    {CRM_LEAD_STATUS_OPTIONS.map((statusOption) => (
+                      <SelectItem key={statusOption} value={statusOption}>
+                        {statusOption}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {statusRequiresFollowUpDate ? (
+                <div className="space-y-2">
+                  <Label htmlFor="bulk-reassign-follow-up-date">
+                    Follow-up date
+                    <span className="text-destructive"> *</span>
+                  </Label>
+                  <Input
+                    id="bulk-reassign-follow-up-date"
+                    type="date"
+                    value={followUpDate}
+                    onChange={(event) => setFollowUpDate(event.target.value)}
+                  />
+                </div>
+              ) : null}
+
+              {statusRequiresModeOfPayment ? (
+                <div className="space-y-2">
+                  <Label htmlFor="bulk-reassign-mode-of-payment">
+                    Mode of Payment
+                    <span className="text-destructive"> *</span>
+                  </Label>
+                  <Select
+                    value={modeOfPayment || '__none__'}
+                    onValueChange={(value) =>
+                      setModeOfPayment(value === '__none__' ? '' : value)
+                    }
+                  >
+                    <SelectTrigger id="bulk-reassign-mode-of-payment">
+                      <SelectValue placeholder="Select mode of payment" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">Select mode of payment</SelectItem>
+                      {CRM_MODE_OF_PAYMENT_OPTIONS.map((modeOption) => (
+                        <SelectItem key={modeOption} value={modeOption}>
+                          {modeOption}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : null}
+            </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="bulk-reassign-sub-status">Sub status</Label>
-              <Input
-                id="bulk-reassign-sub-status"
-                type="number"
-                min={0}
-                value={subStatus}
-                onChange={(event) => setSubStatus(event.target.value)}
-                placeholder="Optional"
-              />
+              <Select
+                value={subStatus || '__none__'}
+                onValueChange={(value) =>
+                  setSubStatus(value === '__none__' ? '' : value)
+                }
+              >
+                <SelectTrigger id="bulk-reassign-sub-status">
+                  <SelectValue placeholder="Optional" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">Leave unchanged</SelectItem>
+                  {subStatusOptions.map((option) => (
+                    <SelectItem key={option.key} value={String(option.key)}>
+                      {option.key} - {option.value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
@@ -396,7 +525,9 @@ export function BulkLeadReassignDialog({
             disabled={
               isPending ||
               selectedBdUserIds.length === 0 ||
-              selectedLeadIds.length === 0
+              selectedLeadIds.length === 0 ||
+              (statusRequiresFollowUpDate && followUpDate.trim().length === 0) ||
+              (statusRequiresModeOfPayment && modeOfPayment.trim().length === 0)
             }
           >
             {isPending ? (

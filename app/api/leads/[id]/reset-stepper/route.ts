@@ -6,7 +6,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { canResetStepper } from '@/lib/case-permissions'
-import { hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
+import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import {
   buildWorkflowResetTimelineNote,
   getCompletedResetTargets,
@@ -18,7 +18,7 @@ import {
 } from '@/lib/case/workflow-reset'
 
 const resetStepperSchema = z.object({
-  targetStep: z.number().int().min(1).max(9),
+  targetStep: z.number().int().min(1).max(10),
   reason: z.string().min(1, 'Reason is required').max(4000),
 })
 
@@ -45,12 +45,13 @@ export async function GET(
       },
     })
     if (!lead) return errorResponse('Lead not found', 404)
-    if (!canResetStepper(user, lead as any)) {
+    if (!canResetStepper(user as any)) {
       return errorResponse('Only Executive Assistant can reset the workflow stepper', 403)
     }
 
     const extras: WorkflowStepExtras = {
       hasOpdScheduled: hasLeadOpdScheduled(lead),
+      hasOpdDone: hasLeadOpdDone(lead),
       hasInitiateForm: !!lead.insuranceInitiateForm?.id,
       hasIpdMark: !!lead.admissionRecord?.ipdStatus,
     }
@@ -127,12 +128,13 @@ export async function POST(
     })
 
     if (!lead) return errorResponse('Lead not found', 404)
-    if (!canResetStepper(user, lead as any)) {
+    if (!canResetStepper(user as any)) {
       return errorResponse('Only Executive Assistant can reset the workflow stepper', 403)
     }
 
     const extras: WorkflowStepExtras = {
       hasOpdScheduled: hasLeadOpdScheduled(lead),
+      hasOpdDone: hasLeadOpdDone(lead),
       hasInitiateForm: !!lead.insuranceInitiateForm?.id,
       hasIpdMark: !!lead.admissionRecord?.ipdStatus,
     }

@@ -40,7 +40,7 @@ import {
   isActiveBulkLeadReassignStatus,
 } from '@/lib/lead-bulk-reassign/shared'
 import { getStatusColor } from '@/lib/lead-status-colors'
-import { hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
+import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import {
   getLeadAgeInfo,
   getLeadReceiptDate,
@@ -104,6 +104,10 @@ type BulkLeadReassignOptionsResponse = {
     name: string
     email: string
     role: string
+  }>
+  subStatusOptions: Array<{
+    key: number
+    value: string
   }>
 }
 
@@ -265,10 +269,36 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'bd', label: 'BD', defaultVisible: { bd: false, 'team-lead': true } },
 ]
 
+const PIPELINE_DATE_FILTER_COLUMNS = new Set<PipelineColumnId>([
+  'assignDate',
+  'leadDate',
+  'followUpDate',
+  'surgeryDate',
+  'createDate',
+  'modifyDate',
+])
+
+const PIPELINE_SERVER_FILTER_COLUMNS = new Set<PipelineColumnId>([
+  'assignDate',
+  'leadDate',
+  'followUpDate',
+  'surgeryDate',
+  'createDate',
+  'modifyDate',
+])
+
 function getPipelineColumnDefinitions(variant: 'bd' | 'team-lead') {
   return PIPELINE_COLUMN_DEFINITIONS.filter(
     (column) => !column.variants || column.variants.includes(variant)
   )
+}
+
+function isPipelineDateFilterColumn(columnId: PipelineColumnId) {
+  return PIPELINE_DATE_FILTER_COLUMNS.has(columnId)
+}
+
+function isPipelineServerFilterColumn(columnId: PipelineColumnId) {
+  return PIPELINE_SERVER_FILTER_COLUMNS.has(columnId)
 }
 
 function createInitialVisibleColumns(variant: 'bd' | 'team-lead') {
@@ -330,22 +360,34 @@ function formatMonthCell(value: unknown) {
 }
 
 function isCashCaseStage(stage: Lead['caseStage']) {
-  return [
+  return ([
     CaseStage.CASH_IPD_PENDING,
+    CaseStage.CASH_OPD_SCHEDULED,
+    CaseStage.CASH_OPD_DONE,
     CaseStage.CASH_IPD_SUBMITTED,
     CaseStage.CASH_ON_HOLD,
     CaseStage.CASH_APPROVED,
     CaseStage.CASH_IPD_DONE,
     CaseStage.CASH_DISCHARGED,
-  ].includes(stage as CaseStage)
+  ] as CaseStage[]).includes(stage as CaseStage)
 }
 
 function getLeadStageBadge(lead: Lead) {
   if (!lead.caseStage) return null
 
   if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
+    if (hasLeadOpdDone(lead)) {
+      return {
+        className: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300',
+        label: 'OPD Done',
+      }
+    }
+
     return hasLeadOpdScheduled(lead)
-      ? getCaseStageBadgeConfig(String(lead.caseStage))
+      ? {
+          className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
+          label: 'OPD Schedule',
+        }
       : {
           className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
           label: 'OPD Schedule',
@@ -501,7 +543,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const searchParams = useSearchParams()
 
   const { state, setState, campaignSelection } = usePipelineUrlState()
-  const { data, isLoading, isFetching } = usePipelinePage()
 
   const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
   const [bulkReassignOpen, setBulkReassignOpen] = useState(false)
@@ -524,7 +565,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     retry: false,
     staleTime: 5 * 60_000,
   })
-  const canBulkReassign = bulkReassignOptions?.canBulkReassign ?? false
+  const showBulkReassign = Boolean(bulkReassignOptions)
   const {
     data: activeBulkReassignRun,
   } = useQuery<BulkLeadReassignmentRunResponse>({
@@ -539,25 +580,63 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       isActiveBulkLeadReassignStatus(query.state.data?.status ?? '') ? 2000 : false,
   })
   const visibleColumnCount = useMemo(
-    () => availableColumns.filter((column) => visibleColumns[column.id]).length + 3 + (canBulkReassign ? 1 : 0),
-    [availableColumns, canBulkReassign, visibleColumns]
+    () => availableColumns.filter((column) => visibleColumns[column.id]).length + 3 + (showBulkReassign ? 1 : 0),
+    [availableColumns, showBulkReassign, visibleColumns]
   )
   const isColumnVisible = useCallback(
     (columnId: PipelineColumnId) => visibleColumns[columnId] === true,
     [visibleColumns]
   )
 
-  // Column header filters (dropdown-in-header) — client-side, applied on top of
-  // whatever page of data the server already returned/filtered/sorted.
+  // Column header filters (dropdown-in-header). Date filters are sent to the
+  // server so they apply across the full dataset; the remaining filters stay
+  // page-local for now.
   const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
-  const handleColumnFilterChange = useCallback((key: string, selected: string[]) => {
+  const serverColumnFilters = useMemo(() => {
+    const filters = (Object.entries(columnFilters) as Array<[PipelineColumnId, string[]]>).flatMap(
+      ([columnId, selected]) => {
+        if (
+          !isPipelineServerFilterColumn(columnId) ||
+          selected.length !== 2 ||
+          !selected[0]
+        ) {
+          return []
+        }
+
+        return [
+          {
+            field: columnId,
+            operator: 'between' as const,
+            value: [selected[0], selected[1] || selected[0]] as [string, string],
+          },
+        ]
+      }
+    )
+
+    return filters.length > 0 ? JSON.stringify(filters) : ''
+  }, [columnFilters])
+  const { data, isLoading, isFetching } = usePipelinePage({ filters: serverColumnFilters })
+  const handleColumnFilterChange = useCallback((key: PipelineColumnId, selected: string[]) => {
     setColumnFilters((prev) => ({ ...prev, [key]: selected }))
-  }, [])
+    if (isPipelineServerFilterColumn(key)) {
+      setState({ page: 1 }, { resetPage: false })
+    }
+  }, [setState])
   const activeColumnFilterCount = useMemo(
     () => Object.values(columnFilters).filter((v) => v && v.length > 0).length,
     [columnFilters]
   )
-  const clearColumnFilters = useCallback(() => setColumnFilters({}), [])
+  const localColumnFilterCount = useMemo(
+    () =>
+      (Object.entries(columnFilters) as Array<[PipelineColumnId, string[]]>).filter(
+        ([columnId, value]) => value.length > 0 && !isPipelineServerFilterColumn(columnId)
+      ).length,
+    [columnFilters]
+  )
+  const clearColumnFilters = useCallback(() => {
+    setColumnFilters({})
+    setState({ page: 1 }, { resetPage: false })
+  }, [setState])
 
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -684,13 +763,14 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const getHeaderFilterProps = useCallback(
     (columnId: PipelineColumnId) => ({
       filterValue: columnFilters[columnId] ?? [],
-      filterOptions: columnFilterOptions[columnId] ?? [],
+      filterOptions: isPipelineDateFilterColumn(columnId) ? undefined : (columnFilterOptions[columnId] ?? []),
+      filterType: isPipelineDateFilterColumn(columnId) ? 'dateRange' : 'multiSelect',
       onFilterChange: (values: string[]) => handleColumnFilterChange(columnId, values),
     }),
     [columnFilterOptions, columnFilters, handleColumnFilterChange]
   )
 
-  // Apply column filters on top of the current page's rows.
+  // Apply only page-local column filters on top of the server-filtered rows.
   const tableRows: Lead[] = useMemo(
     () =>
       availableColumns.reduce<Lead[]>((result, column) => {
@@ -699,9 +779,11 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           return result
         }
 
-        return result.filter((lead) =>
-          selected.includes(getPipelineColumnFilterValue(lead, column.id))
-        )
+        if (isPipelineServerFilterColumn(column.id)) {
+          return result
+        }
+
+        return result.filter((lead) => selected.includes(getPipelineColumnFilterValue(lead, column.id)))
       }, rawPageLeads),
     [availableColumns, rawPageLeads, columnFilters]
   )
@@ -784,6 +866,9 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     mutationFn: (payload: {
       bdUserIds: string[]
       removePreviousRemarks: boolean
+      leadStatus?: string
+      followUpDate?: string
+      modeOfPayment?: string
       subStatus?: number
       pauseSeconds?: number
     }) =>
@@ -842,6 +927,12 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const totalPages = data?.totalPages ?? 1
   const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1
   const rangeEnd = Math.min(page * pageSize, total)
+  const hasLocalColumnFilters = localColumnFilterCount > 0
+  const effectivePage = hasLocalColumnFilters ? 1 : page
+  const effectiveTotalPages = hasLocalColumnFilters ? 1 : totalPages
+  const effectiveRangeStart = hasLocalColumnFilters ? (tableRows.length > 0 ? 1 : 0) : rangeStart
+  const effectiveRangeEnd = hasLocalColumnFilters ? tableRows.length : rangeEnd
+  const effectiveTotal = hasLocalColumnFilters ? tableRows.length : total
   const isBackgroundRefetching = isFetching && !isLoading
   const pipelineReturnTo = useMemo(() => {
     const query = searchParams.toString()
@@ -1072,14 +1163,14 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     </h3>
                     <p className="text-xs text-muted-foreground">
                       {data
-                        ? `${rangeStart}–${rangeEnd} of ${total} shown${
-                            activeColumnFilterCount > 0 ? ` · ${tableRows.length} match column filters on this page` : ''
-                          }`
+                        ? hasLocalColumnFilters
+                          ? `${rangeStart}–${rangeEnd} of ${total} shown · ${tableRows.length} match page-only column filters on this page`
+                          : `${rangeStart}–${rangeEnd} of ${total} shown`
                         : 'Loading…'}{' '}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {canBulkReassign ? (
+                    {showBulkReassign ? (
                       <>
                         <Button
                           type="button"
@@ -1158,7 +1249,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     <table className="w-full caption-bottom text-sm">
                       <thead className="sticky top-0 z-10 bg-background [&_tr]:border-b">
                         <tr className="border-b bg-background">
-                          {canBulkReassign ? (
+                          {showBulkReassign ? (
                             <th className="h-10 w-12 px-2 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               <div className="flex justify-center">
                                 <Checkbox
@@ -1297,7 +1388,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             onEdit={handleEditLead}
                             onMarkOpened={markLeadOpened}
                             isOpened={openedLeadIds.includes(lead.id)}
-                            selectionEnabled={canBulkReassign}
+                            selectionEnabled={showBulkReassign}
                             isSelected={selectedLeadIds.includes(lead.id)}
                             onToggleSelected={toggleLeadSelection}
                             visibleColumns={visibleColumns}
@@ -1310,7 +1401,11 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
                 <div className="flex flex-col gap-2 border-t border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-xs text-muted-foreground">
-                    {total > 0 ? `Showing ${rangeStart}–${rangeEnd} of ${total}` : 'No results'}
+                    {effectiveTotal > 0
+                      ? hasLocalColumnFilters
+                        ? `Showing ${effectiveRangeStart}–${effectiveRangeEnd} of ${effectiveTotal} filtered results on this page`
+                        : `Showing ${effectiveRangeStart}–${effectiveRangeEnd} of ${effectiveTotal}`
+                      : 'No results'}
                   </p>
                   <div className="flex items-center gap-2">
                     <Select
@@ -1331,19 +1426,19 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={page <= 1}
+                      disabled={hasLocalColumnFilters || page <= 1}
                       onClick={() => setState({ page: page - 1 })}
                     >
                       <ChevronLeft className="h-4 w-4" />
                       Prev
                     </Button>
                     <span className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
-                      Page {page} of {totalPages}
+                      Page {effectivePage} of {effectiveTotalPages}
                     </span>
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={page >= totalPages}
+                      disabled={hasLocalColumnFilters || page >= totalPages}
                       onClick={() => setState({ page: page + 1 })}
                     >
                       Next
@@ -1369,6 +1464,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           onSelectedLeadIdsChange={setSelectedLeadIds}
           selectedLeads={selectedLeads}
           assignableUsers={bulkReassignOptions?.assignableUsers ?? []}
+          subStatusOptions={bulkReassignOptions?.subStatusOptions ?? []}
           isPending={bulkReassignMutation.isPending}
           onSubmit={(payload) => bulkReassignMutation.mutateAsync(payload)}
         />
@@ -1409,16 +1505,20 @@ function canShowPipelineOpdSchedule(lead: Lead) {
   if (!lead.caseStage) return false
 
   if (isCashCaseStage(lead.caseStage)) {
-    return [
+    return ([
       CaseStage.CASH_IPD_PENDING,
+      CaseStage.CASH_OPD_SCHEDULED,
+      CaseStage.CASH_OPD_DONE,
       CaseStage.CASH_IPD_SUBMITTED,
       CaseStage.CASH_ON_HOLD,
       CaseStage.CASH_APPROVED,
-    ].includes(lead.caseStage)
+    ] as CaseStage[]).includes(lead.caseStage as CaseStage)
   }
 
-  return [
+  return ([
     CaseStage.NEW_LEAD,
+    CaseStage.OPD_SCHEDULED,
+    CaseStage.OPD_DONE,
     CaseStage.KYP_BASIC_PENDING,
     CaseStage.KYP_BASIC_COMPLETE,
     CaseStage.HOSPITALS_SUGGESTED,
@@ -1430,14 +1530,15 @@ function canShowPipelineOpdSchedule(lead: Lead) {
     CaseStage.DISCHARGED,
     CaseStage.PL_PENDING,
     CaseStage.OUTSTANDING,
-  ].includes(lead.caseStage)
+  ] as CaseStage[]).includes(lead.caseStage as CaseStage)
 }
 
 function canShowPipelineCardUpload(lead: Lead) {
   if (!lead.caseStage || isCashCaseStage(lead.caseStage)) return false
   if (lead.caseStage === CaseStage.KYP_BASIC_COMPLETE) return true
-  if (![CaseStage.NEW_LEAD, CaseStage.KYP_BASIC_PENDING].includes(lead.caseStage)) return false
-  return hasLeadOpdScheduled(lead)
+  if (lead.caseStage === CaseStage.OPD_DONE) return true
+  if (!([CaseStage.NEW_LEAD, CaseStage.OPD_SCHEDULED, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage)) return false
+  return hasLeadOpdDone(lead)
 }
 
 function canShowPipelinePreAuthRaised(lead: Lead) {
@@ -1448,18 +1549,24 @@ function canShowPipelineIpdSchedule(lead: Lead) {
   if (!lead.caseStage) return false
 
   if (isCashCaseStage(lead.caseStage)) {
-    if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
-      return hasLeadOpdScheduled(lead)
+    if (lead.caseStage === CaseStage.CASH_OPD_DONE) {
+      return true
     }
 
-    return [
+    if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
+      return hasLeadOpdDone(lead)
+    }
+
+    return ([
       CaseStage.CASH_IPD_SUBMITTED,
       CaseStage.CASH_ON_HOLD,
       CaseStage.CASH_APPROVED,
-    ].includes(lead.caseStage)
+    ] as CaseStage[]).includes(lead.caseStage as CaseStage)
   }
 
-  return [CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED].includes(lead.caseStage)
+  return ([CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED] as CaseStage[]).includes(
+    lead.caseStage as CaseStage
+  )
 }
 
 function getPipelineIpdScheduleHref(lead: Lead) {
@@ -1531,6 +1638,7 @@ function HeaderCell({
   onSort,
   filterValue,
   filterOptions,
+  filterType,
   onFilterChange,
 }: {
   label: string
@@ -1539,6 +1647,7 @@ function HeaderCell({
   onSort?: (field: PipelineSortField) => void
   filterValue?: string[]
   filterOptions?: string[]
+  filterType?: 'multiSelect' | 'dateRange'
   onFilterChange?: (v: string[]) => void
 }) {
   const active = !!sortField && state?.sort === sortField
@@ -1569,8 +1678,13 @@ function HeaderCell({
         ) : (
           <span>{label}</span>
         )}
-        {filterOptions && onFilterChange && (
-          <ColumnFilter value={filterValue} options={filterOptions} onChange={(v) => onFilterChange(v as string[])} />
+        {onFilterChange && (filterType === 'dateRange' || filterOptions) && (
+          <ColumnFilter
+            type={filterType}
+            value={filterValue}
+            options={filterOptions}
+            onChange={(v) => onFilterChange(v as string[])}
+          />
         )}
       </div>
     </th>

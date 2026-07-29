@@ -125,6 +125,7 @@ export const ModelName = {
   CrmCampaignLeadSource: 'CrmCampaignLeadSource',
   CrmCampaignCircle: 'CrmCampaignCircle',
   CrmCampaignCity: 'CrmCampaignCity',
+  CrmSubStatusMaster: 'CrmSubStatusMaster',
   CrmCampaign: 'CrmCampaign',
   CrmCampaignTeamLeadAssignment: 'CrmCampaignTeamLeadAssignment',
   CrmActivityLog: 'CrmActivityLog',
@@ -361,6 +362,7 @@ export const LeadScalarFieldEnum = {
   profession: 'profession',
   qr: 'qr',
   removeRemarks: 'removeRemarks',
+  isOldCrmLead: 'isOldCrmLead',
   remarksClearedAt: 'remarksClearedAt',
   adId: 'adId',
   campaignId: 'campaignId',
@@ -1692,6 +1694,18 @@ export const CrmCampaignCityScalarFieldEnum = {
 } as const
 
 export type CrmCampaignCityScalarFieldEnum = (typeof CrmCampaignCityScalarFieldEnum)[keyof typeof CrmCampaignCityScalarFieldEnum]
+
+
+export const CrmSubStatusMasterScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmSubStatusMasterScalarFieldEnum = (typeof CrmSubStatusMasterScalarFieldEnum)[keyof typeof CrmSubStatusMasterScalarFieldEnum]
 
 
 export const CrmCampaignScalarFieldEnum = {

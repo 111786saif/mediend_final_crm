@@ -230,6 +230,58 @@ export async function getAssignableLeadUsersForActor(
     .sort((left, right) => left.name.localeCompare(right.name))
 }
 
+export async function getBulkReassignableBdUsersForActor(
+  user: SessionUser
+): Promise<AssignableLeadUser[]> {
+  if (LEAD_STATUS_OVERRIDE_ROLES.has(user.role) || user.role === 'EXECUTIVE_ASSISTANT') {
+    const users = await prisma.user.findMany({
+      where: {
+        role: UserRole.BD,
+        employee: {
+          is: {
+            status: EmployeeStatus.ACTIVE,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
+      orderBy: { name: 'asc' },
+    })
+
+    return users
+  }
+
+  if (user.role === 'BD') {
+    return []
+  }
+
+  if (!LEAD_STATUS_HIERARCHY_ROLES.has(user.role)) {
+    return []
+  }
+
+  const employee = await getEmployeeByUserId(user.id)
+  if (!employee) {
+    return []
+  }
+
+  const subordinates = await getSubordinates(employee.id, true)
+
+  return subordinates
+    .filter((subordinate) => subordinate.user.role === UserRole.BD)
+    .filter((subordinate) => subordinate.status === EmployeeStatus.ACTIVE)
+    .map((subordinate) => ({
+      id: subordinate.user.id,
+      name: subordinate.user.name,
+      email: subordinate.user.email,
+      role: subordinate.user.role,
+    }))
+    .sort((left, right) => left.name.localeCompare(right.name))
+}
+
 export async function canUserReassignLead(
   user: SessionUser,
   leadOwnerUserId: string,

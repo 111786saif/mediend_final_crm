@@ -388,6 +388,11 @@ export type CrmCampaignCircle = Prisma.CrmCampaignCircleModel
  */
 export type CrmCampaignCity = Prisma.CrmCampaignCityModel
 /**
+ * Model CrmSubStatusMaster
+ * 
+ */
+export type CrmSubStatusMaster = Prisma.CrmSubStatusMasterModel
+/**
  * Model CrmCampaign
  * 
  */
