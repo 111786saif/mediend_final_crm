@@ -128,6 +128,7 @@ export const ModelName = {
   CrmCampaign: 'CrmCampaign',
   CrmCampaignTeamLeadAssignment: 'CrmCampaignTeamLeadAssignment',
   CrmActivityLog: 'CrmActivityLog',
+  BulkLeadReassignmentRun: 'BulkLeadReassignmentRun',
   Resource: 'Resource',
   PermissionAssignment: 'PermissionAssignment',
   PermissionAuditLog: 'PermissionAuditLog',
@@ -197,7 +198,15 @@ export const ModelName = {
   PnLConfig: 'PnLConfig',
   PnLEntry: 'PnLEntry',
   TargetPnLEntry: 'TargetPnLEntry',
-  RequestLog: 'RequestLog'
+  RequestLog: 'RequestLog',
+  KnowledgeDocument: 'KnowledgeDocument',
+  KnowledgeChunk: 'KnowledgeChunk',
+  KnowledgeDocumentRole: 'KnowledgeDocumentRole',
+  KnowledgeDocumentUser: 'KnowledgeDocumentUser',
+  KnowledgeDocumentDepartment: 'KnowledgeDocumentDepartment',
+  AiConversation: 'AiConversation',
+  AiMessage: 'AiMessage',
+  AiToolCall: 'AiToolCall'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -352,6 +361,7 @@ export const LeadScalarFieldEnum = {
   profession: 'profession',
   qr: 'qr',
   removeRemarks: 'removeRemarks',
+  remarksClearedAt: 'remarksClearedAt',
   adId: 'adId',
   campaignId: 'campaignId',
   formId: 'formId',
@@ -1741,6 +1751,35 @@ export const CrmActivityLogScalarFieldEnum = {
 export type CrmActivityLogScalarFieldEnum = (typeof CrmActivityLogScalarFieldEnum)[keyof typeof CrmActivityLogScalarFieldEnum]
 
 
+export const BulkLeadReassignmentRunScalarFieldEnum = {
+  id: 'id',
+  actorUserId: 'actorUserId',
+  leadIds: 'leadIds',
+  bdUserIds: 'bdUserIds',
+  pauseSeconds: 'pauseSeconds',
+  subStatus: 'subStatus',
+  removePreviousRemarks: 'removePreviousRemarks',
+  status: 'status',
+  processedCount: 'processedCount',
+  currentLeadIndex: 'currentLeadIndex',
+  currentBdIndex: 'currentBdIndex',
+  currentCycleNumber: 'currentCycleNumber',
+  totalLeads: 'totalLeads',
+  totalBds: 'totalBds',
+  bullJobId: 'bullJobId',
+  nextRunAt: 'nextRunAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  failedAt: 'failedAt',
+  errorMessage: 'errorMessage',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BulkLeadReassignmentRunScalarFieldEnum = (typeof BulkLeadReassignmentRunScalarFieldEnum)[keyof typeof BulkLeadReassignmentRunScalarFieldEnum]
+
+
 export const ResourceScalarFieldEnum = {
   id: 'id',
   key: 'key',
@@ -2923,6 +2962,99 @@ export const RequestLogScalarFieldEnum = {
 } as const
 
 export type RequestLogScalarFieldEnum = (typeof RequestLogScalarFieldEnum)[keyof typeof RequestLogScalarFieldEnum]
+
+
+export const KnowledgeDocumentScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  sourceType: 'sourceType',
+  fileUrl: 'fileUrl',
+  mimeType: 'mimeType',
+  contentText: 'contentText',
+  visibility: 'visibility',
+  isActive: 'isActive',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type KnowledgeDocumentScalarFieldEnum = (typeof KnowledgeDocumentScalarFieldEnum)[keyof typeof KnowledgeDocumentScalarFieldEnum]
+
+
+export const KnowledgeChunkScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  chunkIndex: 'chunkIndex',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type KnowledgeChunkScalarFieldEnum = (typeof KnowledgeChunkScalarFieldEnum)[keyof typeof KnowledgeChunkScalarFieldEnum]
+
+
+export const KnowledgeDocumentRoleScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  role: 'role'
+} as const
+
+export type KnowledgeDocumentRoleScalarFieldEnum = (typeof KnowledgeDocumentRoleScalarFieldEnum)[keyof typeof KnowledgeDocumentRoleScalarFieldEnum]
+
+
+export const KnowledgeDocumentUserScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  userId: 'userId'
+} as const
+
+export type KnowledgeDocumentUserScalarFieldEnum = (typeof KnowledgeDocumentUserScalarFieldEnum)[keyof typeof KnowledgeDocumentUserScalarFieldEnum]
+
+
+export const KnowledgeDocumentDepartmentScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  departmentId: 'departmentId'
+} as const
+
+export type KnowledgeDocumentDepartmentScalarFieldEnum = (typeof KnowledgeDocumentDepartmentScalarFieldEnum)[keyof typeof KnowledgeDocumentDepartmentScalarFieldEnum]
+
+
+export const AiConversationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiConversationScalarFieldEnum = (typeof AiConversationScalarFieldEnum)[keyof typeof AiConversationScalarFieldEnum]
+
+
+export const AiMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  userId: 'userId',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type AiMessageScalarFieldEnum = (typeof AiMessageScalarFieldEnum)[keyof typeof AiMessageScalarFieldEnum]
+
+
+export const AiToolCallScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  userId: 'userId',
+  toolName: 'toolName',
+  input: 'input',
+  denied: 'denied',
+  errorCode: 'errorCode',
+  createdAt: 'createdAt'
+} as const
+
+export type AiToolCallScalarFieldEnum = (typeof AiToolCallScalarFieldEnum)[keyof typeof AiToolCallScalarFieldEnum]
 
 
 export const SortOrder = {

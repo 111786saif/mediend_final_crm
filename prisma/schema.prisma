@@ -639,6 +639,13 @@ model User {
   // Calendar availability statuses
   statuses UserStatus[]
 
+  // mediend AI knowledge base + audit
+  knowledgeDocumentsUploaded KnowledgeDocument[]       @relation("KnowledgeDocumentUploader")
+  knowledgeDocumentUsers     KnowledgeDocumentUser[]
+  aiConversations            AiConversation[]
+  aiMessages                 AiMessage[]
+  aiToolCalls                AiToolCall[]
+
   @@index([email])
   @@index([role])
 }
@@ -1192,6 +1199,7 @@ model Department {
   meets              Meet[]
   crmAssignmentRules CrmAssignmentRule[]
   crmCampaigns       CrmCampaign[]
+  knowledgeDocuments KnowledgeDocumentDepartment[]
 
   @@index([headId])
   @@index([name])
@@ -4363,4 +4371,130 @@ model RequestLog {
   @@index([createdAt])
   @@index([status, createdAt])
   @@index([path, createdAt])
+}
+
+// ─── mediend AI: knowledge base + conversation audit ─────────────────────────
+
+enum KnowledgeSourceType {
+  UPLOAD
+  TEXT
+  URL
+}
+
+enum KnowledgeVisibility {
+  GENERAL
+  RESTRICTED
+}
+
+model KnowledgeDocument {
+  id           String               @id @default(cuid())
+  title        String
+  description  String?              @db.Text
+  sourceType   KnowledgeSourceType  @default(TEXT)
+  fileUrl      String?
+  mimeType     String?
+  contentText  String?              @db.Text
+  visibility   KnowledgeVisibility  @default(GENERAL)
+  isActive     Boolean              @default(true)
+  uploadedById String
+  uploadedBy   User                 @relation("KnowledgeDocumentUploader", fields: [uploadedById], references: [id])
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  chunks      KnowledgeChunk[]
+  roles       KnowledgeDocumentRole[]
+  users       KnowledgeDocumentUser[]
+  departments KnowledgeDocumentDepartment[]
+
+  @@index([isActive, visibility])
+  @@index([uploadedById])
+}
+
+model KnowledgeChunk {
+  id          String            @id @default(cuid())
+  documentId  String
+  document    KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  chunkIndex  Int
+  content     String            @db.Text
+  createdAt   DateTime          @default(now())
+
+  @@unique([documentId, chunkIndex])
+  @@index([documentId])
+}
+
+model KnowledgeDocumentRole {
+  id         String            @id @default(cuid())
+  documentId String
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  role       String
+
+  @@unique([documentId, role])
+  @@index([role])
+}
+
+model KnowledgeDocumentUser {
+  id         String            @id @default(cuid())
+  documentId String
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, userId])
+  @@index([userId])
+}
+
+model KnowledgeDocumentDepartment {
+  id           String            @id @default(cuid())
+  documentId   String
+  document     KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  departmentId String
+  department   Department        @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, departmentId])
+  @@index([departmentId])
+}
+
+model AiConversation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages  AiMessage[]
+  toolCalls AiToolCall[]
+
+  @@index([userId, createdAt])
+}
+
+model AiMessage {
+  id             String         @id @default(cuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String
+  content        String         @db.Text
+  createdAt      DateTime       @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([userId])
+}
+
+model AiToolCall {
+  id             String         @id @default(cuid())
+  conversationId String?
+  conversation   AiConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolName       String
+  input          Json?
+  denied         Boolean        @default(false)
+  errorCode      String?
+  createdAt      DateTime       @default(now())
+
+  @@index([userId, createdAt])
+  @@index([toolName, createdAt])
+  @@index([denied])
 }

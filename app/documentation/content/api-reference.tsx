@@ -299,7 +299,10 @@ export const apiSections = {
 
         <SubSection title='Endpoints'>
           <APITable routes={[
-            {method:'POST',path:'/api/ai/chat',description:'AI chatbot query'},
+            {method:'POST',path:'/api/ai/chat',description:'Role-scoped mediend AI chat (streaming + tools)'},
+            {method:'GET',path:'/api/ai/capabilities',description:'Tools and suggested prompts for current user'},
+            {method:'GET',path:'/api/ai/knowledge',description:'List knowledge documents (SUPER_ADMIN / EA)'},
+            {method:'POST',path:'/api/ai/knowledge',description:'Create knowledge document (SUPER_ADMIN / EA)'},
             {method:'POST',path:'/api/admin/seed-users',description:'Seed test users'},
             {method:'GET',path:'/api/admin/system/health',description:'System health check'},
             {method:'GET',path:'/api/settings',description:'Get application settings'},

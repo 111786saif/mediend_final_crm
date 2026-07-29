@@ -403,6 +403,11 @@ export type CrmCampaignTeamLeadAssignment = Prisma.CrmCampaignTeamLeadAssignment
  */
 export type CrmActivityLog = Prisma.CrmActivityLogModel
 /**
+ * Model BulkLeadReassignmentRun
+ * 
+ */
+export type BulkLeadReassignmentRun = Prisma.BulkLeadReassignmentRunModel
+/**
  * Model Resource
  * 
  */
@@ -753,3 +758,43 @@ export type TargetPnLEntry = Prisma.TargetPnLEntryModel
  * 
  */
 export type RequestLog = Prisma.RequestLogModel
+/**
+ * Model KnowledgeDocument
+ * 
+ */
+export type KnowledgeDocument = Prisma.KnowledgeDocumentModel
+/**
+ * Model KnowledgeChunk
+ * 
+ */
+export type KnowledgeChunk = Prisma.KnowledgeChunkModel
+/**
+ * Model KnowledgeDocumentRole
+ * 
+ */
+export type KnowledgeDocumentRole = Prisma.KnowledgeDocumentRoleModel
+/**
+ * Model KnowledgeDocumentUser
+ * 
+ */
+export type KnowledgeDocumentUser = Prisma.KnowledgeDocumentUserModel
+/**
+ * Model KnowledgeDocumentDepartment
+ * 
+ */
+export type KnowledgeDocumentDepartment = Prisma.KnowledgeDocumentDepartmentModel
+/**
+ * Model AiConversation
+ * 
+ */
+export type AiConversation = Prisma.AiConversationModel
+/**
+ * Model AiMessage
+ * 
+ */
+export type AiMessage = Prisma.AiMessageModel
+/**
+ * Model AiToolCall
+ * 
+ */
+export type AiToolCall = Prisma.AiToolCallModel

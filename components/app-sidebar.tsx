@@ -46,7 +46,6 @@ import { usePathname } from 'next/navigation'
 import * as React from 'react'
 import logo from '@/public/logo-mediend.png'
 import { UserRole } from '@/generated/prisma/enums'
-import { useAI } from '@/components/ai/ai-provider'
 import { useTheme } from 'next-themes'
 
 function getBadgeCount(
@@ -106,7 +105,6 @@ function getBadgeCount(
 
 export function AppSidebar() {
   const { user, logout, isTester, setActiveRole } = useAuth()
-  const ai = useAI()
   const pathname = usePathname()
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
@@ -767,14 +765,14 @@ export function AppSidebar() {
               </div>
             </SidebarMenuItem>
           )}
-          {ai && (
-            <SidebarMenuItem>
-              <SidebarMenuButton onClick={ai.openAI} tooltip="mediendAI">
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="mediend AI">
+              <Link href="/training" onClick={closeSidebarOnMobile}>
                 <Sparkles className="text-purple-400" />
-                <span>mediendAI</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          )}
+                <span>mediend AI</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}

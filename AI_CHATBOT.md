@@ -1,133 +1,90 @@
-# mediendAI Chatbot
+# mediend AI
 
-AI-powered assistant for the Mediend CRM dashboard that can answer questions about data, analytics, and operations.
-
-## Features
-
-- **Natural Language Queries**: Ask questions about your dashboard data in plain English
-- **Streaming Responses**: Real-time text streaming for smooth conversations
-- **Tool Integration**: Leverages existing APIs and can execute raw SQL queries for complex analysis
-- **Role-Based Access**: Respects user roles and permissions (BD sees own data, TEAM_LEAD sees team data, etc.)
-- **Pre-made Questions**: Quick question chips for common queries
-- **Beautiful UI**: Animated floating button with purple/white gradient theme
+Role-scoped assistant at `/training`. Answers come from existing internal APIs exposed as LLM tools, plus an audience-controlled knowledge base (Postgres full-text search). Access control is enforced by **only registering the tools** the current user is entitled to.
 
 ## Setup
 
-### 1. Environment Variables
-
-Add **one** of these to your `.env` file (OpenAI is used first if set):
-
-**Option A – OpenAI (recommended)**  
-Get a key at [OpenAI API Keys](https://platform.openai.com/api-keys):
+Add to `.env`:
 
 ```bash
-OPENAI_API_KEY=your_openai_api_key_here
+AI_GATEWAY_BASE_URL=https://api.commandcode.ai/provider/v1
+AI_GATEWAY_API_KEY=your_command_code_api_key
+AI_CHAT_MODEL=deepseek/deepseek-v4-flash
 ```
 
-Optional: override the model (default is `gpt-4o-mini`):
+Optional model IDs (see `opencode.json`): `deepseek/deepseek-v4-pro`, `Qwen/Qwen3.6-Plus`, `Qwen/Qwen3.7-Max`.
+
+Apply the knowledge/audit migration (includes `tsvector` + GIN index):
 
 ```bash
-OPENAI_CHAT_MODEL=gpt-4o
+bunx prisma migrate deploy
+# or: bunx prisma db push
 ```
-
-**Option B – Groq (free tier)**  
-Get a key at [Groq Console](https://console.groq.com):
-
-```bash
-GROQ_API_KEY=your_groq_api_key_here
-```
-
-**Option C – Google Gemini**
-
-```bash
-GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key_here
-```
-
-Provider order: **OpenAI** → Groq → Google. If none are set, the chat returns a clear error.
-
-### 2. Dependencies
-
-Dependencies are already installed:
-- `ai` - Vercel AI SDK
-- `@ai-sdk/openai` - OpenAI provider (default when OPENAI_API_KEY is set)
-- `@ai-sdk/google` - Google Gemini provider
-- `@ai-sdk/groq` - Groq provider (free tier, multimodal)
 
 ## Architecture
 
-### Backend
+| Piece | Path |
+|-------|------|
+| Chat UI | `app/training/page.tsx` |
+| Knowledge admin | `app/training/documents/page.tsx` (SUPER_ADMIN, EXECUTIVE_ASSISTANT) |
+| Chat API | `POST /api/ai/chat` |
+| Capabilities | `GET /api/ai/capabilities` |
+| Knowledge API | `GET/POST /api/ai/knowledge`, `PATCH/DELETE /api/ai/knowledge/[id]` |
+| Provider | `lib/ai/provider.ts` (Command Code OpenAI-compatible gateway) |
+| Actor / scope | `lib/ai/actor.ts` |
+| Tool registry | `lib/ai/registry.ts` |
+| Tools | `lib/ai/tools/{self,team,global,knowledge}.ts` |
+| Knowledge FTS | `lib/ai/knowledge.ts` |
+| Subject resolve | `lib/ai/resolve-subject.ts` |
 
-- **`/api/ai/chat`** - Main streaming chat endpoint
-- **`/api/ai/sql`** - Secure raw SQL execution endpoint
-- **`lib/ai/tools.ts`** - AI tool definitions (queryLeads, queryAnalytics, etc.)
-- **`lib/ai/schema-context.ts`** - Database schema knowledge for AI
-- **`lib/ai/sql-validator.ts`** - SQL query security validation
-
-### Frontend
-
-- **`components/ai/ai-floating-button.tsx`** - Animated gradient button
-- **`components/ai/ai-chat-sheet.tsx`** - Chat sheet panel
-- **`components/ai/message-list.tsx`** - Message display with streaming
-- **`components/ai/chat-input.tsx`** - Input component
-- **`components/ai/quick-questions.tsx`** - Pre-made question chips
-- **`components/ai/ai-provider.tsx`** - Provider component
-
-## Usage
-
-1. Click the floating purple button in the bottom-right corner
-2. The chat sheet opens from the right
-3. Type your question or click a pre-made question chip
-4. The AI responds with streaming text
-5. Ask follow-up questions in the conversation
-
-## Example Questions
-
-- "What's the total revenue this month?"
-- "Show me top performing BDs"
-- "How many leads are in IPD stage?"
-- "What's the conversion rate by source?"
-- "List pending insurance cases"
-- "Show outstanding payments summary"
-
-## Security
-
-- SQL queries are validated and restricted to SELECT statements only
-- Role-based filtering ensures users only see data they have permission to access
-- Query timeouts prevent long-running queries
-- Row limits prevent excessive data retrieval
-
-## AI Tools
-
-The AI has access to these tools:
-
-1. **queryLeads** - Query leads with filters (status, date range, circle, BD, etc.)
-2. **queryAnalytics** - Get dashboard analytics (revenue, profit, conversion rates)
-3. **queryFinance** - Query finance ledger entries
-4. **executeQuery** - Execute raw SQL SELECT queries (for complex analysis)
-5. **getSchemaInfo** - Get information about database tables and fields
-
-## Customization
-
-### Change Model
-
-Edit `app/api/ai/chat/route.ts`:
-
-```typescript
-model: google('gemini-1.5-flash') // Change to gemini-1.5-pro for better quality
+```mermaid
+flowchart TB
+  U[User message] --> API[POST /api/ai/chat]
+  API --> Actor[buildAiActor]
+  Actor --> Reg[buildToolsForActor]
+  Reg --> LLM[streamText via Command Code]
+  LLM -->|tool calls| Exec[execute + re-check scope]
+  Exec --> Lib[lib helpers]
+  Exec --> FTS[Knowledge FTS with audience in SQL WHERE]
+  LLM --> UI[Markdown + widgets]
 ```
 
-### Add More Quick Questions
+## Security model
 
-Edit `components/ai/quick-questions.tsx`:
+1. **Registration-time filter** — disallowed tools are omitted from the model’s tool set.
+2. **Execution-time re-check** — every tool execute re-asserts permission and clamps data scope.
+3. **No raw SQL** — the old `executeQuery` / `/api/ai/sql` surface was removed.
+4. **Subjects by name only** — team tools resolve people via `resolveSubject`; raw employee IDs from the model are never accepted. Out-of-hierarchy names return `OUT_OF_SCOPE`.
 
+### Tool scopes
 
-```typescript
-const QUICK_QUESTIONS = [
-  "Your question here",
-  // ...
-]
+| Scope | Who gets them |
+|-------|----------------|
+| SELF | Any authenticated employee (own targets, leaves, attendance, leads, KB search) |
+| TEAM | Managers with subordinates / `hierarchy:team:read` / subtree sales roles |
+| GLOBAL | MD, ADMIN, SUPER_ADMIN, SALES_HEAD, EXECUTIVE_ASSISTANT (+ HR_HEAD for org HR KPIs) |
+
+## Knowledge base
+
+- Documents: general or restricted (roles + users + departments).
+- Search uses `websearch_to_tsquery` + `ts_rank`; audience predicates live **inside** the SQL `WHERE` (not post-filtered in JS).
+- SUPER_ADMIN and MD bypass audience filters.
+
+## UI
+
+- Streaming via `useChat` + `DefaultChatTransport`
+- Markdown (`react-markdown` + `remark-gfm`)
+- Widgets for targets, leave, attendance pie, IPD leaderboard bars, KB citations
+- Role-aware suggested prompts from `/api/ai/capabilities`
+
+## Audit
+
+`AiConversation`, `AiMessage`, `AiToolCall` log tool names, inputs, and `denied` when a call returns `OUT_OF_SCOPE`.
+
+## RBAC smoke test
+
+```bash
+bun scripts/test-ai-rbac.ts
 ```
 
-### Customize Colors
-
-Edit `components/ai/ai-floating-button.tsx` and other components to change the purple theme.
+Snapshots tool names per role and asserts peer name lookups return `OUT_OF_SCOPE` for a BD.
