@@ -653,7 +653,7 @@ export default function CaseTrackerPage() {
       const colId = col.id
       if (!colId) return true
       const resourceKey = `sales.case_tracker.table.lead.column.${colId}`
-      if (resourceKey in RESOURCE_MAP) {
+      if (resourceKey in RESOURCE_MAP && resourceKey in permissions) {
         return hasAccess(resourceKey, 'READ')
       }
       return true

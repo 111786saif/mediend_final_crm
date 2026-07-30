@@ -86,6 +86,7 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'sales.team_lead_pipeline', label: 'Team Lead Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 12 },
   { key: 'sales.ea_pipeline', label: 'EA Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 13 },
   { key: 'sales.blueprint_dashboard', label: 'Blue Print Dashboard', type: 'SECTION', parentKey: 'sales', sortOrder: 14 },
+  { key: 'sales.opd_monitoring', label: 'OPD Monitoring', type: 'SECTION', parentKey: 'sales', sortOrder: 15 },
 
 
   // Under insurance_pl
@@ -456,6 +457,26 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'finance.fin_ledger.table.ledger.column.amount', label: 'Amount Column', type: 'ENTITY', parentKey: 'finance.fin_ledger.table', sortOrder: 3 },
   { key: 'finance.fin_ledger.table.ledger.column.mode', label: 'Payment Mode Column', type: 'ENTITY', parentKey: 'finance.fin_ledger.table', sortOrder: 4 },
   { key: 'finance.fin_ledger.table.ledger.column.status', label: 'Status Column', type: 'ENTITY', parentKey: 'finance.fin_ledger.table', sortOrder: 5 },
+
+  // OPD Monitoring (sales.opd_monitoring)
+  { key: 'sales.opd_monitoring.analytics', label: 'OPD Monitoring Analytics Summary', type: 'SECTION', parentKey: 'sales.opd_monitoring', sortOrder: 1 },
+  { key: 'sales.opd_monitoring.analytics.scheduled', label: 'Scheduled Card', type: 'ENTITY', parentKey: 'sales.opd_monitoring.analytics', sortOrder: 1 },
+  { key: 'sales.opd_monitoring.analytics.done', label: 'Done Card', type: 'ENTITY', parentKey: 'sales.opd_monitoring.analytics', sortOrder: 2 },
+  { key: 'sales.opd_monitoring.analytics.no_show', label: 'No Show Card', type: 'ENTITY', parentKey: 'sales.opd_monitoring.analytics', sortOrder: 3 },
+  { key: 'sales.opd_monitoring.analytics.cancelled', label: 'Cancelled Card', type: 'ENTITY', parentKey: 'sales.opd_monitoring.analytics', sortOrder: 4 },
+
+  { key: 'sales.opd_monitoring.daily', label: 'OPD Monitoring: Daily View Tab', type: 'SECTION', parentKey: 'sales.opd_monitoring', sortOrder: 2 },
+  { key: 'sales.opd_monitoring.doctor', label: 'OPD Monitoring: Doctor-wise View Tab', type: 'SECTION', parentKey: 'sales.opd_monitoring', sortOrder: 3 },
+  { key: 'sales.opd_monitoring.overdue', label: 'OPD Monitoring: Pending / Overdue Tab', type: 'SECTION', parentKey: 'sales.opd_monitoring', sortOrder: 4 },
+
+  { key: 'sales.opd_monitoring.table', label: 'OPD Monitoring Table', type: 'SECTION', parentKey: 'sales.opd_monitoring', sortOrder: 5 },
+  { key: 'sales.opd_monitoring.table.lead.column.patient_name', label: 'Table Column: Patient Name', type: 'ENTITY', parentKey: 'sales.opd_monitoring.table', sortOrder: 1 },
+  { key: 'sales.opd_monitoring.table.lead.column.lead_ref', label: 'Table Column: Lead Ref', type: 'ENTITY', parentKey: 'sales.opd_monitoring.table', sortOrder: 2 },
+  { key: 'sales.opd_monitoring.table.lead.column.doctor', label: 'Table Column: Doctor', type: 'ENTITY', parentKey: 'sales.opd_monitoring.table', sortOrder: 3 },
+  { key: 'sales.opd_monitoring.table.lead.column.hospital', label: 'Table Column: Hospital', type: 'ENTITY', parentKey: 'sales.opd_monitoring.table', sortOrder: 4 },
+  { key: 'sales.opd_monitoring.table.lead.column.date', label: 'Table Column: Appointment Date', type: 'ENTITY', parentKey: 'sales.opd_monitoring.table', sortOrder: 5 },
+  { key: 'sales.opd_monitoring.table.lead.column.status', label: 'Table Column: Status', type: 'ENTITY', parentKey: 'sales.opd_monitoring.table', sortOrder: 6 },
+  { key: 'sales.opd_monitoring.table.lead.column.bd', label: 'Table Column: BD', type: 'ENTITY', parentKey: 'sales.opd_monitoring.table', sortOrder: 7 },
 ]
 
 async function main() {

@@ -255,6 +255,23 @@ export function AppSidebar() {
   const isEa = user.role === 'EXECUTIVE_ASSISTANT'
 
   const filterByPermission = (item: any) => {
+    // Dynamic checks for generic/legacy pages with role-specific resource keys
+    if (item.title === 'Pipeline') {
+      return (
+        hasAccess('sales.sales_pipeline', 'READ') ||
+        hasAccess('sales.team_lead_pipeline', 'READ') ||
+        hasAccess('sales.ea_pipeline', 'READ')
+      )
+    }
+
+    if (item.title === 'Targets') {
+      return (
+        hasAccess('sales.targets', 'READ') ||
+        hasAccess('sales.team_lead_targets', 'READ') ||
+        hasAccess('sales.sales_head_targets', 'READ')
+      )
+    }
+
     // 1. Try to match the current item URL against RESOURCE_MAP paths
     let resourceKey = Object.keys(RESOURCE_MAP).find(
       (key) => (RESOURCE_MAP as any)[key].path === item.url
