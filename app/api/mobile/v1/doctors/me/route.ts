@@ -1,6 +1,13 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import {
+  emailField,
+  nullableOptionalStringField,
+  optionalIntField,
+  phoneField,
+  requiredStringField,
+} from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import {
   DoctorAppProfileError,
@@ -10,20 +17,29 @@ import {
 
 const updateDoctorProfileSchema = z
   .object({
-    name: z.string().trim().min(1).max(200).optional(),
-    email: z.string().email().trim().toLowerCase().optional(),
-    phoneNumber: z.string().trim().max(20).nullable().optional(),
-    category: z.string().trim().max(100).nullable().optional(),
-    treatment: z.string().trim().max(200).nullable().optional(),
-    specialty: z.string().trim().max(200).nullable().optional(),
-    age: z.coerce.number().int().min(0).max(120).nullable().optional(),
-    sex: z.string().trim().max(50).nullable().optional(),
-    gender: z.string().trim().max(50).nullable().optional(),
-    aadhaarNumber: z.string().trim().max(20).nullable().optional(),
-    panNumber: z.string().trim().max(20).nullable().optional(),
-    experienceYears: z.coerce.number().int().min(0).max(80).nullable().optional(),
-    experienceNotes: z.string().trim().max(5000).nullable().optional(),
-    feeStructure: z.string().trim().max(5000).nullable().optional(),
+    name: z.preprocess(
+      (value) => (typeof value === 'string' && value.trim() === '' ? undefined : value),
+      requiredStringField('Name', { max: 200 }).optional()
+    ),
+    email: emailField('Email', { optional: true }),
+    phoneNumber: phoneField('Phone number', { optional: true }),
+    category: nullableOptionalStringField('Category', { max: 100 }),
+    treatment: nullableOptionalStringField('Treatment', { max: 200 }),
+    specialty: nullableOptionalStringField('Specialty', { max: 200 }),
+    age: z.preprocess(
+      (value) => (value === null ? null : value),
+      optionalIntField('Age', { min: 0, max: 120 }).nullable().optional()
+    ),
+    sex: nullableOptionalStringField('Sex', { max: 50 }),
+    gender: nullableOptionalStringField('Gender', { max: 50 }),
+    aadhaarNumber: nullableOptionalStringField('Aadhaar number', { max: 20 }),
+    panNumber: nullableOptionalStringField('PAN number', { max: 20 }),
+    experienceYears: z.preprocess(
+      (value) => (value === null ? null : value),
+      optionalIntField('Experience years', { min: 0, max: 80 }).nullable().optional()
+    ),
+    experienceNotes: nullableOptionalStringField('Experience notes', { max: 5000 }),
+    feeStructure: nullableOptionalStringField('Fee structure', { max: 5000 }),
   })
   .refine(data => Object.keys(data).length > 0, {
     message: 'At least one field is required',

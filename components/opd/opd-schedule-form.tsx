@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { type FormEvent, type ReactNode, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Building2, Calendar, IndianRupee, Stethoscope, User } from 'lucide-react'
 import { toast } from 'sonner'
@@ -13,6 +13,7 @@ import { CaseStage, FlowType } from '@/generated/prisma/enums'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { getNextStageAfterOpdSchedule, OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
+import { cn } from '@/lib/utils'
 
 const SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
 const SURGEON_TYPE_OPTIONS = [
@@ -31,6 +32,27 @@ const OPD_MODE_OPTIONS = [
   { value: 'OFFLINE', label: 'Offline' },
   { value: 'ONLINE', label: 'Online' },
 ] as const
+const VALID_OPD_MODES = new Set(OPD_MODE_OPTIONS.map((option) => option.value))
+const MAX_PATIENT_AGE = 120
+
+type FormErrors = Partial<Record<
+  | 'patientName'
+  | 'age'
+  | 'sex'
+  | 'phoneNumber'
+  | 'alternateNumber'
+  | 'circle'
+  | 'category'
+  | 'treatment'
+  | 'surgeonName'
+  | 'surgeonType'
+  | 'hospitalName'
+  | 'opdChargeAmount'
+  | 'opdMode'
+  | 'arrivalDate'
+  | 'arrivalTime',
+  string
+>>
 
 function toDateInputValue(value: string | null | undefined) {
   if (!value) return ''
@@ -59,12 +81,64 @@ function normalizeStatus(value: string | null | undefined) {
   return String(value ?? '').trim().toLowerCase()
 }
 
+function normalizeHospitalFieldValue(value: string | null | undefined) {
+  const trimmed = value?.trim() || ''
+  if (!trimmed) return ''
+  const normalized = trimmed.toLowerCase()
+  if (normalized === 'not specified' || normalized === 'unknown' || normalized === '—') {
+    return ''
+  }
+  return trimmed
+}
+
 function mapOpdModeValue(value: number | null | undefined) {
   return value === 2 ? 'ONLINE' : 'OFFLINE'
 }
 
 function mapOpdModeToPayload(value: string) {
   return value === 'ONLINE' ? 2 : 1
+}
+
+function digitsOnly(value: string) {
+  return value.replace(/\D/g, '')
+}
+
+function normalizeIndianPhone(value: string) {
+  const digits = digitsOnly(value)
+  if (digits.length === 10) return digits
+  if (digits.length === 12 && digits.startsWith('91')) return digits.slice(2)
+  return null
+}
+
+function isValidDateInput(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  const parsed = new Date(`${value}T00:00:00`)
+  return !Number.isNaN(parsed.getTime())
+}
+
+function isValidTimeInput(value: string) {
+  if (!/^\d{2}:\d{2}$/.test(value)) return false
+  const [hours, minutes] = value.split(':').map((part) => Number.parseInt(part, 10))
+  return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59
+}
+
+function RequiredLabel({
+  htmlFor,
+  children,
+}: {
+  htmlFor: string
+  children: ReactNode
+}) {
+  return (
+    <Label htmlFor={htmlFor}>
+      {children} <span className="text-current">*</span>
+    </Label>
+  )
+}
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null
+  return <p className="mt-1 text-xs text-destructive">{message}</p>
 }
 
 export interface OPDScheduleFormProps {
@@ -124,7 +198,8 @@ export function OPDScheduleForm({
   onSuccess,
   onCancel,
 }: OPDScheduleFormProps) {
-  const initialHospitalName = opdHospital?.trim() || hospitalName?.trim() || ''
+  const initialHospitalName =
+    normalizeHospitalFieldValue(opdHospital) || normalizeHospitalFieldValue(hospitalName)
   const initialDoctorName = opdDrName?.trim() || surgeonName?.trim() || ''
   const initialScheduleDate = opdScheduleDate || null
 
@@ -152,6 +227,7 @@ export function OPDScheduleForm({
     arrivalTime: toTimeInputValue(initialScheduleDate),
   })
   const [submitting, setSubmitting] = useState(false)
+  const [errors, setErrors] = useState<FormErrors>({})
 
   const opdId = useMemo(() => `OPD-${leadRef}`, [leadRef])
   const initialNormalizedSex = useMemo(() => normalizeLeadSexValue(sex), [sex])
@@ -182,15 +258,57 @@ export function OPDScheduleForm({
 
   function setField<K extends keyof typeof formData>(key: K, value: (typeof formData)[K]) {
     setFormData((current) => ({ ...current, [key]: value }))
+    setErrors((current) => {
+      if (!current[key as keyof FormErrors]) return current
+      const next = { ...current }
+      delete next[key as keyof FormErrors]
+      return next
+    })
+  }
+
+  function handleHospitalChange(value: string) {
+    setFormData((current) => {
+      const nextHospitalName = value
+      const hospitalNameChanged = nextHospitalName.trim() !== current.hospitalName.trim()
+
+      if (!hospitalNameChanged) {
+        return {
+          ...current,
+          hospitalName: nextHospitalName,
+        }
+      }
+
+      return {
+        ...current,
+        hospitalName: nextHospitalName,
+        hospitalLocation: '',
+        hospitalAddress: '',
+        googleMapLocation: '',
+      }
+    })
+
+    setErrors((current) => {
+      if (!current.hospitalName) return current
+      const next = { ...current }
+      delete next.hospitalName
+      return next
+    })
   }
 
   function handleHospitalSelect(item: MasterItem) {
     setFormData((current) => ({
       ...current,
       hospitalName: item.name,
-      hospitalAddress: item.address || current.hospitalAddress,
-      googleMapLocation: item.googleMapLink || current.googleMapLocation,
+      hospitalLocation: '',
+      hospitalAddress: item.address || '',
+      googleMapLocation: item.googleMapLink || '',
     }))
+    setErrors((current) => {
+      if (!current.hospitalName) return current
+      const next = { ...current }
+      delete next.hospitalName
+      return next
+    })
   }
 
   function handleDoctorSelect(item: MasterItem) {
@@ -199,10 +317,170 @@ export function OPDScheduleForm({
       surgeonName: item.name,
       surgeonType: current.surgeonType || item.category || '',
     }))
+    setErrors((current) => {
+      if (!current.surgeonName && !current.surgeonType) return current
+      const next = { ...current }
+      delete next.surgeonName
+      delete next.surgeonType
+      return next
+    })
   }
 
-  async function handleSubmit(event: React.FormEvent) {
+  function handleCategoryChange(value: string) {
+    setFormData((current) => {
+      const nextCategory = value.trim()
+      const categoryChanged =
+        nextCategory.toLowerCase() !== current.category.trim().toLowerCase()
+
+      return {
+        ...current,
+        category: value,
+        treatment: categoryChanged ? '' : current.treatment,
+      }
+    })
+
+    setErrors((current) => {
+      if (!current.category && !current.treatment) return current
+      const next = { ...current }
+      delete next.category
+      delete next.treatment
+      return next
+    })
+  }
+
+  function handleCategorySelect(item: MasterItem) {
+    handleCategoryChange(item.name)
+  }
+
+  function handleTreatmentSelect(item: MasterItem) {
+    setFormData((current) => ({
+      ...current,
+      treatment: item.name,
+      category: current.category.trim() || item.category?.trim() || '',
+    }))
+
+    setErrors((current) => {
+      if (!current.category && !current.treatment) return current
+      const next = { ...current }
+      delete next.category
+      delete next.treatment
+      return next
+    })
+  }
+
+  function validateForm() {
+    const nextErrors: FormErrors = {}
+    const trimmedPatientName = formData.patientName.trim()
+    const trimmedAge = formData.age.trim()
+    const trimmedSex = formData.sex.trim()
+    const trimmedPhone = formData.phoneNumber.trim()
+    const trimmedAltPhone = formData.alternateNumber.trim()
+    const trimmedCircle = formData.circle.trim()
+    const trimmedCategory = formData.category.trim()
+    const trimmedTreatment = formData.treatment.trim()
+    const trimmedDoctor = formData.surgeonName.trim()
+    const trimmedSurgeonType = formData.surgeonType.trim()
+    const trimmedHospital = formData.hospitalName.trim()
+    const trimmedCharge = formData.opdChargeAmount.trim()
+
+    if (!trimmedPatientName) {
+      nextErrors.patientName = 'Patient name is required'
+    }
+
+    if (!trimmedAge) {
+      nextErrors.age = 'Age is required'
+    } else if (!/^\d+$/.test(trimmedAge)) {
+      nextErrors.age = 'Age must be a whole number'
+    } else {
+      const parsedAge = Number.parseInt(trimmedAge, 10)
+      if (parsedAge <= 0 || parsedAge > MAX_PATIENT_AGE) {
+        nextErrors.age = `Age must be between 1 and ${MAX_PATIENT_AGE}`
+      }
+    }
+
+    const normalizedSex = normalizeLeadSexValue(trimmedSex)
+    if (!normalizedSex) {
+      nextErrors.sex = 'Sex is required'
+    }
+
+    const normalizedPhone = normalizeIndianPhone(trimmedPhone)
+    if (!trimmedPhone) {
+      nextErrors.phoneNumber = 'Patient number is required'
+    } else if (!normalizedPhone) {
+      nextErrors.phoneNumber = 'Patient number must be a valid 10-digit Indian mobile number'
+    }
+
+    const normalizedAltPhone = trimmedAltPhone ? normalizeIndianPhone(trimmedAltPhone) : null
+    if (trimmedAltPhone && !normalizedAltPhone) {
+      nextErrors.alternateNumber =
+        'Alternative number must be a valid 10-digit Indian mobile number'
+    }
+    if (normalizedPhone && normalizedAltPhone && normalizedPhone === normalizedAltPhone) {
+      nextErrors.alternateNumber =
+        'Alternative number must be different from the patient number'
+    }
+
+    if (!trimmedCircle) {
+      nextErrors.circle = 'Circle is required'
+    }
+
+    if (!trimmedCategory) {
+      nextErrors.category = 'Category is required'
+    }
+
+    if (!trimmedTreatment) {
+      nextErrors.treatment = 'Treatment is required'
+    }
+
+    if (!trimmedDoctor) {
+      nextErrors.surgeonName = 'Surgeon name is required'
+    }
+
+    if (!trimmedSurgeonType) {
+      nextErrors.surgeonType = 'Surgeon type is required'
+    }
+
+    if (!trimmedHospital) {
+      nextErrors.hospitalName = 'Hospital / clinic name is required'
+    }
+
+    if (trimmedCharge) {
+      if (!/^\d+$/.test(trimmedCharge)) {
+        nextErrors.opdChargeAmount = 'OPD charge must be a whole number'
+      } else if (Number.parseInt(trimmedCharge, 10) < 0) {
+        nextErrors.opdChargeAmount = 'OPD charge must be zero or more'
+      }
+    }
+
+    if (!VALID_OPD_MODES.has(formData.opdMode as (typeof OPD_MODE_OPTIONS)[number]['value'])) {
+      nextErrors.opdMode = 'OPD mode is required'
+    }
+
+    if (!formData.arrivalDate) {
+      nextErrors.arrivalDate = 'Arrival date is required'
+    } else if (!isValidDateInput(formData.arrivalDate)) {
+      nextErrors.arrivalDate = 'Arrival date must be valid'
+    }
+
+    if (!formData.arrivalTime) {
+      nextErrors.arrivalTime = 'Arrival time is required'
+    } else if (!isValidTimeInput(formData.arrivalTime)) {
+      nextErrors.arrivalTime = 'Arrival time must be valid'
+    }
+
+    return nextErrors
+  }
+
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault()
+
+    const validationErrors = validateForm()
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
+      toast.error(Object.values(validationErrors)[0] ?? 'Please fill all required fields')
+      return
+    }
+    setErrors({})
 
     const trimmedPatientName = formData.patientName.trim()
     const trimmedSex = formData.sex.trim()
@@ -210,51 +488,13 @@ export function OPDScheduleForm({
     const trimmedHospital = formData.hospitalName.trim()
     const trimmedDoctor = formData.surgeonName.trim()
 
-    if (!trimmedPatientName) {
-      toast.error('Patient name is required')
-      return
-    }
-
-    if (!formData.arrivalDate) {
-      toast.error('Arrival date is required')
-      return
-    }
-
-    if (!formData.arrivalTime) {
-      toast.error('Arrival time is required')
-      return
-    }
-
-    if (!trimmedHospital) {
-      toast.error('Hospital / clinic name is required')
-      return
-    }
-
-    if (!trimmedDoctor) {
-      toast.error('Surgeon name is required')
-      return
-    }
-
-    if (trimmedSex && !normalizeLeadSexValue(trimmedSex)) {
-      toast.error('Sex must be Male, Female, or Other')
-      return
-    }
-
     const parsedAge =
       formData.age.trim().length > 0 ? Number.parseInt(formData.age.trim(), 10) : null
-    if (formData.age.trim().length > 0 && (parsedAge == null || !Number.isFinite(parsedAge) || parsedAge < 0)) {
-      toast.error('Age must be a valid number')
-      return
-    }
 
     const parsedCharge =
       formData.opdChargeAmount.trim().length > 0
         ? Number.parseInt(formData.opdChargeAmount.trim(), 10)
         : 0
-    if (!Number.isFinite(parsedCharge) || parsedCharge < 0) {
-      toast.error('OPD charge must be a valid amount')
-      return
-    }
 
     const scheduleDateTime = composeScheduleDateTime(formData.arrivalDate, formData.arrivalTime)
     const nextStatus = OPD_SCHEDULED_STATUS
@@ -376,6 +616,9 @@ export function OPDScheduleForm({
             <Calendar className="h-5 w-5 text-sky-600" />
             <span>Update OPD Details</span>
           </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Fields marked <span className="font-bold text-current">*</span> are required.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2">
@@ -389,32 +632,38 @@ export function OPDScheduleForm({
             <Input id="opd-id" value={opdId} disabled className="mt-1" />
           </div>
           <div>
-            <Label htmlFor="opd-patient-name">Patient name</Label>
+            <RequiredLabel htmlFor="opd-patient-name">Patient name</RequiredLabel>
             <Input
               id="opd-patient-name"
               value={formData.patientName}
               onChange={(event) => setField('patientName', event.target.value)}
-              className="mt-1"
+              className={cn('mt-1', errors.patientName && 'border-destructive')}
             />
+            <FieldError message={errors.patientName} />
           </div>
           <div>
-            <Label htmlFor="opd-age">Age</Label>
+            <RequiredLabel htmlFor="opd-age">Age</RequiredLabel>
             <Input
               id="opd-age"
               type="number"
-              min={0}
+              min={1}
+              max={MAX_PATIENT_AGE}
               value={formData.age}
               onChange={(event) => setField('age', event.target.value)}
-              className="mt-1"
+              className={cn('mt-1', errors.age && 'border-destructive')}
             />
+            <FieldError message={errors.age} />
           </div>
           <div>
-            <Label htmlFor="opd-sex">Sex</Label>
+            <RequiredLabel htmlFor="opd-sex">Sex</RequiredLabel>
             <Select
               value={formData.sex || '__none__'}
               onValueChange={(value) => setField('sex', value === '__none__' ? '' : value)}
             >
-              <SelectTrigger id="opd-sex" className="mt-1">
+              <SelectTrigger
+                id="opd-sex"
+                className={cn('mt-1', errors.sex && 'border-destructive')}
+              >
                 <SelectValue placeholder="Select sex" />
               </SelectTrigger>
               <SelectContent>
@@ -426,15 +675,17 @@ export function OPDScheduleForm({
                 ))}
               </SelectContent>
             </Select>
+            <FieldError message={errors.sex} />
           </div>
           <div>
-            <Label htmlFor="opd-phone">Patient number</Label>
+            <RequiredLabel htmlFor="opd-phone">Patient number</RequiredLabel>
             <Input
               id="opd-phone"
               value={formData.phoneNumber}
               onChange={(event) => setField('phoneNumber', event.target.value)}
-              className="mt-1"
+              className={cn('mt-1', errors.phoneNumber && 'border-destructive')}
             />
+            <FieldError message={errors.phoneNumber} />
           </div>
           <div>
             <Label htmlFor="opd-alt-phone">Alternative number</Label>
@@ -442,17 +693,19 @@ export function OPDScheduleForm({
               id="opd-alt-phone"
               value={formData.alternateNumber}
               onChange={(event) => setField('alternateNumber', event.target.value)}
-              className="mt-1"
+              className={cn('mt-1', errors.alternateNumber && 'border-destructive')}
             />
+            <FieldError message={errors.alternateNumber} />
           </div>
           <div>
-            <Label htmlFor="opd-circle">Circle</Label>
+            <RequiredLabel htmlFor="opd-circle">Circle</RequiredLabel>
             <Input
               id="opd-circle"
               value={formData.circle}
               onChange={(event) => setField('circle', event.target.value)}
-              className="mt-1"
+              className={cn('mt-1', errors.circle && 'border-destructive')}
             />
+            <FieldError message={errors.circle} />
           </div>
           <div>
             <Label htmlFor="opd-city">City</Label>
@@ -470,24 +723,31 @@ export function OPDScheduleForm({
             Treatment Details
           </div>
 
-          <div>
-            <Label htmlFor="opd-category">Category</Label>
-            <Input
-              id="opd-category"
-              value={formData.category}
-              onChange={(event) => setField('category', event.target.value)}
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="opd-treatment">Treatment</Label>
-            <Input
-              id="opd-treatment"
-              value={formData.treatment}
-              onChange={(event) => setField('treatment', event.target.value)}
-              className="mt-1"
-            />
-          </div>
+          <MasterCombobox
+            id="opd-category"
+            label="Category"
+            masterType="treatment-categories"
+            value={formData.category}
+            onChange={handleCategoryChange}
+            onItemSelect={handleCategorySelect}
+            placeholder="Search treatment category..."
+            required
+            error={errors.category}
+            allowFreeText={false}
+          />
+          <MasterCombobox
+            id="opd-treatment"
+            label="Treatment"
+            masterType="treatments"
+            value={formData.treatment}
+            onChange={(value) => setField('treatment', value)}
+            onItemSelect={handleTreatmentSelect}
+            queryParams={{ category: formData.category }}
+            placeholder="Search treatment..."
+            required
+            error={errors.treatment}
+            allowFreeText={false}
+          />
           <div className="md:col-span-2">
             <Label htmlFor="opd-quantity-grade">Quantity / Grade</Label>
             <Input
@@ -510,15 +770,20 @@ export function OPDScheduleForm({
             value={formData.surgeonName}
             onChange={(value) => setField('surgeonName', value)}
             onItemSelect={handleDoctorSelect}
+            required
+            error={errors.surgeonName}
             allowFreeText
           />
           <div>
-            <Label htmlFor="opd-surgeon-type">Surgeon type</Label>
+            <RequiredLabel htmlFor="opd-surgeon-type">Surgeon type</RequiredLabel>
             <Select
               value={formData.surgeonType || '__none__'}
               onValueChange={(value) => setField('surgeonType', value === '__none__' ? '' : value)}
             >
-              <SelectTrigger id="opd-surgeon-type" className="mt-1">
+              <SelectTrigger
+                id="opd-surgeon-type"
+                className={cn('mt-1', errors.surgeonType && 'border-destructive')}
+              >
                 <SelectValue placeholder="Select surgeon type" />
               </SelectTrigger>
               <SelectContent>
@@ -530,6 +795,7 @@ export function OPDScheduleForm({
                 ))}
               </SelectContent>
             </Select>
+            <FieldError message={errors.surgeonType} />
           </div>
 
           <div className="md:col-span-2 mt-2 flex items-center gap-2 border-b pb-2 text-sm font-semibold text-foreground">
@@ -543,8 +809,10 @@ export function OPDScheduleForm({
               label="Hospital / clinic name"
               masterType="hospitals"
               value={formData.hospitalName}
-              onChange={(value) => setField('hospitalName', value)}
+              onChange={handleHospitalChange}
               onItemSelect={handleHospitalSelect}
+              required
+              error={errors.hospitalName}
               allowFreeText
             />
           </div>
@@ -592,13 +860,17 @@ export function OPDScheduleForm({
               min={0}
               value={formData.opdChargeAmount}
               onChange={(event) => setField('opdChargeAmount', event.target.value)}
-              className="mt-1"
+              className={cn('mt-1', errors.opdChargeAmount && 'border-destructive')}
             />
+            <FieldError message={errors.opdChargeAmount} />
           </div>
           <div>
-            <Label htmlFor="opd-mode">Type</Label>
+            <RequiredLabel htmlFor="opd-mode">Type</RequiredLabel>
             <Select value={formData.opdMode} onValueChange={(value) => setField('opdMode', value)}>
-              <SelectTrigger id="opd-mode" className="mt-1">
+              <SelectTrigger
+                id="opd-mode"
+                className={cn('mt-1', errors.opdMode && 'border-destructive')}
+              >
                 <SelectValue placeholder="Select OPD mode" />
               </SelectTrigger>
               <SelectContent>
@@ -609,6 +881,7 @@ export function OPDScheduleForm({
                 ))}
               </SelectContent>
             </Select>
+            <FieldError message={errors.opdMode} />
           </div>
 
           <div className="md:col-span-2 mt-2 flex items-center gap-2 border-b pb-2 text-sm font-semibold text-foreground">
@@ -617,24 +890,26 @@ export function OPDScheduleForm({
           </div>
 
           <div>
-            <Label htmlFor="opd-arrival-date">Arrival date</Label>
+            <RequiredLabel htmlFor="opd-arrival-date">Arrival date</RequiredLabel>
             <Input
               id="opd-arrival-date"
               type="date"
               value={formData.arrivalDate}
               onChange={(event) => setField('arrivalDate', event.target.value)}
-              className="mt-1"
+              className={cn('mt-1', errors.arrivalDate && 'border-destructive')}
             />
+            <FieldError message={errors.arrivalDate} />
           </div>
           <div>
-            <Label htmlFor="opd-arrival-time">Arrival time</Label>
+            <RequiredLabel htmlFor="opd-arrival-time">Arrival time</RequiredLabel>
             <Input
               id="opd-arrival-time"
               type="time"
               value={formData.arrivalTime}
               onChange={(event) => setField('arrivalTime', event.target.value)}
-              className="mt-1"
+              className={cn('mt-1', errors.arrivalTime && 'border-destructive')}
             />
+            <FieldError message={errors.arrivalTime} />
           </div>
         </div>
       </div>

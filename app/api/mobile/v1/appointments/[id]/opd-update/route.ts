@@ -2,27 +2,34 @@ import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { CaseStage } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import {
+  nullableOptionalStringField,
+  optionalIntField,
+  optionalStringField,
+} from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import { DoctorAppApiError, updateDoctorOpdAppointment } from '@/lib/doctor-app/appointments'
 import { KYP_UPLOAD_MAX_BYTES } from '@/lib/upload-limits'
 
 const opdUpdateSchema = z.object({
-  opdHospital: z.string().trim().min(1).optional(),
-  opdDrName: z.string().trim().min(1).optional(),
-  opdContactNo: z.string().trim().min(1).optional(),
-  opdCharges: z.coerce.number().int().min(0).optional(),
-  opdScheduleDate: z.string().trim().nullable().optional(),
-  followUpDate: z.string().trim().nullable().optional(),
-  remarks: z.string().trim().nullable().optional(),
-  status: z.string().trim().min(1).optional(),
-  caseStage: z.nativeEnum(CaseStage).optional(),
+  opdHospital: optionalStringField('OPD hospital'),
+  opdDrName: optionalStringField('OPD doctor name'),
+  opdContactNo: optionalStringField('OPD contact number'),
+  opdCharges: optionalIntField('OPD charges', { min: 0 }),
+  opdScheduleDate: nullableOptionalStringField('OPD schedule date'),
+  followUpDate: nullableOptionalStringField('Follow-up date'),
+  remarks: nullableOptionalStringField('Remarks'),
+  status: optionalStringField('Status'),
+  caseStage: z.nativeEnum(CaseStage, {
+    invalid_type_error: 'Case stage is invalid',
+  }).optional(),
   markOpdDone: z.boolean().optional(),
-  surgeryAdvised: z.string().trim().nullable().optional(),
-  surgeryRemarksType: z.string().trim().nullable().optional(),
-  reasonNoSurgery: z.string().trim().nullable().optional(),
-  followUpReason: z.string().trim().nullable().optional(),
+  surgeryAdvised: nullableOptionalStringField('Surgery advised'),
+  surgeryRemarksType: nullableOptionalStringField('Surgery remarks type'),
+  reasonNoSurgery: nullableOptionalStringField('Reason for no surgery'),
+  followUpReason: nullableOptionalStringField('Follow-up reason'),
   implantRequired: z.boolean().nullable().optional(),
-  diagnosis: z.string().trim().nullable().optional(),
+  diagnosis: nullableOptionalStringField('Diagnosis'),
 })
 
 function getOptionalFormValue(formData: FormData, key: string) {

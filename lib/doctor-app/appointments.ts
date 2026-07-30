@@ -1153,6 +1153,12 @@ export async function updateDoctorOpdAppointment(
       input.implantRequired !== undefined
         ? input.implantRequired
         : lead.opdImplantRequired ?? null
+    const nextRemarks =
+      input.remarks !== undefined
+        ? normalizeText(input.remarks)
+        : shouldMarkOpdDone
+          ? `OPD marked done by ${user.name}`
+          : undefined
 
     await tx.lead.update({
       where: { id: leadId },
@@ -1167,7 +1173,7 @@ export async function updateDoctorOpdAppointment(
         ...(input.followUpDate !== undefined
           ? { followUpDate: parseOptionalDate(input.followUpDate, 'followUpDate') }
           : {}),
-        ...(input.remarks !== undefined ? { remarks: normalizeText(input.remarks) } : {}),
+        ...(nextRemarks !== undefined ? { remarks: nextRemarks } : {}),
         opdSurgeryAdvised: surgeryAdvised,
         opdSurgeryRemarkCode: nextSurgeryRemarkCode,
         opdReasonNoSurgeryCode: nextReasonNoSurgeryCode,
@@ -1217,8 +1223,8 @@ export async function updateDoctorOpdAppointment(
           toStage: nextStage,
           changedById: changedById!,
           note: shouldMarkOpdDone
-            ? 'OPD marked done by doctor app'
-            : 'Doctor app updated OPD stage',
+            ? `OPD marked done by ${user.name}`
+            : `OPD stage updated by ${user.name}`,
         },
       })
     }

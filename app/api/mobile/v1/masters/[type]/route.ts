@@ -6,6 +6,7 @@ import {
   unauthorizedResponse,
   zodErrorResponse,
 } from '@/lib/api-utils'
+import { booleanStringField, optionalStringField } from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import { DoctorAppApiError } from '@/lib/doctor-app/appointments'
 import {
@@ -15,11 +16,8 @@ import {
 } from '@/lib/doctor-admin/masters'
 
 const listSchema = z.object({
-  search: z.string().optional().default(''),
-  includeInactive: z
-    .enum(['true', 'false'])
-    .optional()
-    .transform((value) => value === 'true'),
+  search: optionalStringField('Search').default(''),
+  includeInactive: booleanStringField('includeInactive', { defaultValue: false }),
 })
 
 export async function GET(

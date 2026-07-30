@@ -1,6 +1,12 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import {
+  nullableOptionalStringField,
+  optionalIntField,
+  optionalStringField,
+  requiredStringField,
+} from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import {
   createDoctorLeaveRequest,
@@ -10,15 +16,15 @@ import {
 import { DoctorAppContextError } from '@/lib/doctor-app/context'
 
 const createLeaveSchema = z.object({
-  startDate: z.string().trim().min(1),
-  endDate: z.string().trim().min(1),
-  reason: z.string().trim().nullable().optional(),
+  startDate: requiredStringField('Start date'),
+  endDate: requiredStringField('End date'),
+  reason: nullableOptionalStringField('Reason'),
 })
 
 const listLeavesSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).max(100).optional().default(20),
-  status: z.string().trim().optional(),
+  page: optionalIntField('Page', { min: 1, defaultValue: 1 }),
+  limit: optionalIntField('Limit', { min: 1, max: 100, defaultValue: 20 }),
+  status: optionalStringField('Status'),
 })
 
 export async function POST(request: NextRequest) {

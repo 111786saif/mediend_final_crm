@@ -1,6 +1,12 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import {
+  optionalEnumField,
+  optionalIntField,
+  optionalStringField,
+  requiredStringField,
+} from '@/lib/doctor-api-validation'
 import { getDoctorAdminUser } from '@/lib/doctor-admin/auth'
 import {
   AppointmentMonitoringListFilters,
@@ -11,28 +17,28 @@ import {
 
 const summarySchema = z.object({
   mode: z.literal('summary'),
-  range: z.enum(['all', 'day']).optional().default('all'),
-  date: z.string().trim().optional(),
+  range: optionalEnumField('Range', ['all', 'day'], 'all'),
+  date: optionalStringField('Date'),
 })
 
 const dailySchema = z.object({
   mode: z.literal('daily'),
-  date: z.string().trim().min(1),
+  date: requiredStringField('Date'),
 })
 
 const doctorSchema = z.object({
   mode: z.literal('doctor'),
-  doctorId: z.string().trim().optional(),
-  startDate: z.string().trim().optional(),
-  endDate: z.string().trim().optional(),
-  status: z.string().trim().optional(),
-  type: z.enum(['all', 'opd', 'ipd']).optional().default('all'),
+  doctorId: optionalStringField('Doctor ID'),
+  startDate: optionalStringField('Start date'),
+  endDate: optionalStringField('End date'),
+  status: optionalStringField('Status'),
+  type: optionalEnumField('Appointment type', ['all', 'opd', 'ipd'], 'all'),
 })
 
 const overdueSchema = z.object({
   mode: z.literal('overdue'),
-  doctorId: z.string().trim().optional(),
-  daysOverdue: z.coerce.number().int().min(0).optional().default(1),
+  doctorId: optionalStringField('Doctor ID'),
+  daysOverdue: optionalIntField('Days overdue', { min: 0, defaultValue: 1 }),
 })
 
 export async function GET(request: NextRequest) {

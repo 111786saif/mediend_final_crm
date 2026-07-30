@@ -2,6 +2,13 @@ import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { IpdStatus } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import {
+  nullableOptionalStringField,
+  optionalEnumField,
+  optionalIntField,
+  optionalStringField,
+  requiredStringField,
+} from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import { DoctorAppApiError, updateDoctorIpdAppointment } from '@/lib/doctor-app/appointments'
 import { KYP_UPLOAD_MAX_BYTES } from '@/lib/upload-limits'
@@ -16,38 +23,49 @@ const doctorMobileIpdStatuses = [
 ] as const
 
 const ipdImplantSchema = z.object({
-  implantId: z.string().trim().min(1),
-  quantity: z.coerce.number().int().min(1).optional(),
-  notes: z.string().trim().nullable().optional(),
+  implantId: requiredStringField('Implant ID'),
+  quantity: optionalIntField('Implant quantity', { min: 1 }),
+  notes: nullableOptionalStringField('Implant notes'),
 })
 
 const ipdSurgeryUpdateSchema = z
   .object({
-    status: z.enum(doctorMobileIpdStatuses).optional(),
-    ipdAdmissionDate: z.string().trim().nullable().optional(),
-    admissionTime: z.string().trim().nullable().optional(),
-    ipdHospital: z.string().trim().min(1).optional(),
-    ipdDrName: z.string().trim().min(1).optional(),
-    ipdContactNo: z.string().trim().min(1).optional(),
-    surgeryDate: z.string().trim().nullable().optional(),
-    operationTime: z.string().trim().nullable().optional(),
-    hospitalAddress: z.string().trim().nullable().optional(),
-    googleMapLocation: z.string().trim().nullable().optional(),
-    tpa: z.string().trim().nullable().optional(),
-    instrument: z.string().trim().nullable().optional(),
-    implantConsumables: z.string().trim().nullable().optional(),
-    ipdStatus: z.nativeEnum(IpdStatus).nullable().optional(),
-    ipdStatusReason: z.string().trim().nullable().optional(),
+    status: optionalEnumField('Status', doctorMobileIpdStatuses),
+    ipdAdmissionDate: nullableOptionalStringField('IPD admission date'),
+    admissionTime: nullableOptionalStringField('Admission time'),
+    ipdHospital: optionalStringField('IPD hospital'),
+    ipdDrName: optionalStringField('IPD doctor name'),
+    ipdContactNo: optionalStringField('IPD contact number'),
+    surgeryDate: nullableOptionalStringField('Surgery date'),
+    operationTime: nullableOptionalStringField('Operation time'),
+    hospitalAddress: nullableOptionalStringField('Hospital address'),
+    googleMapLocation: nullableOptionalStringField('Google map location'),
+    tpa: nullableOptionalStringField('TPA'),
+    instrument: nullableOptionalStringField('Instrument'),
+    implantConsumables: nullableOptionalStringField('Implant consumables'),
+    ipdStatus: z.nativeEnum(IpdStatus, {
+      invalid_type_error: 'IPD status is invalid',
+    }).nullable().optional(),
+    ipdStatusReason: nullableOptionalStringField('IPD status reason'),
     implantUsed: z.boolean().nullable().optional(),
     implantsUsed: z.array(ipdImplantSchema).optional(),
-    noShowReason: z.string().trim().nullable().optional(),
-    newSurgeryDate: z.string().trim().nullable().optional(),
-    ipdDischargeDate: z.string().trim().nullable().optional(),
-    dischargeDate: z.string().trim().nullable().optional(),
-    procedureNotes: z.string().trim().nullable().optional(),
-    notes: z.string().trim().nullable().optional(),
-    prescriptionImageUrl: z.string().trim().nullable().optional(),
-    prescriptionImageUrls: z.array(z.string().trim()).optional(),
+    noShowReason: nullableOptionalStringField('No-show reason'),
+    newSurgeryDate: nullableOptionalStringField('New surgery date'),
+    ipdDischargeDate: nullableOptionalStringField('IPD discharge date'),
+    dischargeDate: nullableOptionalStringField('Discharge date'),
+    procedureNotes: nullableOptionalStringField('Procedure notes'),
+    notes: nullableOptionalStringField('Notes'),
+    prescriptionImageUrl: nullableOptionalStringField('Prescription image URL'),
+    prescriptionImageUrls: z
+      .array(
+        z
+          .string({
+            invalid_type_error: 'Prescription image URL must be a string',
+          })
+          .trim()
+          .min(1, 'Prescription image URL is required')
+      )
+      .optional(),
   })
   .superRefine((value, ctx) => {
     if (value.status === 'surgery_done') {

@@ -1,14 +1,15 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import { optionalIntField } from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import { DoctorAppDashboardError, getDoctorDashboardSummary } from '@/lib/doctor-app/dashboard'
 import { DoctorAppContextError } from '@/lib/doctor-app/context'
 
 const summarySchema = z.object({
-  day: z.coerce.number().int().min(1).max(31).optional(),
-  month: z.coerce.number().int().min(1).max(12).optional(),
-  year: z.coerce.number().int().min(2000).max(2100).optional(),
+  day: optionalIntField('Day', { min: 1, max: 31 }),
+  month: optionalIntField('Month', { min: 1, max: 12 }),
+  year: optionalIntField('Year', { min: 2000, max: 2100 }),
 })
 
 export async function GET(request: NextRequest) {

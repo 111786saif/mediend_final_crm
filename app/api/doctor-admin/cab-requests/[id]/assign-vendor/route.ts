@@ -1,12 +1,13 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import { nullableOptionalStringField, requiredStringField } from '@/lib/doctor-api-validation'
 import { getDoctorAdminUser } from '@/lib/doctor-admin/auth'
 import { assignDoctorAdminCabVendor, DoctorAdminCabError } from '@/lib/doctor-admin/cab-requests'
 
 const assignSchema = z.object({
-  vendorName: z.string().trim().min(1),
-  vendorPhone: z.string().trim().optional().nullable(),
+  vendorName: requiredStringField('Vendor name'),
+  vendorPhone: nullableOptionalStringField('Vendor phone'),
 })
 
 export async function PUT(

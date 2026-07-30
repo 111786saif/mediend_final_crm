@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, zodErrorResponse } from '@/lib/api-utils'
+import { phoneField } from '@/lib/doctor-api-validation'
 import { DoctorAppWhatsappOtpError, sendDoctorAppWhatsappOtp } from '@/lib/doctor-app/auth'
 
 const sendWhatsappOtpSchema = z.object({
-  phone: z.string().min(8).max(20).trim(),
+  phone: phoneField('Phone number'),
 })
 
 export async function POST(request: NextRequest) {

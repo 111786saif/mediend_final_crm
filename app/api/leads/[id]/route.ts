@@ -10,6 +10,7 @@ import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
+import { OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
 import {
   isStatusRequiringAgeSex,
   isStatusRequiringFollowUpDate,
@@ -44,6 +45,10 @@ function parseFollowUpDateInput(value: unknown) {
   return { provided: true, value: parsed as Date }
 }
 import { recomputeOutstandingFromInstallments } from '@/lib/pl/installments'
+
+function normalizeStatusLabel(value: string | null | undefined) {
+  return String(value ?? '').trim().toLowerCase()
+}
 
 export async function GET(
   request: NextRequest,
@@ -260,6 +265,46 @@ export async function GET(
       console.error('[DEBUG] Error fetching admissionRecord relation:', e);
     }
 
+    let opdRecordingRelations = null;
+    try {
+      opdRecordingRelations = await prisma.lead.findUnique({
+        where: { id },
+        select: {
+          opdSurgeryRemark: {
+            select: {
+              code: true,
+              label: true,
+            },
+          },
+          opdReasonNoSurgery: {
+            select: {
+              code: true,
+              label: true,
+            },
+          },
+          opdFollowUpReason: {
+            select: {
+              code: true,
+              label: true,
+            },
+          },
+          opdPrescriptionImages: {
+            orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+            select: {
+              id: true,
+              fileName: true,
+              fileUrl: true,
+              storageKey: true,
+              sortOrder: true,
+            },
+          },
+        },
+      });
+      console.log('[DEBUG] opdRecordingRelations fetched successfully');
+    } catch (e) {
+      console.error('[DEBUG] Error fetching opdRecordingRelations:', e);
+    }
+
     // Resolve hospital name to fetch hospitalShare if the column exists in HospitalMaster
     const pl = (plRecord as Record<string, unknown> | null) ?? {}
     const ds = (dischargeSheet as Record<string, unknown> | null) ?? {}
@@ -306,7 +351,11 @@ export async function GET(
       plRecord,
       dischargeSheet,
       insuranceInitiateForm,
-      admissionRecord
+      admissionRecord,
+      opdSurgeryRemark: opdRecordingRelations?.opdSurgeryRemark ?? null,
+      opdReasonNoSurgery: opdRecordingRelations?.opdReasonNoSurgery ?? null,
+      opdFollowUpReason: opdRecordingRelations?.opdFollowUpReason ?? null,
+      opdPrescriptionImages: opdRecordingRelations?.opdPrescriptionImages ?? [],
     } as any
 
     console.log('[DEBUG] Full lead object constructed successfully with all relations')
@@ -402,6 +451,12 @@ export async function PATCH(
             : body.remarks
     const statusChangeRemark =
       typeof body.statusChangeRemark === 'string' ? body.statusChangeRemark.trim() : ''
+    const isOpdScheduledStatusChange =
+      requestedStatus !== undefined &&
+      normalizeStatusLabel(requestedStatus) === normalizeStatusLabel(OPD_SCHEDULED_STATUS)
+    const effectiveStatusChangeRemark = isOpdScheduledStatusChange
+      ? [`OPD schedule by ${user.name}`, statusChangeRemark].filter(Boolean).join(' | ')
+      : statusChangeRemark
     const requireStatusChangeRemark = body.requireStatusChangeRemark === 'true'
     const currentRemarks =
       typeof lead.remarks === 'string' ? lead.remarks.trim() || null : lead.remarks ?? null
@@ -427,8 +482,8 @@ export async function PATCH(
     }
 
     if (
-      (statusChanged && (requireStatusChangeRemark || statusChangeRemark)) ||
-      (!statusChanged && statusChangeRemark)
+      (statusChanged && (requireStatusChangeRemark || effectiveStatusChangeRemark)) ||
+      (!statusChanged && effectiveStatusChangeRemark)
     ) {
       if (!(await canUserAddLeadRemarks(user, lead.bdId))) {
       return errorResponse(
@@ -485,11 +540,11 @@ export async function PATCH(
       return errorResponse('Follow-up date is invalid', 400)
     }
 
-    if (requireStatusChangeRemark && statusChanged && !statusChangeRemark) {
+    if (requireStatusChangeRemark && statusChanged && !effectiveStatusChangeRemark) {
       return errorResponse('Remark is required when changing lead status', 400)
     }
 
-    if (statusChangeRemark.length > 4000) {
+    if (effectiveStatusChangeRemark.length > 4000) {
       return errorResponse('Remark must be 4000 characters or less', 400)
     }
 
@@ -737,11 +792,11 @@ export async function PATCH(
       }
 
       const statusRemarkEntry =
-        statusChangeRemark
+        effectiveStatusChangeRemark
           ? await tx.leadRemarkEntry.create({
               data: {
                 leadId: lead.id,
-                content: statusChangeRemark,
+                content: effectiveStatusChangeRemark,
                 createdById: user.id,
               },
               include: {
