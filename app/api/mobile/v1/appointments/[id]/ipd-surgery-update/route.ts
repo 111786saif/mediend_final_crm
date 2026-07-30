@@ -6,6 +6,7 @@ import {
   nullableOptionalStringField,
   optionalEnumField,
   optionalIntField,
+  optionalStringField,
   requiredStringField,
 } from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'

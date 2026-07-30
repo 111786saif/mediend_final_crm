@@ -81,6 +81,16 @@ function normalizeStatus(value: string | null | undefined) {
   return String(value ?? '').trim().toLowerCase()
 }
 
+function normalizeHospitalFieldValue(value: string | null | undefined) {
+  const trimmed = value?.trim() || ''
+  if (!trimmed) return ''
+  const normalized = trimmed.toLowerCase()
+  if (normalized === 'not specified' || normalized === 'unknown' || normalized === '—') {
+    return ''
+  }
+  return trimmed
+}
+
 function mapOpdModeValue(value: number | null | undefined) {
   return value === 2 ? 'ONLINE' : 'OFFLINE'
 }
@@ -121,7 +131,7 @@ function RequiredLabel({
 }) {
   return (
     <Label htmlFor={htmlFor}>
-      {children} <span className="text-destructive">*</span>
+      {children} <span className="text-current">*</span>
     </Label>
   )
 }
@@ -188,7 +198,8 @@ export function OPDScheduleForm({
   onSuccess,
   onCancel,
 }: OPDScheduleFormProps) {
-  const initialHospitalName = opdHospital?.trim() || hospitalName?.trim() || ''
+  const initialHospitalName =
+    normalizeHospitalFieldValue(opdHospital) || normalizeHospitalFieldValue(hospitalName)
   const initialDoctorName = opdDrName?.trim() || surgeonName?.trim() || ''
   const initialScheduleDate = opdScheduleDate || null
 
@@ -255,12 +266,42 @@ export function OPDScheduleForm({
     })
   }
 
+  function handleHospitalChange(value: string) {
+    setFormData((current) => {
+      const nextHospitalName = value
+      const hospitalNameChanged = nextHospitalName.trim() !== current.hospitalName.trim()
+
+      if (!hospitalNameChanged) {
+        return {
+          ...current,
+          hospitalName: nextHospitalName,
+        }
+      }
+
+      return {
+        ...current,
+        hospitalName: nextHospitalName,
+        hospitalLocation: '',
+        hospitalAddress: '',
+        googleMapLocation: '',
+      }
+    })
+
+    setErrors((current) => {
+      if (!current.hospitalName) return current
+      const next = { ...current }
+      delete next.hospitalName
+      return next
+    })
+  }
+
   function handleHospitalSelect(item: MasterItem) {
     setFormData((current) => ({
       ...current,
       hospitalName: item.name,
-      hospitalAddress: item.address || current.hospitalAddress,
-      googleMapLocation: item.googleMapLink || current.googleMapLocation,
+      hospitalLocation: '',
+      hospitalAddress: item.address || '',
+      googleMapLocation: item.googleMapLink || '',
     }))
     setErrors((current) => {
       if (!current.hospitalName) return current
@@ -281,6 +322,48 @@ export function OPDScheduleForm({
       const next = { ...current }
       delete next.surgeonName
       delete next.surgeonType
+      return next
+    })
+  }
+
+  function handleCategoryChange(value: string) {
+    setFormData((current) => {
+      const nextCategory = value.trim()
+      const categoryChanged =
+        nextCategory.toLowerCase() !== current.category.trim().toLowerCase()
+
+      return {
+        ...current,
+        category: value,
+        treatment: categoryChanged ? '' : current.treatment,
+      }
+    })
+
+    setErrors((current) => {
+      if (!current.category && !current.treatment) return current
+      const next = { ...current }
+      delete next.category
+      delete next.treatment
+      return next
+    })
+  }
+
+  function handleCategorySelect(item: MasterItem) {
+    handleCategoryChange(item.name)
+  }
+
+  function handleTreatmentSelect(item: MasterItem) {
+    setFormData((current) => ({
+      ...current,
+      treatment: item.name,
+      category: current.category.trim() || item.category?.trim() || '',
+    }))
+
+    setErrors((current) => {
+      if (!current.category && !current.treatment) return current
+      const next = { ...current }
+      delete next.category
+      delete next.treatment
       return next
     })
   }
@@ -534,7 +617,7 @@ export function OPDScheduleForm({
             <span>Update OPD Details</span>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
-            Fields marked <span className="font-bold text-destructive">*</span> are required.
+            Fields marked <span className="font-bold text-current">*</span> are required.
           </p>
         </div>
 
@@ -640,26 +723,31 @@ export function OPDScheduleForm({
             Treatment Details
           </div>
 
-          <div>
-            <RequiredLabel htmlFor="opd-category">Category</RequiredLabel>
-            <Input
-              id="opd-category"
-              value={formData.category}
-              onChange={(event) => setField('category', event.target.value)}
-              className={cn('mt-1', errors.category && 'border-destructive')}
-            />
-            <FieldError message={errors.category} />
-          </div>
-          <div>
-            <RequiredLabel htmlFor="opd-treatment">Treatment</RequiredLabel>
-            <Input
-              id="opd-treatment"
-              value={formData.treatment}
-              onChange={(event) => setField('treatment', event.target.value)}
-              className={cn('mt-1', errors.treatment && 'border-destructive')}
-            />
-            <FieldError message={errors.treatment} />
-          </div>
+          <MasterCombobox
+            id="opd-category"
+            label="Category"
+            masterType="treatment-categories"
+            value={formData.category}
+            onChange={handleCategoryChange}
+            onItemSelect={handleCategorySelect}
+            placeholder="Search treatment category..."
+            required
+            error={errors.category}
+            allowFreeText={false}
+          />
+          <MasterCombobox
+            id="opd-treatment"
+            label="Treatment"
+            masterType="treatments"
+            value={formData.treatment}
+            onChange={(value) => setField('treatment', value)}
+            onItemSelect={handleTreatmentSelect}
+            queryParams={{ category: formData.category }}
+            placeholder="Search treatment..."
+            required
+            error={errors.treatment}
+            allowFreeText={false}
+          />
           <div className="md:col-span-2">
             <Label htmlFor="opd-quantity-grade">Quantity / Grade</Label>
             <Input
@@ -721,7 +809,7 @@ export function OPDScheduleForm({
               label="Hospital / clinic name"
               masterType="hospitals"
               value={formData.hospitalName}
-              onChange={(value) => setField('hospitalName', value)}
+              onChange={handleHospitalChange}
               onItemSelect={handleHospitalSelect}
               required
               error={errors.hospitalName}

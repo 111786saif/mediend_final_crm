@@ -10,7 +10,14 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 
-export type MasterType = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia' | 'insurance' | 'treatments'
+export type MasterType =
+  | 'hospitals'
+  | 'doctors'
+  | 'tpas'
+  | 'anesthesia'
+  | 'insurance'
+  | 'treatments'
+  | 'treatment-categories'
 
 const MASTER_PATH: Record<MasterType, string> = {
   hospitals: '/api/masters/hospitals',
@@ -19,6 +26,7 @@ const MASTER_PATH: Record<MasterType, string> = {
   anesthesia: '/api/masters/anesthesia',
   insurance: '/api/masters/insurance',
   treatments: '/api/masters/treatments',
+  'treatment-categories': '/api/masters/treatment-categories',
 }
 
 export interface MasterItem {
@@ -77,6 +85,7 @@ export interface MasterComboboxProps {
   error?: string
   className?: string
   onItemSelect?: (item: MasterItem) => void
+  queryParams?: Record<string, string | null | undefined>
   /**
    * When false, only values chosen from the dropdown are kept.
    * Typing that does not match a master item is cleared on blur / Enter.
@@ -97,6 +106,7 @@ export function MasterCombobox({
   error,
   className,
   onItemSelect,
+  queryParams,
   allowFreeText = true,
 }: MasterComboboxProps) {
   const [open, setOpen] = React.useState(false)
@@ -105,11 +115,18 @@ export function MasterCombobox({
 
   const path = MASTER_PATH[masterType]
   const { data, isFetching } = useQuery({
-    queryKey: ['masters', masterType, debouncedSearch],
+    queryKey: ['masters', masterType, debouncedSearch, queryParams],
     queryFn: async () => {
-      const q = debouncedSearch.trim()
-      const url = `${path}?search=${encodeURIComponent(q)}`
-      return apiGet<{ items: MasterItem[] }>(url)
+      const params = new URLSearchParams()
+      params.set('search', debouncedSearch.trim())
+
+      for (const [key, rawValue] of Object.entries(queryParams ?? {})) {
+        const value = String(rawValue ?? '').trim()
+        if (!value) continue
+        params.set(key, value)
+      }
+
+      return apiGet<{ items: MasterItem[] }>(`${path}?${params.toString()}`)
     },
     enabled: !disabled,
     staleTime: 30_000,
