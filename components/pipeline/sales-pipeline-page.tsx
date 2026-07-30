@@ -764,7 +764,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     (columnId: PipelineColumnId) => ({
       filterValue: columnFilters[columnId] ?? [],
       filterOptions: isPipelineDateFilterColumn(columnId) ? undefined : (columnFilterOptions[columnId] ?? []),
-      filterType: isPipelineDateFilterColumn(columnId) ? 'dateRange' : 'multiSelect',
+      filterType: (isPipelineDateFilterColumn(columnId) ? 'dateRange' : 'multiSelect') as 'dateRange' | 'multiSelect',
       onFilterChange: (values: string[]) => handleColumnFilterChange(columnId, values),
     }),
     [columnFilterOptions, columnFilters, handleColumnFilterChange]
