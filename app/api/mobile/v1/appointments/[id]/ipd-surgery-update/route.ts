@@ -22,6 +22,28 @@ const doctorMobileIpdStatuses = [
   'no_show',
 ] as const
 
+function normalizeDoctorMobileIpdStatusInput(value: unknown) {
+  if (typeof value !== 'string') {
+    return value
+  }
+
+  const trimmed = value.trim()
+  if (!trimmed) {
+    return undefined
+  }
+
+  const key = trimmed.toLowerCase().replace(/[\s-]+/g, '_')
+
+  if (['scheduled', 'schedule'].includes(key)) return 'scheduled'
+  if (['admitted', 'admission_done', 'admitted_done'].includes(key)) return 'admitted'
+  if (['surgery_done', 'ipd_done', 'done'].includes(key)) return 'surgery_done'
+  if (['discharged', 'discharge_done'].includes(key)) return 'discharged'
+  if (['closed', 'complete', 'completed'].includes(key)) return 'closed'
+  if (['no_show', 'noshow', 'cancelled', 'canceled'].includes(key)) return 'no_show'
+
+  return trimmed
+}
+
 const ipdImplantSchema = z.object({
   implantId: requiredStringField('Implant ID'),
   quantity: optionalIntField('Implant quantity', { min: 1 }),
@@ -30,7 +52,10 @@ const ipdImplantSchema = z.object({
 
 const ipdSurgeryUpdateSchema = z
   .object({
-    status: optionalEnumField('Status', doctorMobileIpdStatuses),
+    status: z.preprocess(
+      normalizeDoctorMobileIpdStatusInput,
+      optionalEnumField('Status', doctorMobileIpdStatuses)
+    ),
     ipdAdmissionDate: nullableOptionalStringField('IPD admission date'),
     admissionTime: nullableOptionalStringField('Admission time'),
     ipdHospital: optionalStringField('IPD hospital'),
