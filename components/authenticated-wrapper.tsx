@@ -140,10 +140,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
     const u = user as SessionUser | null
     if (!u) return []
 
-    const tasksBadge =
-      u.role === 'MD' || u.role === 'ADMIN'
-        ? (badgeCounts?.pendingTaskReviews ?? 0) + (badgeCounts?.pendingDueDateApprovals ?? 0)
-        : (badgeCounts?.myPendingTasks ?? 0)
+    const tasksBadge = badgeCounts?.taskOverviewCount ?? 0
     const approvalsBadge =
       (badgeCounts?.pendingFinanceApprovals ?? 0) +
       (u.role === 'MD' || u.role === 'ADMIN' ? (badgeCounts?.pendingMDApprovals ?? 0) : 0) +

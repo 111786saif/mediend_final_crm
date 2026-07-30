@@ -147,6 +147,24 @@ export const navItems: NavItem[] = [
     roles: ['DIGITAL_MARKETING_HEAD', 'MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
+    title: 'Campaign CPL',
+    url: '/digital-marketing/cpl',
+    icon: Target,
+    roles: [
+      'MD',
+      'ADMIN',
+      'TESTER',
+      'DIGITAL_MARKETING_HEAD',
+      'SALES_HEAD',
+      'TEAM_LEAD',
+      'BD',
+      'INSURANCE_HEAD',
+      'COMPLIANCE_HEAD',
+      'IT_HEAD',
+      'HR_HEAD',
+    ],
+  },
+  {
     title: 'CRM Campaigns',
     url: '/crm/campaigns',
     icon: Megaphone,
@@ -545,20 +563,23 @@ export const navItems: NavItem[] = [
   },
 ]
 
-/** Merged in app-sidebar when user has `cpl_access` (IT Permissions). Not in `navItems`. */
 export function getCampaignCplNavItem(): NavItem & { url: string } {
-  return {
-    title: 'Campaign CPL',
-    url: '/digital-marketing/cpl',
-    icon: Target,
+  const item = navItems.find((entry) => entry.title === 'Campaign CPL')
+  if (!item?.url) {
+    return {
+      title: 'Campaign CPL',
+      url: '/digital-marketing/cpl',
+      icon: Target,
+    }
   }
+  return item as NavItem & { url: string }
 }
 
 export function getDashboardUrl(role: string): string {
   if (role === 'SALES_HEAD') return '/sales/dashboard'
   if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
   if (role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
-  if (role === 'DIGITAL_MARKETING_HEAD') return '/pl/dashboard'
+  if (role === 'DIGITAL_MARKETING_HEAD') return '/digital-marketing/dashboard'
   if (role === 'PL_HEAD') return '/pl/surgery-dashboard'
   if (role === 'INSURANCE_HEAD') return '/insurance/dashboard'
   if (role === 'OUTSTANDING_HEAD') return '/pl/outstanding'
@@ -568,8 +589,10 @@ export function getDashboardUrl(role: string): string {
 function dedupeNavItemsByUrl(items: (NavItem & { url: string })[]): (NavItem & { url: string })[] {
   const seen = new Set<string>()
   return items.filter((item) => {
-    if (seen.has(item.url)) return false
-    seen.add(item.url)
+    // Keep distinct nav labels even when they share a URL (e.g. Dashboard + P/L Surgery).
+    const key = `${item.title}::${item.url}`
+    if (seen.has(key)) return false
+    seen.add(key)
     return true
   })
 }
@@ -609,6 +632,7 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
         item.title === 'Recruitment' ||
         item.title === 'Loan & Demat Revenue' ||
         item.title === 'DM Dashboard' ||
+        item.title === 'Campaign CPL' ||
         item.title === 'Targeted P&L' ||
         item.title.startsWith('MD ') ||
         (item.title === 'Master Data' && item.roles?.includes('MD'))

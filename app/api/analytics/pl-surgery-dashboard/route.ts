@@ -6,6 +6,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getManagerGroups } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+import { aggregateDiseaseDistribution } from '@/lib/analytics/disease-category'
 
 function mediendExpenseForPl(pl: {
   cabCharges: number

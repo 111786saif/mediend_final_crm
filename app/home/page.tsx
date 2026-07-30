@@ -492,7 +492,7 @@ function NavCards() {
   const getBadge = (title: string) => {
     if (title === 'Meets') return meetUnreadCount > 0 ? meetUnreadCount : undefined
     if (!badgeCounts) return undefined
-    if (title === 'Tasks') return (badgeCounts.pendingTaskReviews ?? 0) + (badgeCounts.pendingDueDateApprovals ?? 0)
+    if (title === 'Tasks') return badgeCounts.taskOverviewCount ?? undefined
     if (title === 'MD Messages') return badgeCounts.unreadMessages
     if (title === 'Appointments') return badgeCounts.pendingAppointments
     if (title === 'Finance' || title === 'Finance Ledger') return badgeCounts.pendingFinanceApprovals
