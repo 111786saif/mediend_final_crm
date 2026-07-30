@@ -2,6 +2,7 @@ import { CaseStage, IpdStatus, PipelineStage, Prisma } from '@/generated/prisma/
 import { prisma } from '@/lib/prisma'
 import { uploadFileToS3 } from '@/lib/s3-client'
 import { DoctorAppSessionUser } from '@/lib/doctor-app/auth'
+import { assertDoctorAvailableOnDate, normalizeDoctorName } from '@/lib/doctor-availability'
 import {
   getNextStageAfterOpdDone,
   hasLeadOpdDone,
@@ -1062,6 +1063,18 @@ export async function updateDoctorOpdAppointment(
   input: UpdateDoctorOpdInput
 ) {
   const { lead } = await findDoctorScopedLead(user, leadId)
+  const nextOpdDoctorName = normalizeDoctorName(
+    input.opdDrName !== undefined ? input.opdDrName : lead.opdDrName || lead.surgeonName
+  )
+  const nextOpdScheduleDate =
+    input.opdScheduleDate !== undefined ? input.opdScheduleDate : lead.opdScheduleDate
+
+  await assertDoctorAvailableOnDate(
+    prisma,
+    nextOpdDoctorName,
+    nextOpdScheduleDate,
+    'Selected doctor is on approved leave for this date.'
+  )
 
   let targetCaseStage = input.caseStage
   let targetStatus = input.status?.trim()
@@ -1306,6 +1319,31 @@ export async function updateDoctorIpdAppointment(
   const normalizedStatusNotes =
     normalizedProcedureNotes !== undefined ? normalizedProcedureNotes : undefined
   const isCashFlow = lead.flowType === 'CASH'
+  const nextIpdDoctorName = normalizeDoctorName(
+    normalizedIpdDoctor ?? lead.ipdDrName ?? lead.surgeonName
+  )
+  const nextAdmissionDate =
+    input.ipdAdmissionDate !== undefined
+      ? input.ipdAdmissionDate
+      : lead.admissionRecord?.admissionDate || lead.ipdAdmissionDate
+  const nextSurgeryDate =
+    input.surgeryDate !== undefined
+      ? input.surgeryDate
+      : lead.admissionRecord?.surgeryDate || lead.surgeryDate
+
+  await assertDoctorAvailableOnDate(
+    prisma,
+    nextIpdDoctorName,
+    nextAdmissionDate,
+    'Selected doctor is on approved leave for this date.'
+  )
+  await assertDoctorAvailableOnDate(
+    prisma,
+    nextIpdDoctorName,
+    nextSurgeryDate,
+    'Selected doctor is on approved leave for this date.'
+  )
+
   const targetCaseStage =
     getCaseStageForDoctorMobileIpdStatus(normalizedDoctorStatus, isCashFlow) ??
     getCaseStageForIpdEnumStatus(effectiveIpdStatus, isCashFlow)

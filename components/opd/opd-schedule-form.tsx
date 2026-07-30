@@ -770,6 +770,7 @@ export function OPDScheduleForm({
             value={formData.surgeonName}
             onChange={(value) => setField('surgeonName', value)}
             onItemSelect={handleDoctorSelect}
+            queryParams={{ availabilityDate: formData.arrivalDate, appointmentType: 'opd' }}
             required
             error={errors.surgeonName}
             allowFreeText

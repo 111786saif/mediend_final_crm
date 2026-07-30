@@ -12,6 +12,12 @@ import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
 import { OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
 import {
+  assertDoctorAvailableOnDate,
+  DoctorAvailabilityError,
+  normalizeDoctorName,
+  parseDoctorAvailabilityDate,
+} from '@/lib/doctor-availability'
+import {
   isStatusRequiringAgeSex,
   isStatusRequiringFollowUpDate,
   isStatusRequiringModeOfPayment,
@@ -618,6 +624,38 @@ export async function PATCH(
       )
     }
 
+    const nextOpdDoctorName =
+      body.opdDrName !== undefined
+        ? normalizeDoctorName(typeof body.opdDrName === 'string' ? body.opdDrName : null)
+        : body.surgeonName !== undefined
+          ? normalizeDoctorName(typeof body.surgeonName === 'string' ? body.surgeonName : null)
+          : normalizeDoctorName(lead.opdDrName || lead.surgeonName)
+    const nextOpdScheduleDate =
+      body.opdScheduleDate !== undefined
+        ? parseDoctorAvailabilityDate(body.opdScheduleDate as string | null, 'OPD schedule date')
+        : lead.opdScheduleDate
+    const nextIpdDoctorName =
+      body.surgeonName !== undefined
+        ? normalizeDoctorName(typeof body.surgeonName === 'string' ? body.surgeonName : null)
+        : normalizeDoctorName(lead.ipdDrName || lead.surgeonName)
+    const nextIpdSurgeryDate =
+      body.surgeryDate !== undefined
+        ? parseDoctorAvailabilityDate(body.surgeryDate as string | null, 'Surgery date')
+        : lead.surgeryDate
+
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextOpdDoctorName,
+      nextOpdScheduleDate,
+      'Selected doctor is on approved leave for this date.'
+    )
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextIpdDoctorName,
+      nextIpdSurgeryDate,
+      'Selected doctor is on approved leave for this date.'
+    )
+
     // Track stage changes
     if (body.pipelineStage && body.pipelineStage !== lead.pipelineStage) {
       await prisma.leadStageEvent.create({
@@ -1082,6 +1120,9 @@ export async function PATCH(
 
     return successResponse(responsePayload, 'Lead updated successfully')
   } catch (error) {
+    if (error instanceof DoctorAvailabilityError) {
+      return errorResponse(error.message, error.status)
+    }
     console.error('Error updating lead:', error)
     const message = error instanceof Error ? error.message : 'Failed to update lead'
     return errorResponse(message, 500)
