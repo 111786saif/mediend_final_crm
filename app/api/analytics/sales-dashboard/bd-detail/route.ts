@@ -1,24 +1,20 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+import {
+  canAccessSalesDashboard,
+  getSalesDashboardBdIdFilter,
+} from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 
 export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
-    if (
-      user.role !== UserRole.MD &&
-      user.role !== UserRole.ADMIN &&
-      user.role !== UserRole.SALES_HEAD &&
-      user.role !== UserRole.EXECUTIVE_ASSISTANT &&
-      user.role !== UserRole.TEAM_LEAD &&
-      user.role !== UserRole.DIGITAL_MARKETING_HEAD
-    ) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -95,10 +91,10 @@ export async function GET(request: NextRequest) {
 
     if (!bdUser) return errorResponse('BD not found', 404)
 
-    // TEAM_LEAD gate: can only view BDs who are their subordinates
-    if (user.role === UserRole.TEAM_LEAD) {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      if (!subIds.includes(bdId) && bdId !== user.id) {
+    // TL/ACM/CM gate: can only view BDs in their recursive subtree (incl. self)
+    if (isSubtreeScopedSalesRole(user.role)) {
+      const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+      if (!bdIdFilter?.includes(bdId)) {
         return errorResponse('Forbidden', 403)
       }
     }

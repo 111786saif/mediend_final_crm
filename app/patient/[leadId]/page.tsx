@@ -37,6 +37,7 @@ import {
   canFillIPDCashForm,
   canGeneratePDF,
   canInitiate,
+  canMarkOpdDone,
   canMarkIPD,
   canMarkLost,
   canModifyHospitals,
@@ -51,6 +52,8 @@ import {
 } from '@/lib/case-permissions'
 import { getKYPStatusLabel } from '@/lib/kyp-status-labels'
 import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { getNextStageAfterOpdDone, hasLeadOpdDone, hasLeadOpdScheduled, OPD_DONE_STATUS } from '@/lib/lead-opd-workflow'
+import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
@@ -125,6 +128,7 @@ interface Lead {
   status: string
   pipelineStage: string
   caseStage: CaseStage
+  isOldCrmLead?: boolean
   flowType?: FlowType | null
   collectedByMediend?: number | null
   collectedByHospital?: number | null
@@ -149,6 +153,28 @@ interface Lead {
   opdCharges?: number | null
   opdScheduleDate?: string | null
   opdMeeting?: number | null
+  opdSurgeryAdvised?: string | null
+  opdImplantRequired?: boolean | null
+  opdDiagnosis?: string | null
+  opdSurgeryRemark?: {
+    code?: string | null
+    label?: string | null
+  } | null
+  opdReasonNoSurgery?: {
+    code?: string | null
+    label?: string | null
+  } | null
+  opdFollowUpReason?: {
+    code?: string | null
+    label?: string | null
+  } | null
+  opdPrescriptionImages?: Array<{
+    id: string
+    fileName: string
+    fileUrl: string
+    storageKey?: string | null
+    sortOrder?: number | null
+  }> | null
   kypSubmission?: {
     id: string
     status: string
@@ -420,6 +446,27 @@ function DossierSectionHeader({
   )
 }
 
+function formatCaseStageLabel(stage: CaseStage | string | null | undefined) {
+  if (!stage) return null
+  return String(stage).replace(/_/g, ' ')
+}
+
+function getOpdModeLabel(opdMeeting: number | null | undefined) {
+  if (opdMeeting === 2) return 'Online'
+  if (opdMeeting === 1) return 'Offline'
+  return null
+}
+
+function getOpdSurgeryAdvisedLabel(value: string | null | undefined) {
+  const normalized = String(value ?? '').trim().toLowerCase()
+  if (normalized === 'yes') return 'Yes'
+  if (normalized === 'no') return 'No'
+  if (normalized === 'follow_up' || normalized === 'follow-up' || normalized === 'follow up') {
+    return 'Follow-up'
+  }
+  return value || null
+}
+
 export default function PatientDetailsPage() {
   const { user } = useAuth()
   const router = useRouter()
@@ -484,7 +531,9 @@ export default function PatientDetailsPage() {
     if (
       quickAction === 'ipd-schedule' &&
       lead.flowType !== FlowType.CASH &&
-      [CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED].includes(lead.caseStage)
+      ([CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED] as CaseStage[]).includes(
+        lead.caseStage as CaseStage
+      )
     ) {
       const timer = window.setTimeout(() => {
         setAdmitEditMode(lead.caseStage !== CaseStage.PREAUTH_COMPLETE)
@@ -497,7 +546,9 @@ export default function PatientDetailsPage() {
     if (
       quickAction === 'ipd-cash' &&
       lead.flowType === FlowType.CASH &&
-      [CaseStage.CASH_IPD_PENDING, CaseStage.CASH_IPD_SUBMITTED, CaseStage.CASH_ON_HOLD, CaseStage.CASH_APPROVED].includes(lead.caseStage)
+      ([CaseStage.CASH_OPD_DONE, CaseStage.CASH_IPD_SUBMITTED, CaseStage.CASH_ON_HOLD, CaseStage.CASH_APPROVED] as CaseStage[]).includes(
+        lead.caseStage as CaseStage
+      )
     ) {
       const timer = window.setTimeout(() => {
         setShowIPDCashModal(true)
@@ -555,6 +606,8 @@ export default function PatientDetailsPage() {
   const getStageBadgeColor = (stage: CaseStage) => {
     const colors: Record<CaseStage, string> = {
       [CaseStage.NEW_LEAD]: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-300',
+      [CaseStage.OPD_SCHEDULED]: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 border-cyan-300',
+      [CaseStage.OPD_DONE]: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300 border-teal-300',
       [CaseStage.KYP_BASIC_PENDING]: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300 border-amber-300',
       [CaseStage.KYP_BASIC_COMPLETE]: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300 border-emerald-300',
       [CaseStage.KYP_DETAILED_PENDING]: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300 border-amber-300',
@@ -572,6 +625,8 @@ export default function PatientDetailsPage() {
       [CaseStage.OUTSTANDING]: 'bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300 border-gray-300',
       // Cash Flow Stages
       [CaseStage.CASH_IPD_PENDING]: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300 border-amber-300',
+      [CaseStage.CASH_OPD_SCHEDULED]: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 border-cyan-300',
+      [CaseStage.CASH_OPD_DONE]: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300 border-teal-300',
       [CaseStage.CASH_IPD_SUBMITTED]: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 border-blue-300',
       [CaseStage.CASH_APPROVED]: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 border-green-300',
       [CaseStage.CASH_ON_HOLD]: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 border-red-300',
@@ -744,8 +799,66 @@ export default function PatientDetailsPage() {
   // Cash Flow Permissions
   const canStartCash = !readOnly && user && canStartCashMode(user as any, lead)
   const canRevertCash = !readOnly && user && canRevertCashMode(user as any, lead)
-  const canFillIPDCash = !readOnly && user && canFillIPDCashForm(user as any, lead)
+  const hasScheduledOpd = hasLeadOpdScheduled(lead)
+  const hasDoneOpd = hasLeadOpdDone(lead)
+  const canMarkOpd = !readOnly && !!user && canMarkOpdDone(user as any, lead)
+  const canFillIPDCash = !readOnly && !!user && canFillIPDCashForm(user as any, lead)
   const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
+  const displayStatus = normalizeLeadStatus(lead.status)
+  const canManageOpd =
+    !!user &&
+    (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') &&
+    (
+      lead.flowType === FlowType.CASH
+        ? ([
+            CaseStage.CASH_IPD_PENDING,
+            CaseStage.CASH_OPD_SCHEDULED,
+            CaseStage.CASH_OPD_DONE,
+            CaseStage.CASH_IPD_SUBMITTED,
+            CaseStage.CASH_ON_HOLD,
+            CaseStage.CASH_APPROVED,
+          ] as CaseStage[]).includes(lead.caseStage as CaseStage)
+        : ([
+            CaseStage.NEW_LEAD,
+            CaseStage.OPD_SCHEDULED,
+            CaseStage.OPD_DONE,
+            CaseStage.KYP_BASIC_PENDING,
+            CaseStage.KYP_BASIC_COMPLETE,
+            CaseStage.HOSPITALS_SUGGESTED,
+            CaseStage.PREAUTH_RAISED,
+            CaseStage.PREAUTH_COMPLETE,
+            CaseStage.INITIATED,
+            CaseStage.ADMITTED,
+            CaseStage.IPD_DONE,
+            CaseStage.DISCHARGED,
+            CaseStage.PL_PENDING,
+            CaseStage.OUTSTANDING,
+          ] as CaseStage[]).includes(lead.caseStage as CaseStage)
+    )
+  const canEditOpdSchedule = canManageOpd && !(user?.role === 'BD' && hasDoneOpd)
+  const showOpdDetails =
+    hasScheduledOpd ||
+    hasDoneOpd ||
+    Boolean(lead.opdHospital || lead.opdDrName || lead.opdScheduleDate) ||
+    typeof lead.opdCharges === 'number' ||
+    typeof lead.opdMeeting === 'number'
+  const opdStatusLabel = hasDoneOpd ? 'OPD Done' : hasScheduledOpd ? 'OPD Scheduled' : null
+  const formattedOpdScheduleDate = lead.opdScheduleDate
+    ? format(new Date(lead.opdScheduleDate), 'dd MMM yyyy · hh:mm a')
+    : null
+  const opdChargeValue =
+    lead.opdCharges != null ? `₹${Number(lead.opdCharges).toLocaleString('en-IN')}` : null
+  const hasOpdDoctorNotes =
+    Boolean(
+      lead.remarks ||
+      lead.opdSurgeryAdvised ||
+      lead.opdDiagnosis ||
+      lead.opdSurgeryRemark?.label ||
+      lead.opdReasonNoSurgery?.label ||
+      lead.opdFollowUpReason?.label ||
+      typeof lead.opdImplantRequired === 'boolean'
+    )
+  const opdPrescriptionImages = lead.opdPrescriptionImages ?? []
 
   // Collect all uploaded documents for grid (KYP + PreAuth)
   const uploadedDocuments = (() => {
@@ -860,10 +973,10 @@ export default function PatientDetailsPage() {
                         <span className="font-mono text-xs">{lead.phoneNumber}</span>
                       </>
                     )}
-                    {lead.status && (
+                    {(lead.status || hasScheduledOpd) && (
                       <>
                         <span className="text-gray-300 dark:text-gray-700">·</span>
-                        <span className="text-gray-500 dark:text-gray-400">{lead.status}</span>
+                        <span className="text-gray-500 dark:text-gray-400">{displayStatus}</span>
                       </>
                     )}
                   </div>
@@ -890,6 +1003,11 @@ export default function PatientDetailsPage() {
                 >
                   {lead.pipelineStage}
                 </Badge>
+                {lead.isOldCrmLead ? (
+                  <Badge className="border border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                    Old CRM Lead
+                  </Badge>
+                ) : null}
                 <Badge className={`border-2 ${getStageBadgeColor(lead.caseStage)}`}>
                   {lead.caseStage.replace(/_/g, ' ')}
                 </Badge>
@@ -910,7 +1028,7 @@ export default function PatientDetailsPage() {
               const effectiveSurgeryDate =
                 isPostponed && rec?.newSurgeryDate
                   ? rec.newSurgeryDate
-                  : rec?.surgeryDate
+                  : rec?.surgeryDate || lead.surgeryDate
               const surgeryDateNode = effectiveSurgeryDate ? (
                 <span className="inline-flex items-center gap-1.5">
                   <span>
@@ -1159,9 +1277,13 @@ export default function PatientDetailsPage() {
                   </Badge>
                 )}
                 {user &&
-                  canResetStepper(user, lead) &&
+                  canResetStepper(user as any) &&
                   lead.caseStage !== CaseStage.NEW_LEAD &&
-                  lead.caseStage !== CaseStage.CASH_IPD_PENDING && (
+                  !(
+                    lead.flowType === FlowType.CASH &&
+                    lead.caseStage === CaseStage.CASH_IPD_PENDING &&
+                    !hasScheduledOpd
+                  ) && (
                   <Button
                     type="button"
                     variant="outline"
@@ -1176,10 +1298,16 @@ export default function PatientDetailsPage() {
               </div>
             </div>
             {lead.flowType === FlowType.CASH ? (
-              <CashStageProgress currentStage={lead.caseStage} />
+              <CashStageProgress
+                currentStage={lead.caseStage}
+                hasOpdScheduled={hasScheduledOpd}
+                hasOpdDone={hasDoneOpd}
+              />
             ) : (
               <StageProgress
                 currentStage={lead.caseStage}
+                hasOpdScheduled={hasScheduledOpd}
+                hasOpdDone={hasDoneOpd}
                 hasInitiateForm={!!lead.insuranceInitiateForm?.id}
                 hasIpdMark={!!lead.admissionRecord?.ipdStatus}
               />
@@ -1326,7 +1454,11 @@ export default function PatientDetailsPage() {
                       try {
                         await apiPatch(`/api/leads/${leadId}`, {
                           flowType: FlowType.CASH,
-                          caseStage: CaseStage.CASH_IPD_PENDING,
+                          caseStage: hasDoneOpd
+                            ? CaseStage.CASH_OPD_DONE
+                            : hasScheduledOpd
+                              ? CaseStage.CASH_OPD_SCHEDULED
+                              : CaseStage.CASH_IPD_PENDING,
                           stageChangeNote: 'Switched to Cash Mode'
                         })
                         toast.success('Switched to Cash Mode')
@@ -1356,7 +1488,13 @@ export default function PatientDetailsPage() {
                         // Or just set flowType to INSURANCE and let stage be what it was?
                         // Ideally we should track previous stage.
                         // For simplicity, let's set to KYP_BASIC_COMPLETE if kyp exists, else NEW_LEAD.
-                        const targetStage = lead.kypSubmission ? CaseStage.KYP_BASIC_COMPLETE : CaseStage.NEW_LEAD
+                        const targetStage = lead.kypSubmission
+                          ? CaseStage.KYP_BASIC_COMPLETE
+                          : hasDoneOpd
+                            ? CaseStage.OPD_DONE
+                            : hasScheduledOpd
+                              ? CaseStage.OPD_SCHEDULED
+                              : CaseStage.NEW_LEAD
                         await apiPatch(`/api/leads/${leadId}`, {
                           flowType: FlowType.INSURANCE,
                           caseStage: targetStage,
@@ -1398,8 +1536,51 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
-                {/* BD / TL Actions (Insurance Flow) — show when at Card Details step (NEW_LEAD or KYP_BASIC_PENDING) */}
-                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') && (lead.caseStage === CaseStage.NEW_LEAD || lead.caseStage === CaseStage.KYP_BASIC_PENDING) && (
+                {canEditOpdSchedule && (
+                  <Button
+                    asChild
+                    className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white border-0"
+                  >
+                    <Link href={`/patient/${leadId}/opd-schedule`}>
+                      {hasScheduledOpd ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                      {hasScheduledOpd ? 'Edit OPD Schedule' : 'Schedule OPD'}
+                    </Link>
+                  </Button>
+                )}
+
+                {canMarkOpd && (
+                  <Button
+                    className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white border-0"
+                    onClick={async () => {
+                      const nextStage = getNextStageAfterOpdDone(lead)
+                      if (!nextStage) {
+                        toast.error('This case is not ready to mark OPD done')
+                        return
+                      }
+                      try {
+                        await apiPatch(`/api/leads/${leadId}`, {
+                          status: OPD_DONE_STATUS,
+                          caseStage: nextStage,
+                          stageChangeNote: 'OPD marked done',
+                          requireStatusChangeRemark: 'true',
+                          statusChangeRemark: 'OPD marked done',
+                        })
+                        toast.success('OPD marked done')
+                        queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+                        queryClient.invalidateQueries({ queryKey: ['leads'] })
+                        queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+                      } catch {
+                        toast.error('Failed to mark OPD done')
+                      }
+                    }}
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    Mark OPD Done
+                  </Button>
+                )}
+
+                {/* BD / TL Actions (Insurance Flow) — show when at Card Details step */}
+                {lead.flowType !== FlowType.CASH && hasDoneOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && ([CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage) && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
@@ -1410,7 +1591,7 @@ export default function PatientDetailsPage() {
                     </Link>
                   </Button>
                 )}
-                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') && lead.caseStage === CaseStage.KYP_BASIC_COMPLETE && (
+                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && lead.caseStage === CaseStage.KYP_BASIC_COMPLETE && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
@@ -1528,7 +1709,7 @@ export default function PatientDetailsPage() {
                     Print / Save as PDF
                   </Button>
                 )}
-                {lead.admissionRecord && ['BD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'ADMIN'].includes(user.role) && (
+                {lead.admissionRecord && ['BD', 'TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER', 'INSURANCE_HEAD', 'ADMIN'].includes(user.role) && (
                   <>
                     <Button
                       variant="outline"
@@ -1584,6 +1765,134 @@ export default function PatientDetailsPage() {
                     Mark Lost
                   </Button>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {showOpdDetails && (
+          <Card className="border-2 shadow-sm">
+            <CardHeader className="border-b bg-gradient-to-r from-cyan-50 to-sky-50 dark:from-cyan-950/20 dark:to-sky-950/20">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <CalendarIcon className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+                  <CardTitle>OPD Details</CardTitle>
+                  {opdStatusLabel ? (
+                    <Badge className="border-0 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300">
+                      {opdStatusLabel}
+                    </Badge>
+                  ) : null}
+                  <span className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white/70 px-2 py-0.5 text-[11px] text-gray-600 dark:border-gray-700 dark:bg-black/30 dark:text-gray-400">
+                    <Activity className="w-3 h-3" />
+                    {formatCaseStageLabel(lead.caseStage)}
+                  </span>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {formattedOpdScheduleDate ? `Scheduled for ${formattedOpdScheduleDate}` : 'OPD summary'}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <Section
+                icon={Stethoscope}
+                iconClassName="text-cyan-600"
+                title="Appointment Snapshot"
+                hasContent={showOpdDetails}
+              >
+                <Field label="OPD ID" value={`OPD-${lead.leadRef}`} />
+                <Field label="Patient Name" value={lead.patientName} />
+                <Field
+                  label="Age / Sex"
+                  value={
+                    lead.age != null || lead.sex
+                      ? `${lead.age ?? '—'} / ${lead.sex ?? '—'}`
+                      : null
+                  }
+                />
+                <Field label="Patient Number" value={lead.phoneNumber} />
+                <Field label="Alternative Number" value={lead.alternateNumber} />
+                <Field label="Circle" value={lead.circle} />
+                <Field label="Category" value={lead.category} />
+                <Field label="Treatment" value={lead.treatment} />
+                <Field
+                  label="Quantity / Grade"
+                  value={lead.quantityGrade}
+                />
+                <Field label="Hospital / Clinic" value={lead.opdHospital || lead.hospitalName} />
+                <Field label="Doctor" value={lead.opdDrName || lead.surgeonName} />
+                <Field label="Doctor Type" value={lead.surgeonType} />
+                <Field label="Scheduled At" value={formattedOpdScheduleDate} />
+                <Field label="OPD Mode" value={getOpdModeLabel(lead.opdMeeting)} />
+                <Field label="Charges" value={opdChargeValue} />
+              </Section>
+              <div className="mt-4 grid gap-4">
+                <Section
+                  icon={FileText}
+                  iconClassName="text-emerald-600"
+                  title="Doctor Notes"
+                  hasContent={hasOpdDoctorNotes}
+                >
+                  <Field
+                    label="Surgery Advised"
+                    value={getOpdSurgeryAdvisedLabel(lead.opdSurgeryAdvised)}
+                  />
+                  <Field
+                    label="Surgery Remark"
+                    value={lead.opdSurgeryRemark?.label}
+                  />
+                  <Field
+                    label="Reason for No Surgery"
+                    value={lead.opdReasonNoSurgery?.label}
+                  />
+                  <Field
+                    label="Follow-up Reason"
+                    value={lead.opdFollowUpReason?.label}
+                  />
+                  <Field
+                    label="Implant Required"
+                    value={
+                      typeof lead.opdImplantRequired === 'boolean'
+                        ? lead.opdImplantRequired
+                          ? 'Yes'
+                          : 'No'
+                        : null
+                    }
+                  />
+                  <Field label="Diagnosis" value={lead.opdDiagnosis} />
+                  {lead.remarks ? (
+                    <div className="col-span-2 sm:col-span-3 md:col-span-4">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold mb-1">
+                        Doctor Remarks
+                      </p>
+                      <p className="text-sm rounded-lg border bg-card p-3 whitespace-pre-wrap">
+                        {lead.remarks}
+                      </p>
+                    </div>
+                  ) : null}
+                </Section>
+                <Section
+                  icon={File}
+                  iconClassName="text-blue-600"
+                  title="Prescription Images"
+                  hasContent={opdPrescriptionImages.length > 0}
+                >
+                  <div className="col-span-2 sm:col-span-3 md:col-span-4 flex flex-wrap gap-2">
+                    {opdPrescriptionImages.map((image, index) => (
+                      <Button
+                        key={image.id}
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-[11px] gap-1"
+                      >
+                        <a href={image.fileUrl} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="w-3 h-3" />
+                          {image.fileName?.trim() || `Prescription ${index + 1}`}
+                        </a>
+                      </Button>
+                    ))}
+                  </div>
+                </Section>
               </div>
             </CardContent>
           </Card>
@@ -1957,7 +2266,7 @@ export default function PatientDetailsPage() {
         )}
 
         {/* Discharge & patient info — inline read-only panel, hidden from BD and TL */}
-        {lead.dischargeSheet && user?.role !== 'BD' && user?.role !== 'TEAM_LEAD' && (
+        {lead.dischargeSheet && user?.role !== 'BD' && user?.role !== 'TEAM_LEAD' && user?.role !== 'ASSISTANT_CATEGORY_MANAGER' && user?.role !== 'CATEGORY_MANAGER' && (
           <Card>
             <CardHeader>
               <CardTitle>Discharge</CardTitle>
@@ -1978,7 +2287,7 @@ export default function PatientDetailsPage() {
         {/* Activity Timeline */}
         {stageHistory && <ActivityTimeline history={stageHistory} />}
 
-        {user && canResetStepper(user, lead) && (
+        {user && canResetStepper(user as any) && (
           <ResetStepperDialog
             leadId={leadId}
             open={showResetStepperDialog}

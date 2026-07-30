@@ -32,7 +32,7 @@ import {
 } from '@/components/meets/meet-details-drawer'
 
 const IPD_STAGES = 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED'
-const ALLOWED_ROLES = ['BD', 'TEAM_LEAD']
+const ALLOWED_ROLES = ['BD', 'TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER']
 
 function rangeForView(view: CalendarView, focus: Date): { start: Date; end: Date } {
   if (view === 'month') {

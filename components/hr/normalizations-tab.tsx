@@ -27,7 +27,7 @@ import { apiGet, apiPatch } from '@/lib/api-client'
 import { useMemo, useState } from 'react'
 import { UserCheck, Check, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { format, subMonths } from 'date-fns'
+import { format } from 'date-fns'
 import {
   Sheet,
   SheetContent,
@@ -123,8 +123,9 @@ const MIN_REJECTION_LENGTH = 15
 export function NormalizationsTab() {
   const queryClient = useQueryClient()
   const [statusFilter, setStatusFilter] = useState<'PENDING' | 'APPROVED' | 'REJECTED'>('PENDING')
-  const [fromDate, setFromDate] = useState(() => format(subMonths(new Date(), 1), 'yyyy-MM-dd'))
-  const [toDate, setToDate] = useState(() => format(new Date(), 'yyyy-MM-dd'))
+  // Pending queue must match badge counts (all-time). Date bounds are optional for history.
+  const [fromDate, setFromDate] = useState('')
+  const [toDate, setToDate] = useState('')
   const [rejectOpen, setRejectOpen] = useState(false)
   const [rejectRow, setRejectRow] = useState<NormalizationRow | null>(null)
   const [rejectRemarks, setRejectRemarks] = useState('')
@@ -198,6 +199,7 @@ export function NormalizationsTab() {
       queryClient.invalidateQueries({ queryKey: ['hr', 'employee'] })
       queryClient.invalidateQueries({ queryKey: ['hierarchy', 'my-team', 'attendance'] })
       queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'team'] })
+      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
       toast.success(variables.status === 'APPROVED' ? 'Normalization approved' : 'Normalization rejected')
     },
     onError: (e: Error) => toast.error(e.message || 'Failed to update'),
@@ -489,7 +491,9 @@ export function NormalizationsTab() {
       <Card>
         <CardHeader>
           <CardTitle>Filter</CardTitle>
-          <CardDescription>Show requests by status and date range</CardDescription>
+          <CardDescription>
+            Pending shows the full HR queue (same as the badge). Use dates to narrow approved/rejected history.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-2">
@@ -512,6 +516,20 @@ export function NormalizationsTab() {
               <Label className="text-xs text-muted-foreground">To date</Label>
               <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} className="mt-1 w-[140px]" />
             </div>
+            {(fromDate || toDate) && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="mb-0.5"
+                onClick={() => {
+                  setFromDate('')
+                  setToDate('')
+                }}
+              >
+                Clear dates
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

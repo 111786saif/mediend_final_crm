@@ -56,6 +56,7 @@ export interface Lead {
   leadEntryDate?: string | Date | null
   assignedDate?: string | Date | null
   followUpDate?: string | Date | null
+  opdScheduleDate?: string | Date | null
   campaignName?: string | null
   month?: string | Date | null
   profession?: string | null
@@ -121,6 +122,7 @@ export interface Lead {
     bdmName?: string
     closedAt?: string | null
     updatedAt?: string | Date
+    outstandingStatus?: string
   }
   [key: string]: unknown
 }

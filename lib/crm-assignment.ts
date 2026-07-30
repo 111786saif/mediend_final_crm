@@ -61,7 +61,8 @@ export type CrmAssignmentDryRunResult = {
   }
   assignment: null | {
     bd: { employeeId: string; userId: string; name: string }
-    teamLead: { employeeId: string; userId: string; name: string } | null
+    teamLead: { employeeId: string; userId: string; name: string; role?: UserRole } | null
+    categoryManager: { employeeId: string; userId: string; name: string } | null
     salesHead: { employeeId: string; userId: string; name: string } | null
     managementChain: Array<{ employeeId: string; userId: string; name: string; role: UserRole }>
     metrics: CandidateMetrics
@@ -499,7 +500,15 @@ export async function dryRunCrmLeadAssignment(input: AssignmentInput): Promise<C
       role: employee.user.role,
     }))
 
-  const teamLead = approverChain.find((employee) => employee.role === UserRole.TEAM_LEAD) ?? null
+  // ACM is functionally identical to Team Lead
+  const teamLead =
+    approverChain.find(
+      (employee) =>
+        employee.role === UserRole.TEAM_LEAD ||
+        employee.role === UserRole.ASSISTANT_CATEGORY_MANAGER
+    ) ?? null
+  const categoryManager =
+    approverChain.find((employee) => employee.role === UserRole.CATEGORY_MANAGER) ?? null
   const salesHead = approverChain.find((employee) => employee.role === UserRole.SALES_HEAD) ?? null
 
   return {
@@ -532,6 +541,14 @@ export async function dryRunCrmLeadAssignment(input: AssignmentInput): Promise<C
             employeeId: teamLead.employeeId,
             userId: teamLead.userId,
             name: teamLead.name,
+            role: teamLead.role,
+          }
+        : null,
+      categoryManager: categoryManager
+        ? {
+            employeeId: categoryManager.employeeId,
+            userId: categoryManager.userId,
+            name: categoryManager.name,
           }
         : null,
       salesHead: salesHead

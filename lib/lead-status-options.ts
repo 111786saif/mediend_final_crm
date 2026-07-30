@@ -13,6 +13,8 @@ export const LEAD_STATUS_OPTIONS = [
   'Call Back (T)',
   'Call Back Next Week',
   'Call Back Next Month',
+  'OPD Schedule',
+  'OPD Done',
   'IPD Schedule',
   'IPD Done',
   'Converted',
@@ -26,4 +28,24 @@ export const LEAD_STATUS_OPTIONS = [
   'Fund Issues',
   'Call Done',
   'C/W Done',
+] as const
+
+export const CRM_ADDITIONAL_LEAD_STATUS_OPTIONS = [
+  'DNP-1',
+  'DNP-2',
+  'DNP-3',
+  'DNP-4',
+  'DNP-5',
+  'DNP Exhausted',
+] as const
+
+export const CRM_LEAD_STATUS_OPTIONS = Array.from(
+  new Set([...LEAD_STATUS_OPTIONS, ...CRM_ADDITIONAL_LEAD_STATUS_OPTIONS])
+)
+
+export const CRM_MODE_OF_PAYMENT_OPTIONS = [
+  'Cash',
+  'Cashless',
+  'EMI',
+  'Reimbursement',
 ] as const

@@ -1,12 +1,17 @@
-import { Prisma } from '@/generated/prisma/client'
+import { Prisma, UserRole } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { MEET_MD_INVITE_EMPLOYEE_CODE } from '@/lib/meets'
+import {
+  CATEGORY_MANAGER_ROLES,
+  TEAM_UNIT_ROLES,
+} from '@/lib/sales-hierarchy-roles'
 
 const employeeSelect = {
   id: true,
   userId: true,
   employeeCode: true,
   managerId: true,
+  status: true,
   departmentId: true,
   user: {
     select: {
@@ -179,6 +184,199 @@ export async function getSubordinateUserIdsForLeadAccess(userId: string): Promis
  */
 export async function getTeamLeadLeadAccessBdUserIds(userId: string): Promise<string[]> {
   return getSubordinateUserIdsForLeadAccess(userId)
+}
+
+/**
+ * Recursive descendant user IDs for a manager (Employee.id).
+ */
+export async function getDescendantUserIds(managerEmployeeId: string): Promise<string[]> {
+  const subordinates = await getSubordinates(managerEmployeeId, true)
+  return subordinates.map((s) => s.userId)
+}
+
+/**
+ * Manager's own userId + all recursive descendants.
+ * Used when selecting a CM/TL/ACM to roll up their full subtree (Mohit/Amir rule).
+ */
+export async function getTeamScopeUserIds(managerEmployeeId: string): Promise<string[]> {
+  const manager = await prisma.employee.findUnique({
+    where: { id: managerEmployeeId },
+    select: { userId: true },
+  })
+  if (!manager) return []
+  const descendantIds = await getDescendantUserIds(managerEmployeeId)
+  return [manager.userId, ...descendantIds]
+}
+
+/**
+ * Leaf BD user IDs under a manager (recursive), plus the manager's own userId
+ * so personal leads/IPD owned by the manager still count.
+ */
+export async function resolveLeafBdUserIds(managerEmployeeId: string): Promise<{
+  managerUserId: string
+  managerName: string
+  managerRole: UserRole
+  allUserIds: string[]
+  bdMembers: Array<{
+    employeeId: string
+    userId: string
+    name: string
+    profilePicture: string | null
+  }>
+}> {
+  const manager = await prisma.employee.findUnique({
+    where: { id: managerEmployeeId },
+    select: {
+      userId: true,
+      user: { select: { id: true, name: true, role: true, profilePicture: true } },
+    },
+  })
+  if (!manager) {
+    throw new Error('Manager not found')
+  }
+
+  const subordinates = await getSubordinates(managerEmployeeId, true)
+  const bdMembers = subordinates
+    .filter((s) => s.user.role === UserRole.BD)
+    .map((s) => ({
+      employeeId: s.id,
+      userId: s.userId,
+      name: s.user.name,
+      profilePicture: null as string | null,
+    }))
+
+  // Enrich profile pictures for BD members
+  if (bdMembers.length > 0) {
+    const users = await prisma.user.findMany({
+      where: { id: { in: bdMembers.map((m) => m.userId) } },
+      select: { id: true, profilePicture: true },
+    })
+    const picMap = new Map(users.map((u) => [u.id, u.profilePicture ?? null]))
+    for (const m of bdMembers) {
+      m.profilePicture = picMap.get(m.userId) ?? null
+    }
+  }
+
+  const allUserIds = [manager.userId, ...bdMembers.map((m) => m.userId)]
+  // Also include non-BD descendants who may personally own leads (TL/ACM/CM doing BD work)
+  for (const sub of subordinates) {
+    if (sub.user.role !== UserRole.BD && !allUserIds.includes(sub.userId)) {
+      allUserIds.push(sub.userId)
+    }
+  }
+
+  return {
+    managerUserId: manager.userId,
+    managerName: manager.user.name,
+    managerRole: manager.user.role,
+    allUserIds,
+    bdMembers,
+  }
+}
+
+export type SalesTeamUnitLevel = 'cm' | 'tl'
+
+export type SalesTeamUnit = {
+  id: string
+  userId: string
+  name: string
+  profilePicture: string | null
+  employeeCode: string | null
+  role: UserRole
+  /** Direct BD reports only (for TL/ACM target member lists). */
+  memberCount: number
+  members: Array<{
+    id: string
+    employeeId: string
+    name: string
+    profilePicture: string | null
+  }>
+  /** Recursive BD + manager user IDs for analytics filters. */
+  scopeUserIds: string[]
+}
+
+/**
+ * List filterable sales team units at CM or TL/ACM level.
+ */
+export async function getSalesTeamUnits(options: {
+  level: SalesTeamUnitLevel
+}): Promise<SalesTeamUnit[]> {
+  const roles =
+    options.level === 'cm' ? CATEGORY_MANAGER_ROLES : TEAM_UNIT_ROLES
+
+  const managers = await prisma.employee.findMany({
+    where: { user: { role: { in: roles } } },
+    select: {
+      id: true,
+      userId: true,
+      employeeCode: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          profilePicture: true,
+          role: true,
+        },
+      },
+      subordinates: {
+        where: { user: { role: UserRole.BD } },
+        select: {
+          id: true,
+          userId: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              profilePicture: true,
+            },
+          },
+        },
+        orderBy: { user: { name: 'asc' } },
+      },
+    },
+    orderBy: { user: { name: 'asc' } },
+  })
+
+  const units: SalesTeamUnit[] = []
+  for (const m of managers) {
+    const scopeUserIds = await getTeamScopeUserIds(m.id)
+    units.push({
+      id: m.id,
+      userId: m.userId,
+      name: m.user.name,
+      profilePicture: m.user.profilePicture,
+      employeeCode: m.employeeCode,
+      role: m.user.role,
+      memberCount: m.subordinates.length,
+      members: m.subordinates.map((s) => ({
+        id: s.userId,
+        employeeId: s.id,
+        name: s.user.name,
+        profilePicture: s.user.profilePicture,
+      })),
+      scopeUserIds,
+    })
+  }
+  return units
+}
+
+/**
+ * For a session user in a subtree-scoped sales role, return user IDs in their scope
+ * (self + recursive subordinates). Returns null for unscoped roles (caller decides).
+ */
+export async function getSubtreeScopeUserIdsForRole(
+  userId: string,
+  role: UserRole | string
+): Promise<string[] | null> {
+  if (
+    role !== UserRole.TEAM_LEAD &&
+    role !== UserRole.ASSISTANT_CATEGORY_MANAGER &&
+    role !== UserRole.CATEGORY_MANAGER
+  ) {
+    return null
+  }
+  const subIds = await getSubordinateUserIdsForLeadAccess(userId)
+  return [userId, ...subIds]
 }
 
 /**

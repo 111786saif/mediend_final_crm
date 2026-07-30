@@ -3,21 +3,14 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { canAccessSalesDashboard } from '@/lib/analytics/sales-dashboard-access'
 
 export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
 
-    // Scope checking - same as other analytics/targets APIs
-    if (
-      user.role !== 'MD' &&
-      user.role !== 'ADMIN' &&
-      user.role !== 'SALES_HEAD' &&
-      user.role !== 'EXECUTIVE_ASSISTANT' &&
-      user.role !== 'TEAM_LEAD' &&
-      user.role !== 'DIGITAL_MARKETING_HEAD'
-    ) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 

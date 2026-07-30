@@ -1,37 +1,31 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/auth'
-import { successResponse, errorResponse } from '@/lib/api-utils'
-import { UserRole } from '@/generated/prisma/client'
-
-const VALID_ROLES = Object.values(UserRole)
+import {
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+} from '@/lib/api-utils'
+import { getSessionWithFreshUser } from '@/lib/session'
+import { hasPermission } from '@/lib/rbac'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json().catch(() => null)
+    const user = await getSessionWithFreshUser()
+    if (!user) {
+      return unauthorizedResponse()
+    }
 
-    if (body && body.email) {
-      const { email, password, name, role } = body
+    if (!hasPermission(user, 'users:write')) {
+      return errorResponse('Forbidden', 403)
+    }
 
-      if (!email || !password || !name || !role) {
-        return errorResponse('Missing required fields: email, password, name, role', 400)
-      }
-
-      if (!VALID_ROLES.includes(role)) {
-        return errorResponse(`Invalid role. Valid roles: ${VALID_ROLES.join(', ')}`, 400)
-      }
-
-      const normalizedEmail = email.toLowerCase().trim()
-      const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } })
-      if (existingUser) return errorResponse('User with this email already exists', 400)
-
-      const passwordHash = await hashPassword(password)
-      const user = await prisma.user.create({
-        data: { email: normalizedEmail, passwordHash, name, role },
-        select: { id: true, email: true, name: true, role: true, createdAt: true },
-      })
-
-      return successResponse({ message: 'User created successfully', user })
+    const body = await request.json().catch(() => ({}))
+    if (body && Object.keys(body).length > 0) {
+      return errorResponse(
+        'Direct user creation from this endpoint is disabled. Use `bun run create:superadmin <email> <password> [name]` for bootstrap access.',
+        403
+      )
     }
 
     // No body provided — seed default users

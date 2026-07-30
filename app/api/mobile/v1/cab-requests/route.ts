@@ -1,6 +1,12 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import {
+  optionalIntField,
+  optionalNumberField,
+  optionalStringField,
+  requiredStringField,
+} from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import {
   createDoctorCabRequest,
@@ -10,19 +16,19 @@ import {
 import { DoctorAppContextError } from '@/lib/doctor-app/context'
 
 const createCabRequestSchema = z.object({
-  pickup: z.string().trim().min(1),
-  drop: z.string().trim().min(1),
-  pickupLat: z.coerce.number().min(-90).max(90).nullable().optional(),
-  pickupLng: z.coerce.number().min(-180).max(180).nullable().optional(),
-  dropLat: z.coerce.number().min(-90).max(90).nullable().optional(),
-  dropLng: z.coerce.number().min(-180).max(180).nullable().optional(),
-  scheduledFor: z.string().trim().min(1),
+  pickup: requiredStringField('Pickup'),
+  drop: requiredStringField('Drop'),
+  pickupLat: optionalNumberField('Pickup latitude', { min: -90, max: 90, nullable: true }),
+  pickupLng: optionalNumberField('Pickup longitude', { min: -180, max: 180, nullable: true }),
+  dropLat: optionalNumberField('Drop latitude', { min: -90, max: 90, nullable: true }),
+  dropLng: optionalNumberField('Drop longitude', { min: -180, max: 180, nullable: true }),
+  scheduledFor: requiredStringField('Scheduled time'),
 })
 
 const listCabRequestsSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).max(100).optional().default(20),
-  status: z.string().trim().optional(),
+  page: optionalIntField('Page', { min: 1, defaultValue: 1 }),
+  limit: optionalIntField('Limit', { min: 1, max: 100, defaultValue: 20 }),
+  status: optionalStringField('Status'),
 })
 
 export async function POST(request: NextRequest) {

@@ -1,10 +1,10 @@
-import { UserRole } from '@/generated/prisma/client'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isSuperAdmin } from '@/lib/crm-campaigns'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 import { prisma } from '@/lib/prisma'
+import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 import { getSessionWithFreshUser } from '@/lib/session'
 
 const assignmentMemberSchema = z.object({
@@ -84,10 +84,13 @@ export async function PUT(
 
     const invalid = employees.find(
       (employee) =>
-        employee.user.role !== UserRole.TEAM_LEAD || employee.status !== 'ACTIVE'
+        !isTeamLeadEquivalent(employee.user.role) || employee.status !== 'ACTIVE'
     )
     if (invalid) {
-      return errorResponse('All assignments must point to active Team Lead employees.', 400)
+      return errorResponse(
+        'All assignments must point to active Team Lead or Assistant Category Manager employees.',
+        400
+      )
     }
 
     if (campaign.departmentId) {

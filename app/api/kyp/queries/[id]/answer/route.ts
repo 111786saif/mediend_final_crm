@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 
 const answerQuerySchema = z.object({
@@ -19,8 +20,8 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    // Only BD can answer queries
-    if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
+    // Only BD / TL / ACM / CM (or Admin) can answer queries
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden: Only BD can answer queries', 403)
     }
 

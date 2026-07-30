@@ -1,12 +1,13 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import { nullableOptionalStringField } from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import { cancelDoctorOpdAppointment, DoctorAppApiError } from '@/lib/doctor-app/appointments'
 
 const opdCancelSchema = z.object({
-  remarks: z.string().trim().nullable().optional(),
-  followUpDate: z.string().trim().nullable().optional(),
+  remarks: nullableOptionalStringField('Remarks'),
+  followUpDate: nullableOptionalStringField('Follow-up date'),
 })
 
 export async function PUT(

@@ -5,7 +5,6 @@ import { QueryProvider } from "@/providers/query-provider";
 import { BackCloseProvider } from "@/providers/back-close-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthenticatedWrapper } from "@/components/authenticated-wrapper";
-import { AIProvider } from "@/components/ai/ai-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({
@@ -53,10 +52,8 @@ export default function RootLayout({
         >
           <QueryProvider>
             <BackCloseProvider>
-              <AIProvider>
-                <AuthenticatedWrapper>{children}</AuthenticatedWrapper>
-                <Toaster />
-              </AIProvider>
+              <AuthenticatedWrapper>{children}</AuthenticatedWrapper>
+              <Toaster />
             </BackCloseProvider>
           </QueryProvider>
         </ThemeProvider>

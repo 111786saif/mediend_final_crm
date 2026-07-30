@@ -7,36 +7,63 @@ import { successResponse, errorResponse, unauthorizedResponse, forbiddenResponse
 import { doctorMasterFieldsSchema, emptyToNull } from '@/lib/masters/schemas'
 import { normalizeIndianPhone } from '@/lib/doctor-app/phone'
 import { syncDoctorAppAccountFromMaster } from '@/lib/doctor-app/master-sync'
+import {
+  DoctorAvailabilityError,
+  listDoctorIdsOnApprovedLeaveForDate,
+  parseDoctorAvailabilityDate,
+} from '@/lib/doctor-availability'
 
 export async function GET(request: NextRequest) {
-  const user = getSessionFromRequest(request)
-  if (!user) return unauthorizedResponse()
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) return unauthorizedResponse()
 
-  const { searchParams } = new URL(request.url)
-  const search = searchParams.get('search')?.trim() || ''
-  const includeInactive =
-    searchParams.get('includeInactive') === 'true' && hasPermission(user, 'masters:read')
+    const { searchParams } = new URL(request.url)
+    const search = searchParams.get('search')?.trim() || ''
+    const includeInactive =
+      searchParams.get('includeInactive') === 'true' && hasPermission(user, 'masters:read')
+    const availabilityDate = searchParams.get('availabilityDate')?.trim() || ''
 
-  const where: Prisma.DoctorMasterWhereInput = {}
-  if (!includeInactive) {
-    where.isActive = true
+    const where: Prisma.DoctorMasterWhereInput = {}
+    if (!includeInactive) {
+      where.isActive = true
+    }
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { category: { contains: search, mode: 'insensitive' } },
+        { treatment: { contains: search, mode: 'insensitive' } },
+        { phoneNumber: { contains: search, mode: 'insensitive' } },
+      ]
+    }
+
+    const parsedAvailabilityDate = availabilityDate
+      ? parseDoctorAvailabilityDate(availabilityDate, 'availabilityDate')
+      : null
+    if (parsedAvailabilityDate) {
+      const unavailableDoctorIds = await listDoctorIdsOnApprovedLeaveForDate(
+        prisma,
+        parsedAvailabilityDate
+      )
+      if (unavailableDoctorIds.length > 0) {
+        where.id = { notIn: unavailableDoctorIds }
+      }
+    }
+
+    const items = await prisma.doctorMaster.findMany({
+      where,
+      orderBy: { name: 'asc' },
+      take: 500,
+    })
+
+    return successResponse({ items })
+  } catch (error) {
+    if (error instanceof DoctorAvailabilityError) {
+      return errorResponse(error.message, error.status)
+    }
+
+    throw error
   }
-  if (search) {
-    where.OR = [
-      { name: { contains: search, mode: 'insensitive' } },
-      { category: { contains: search, mode: 'insensitive' } },
-      { treatment: { contains: search, mode: 'insensitive' } },
-      { phoneNumber: { contains: search, mode: 'insensitive' } },
-    ]
-  }
-
-  const items = await prisma.doctorMaster.findMany({
-    where,
-    orderBy: { name: 'asc' },
-    take: 500,
-  })
-
-  return successResponse({ items })
 }
 
 export async function POST(request: NextRequest) {

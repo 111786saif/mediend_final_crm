@@ -17,6 +17,8 @@ export default async function PipelineRedirectPage() {
     case 'ADMIN':
       redirect('/bd/pipeline')
     case 'TEAM_LEAD':
+    case 'ASSISTANT_CATEGORY_MANAGER':
+    case 'CATEGORY_MANAGER':
     case 'SALES_HEAD':
       redirect('/team-lead/pipeline')
     case 'EXECUTIVE_ASSISTANT':

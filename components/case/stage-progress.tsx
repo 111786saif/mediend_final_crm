@@ -4,7 +4,7 @@ import { CaseStage } from '@/generated/prisma/enums'
 import { cn } from '@/lib/utils'
 import { CheckCircle2, Clock } from 'lucide-react'
 
-// ─── Step definitions matching the 8-step workflow ──────────────────────────
+// ─── Step definitions matching the insurance workflow ───────────────────────
 
 type StepOwner = 'BD' | 'INSURANCE'
 
@@ -18,6 +18,8 @@ interface WorkflowStep {
 }
 
 interface StepExtras {
+  hasOpdScheduled: boolean
+  hasOpdDone: boolean
   hasInitiateForm: boolean
   hasIpdMark: boolean
 }
@@ -25,22 +27,24 @@ interface StepExtras {
 // Map active CaseStage values to a linear index for ordering
 const STAGE_ORDER: Partial<Record<CaseStage, number>> = {
   [CaseStage.NEW_LEAD]: 0,
-  [CaseStage.KYP_BASIC_COMPLETE]: 1,
-  [CaseStage.HOSPITALS_SUGGESTED]: 2,
-  [CaseStage.PREAUTH_RAISED]: 3,
-  [CaseStage.PREAUTH_COMPLETE]: 4,
-  [CaseStage.INITIATED]: 5,
-  [CaseStage.DISCHARGED]: 6,
+  [CaseStage.OPD_SCHEDULED]: 1,
+  [CaseStage.OPD_DONE]: 2,
+  [CaseStage.KYP_BASIC_COMPLETE]: 3,
+  [CaseStage.HOSPITALS_SUGGESTED]: 4,
+  [CaseStage.PREAUTH_RAISED]: 5,
+  [CaseStage.PREAUTH_COMPLETE]: 6,
+  [CaseStage.INITIATED]: 7,
+  [CaseStage.DISCHARGED]: 9,
   // Legacy mappings
-  [CaseStage.KYP_BASIC_PENDING]: 1,
-  [CaseStage.KYP_DETAILED_PENDING]: 2,
-  [CaseStage.KYP_DETAILED_COMPLETE]: 2,
-  [CaseStage.KYP_PENDING]: 1,
-  [CaseStage.KYP_COMPLETE]: 2,
-  [CaseStage.ADMITTED]: 5,
-  [CaseStage.IPD_DONE]: 6,
-  [CaseStage.PL_PENDING]: 6,
-  [CaseStage.OUTSTANDING]: 6,
+  [CaseStage.KYP_BASIC_PENDING]: 2,
+  [CaseStage.KYP_DETAILED_PENDING]: 4,
+  [CaseStage.KYP_DETAILED_COMPLETE]: 4,
+  [CaseStage.KYP_PENDING]: 2,
+  [CaseStage.KYP_COMPLETE]: 4,
+  [CaseStage.ADMITTED]: 7,
+  [CaseStage.IPD_DONE]: 8,
+  [CaseStage.PL_PENDING]: 9,
+  [CaseStage.OUTSTANDING]: 9,
 }
 
 function getStageIndex(stage: CaseStage): number {
@@ -50,69 +54,122 @@ function getStageIndex(stage: CaseStage): number {
 const WORKFLOW_STEPS: WorkflowStep[] = [
   {
     number: 1,
-    label: 'Insurance Card Details',
-    shortLabel: 'Card Details',
+    label: 'OPD Schedule',
+    shortLabel: 'OPD Schedule',
     owner: 'BD',
-    isDone: (si) => si >= 1,
+    isDone: (si, ex) => si >= 1 || ex.hasOpdScheduled,
   },
   {
     number: 2,
-    label: 'Suggest Hospitals',
-    shortLabel: 'Hospitals',
-    owner: 'INSURANCE',
-    isDone: (si) => si >= 2,
+    label: 'OPD Done',
+    shortLabel: 'OPD Done',
+    owner: 'BD',
+    isDone: (si, ex) => si >= 2 || ex.hasOpdDone,
   },
   {
     number: 3,
-    label: 'Pre-Auth Raise',
-    shortLabel: 'Pre-Auth Raise',
+    label: 'Insurance Card Details',
+    shortLabel: 'Card Details',
     owner: 'BD',
-    isDone: (si) => si >= 3,
+    isDone: (si, ex) => si >= 3 || ex.hasOpdDone,
   },
   {
     number: 4,
-    label: 'Pre-Auth Approval',
-    shortLabel: 'PA Approval',
+    label: 'Suggest Hospitals',
+    shortLabel: 'Hospitals',
     owner: 'INSURANCE',
-    isDone: (si) => si >= 4,
+    isDone: (si, ex) => ex.hasOpdDone && si >= 3,
   },
   {
     number: 5,
-    label: 'Insurance Initial Form',
-    shortLabel: 'Initial Form',
-    owner: 'INSURANCE',
-    isDone: (si, ex) => si >= 4 && ex.hasInitiateForm,
+    label: 'Pre-Auth Raise',
+    shortLabel: 'Pre-Auth Raise',
+    owner: 'BD',
+    isDone: (si, ex) => ex.hasOpdDone && si >= 4,
   },
   {
     number: 6,
-    label: 'IPD Details',
-    shortLabel: 'IPD Details',
-    owner: 'BD',
-    isDone: (si) => si >= 5,
+    label: 'Pre-Auth Approval',
+    shortLabel: 'PA Approval',
+    owner: 'INSURANCE',
+    isDone: (si, ex) => ex.hasOpdDone && si >= 5,
   },
   {
     number: 7,
-    label: 'IPD Mark',
-    shortLabel: 'IPD Mark',
-    owner: 'BD',
-    isDone: (si, ex) => si >= 5 && ex.hasIpdMark,
+    label: 'Insurance Initial Form',
+    shortLabel: 'Initial Form',
+    owner: 'INSURANCE',
+    isDone: (si, ex) => ex.hasOpdDone && si >= 6 && ex.hasInitiateForm,
   },
   {
     number: 8,
+    label: 'IPD Details',
+    shortLabel: 'IPD Details',
+    owner: 'BD',
+    isDone: (si, ex) => ex.hasOpdDone && si >= 7,
+  },
+  {
+    number: 9,
+    label: 'IPD Mark',
+    shortLabel: 'IPD Mark',
+    owner: 'BD',
+    isDone: (si, ex) => ex.hasOpdDone && si >= 7 && ex.hasIpdMark,
+  },
+  {
+    number: 10,
     label: 'Discharge Summary',
     shortLabel: 'Discharge',
     owner: 'INSURANCE',
-    isDone: (si) => si >= 6,
+    isDone: (si, ex) => ex.hasOpdDone && si >= 8,
   },
 ]
 
-function getCurrentStep(stageIndex: number, extras: StepExtras): number {
-  // Returns 1-based index of the current (in-progress) step.
-  // If all done, returns 8.
-  for (let i = 0; i < WORKFLOW_STEPS.length; i++) {
-    if (!WORKFLOW_STEPS[i].isDone(stageIndex, extras)) return i + 1
+function isInsuranceWorkflowComplete(stage: CaseStage) {
+  return (
+    stage === CaseStage.DISCHARGED ||
+    stage === CaseStage.PL_PENDING ||
+    stage === CaseStage.OUTSTANDING
+  )
+}
+
+function getCurrentStep(currentStage: CaseStage, extras: StepExtras): number {
+  switch (currentStage) {
+    case CaseStage.NEW_LEAD:
+      return extras.hasOpdDone ? 3 : extras.hasOpdScheduled ? 2 : 1
+    case CaseStage.OPD_SCHEDULED:
+      return 2
+    case CaseStage.OPD_DONE:
+    case CaseStage.KYP_BASIC_PENDING:
+    case CaseStage.KYP_PENDING:
+      return 3
+    case CaseStage.KYP_BASIC_COMPLETE:
+      return 4
+    case CaseStage.HOSPITALS_SUGGESTED:
+    case CaseStage.KYP_DETAILED_PENDING:
+    case CaseStage.KYP_DETAILED_COMPLETE:
+    case CaseStage.KYP_COMPLETE:
+      return 5
+    case CaseStage.PREAUTH_RAISED:
+      return 6
+    case CaseStage.PREAUTH_COMPLETE:
+      return extras.hasInitiateForm ? 8 : 7
+    case CaseStage.INITIATED:
+    case CaseStage.ADMITTED:
+      return extras.hasIpdMark ? 10 : 9
+    case CaseStage.IPD_DONE:
+      return 10
+    case CaseStage.DISCHARGED:
+    case CaseStage.PL_PENDING:
+    case CaseStage.OUTSTANDING:
+      return WORKFLOW_STEPS.length
+    default: {
+      const stageIndex = getStageIndex(currentStage)
+      for (let i = 0; i < WORKFLOW_STEPS.length; i++) {
+        if (!WORKFLOW_STEPS[i].isDone(stageIndex, extras)) return i + 1
+      }
+      return WORKFLOW_STEPS.length
+    }
   }
-  return WORKFLOW_STEPS.length
 }
 
 // ─── Colour helpers ──────────────────────────────────────────────────────────
@@ -143,6 +200,8 @@ const DONE_COLORS = {
 
 export interface StageProgressProps {
   currentStage: CaseStage
+  hasOpdScheduled?: boolean
+  hasOpdDone?: boolean
   hasInitiateForm?: boolean
   hasIpdMark?: boolean
   compact?: boolean
@@ -153,17 +212,25 @@ export interface StageProgressProps {
 
 export function StageProgress({
   currentStage,
+  hasOpdScheduled = false,
+  hasOpdDone = false,
   hasInitiateForm = false,
   hasIpdMark = false,
   compact = false,
   className,
 }: StageProgressProps) {
-  const stageIndex = getStageIndex(currentStage)
-  const extras: StepExtras = { hasInitiateForm, hasIpdMark }
-  const currentStepNumber = getCurrentStep(stageIndex, extras)
+  const extras: StepExtras = { hasOpdScheduled, hasOpdDone, hasInitiateForm, hasIpdMark }
+  const currentStepNumber = getCurrentStep(currentStage, extras)
+  const allDone = isInsuranceWorkflowComplete(currentStage)
 
   if (compact) {
-    return <StageProgressCompact stageIndex={stageIndex} extras={extras} currentStepNumber={currentStepNumber} className={className} />
+    return (
+      <StageProgressCompact
+        currentStepNumber={currentStepNumber}
+        allDone={allDone}
+        className={className}
+      />
+    )
   }
 
   return (
@@ -174,11 +241,13 @@ export function StageProgress({
         <div className="absolute top-4 left-4 right-4 h-0.5 bg-gray-200 dark:bg-gray-700 z-0" />
 
         {WORKFLOW_STEPS.map((step, idx) => {
-          const done = step.isDone(stageIndex, extras)
+          const done = allDone || step.number < currentStepNumber
           const isCurrent = step.number === currentStepNumber
           const colors = step.owner === 'BD' ? BD_COLORS : INS_COLORS
           const isLast = idx === WORKFLOW_STEPS.length - 1
-          const nextDone = idx < WORKFLOW_STEPS.length - 1 && WORKFLOW_STEPS[idx + 1].isDone(stageIndex, extras)
+          const nextDone =
+            idx < WORKFLOW_STEPS.length - 1 &&
+            (allDone || WORKFLOW_STEPS[idx + 1].number < currentStepNumber)
 
           return (
             <div key={step.number} className="relative flex flex-col items-center flex-1 z-10">
@@ -242,7 +311,6 @@ export function StageProgress({
         {(() => {
           const step = WORKFLOW_STEPS[currentStepNumber - 1]
           if (!step) return null
-          const allDone = currentStepNumber === WORKFLOW_STEPS.length && WORKFLOW_STEPS[WORKFLOW_STEPS.length - 1].isDone(stageIndex, extras)
           const colors = step.owner === 'BD' ? BD_COLORS : INS_COLORS
           return (
             <span className={cn('text-xs font-semibold px-2 py-1 rounded-full', colors.badge)}>
@@ -258,17 +326,14 @@ export function StageProgress({
 // ─── Compact version (pipeline rows) ────────────────────────────────────────
 
 function StageProgressCompact({
-  stageIndex,
-  extras,
   currentStepNumber,
+  allDone,
   className,
 }: {
-  stageIndex: number
-  extras: StepExtras
   currentStepNumber: number
+  allDone: boolean
   className?: string
 }) {
-  const allDone = currentStepNumber === WORKFLOW_STEPS.length && WORKFLOW_STEPS[WORKFLOW_STEPS.length - 1].isDone(stageIndex, extras)
   const currentStep = WORKFLOW_STEPS[currentStepNumber - 1]
   const colors = currentStep?.owner === 'BD' ? BD_COLORS : INS_COLORS
 
@@ -277,7 +342,7 @@ function StageProgressCompact({
       {/* Mini dot track */}
       <div className="flex items-center gap-0.5">
         {WORKFLOW_STEPS.map((step) => {
-          const done = step.isDone(stageIndex, extras)
+          const done = allDone || step.number < currentStepNumber
           const isCurrent = step.number === currentStepNumber
           const stepColors = step.owner === 'BD' ? BD_COLORS : INS_COLORS
           return (

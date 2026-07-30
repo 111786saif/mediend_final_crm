@@ -7,6 +7,7 @@ import {
   BookOpen,
   Building2,
   Calendar,
+  CalendarClock,
   CalendarCheck,
   CalendarDays,
   CheckCircle,
@@ -63,7 +64,7 @@ export const navItems: NavItem[] = [
     title: 'MD Home',
     url: '/md/home',
     icon: LayoutDashboard,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Tasks',
@@ -79,7 +80,7 @@ export const navItems: NavItem[] = [
     title: 'IPD Calendar',
     url: '/ipd-calendar',
     icon: Stethoscope,
-    roles: ['BD', 'TEAM_LEAD'],
+    roles: ['BD', 'TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER'],
   },
   {
     title: 'Meets',
@@ -90,13 +91,29 @@ export const navItems: NavItem[] = [
     title: 'Dashboard',
     url: '/dashboard',
     icon: LayoutDashboard,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'DIGITAL_MARKETING_HEAD', 'ADMIN'],
+    roles: [
+      'SALES_HEAD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'DIGITAL_MARKETING_HEAD',
+      'ADMIN',
+    ],
   },
   {
     title: 'Sales Dashboard',
     url: '/md/sales',
     icon: TrendingUp,
-    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: [
+      'MD',
+      'ADMIN',
+      'SALES_HEAD',
+      'CATEGORY_MANAGER',
+      'DIGITAL_MARKETING_HEAD',
+      'EXECUTIVE_ASSISTANT',
+    ],
   },
   {
     title: 'Incentive',
@@ -108,7 +125,7 @@ export const navItems: NavItem[] = [
     title: 'Finance Dashboard',
     url: '/md/finance',
     icon: DollarSign,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD HR Dashboard',
@@ -120,13 +137,13 @@ export const navItems: NavItem[] = [
     title: 'MD Attendance',
     url: '/md/attendance',
     icon: CalendarCheck,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD Leave balances',
     url: '/md/leave-balances',
     icon: CalendarDays,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Master Data',
@@ -212,7 +229,14 @@ export const navItems: NavItem[] = [
     title: 'CRM Churn Rules',
     url: '/crm/churn-rules',
     icon: Route,
-    roles: ['SUPER_ADMIN', 'CRM_ADMIN', 'ADMIN', 'SALES_HEAD', 'TEAM_LEAD'],
+    roles: [
+      'SUPER_ADMIN',
+      'CRM_ADMIN',
+      'ADMIN',
+      'SALES_HEAD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+    ],
   },
   // {
   //   title: 'CRM Assignment Rules',
@@ -224,7 +248,7 @@ export const navItems: NavItem[] = [
     title: 'Dept Targets',
     url: '/md/targets',
     icon: Target,
-    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD'],
+    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'HR Dashboard',
@@ -242,25 +266,78 @@ export const navItems: NavItem[] = [
     title: 'Pipeline',
     url: '/pipeline',
     icon: ClipboardList,
-    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+      'EXECUTIVE_ASSISTANT',
+    ],
+  },
+  {
+    title: 'OPD Monitoring',
+    url: '/opd-monitoring',
+    icon: CalendarClock,
+    roles: [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+      'EXECUTIVE_ASSISTANT',
+      'ADMIN',
+      'MD',
+      'TESTER',
+    ],
   },
   {
     title: 'Case Tracker',
     url: '/bd/kyp',
     icon: FileText,
-    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT', 'PL_HEAD'],
+    roles: [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+      'EXECUTIVE_ASSISTANT',
+      'PL_HEAD',
+    ],
   },
   {
     title: 'Pending Surgery',
     url: '/reports/patient-cards-pending-surgery',
     icon: ClipboardList,
-    roles: ['TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT', 'MD', 'ADMIN'],
+    roles: [
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+      'EXECUTIVE_ASSISTANT',
+      'MD',
+      'ADMIN',
+    ],
   },
   {
     title: 'Targets',
     url: '/sales/targets',
     icon: Target,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: [
+      'SALES_HEAD',
+      'CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'EXECUTIVE_ASSISTANT',
+      'MD',
+      'ADMIN',
+    ],
+  },
+  {
+    title: 'Blue Print Dashboard',
+    url: '/sales/blueprint',
+    icon: LayoutDashboard,
+    roles: ['SALES_HEAD'],
   },
   {
     title: 'Sales P&L',
@@ -283,13 +360,52 @@ export const navItems: NavItem[] = [
     title: 'Chat',
     url: '/chat',
     icon: MessageSquare,
-    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+    roles: [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'INSURANCE',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'PL_ENTRY',
+      'PL_VIEWER',
+      'ACCOUNTS',
+      'ADMIN',
+      'TESTER',
+      'EXECUTIVE_ASSISTANT',
+      'COMPLIANCE_HEAD',
+      'DIGITAL_MARKETING_HEAD',
+    ],
   },
   {
-    title: 'Training',
+    title: 'mediend AI',
     url: '/training',
     icon: GraduationCap,
-    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+    roles: [
+      'MD',
+      'SUPER_ADMIN',
+      'CRM_ADMIN',
+      'EXECUTIVE_ASSISTANT',
+      'SALES_HEAD',
+      'CATEGORY_MANAGER',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'BD',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'OUTSTANDING_HEAD',
+      'HR_HEAD',
+      'FINANCE_HEAD',
+      'DIGITAL_MARKETING_HEAD',
+      'IT_HEAD',
+      'LOAN_DEMAT_HEAD',
+      'COMPLIANCE_HEAD',
+      'ADMIN',
+      'USER',
+      'TESTER',
+      'ACCESS_MATRIX',
+    ],
   },
   {
     title: 'P/L Ledger',
@@ -391,13 +507,13 @@ export const navItems: NavItem[] = [
     title: 'MD Messages',
     url: '/md/anonymous-messages',
     icon: Mail,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD Appointments',
     url: '/md/appointments',
     icon: CalendarCheck,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Fin Ledger',
@@ -463,7 +579,7 @@ export const navItems: NavItem[] = [
     title: 'MD Team Approvals',
     url: '/md/md-approvals',
     icon: CheckCircle,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Ask MD Approval',
@@ -517,7 +633,7 @@ export const navItems: NavItem[] = [
     title: 'MD P&L',
     url: '/md/pnl',
     icon: TrendingUp,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'IT P&L',
@@ -529,7 +645,7 @@ export const navItems: NavItem[] = [
     title: 'Loan & Demat Revenue',
     url: '/loan-demat/revenue',
     icon: IndianRupee,
-    roles: ['FINANCE_HEAD', 'MD', 'ADMIN'],
+    roles: ['FINANCE_HEAD', 'MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'IT Permissions',
@@ -547,13 +663,13 @@ export const navItems: NavItem[] = [
     title: 'MD Compliance',
     url: '/md/compliance',
     icon: Star,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD Outstanding',
     url: '/md/outstanding',
     icon: CreditCard,
-    roles: ['MD', 'ADMIN'],
+    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Cumulative Report',
@@ -577,7 +693,8 @@ export function getCampaignCplNavItem(): NavItem & { url: string } {
 
 export function getDashboardUrl(role: string): string {
   if (role === 'SALES_HEAD') return '/sales/dashboard'
-  if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
+  if (role === 'CATEGORY_MANAGER') return '/sales/dashboard'
+  if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') return '/team-lead/dashboard'
   if (role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
   if (role === 'DIGITAL_MARKETING_HEAD') return '/digital-marketing/dashboard'
   if (role === 'PL_HEAD') return '/pl/surgery-dashboard'
@@ -602,70 +719,7 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
   if (user.role === 'ACCESS_MATRIX') {
     return navItems.filter((item) => item.title === 'IT Permissions')
   }
-  return navItems.filter((item) => {
-    if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Calendar') return true
-    if (item.title === 'Meets') return user.role !== 'BD'
-    // Sales Head: "Sales Dashboard" already points to /sales/dashboard; generic "Dashboard" would duplicate it
-    if (item.title === 'Dashboard' && user.role === 'SALES_HEAD') {
-      return false
-    }
-    // Company P&L (/finance/pnl): Finance Head, MD, Admin only (not TESTER / other roles with broad nav)
-    if (item.title === 'Company P&L') {
-      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
-    }
-    // Targeted P&L: same access as Company P&L
-    if (item.title === 'Targeted P&L') {
-      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
-    }
-    if (item.title === 'Sales P&L') {
-      return hasPermission(user, 'sales:pnl:read')
-    }
-    // IT P&L overview: IT Head, Finance Head, MD, Admin only (not Sales Head / TESTER broad nav)
-    if (item.title === 'IT P&L') {
-      return user.role === 'IT_HEAD' || user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
-    }
-    if (user.role === 'MD') {
-      return (
-        item.title === 'Sales Dashboard' ||
-        item.title === 'Finance Dashboard' ||
-        item.title === 'MD HR Dashboard' ||
-        item.title === 'Recruitment' ||
-        item.title === 'Loan & Demat Revenue' ||
-        item.title === 'DM Dashboard' ||
-        item.title === 'Campaign CPL' ||
-        item.title === 'Targeted P&L' ||
-        item.title.startsWith('MD ') ||
-        (item.title === 'Master Data' && item.roles?.includes('MD'))
-      )
-    }
-    // Doctor / Hospital lists: main nav for PL or Finance (not nested under Finance)
-    if (item.title === 'Doctor List' || item.title === 'Hospital List') {
-      return hasPlOrFinanceRead(user)
-    }
-    // Outstanding List is Finance Head main-nav label for /pl/outstanding (PL roles use P/L Outstanding)
-    if (item.title === 'Outstanding List') {
-      return user.role === 'FINANCE_HEAD' || user.role === 'ADMIN' || user.role === 'TESTER'
-    }
-    // USER role can only see Tasks + "My " prefixed pages (MyHRMS)
-    if (user.role === 'USER') {
-      return item.title === 'Tasks' || item.title.startsWith('My ')
-    }
-    if (item.title.startsWith('My ') || item.title.startsWith('Svc ')) {
-      return true
-    }
-    if (user.role === 'ADMIN' || user.role === 'TESTER') {
-      // Exclude HR_HEAD-only HR Dashboard to avoid duplicate (ADMIN sees MD HR Dashboard)
-      if (item.title === 'HR Dashboard' && item.url === '/hr/dashboard') return false
-      return true
-    }
-    if (item.roles) {
-      return item.roles.includes(user.role)
-    }
-    if (item.permission) {
-      return hasPermission(user, item.permission)
-    }
-    return false
-  })
+  return navItems
 }
 
 function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string })[] {
@@ -673,19 +727,30 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
     if (item.title === 'Dashboard') {
       return { ...item, url: getDashboardUrl(role) }
     }
-    if (item.title === 'Sales Dashboard' && role === 'SALES_HEAD') {
+    if (
+      item.title === 'Sales Dashboard' &&
+      (role === 'SALES_HEAD' || role === 'CATEGORY_MANAGER')
+    ) {
       return { ...item, url: '/sales/dashboard' }
     }
     if (item.title === 'Pipeline') {
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }
-      if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/pipeline' }
+      if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
+        return { ...item, url: '/team-lead/pipeline' }
+      }
+      if (role === 'CATEGORY_MANAGER') return { ...item, url: '/team-lead/pipeline' }
       if (role === 'SALES_HEAD') return { ...item, url: '/team-lead/pipeline' }
       if (role === 'EXECUTIVE_ASSISTANT') return { ...item, url: '/executive-assistant/pipeline' }
       if (role === 'ADMIN') return { ...item, url: '/bd/pipeline' }
     }
     if (item.title === 'Targets') {
-      if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/targets' }
-      if (role === 'EXECUTIVE_ASSISTANT') return { ...item, url: '/executive-assistant/targets' }
+      if (role === 'CATEGORY_MANAGER') return { ...item, url: '/sales/targets' }
+      if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
+        return { ...item, url: '/team-lead/targets' }
+      }
+      if (role === 'SALES_HEAD' || role === 'EXECUTIVE_ASSISTANT' || role === 'MD' || role === 'ADMIN') {
+        return { ...item, url: '/sales-head/targets' }
+      }
     }
     return item
   })
@@ -707,7 +772,7 @@ export function getFilteredNavItemsWithUrls(user: SessionUser | null): (NavItem 
 export function getFirstNavUrl(user: SessionUser | null): string {
   // MD/ADMIN land on the MD Command Center; everyone else on the generic home page
   if (user) {
-    if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
+    if (user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT') return '/md/home'
     if (String(user.role) === 'SUPER_ADMIN') return '/crm/campaigns'
     if (String(user.role) === 'CRM_ADMIN') return '/crm/access-matrix'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'

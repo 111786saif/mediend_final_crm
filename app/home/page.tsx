@@ -51,6 +51,7 @@ import { NewHireWelcomePopup } from '@/components/new-hire-welcome-popup'
 import { Megaphone } from 'lucide-react'
 import { FnFReminderCard } from '@/components/hr/fnf-reminder-card'
 import { BirthdayCelebrationCard } from '@/components/birthday-celebration-card'
+import { NewJoinerCelebrationCard } from '@/components/new-joiner-celebration-card'
 import { BirthdayPopup } from '@/components/birthday-popup'
 import { RankUpPopup } from '@/components/notifications/rank-up-popup'
 import { TeamTargetWidget } from '@/components/targets/team-target-widget'
@@ -641,6 +642,9 @@ const { data: workLogCheck } = useWorkLogCheck({
 
       {/* Birthday celebration */}
       <BirthdayCelebrationCard />
+
+      {/* New joiner announcement */}
+      <NewJoinerCelebrationCard />
 
       {/* Add work log - MD team & watchlist users (those enforced to log) */}
       {subjectToWorkLogs && (

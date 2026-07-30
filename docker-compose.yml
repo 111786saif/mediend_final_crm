@@ -16,6 +16,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Single app container. Nginx on the host proxies to 127.0.0.1:3000.
   app:
     build:
@@ -31,8 +44,29 @@ services:
       - "127.0.0.1:3000:3000"
     env_file:
       - /root/mediend.workspace/.env
+    environment:
+      REDIS_URL: redis://redis:6379
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # BullMQ worker for bulk lead reassignment jobs.
+  worker-bulk-reassign:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    restart: unless-stopped
+    env_file:
+      - /root/mediend.workspace/.env
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
   uptime-kuma:
@@ -184,6 +218,23 @@ services:
     profiles:
       - tools
     entrypoint: ["bun", "run", "scripts/reset-password.js"]
+
+  # One-off: reset ALL users to the same password (default 12345678).
+  # Usage: docker compose --profile tools run --rm reset-all-passwords
+  #    or: docker compose --profile tools run --rm reset-all-passwords MyTempPass123
+  reset-all-passwords:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/reset-all-passwords.js"]
 
   # One-off: seed holidays from app/holidays.json
   # Usage: docker compose --profile tools run --rm seed-holidays
@@ -634,4 +685,5 @@ services:
 
 volumes:
   pgdata:
+  redis-data:
   uptime-kuma-data:

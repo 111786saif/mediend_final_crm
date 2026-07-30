@@ -1,88 +1,115 @@
-import { streamText, convertToModelMessages } from 'ai'
-import { openai } from '@ai-sdk/openai'
-import { google } from '@ai-sdk/google'
+import {
+  streamText,
+  convertToModelMessages,
+  stepCountIs,
+  smoothStream,
+} from 'ai'
 import { NextRequest } from 'next/server'
-import { getSessionFromRequest } from '@/lib/session'
 import { unauthorizedResponse, errorResponse } from '@/lib/api-utils'
-import { buildSystemPrompt } from '@/lib/ai/schema-context'
-import { createQueryLeadsTool, createQueryAnalyticsTool, createQueryFinanceTool, createExecuteQueryTool, createGetSchemaInfoTool } from '@/lib/ai/tools'
-import { getUserById } from '@/lib/auth'
+import { buildAiActor } from '@/lib/ai/actor'
+import { buildToolsForActor } from '@/lib/ai/registry'
+import { buildSystemPrompt } from '@/lib/ai/prompt'
+import { chatModel, isAiGatewayConfigured } from '@/lib/ai/provider'
+import { prisma } from '@/lib/prisma'
+import '@/lib/ai/tools'
 
-const OPENAI_CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4o-mini'
-
-type AIProvider = 'openai' | 'gemini'
-
-function getChatModel(provider: AIProvider) {
-  if (provider === 'gemini') {
-    if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-      return errorResponse('Gemini is not configured. Set GOOGLE_GENERATIVE_AI_API_KEY in .env', 503)
-    }
-    return google('gemini-2.0-flash')
-  }
-  // default: openai
-  if (!process.env.OPENAI_API_KEY) {
-    return errorResponse('OpenAI is not configured. Set OPENAI_API_KEY in .env', 503)
-  }
-  return openai(OPENAI_CHAT_MODEL)
-}
+export const maxDuration = 60
 
 export async function POST(req: NextRequest) {
   try {
-    const user = getSessionFromRequest(req)
-    if (!user) {
-      return unauthorizedResponse('Please log in to use mediendAI')
+    if (!isAiGatewayConfigured()) {
+      return errorResponse(
+        'AI gateway is not configured. Set AI_GATEWAY_API_KEY in .env',
+        503
+      )
     }
 
-    const fullUser = await getUserById(user.id)
-    if (!fullUser) {
-      return unauthorizedResponse()
-    }
-
-    const AI_ALLOWED_ROLES = ['ADMIN', 'MD', 'EXECUTIVE_ASSISTANT', 'FINANCE_HEAD']
-    if (!AI_ALLOWED_ROLES.includes(fullUser.role)) {
-      return errorResponse('Access denied. AI features are not available for your role.', 403)
+    const actor = await buildAiActor(req)
+    if (!actor) {
+      return unauthorizedResponse('Please log in to use mediend AI')
     }
 
     const body = await req.json()
     const messages = body.messages
-    const dateRange = body.dateRange as { from?: string; to?: string } | undefined
-
     if (!messages || !Array.isArray(messages)) {
       return errorResponse('Invalid request: messages array required', 400)
     }
 
-    const providerParam = (req.nextUrl.searchParams.get('model') ?? 'openai') as AIProvider
-    const modelOrError = getChatModel(providerParam)
+    const tools = buildToolsForActor(actor)
+    const toolNames = Object.keys(tools)
+    const system = buildSystemPrompt(actor, toolNames)
 
-    // If getChatModel returned a Response (error), return it directly
-    if (modelOrError instanceof Response) return modelOrError
-
-    const systemPrompt = buildSystemPrompt(fullUser.role, dateRange)
-
-    const cookieHeader = req.headers.get('cookie') || ''
-    const tools = {
-      queryLeads: createQueryLeadsTool(fullUser),
-      queryAnalytics: createQueryAnalyticsTool(fullUser),
-      queryFinance: createQueryFinanceTool(fullUser),
-      executeQuery: createExecuteQueryTool(cookieHeader),
-      getSchemaInfo: createGetSchemaInfoTool(),
+    // Lightweight audit: create/reuse conversation from body.conversationId
+    let conversationId: string | null =
+      typeof body.conversationId === 'string' ? body.conversationId : null
+    try {
+      if (!conversationId) {
+        const conv = await prisma.aiConversation.create({
+          data: {
+            userId: actor.user.id,
+            title: 'Chat',
+          },
+        })
+        conversationId = conv.id
+      }
+    } catch (err) {
+      console.warn('[ai/chat] audit conversation create failed', err)
     }
 
     const modelMessages = await convertToModelMessages(messages, { tools })
 
     const result = streamText({
-      model: modelOrError,
-      system: systemPrompt,
+      model: chatModel(),
+      system,
       messages: modelMessages,
       tools,
-      temperature: 0.7,
+      stopWhen: stepCountIs(6),
+      experimental_transform: smoothStream(),
+      temperature: 0.2,
+      onStepFinish: async ({ toolCalls, toolResults }) => {
+        if (!toolCalls?.length) return
+        try {
+          await prisma.aiToolCall.createMany({
+            data: toolCalls.map((tc, i) => {
+              const result = toolResults?.[i] as
+                | { output?: { error?: string } }
+                | undefined
+              const errCode =
+                result?.output &&
+                typeof result.output === 'object' &&
+                result.output !== null &&
+                'error' in result.output
+                  ? String((result.output as { error?: string }).error)
+                  : null
+              return {
+                conversationId,
+                userId: actor.user.id,
+                toolName: tc.toolName,
+                input: tc.input as object,
+                denied: errCode === 'OUT_OF_SCOPE',
+                errorCode: errCode,
+              }
+            }),
+          })
+        } catch (err) {
+          console.warn('[ai/chat] tool call audit failed', err)
+        }
+      },
     })
 
-    return result.toUIMessageStreamResponse()
+    return result.toUIMessageStreamResponse({
+      headers: conversationId
+        ? { 'X-Conversation-Id': conversationId }
+        : undefined,
+    })
   } catch (error) {
     console.error('Error in AI chat:', error)
     return errorResponse(
-      error instanceof Error ? error.message : 'Failed to process chat request',
+      error instanceof Error
+        ? error.message.includes('authentication') || error.message.includes('Authorization')
+          ? `${error.message} — check AI_GATEWAY_API_KEY (Command Code Studio, usually user_… prefix) and recreate the app container after updating .env`
+          : error.message
+        : 'Failed to process chat request',
       500
     )
   }

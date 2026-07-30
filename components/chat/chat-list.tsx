@@ -69,7 +69,10 @@ export function ChatList({ selectedLeadId }: ChatListProps) {
     refetchInterval: 30000, // Refetch every 30 seconds
   })
 
-  const showBdFilter = user?.role === 'TEAM_LEAD'
+  const showBdFilter =
+    user?.role === 'TEAM_LEAD' ||
+    user?.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+    user?.role === 'CATEGORY_MANAGER'
 
   const monthOptions = useMemo(() => {
     if (!conversations) return []

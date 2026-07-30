@@ -127,7 +127,7 @@ export function getCumulativeReportStatus(lead: LeadForStatus): CumulativeReport
   }
 
   if (
-    ['New', 'Hot Lead', 'Interested', 'Nurture', 'IPD Schedule', 'OPD Schedule', 'New Lead'].includes(norm) ||
+    ['New', 'Hot Lead', 'Interested', 'Nurture', 'IPD Schedule', 'OPD Schedule', 'OPD Scheduled', 'OPD Done', 'New Lead'].includes(norm) ||
     PLANNING_STAGES.includes(lead.caseStage as (typeof PLANNING_STAGES)[number])
   ) {
     return 'Planning'

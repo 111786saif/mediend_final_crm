@@ -15,11 +15,30 @@ import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/hooks/use-auth'
-import { hasPermission } from '@/lib/rbac'
+import { getAvailableRolesForCreator, hasPermission } from '@/lib/rbac'
 import { cn } from '@/lib/utils'
+import { type UserRole } from '@/generated/prisma/enums'
+import { getRoleLabel } from '@/lib/roles'
 import { EmployeeDetailDrawer } from '@/components/hr/employee-detail-drawer'
 import { AddEmployeeDialog, type OnboardResult } from '@/components/hr/add-employee-dialog'
 import { SyncProgressModal } from '@/components/hr/sync-progress-modal'
+
+const EDIT_EMPLOYEE_ROLE_ORDER: UserRole[] = [
+  'SALES_HEAD',
+  'CATEGORY_MANAGER',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'TEAM_LEAD',
+  'BD',
+  'INSURANCE_HEAD',
+  'PL_HEAD',
+  'OUTSTANDING_HEAD',
+  'HR_HEAD',
+  'DIGITAL_MARKETING_HEAD',
+  'LOAN_DEMAT_HEAD',
+  'COMPLIANCE_HEAD',
+  'USER',
+  'ACCESS_MATRIX',
+]
 
 interface Department {
   id: string
@@ -95,6 +114,7 @@ interface EditFormData {
   departmentId: string
   managerId: string
   designation: string
+  role: string
   dateOfBirth: string
   panNumber: string
   aadharNumber: string
@@ -123,6 +143,7 @@ interface EditPatchPayload {
   bankAccountName?: string | null
   bankAccountNumber?: string | null
   ifscCode?: string | null
+  role?: UserRole
 }
 
 export default function HREmployeesPage() {
@@ -505,6 +526,7 @@ export default function HREmployeesPage() {
               departments={departments || []}
               circleOptions={employeeMeta?.circles ?? []}
               managerOptions={employees?.filter((e) => e.id !== selectedEmployee.id) ?? []}
+              canEditRole={canCreate}
               onSubmit={(data) => updateMutation.mutate({ id: selectedEmployee.id, data })}
               isLoading={updateMutation.isPending}
             />
@@ -549,6 +571,7 @@ function EmployeeEditForm({
   departments,
   circleOptions,
   managerOptions,
+  canEditRole,
   onSubmit,
   isLoading,
 }: {
@@ -556,9 +579,12 @@ function EmployeeEditForm({
   departments: Department[]
   circleOptions: CircleOption[]
   managerOptions: Employee[]
+  canEditRole: boolean
   onSubmit: (data: EditPatchPayload) => void
   isLoading: boolean
 }) {
+  const { user } = useAuth()
+  const currentRole = employee.user.role as UserRole
   const [formData, setFormData] = useState<EditFormData>({
     employeeCode: employee.employeeCode,
     bdNumber: employee.bdNumber != null ? String(employee.bdNumber) : '',
@@ -567,6 +593,7 @@ function EmployeeEditForm({
     departmentId: employee.department?.id || 'none',
     managerId: employee.manager?.id || 'none',
     designation: employee.designation || employee.user.role.replace('_', ' ') || '',
+    role: employee.user.role,
     dateOfBirth: toDateInput(employee.dateOfBirth),
     panNumber: employee.panNumber || '',
     aadharNumber: employee.aadharNumber || '',
@@ -577,6 +604,21 @@ function EmployeeEditForm({
     bankAccountNumber: employee.bankAccountNumber || '',
     ifscCode: employee.ifscCode || '',
   })
+
+  const availableRoles = (() => {
+    if (!canEditRole || !user) return []
+    const allowed = new Set(getAvailableRolesForCreator(user))
+    const ordered = EDIT_EMPLOYEE_ROLE_ORDER.filter((role) => allowed.has(role))
+    // Keep locked current role visible only while still selected (cannot re-assign it after leaving)
+    if (
+      currentRole &&
+      !allowed.has(currentRole) &&
+      formData.role === currentRole
+    ) {
+      return [currentRole, ...ordered]
+    }
+    return ordered
+  })()
 
   const set = <K extends keyof EditFormData>(key: K, value: EditFormData[K]) =>
     setFormData((prev) => ({ ...prev, [key]: value }))
@@ -618,8 +660,14 @@ function EmployeeEditForm({
       ifscCode: formData.ifscCode.trim().toUpperCase() || null,
     }
 
+    if (canEditRole && formData.role) {
+      payload.role = formData.role as UserRole
+    }
+
     onSubmit(payload)
   }
+
+  const allowedForCreator = user ? new Set(getAvailableRolesForCreator(user)) : new Set<UserRole>()
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -633,6 +681,27 @@ function EmployeeEditForm({
               placeholder="e.g. Business Development Executive"
             />
           </div>
+          {canEditRole && availableRoles.length > 0 && (
+            <div>
+              <Label>Role</Label>
+              <Select
+                value={formData.role}
+                onValueChange={(value) => set('role', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableRoles.map((role) => (
+                    <SelectItem key={role} value={role}>
+                      {getRoleLabel(role)}
+                      {!allowedForCreator.has(role) ? ' (current)' : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div>
             <Label>Employee Code *</Label>
             <Input

@@ -1,14 +1,15 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import { optionalIntField, optionalStringField } from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import { DoctorAppCabError, listDoctorCabRequests } from '@/lib/doctor-app/cab-requests'
 import { DoctorAppContextError } from '@/lib/doctor-app/context'
 
 const listCabRequestsSchema = z.object({
-  page: z.coerce.number().int().min(1).optional().default(1),
-  limit: z.coerce.number().int().min(1).max(100).optional().default(20),
-  status: z.string().trim().optional(),
+  page: optionalIntField('Page', { min: 1, defaultValue: 1 }),
+  limit: optionalIntField('Limit', { min: 1, max: 100, defaultValue: 20 }),
+  status: optionalStringField('Status'),
 })
 
 export async function GET(request: NextRequest) {

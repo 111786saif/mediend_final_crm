@@ -19,10 +19,11 @@ import { useBadgeCounts } from '@/hooks/use-badge-counts'
 import { useNotifications } from '@/hooks/use-notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useSidebar } from '@/components/ui/sidebar'
-import { getFilteredNavItemsWithUrls } from '@/lib/sidebar-nav'
+import { getFilteredNavItemsWithUrls, navItems } from '@/lib/sidebar-nav'
 import { usePermissions } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   ChevronDown,
   DollarSign,
@@ -45,7 +46,6 @@ import { usePathname } from 'next/navigation'
 import * as React from 'react'
 import logo from '@/public/logo-mediend.png'
 import { UserRole } from '@/generated/prisma/enums'
-import { useAI } from '@/components/ai/ai-provider'
 import { useTheme } from 'next-themes'
 
 function getBadgeCount(
@@ -104,7 +104,6 @@ function getBadgeCount(
 
 export function AppSidebar() {
   const { user, logout, isTester, setActiveRole } = useAuth()
-  const ai = useAI()
   const pathname = usePathname()
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
@@ -150,6 +149,76 @@ export function AppSidebar() {
     return null
   }
 
+  if (!permissionsReady) {
+    return (
+      <Sidebar>
+        <SidebarHeader className="border-b border-sidebar-border">
+          <div className="flex items-center gap-1 p-2">
+            <div className="relative h-8 w-32 shrink-0">
+              <Image
+                src={logo}
+                alt="Mediend"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <p className="text-md text-white font-bold">Workspace Beta</p>
+          </div>
+        </SidebarHeader>
+        <SidebarContent className="gap-1 px-2 py-3">
+          <SidebarGroup className="p-0">
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-1">
+                {/* Simulated Main Navigation Items */}
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <SidebarMenuItem key={`main-${i}`}>
+                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-md">
+                      <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
+                      <Skeleton className={`h-4 bg-sidebar-foreground/15 ${
+                        i % 3 === 0 ? 'w-24' : i % 3 === 1 ? 'w-32' : 'w-28'
+                      }`} />
+                    </div>
+                  </SidebarMenuItem>
+                ))}
+
+                {/* Simulated Collapsible Section Header */}
+                <div className="mt-4 mb-2 flex items-center justify-between px-3 py-2">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
+                    <Skeleton className="h-4 w-16 bg-sidebar-foreground/15" />
+                  </div>
+                  <Skeleton className="h-3 w-3 bg-sidebar-foreground/15" />
+                </div>
+
+                {/* Simulated Sub-navigation Items */}
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <SidebarMenuItem key={`sub-${i}`}>
+                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-md">
+                      <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
+                      <Skeleton className={`h-4 bg-sidebar-foreground/15 ${
+                        i % 2 === 0 ? 'w-20' : 'w-24'
+                      }`} />
+                    </div>
+                  </SidebarMenuItem>
+                ))}
+
+                {/* Another Collapsible Header */}
+                <div className="mt-4 mb-2 flex items-center justify-between px-3 py-2">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
+                    <Skeleton className="h-4 w-20 bg-sidebar-foreground/15" />
+                  </div>
+                  <Skeleton className="h-3 w-3 bg-sidebar-foreground/15" />
+                </div>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+    )
+  }
+
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
 
   const HRM_TITLES = ['Attendance & Normalizations', 'People & Org', 'Compensation & Docs', 'Engagement']
@@ -167,103 +236,42 @@ export function AppSidebar() {
     'CRM Churn Rules',
   ]
 
-  const navigationItems =
-    user.role === 'MD'
-      ? itemsWithUrls.filter(
-          (item) =>
-            item.title === 'Tasks' ||
-            item.title === 'Meets' ||
-            item.title === 'Calendar' ||
-            item.title === 'Sales Dashboard' ||
-            item.title === 'Finance Dashboard' ||
-            item.title === 'MD HR Dashboard' ||
-            item.title === 'DM Dashboard' ||
-            item.title === 'Campaign CPL' ||
-            item.title === 'Dept Targets' ||
-            item.title.startsWith('MD ')
-        )
-      : user.role === 'ADMIN' || user.role === 'TESTER'
-        ? itemsWithUrls.filter(
-            (item) =>
-              item.title === 'Home' ||
-              item.title === 'Tasks' ||
-              item.title === 'Meets' ||
-              item.title === 'Calendar' ||
-              item.title === 'Sales Dashboard' ||
-              item.title === 'Finance Dashboard' ||
-              item.title === 'MD HR Dashboard' ||
-              item.title.startsWith('MD ') ||
-              item.title === 'Attendance & Normalizations' ||
-              item.title === 'People & Org' ||
-              item.title === 'Compensation & Docs' ||
-              item.title === 'Engagement' ||
-              item.title === 'Doctor List' ||
-              item.title === 'Hospital List' ||
-              item.title === 'Outstanding List' ||
-              item.title === 'P/L Outstanding'
-          )
-        : user.role === 'EXECUTIVE_ASSISTANT'
-          ? itemsWithUrls.filter(
-              (item) =>
-                item.title === 'Home' ||
-                item.title === 'Tasks' ||
-                item.title === 'Meets' ||
-                item.title === 'Calendar' ||
-                item.title === 'Chat' ||
-                item.title === 'Master Data' ||
-                item.title === 'Doctor Admin' ||
-                item.title === 'Compliance' ||
-                item.title === 'Cumulative Report' ||
-                SALES_TITLES.includes(item.title) ||
-                INSURANCE_PL_TITLES.includes(item.title) ||
-                EA_HRM_TITLES.includes(item.title) ||
-                item.title.startsWith('My ') ||
-                EA_MYHRMS_EXTRA.includes(item.title)
-            )
-          : user.role === 'USER'
-            ? itemsWithUrls.filter(
-                (item) =>
-                  item.title === 'Home' ||
-                  item.title === 'Tasks' ||
-                  item.title === 'Meets' ||
-                  item.title === 'Calendar' ||
-                  item.title.startsWith('My ')
-              )
-            : user.role === 'COMPLIANCE_HEAD'
-              ? itemsWithUrls.filter(
-                  (item) =>
-                    item.title === 'Home' ||
-                    item.title === 'Tasks' ||
-                    item.title === 'Meets' ||
-                    item.title === 'Calendar' ||
-                    item.title === 'Chat' ||
-                    item.title === 'Compliance' ||
-                    item.title === 'Cumulative Report' ||
-                    item.title.startsWith('My ')
-                )
-              : itemsWithUrls.filter(
-                  (item) => {
-                    if (user.role === 'SALES_HEAD' && HRM_TITLES.includes(item.title)) return false
-                    return (
-                      item.title === 'Home' ||
-                      item.title.startsWith('My ') ||
-                      item.title === 'Attendance & Normalizations' ||
-                      item.title === 'People & Org' ||
-                      item.title === 'Compensation & Docs' ||
-                      item.title === 'Engagement' ||
-                      (!item.title.startsWith('Svc ') &&
-                        !item.title.startsWith('MD ') &&
-                        !item.title.startsWith('Fin '))
-                    )
-                  }
-                )
+  const navigationItems = itemsWithUrls
 
   const isEa = user.role === 'EXECUTIVE_ASSISTANT'
 
   const filterByPermission = (item: (typeof itemsWithUrls)[number]) => {
-    const resourceKey = Object.keys(RESOURCE_MAP).find(
+    if (item.title === 'Pipeline') {
+      if (!permissionsReady) return true
+      return (
+        hasAccess('sales.sales_pipeline', 'READ') ||
+        hasAccess('sales.team_lead_pipeline', 'READ') ||
+        hasAccess('sales.ea_pipeline', 'READ')
+      )
+    }
+
+    if (item.title === 'Targets') {
+      if (!permissionsReady) return true
+      return (
+        hasAccess('sales.targets', 'READ') ||
+        hasAccess('sales.team_lead_targets', 'READ') ||
+        hasAccess('sales.sales_head_targets', 'READ')
+      )
+    }
+
+    let resourceKey = Object.keys(RESOURCE_MAP).find(
       (key) => RESOURCE_MAP[key as keyof typeof RESOURCE_MAP].path === item.url,
     )
+
+    if (!resourceKey) {
+      const originalItem = navItems.find((ni) => ni.title === item.title)
+      if (originalItem) {
+        resourceKey = Object.keys(RESOURCE_MAP).find(
+          (key) => RESOURCE_MAP[key as keyof typeof RESOURCE_MAP].path === originalItem.url,
+        )
+      }
+    }
+
     if (resourceKey && permissionsReady) {
       if (hasAccess(resourceKey, 'READ')) return true
       if (item.permission && hasPermission(user, item.permission)) return true
@@ -303,7 +311,7 @@ export function AppSidebar() {
     .filter((item) => (isEa ? (item.title.startsWith('My ') || EA_MYHRMS_EXTRA.includes(item.title)) : item.title.startsWith('My ')))
     .filter(filterByPermission)
 
-  const crmItems = navigationItems.filter((item) => CRM_TITLES.includes(item.title))
+  const crmItems = navigationItems.filter((item) => CRM_TITLES.includes(item.title)).filter(filterByPermission)
 
   const showHrSection = (user.role === 'HR_HEAD' || isEa) && hrItems.length > 0
   const showMyHrmsSection = myHrmsItems.length > 0
@@ -658,31 +666,36 @@ export function AppSidebar() {
             </div>
           </SidebarGroup>
         )}
-        {user.role !== 'HR_HEAD' && itemsWithUrls.some((item) => item.title.startsWith('Fin ')) && (
-          <SidebarGroup className="pb-1">
-            <button
-              onClick={() => toggleSection('finance')}
-              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
-                <span>Finance</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${openSections.finance ? 'rotate-180' : ''
+        {(() => {
+          const allowedFinanceItems = itemsWithUrls
+            .filter((item) => item.title.startsWith('Fin '))
+            .filter(filterByPermission)
+
+          if (user.role === 'HR_HEAD' || allowedFinanceItems.length === 0) return null
+
+          return (
+            <SidebarGroup className="pb-1">
+              <button
+                onClick={() => toggleSection('finance')}
+                className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  <span>Finance</span>
+                </div>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-200 ${openSections.finance ? 'rotate-180' : ''
+                    }`}
+                />
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.finance ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
                   }`}
-              />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.finance ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-              {openSections.finance && (
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {itemsWithUrls
-                      .filter((item) => item.title.startsWith('Fin '))
-                      .map((item) => {
+              >
+                {openSections.finance && (
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {allowedFinanceItems.map((item) => {
                         const Icon = item.icon
                         const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
                         const badgeCount = getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
@@ -702,12 +715,13 @@ export function AppSidebar() {
                           </SidebarMenuItem>
                         )
                       })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              )}
-            </div>
-          </SidebarGroup>
-        )}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                )}
+              </div>
+            </SidebarGroup>
+          )
+        })()}
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border">
         <SidebarMenu>
@@ -740,14 +754,14 @@ export function AppSidebar() {
               </div>
             </SidebarMenuItem>
           )}
-          {ai && (
-            <SidebarMenuItem>
-              <SidebarMenuButton onClick={ai.openAI} tooltip="mediendAI">
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="mediend AI">
+              <Link href="/training" onClick={closeSidebarOnMobile}>
                 <Sparkles className="text-purple-400" />
-                <span>mediendAI</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          )}
+                <span>mediend AI</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}

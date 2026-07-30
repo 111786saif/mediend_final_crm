@@ -7,7 +7,7 @@ import {
 } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 
-export const CAMPAIGN_MASTER_TYPES = ['source', 'leadSource', 'circle', 'city'] as const
+export const CAMPAIGN_MASTER_TYPES = ['source', 'leadSource', 'circle', 'city', 'subStatus'] as const
 
 export type CampaignMasterType = (typeof CAMPAIGN_MASTER_TYPES)[number]
 
@@ -185,7 +185,7 @@ export async function validateCampaignReferences(input: CampaignReferenceValidat
 }
 
 export async function getCampaignManagementPageData(month: number, year: number) {
-  const [sources, leadSources, circles, cities, departments, campaigns, teamLeads, bdCounts] = await Promise.all([
+  const [sources, leadSources, circles, cities, subStatuses, departments, campaigns, teamLeads, bdCounts] = await Promise.all([
     prisma.crmCampaignSource.findMany({
       orderBy: { name: 'asc' },
     }),
@@ -203,6 +203,9 @@ export async function getCampaignManagementPageData(month: number, year: number)
         circle: true,
       },
       orderBy: [{ circle: { name: 'asc' } }, { name: 'asc' }],
+    }),
+    prisma.crmSubStatusMaster.findMany({
+      orderBy: [{ key: 'asc' }, { value: 'asc' }],
     }),
     prisma.department.findMany({
       orderBy: { name: 'asc' },
@@ -241,7 +244,8 @@ export async function getCampaignManagementPageData(month: number, year: number)
       where: {
         status: EmployeeStatus.ACTIVE,
         user: {
-          role: UserRole.TEAM_LEAD,
+          // ACM is functionally identical to Team Lead for campaign assignment
+          role: { in: [UserRole.TEAM_LEAD, UserRole.ASSISTANT_CATEGORY_MANAGER] },
         },
       },
       include: {
@@ -283,6 +287,7 @@ export async function getCampaignManagementPageData(month: number, year: number)
       leadSources,
       circles,
       cities,
+      subStatuses,
       departments,
     },
     teamLeads: teamLeads.map((employee) => ({
@@ -348,7 +353,8 @@ async function chooseTeamLeadAssignment(campaign: CampaignWithRelations, receive
     (assignment) =>
       assignment.isActive &&
       assignment.teamLeadEmployee.status === EmployeeStatus.ACTIVE &&
-      assignment.teamLeadEmployee.user.role === UserRole.TEAM_LEAD &&
+      (assignment.teamLeadEmployee.user.role === UserRole.TEAM_LEAD ||
+        assignment.teamLeadEmployee.user.role === UserRole.ASSISTANT_CATEGORY_MANAGER) &&
       (!requiredDepartmentId || assignment.teamLeadEmployee.departmentId === requiredDepartmentId)
   )
 

@@ -30,6 +30,12 @@ const masterCreateSchema = z.discriminatedUnion('type', [
     circleId: z.string().min(1),
     isActive: z.boolean().optional().default(true),
   }),
+  z.object({
+    type: z.literal('subStatus'),
+    key: z.number().int().min(1),
+    value: z.string().trim().min(1).max(255),
+    isActive: z.boolean().optional().default(true),
+  }),
 ])
 
 export async function POST(request: Request) {
@@ -127,6 +133,28 @@ export async function POST(request: Request) {
         metadata: created,
       })
       return successResponse(created, 'Circle created successfully')
+    }
+
+    if (data.type === 'subStatus') {
+      const created = await prisma.crmSubStatusMaster.create({
+        data: {
+          key: data.key,
+          value: data.value,
+          isActive: data.isActive,
+        },
+      })
+      await logCrmActivity({
+        action: 'CRM_MASTER_CREATED',
+        entityType: 'CRM_MASTER_SUB_STATUS',
+        entityId: created.id,
+        entityLabel: `${created.key} · ${created.value}`,
+        actorUserId: currentUser.id,
+        actorRole: currentUser.role,
+        request,
+        summary: `Created CRM sub status "${created.value}"`,
+        metadata: created,
+      })
+      return successResponse(created, 'Sub status created successfully')
     }
 
     const circle = await prisma.crmCampaignCircle.findUnique({

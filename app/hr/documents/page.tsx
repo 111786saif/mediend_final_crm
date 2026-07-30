@@ -13,11 +13,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPost, apiPatch } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { useState, useMemo, useEffect } from 'react'
-import { FileText, Plus, ExternalLink, Mail, Upload, Search, ChevronRight, Check, Clock, Eye, ArrowLeft, Pencil } from 'lucide-react'
+import { FileText, Plus, ExternalLink, Mail, Upload, Search, ChevronRight, Check, Clock, Eye, ArrowLeft, Pencil, Settings2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
+import Link from 'next/link'
+import { EditDocumentDialog } from '@/components/hr/edit-document-dialog'
+import { DocumentRichEditor } from '@/components/hr/document-rich-editor'
+import { extractBodyHtml } from '@/lib/hrms/document-merge'
 
 interface Employee {
   id: string
@@ -104,11 +108,10 @@ function DocStatusCell({ docs }: { docs: EmployeeDocument[] }) {
 
 export default function HRDocumentsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [dialogMode, setDialogMode] = useState<'generate' | 'edit'>('generate')
-  const [editingDocId, setEditingDocId] = useState<string | null>(null)
-  const [editingDocMeta, setEditingDocMeta] = useState<Record<string, unknown> | null>(null)
   const [sheetEmployee, setSheetEmployee] = useState<Employee | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [richEditDocId, setRichEditDocId] = useState<string | null>(null)
+  const [richEditOpen, setRichEditOpen] = useState(false)
   const queryClient = useQueryClient()
 
   const { data: employees = [] } = useQuery<Employee[]>({
@@ -156,6 +159,7 @@ export default function HRDocumentsPage() {
       applicantName?: string
       applicantEmail?: string
       metadata?: Record<string, unknown>
+      contentHtml?: string
     }) => {
       const response = await apiPost<{ document: EmployeeDocument; htmlContent: string }>('/api/hr/documents', data)
       return response
@@ -163,9 +167,6 @@ export default function HRDocumentsPage() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['hr-documents'] })
       setIsDialogOpen(false)
-      setEditingDocId(null)
-      setEditingDocMeta(null)
-      setDialogMode('generate')
       toast.success('Document generated successfully')
       window.open(`/hr/documents/${data.document.id}/view`, '_blank', 'noopener,noreferrer')
     },
@@ -174,33 +175,13 @@ export default function HRDocumentsPage() {
     },
   })
 
-  const editMutation = useMutation({
-    mutationFn: async ({ id, metadata }: { id: string; metadata: Record<string, unknown> }) => {
-      const response = await apiPatch<{ document: EmployeeDocument }>(`/api/hr/documents/${id}`, { metadata })
-      return response
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['hr-documents'] })
-      setIsDialogOpen(false)
-      setEditingDocId(null)
-      setEditingDocMeta(null)
-      setDialogMode('generate')
-      toast.success('Document updated successfully')
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update document')
-    },
-  })
-
   const handleViewDocument = (docId: string) => {
     window.open(`/hr/documents/${docId}/view`, '_blank', 'noopener,noreferrer')
   }
 
   const handleEditDocument = (doc: EmployeeDocument) => {
-    setEditingDocId(doc.id)
-    setEditingDocMeta(doc.metadata)
-    setDialogMode('edit')
-    setIsDialogOpen(true)
+    setRichEditDocId(doc.id)
+    setRichEditOpen(true)
   }
 
   const invalidateDocuments = () => {
@@ -208,59 +189,56 @@ export default function HRDocumentsPage() {
   }
 
   const canEditDoc = (doc: EmployeeDocument) => {
-    return doc.documentType === 'EXIT_INTERVIEW_FORM' && !doc.acknowledgedAt
+    return doc.documentType !== 'CUSTOM' && !doc.acknowledgedAt
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h1 className="text-3xl font-bold">Document Generation</h1>
-          <p className="text-muted-foreground mt-1">Generate and manage employee documents</p>
+          <p className="text-muted-foreground mt-1">Generate, edit, and manage employee documents</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          if (!open) {
-            setEditingDocId(null)
-            setEditingDocMeta(null)
-            setDialogMode('generate')
-          }
-          setIsDialogOpen(open)
-        }}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Generate Document
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>
-                {dialogMode === 'edit' ? 'Edit Exit Interview Form' : 'Generate Employee Document'}
-              </DialogTitle>
-              <DialogDescription>
-                {dialogMode === 'edit' ? 'Update the exit interview form (editing is locked after employee acknowledgment)' : 'Select an employee and document type to generate'}
-              </DialogDescription>
-            </DialogHeader>
-            {dialogMode === 'edit' && editingDocId && editingDocMeta ? (
-              <ExitInterviewForm
-                employees={employees}
-                preselectedEmployeeId={editingDocMeta.employeeId as string | undefined}
-                initialValues={editingDocMeta}
-                onSubmit={(metadata) => editMutation.mutate({ id: editingDocId, metadata })}
-                isLoading={editMutation.isPending}
-                isEdit
-              />
-            ) : (
+        <div className="flex items-center gap-2">
+          <Button variant="outline" asChild>
+            <Link href="/hr/documents/templates">
+              <Settings2 className="h-4 w-4 mr-2" />
+              Manage Templates
+            </Link>
+          </Button>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Generate Document
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Generate Employee Document</DialogTitle>
+                <DialogDescription>
+                  Select an employee and document type, then edit the letter before saving
+                </DialogDescription>
+              </DialogHeader>
               <GenerateDocumentForm
                 employees={employees}
                 preselectedEmployeeId={sheetEmployee?.id}
                 onSubmit={(data) => generateMutation.mutate(data)}
                 isLoading={generateMutation.isPending}
               />
-            )}
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
+
+      <EditDocumentDialog
+        documentId={richEditDocId}
+        open={richEditOpen}
+        onOpenChange={(open) => {
+          setRichEditOpen(open)
+          if (!open) setRichEditDocId(null)
+        }}
+      />
 
       <div className="grid gap-4 md:grid-cols-4">
         {DOC_TYPES_FOR_TABLE.map((key) => {
@@ -378,9 +356,6 @@ export default function HRDocumentsPage() {
                   <Button
                     size="sm"
                     onClick={() => {
-                      setDialogMode('generate')
-                      setEditingDocId(null)
-                      setEditingDocMeta(null)
                       setIsDialogOpen(true)
                     }}
                   >
@@ -647,11 +622,19 @@ function GenerateDocumentForm({
 }: {
   employees: Employee[]
   preselectedEmployeeId?: string
-  onSubmit: (data: { employeeId?: string; documentType: string; applicantName?: string; applicantEmail?: string; metadata?: Record<string, unknown> }) => void
+  onSubmit: (data: {
+    employeeId?: string
+    documentType: string
+    applicantName?: string
+    applicantEmail?: string
+    metadata?: Record<string, unknown>
+    contentHtml?: string
+  }) => void
   isLoading: boolean
 }) {
   const [step, setStep] = useState<1 | 2 | 'preview'>(1)
   const [previewHtml, setPreviewHtml] = useState<string | null>(null)
+  const [editableHtml, setEditableHtml] = useState('')
   const [previewing, setPreviewing] = useState(false)
   const [formData, setFormData] = useState({
     documentType: '',
@@ -743,7 +726,9 @@ function GenerateDocumentForm({
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Preview failed')
-      setPreviewHtml(data.data?.htmlContent || data.htmlContent)
+      const html = data.data?.htmlContent || data.htmlContent
+      setPreviewHtml(html)
+      setEditableHtml(extractBodyHtml(html || ''))
       setStep('preview')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to preview')
@@ -757,8 +742,14 @@ function GenerateDocumentForm({
     onSubmit(buildPayload())
   }
 
+  const handleGenerateFromEditor = () => {
+    onSubmit({
+      ...buildPayload(),
+      contentHtml: editableHtml,
+    })
+  }
+
   if (formData.documentType === 'EXIT_INTERVIEW_FORM' && formData.employeeId) {
-    const emp = employees.find((e) => e.id === formData.employeeId)
     return (
       <ExitInterviewForm
         employees={employees}
@@ -833,19 +824,17 @@ function GenerateDocumentForm({
       <div className="space-y-4">
         <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2 text-sm">
           <Eye className="h-4 w-4 text-muted-foreground shrink-0" />
-          <span className="font-medium">Document Preview</span>
+          <span className="font-medium">Edit Document</span>
           <span className="text-muted-foreground">·</span>
           <span className="text-muted-foreground">{DOCUMENT_TYPES[formData.documentType]}</span>
         </div>
-        <div className="border rounded-lg overflow-hidden max-h-[400px] overflow-y-auto bg-white">
-          <div className="p-4" dangerouslySetInnerHTML={{ __html: previewHtml }} />
-        </div>
+        <DocumentRichEditor content={editableHtml} onChange={setEditableHtml} minHeight="420px" />
         <div className="flex justify-between pt-2">
           <Button type="button" variant="outline" onClick={() => setStep(2)}>
             <ArrowLeft className="h-4 w-4 mr-1" />
-            Edit
+            Back to Fields
           </Button>
-          <Button onClick={() => onSubmit(buildPayload())} disabled={isLoading}>
+          <Button onClick={handleGenerateFromEditor} disabled={isLoading}>
             {isLoading ? 'Generating...' : 'Generate & Save'}
           </Button>
         </div>

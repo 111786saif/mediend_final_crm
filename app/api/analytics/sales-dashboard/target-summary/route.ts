@@ -1,18 +1,14 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Prisma, UserRole } from '@/generated/prisma/client'
+import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
-
-const ALLOWED_ROLES: UserRole[] = [
-  UserRole.MD,
-  UserRole.ADMIN,
-  UserRole.SALES_HEAD,
-  UserRole.EXECUTIVE_ASSISTANT,
-  UserRole.TEAM_LEAD,
-]
+import {
+  canAccessSalesDashboard,
+  getSalesDashboardBdIdFilter,
+} from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 
 /**
  * GET /api/analytics/sales-dashboard/target-summary?startDate=&endDate=
@@ -23,7 +19,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
-    if (!ALLOWED_ROLES.includes(user.role as UserRole)) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -39,7 +35,10 @@ export async function GET(request: NextRequest) {
     const periodStart = dateFilter.gte as Date
     const periodEnd = dateFilter.lte as Date
 
-    let teamScope: Prisma.LeadWhereInput = {}
+    const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+    const teamScope: Prisma.LeadWhereInput = bdIdFilter
+      ? { bdId: { in: bdIdFilter } }
+      : {}
     let targetScope: Prisma.TargetWhereInput = {
       targetType: 'TEAM',
       periodStartDate: { lte: periodEnd },
@@ -47,10 +46,7 @@ export async function GET(request: NextRequest) {
       metric: { in: ['IPD_DONE', 'SURGERIES_DONE'] },
     }
 
-    if (user.role === UserRole.TEAM_LEAD) {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      teamScope = { bdId: { in: [user.id, ...subIds] } }
-
+    if (isSubtreeScopedSalesRole(user.role)) {
       const emp = await prisma.employee.findUnique({
         where: { userId: user.id },
         select: { id: true },

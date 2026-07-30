@@ -387,10 +387,10 @@ export function isDoctorAdminMasterType(type: string): type is DoctorAdminMaster
 
 export async function listDoctorAdminMasters(
   type: DoctorAdminMasterType,
-  search: string,
+  search: string | null | undefined,
   includeInactive: boolean
 ) {
-  return handlers[type].list(search.trim(), includeInactive)
+  return handlers[type].list(String(search ?? '').trim(), includeInactive)
 }
 
 export async function createDoctorAdminMaster(type: DoctorAdminMasterType, data: Record<string, unknown>) {

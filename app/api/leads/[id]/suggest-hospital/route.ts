@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 import { CaseStage, Prisma } from '@/generated/prisma/client'
 
@@ -17,7 +18,7 @@ async function gateSuggestHospitalList(
   user: NonNullable<ReturnType<typeof getSessionFromRequest>>,
   leadId: string
 ) {
-  if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
+  if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
     return errorResponse('Forbidden: Only BD or Team Lead can suggest new hospitals', 403)
   }
 
@@ -87,7 +88,7 @@ export async function POST(
     const body = await request.json()
     const data = suggestHospitalSchema.parse(body)
 
-    if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden: Only BD or Team Lead can suggest new hospitals', 403)
     }
 

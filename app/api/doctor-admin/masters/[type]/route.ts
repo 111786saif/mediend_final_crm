@@ -1,6 +1,13 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import {
+  booleanStringField,
+  nullableOptionalStringField,
+  optionalNumberField,
+  optionalStringField,
+  requiredStringField,
+} from '@/lib/doctor-api-validation'
 import { getDoctorAdminUser } from '@/lib/doctor-admin/auth'
 import {
   createDoctorAdminMaster,
@@ -10,27 +17,24 @@ import {
 } from '@/lib/doctor-admin/masters'
 
 const listSchema = z.object({
-  search: z.string().optional().default(''),
-  includeInactive: z
-    .enum(['true', 'false'])
-    .optional()
-    .transform(value => value !== 'false'),
+  search: optionalStringField('Search').default(''),
+  includeInactive: booleanStringField('includeInactive', { defaultValue: true }),
 })
 
 const implantCreateSchema = z.object({
-  name: z.string().trim().min(1),
-  code: z.string().trim().optional().nullable(),
-  category: z.string().trim().optional().nullable(),
-  manufacturer: z.string().trim().optional().nullable(),
-  unitCost: z.union([z.number(), z.string(), z.null()]).optional(),
-  description: z.string().trim().optional().nullable(),
+  name: requiredStringField('Implant name'),
+  code: nullableOptionalStringField('Implant code'),
+  category: nullableOptionalStringField('Category'),
+  manufacturer: nullableOptionalStringField('Manufacturer'),
+  unitCost: optionalNumberField('Unit cost', { min: 0, nullable: true }),
+  description: nullableOptionalStringField('Description'),
   isActive: z.boolean().optional(),
 })
 
 const optionCreateSchema = z.object({
-  code: z.string().trim().min(1),
-  label: z.string().trim().min(1),
-  displayOrder: z.union([z.number(), z.string()]).optional(),
+  code: requiredStringField('Code'),
+  label: requiredStringField('Label'),
+  displayOrder: optionalNumberField('Display order', { min: 0 }),
   isActive: z.boolean().optional(),
 })
 

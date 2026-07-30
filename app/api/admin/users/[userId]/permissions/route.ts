@@ -220,64 +220,102 @@ export async function PATCH(
       return errorResponse(`Resources not found: ${invalidIds.slice(0, 5).join(', ')}`, 404)
     }
 
-    // Fetch existing assignments for audit log
+    // Fetch existing assignments for comparison and audit log
     const existingAssignments = await prisma.permissionAssignment.findMany({
       where: {
         userId,
         resourceId: { in: resourceIds },
       },
-      select: { resourceId: true, permissionLevel: true, canGrant: true },
+      select: { id: true, resourceId: true, permissionLevel: true, canGrant: true },
     })
     const existingMap = new Map(
       existingAssignments.map((a) => [a.resourceId, a])
     )
 
-    // Upsert all permission assignments in a transaction with extended timeout
-    await prisma.$transaction(
-      async (tx) => {
-        for (const item of assignments) {
-          await tx.permissionAssignment.upsert({
-            where: {
-              userId_resourceId: {
-                userId,
-                resourceId: item.resourceId,
-              },
-            },
-            update: {
-              permissionLevel: item.permissionLevel,
-              canGrant: item.canGrant,
-              grantedById: actorUser.id,
-            },
-            create: {
-              userId,
-              resourceId: item.resourceId,
-              permissionLevel: item.permissionLevel,
-              canGrant: item.canGrant,
-              grantedById: actorUser.id,
-            },
+    const toCreate: any[] = []
+    const toUpdate: { id: string; permissionLevel: PermissionLevel; canGrant: boolean }[] = []
+    const auditLogs: any[] = []
+
+    for (const item of assignments) {
+      const existing = existingMap.get(item.resourceId)
+
+      if (!existing) {
+        // Only create if level is not NONE or if canGrant is enabled
+        if (item.permissionLevel !== 'NONE' || item.canGrant) {
+          toCreate.push({
+            subjectType: SubjectType.USER,
+            userId,
+            resourceId: item.resourceId,
+            permissionLevel: item.permissionLevel,
+            canGrant: item.canGrant,
+            grantedById: actorUser.id,
+          })
+          auditLogs.push({
+            actorId: actorUser.id,
+            targetUserId: userId,
+            resourceId: item.resourceId,
+            oldLevel: null,
+            newLevel: item.permissionLevel,
+            oldCanGrant: null,
+            newCanGrant: item.canGrant,
           })
         }
-      },
-      { timeout: 30000 } // 30s timeout for large batch
-    )
-
-    // Bulk-insert audit logs outside the transaction (non-critical)
-    await prisma.permissionAuditLog.createMany({
-      data: assignments.map((item) => {
-        const existing = existingMap.get(item.resourceId)
-        return {
-          actorId: actorUser.id,
-          targetUserId: userId,
-          resourceId: item.resourceId,
-          oldLevel: existing?.permissionLevel ?? null,
-          newLevel: item.permissionLevel,
-          oldCanGrant: existing?.canGrant ?? null,
-          newCanGrant: item.canGrant,
+      } else {
+        // Check if values have actually changed
+        if (
+          existing.permissionLevel !== item.permissionLevel ||
+          existing.canGrant !== item.canGrant
+        ) {
+          toUpdate.push({
+            id: existing.id,
+            permissionLevel: item.permissionLevel,
+            canGrant: item.canGrant,
+          })
+          auditLogs.push({
+            actorId: actorUser.id,
+            targetUserId: userId,
+            resourceId: item.resourceId,
+            oldLevel: existing.permissionLevel,
+            newLevel: item.permissionLevel,
+            oldCanGrant: existing.canGrant,
+            newCanGrant: item.canGrant,
+          })
         }
-      }),
-    })
+      }
+    }
 
-    return successResponse({ count: assignments.length })
+    // Execute operations if changes are detected
+    if (toCreate.length > 0 || toUpdate.length > 0) {
+      await prisma.$transaction(
+        async (tx) => {
+          if (toCreate.length > 0) {
+            await tx.permissionAssignment.createMany({
+              data: toCreate,
+            })
+          }
+          for (const updateItem of toUpdate) {
+            await tx.permissionAssignment.update({
+              where: { id: updateItem.id },
+              data: {
+                permissionLevel: updateItem.permissionLevel,
+                canGrant: updateItem.canGrant,
+                grantedById: actorUser.id,
+              },
+            })
+          }
+        },
+        { timeout: 30000 }
+      )
+
+      // Bulk-insert audit logs for modified records only
+      if (auditLogs.length > 0) {
+        await prisma.permissionAuditLog.createMany({
+          data: auditLogs,
+        })
+      }
+    }
+
+    return successResponse({ count: auditLogs.length })
   } catch (error) {
     console.error('Error batch updating permissions:', error)
     return errorResponse('Failed to batch update permissions', 500)

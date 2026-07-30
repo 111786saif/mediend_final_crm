@@ -11,6 +11,7 @@ export const RESOURCE_MAP = {
   "insurance_pl": { label: "Insurance & P/L", component: "InsurancePlGroup" },
   "finance": { label: "Finance & Accounts", component: "FinanceGroup" },
   "actions": { label: "System Actions", component: "SystemActionsGroup" },
+  "crm": { label: "CRM", component: "CrmGroup" },
 
   // SECTIONS / PAGES
 
@@ -28,6 +29,7 @@ export const RESOURCE_MAP = {
   "main.master_data": { path: "/master-data", component: "MasterDataPage" },
   "main.dept_targets": { path: "/md/targets", component: "DeptTargetsPage" },
   "main.chat": { path: "/chat", component: "ChatPage" },
+  "main.training": { path: "/training", component: "TrainingPage" },
   "main.md_messages": { path: "/md/anonymous-messages", component: "MDMessagesPage" },
   "main.md_appointments": { path: "/md/appointments", component: "MDAppointmentsPage" },
   "main.company_pnl": { path: "/finance/pnl", component: "CompanyPnLPage" },
@@ -41,9 +43,21 @@ export const RESOURCE_MAP = {
   "main.md_outstanding": { path: "/md/outstanding", component: "MDOutstandingPage" },
   "main.incentive": { path: "/incentives", component: "IncentivesPage" },
   "main.cumulative_report": { path: "/cumulative-report", component: "CumulativeReportPage" },
+  "main.ipd_calendar": { path: "/ipd-calendar", component: "IPDCalendarPage" },
+  "main.doctor_admin": { path: "/executive-assistant/doctor-admin", component: "DoctorAdminPage" },
+
+  // CRM Group Pages
+  "crm.campaigns": { path: "/crm/campaigns", component: "CrmCampaignsPage" },
+  "crm.incoming_leads": { path: "/crm/incoming-leads", component: "CrmIncomingLeadsPage" },
+  "crm.kpis": { path: "/crm/kpis", component: "CrmKpisPage" },
+  "crm.activity": { path: "/crm/activity", component: "CrmActivityPage" },
+  "crm.masters": { path: "/crm/masters", component: "CrmMastersPage" },
+  "crm.access_matrix": { path: "/crm/access-matrix", component: "CrmAccessMatrixPage" },
+  "crm.churn_rules": { path: "/crm/churn-rules", component: "CrmChurnRulesPage" },
 
 
   // HRM Group Pages
+  "hrm.hr_dashboard": { path: "/hr/dashboard", component: "HRDashboardPage" },
   "hrm.attendance_normalizations": { path: "/hr/attendance-leaves", component: "AttendanceLeavesPage" },
   "hrm.people_org": { path: "/hr/people", component: "PeopleOrgPage" },
   "hrm.onboarding": { path: "/hr/onboarding", component: "HROnboardingPage" },
@@ -60,14 +74,20 @@ export const RESOURCE_MAP = {
 
   // Sales Group Pages
   "sales.sales_dashboard": { path: "/sales/dashboard", component: "SalesDashboardPage" },
+  "sales.md_sales_dashboard": { path: "/md/sales", component: "SalesDashboardPage" },
   "sales.dm_dashboard": { path: "/digital-marketing/dashboard", component: "DMDashboardPage" },
   "sales.case_tracker": { path: "/bd/kyp", component: "CaseTrackerPage" },
   "sales.pending_surgery": { path: "/reports/patient-cards-pending-surgery", component: "PendingSurgeryPage" },
   "sales.targets": { path: "/sales/targets", component: "TargetsPage" },
+  "sales.team_lead_targets": { path: "/team-lead/targets", component: "TeamLeadTargetsPage" },
+  "sales.sales_head_targets": { path: "/sales-head/targets", component: "SalesHeadTargetsPage" },
   "sales.sales_pnl": { path: "/sales/pnl", component: "SalesPnLPage" },
   "sales.campaign_cpl": { path: "/digital-marketing/cpl", component: "CampaignCPLPage" },
   "sales.sales_pipeline": { path: "/bd/pipeline", component: "SalesPipelinePage" },
   "sales.team_lead_pipeline": { path: "/team-lead/pipeline", component: "TeamLeadPipelinePage" },
+  "sales.ea_pipeline": { path: "/executive-assistant/pipeline", component: "EAPipelinePage" },
+  "sales.blueprint_dashboard": { path: "/sales/blueprint", component: "BluePrintDashboardPage" },
+  "sales.opd_monitoring": { path: "/opd-monitoring", component: "OpdMonitoringPage" },
 
   // Insurance Group Pages
   "insurance_pl.insurance": { path: "/insurance/dashboard", component: "InsurancePage" },
@@ -92,6 +112,10 @@ export const RESOURCE_MAP = {
   "finance.fin_team_approvals": { path: "/finance/team-approvals", component: "FinTeamApprovalsPage" },
   "finance.md_team_approvals": { path: "/md/md-approvals", component: "MDTeamApprovalsPage" },
   "finance.fin_reports": { path: "/finance/reports", component: "FinReportsPage" },
+  "finance.fin_invoice_requests": { path: "/finance/invoice-requests", component: "FinInvoiceRequestsPage" },
+  "finance.fin_doctor_payoff": { path: "/finance/doctor-payoff-requests", component: "FinDoctorPayoffPage" },
+  "finance.fin_sales_team_cost": { path: "/finance/sales-team-cost", component: "FinSalesTeamCostPage" },
+  "finance.master_seating_cost": { path: "/finance/master-seating-cost", component: "MasterSeatingCostPage" },
 
   // ENTITIES (Legacy Leaf Actions & static mapping)
   "leads.table.lead.column.phoneNumber": { component: "PhoneNumberColumn" },
@@ -118,6 +142,16 @@ export const RESOURCE_MAP = {
   "sales.team_lead_pipeline.table.lead.column.alternateNumber": { label: "Alternate Phone Number", component: "AlternatePhoneNumber" },
   "sales.team_lead_pipeline.table.lead.column.patientEmail": { label: "Patient Email Address", component: "PatientEmailAddress" },
   "sales.team_lead_pipeline.table.lead.column.netProfit": { label: "Net Profit Amount", component: "NetProfitAmount" },
+
+  // Blueprint Dashboard Table Column Registry Map
+  "sales.blueprint_dashboard.table.blueprint.column.name": { label: "Blueprint: Name Column", component: "BlueprintNameColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.team": { label: "Blueprint: Team Column", component: "BlueprintTeamColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.teamSize": { label: "Blueprint: Team Size Column", component: "BlueprintTeamSizeColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.targetSalaryMin": { label: "Blueprint: Target (Salary Min) Column", component: "BlueprintTargetSalaryMinColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.target": { label: "Blueprint: Target Column", component: "BlueprintTargetColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.costTotalSpend": { label: "Blueprint: Cost Total Spend Column", component: "BlueprintCostTotalSpendColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.netProfitActual": { label: "Blueprint: Net Profit Actual Column", component: "BlueprintNetProfitActualColumn" },
+  "sales.blueprint_dashboard.table.blueprint.column.mediendProfit": { label: "Blueprint: MediEnd Profit Column", component: "BlueprintMediendProfitColumn" },
 
   // ============================================
   // NESTED LEVEL 3/4 MATRIX EXTENSIONS (ALL TABLES)
@@ -279,6 +313,26 @@ export const RESOURCE_MAP = {
   "sales.team_lead_pipeline.table.lead.column.doctor": { label: "Table Column: Doctor", component: "DoctorColumn" },
   "sales.team_lead_pipeline.table.lead.column.stage": { label: "Table Column: Stage", component: "StageColumn" },
   "sales.team_lead_pipeline.table.lead.column.actions": { label: "Table Column: Actions", component: "ActionsColumn" },
+
+  // OPD Monitoring (sales.opd_monitoring)
+  "sales.opd_monitoring.analytics": { label: "OPD Monitoring Analytics Summary", component: "OpdMonitoringAnalytics" },
+  "sales.opd_monitoring.analytics.scheduled": { label: "Scheduled Card", component: "OpdScheduledCard" },
+  "sales.opd_monitoring.analytics.done": { label: "Done Card", component: "OpdDoneCard" },
+  "sales.opd_monitoring.analytics.no_show": { label: "No Show Card", component: "OpdNoShowCard" },
+  "sales.opd_monitoring.analytics.cancelled": { label: "Cancelled Card", component: "OpdCancelledCard" },
+
+  "sales.opd_monitoring.daily": { label: "OPD Monitoring: Daily View Tab", component: "OpdDailyViewTab" },
+  "sales.opd_monitoring.doctor": { label: "OPD Monitoring: Doctor-wise View Tab", component: "OpdDoctorViewTab" },
+  "sales.opd_monitoring.overdue": { label: "OPD Monitoring: Pending / Overdue Tab", component: "OpdOverdueTab" },
+
+  "sales.opd_monitoring.table": { label: "OPD Monitoring Table", component: "OpdMonitoringTable" },
+  "sales.opd_monitoring.table.lead.column.patient_name": { label: "Table Column: Patient Name", component: "OpdPatientNameColumn" },
+  "sales.opd_monitoring.table.lead.column.lead_ref": { label: "Table Column: Lead Ref", component: "OpdLeadRefColumn" },
+  "sales.opd_monitoring.table.lead.column.doctor": { label: "Table Column: Doctor", component: "OpdDoctorColumn" },
+  "sales.opd_monitoring.table.lead.column.hospital": { label: "Table Column: Hospital", component: "OpdHospitalColumn" },
+  "sales.opd_monitoring.table.lead.column.date": { label: "Table Column: Appointment Date", component: "OpdAppointmentDateColumn" },
+  "sales.opd_monitoring.table.lead.column.status": { label: "Table Column: Status", component: "OpdStatusColumn" },
+  "sales.opd_monitoring.table.lead.column.bd": { label: "Table Column: BD", component: "OpdBdColumn" },
 
   // --- MODULE 5: INSURANCE & P/L ---
   "insurance_pl.pl_surgery.analytics": { label: "PL Surgery Analytics Section", component: "PLSurgeryAnalytics" },

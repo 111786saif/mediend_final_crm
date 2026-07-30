@@ -4,7 +4,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { Prisma } from '@/generated/prisma/client'
-import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
+import { getLeadAccessSubordinateIds } from '@/lib/lead-access-api'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,9 +29,9 @@ export async function GET(request: NextRequest) {
       if (status) {
         where.status = status as any
       }
-    } else if (user.role === 'TEAM_LEAD') {
-      // Team Lead can access their own leads + all subordinates' leads
-      const subordinateIds = await getTeamLeadLeadAccessBdUserIds(user.id)
+    } else if (isSubtreeScopedSalesRole(user.role)) {
+      // TL / ACM / CM can access their own leads + all subordinates' leads
+      const subordinateIds = (await getLeadAccessSubordinateIds(user)) ?? []
       where.OR = [
         { submittedById: user.id },
         { lead: { bdId: user.id } },

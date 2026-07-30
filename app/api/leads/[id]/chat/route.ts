@@ -2,8 +2,9 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canAccessLead } from '@/lib/rbac'
-import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
+import { getLeadAccessSubordinateIds } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 import { ChatMessageType } from '@/generated/prisma/client'
 
@@ -31,8 +32,7 @@ export async function GET(
       select: { id: true, bdId: true },
     })
     if (!lead) return errorResponse('Lead not found', 404)
-    const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    const subordinateIds = await getLeadAccessSubordinateIds(user)
     if (!canAccessLead(user, lead.bdId, subordinateIds))
       return errorResponse('Forbidden', 403)
 
@@ -77,8 +77,7 @@ export async function POST(
       select: { id: true, bdId: true },
     })
     if (!lead) return errorResponse('Lead not found', 404)
-    const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    const subordinateIds = await getLeadAccessSubordinateIds(user)
     if (!canAccessLead(user, lead.bdId, subordinateIds))
       return errorResponse('Forbidden', 403)
 
@@ -111,8 +110,8 @@ export async function POST(
     if (leadWithBD) {
       const notificationUsers: string[] = []
       
-      if (user.role === 'BD' || user.role === 'TEAM_LEAD') {
-        // BD sent message, notify Insurance users
+      if (isSalesLeadWorkerRole(user.role)) {
+        // BD / TL / ACM / CM sent message, notify Insurance users
         const insuranceUsers = await prisma.user.findMany({
           where: {
             role: { in: ['INSURANCE_HEAD'] },

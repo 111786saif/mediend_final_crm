@@ -4,6 +4,8 @@ import type { SessionUser } from '@/lib/auth'
 export const CHAT_ALLOWED_ROLES = [
   'BD',
   'TEAM_LEAD',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'CATEGORY_MANAGER',
   'INSURANCE',
   'INSURANCE_HEAD',
   'PL_HEAD',

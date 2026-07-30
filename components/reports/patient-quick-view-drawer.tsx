@@ -15,6 +15,7 @@ import { ActivityTimeline } from '@/components/case/activity-timeline'
 import { StageProgress } from '@/components/case/stage-progress'
 import { CashStageProgress } from '@/components/case/cash-stage-progress'
 import { CaseStage, FlowType } from '@/generated/prisma/enums'
+import { hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import { cn } from '@/lib/utils'
 import {
   Loader2,
@@ -42,6 +43,8 @@ interface LeadDetail {
   pipelineStage?: string
   flowType?: FlowType | null
   bd?: { name?: string } | null
+  status?: string | null
+  opdScheduleDate?: string | null
   insuranceInitiateForm?: { id?: string } | null
   admissionRecord?: { ipdStatus?: string | null } | null
 }
@@ -193,10 +196,14 @@ export function PatientQuickViewDrawer({
               </div>
               <div className="rounded-lg border border-border/60 bg-muted/20 p-3">
                 {lead.flowType === FlowType.CASH ? (
-                  <CashStageProgress currentStage={lead.caseStage} />
+                  <CashStageProgress
+                    currentStage={lead.caseStage}
+                    hasOpdScheduled={hasLeadOpdScheduled(lead)}
+                  />
                 ) : (
                   <StageProgress
                     currentStage={lead.caseStage}
+                    hasOpdScheduled={hasLeadOpdScheduled(lead)}
                     hasInitiateForm={!!lead.insuranceInitiateForm?.id}
                     hasIpdMark={!!lead.admissionRecord?.ipdStatus}
                     compact

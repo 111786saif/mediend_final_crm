@@ -9,8 +9,12 @@ import { getAvatarColor } from '@/lib/avatar-colors'
 import { CheckCircle2, CircleDot, Loader2, MessageSquareQuote, PhoneCall, UserRoundPlus } from 'lucide-react'
 import { toast } from 'sonner'
 import { apiGet, apiPatch } from '@/lib/api-client'
+import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
-import { LEAD_STATUS_OPTIONS } from '@/lib/lead-status-options'
+import {
+  CRM_LEAD_STATUS_OPTIONS,
+  CRM_MODE_OF_PAYMENT_OPTIONS,
+} from '@/lib/lead-status-options'
 import {
   isStatusRequiringAgeSex,
   isStatusRequiringFollowUpDate,
@@ -37,19 +41,6 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 
 const CRM_LEAD_SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
-const MODE_OF_PAYMENT_OPTIONS = ['Cash', 'Cashless', 'EMI', 'Reimbursement'] as const
-const CRM_ADDITIONAL_STATUS_OPTIONS = [
-  'DNP-1',
-  'DNP-2',
-  'DNP-3',
-  'DNP-4',
-  'DNP-5',
-  'DNP Exhausted',
-] as const
-
-const CRM_EDIT_LEAD_STATUS_OPTIONS = [
-  ...new Set([...LEAD_STATUS_OPTIONS, ...CRM_ADDITIONAL_STATUS_OPTIONS]),
-]
 
 function formatDisplayValue(value: unknown, fallback = '—') {
   if (typeof value !== 'string') return fallback
@@ -220,6 +211,7 @@ export function LeadEditDrawer({
   const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
   const [modeOfPaymentDraft, setModeOfPaymentDraft] = useState<string | null>(null)
   const [statusChangeRemarkDraft, setStatusChangeRemarkDraft] = useState('')
+  const [expandedRemarksLeadId, setExpandedRemarksLeadId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
   const { data: lead, isLoading, error } = useQuery<LeadEditLead, Error>({
@@ -275,8 +267,14 @@ export function LeadEditDrawer({
   const currentFollowUpDate = toDateInputValue(lead?.followUpDate)
   const currentModeOfPayment = lead?.modeOfPayment ?? ''
   const trimmedStatusChangeRemark = statusChangeRemarkDraft.trim()
+  const remarkHistory = remarksData?.remarks ?? []
   const previousRemark = remarksData?.latestRemark ?? null
+  const olderRemarks = previousRemark
+    ? remarkHistory.filter((remark) => remark.id !== previousRemark.id)
+    : remarkHistory
   const activityLogs = activityData?.logs ?? []
+  const remarkDirty = trimmedStatusChangeRemark.length > 0
+  const showAllRemarks = Boolean(leadId) && expandedRemarksLeadId === leadId
 
   const statusChanged = effectiveLeadStatus !== currentStatus
   const followUpDateChanged = effectiveFollowUpDate !== currentFollowUpDate
@@ -292,21 +290,31 @@ export function LeadEditDrawer({
   const assigneeDirty = effectiveAssigneeId !== currentAssigneeId
 
   const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged
-  const isDirty = profileDirty || assigneeDirty || statusDirty
+  const isDirty = profileDirty || assigneeDirty || statusDirty || remarkDirty
+  const saveDisabled =
+    saving ||
+    isLoading ||
+    isLoadingMeta ||
+    !lead ||
+    !isDirty ||
+    (profileDirty && !canEditLeadProfile) ||
+    (assigneeDirty && !canReassignLead) ||
+    (statusDirty && !canUpdateLeadStatus) ||
+    ((statusChanged || remarkDirty) && !canEditRemarks)
 
   const statusOptions = Array.from(
     new Set(
       effectiveLeadStatus && effectiveLeadStatus.trim().length > 0
-        ? [effectiveLeadStatus, ...CRM_EDIT_LEAD_STATUS_OPTIONS]
-        : CRM_EDIT_LEAD_STATUS_OPTIONS
+        ? [effectiveLeadStatus, ...CRM_LEAD_STATUS_OPTIONS]
+        : CRM_LEAD_STATUS_OPTIONS
     )
   )
 
   const modeOfPaymentOptions = Array.from(
     new Set(
       effectiveModeOfPayment && effectiveModeOfPayment.trim().length > 0
-        ? [effectiveModeOfPayment, ...MODE_OF_PAYMENT_OPTIONS]
-        : MODE_OF_PAYMENT_OPTIONS
+        ? [effectiveModeOfPayment, ...CRM_MODE_OF_PAYMENT_OPTIONS]
+        : CRM_MODE_OF_PAYMENT_OPTIONS
     )
   )
   const assigneeOptions = Array.from(
@@ -345,8 +353,12 @@ export function LeadEditDrawer({
       return
     }
 
-    if (statusChanged && !canEditRemarks) {
-      toast.error('You do not have permission to add the required remark for this status change')
+    if ((statusChanged || remarkDirty) && !canEditRemarks) {
+      toast.error(
+        statusChanged
+          ? 'You do not have permission to add the required remark for this status change'
+          : 'You do not have permission to add a remark for this lead'
+      )
       return
     }
 
@@ -441,6 +453,9 @@ export function LeadEditDrawer({
       payload.status = effectiveLeadStatus
       payload.crmEditFollowUpValidation = 'true'
       payload.requireStatusChangeRemark = 'true'
+    }
+
+    if (trimmedStatusChangeRemark.length > 0) {
       payload.statusChangeRemark = trimmedStatusChangeRemark
     }
 
@@ -479,7 +494,9 @@ export function LeadEditDrawer({
     <Sheet open={open} onOpenChange={onOpenChange} disableBackClose>
       <SheetContent side="right" className="flex h-full w-full max-w-4xl flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
         <SheetHeader className="shrink-0 border-b px-4 py-4 text-left">
-          <SheetTitle>{lead ? lead.patientName : 'Edit lead'}</SheetTitle>
+          <SheetTitle>
+            {lead ? `${lead.patientName} · ${lead.leadRef}` : 'Edit lead'}
+          </SheetTitle>
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto px-4 py-4">
@@ -496,10 +513,22 @@ export function LeadEditDrawer({
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Lead Details</CardTitle>
-                  <CardDescription>
-                    Editing is limited to name, WhatsApp, surgery date, and assignment.
-                  </CardDescription>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-base">Lead Details</CardTitle>
+                      <CardDescription>
+                        Editing is limited to name, WhatsApp, surgery date, and assignment.
+                      </CardDescription>
+                    </div>
+                    <LeadQrPopover
+                      leadId={lead.id}
+                      phoneNumber={lead.phoneNumber ?? ''}
+                      patientName={lead.patientName}
+                      triggerVariant="button"
+                      buttonLabel="Lead QR"
+                      allowServerSidePhoneLookup
+                    />
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
@@ -560,41 +589,7 @@ export function LeadEditDrawer({
                     </div>
                   </div>
 
-                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                    <ReadonlyField label="Phone" value={formatDisplayValue(lead.phoneNumber)} />
-                    <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
-                    <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
-                    <ReadonlyField label="Current Owner" value={currentAssigneeName} />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Status Workflow</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="drawer-lead-status">Lead status</Label>
-                      <Select
-                        value={effectiveLeadStatus}
-                        onValueChange={setLeadStatusDraft}
-                        disabled={!canUpdateLeadStatus || saving}
-                      >
-                        <SelectTrigger id="drawer-lead-status">
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {statusOptions.map((statusOption) => (
-                            <SelectItem key={statusOption} value={statusOption}>
-                              {statusOption}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
+                  <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="drawer-age">
                         Age
@@ -633,6 +628,42 @@ export function LeadEditDrawer({
                           {CRM_LEAD_SEX_OPTIONS.map((sexOption) => (
                             <SelectItem key={sexOption} value={sexOption}>
                               {sexOption}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                    <ReadonlyField label="Phone" value={formatDisplayValue(lead.phoneNumber)} />
+                    <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
+                    <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
+                    <ReadonlyField label="Current Owner" value={currentAssigneeName} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Status Workflow</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-lead-status">Lead status</Label>
+                      <Select
+                        value={effectiveLeadStatus}
+                        onValueChange={setLeadStatusDraft}
+                        disabled={!canUpdateLeadStatus || saving}
+                      >
+                        <SelectTrigger id="drawer-lead-status">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {statusOptions.map((statusOption) => (
+                            <SelectItem key={statusOption} value={statusOption}>
+                              {statusOption}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -688,10 +719,10 @@ export function LeadEditDrawer({
 
                   
                   <div className="space-y-2">
-                    <Label htmlFor="drawer-status-change-remark">
-                      Status change remark
-                      {statusChanged ? <span className="text-destructive"> *</span> : null}
-                    </Label>
+                      <Label htmlFor="drawer-status-change-remark">
+                        Remark
+                        {statusChanged ? <span className="text-destructive"> *</span> : null}
+                      </Label>
                     <Textarea
                       id="drawer-status-change-remark"
                       value={statusChangeRemarkDraft}
@@ -700,7 +731,7 @@ export function LeadEditDrawer({
                       placeholder={
                         statusChanged
                           ? 'Explain why you are changing this lead status'
-                          : 'This remark becomes mandatory when the status changes'
+                          : 'Add a remark for this lead'
                       }
                       rows={4}
                     />
@@ -721,30 +752,82 @@ export function LeadEditDrawer({
                         Loading previous remark...
                       </div>
                     ) : previousRemark ? (
-                      <div className="rounded-xl border border-primary/30 bg-muted/20 px-4 py-4">
-                        <div className="flex items-start gap-3">
-                          <span className="select-none text-3xl font-bold leading-none text-foreground/80">
-                            &ldquo;
-                          </span>
-                          <p className="pt-1 whitespace-pre-wrap text-sm leading-6 text-foreground">
-                            {previousRemark.content}
-                          </p>
-                        </div>
-                        <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
-                          <Avatar className="h-8 w-8 shrink-0">
-                            <AvatarFallback
-                              className={`${getAvatarColor(previousRemark.createdBy?.name ?? 'System').bg} ${getAvatarColor(previousRemark.createdBy?.name ?? 'System').text} text-[10px] font-semibold`}
-                            >
-                              {getInitials(previousRemark.createdBy?.name ?? 'System')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0">
-                            <p className="font-medium text-foreground">
-                              {previousRemark.createdBy?.name ?? 'System'}
+                      <div className="space-y-3">
+                        <div className="rounded-xl border border-primary/30 bg-muted/20 px-4 py-4">
+                          <div className="flex items-start gap-3">
+                            <span className="select-none text-3xl font-bold leading-none text-foreground/80">
+                              &ldquo;
+                            </span>
+                            <p className="pt-1 whitespace-pre-wrap text-sm leading-6 text-foreground">
+                              {previousRemark.content}
                             </p>
-                            <p>{format(new Date(previousRemark.createdAt), 'd MMM yyyy, h:mm a')}</p>
+                          </div>
+                          <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
+                            <Avatar className="h-8 w-8 shrink-0">
+                              <AvatarFallback
+                                className={`${getAvatarColor(previousRemark.createdBy?.name ?? 'System').bg} ${getAvatarColor(previousRemark.createdBy?.name ?? 'System').text} text-[10px] font-semibold`}
+                              >
+                                {getInitials(previousRemark.createdBy?.name ?? 'System')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0">
+                              <p className="font-medium text-foreground">
+                                {previousRemark.createdBy?.name ?? 'System'}
+                              </p>
+                              <p>{format(new Date(previousRemark.createdAt), 'd MMM yyyy, h:mm a')}</p>
+                            </div>
                           </div>
                         </div>
+
+                        {olderRemarks.length > 0 ? (
+                          <div className="space-y-3">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setExpandedRemarksLeadId((current) =>
+                                  current === leadId ? null : leadId
+                                )
+                              }
+                              className="w-full sm:w-auto"
+                            >
+                              {showAllRemarks
+                                ? 'Hide remarks history'
+                                : `View all remarks (${olderRemarks.length})`}
+                            </Button>
+
+                            {showAllRemarks ? (
+                              <div className="space-y-3 rounded-xl border bg-muted/10 p-3">
+                                {olderRemarks.map((remark) => (
+                                  <div
+                                    key={remark.id}
+                                    className="rounded-lg border bg-background/40 px-4 py-3"
+                                  >
+                                    <p className="whitespace-pre-wrap text-sm leading-6 text-foreground">
+                                      {remark.content}
+                                    </p>
+                                    <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
+                                      <Avatar className="h-8 w-8 shrink-0">
+                                        <AvatarFallback
+                                          className={`${getAvatarColor(remark.createdBy?.name ?? 'System').bg} ${getAvatarColor(remark.createdBy?.name ?? 'System').text} text-[10px] font-semibold`}
+                                        >
+                                          {getInitials(remark.createdBy?.name ?? 'System')}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      <div className="min-w-0">
+                                        <p className="font-medium text-foreground">
+                                          {remark.createdBy?.name ?? 'System'}
+                                        </p>
+                                        <p>{format(new Date(remark.createdAt), 'd MMM yyyy, h:mm a')}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        ) : null}
                       </div>
                     ) : (
                       <div className="rounded-xl border bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
@@ -818,17 +901,7 @@ export function LeadEditDrawer({
           </Button>
           <Button
             onClick={handleSave}
-            disabled={
-              saving ||
-              isLoading ||
-              isLoadingMeta ||
-              !lead ||
-              !isDirty ||
-              (profileDirty && !canEditLeadProfile) ||
-              (assigneeDirty && !canReassignLead) ||
-              (statusDirty && !canUpdateLeadStatus) ||
-              (statusChanged && !canEditRemarks)
-            }
+            disabled={saveDisabled}
           >
             {saving ? (
               <>

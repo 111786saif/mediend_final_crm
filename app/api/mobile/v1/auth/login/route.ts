@@ -1,11 +1,12 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, zodErrorResponse } from '@/lib/api-utils'
+import { emailField, requiredStringField } from '@/lib/doctor-api-validation'
 import { loginDoctorApp } from '@/lib/doctor-app/auth'
 
 const loginSchema = z.object({
-  email: z.string().email().trim().toLowerCase(),
-  password: z.string().min(1),
+  email: emailField('Email'),
+  password: requiredStringField('Password'),
 })
 
 export async function POST(request: NextRequest) {

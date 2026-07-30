@@ -350,7 +350,7 @@ export default function PLSurgeryDashboardPage() {
       if (colId === 'teamName') colId = 'team_leader'
       if (!colId) return true
       const resourceKey = `insurance_pl.pl_surgery.table.dischargeSheet.column.${colId}`
-      if (resourceKey in RESOURCE_MAP) {
+      if (resourceKey in RESOURCE_MAP && resourceKey in permissions) {
         return hasAccess(resourceKey, 'READ')
       }
       return true

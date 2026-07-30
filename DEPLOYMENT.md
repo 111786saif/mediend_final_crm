@@ -4,7 +4,7 @@ This guide covers deploying the Mediend CRM to a VPS using Docker Compose, Nginx
 
 ## Architecture
 
-- **Docker Compose**: Runs the Next.js app, PostgreSQL, and Uptime Kuma
+- **Docker Compose**: Runs the Next.js app, PostgreSQL, Redis, BullMQ worker, and Uptime Kuma
 - **Nginx**: Reverse proxy with SSL via Let's Encrypt
 - **Cron Jobs**: Automated attendance sync, leads sync, and backups
 - **Observability**: Built-in dashboard at `/admin/system`
@@ -90,6 +90,9 @@ JWT_SECRET=<openssl rand -base64 32>
 NEXT_PUBLIC_APP_URL=https://workspace.mediend.com
 NODE_ENV=production
 CRON_SECRET=<openssl rand -base64 32>
+
+# Bulk lead reassignment queue (use the Docker service name, not localhost)
+REDIS_URL=redis://redis:6379
 
 # Push notifications (work log reminders) - generate with: npx web-push generate-vapid-keys
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=<public-key>

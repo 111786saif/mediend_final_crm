@@ -987,7 +987,7 @@ export default function PLOutstandingPage() {
       const colId = col.id
       if (!colId) return true
       const resourceKey = `insurance_pl.pl_outstanding.table.dischargeSheet.column.${colId}`
-      if (resourceKey in RESOURCE_MAP) {
+      if (resourceKey in RESOURCE_MAP && resourceKey in permissions) {
         return hasAccess(resourceKey, 'READ')
       }
       return true

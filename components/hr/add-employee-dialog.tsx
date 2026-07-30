@@ -1,10 +1,18 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from '@/components/ui/combobox'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -16,6 +24,16 @@ import { cn } from '@/lib/utils'
 import { type UserRole } from '@/generated/prisma/enums'
 import { getAvailableRolesForCreator } from '@/lib/rbac'
 import { getRoleLabel } from '@/lib/roles'
+
+type ManagerOption = {
+  id: string
+  employeeCode: string
+  user: { name: string }
+}
+
+function managerLabel(employee: ManagerOption) {
+  return `${employee.user.name} (${employee.employeeCode})`
+}
 
 const ADD_EMPLOYEE_ROLE_ORDER: UserRole[] = [
   'SALES_HEAD',
@@ -108,6 +126,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
   const [step, setStep] = useState<1 | 2>(1)
   const [employees, setEmployees] = useState<EmployeeFormData[]>([createEmptyEmployee()])
   const [activeIdx, setActiveIdx] = useState(0)
+  const [managerSearch, setManagerSearch] = useState('')
 
   const availableRoles = currentUser ? getAvailableRoles(currentUser.role) : []
 
@@ -117,9 +136,9 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
     enabled: open,
   })
 
-  const { data: existingEmployees } = useQuery<Array<{ id: string; employeeCode: string; user: { name: string } }>>({
+  const { data: existingEmployees } = useQuery<ManagerOption[]>({
     queryKey: ['employees'],
-    queryFn: () => apiGet<Array<{ id: string; employeeCode: string; user: { name: string } }>>('/api/employees'),
+    queryFn: () => apiGet<ManagerOption[]>('/api/employees'),
     enabled: open,
   })
 
@@ -175,6 +194,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
     setEmployees([createEmptyEmployee()])
     setActiveIdx(0)
     setSubmittedEmployees([])
+    setManagerSearch('')
   }, [])
 
   const handleClose = useCallback(() => {
@@ -221,6 +241,30 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
   }
 
   const emp = employees[activeIdx]
+
+  const selectedManager = useMemo(
+    () => existingEmployees?.find((e) => e.id === emp?.managerId) ?? null,
+    [existingEmployees, emp?.managerId]
+  )
+
+  const filteredManagers = useMemo(() => {
+    const list = existingEmployees ?? []
+    const q = managerSearch.trim().toLowerCase()
+    if (!q) return list
+    // Show full list when the input is just the selected label (dropdown open / idle)
+    if (selectedManager && q === managerLabel(selectedManager).toLowerCase()) return list
+    return list.filter(
+      (e) =>
+        e.user.name.toLowerCase().includes(q) ||
+        e.employeeCode.toLowerCase().includes(q)
+    )
+  }, [existingEmployees, managerSearch, selectedManager])
+
+  // Keep the combobox input in sync when switching employee tabs or changing selection
+  useEffect(() => {
+    const selected = existingEmployees?.find((e) => e.id === emp?.managerId)
+    setManagerSearch(selected ? managerLabel(selected) : '')
+  }, [activeIdx, emp?.managerId, existingEmployees])
 
   // Lock body scroll while open
   useEffect(() => {
@@ -398,15 +442,36 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                     </div>
                     <div className="space-y-1.5">
                       <Label>Manager</Label>
-                      <Select value={emp.managerId || 'none'} onValueChange={(v) => updateEmployee(activeIdx, { managerId: v === 'none' ? '' : v })}>
-                        <SelectTrigger><SelectValue placeholder="No manager" /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">No manager</SelectItem>
-                          {existingEmployees?.map((e) => (
-                            <SelectItem key={e.id} value={e.id}>{e.user.name} ({e.employeeCode})</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Combobox<ManagerOption>
+                        items={filteredManagers}
+                        value={selectedManager}
+                        onValueChange={(manager) =>
+                          updateEmployee(activeIdx, { managerId: manager?.id ?? '' })
+                        }
+                        itemToStringLabel={managerLabel}
+                        isItemEqualToValue={(a, b) => a?.id === b?.id}
+                        inputValue={managerSearch}
+                        onInputValueChange={setManagerSearch}
+                      >
+                        <ComboboxInput
+                          placeholder="Search manager by name or code"
+                          showClear
+                          className="w-full"
+                        />
+                        <ComboboxContent>
+                          <ComboboxEmpty>No managers found.</ComboboxEmpty>
+                          <ComboboxList>
+                            {(manager: ManagerOption) => (
+                              <ComboboxItem key={manager.id} value={manager}>
+                                <div className="min-w-0">
+                                  <div className="truncate font-medium">{manager.user.name}</div>
+                                  <div className="truncate text-xs opacity-80">{manager.employeeCode}</div>
+                                </div>
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
                     </div>
                   </div>
 

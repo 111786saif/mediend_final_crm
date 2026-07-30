@@ -6,11 +6,14 @@ import { Prisma } from '@/generated/prisma/client'
 import { CaseStage } from '@/generated/prisma/enums'
 import {
   getTeamLeadLeadAccessBdUserIds,
-  getManagerGroups,
+  getSalesTeamUnits,
 } from '@/lib/hierarchy'
+import { isSubtreeScopedSalesRole, isTeamUnitRole } from '@/lib/sales-hierarchy-roles'
 
 const ALLOWED_ROLES = new Set([
   'TEAM_LEAD',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'CATEGORY_MANAGER',
   'SALES_HEAD',
   'EXECUTIVE_ASSISTANT',
   'MD',
@@ -123,16 +126,20 @@ export async function GET(request: NextRequest) {
 
   // Build BD scope
   let bdScope: Prisma.LeadWhereInput = {}
-  if (user.role === 'TEAM_LEAD') {
+  if (isSubtreeScopedSalesRole(user.role)) {
     const subIds = await getTeamLeadLeadAccessBdUserIds(user.id)
     bdScope = { bdId: { in: [user.id, ...subIds] } }
   } else if (teamLeadUserIdParam) {
-    // SALES_HEAD / EA / MD / ADMIN narrowing by a chosen team lead
-    const groups = await getManagerGroups()
-    const chosen = groups.find((g) => g.managerUserId === teamLeadUserIdParam)
+    // SALES_HEAD / EA / MD / ADMIN narrowing by a chosen TL/ACM/CM (recursive scope)
+    const [tlUnits, cmUnits] = await Promise.all([
+      getSalesTeamUnits({ level: 'tl' }),
+      getSalesTeamUnits({ level: 'cm' }),
+    ])
+    const chosen =
+      tlUnits.find((g) => g.userId === teamLeadUserIdParam) ??
+      cmUnits.find((g) => g.userId === teamLeadUserIdParam)
     if (chosen) {
-      const ids = [chosen.managerUserId, ...chosen.subordinates.map((s) => s.userId)]
-      bdScope = { bdId: { in: ids } }
+      bdScope = { bdId: { in: chosen.scopeUserIds } }
     }
   }
 
@@ -222,16 +229,16 @@ export async function GET(request: NextRequest) {
   const truncated = leads.length > HARD_CAP
   const limited = truncated ? leads.slice(0, HARD_CAP) : leads
 
-  // Build a TL lookup from manager groups so we don't blindly trust single-hop bd.employee.manager
-  // (which could be CM/ACM in some teams). Map bdUserId -> { tlUserId, tlName }.
-  const showGroups = user.role !== 'TEAM_LEAD'
+  // Map bdUserId -> TL/ACM (or CM when BD reports directly to CM) via recursive team units
+  const showGroups = !isSubtreeScopedSalesRole(user.role) || user.role === 'CATEGORY_MANAGER'
   const tlByBdUserId = new Map<string, { tlUserId: string; tlName: string }>()
   if (showGroups) {
-    const groups = await getManagerGroups()
-    for (const g of groups) {
-      if (g.managerRole !== 'TEAM_LEAD') continue
-      for (const s of g.subordinates) {
-        tlByBdUserId.set(s.userId, { tlUserId: g.managerUserId, tlName: g.managerName })
+    const tlUnits = await getSalesTeamUnits({ level: 'tl' })
+    for (const g of tlUnits) {
+      if (!isTeamUnitRole(g.role)) continue
+      for (const uid of g.scopeUserIds) {
+        if (uid === g.userId) continue
+        tlByBdUserId.set(uid, { tlUserId: g.userId, tlName: g.name })
       }
     }
   }

@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,7 +16,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
-import { useState, useMemo } from 'react'
+import { useAuth } from '@/hooks/use-auth'
+import { useState, useMemo, useEffect } from 'react'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
   Plus,
@@ -57,7 +57,7 @@ interface TeamInfo {
 
 interface TargetProgress {
   id: string
-  targetType: 'BD' | 'TEAM'
+  targetType: 'BD' | 'TEAM' | 'CATEGORY'
   targetForId: string
   entityName: string
   entityAvatar: string | null
@@ -75,6 +75,7 @@ interface TargetProgress {
     actual: number
     percentage: number
   }>
+  createdById: string
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -123,36 +124,9 @@ function MonthPicker({ selectedMonth, onChange }: { selectedMonth: Date; onChang
   )
 }
 
-// ─── Summary Stats ────────────────────────────────────────────────────────────
+// ─── Team Details Dialog ────────────────────────────────────────────────────────
 
-function SummaryStats({ targets }: { targets: TargetProgress[] }) {
-  const totalTarget = targets.reduce((s, t) => s + t.targetValue, 0)
-  const totalActual = targets.reduce((s, t) => s + t.actual, 0)
-  const overallPct = totalTarget > 0 ? Math.round((totalActual / totalTarget) * 100) : 0
-  const onTrack = targets.filter((t) => t.status === 'completed' || t.status === 'on_track').length
-
-  const stats = [
-    { label: 'Monthly Target', value: totalTarget, color: '' },
-    { label: 'IPDs Done', value: totalActual, color: 'text-emerald-600 dark:text-emerald-400' },
-    { label: 'Overall', value: `${overallPct}%`, color: overallPct >= 60 ? 'text-blue-600 dark:text-blue-400' : 'text-red-500' },
-    { label: 'On Track', value: `${onTrack}/${targets.length}`, color: 'text-violet-600 dark:text-violet-400' },
-  ]
-
-  return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-      {stats.map((s) => (
-        <div key={s.label} className="bg-card border border-border rounded-2xl p-4 shadow-sm">
-          <p className="text-xs text-muted-foreground font-medium mb-1">{s.label}</p>
-          <p className={cn('text-3xl font-bold tabular-nums', s.color)}>{s.value}</p>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// ─── BD Details Dialog ────────────────────────────────────────────────────────
-
-function BdDetailsDialog({
+function TeamDetailsDialog({
   target,
   open,
   onOpenChange,
@@ -173,7 +147,7 @@ function BdDetailsDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className="h-5 w-5 text-violet-500" />
-            {target.entityName} · All BDs
+            {target.entityName} · Members breakdown
           </DialogTitle>
         </DialogHeader>
 
@@ -182,12 +156,12 @@ function BdDetailsDialog({
             <span className="font-bold tabular-nums text-lg">{target.actual}</span>
             <span className="text-muted-foreground"> / {target.targetValue} IPDs</span>
           </div>
-          <Badge variant="outline" className="text-xs">{sortedBDs.length} BDs</Badge>
+          <Badge variant="outline" className="text-xs">{sortedBDs.length} members</Badge>
         </div>
 
         <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
           {sortedBDs.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-8">No BDs in this team.</p>
+            <p className="text-sm text-muted-foreground text-center py-8">No members in this team.</p>
           )}
           {sortedBDs.map((bd, idx) => {
             const RankIcon = RANK_ICONS[idx]
@@ -241,7 +215,7 @@ function TeamTargetCard({
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false)
   const pct = Math.min(target.percentage, 100)
-  const sc = STATUS_CONFIG[target.status]
+  const sc = STATUS_CONFIG[target.status] || STATUS_CONFIG.at_risk
   const StatusIcon = sc.icon
   const ac = getAvatarColor(target.entityName)
   const topBDs = target.bdBreakdown.slice(0, 3)
@@ -259,7 +233,7 @@ function TeamTargetCard({
             </Avatar>
             <div>
               <h3 className="font-semibold text-base leading-tight">{target.entityName}</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">{target.bdBreakdown.length} BDs in team</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{target.bdBreakdown.length} members in team</p>
             </div>
           </div>
           <Badge className={cn('text-xs font-medium border-0 gap-1 shrink-0', sc.badge)}>
@@ -313,7 +287,7 @@ function TeamTargetCard({
               )
             })}
             {remaining > 0 && (
-              <p className="text-xs text-muted-foreground pl-6">+{remaining} more BDs</p>
+              <p className="text-xs text-muted-foreground pl-6">+{remaining} more members</p>
             )}
           </div>
         )}
@@ -328,7 +302,7 @@ function TeamTargetCard({
             disabled={target.bdBreakdown.length === 0}
           >
             <Eye className="h-3 w-3" />
-            View
+            View Breakdown
           </Button>
           {!readOnly && (
             <Button
@@ -344,12 +318,12 @@ function TeamTargetCard({
         </div>
       </CardContent>
 
-      <BdDetailsDialog target={target} open={detailsOpen} onOpenChange={setDetailsOpen} />
+      <TeamDetailsDialog target={target} open={detailsOpen} onOpenChange={setDetailsOpen} />
     </Card>
   )
 }
 
-// ─── Set Target Dialog ────────────────────────────────────────────────────────
+// ─── Set Target Dialog ─────────────────────────────────────────────────────────
 
 function SetTargetDialog({
   teams,
@@ -359,7 +333,7 @@ function SetTargetDialog({
   isLoading,
   open,
   onOpenChange,
-  preselectedTeamId,
+  delegationRemaining,
 }: {
   teams: TeamInfo[]
   selectedMonth: Date
@@ -368,12 +342,10 @@ function SetTargetDialog({
   isLoading: boolean
   open: boolean
   onOpenChange: (v: boolean) => void
-  preselectedTeamId?: string
+  delegationRemaining: number
 }) {
-  const [selectedTeamId, setSelectedTeamId] = useState(preselectedTeamId ?? '')
+  const [selectedTeamId, setSelectedTeamId] = useState('')
   const [targetValue, setTargetValue] = useState('')
-
-  const existingTeamIds = new Set(existingTargets.map((t) => t.targetForId))
 
   const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
   const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
@@ -381,7 +353,15 @@ function SetTargetDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedTeamId) { toast.error('Please select a team'); return }
-    if (!targetValue || Number(targetValue) <= 0) { toast.error('Enter a valid target'); return }
+    const val = parseFloat(targetValue)
+    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+    
+    // Check allocation limits
+    if (val > delegationRemaining) {
+      toast.error(`Value exceeds remaining team delegation budget (${delegationRemaining} IPDs)`)
+      return
+    }
+
     onSubmit({
       targetType: 'TEAM',
       targetForId: selectedTeamId,
@@ -389,7 +369,7 @@ function SetTargetDialog({
       periodStartDate: periodStart.toISOString(),
       periodEndDate: periodEnd.toISOString(),
       metric: 'IPD_DONE',
-      targetValue: parseFloat(targetValue),
+      targetValue: val,
     })
   }
 
@@ -404,23 +384,20 @@ function SetTargetDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-1">
           <div>
-            <Label className="text-sm font-medium mb-2 block">Select Team Lead</Label>
+            <Label className="text-sm font-medium mb-2 block">Select Team Lead / ACM</Label>
             <div className="grid gap-2 max-h-[220px] overflow-y-auto pr-1">
               {teams.map((team) => {
                 const ac = getAvatarColor(team.name)
                 const isSelected = selectedTeamId === team.id
-                const hasTarget = existingTeamIds.has(team.id)
                 return (
                   <button
                     key={team.id}
                     type="button"
-                    disabled={hasTarget}
                     onClick={() => setSelectedTeamId(team.id)}
                     className={cn(
                       'flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left',
-                      hasTarget ? 'border-border opacity-50 cursor-not-allowed' :
                       isSelected ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20' :
-                      'border-border hover:border-muted-foreground/30'
+                        'border-border hover:border-muted-foreground/30'
                     )}
                   >
                     <Avatar className="h-9 w-9">
@@ -430,10 +407,9 @@ function SetTargetDialog({
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{team.name}</p>
-                      <p className="text-xs text-muted-foreground">{team.memberCount} BDs</p>
+                      <p className="text-xs text-muted-foreground">{team.memberCount} members</p>
                     </div>
-                    {hasTarget && <Badge variant="outline" className="text-[10px] shrink-0">Set</Badge>}
-                    {isSelected && !hasTarget && (
+                    {isSelected && (
                       <div className="h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center shrink-0">
                         <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -446,7 +422,10 @@ function SetTargetDialog({
             </div>
           </div>
           <div>
-            <Label className="text-sm font-medium">IPD Done Target</Label>
+            <div className="flex justify-between items-center">
+              <Label className="text-sm font-medium">IPD Done Target</Label>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Budget Limit: {delegationRemaining} IPDs</span>
+            </div>
             <Input
               type="number"
               className="mt-1.5 text-lg font-semibold h-12"
@@ -467,16 +446,90 @@ function SetTargetDialog({
   )
 }
 
+// ─── Set Self Target Dialog ────────────────────────────────────────────────────
+
+function SetSelfTargetDialog({
+  selectedMonth,
+  onSubmit,
+  isLoading,
+  open,
+  onOpenChange,
+  initialValue = '',
+}: {
+  selectedMonth: Date
+  onSubmit: (data: Record<string, unknown>) => void
+  isLoading: boolean
+  open: boolean
+  onOpenChange: (v: boolean) => void
+  initialValue?: string
+}) {
+  const [targetValue, setTargetValue] = useState(initialValue)
+
+  useEffect(() => {
+    setTargetValue(initialValue)
+  }, [initialValue, open])
+
+  const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
+  const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!targetValue || Number(targetValue) <= 0) { toast.error('Enter a valid target'); return }
+    onSubmit({
+      targetType: 'BD',
+      periodType: 'MONTH',
+      periodStartDate: periodStart.toISOString(),
+      periodEndDate: periodEnd.toISOString(),
+      metric: 'IPD_DONE',
+      targetValue: parseFloat(targetValue),
+    })
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-violet-500" />
+            Set My Individual Target · {format(selectedMonth, 'MMMM yyyy')}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-1">
+          <div>
+            <Label className="text-sm font-medium">IPD Done Target</Label>
+            <Input
+              type="number"
+              className="mt-1.5 text-lg font-semibold h-12"
+              value={targetValue}
+              onChange={(e) => setTargetValue(e.target.value)}
+              placeholder="e.g. 10"
+              min={1}
+              required
+            />
+            <p className="text-xs text-muted-foreground mt-1">Your own target expected this month</p>
+          </div>
+          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading}>
+            {isLoading ? 'Saving...' : 'Set Target'}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function SalesTargetsPage({ readOnly = false }: { readOnly?: boolean }) {
+export default function CategorySalesTargetsPage({ readOnly = false }: { readOnly?: boolean }) {
+  const { user } = useAuth()
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
     return new Date(now.getFullYear(), now.getMonth(), 1)
   })
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const queryClient = useQueryClient()
+  const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false)
+  const [isSelfDialogOpen, setIsSelfDialogOpen] = useState(false)
+  const [selfTargetValueInput, setSelfTargetValueInput] = useState('')
 
+  const queryClient = useQueryClient()
   const monthStr = format(selectedMonth, 'yyyy-MM')
 
   const { data: teams = [] } = useQuery<TeamInfo[]>({
@@ -494,11 +547,33 @@ export default function SalesTargetsPage({ readOnly = false }: { readOnly?: bool
     [targets]
   )
 
+  const selfTarget = useMemo(
+    () => targets.find((t) => t.targetType === 'BD' && t.targetForId === user?.id),
+    [targets, user?.id]
+  )
+
+  const categoryTarget = useMemo(
+    () => targets.find((t) => t.targetType === 'CATEGORY'),
+    [targets]
+  )
+
+  const categoryTargetValue = categoryTarget?.targetValue ?? 0
+  const selfTargetValue = selfTarget?.targetValue ?? 0
+  const delegationBudget = Math.max(0, categoryTargetValue - selfTargetValue)
+  const totalTeamDelegated = teamTargets.reduce((sum, t) => sum + t.targetValue, 0)
+  const delegationRemaining = Math.max(0, delegationBudget - totalTeamDelegated)
+
   const createTargetMutation = useMutation({
-    mutationFn: (data: Record<string, unknown>) => apiPost('/api/targets', data),
+    mutationFn: (data: Record<string, unknown>) => {
+      if (data.targetType === 'BD' && !data.targetForId) {
+        data.targetForId = user?.id
+      }
+      return apiPost('/api/targets', data)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['target-progress'] })
-      setIsDialogOpen(false)
+      setIsTeamDialogOpen(false)
+      setIsSelfDialogOpen(false)
       toast.success('Target set successfully')
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Failed to set target'),
@@ -512,64 +587,150 @@ export default function SalesTargetsPage({ readOnly = false }: { readOnly?: bool
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5">
               <Target className="h-6 w-6 text-violet-500" />
-              Surgery Sales Targets
+              Category Sales Targets
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Monthly IPD targets · {format(selectedMonth, 'MMMM yyyy')}
+              Sub-team delegation targets · {format(selectedMonth, 'MMMM yyyy')}
             </p>
           </div>
           <div className="flex items-center gap-3">
             <MonthPicker selectedMonth={selectedMonth} onChange={setSelectedMonth} />
-            {!readOnly && (
-              <Button
-                className="gap-2 bg-violet-600 hover:bg-violet-700"
-                onClick={() => setIsDialogOpen(true)}
-              >
-                <Plus className="h-4 w-4" />
-                Set Target
-              </Button>
-            )}
           </div>
         </div>
 
-        {/* Summary */}
-        {teamTargets.length > 0 && <SummaryStats targets={teamTargets} />}
-
-        {/* Content */}
-        {isLoading ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
-            ))}
-          </div>
-        ) : teamTargets.length === 0 ? (
-          <Card className="border-dashed rounded-2xl">
-            <CardContent className="py-16 text-center">
-              <Target className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-1">No targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
-              <p className="text-sm text-muted-foreground mb-5">
-                {readOnly ? 'No targets have been set yet.' : 'Set monthly IPD targets for each team lead to start tracking.'}
+        {/* Hero Performance Cards at the Top */}
+        {!isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Card 1: Category Target */}
+            <Card className="rounded-2xl border border-blue-200 dark:border-blue-800/60 bg-gradient-to-br from-blue-50/50 to-indigo-50/20 dark:from-blue-950/20 dark:to-indigo-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
+              <div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">My Category Target</p>
+                    <p className="text-muted-foreground text-[11px] mt-0.5">Assigned from top order</p>
+                  </div>
+                  <div className="h-6 w-6 shrink-0" />
+                </div>
+                <div className="flex items-baseline gap-1 mt-1">
+                  <span className="text-2xl font-extrabold tabular-nums text-blue-900 dark:text-blue-200">{categoryTargetValue}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">IPDs</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-2 border-t border-blue-100 dark:border-blue-900/50">
+                Progress: <span className="font-semibold text-blue-700 dark:text-blue-300">{categoryTarget?.actual ?? 0} Done ({categoryTarget ? Math.round(categoryTarget.percentage) : 0}%)</span>
               </p>
-              {!readOnly && (
-                <Button variant="outline" className="gap-2" onClick={() => setIsDialogOpen(true)}>
-                  <Plus className="h-4 w-4" />
-                  Set First Target
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {teamTargets.map((t) => (
-              <TeamTargetCard
-                key={t.id}
-                target={t}
-                readOnly={readOnly}
-                onSetTarget={() => setIsDialogOpen(true)}
-              />
-            ))}
+            </Card>
+
+            {/* Card 2: Self Target */}
+            <Card className="rounded-2xl border border-violet-200 dark:border-violet-800/60 bg-gradient-to-br from-violet-50/50 to-fuchsia-50/20 dark:from-violet-950/20 dark:to-fuchsia-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
+              <div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">My Self Target</p>
+                    <p className="text-muted-foreground text-[11px] mt-0.5">Individual performance target</p>
+                  </div>
+                  {!readOnly && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-6 px-1.5 text-[10px] gap-1 border-violet-300 dark:border-violet-800 hover:bg-violet-100/50 dark:hover:bg-violet-900/30 shrink-0"
+                      onClick={() => {
+                        setSelfTargetValueInput(selfTargetValue > 0 ? selfTargetValue.toString() : '')
+                        setIsSelfDialogOpen(true)
+                      }}
+                    >
+                      <Pencil className="h-2.5 w-2.5" />
+                      {selfTargetValue > 0 ? 'Edit' : 'Set'}
+                    </Button>
+                  )}
+                </div>
+                <div className="flex items-baseline gap-1 mt-1">
+                  <span className="text-2xl font-extrabold tabular-nums text-violet-900 dark:text-violet-200">{selfTargetValue}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">IPDs</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-2 border-t border-violet-100 dark:border-violet-900/50">
+                Progress: <span className="font-semibold text-violet-700 dark:text-violet-300">{selfTarget?.actual ?? 0} Done ({selfTarget ? Math.round(selfTarget.percentage) : 0}%)</span>
+              </p>
+            </Card>
+
+            {/* Card 3: Delegation Budget */}
+            <Card className="rounded-2xl border border-emerald-200 dark:border-emerald-800/60 bg-gradient-to-br from-emerald-50/50 to-teal-50/20 dark:from-emerald-950/20 dark:to-teal-950/10 p-4 shadow-sm flex flex-col justify-between min-h-[145px]">
+              <div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Team Delegation Budget</p>
+                    <p className="text-muted-foreground text-[11px] mt-0.5">For Team Leads & ACMs</p>
+                  </div>
+                  <div className="h-6 w-6 shrink-0" />
+                </div>
+                <div className="flex items-baseline gap-1 mt-1">
+                  <span className="text-2xl font-extrabold tabular-nums text-emerald-900 dark:text-emerald-200">{delegationBudget}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">IPDs ({categoryTargetValue} - {selfTargetValue})</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-2 border-t border-emerald-100 dark:border-emerald-900/50 flex justify-between">
+                <span>Allocated: <span className="font-semibold text-emerald-700 dark:text-emerald-300">{totalTeamDelegated}</span></span>
+                <span>Remaining: <span className="font-semibold text-emerald-700 dark:text-emerald-300">{delegationRemaining}</span></span>
+              </p>
+            </Card>
           </div>
         )}
+
+        {/* Team Targets Content */}
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              Team Level Performance
+            </h2>
+            {!readOnly && (
+              <Button
+                className="gap-2 bg-violet-600 hover:bg-violet-700"
+                size="sm"
+                onClick={() => setIsTeamDialogOpen(true)}
+              >
+                <Plus className="h-4 w-4" />
+                Set Team Target
+              </Button>
+            )}
+          </div>
+
+          {/* Content */}
+          {isLoading ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
+              ))}
+            </div>
+          ) : teamTargets.length === 0 ? (
+            <Card className="border-dashed rounded-2xl">
+              <CardContent className="py-16 text-center">
+                <Target className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-1">No targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
+                <p className="text-sm text-muted-foreground mb-5">
+                  {readOnly ? 'No targets have been set yet.' : 'Set monthly delegation targets for each team lead / ACM to start tracking.'}
+                </p>
+                {!readOnly && (
+                  <Button variant="outline" className="gap-2" onClick={() => setIsTeamDialogOpen(true)}>
+                    <Plus className="h-4 w-4" />
+                    Set First Target
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {teamTargets.map((t) => (
+                <TeamTargetCard
+                  key={t.id}
+                  target={t}
+                  readOnly={readOnly}
+                  onSetTarget={() => setIsTeamDialogOpen(true)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {!readOnly && (
@@ -579,8 +740,20 @@ export default function SalesTargetsPage({ readOnly = false }: { readOnly?: bool
           existingTargets={teamTargets}
           onSubmit={(data) => createTargetMutation.mutate(data)}
           isLoading={createTargetMutation.isPending}
-          open={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
+          open={isTeamDialogOpen}
+          onOpenChange={setIsTeamDialogOpen}
+          delegationRemaining={delegationRemaining}
+        />
+      )}
+
+      {!readOnly && (
+        <SetSelfTargetDialog
+          selectedMonth={selectedMonth}
+          onSubmit={(data) => createTargetMutation.mutate(data)}
+          isLoading={createTargetMutation.isPending}
+          open={isSelfDialogOpen}
+          onOpenChange={setIsSelfDialogOpen}
+          initialValue={selfTargetValueInput}
         />
       )}
     </AuthenticatedLayout>

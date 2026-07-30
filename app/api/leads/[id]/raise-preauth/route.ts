@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 import { CaseStage } from '@/generated/prisma/client'
 
@@ -52,7 +53,7 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden: Only BD or Team Lead can raise pre-auth requests', 403)
     }
 

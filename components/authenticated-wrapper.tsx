@@ -15,9 +15,8 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { NotificationBell } from '@/components/notifications/notification-bell'
 import { Button } from '@/components/ui/button'
-import { Calendar, CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, UserCheck, UserCircle, Wallet, Sun, Moon } from 'lucide-react'
+import { Calendar, CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Home, UserCheck, UserCircle, Wallet, Sun, Moon, GraduationCap } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useAI } from '@/components/ai/ai-provider'
 import { CommandPalette } from '@/components/command-palette'
 import { PageTransition } from '@/components/page-transition'
 import { useState, useMemo, useEffect, useRef } from 'react'
@@ -30,16 +29,6 @@ import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
 import { MeetReminderPopup } from '@/components/meets/meet-reminder-popup'
 import { BMICalculator } from '@/components/bmi-calculator'
 
-
-function AIDesktopButton() {
-  const ai = useAI()
-  if (!ai) return null
-  return (
-    <Button variant="ghost" size="icon" onClick={ai.openAI} aria-label="Open mediendAI">
-      <Sparkles className="h-5 w-5 text-muted-foreground" />
-    </Button>
-  )
-}
 
 function NavbarThemeToggle() {
   const { theme, setTheme } = useTheme()
@@ -151,15 +140,66 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
         : (badgeCounts?.unreadChatMessages ?? 0) || (badgeCounts?.unreadMessages ?? 0)
 
     const hasApprovals = u.role === 'MD' || u.role === 'ADMIN' || hasPermission(u, 'finance:approve')
-    const hasDashboard = ['SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'DIGITAL_MARKETING_HEAD', 'ADMIN'].includes(u.role)
-    const hasCoreHr = ['USER', 'BD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
-    const hasPipeline = u.role === 'BD' || u.role === 'TEAM_LEAD'
+    const hasDashboard = [
+      'SALES_HEAD',
+      'CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'DIGITAL_MARKETING_HEAD',
+      'ADMIN',
+    ].includes(u.role)
+    const hasCoreHr = [
+      'USER',
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'HR_HEAD',
+      'FINANCE_HEAD',
+      'ADMIN',
+      'DIGITAL_MARKETING_HEAD',
+    ].includes(u.role)
+    const hasPipeline =
+      u.role === 'BD' ||
+      u.role === 'TEAM_LEAD' ||
+      u.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+      u.role === 'CATEGORY_MANAGER'
     const hasMessages =
       u.role === 'MD' ||
       u.role === 'ADMIN' ||
       canAccessChat(u)
-    const hasSupport = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
-    const hasFinancial = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
+    const hasSupport = [
+      'USER',
+      'BD',
+      'SALES_HEAD',
+      'CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'HR_HEAD',
+      'FINANCE_HEAD',
+      'ADMIN',
+      'DIGITAL_MARKETING_HEAD',
+    ].includes(u.role)
+    const hasFinancial = [
+      'USER',
+      'BD',
+      'SALES_HEAD',
+      'CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'HR_HEAD',
+      'FINANCE_HEAD',
+      'ADMIN',
+      'DIGITAL_MARKETING_HEAD',
+    ].includes(u.role)
 
     const leftCandidates: (BottomNavItem & { show: boolean })[] = [
       {
@@ -180,12 +220,18 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
       },
       {
         href:
-          u.role === 'SALES_HEAD'
+          u.role === 'SALES_HEAD' || u.role === 'CATEGORY_MANAGER'
             ? '/sales/dashboard'
-            : u.role === 'TEAM_LEAD'
+            : u.role === 'TEAM_LEAD' || u.role === 'ASSISTANT_CATEGORY_MANAGER'
               ? '/team-lead/dashboard'
               : '/bd/pipeline',
-        label: u.role === 'SALES_HEAD' || u.role === 'TEAM_LEAD' ? 'Dashboard' : 'Pipeline',
+        label:
+          u.role === 'SALES_HEAD' ||
+          u.role === 'CATEGORY_MANAGER' ||
+          u.role === 'TEAM_LEAD' ||
+          u.role === 'ASSISTANT_CATEGORY_MANAGER'
+            ? 'Dashboard'
+            : 'Pipeline',
         icon: LayoutDashboard,
         matchPrefixes: ['/sales/dashboard', '/bd/pipeline', '/team-lead/dashboard'],
         show: hasDashboard || hasPipeline,
@@ -302,8 +348,20 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
                 >
                   <Search className="h-5 w-5" />
                 </Button>
-                <AIDesktopButton />
-                {(user?.role === 'BD' || user?.role === 'TEAM_LEAD') && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  title="mediend AI"
+                >
+                  <Link href="/training">
+                    <GraduationCap className="h-5 w-5 text-muted-foreground" />
+                  </Link>
+                </Button>
+                {(user?.role === 'BD' ||
+                  user?.role === 'TEAM_LEAD' ||
+                  user?.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+                  user?.role === 'CATEGORY_MANAGER') && (
                   <BMICalculator />
                 )}
                 <NotificationBell />

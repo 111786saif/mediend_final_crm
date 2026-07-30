@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { canAccessSalesDashboard } from '@/lib/analytics/sales-dashboard-access'
 
 function toOptions(values: Array<string | null | undefined>): Array<{ label: string; value: string }> {
   return [...new Set(values.filter((v): v is string => !!v && v.trim() !== ''))]
@@ -14,15 +15,7 @@ export async function GET(request: NextRequest) {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
 
-    // Scope checking - same as other analytics APIs
-    if (
-      user.role !== 'MD' &&
-      user.role !== 'ADMIN' &&
-      user.role !== 'SALES_HEAD' &&
-      user.role !== 'EXECUTIVE_ASSISTANT' &&
-      user.role !== 'TEAM_LEAD' &&
-      user.role !== 'DIGITAL_MARKETING_HEAD'
-    ) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 

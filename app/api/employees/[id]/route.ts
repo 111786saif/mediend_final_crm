@@ -1,11 +1,13 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasPermission, canCreateRole } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getComputedBalancesForEmployee } from '@/lib/hrms/leave-policy-calculator'
 import { z } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
+import { UserRole } from '@/generated/prisma/enums'
+import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 const updateEmployeeSchema = z.object({
   employeeCode: z.string().optional(),
@@ -26,6 +28,7 @@ const updateEmployeeSchema = z.object({
   bankAccountNumber: z.string().max(50).optional().nullable(),
   ifscCode: z.string().max(11).optional().nullable(),
   uanNumber: z.string().max(50).optional().nullable(),
+  role: z.nativeEnum(UserRole).optional(),
 })
 
 export async function GET(
@@ -198,8 +201,8 @@ export async function PATCH(
         return errorResponse('Department heads cannot be assigned to team leads', 400)
       }
 
-      // Validation: Team Leads cannot be assigned to other team leads
-      if (currentEmployee.user.role === 'TEAM_LEAD') {
+      // Validation: Team Leads / ACM cannot be assigned to other team leads
+      if (isTeamLeadEquivalent(currentEmployee.user.role)) {
         return errorResponse('Team leads cannot be assigned to other team leads', 400)
       }
 
@@ -231,9 +234,9 @@ export async function PATCH(
           return errorResponse('Team lead not found', 404)
         }
 
-        // Validation: Team lead must have TEAM_LEAD role
-        if (teamLead.user.role !== 'TEAM_LEAD') {
-          return errorResponse('Assigned employee must have TEAM_LEAD role', 400)
+        // Validation: Team lead must have TEAM_LEAD or ACM role
+        if (!isTeamLeadEquivalent(teamLead.user.role)) {
+          return errorResponse('Assigned employee must have TEAM_LEAD or ACM role', 400)
         }
 
         // Validation: Team lead must be leading a team
@@ -327,6 +330,25 @@ export async function PATCH(
     if (data.bankAccountNumber !== undefined) updateData.bankAccountNumber = data.bankAccountNumber || null
     if (data.ifscCode !== undefined) updateData.ifscCode = data.ifscCode || null
     if (data.uanNumber !== undefined) updateData.uanNumber = data.uanNumber || null
+
+    if (data.role !== undefined && data.role !== currentEmployee.user.role) {
+      if (!hasPermission(user, 'users:write')) {
+        return errorResponse('Forbidden', 403)
+      }
+      if (user.id === currentEmployee.user.id) {
+        return errorResponse('Cannot change your own role', 400)
+      }
+      if (data.role === 'MD') {
+        return errorResponse('Cannot assign MD role', 400)
+      }
+      if (currentEmployee.user.role === 'MD') {
+        return errorResponse('Cannot change role of MD user', 400)
+      }
+      if (!canCreateRole(user, data.role)) {
+        return errorResponse(`You do not have permission to assign role: ${data.role}`, 403)
+      }
+      updateData.user = { update: { role: data.role } }
+    }
 
     const { clearBdNumberCache } = await import('@/lib/sync/bd-number-map')
     if (data.bdNumber !== undefined) {

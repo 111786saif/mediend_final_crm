@@ -4,7 +4,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getLeadPipelineBucket } from '@/lib/pipeline-lead-buckets'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 
 /**
  * Get today's actionable lead assignments grouped by BD.
@@ -38,9 +39,9 @@ export async function GET(request: NextRequest) {
     const todayEndUTC = new Date(todayEnd.getTime() - istOffsetMs)
 
     const scopeWhere: { bdId?: { in: string[] } } = {}
-    if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      scopeWhere.bdId = { in: [user.id, ...subIds] }
+    if (isSubtreeScopedSalesRole(user.role)) {
+      const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+      if (bdIdFilter) scopeWhere.bdId = { in: bdIdFilter }
     }
 
     const leads = await prisma.lead.findMany({

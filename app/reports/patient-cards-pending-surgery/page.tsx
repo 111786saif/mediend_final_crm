@@ -167,7 +167,10 @@ function humanizeStage(stage: string | undefined | null): string {
 
 export default function PatientCardsPendingSurgeryPage() {
   const { user } = useAuth()
-  const isTL = user?.role === 'TEAM_LEAD'
+  const isTL =
+    user?.role === 'TEAM_LEAD' ||
+    user?.role === 'ASSISTANT_CATEGORY_MANAGER' ||
+    user?.role === 'CATEGORY_MANAGER'
 
   const currentYear = new Date().getFullYear()
   const [year, setYear] = useState<number>(currentYear)

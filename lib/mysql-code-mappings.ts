@@ -294,10 +294,15 @@ export function mapStatusCode(code: string | null | undefined): string {
   if (!code) return 'New'
   
   const trimmed = String(code).trim()
+  const normalized = trimmed.toLowerCase()
   
   // If it's a numeric code, try to map it
   if (/^\d+$/.test(trimmed)) {
     return STATUS_MAP[trimmed] || trimmed
+  }
+
+  if (normalized === 'opd_scheduled' || normalized === 'opd scheduled') {
+    return 'OPD Schedule'
   }
   
   // Otherwise, return the original value (might already be text)

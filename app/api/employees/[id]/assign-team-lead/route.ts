@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
+import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 const assignTeamLeadSchema = z.object({
   teamLeadId: z.string().nullable().optional(),
@@ -58,8 +59,8 @@ export async function POST(
       return errorResponse('Department heads cannot be assigned to team leads', 400)
     }
 
-    // Validation: Team Leads cannot be assigned to other team leads
-    if (employee.user.role === 'TEAM_LEAD') {
+    // Validation: Team Leads / ACM cannot be assigned to other team leads
+    if (isTeamLeadEquivalent(employee.user.role)) {
       return errorResponse('Team leads cannot be assigned to other team leads', 400)
     }
 
@@ -134,9 +135,9 @@ export async function POST(
       return errorResponse('Team lead not found', 404)
     }
 
-    // Validation: Team lead must have TEAM_LEAD role
-    if (teamLead.user.role !== 'TEAM_LEAD') {
-      return errorResponse('Assigned employee must have TEAM_LEAD role', 400)
+    // Validation: Team lead must have TEAM_LEAD or ACM role
+    if (!isTeamLeadEquivalent(teamLead.user.role)) {
+      return errorResponse('Assigned employee must have TEAM_LEAD or ACM role', 400)
     }
 
     // Validation: Team lead must be leading a team

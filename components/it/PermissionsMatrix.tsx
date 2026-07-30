@@ -23,6 +23,7 @@ interface PermissionsMatrixProps {
   onUpdatePermission: (resourceId: string, updates: { level: string; canGrant: boolean }) => void
   openSectionKey: string | null
   setOpenSectionKey: (key: string | null) => void
+  isRole?: boolean
 }
 
 export function PermissionsMatrix({
@@ -33,24 +34,25 @@ export function PermissionsMatrix({
   onUpdatePermission,
   openSectionKey,
   setOpenSectionKey,
+  isRole = false,
 }: PermissionsMatrixProps) {
   return (
     <div className="flex-1 w-full space-y-4">
       {/* Active Module Header */}
-      <div className="bg-[#151e3c] border border-[#283150] rounded-xl p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+      <div className="bg-card text-card-foreground border border-border rounded-xl p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-4 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[#2fd9f4]">
+          <div className="w-12 h-12 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
             <FolderLock className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="font-bold text-lg text-white">{activeModule.label} Module</h3>
-            <p className="text-xs text-[#c7c6cd]">Configure functional visibility rules under this module category.</p>
+            <h3 className="font-bold text-lg text-foreground">{activeModule.label} Module</h3>
+            <p className="text-xs text-muted-foreground">Configure functional visibility rules under this module category.</p>
           </div>
         </div>
 
         {/* Grant All Module Switch */}
-        <div className="flex items-center gap-2 bg-[#101a38] border border-[#283150] px-4 py-2 rounded-full self-start sm:self-auto">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-[#c7c6cd]">Grant Module</span>
+        <div className="flex items-center gap-2 bg-muted/50 border border-border px-4 py-2 rounded-full self-start sm:self-auto">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Grant Module</span>
           <PermSwitch
             checked={activeModule.children?.every((sec: any) => {
               const sVal = editedPermissions[sec.id]
@@ -64,22 +66,31 @@ export function PermissionsMatrix({
       {/* Sections Accordions */}
       <div className="space-y-4">
         {activeModule.children?.map((sec: any) => {
-          const isOpen = openSectionKey === sec.key
+          const isOpen = !isRole && openSectionKey === sec.key
           const isSectionGranted = editedPermissions[sec.id]?.level !== 'NONE'
 
           return (
             <div
               key={sec.key}
-              className="border border-[#283150] rounded-xl bg-[#101a38]/30 overflow-hidden transition-all duration-200"
+              className="border border-border rounded-xl bg-card text-card-foreground shadow-sm overflow-hidden transition-all duration-200"
             >
               {/* Accordion Trigger Header */}
               <div
-                className="flex items-center justify-between p-4 cursor-pointer bg-[#151e3c]/50 hover:bg-[#1f2847]/20 select-none"
-                onClick={() => setOpenSectionKey(isOpen ? null : sec.key)}
+                className={cn(
+                  "flex items-center justify-between p-4 bg-muted/40 select-none",
+                  !isRole && "cursor-pointer hover:bg-muted/70"
+                )}
+                onClick={() => {
+                  if (!isRole) {
+                    setOpenSectionKey(isOpen ? null : sec.key)
+                  }
+                }}
               >
                 <div className="flex items-center gap-2">
-                  <ChevronRight className={`h-4 w-4 text-[#2fd9f4] transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
-                  <span className="font-semibold text-lg text-white">{sec.label}</span>
+                  {!isRole && (
+                    <ChevronRight className={`h-4 w-4 text-cyan-600 dark:text-cyan-400 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
+                  )}
+                  <span className="font-semibold text-lg text-foreground">{sec.label}</span>
                 </div>
                 <div className="flex items-center gap-4" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center gap-2">
@@ -94,9 +105,9 @@ export function PermissionsMatrix({
 
               {/* Accordion Content Grid */}
               {isOpen && (
-                <div className="p-4 border-t border-[#283150]/60 bg-[#101a38]/20 space-y-1">
+                <div className="p-4 border-t border-border bg-background space-y-1">
                   {/* Table Header Row */}
-                  <div className="grid grid-cols-12 gap-4 py-3.5 px-4 text-sm font-bold uppercase tracking-wider text-muted-foreground border-b border-[#283150]/40">
+                  <div className="grid grid-cols-12 gap-4 py-3.5 px-4 text-sm font-bold uppercase tracking-wider text-muted-foreground border-b border-border">
                     <div className="col-span-4">Access Node / Entity</div>
                     <div className="col-span-2 text-center">Read</div>
                     <div className="col-span-2 text-center">Write</div>
@@ -117,8 +128,8 @@ export function PermissionsMatrix({
                     return (
                       <React.Fragment key={child.id}>
                         {/* Level 2 Sub-section Row */}
-                        <div className="grid grid-cols-12 gap-4 py-4 px-4 hover:bg-[#1f2847]/10 rounded-lg items-center transition-all border-b border-[#283150]/10">
-                          <div className="col-span-4 text-base pl-6 text-[#c7c6cd] flex items-center gap-1.5 font-medium">
+                        <div className="grid grid-cols-12 gap-4 py-4 px-4 hover:bg-muted/50 rounded-lg items-center transition-all border-b border-border">
+                          <div className="col-span-4 text-base pl-6 text-foreground flex items-center gap-1.5 font-medium">
                             {child.label}
                           </div>
                           <div className="col-span-2 flex justify-center">
@@ -173,9 +184,9 @@ export function PermissionsMatrix({
                           const subIsDelegate = subCurrent.canGrant === true
 
                           return (
-                            <div key={subChild.id} className="grid grid-cols-12 gap-4 py-3 px-4 hover:bg-[#1f2847]/10 rounded-lg items-center transition-all border-b border-[#283150]/5">
-                              <div className="col-span-4 text-sm pl-12 text-[#919097] flex items-center gap-2">
-                                <CornerDownRight className="h-4 w-4 text-[#2fd9f4]/70 shrink-0" />
+                            <div key={subChild.id} className="grid grid-cols-12 gap-4 py-3 px-4 hover:bg-muted/40 rounded-lg items-center transition-all border-b border-border/50">
+                              <div className="col-span-4 text-sm pl-12 text-muted-foreground flex items-center gap-2">
+                                <CornerDownRight className="h-4 w-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
                                 <span>{subChild.label}</span>
                               </div>
                               <div className="col-span-2 flex justify-center">

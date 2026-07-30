@@ -829,25 +829,33 @@ export default function HospitalDetailPage() {
             />
 
             {/* Right Side Widget: P&L Health */}
-            <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-sm dark:shadow-lg">
-              <div className="relative w-20 h-20 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle className="text-slate-200 dark:text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
-                  <circle className="text-cyan-500 dark:text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
-                </svg>
-                <div className="absolute flex flex-col items-center">
-                  <span className="text-base font-bold text-slate-900 dark:text-white">80%</span>
-                  <span className="text-[7px] font-bold text-slate-500 dark:text-[#c7c6cd] uppercase tracking-wider">COLLECTION</span>
+            {(() => {
+              const received = data?.kpis.amountReceived ?? 0
+              const unsettled = data?.kpis.pendingOutstanding ?? 0
+              const total = received + unsettled
+              const receivedPercentage = total > 0 ? Math.round((received / total) * 100) : 0
+              const strokeDashoffset = 213.6 * (1 - Math.min(100, Math.max(0, receivedPercentage)) / 100)
+              return (
+                <div className="bg-white border border-slate-200 dark:bg-[#191D2E]/60 dark:border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-sm dark:shadow-lg">
+                  <div className="relative w-20 h-20 flex items-center justify-center">
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle className="text-slate-200 dark:text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
+                      <circle className="text-cyan-500 dark:text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset={strokeDashoffset} strokeWidth="4"></circle>
+                    </svg>
+                    <div className="absolute flex flex-col items-center">
+                      <span className="text-base font-bold text-slate-900 dark:text-white">{receivedPercentage}%</span>
+                      <span className="text-[7px] font-bold text-slate-500 dark:text-[#c7c6cd] uppercase tracking-wider">RECEIVED</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-slate-900 dark:text-[#dce1ff]">Collection & Health Score</h4>
+                    <p className="text-[11px] text-slate-500 dark:text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">
+                      ₹{received.toLocaleString('en-IN')} received of ₹{total.toLocaleString('en-IN')} expected total.
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <h4 className="font-bold text-xs text-slate-900 dark:text-[#dce1ff]">Collection & Health Score</h4>
-                <p className="text-[11px] text-slate-500 dark:text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">Your hospital is performing above average for City General cluster.</p>
-                <button className="mt-1.5 border border-cyan-500/40 text-cyan-600 dark:border-[#22d3ee]/40 dark:text-[#22d3ee] px-3 py-0.5 rounded-full text-[10px] hover:bg-cyan-50 dark:hover:bg-[#22d3ee]/10 transition-all font-semibold">
-                  Full Analysis
-                </button>
-              </div>
-            </div>
+              )
+            })()}
           </section>
         </div>
       </div>

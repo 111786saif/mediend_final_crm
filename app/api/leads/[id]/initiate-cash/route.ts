@@ -3,8 +3,14 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 import { CaseStage, FlowType, NotificationType, ATSStatus } from '@/generated/prisma/client'
+import {
+  assertDoctorAvailableOnDate,
+  DoctorAvailabilityError,
+  normalizeDoctorName,
+} from '@/lib/doctor-availability'
 
 const initiateCashSchema = z.object({
   admissionDate: z.string(),
@@ -117,7 +123,7 @@ export async function POST(
     const user = await getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden', 403)
     }
 
@@ -136,6 +142,20 @@ export async function POST(
       where: { leadId: id },
       select: { id: true },
     })
+
+    const nextDoctorName = normalizeDoctorName(validatedData.surgeonName)
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextDoctorName,
+      validatedData.admissionDate,
+      'Selected doctor is on approved leave for this date.'
+    )
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextDoctorName,
+      validatedData.surgeryDate,
+      'Selected doctor is on approved leave for this date.'
+    )
 
     const { atsStatus, caseStage, autoApproved } = resolveCashDecision(
       validatedData.atsAmount,
@@ -245,6 +265,9 @@ export async function POST(
           : 'IPD Cash details saved successfully - Pending manual approval'
     )
   } catch (error) {
+    if (error instanceof DoctorAvailabilityError) {
+      return errorResponse(error.message, error.status)
+    }
     console.error('Error initiating cash flow:', error)
     if (error instanceof z.ZodError) {
       return errorResponse('Validation failed', 400)
@@ -261,7 +284,7 @@ export async function PATCH(
     const user = await getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
-    if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden', 403)
     }
 
@@ -278,12 +301,30 @@ export async function PATCH(
 
     if (
       lead.caseStage !== CaseStage.CASH_IPD_PENDING &&
+      lead.caseStage !== CaseStage.CASH_OPD_SCHEDULED &&
       lead.caseStage !== CaseStage.CASH_ON_HOLD &&
       lead.caseStage !== CaseStage.CASH_IPD_SUBMITTED &&
       lead.caseStage !== CaseStage.CASH_APPROVED
     ) {
       return errorResponse('Can only edit IPD Cash details before the case moves past approval', 400)
     }
+
+    const nextDoctorName =
+      validatedData.surgeonName !== undefined
+        ? normalizeDoctorName(validatedData.surgeonName)
+        : normalizeDoctorName(lead.surgeonName)
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextDoctorName,
+      validatedData.admissionDate,
+      'Selected doctor is on approved leave for this date.'
+    )
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextDoctorName,
+      validatedData.surgeryDate,
+      'Selected doctor is on approved leave for this date.'
+    )
 
     const { atsStatus, caseStage, autoApproved } = resolveCashDecision(
       validatedData.atsAmount,
@@ -364,6 +405,9 @@ export async function PATCH(
         : 'IPD Cash details updated successfully'
     )
   } catch (error) {
+    if (error instanceof DoctorAvailabilityError) {
+      return errorResponse(error.message, error.status)
+    }
     console.error('Error updating cash flow:', error)
     if (error instanceof z.ZodError) {
       return errorResponse('Validation failed', 400)

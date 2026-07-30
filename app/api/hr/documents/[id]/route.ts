@@ -3,15 +3,15 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import {
-  generateOfferLetterHTML,
-  generateIncrementLetterHTML,
-  generateExperienceLetterHTML,
-  generateRelievingLetterHTML,
-  generateInternshipOfferLetterHTML,
-  generateInternshipCompletionLetterHTML,
-  generateExitInterviewHTML,
-} from '@/lib/hrms/document-templates'
+import { resolveDocumentHtml, wrapEditedBody } from '@/lib/hrms/document-render'
+import { z } from 'zod'
+
+const patchSchema = z.object({
+  metadata: z.record(z.any()).optional(),
+  contentHtml: z.string().optional(),
+  /** When true, treat contentHtml as body-only and re-wrap with chrome */
+  bodyOnly: z.boolean().optional(),
+})
 
 export async function GET(
   request: NextRequest,
@@ -71,45 +71,22 @@ export async function GET(
 
     const metadata = document.metadata as Record<string, unknown> | null
 
-    let htmlContent: string
+    let htmlContent = await resolveDocumentHtml({
+      documentType: document.documentType,
+      contentHtml: document.contentHtml,
+      employee: employeeData,
+      metadata,
+      documentUrl: document.documentUrl,
+    })
 
-    switch (document.documentType) {
-      case 'OFFER_LETTER':
-        htmlContent = generateOfferLetterHTML(employeeData, metadata || undefined)
-        htmlContent = htmlContent.replace(
-          '<!-- ACK_PLACEHOLDER -->',
-          '<br><br><p>Signature: _________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: _________________</p>'
-        )
-        break
-      case 'INCREMENT_LETTER':
-        htmlContent = generateIncrementLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'EXPERIENCE_LETTER':
-        htmlContent = generateExperienceLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'RELIEVING_LETTER':
-        htmlContent = generateRelievingLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'INTERNSHIP_OFFER_LETTER':
-        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata || undefined)
-        htmlContent = htmlContent.replace(
-          '<!-- ACK_PLACEHOLDER -->',
-          '<br><br><p>Signature: _________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: _________________</p>'
-        )
-        break
-      case 'INTERNSHIP_COMPLETION_LETTER':
-        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
-        break
-      case 'EXIT_INTERVIEW_FORM':
-        htmlContent = generateExitInterviewHTML(employeeData, metadata || undefined)
-        break
-      case 'CUSTOM':
-        htmlContent = document.documentUrl
-          ? `<div style="padding:2rem;text-align:center;"><p>Uploaded document.</p><p><a href="${document.documentUrl}" target="_blank" rel="noopener noreferrer">Open document</a></p></div>`
-          : '<div style="padding:2rem;text-align:center;"><p>No file linked to this document.</p></div>'
-        break
-      default:
-        return errorResponse('Invalid document type', 400)
+    if (
+      document.documentType === 'OFFER_LETTER' ||
+      document.documentType === 'INTERNSHIP_OFFER_LETTER'
+    ) {
+      htmlContent = htmlContent.replace(
+        '<!-- ACK_PLACEHOLDER -->',
+        '<br><br><p>Signature: _________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: _________________</p>'
+      )
     }
 
     const { searchParams } = new URL(request.url)
@@ -162,16 +139,31 @@ export async function PATCH(
       return errorResponse('Cannot edit a document that has already been acknowledged by the employee', 400)
     }
 
-    const body = await request.json()
-    const { metadata } = body
+    if (document.documentType === 'CUSTOM') {
+      return errorResponse('Custom uploaded documents cannot be edited as rich text', 400)
+    }
 
-    if (!metadata || typeof metadata !== 'object') {
-      return errorResponse('metadata is required', 400)
+    const body = await request.json()
+    const { metadata, contentHtml, bodyOnly } = patchSchema.parse(body)
+
+    if (!metadata && !contentHtml) {
+      return errorResponse('metadata or contentHtml is required', 400)
+    }
+
+    let nextHtml = contentHtml
+    if (contentHtml && bodyOnly) {
+      nextHtml = wrapEditedBody(contentHtml, document.documentType)
+    } else if (contentHtml && !contentHtml.includes('<!DOCTYPE') && !contentHtml.includes('<html')) {
+      // TipTap typically returns body fragments — wrap for consistent view/print
+      nextHtml = wrapEditedBody(contentHtml, document.documentType)
     }
 
     const updated = await prisma.employeeDocument.update({
       where: { id },
-      data: { metadata },
+      data: {
+        ...(metadata ? { metadata } : {}),
+        ...(nextHtml ? { contentHtml: nextHtml } : {}),
+      },
       include: {
         employee: {
           include: {
@@ -186,8 +178,14 @@ export async function PATCH(
       },
     })
 
-    return successResponse({ document: updated }, 'Document updated successfully')
+    return successResponse(
+      { document: updated, htmlContent: updated.contentHtml },
+      'Document updated successfully'
+    )
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return errorResponse(error.errors[0]?.message ?? 'Invalid request', 400)
+    }
     console.error('Error updating document:', error)
     return errorResponse('Failed to update document', 500)
   }

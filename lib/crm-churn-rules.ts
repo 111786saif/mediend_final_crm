@@ -1,6 +1,7 @@
 import { EmployeeStatus, UserRole } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getEmployeeByUserId, getManagementChain } from '@/lib/hierarchy'
+import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 
 export const CRM_CHURN_RULES_SETTING_KEY = 'crm_churn_reassignment_rules_v1'
 
@@ -10,6 +11,7 @@ export const CHURN_MANAGEABLE_ROLES = new Set<UserRole>([
   'ADMIN',
   'SALES_HEAD',
   'TEAM_LEAD',
+  'ASSISTANT_CATEGORY_MANAGER',
 ])
 
 export const CHURN_TRIGGER_STATUSES = ['junk', 'churned'] as const
@@ -241,9 +243,10 @@ export async function getAvailableChurnRuleScopes(currentUser: {
   }
 
   if (currentUser.role === 'SUPER_ADMIN') {
-    const [salesHeads, teamLeads] = await Promise.all([
+    const [salesHeads, teamLeads, acms] = await Promise.all([
       listScopedManagers('SALES_HEAD'),
       listScopedManagers('TEAM_LEAD'),
+      listScopedManagers('ASSISTANT_CATEGORY_MANAGER'),
     ])
 
     return [
@@ -271,11 +274,15 @@ export async function getAvailableChurnRuleScopes(currentUser: {
         description: 'Applies to leads under this sales head hierarchy when no team-lead rule matches.',
         user,
       })),
-      ...teamLeads.map((user) => ({
+      ...[...teamLeads, ...acms].map((user) => ({
         key: getChurnScopeKey('TEAM_LEAD', user.id),
         scopeType: 'TEAM_LEAD' as const,
         scopeUserId: user.id,
-        label: `${user.name} · Team Lead`,
+        label: `${user.name} · ${
+          user.role === 'ASSISTANT_CATEGORY_MANAGER'
+            ? 'Assistant Category Manager'
+            : 'Team Lead'
+        }`,
         description: 'Applies to BDs in this team lead’s direct team.',
         user,
       })),
@@ -295,23 +302,25 @@ export async function getAvailableChurnRuleScopes(currentUser: {
     ]
   }
 
-  const scopedRole = currentUser.role as 'SALES_HEAD' | 'TEAM_LEAD'
+  const scopeType: ChurnRuleScopeType = isTeamLeadEquivalent(currentUser.role)
+    ? 'TEAM_LEAD'
+    : 'SALES_HEAD'
+  const isTeamScope = scopeType === 'TEAM_LEAD'
 
   return [
     {
-      key: getChurnScopeKey(scopedRole, currentUser.id),
-      scopeType: scopedRole,
+      key: getChurnScopeKey(scopeType, currentUser.id),
+      scopeType,
       scopeUserId: currentUser.id,
-      label: `${scopedRole === 'TEAM_LEAD' ? 'My team' : 'My sales scope'}`,
-      description:
-        scopedRole === 'TEAM_LEAD'
-          ? 'Applies to BDs who report directly to you.'
-          : 'Applies to leads inside your sales hierarchy when no team-level rule matches.',
+      label: `${isTeamScope ? 'My team' : 'My sales scope'}`,
+      description: isTeamScope
+        ? 'Applies to BDs who report directly to you.'
+        : 'Applies to leads inside your sales hierarchy when no team-level rule matches.',
       user: {
         id: currentUser.id,
-        name: scopedRole,
+        name: scopeType,
         email: '',
-        role: scopedRole,
+        role: currentUser.role,
       },
     },
   ]
@@ -450,10 +459,17 @@ async function resolveLeadTeamContext(leadOwnerUserId: string) {
   }
 
   const chain = await getManagementChain(ownerEmployee.id)
-  const teamLead =
-    ownerEmployee.user.role === 'TEAM_LEAD'
-      ? ownerEmployee
-      : chain.find((employee) => employee.user.role === 'TEAM_LEAD') ?? null
+  // ACM is functionally identical to Team Lead
+  const isTeamUnit =
+    ownerEmployee.user.role === 'TEAM_LEAD' ||
+    ownerEmployee.user.role === 'ASSISTANT_CATEGORY_MANAGER'
+  const teamLead = isTeamUnit
+    ? ownerEmployee
+    : chain.find(
+        (employee) =>
+          employee.user.role === 'TEAM_LEAD' ||
+          employee.user.role === 'ASSISTANT_CATEGORY_MANAGER'
+      ) ?? null
   const salesHead =
     ownerEmployee.user.role === 'SALES_HEAD'
       ? ownerEmployee

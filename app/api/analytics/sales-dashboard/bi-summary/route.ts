@@ -52,29 +52,25 @@ interface BiSummary {
   }>
 }
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
+import {
+  canAccessSalesDashboard,
+  getSalesDashboardBdIdFilter,
+} from '@/lib/analytics/sales-dashboard-access'
 
 export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
 
-    if (
-      user.role !== 'MD' &&
-      user.role !== 'ADMIN' &&
-      user.role !== 'SALES_HEAD' &&
-      user.role !== 'EXECUTIVE_ASSISTANT' &&
-      user.role !== 'TEAM_LEAD'
-    ) {
+    if (!canAccessSalesDashboard(user)) {
       return errorResponse('Forbidden', 403)
     }
 
-    let teamScope: Prisma.LeadWhereInput = {}
-    if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      teamScope = { bdId: { in: [user.id, ...subIds] } }
-    }
+    const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+    const teamScope: Prisma.LeadWhereInput = bdIdFilter
+      ? { bdId: { in: bdIdFilter } }
+      : {}
 
     const { searchParams } = new URL(request.url)
     const startDate = searchParams.get('startDate')

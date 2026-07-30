@@ -66,6 +66,6 @@ export interface SalaryOverrideHistoryEntry {
 export const SALES_TEAM_COST_ROLE_LABEL: Record<SalesTeamCostRoleType, string> = {
   salesHead: 'Sales Head',
   catManager: 'Category Manager',
-  tl: 'Team Leader',
+  tl: 'Team Lead / ACM',
   bd: 'Business Developer',
 }

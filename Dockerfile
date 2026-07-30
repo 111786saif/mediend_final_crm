@@ -35,7 +35,7 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl wget
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
@@ -53,9 +53,20 @@ USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
-  CMD wget -qO- http://localhost:3000/api/health || exit 1
+HEALTHCHECK --interval=15s --timeout=10s --start-period=90s --retries=5 \
+  CMD wget -q --spider http://127.0.0.1:3000/api/health || exit 1
 CMD ["node", "server.js"]
+
+# Long-running BullMQ worker for bulk lead reassignment.
+# Source + deps only — skips Next.js build to keep deploy memory usage low.
+FROM base AS worker
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/generated ./generated
+COPY . .
+ENV NODE_ENV=production
+CMD ["bun", "run", "worker:bulk-reassign"]
 
 # Stage for running one-off migrations and tool scripts (full source + deps).
 # Examples: prisma migrate deploy, db:seed:masters, scripts under scripts/.

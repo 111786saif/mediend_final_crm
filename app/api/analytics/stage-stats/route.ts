@@ -6,7 +6,8 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 
 export async function GET(request: NextRequest) {
   try {
@@ -44,9 +45,9 @@ export async function GET(request: NextRequest) {
     // Role-based filtering
     if (user.role === 'BD') {
       where.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      where.bdId = { in: [user.id, ...subIds] }
+    } else if (isSubtreeScopedSalesRole(user.role)) {
+      const bdIdFilter = await getSalesDashboardBdIdFilter(user)
+      if (bdIdFilter) where.bdId = { in: bdIdFilter }
     }
 
     // Pipeline stage breakdown
@@ -150,7 +151,9 @@ export async function GET(request: NextRequest) {
           'Out of Station',
           'Out of station follow-up',
           'IPD Schedule',
+          'OPD Scheduled',
           'OPD Schedule',
+          'OPD Done',
         ].includes(status) ||
         statusLower.includes('follow') ||
         statusLower.includes('call back') ||
@@ -193,7 +196,7 @@ export async function GET(request: NextRequest) {
       }
       // Completed
       else if (
-        ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'OPD Done', 'Order Booked', 'Policy Booked', 'Policy Issued'].includes(status) ||
+        ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'Order Booked', 'Policy Booked', 'Policy Issued'].includes(status) ||
         statusLower.includes('closed') ||
         statusLower.includes('done') ||
         statusLower.includes('booked')

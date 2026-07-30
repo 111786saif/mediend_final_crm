@@ -117,6 +117,7 @@ enum TargetType {
   BD
   TEAM
   DEPARTMENT_HEAD
+  CATEGORY
 }
 
 enum PeriodType {
@@ -360,6 +361,8 @@ enum PLOutstandingStatus {
 
 enum CaseStage {
   NEW_LEAD
+  OPD_SCHEDULED
+  OPD_DONE
   KYP_BASIC_COMPLETE
   HOSPITALS_SUGGESTED
   PREAUTH_RAISED
@@ -370,6 +373,8 @@ enum CaseStage {
   OUTSTANDING
   // Cash Flow Stages
   CASH_IPD_PENDING
+  CASH_OPD_SCHEDULED
+  CASH_OPD_DONE
   CASH_IPD_SUBMITTED
   CASH_APPROVED
   CASH_ON_HOLD
@@ -537,6 +542,7 @@ model User {
   admissionsInitiated  AdmissionRecord[]  @relation("AdmissionInitiator")
   caseStageChanges     CaseStageHistory[] @relation("CaseStageChanger")
   workflowResetsPerformed WorkflowResetLog[] @relation("WorkflowResetPerformer")
+  bulkLeadReassignmentRuns BulkLeadReassignmentRun[] @relation("BulkLeadReassignmentActor")
   caseChatMessagesSent CaseChatMessage[]  @relation("CaseChatSender")
   chatReadReceipts     ChatReadReceipt[]  @relation("ChatReadUser")
 
@@ -636,6 +642,13 @@ model User {
 
   // Calendar availability statuses
   statuses UserStatus[]
+
+  // mediend AI knowledge base + audit
+  knowledgeDocumentsUploaded KnowledgeDocument[]       @relation("KnowledgeDocumentUploader")
+  knowledgeDocumentUsers     KnowledgeDocumentUser[]
+  aiConversations            AiConversation[]
+  aiMessages                 AiMessage[]
+  aiToolCalls                AiToolCall[]
 
   @@index([email])
   @@index([role])
@@ -748,6 +761,12 @@ model Lead {
   opdCharges         Int       @default(0)
   opdScheduleDate    DateTime?
   opdMeeting         Int?
+  opdSurgeryAdvised  String?
+  opdSurgeryRemarkCode String?
+  opdReasonNoSurgeryCode String?
+  opdFollowUpReasonCode String?
+  opdImplantRequired Boolean?
+  opdDiagnosis       String?
   ipdAdmissionDate   DateTime?
   ipdHospital        String?
   ipdDrName          String?
@@ -771,6 +790,8 @@ model Lead {
   profession         String?
   qr                 String?
   removeRemarks      Boolean   @default(false)
+  isOldCrmLead       Boolean   @default(false)
+  remarksClearedAt   DateTime?
   adId               String?
   campaignId         String?
   formId             String?
@@ -802,6 +823,10 @@ model Lead {
   leadRemarkEntries     LeadRemarkEntry[]
   qrCallAuditLogs       LeadQrCallAuditLog[]
   crmAssignmentPreviewLogs CrmAssignmentPreviewLog[]
+  opdSurgeryRemark      SurgeryRemarkMaster?     @relation("LeadOpdSurgeryRemark", fields: [opdSurgeryRemarkCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  opdReasonNoSurgery    ReasonNoSurgeryMaster?   @relation("LeadOpdReasonNoSurgery", fields: [opdReasonNoSurgeryCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  opdFollowUpReason     FollowUpReasonMaster?    @relation("LeadOpdFollowUpReason", fields: [opdFollowUpReasonCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  opdPrescriptionImages LeadOpdPrescriptionImage[]
 
 
   @@index([bdId])
@@ -818,6 +843,23 @@ model Lead {
   @@index([leadEntryDate])
   @@index([assignedDate])
   @@index([followUpDate])
+  @@index([opdSurgeryRemarkCode])
+  @@index([opdReasonNoSurgeryCode])
+  @@index([opdFollowUpReasonCode])
+}
+
+model LeadOpdPrescriptionImage {
+  id         String   @id @default(cuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  fileName    String
+  fileUrl     String
+  storageKey  String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([leadId, sortOrder])
 }
 
 model CallNote {
@@ -1189,6 +1231,7 @@ model Department {
   meets              Meet[]
   crmAssignmentRules CrmAssignmentRule[]
   crmCampaigns       CrmCampaign[]
+  knowledgeDocuments KnowledgeDocumentDepartment[]
 
   @@index([headId])
   @@index([name])
@@ -1600,6 +1643,7 @@ model EmployeeDocument {
   applicantName  String?
   applicantEmail String?
   metadata       Json?
+  contentHtml    String?      @db.Text
   generatedAt    DateTime     @default(now())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -1609,6 +1653,16 @@ model EmployeeDocument {
 
   @@index([employeeId])
   @@index([documentType])
+}
+
+// Editable master templates for HR letters (one per DocumentType except CUSTOM)
+model DocumentTemplate {
+  id           String       @id @default(cuid())
+  documentType DocumentType @unique
+  name         String
+  contentHtml  String       @db.Text
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 // Feedback 360 - Employee submits, HR reviews
@@ -2681,6 +2735,19 @@ model CrmCampaignCity {
   @@index([isActive])
 }
 
+model CrmSubStatusMaster {
+  id        String   @id @default(cuid())
+  key       Int      @unique
+  value     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([value])
+  @@index([isActive])
+}
+
 model CrmCampaign {
   id                 String                        @id @default(cuid())
   externalCampaignId String                        @unique
@@ -2756,6 +2823,37 @@ model CrmActivityLog {
   @@index([entityType, createdAt])
   @@index([actorUserId, createdAt])
   @@index([action, createdAt])
+}
+
+model BulkLeadReassignmentRun {
+  id                    String   @id @default(cuid())
+  actorUserId           String
+  actorUser             User     @relation("BulkLeadReassignmentActor", fields: [actorUserId], references: [id], onDelete: Cascade)
+  leadIds               Json
+  bdUserIds             Json
+  pauseSeconds          Int
+  subStatus             Int?
+  removePreviousRemarks Boolean  @default(false)
+  status                String   @default("queued")
+  processedCount        Int      @default(0)
+  currentLeadIndex      Int      @default(0)
+  currentBdIndex        Int      @default(0)
+  currentCycleNumber    Int      @default(0)
+  totalLeads            Int
+  totalBds              Int
+  bullJobId             String?
+  nextRunAt             DateTime?
+  startedAt             DateTime?
+  completedAt           DateTime?
+  failedAt              DateTime?
+  errorMessage          String?  @db.Text
+  metadata              Json?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([actorUserId, createdAt])
+  @@index([status, createdAt])
+  @@index([nextRunAt])
 }
 
 // ==========================================
@@ -2949,6 +3047,8 @@ model AdmissionRecord {
   // IPD Status tracking
   ipdStatus          IpdStatus?
   ipdStatusReason    String?
+  ipdImplantUsed     Boolean?
+  ipdNoShowReason    String?
   newSurgeryDate     DateTime?
   ipdDischargeDate   DateTime?
   ipdStatusNotes     String?    @db.Text
@@ -2959,8 +3059,40 @@ model AdmissionRecord {
   initiatedById String
   initiatedBy   User     @relation("AdmissionInitiator", fields: [initiatedById], references: [id])
   initiatedAt   DateTime @default(now())
+  implantUsages  AdmissionRecordImplantUsage[]
+  prescriptionImages AdmissionRecordPrescriptionImage[]
 
   @@index([leadId])
+}
+
+model AdmissionRecordImplantUsage {
+  id                String          @id @default(cuid())
+  admissionRecordId String
+  admissionRecord   AdmissionRecord @relation(fields: [admissionRecordId], references: [id], onDelete: Cascade)
+  implantId         String
+  implant           ImplantMaster   @relation(fields: [implantId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  quantity          Int             @default(1)
+  notes             String?         @db.Text
+  sortOrder         Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([admissionRecordId, sortOrder])
+  @@index([implantId])
+}
+
+model AdmissionRecordPrescriptionImage {
+  id                String          @id @default(cuid())
+  admissionRecordId String
+  admissionRecord   AdmissionRecord @relation(fields: [admissionRecordId], references: [id], onDelete: Cascade)
+  fileName          String
+  fileUrl           String
+  storageKey        String?
+  sortOrder         Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([admissionRecordId, sortOrder])
 }
 
 // ==========================================
@@ -3901,6 +4033,7 @@ model ImplantMaster {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  ipdUsages    AdmissionRecordImplantUsage[]
 
   @@index([name])
   @@index([code])
@@ -3915,6 +4048,7 @@ model SurgeryRemarkMaster {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  opdLeads     Lead[]   @relation("LeadOpdSurgeryRemark")
 
   @@index([displayOrder])
   @@index([isActive])
@@ -3928,6 +4062,7 @@ model ReasonNoSurgeryMaster {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  opdLeads     Lead[]   @relation("LeadOpdReasonNoSurgery")
 
   @@index([displayOrder])
   @@index([isActive])
@@ -3941,6 +4076,7 @@ model FollowUpReasonMaster {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  opdLeads     Lead[]   @relation("LeadOpdFollowUpReason")
 
   @@index([displayOrder])
   @@index([isActive])
@@ -4318,4 +4454,130 @@ model RequestLog {
   @@index([createdAt])
   @@index([status, createdAt])
   @@index([path, createdAt])
+}
+
+// ─── mediend AI: knowledge base + conversation audit ─────────────────────────
+
+enum KnowledgeSourceType {
+  UPLOAD
+  TEXT
+  URL
+}
+
+enum KnowledgeVisibility {
+  GENERAL
+  RESTRICTED
+}
+
+model KnowledgeDocument {
+  id           String               @id @default(cuid())
+  title        String
+  description  String?              @db.Text
+  sourceType   KnowledgeSourceType  @default(TEXT)
+  fileUrl      String?
+  mimeType     String?
+  contentText  String?              @db.Text
+  visibility   KnowledgeVisibility  @default(GENERAL)
+  isActive     Boolean              @default(true)
+  uploadedById String
+  uploadedBy   User                 @relation("KnowledgeDocumentUploader", fields: [uploadedById], references: [id])
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  chunks      KnowledgeChunk[]
+  roles       KnowledgeDocumentRole[]
+  users       KnowledgeDocumentUser[]
+  departments KnowledgeDocumentDepartment[]
+
+  @@index([isActive, visibility])
+  @@index([uploadedById])
+}
+
+model KnowledgeChunk {
+  id          String            @id @default(cuid())
+  documentId  String
+  document    KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  chunkIndex  Int
+  content     String            @db.Text
+  createdAt   DateTime          @default(now())
+
+  @@unique([documentId, chunkIndex])
+  @@index([documentId])
+}
+
+model KnowledgeDocumentRole {
+  id         String            @id @default(cuid())
+  documentId String
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  role       String
+
+  @@unique([documentId, role])
+  @@index([role])
+}
+
+model KnowledgeDocumentUser {
+  id         String            @id @default(cuid())
+  documentId String
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, userId])
+  @@index([userId])
+}
+
+model KnowledgeDocumentDepartment {
+  id           String            @id @default(cuid())
+  documentId   String
+  document     KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  departmentId String
+  department   Department        @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, departmentId])
+  @@index([departmentId])
+}
+
+model AiConversation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages  AiMessage[]
+  toolCalls AiToolCall[]
+
+  @@index([userId, createdAt])
+}
+
+model AiMessage {
+  id             String         @id @default(cuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String
+  content        String         @db.Text
+  createdAt      DateTime       @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([userId])
+}
+
+model AiToolCall {
+  id             String         @id @default(cuid())
+  conversationId String?
+  conversation   AiConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolName       String
+  input          Json?
+  denied         Boolean        @default(false)
+  errorCode      String?
+  createdAt      DateTime       @default(now())
+
+  @@index([userId, createdAt])
+  @@index([toolName, createdAt])
+  @@index([denied])
 }

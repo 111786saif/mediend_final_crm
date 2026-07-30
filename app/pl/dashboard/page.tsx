@@ -1114,7 +1114,7 @@ export default function PLLedgerPage() {
       else if (colId === 'docPayout') colId = 'doc_payout'
 
       const resourceKey = `insurance_pl.pl_ledger.table.dischargeSheet.column.${colId}`
-      if (resourceKey in RESOURCE_MAP) {
+      if (resourceKey in RESOURCE_MAP && resourceKey in permissions) {
         return hasAccess(resourceKey, 'READ')
       }
       return true

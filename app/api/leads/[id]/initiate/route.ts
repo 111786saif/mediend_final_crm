@@ -4,8 +4,14 @@ import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { z } from 'zod'
 import { CaseStage } from '@/generated/prisma/client'
+import {
+  assertDoctorAvailableOnDate,
+  DoctorAvailabilityError,
+  normalizeDoctorName,
+} from '@/lib/doctor-availability'
 
 const initiateSchema = z.object({
   admissionDate: z.string().min(1, 'Admission date is required'),
@@ -59,7 +65,11 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    if (!['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)) {
+    if (
+      !isSalesLeadWorkerRole(user.role) &&
+      user.role !== 'EXECUTIVE_ASSISTANT' &&
+      user.role !== 'ADMIN'
+    ) {
       return errorResponse('Forbidden: Only BD / TL / EA can initiate admission', 403)
     }
 
@@ -97,6 +107,20 @@ export async function POST(
     if (existingAdmission) {
       return errorResponse('Admission already initiated for this case', 400)
     }
+
+    const nextDoctorName = normalizeDoctorName(data.surgeonName)
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextDoctorName,
+      data.admissionDate,
+      'Selected doctor is on approved leave for this date.'
+    )
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextDoctorName,
+      data.surgeryDate,
+      'Selected doctor is on approved leave for this date.'
+    )
 
     const admission = await prisma.admissionRecord.create({
       data: {
@@ -176,6 +200,9 @@ export async function POST(
 
     return successResponse(admission, 'Admission initiated successfully')
   } catch (error) {
+    if (error instanceof DoctorAvailabilityError) {
+      return errorResponse(error.message, error.status)
+    }
     if (error instanceof z.ZodError) {
       return errorResponse('Invalid request data: ' + error.errors.map(e => e.message).join(', '), 400)
     }
@@ -198,7 +225,7 @@ export async function PATCH(
       return unauthorizedResponse()
     }
 
-    if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
+    if (!isSalesLeadWorkerRole(user.role) && user.role !== 'ADMIN') {
       return errorResponse('Forbidden: Only BD / TL can edit IPD details', 403)
     }
 
@@ -228,6 +255,20 @@ export async function PATCH(
     if (!existingAdmission) {
       return errorResponse('No admission record to edit', 404)
     }
+
+    const nextDoctorName = normalizeDoctorName(data.surgeonName || lead.ipdDrName || lead.surgeonName)
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextDoctorName,
+      data.admissionDate,
+      'Selected doctor is on approved leave for this date.'
+    )
+    await assertDoctorAvailableOnDate(
+      prisma,
+      nextDoctorName,
+      data.surgeryDate,
+      'Selected doctor is on approved leave for this date.'
+    )
 
     await prisma.admissionRecord.update({
       where: { leadId },
@@ -266,14 +307,22 @@ export async function PATCH(
       },
     })
 
-    await postCaseChatSystemMessage(
-      leadId,
-      `${user.role === 'TEAM_LEAD' ? 'Team Lead' : 'BD'} updated IPD details.`
-    )
+    const actorLabel =
+      user.role === 'CATEGORY_MANAGER'
+        ? 'Category Manager'
+        : user.role === 'ASSISTANT_CATEGORY_MANAGER'
+          ? 'Assistant Category Manager'
+          : user.role === 'TEAM_LEAD'
+            ? 'Team Lead'
+            : 'BD'
+    await postCaseChatSystemMessage(leadId, `${actorLabel} updated IPD details.`)
 
     const updated = await prisma.admissionRecord.findUnique({ where: { leadId } })
     return successResponse(updated, 'IPD details updated successfully')
   } catch (error) {
+    if (error instanceof DoctorAvailabilityError) {
+      return errorResponse(error.message, error.status)
+    }
     if (error instanceof z.ZodError) {
       return errorResponse('Invalid request data: ' + error.errors.map(e => e.message).join(', '), 400)
     }
