@@ -4,17 +4,29 @@ Role-scoped assistant at `/training`. Answers come from existing internal APIs e
 
 ## Setup
 
-Add to `.env`:
+Choose **one** provider.
+
+### Option A — DeepSeek direct (sk-… key from platform.deepseek.com)
+
+```bash
+AI_GATEWAY_BASE_URL=https://api.deepseek.com
+AI_GATEWAY_API_KEY=sk_your_deepseek_api_key
+AI_CHAT_MODEL=deepseek-v4-flash
+```
+
+### Option B — Command Code gateway (user_… key from Command Code Studio)
 
 ```bash
 AI_GATEWAY_BASE_URL=https://api.commandcode.ai/provider/v1
 AI_GATEWAY_API_KEY=user_your_command_code_api_key
-# Or use the CLI env name:
-# COMMAND_CODE_API_KEY=user_your_command_code_api_key
+# Or: COMMAND_CODE_API_KEY=user_…
 AI_CHAT_MODEL=deepseek/deepseek-v4-flash
 ```
 
-Generate the key in [Command Code Studio](https://commandcode.ai/docs/studio/api-keys). Keys typically start with `user_`. Provider plan or higher is required.
+Generate Command Code keys in [Command Code Studio](https://commandcode.ai/docs/studio/api-keys) (Provider plan or higher).  
+Generate DeepSeek keys at [platform.deepseek.com](https://platform.deepseek.com/api_keys).
+
+**Do not** use a DeepSeek `sk-…` key with the Command Code URL — you will get `Invalid Authorization header or token`.
 
 Optional model IDs (see `opencode.json`): `deepseek/deepseek-v4-pro`, `Qwen/Qwen3.6-Plus`, `Qwen/Qwen3.7-Max`.
 
