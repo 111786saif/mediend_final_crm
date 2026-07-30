@@ -1,12 +1,13 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import { optionalStringField } from '@/lib/doctor-api-validation'
 import { getDoctorAdminUser } from '@/lib/doctor-admin/auth'
 import { DoctorAdminMonitoringError, getDoctorAdminSurgeryPipeline } from '@/lib/doctor-admin/monitoring'
 
 const querySchema = z.object({
-  startDate: z.string().trim().optional(),
-  endDate: z.string().trim().optional(),
+  startDate: optionalStringField('Start date'),
+  endDate: optionalStringField('End date'),
 })
 
 export async function GET(request: NextRequest) {

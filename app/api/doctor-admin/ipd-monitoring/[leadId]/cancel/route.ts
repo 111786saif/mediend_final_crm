@@ -1,11 +1,12 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import { nullableOptionalStringField } from '@/lib/doctor-api-validation'
 import { getDoctorAdminUser } from '@/lib/doctor-admin/auth'
 import { cancelDoctorAdminIpdCase, DoctorAdminMonitoringError } from '@/lib/doctor-admin/monitoring'
 
 const bodySchema = z.object({
-  reason: z.string().trim().optional().nullable(),
+  reason: nullableOptionalStringField('Reason'),
 })
 
 export async function PUT(

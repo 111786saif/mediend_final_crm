@@ -1,12 +1,13 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import { nullableOptionalStringField, requiredStringField } from '@/lib/doctor-api-validation'
 import { getDoctorAdminUser } from '@/lib/doctor-admin/auth'
 import { DoctorAdminCabError, reviewDoctorAdminCabRequest } from '@/lib/doctor-admin/cab-requests'
 
 const reviewSchema = z.object({
-  status: z.string().trim().min(1),
-  reviewNotes: z.string().trim().optional().nullable(),
+  status: requiredStringField('Status'),
+  reviewNotes: nullableOptionalStringField('Review notes'),
 })
 
 export async function PUT(

@@ -1,12 +1,13 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from '@/lib/api-utils'
+import { nullableOptionalStringField, requiredStringField } from '@/lib/doctor-api-validation'
 import { getDoctorAdminUser } from '@/lib/doctor-admin/auth'
 import { DoctorAdminMonitoringError, transferDoctorAdminIpdCase } from '@/lib/doctor-admin/monitoring'
 
 const bodySchema = z.object({
-  hospitalName: z.string().trim().min(1),
-  reason: z.string().trim().optional().nullable(),
+  hospitalName: requiredStringField('Hospital name'),
+  reason: nullableOptionalStringField('Reason'),
 })
 
 export async function PUT(
