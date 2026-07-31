@@ -278,7 +278,10 @@ function IdentityBankFields({
         <Input
           value={form.ifscCode}
           onChange={(e) =>
-            setForm((p) => ({ ...p, ifscCode: e.target.value.toUpperCase().slice(0, 11) }))
+            setForm((p) => ({
+              ...p,
+              ifscCode: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11),
+            }))
           }
           maxLength={11}
           className="font-mono"
@@ -501,22 +504,34 @@ export default function OnboardingPage() {
 
   const profileValid = useMemo(() => {
     return (
-      form.name.trim() &&
-      form.phoneNumber.trim() &&
+      !!form.name.trim() &&
+      !!form.phoneNumber.trim() &&
       form.aadharNumber.trim().length >= 12 &&
       form.panNumber.trim().length >= 10 &&
-      form.bankAccountName.trim() &&
-      form.bankAccountNumber.trim() &&
+      !!form.bankAccountName.trim() &&
+      !!form.bankAccountNumber.trim() &&
       form.ifscCode.trim().length >= 11
     )
+  }, [form])
+
+  const missingProfileFields = useMemo(() => {
+    const missing: string[] = []
+    if (!form.name.trim()) missing.push('Full name')
+    if (!form.phoneNumber.trim()) missing.push('Phone')
+    if (form.aadharNumber.trim().length < 12) missing.push('Aadhaar (12 digits)')
+    if (form.panNumber.trim().length < 10) missing.push('PAN (10 characters)')
+    if (!form.bankAccountName.trim()) missing.push('Account holder name')
+    if (!form.bankAccountNumber.trim()) missing.push('Account number')
+    if (form.ifscCode.trim().length < 11) missing.push('IFSC (11 characters)')
+    return missing
   }, [form])
 
   const identityComplete = useMemo(
     () =>
       form.aadharNumber.trim().length >= 12 &&
       form.panNumber.trim().length >= 10 &&
-      form.bankAccountName.trim() &&
-      form.bankAccountNumber.trim() &&
+      !!form.bankAccountName.trim() &&
+      !!form.bankAccountNumber.trim() &&
       form.ifscCode.trim().length >= 11,
     [form]
   )
@@ -528,7 +543,7 @@ export default function OnboardingPage() {
 
   const saveProfile = async () => {
     if (!profileValid) {
-      toast.error('Please fill all required profile fields')
+      toast.error(`Please fill: ${missingProfileFields.join(', ')}`)
       if (isMobile && !identityComplete) setIdentityDrawerOpen(true)
       return false
     }
@@ -544,13 +559,14 @@ export default function OnboardingPage() {
       emergencyContactPhone: form.emergencyContactPhone.trim() || null,
       profilePicture: form.profilePicture || null,
       dateOfBirth: form.dateOfBirth || null,
-      aadharDocUrl: form.aadharDocUrl || null,
-      panDocUrl: form.panDocUrl || null,
-      resumeDocUrl: form.resumeDocUrl || null,
-      educationalCertDocUrl: form.educationalCertDocUrl || null,
-      appointmentLetterDocUrl: form.appointmentLetterDocUrl || null,
-      salarySlipDocUrl: form.salarySlipDocUrl || null,
-      bankStatementDocUrl: form.bankStatementDocUrl || null,
+    }
+
+    // Only send doc URLs that are set — avoids rejecting relative paths as unused nulls
+    // and skips columns the employee type does not need.
+    for (const doc of docFields) {
+      if (doc.key === 'profilePicture') continue
+      const value = form[doc.key]?.trim()
+      if (value) payload[doc.key] = value
     }
 
     // Only send identity/bank fields when still empty (first-time). Avoids 403 on re-save.
@@ -561,9 +577,13 @@ export default function OnboardingPage() {
     if (!emp?.bankAccountNumber) payload.bankAccountNumber = form.bankAccountNumber.replace(/\D/g, '') || null
     if (!emp?.ifscCode) payload.ifscCode = form.ifscCode.trim().toUpperCase() || null
 
-    await saveMutation.mutateAsync(payload)
-    await refetch()
-    return true
+    try {
+      await saveMutation.mutateAsync(payload)
+      await refetch()
+      return true
+    } catch {
+      return false
+    }
   }
 
   const goNextFromProfile = async () => {
@@ -772,10 +792,18 @@ export default function OnboardingPage() {
               {/* Mobile: open dense sections in drawers */}
               {isMobile ? (
                 <div className="space-y-2 border-t pt-4">
+                  {!identityComplete && (
+                    <p className="rounded-lg border border-amber-200 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+                      Tap <strong>Identity & bank</strong> and fill Aadhaar, PAN, and bank details to continue.
+                    </p>
+                  )}
                   <button
                     type="button"
                     onClick={() => setIdentityDrawerOpen(true)}
-                    className="flex w-full items-center gap-3 rounded-xl border bg-muted/30 px-3 py-3 text-left active:bg-muted/50"
+                    className={cn(
+                      'flex w-full items-center gap-3 rounded-xl border bg-muted/30 px-3 py-3 text-left active:bg-muted/50',
+                      !identityComplete && 'border-amber-300 dark:border-amber-700'
+                    )}
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-600/15 text-sky-700 dark:text-sky-300">
                       <CreditCard className="h-5 w-5" />
@@ -835,13 +863,19 @@ export default function OnboardingPage() {
                 </Button>
                 <Button
                   className="bg-sky-600 hover:bg-sky-700"
-                  disabled={!profileValid || saveMutation.isPending}
+                  disabled={saveMutation.isPending}
                   onClick={goNextFromProfile}
                 >
                   {saveMutation.isPending ? 'Saving…' : 'Save & continue'}
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
+              {!profileValid && (
+                <p className="text-xs text-amber-700 dark:text-amber-300 sm:hidden">
+                  Still needed: {missingProfileFields.join(', ')}
+                  {!identityComplete ? ' — open Identity & bank below.' : ''}
+                </p>
+              )}
             </CardContent>
           </Card>
         )}
@@ -978,7 +1012,7 @@ export default function OnboardingPage() {
             </Button>
             <Button
               className="min-w-0 flex-1 bg-sky-600 hover:bg-sky-700"
-              disabled={!profileValid || saveMutation.isPending}
+              disabled={saveMutation.isPending}
               onClick={goNextFromProfile}
             >
               {saveMutation.isPending ? 'Saving…' : 'Save & continue'}

@@ -20,12 +20,22 @@ const addressSchema = z
   .optional()
   .nullable()
 
+/** Absolute https URL or root-relative upload path (local /uploads/...). */
+const optionalDocUrl = z
+  .union([
+    z.string().url(),
+    z.string().regex(/^\/\S*$/, 'Invalid url'),
+    z.literal(''),
+    z.null(),
+  ])
+  .optional()
+
 const updateProfileSchema = z.object({
   name: z.string().min(1).optional(),
   email: z.string().email().optional(),
   phoneNumber: z.string().max(20).optional().nullable(),
   address: z.string().max(2000).optional().nullable(),
-  profilePicture: z.string().max(2000).optional().nullable().or(z.literal('')),
+  profilePicture: z.string().max(4000).optional().nullable().or(z.literal('')),
   gender: z.string().max(50).optional().nullable(),
   emergencyContactName: z.string().max(100).optional().nullable(),
   emergencyContactPhone: z.string().max(20).optional().nullable(),
@@ -38,16 +48,16 @@ const updateProfileSchema = z.object({
   bankAccountNumber: z.string().max(50).optional().nullable(),
   ifscCode: z.string().max(11).optional().nullable(),
   dateOfBirth: z.string().optional().nullable(),
-  aadharDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  panDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  passportDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  drivingLicenseDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  resumeDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  educationalCertDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  experienceCertDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  appointmentLetterDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  salarySlipDocUrl: z.string().url().optional().nullable().or(z.literal('')),
-  bankStatementDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  aadharDocUrl: optionalDocUrl,
+  panDocUrl: optionalDocUrl,
+  passportDocUrl: optionalDocUrl,
+  drivingLicenseDocUrl: optionalDocUrl,
+  resumeDocUrl: optionalDocUrl,
+  educationalCertDocUrl: optionalDocUrl,
+  experienceCertDocUrl: optionalDocUrl,
+  appointmentLetterDocUrl: optionalDocUrl,
+  salarySlipDocUrl: optionalDocUrl,
+  bankStatementDocUrl: optionalDocUrl,
 })
 
 const managerSelect = {
@@ -309,7 +319,11 @@ export async function PATCH(request: NextRequest) {
     return successResponse(null, 'Profile updated successfully')
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return errorResponse('Invalid request data', 400)
+      const details = error.errors
+        .map((e) => `${e.path.join('.') || 'field'}: ${e.message}`)
+        .slice(0, 3)
+        .join('; ')
+      return errorResponse(details ? `Invalid request data (${details})` : 'Invalid request data', 400)
     }
     console.error('Error updating profile:', error)
     return errorResponse('Failed to update profile', 500)
