@@ -348,6 +348,18 @@ enum IpdStatus {
   DISCHARGED
 }
 
+enum LeadOpdPhase {
+  PRE
+  POST
+}
+
+enum LeadOpdStatus {
+  SCHEDULED
+  DONE
+  CANCELLED
+  NO_SHOW
+}
+
 enum PaidByParty {
   MEDIEND
   HOSPITAL
@@ -832,6 +844,7 @@ model Lead {
   opdReasonNoSurgery    ReasonNoSurgeryMaster?   @relation("LeadOpdReasonNoSurgery", fields: [opdReasonNoSurgeryCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
   opdFollowUpReason     FollowUpReasonMaster?    @relation("LeadOpdFollowUpReason", fields: [opdFollowUpReasonCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
   opdPrescriptionImages LeadOpdPrescriptionImage[]
+  opdAppointments       LeadOpdAppointment[]
 
 
   @@index([bdId])
@@ -3074,6 +3087,58 @@ model AdmissionRecord {
   @@index([leadId])
 }
 
+model LeadOpdAppointment {
+  id                      String                    @id @default(cuid())
+  leadId                  String
+  lead                    Lead                      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  phase                   LeadOpdPhase
+  slot                    Int
+  status                  LeadOpdStatus             @default(SCHEDULED)
+  hospitalName            String?
+  doctorName              String?
+  contactNumber           String?
+  charges                 Int                       @default(0)
+  scheduleDate            DateTime?
+  meetingType             Int?
+  surgeryAdvised          String?
+  surgeryRemarkCode       String?
+  reasonNoSurgeryCode     String?
+  followUpReasonCode      String?
+  implantRequired         Boolean?
+  diagnosis               String?
+  remarks                 String?
+  createdById             String?
+  updatedById             String?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  surgeryRemark           SurgeryRemarkMaster?      @relation("LeadOpdAppointmentSurgeryRemark", fields: [surgeryRemarkCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  reasonNoSurgery         ReasonNoSurgeryMaster?    @relation("LeadOpdAppointmentReasonNoSurgery", fields: [reasonNoSurgeryCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  followUpReason          FollowUpReasonMaster?     @relation("LeadOpdAppointmentFollowUpReason", fields: [followUpReasonCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
+  prescriptionImages      LeadOpdAppointmentPrescriptionImage[]
+
+  @@unique([leadId, phase, slot])
+  @@index([leadId, phase, slot])
+  @@index([status])
+  @@index([scheduleDate])
+  @@index([surgeryRemarkCode])
+  @@index([reasonNoSurgeryCode])
+  @@index([followUpReasonCode])
+}
+
+model LeadOpdAppointmentPrescriptionImage {
+  id               String              @id @default(cuid())
+  opdAppointmentId String
+  opdAppointment   LeadOpdAppointment  @relation(fields: [opdAppointmentId], references: [id], onDelete: Cascade)
+  fileName         String
+  fileUrl          String
+  storageKey       String?
+  sortOrder        Int                 @default(0)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([opdAppointmentId])
+}
+
 model AdmissionRecordImplantUsage {
   id                String          @id @default(cuid())
   admissionRecordId String
@@ -4058,6 +4123,7 @@ model SurgeryRemarkMaster {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   opdLeads     Lead[]   @relation("LeadOpdSurgeryRemark")
+  opdAppointments LeadOpdAppointment[] @relation("LeadOpdAppointmentSurgeryRemark")
 
   @@index([displayOrder])
   @@index([isActive])
@@ -4072,6 +4138,7 @@ model ReasonNoSurgeryMaster {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   opdLeads     Lead[]   @relation("LeadOpdReasonNoSurgery")
+  opdAppointments LeadOpdAppointment[] @relation("LeadOpdAppointmentReasonNoSurgery")
 
   @@index([displayOrder])
   @@index([isActive])
@@ -4086,6 +4153,7 @@ model FollowUpReasonMaster {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   opdLeads     Lead[]   @relation("LeadOpdFollowUpReason")
+  opdAppointments LeadOpdAppointment[] @relation("LeadOpdAppointmentFollowUpReason")
 
   @@index([displayOrder])
   @@index([isActive])

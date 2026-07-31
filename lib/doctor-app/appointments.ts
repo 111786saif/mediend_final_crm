@@ -1,15 +1,20 @@
-import { CaseStage, IpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
+import { CaseStage, IpdStatus, LeadOpdPhase, LeadOpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { uploadFileToS3 } from '@/lib/s3-client'
 import { DoctorAppSessionUser } from '@/lib/doctor-app/auth'
 import { assertDoctorAvailableOnDate, normalizeDoctorName } from '@/lib/doctor-availability'
 import {
-  getNextStageAfterOpdDone,
-  hasLeadOpdDone,
+  buildEffectiveOpdEntries,
+  getEffectiveOpdCounts,
+  getLeadIdFromLegacyLeadOpdId,
+  isLegacyLeadOpdId,
+  type EffectiveOpdEntry,
+} from '@/lib/lead-opd-appointments'
+import { mutateLeadOpd } from '@/lib/lead-opd-mutations'
+import {
   isOpdDoneStatus,
-  isOpdScheduledStatus,
-  OPD_DONE_STATUS,
 } from '@/lib/lead-opd-workflow'
+import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 
 const doctorAppointmentLeadSelect = {
   id: true,
@@ -142,6 +147,10 @@ const doctorAppointmentLeadSelect = {
       sortOrder: true,
     },
   },
+  opdAppointments: {
+    orderBy: [{ phase: 'asc' as const }, { slot: 'asc' as const }, { scheduleDate: 'asc' as const }],
+    select: leadOpdAppointmentSelect,
+  },
   dischargeSheet: {
     select: {
       id: true,
@@ -203,8 +212,6 @@ export interface SearchDoctorAppointmentsInput extends ListDoctorAppointmentsInp
 
 export interface UpdateDoctorOpdInput {
   opdHospital?: string
-  opdDrName?: string
-  opdContactNo?: string
   opdCharges?: number
   opdScheduleDate?: string | null
   followUpDate?: string | null
@@ -231,8 +238,6 @@ export interface UpdateDoctorIpdInput {
   ipdAdmissionDate?: string | null
   admissionTime?: string | null
   ipdHospital?: string
-  ipdDrName?: string
-  ipdContactNo?: string
   surgeryDate?: string | null
   operationTime?: string | null
   hospitalAddress?: string | null
@@ -289,6 +294,7 @@ function getDoctorScopedLeadWhere(doctorName: string): Prisma.LeadWhereInput {
   return {
     OR: [
       { opdDrName: { equals: doctorName, mode: 'insensitive' } },
+      { opdAppointments: { some: { doctorName: { equals: doctorName, mode: 'insensitive' } } } },
       { ipdDrName: { equals: doctorName, mode: 'insensitive' } },
       { surgeonName: { equals: doctorName, mode: 'insensitive' } },
     ],
@@ -305,6 +311,17 @@ function getDoctorSearchWhere(searchText: string): Prisma.LeadWhereInput {
       { hospitalName: { contains: searchText, mode: 'insensitive' } },
       { opdHospital: { contains: searchText, mode: 'insensitive' } },
       { ipdHospital: { contains: searchText, mode: 'insensitive' } },
+      {
+        opdAppointments: {
+          some: {
+            OR: [
+              { hospitalName: { contains: searchText, mode: 'insensitive' } },
+              { doctorName: { contains: searchText, mode: 'insensitive' } },
+              { contactNumber: { contains: searchText, mode: 'insensitive' } },
+            ],
+          },
+        },
+      },
       { treatment: { contains: searchText, mode: 'insensitive' } },
       { category: { contains: searchText, mode: 'insensitive' } },
       { circle: { contains: searchText, mode: 'insensitive' } },
@@ -644,8 +661,19 @@ function isIpdLead(lead: DoctorAppointmentLead) {
   )
 }
 
-function getAppointmentType(lead: DoctorAppointmentLead) {
-  return isIpdLead(lead) ? 'ipd' : 'opd'
+type DoctorFlatAppointment = {
+  id: string
+  leadId: string
+  appointmentType: 'opd' | 'ipd'
+  lead: DoctorAppointmentLead
+  opdEntry: EffectiveOpdEntry | null
+  opdCounts: { pre: number; post: number }
+}
+
+function normalizeComparableText(value: string | null | undefined) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
 }
 
 function getAppointmentDoctorName(lead: DoctorAppointmentLead) {
@@ -656,51 +684,101 @@ function getAppointmentHospitalName(lead: DoctorAppointmentLead) {
   return lead.ipdHospital || lead.opdHospital || lead.hospitalName || null
 }
 
-function getAppointmentDate(lead: DoctorAppointmentLead) {
-  if (isIpdLead(lead)) {
+function getEffectiveOpdEntriesForLead(lead: DoctorAppointmentLead) {
+  return buildEffectiveOpdEntries(lead, lead.opdAppointments)
+}
+
+function matchesDoctorAssignment(value: string | null | undefined, doctorName: string) {
+  return normalizeComparableText(value) === normalizeComparableText(doctorName)
+}
+
+function getDoctorScopedOpdEntries(lead: DoctorAppointmentLead, doctorName: string) {
+  return getEffectiveOpdEntriesForLead(lead).filter((entry) =>
+    matchesDoctorAssignment(entry.doctorName, doctorName)
+  )
+}
+
+function isDoctorFollowUpOpd(appointment: DoctorFlatAppointment) {
+  return (
+    appointment.appointmentType === 'opd' &&
+    normalizeSurgeryAdvised(appointment.opdEntry?.surgeryAdvised) === 'follow_up'
+  )
+}
+
+function shouldIncludeIpdForDoctor(lead: DoctorAppointmentLead, doctorName: string) {
+  if (!isIpdLead(lead)) {
+    return false
+  }
+
+  return matchesDoctorAssignment(getAppointmentDoctorName(lead), doctorName)
+}
+
+function mapLeadToDoctorAppointments(lead: DoctorAppointmentLead, doctorName: string) {
+  const opdCounts = getEffectiveOpdCounts(getEffectiveOpdEntriesForLead(lead))
+  const appointments: DoctorFlatAppointment[] = getDoctorScopedOpdEntries(lead, doctorName).map(
+    (entry) => ({
+      id: entry.id,
+      leadId: lead.id,
+      appointmentType: 'opd',
+      lead,
+      opdEntry: entry,
+      opdCounts,
+    })
+  )
+
+  if (shouldIncludeIpdForDoctor(lead, doctorName)) {
+    appointments.push({
+      id: lead.id,
+      leadId: lead.id,
+      appointmentType: 'ipd',
+      lead,
+      opdEntry: null,
+      opdCounts,
+    })
+  }
+
+  return appointments
+}
+
+function getAppointmentDateForRow(appointment: DoctorFlatAppointment) {
+  if (appointment.appointmentType === 'ipd') {
     return (
-      lead.admissionRecord?.admissionDate ||
-      lead.ipdAdmissionDate ||
-      lead.admissionRecord?.surgeryDate ||
-      lead.surgeryDate ||
-      lead.followUpDate ||
-      lead.updatedDate
+      appointment.lead.admissionRecord?.admissionDate ||
+      appointment.lead.ipdAdmissionDate ||
+      appointment.lead.admissionRecord?.surgeryDate ||
+      appointment.lead.surgeryDate ||
+      appointment.lead.followUpDate ||
+      appointment.lead.updatedDate
     )
   }
 
-  return lead.opdScheduleDate || lead.followUpDate || lead.updatedDate
+  if (isDoctorFollowUpOpd(appointment) && appointment.lead.followUpDate) {
+    return appointment.lead.followUpDate
+  }
+
+  return (
+    appointment.opdEntry?.scheduleDate ||
+    appointment.lead.followUpDate ||
+    appointment.lead.updatedDate
+  )
 }
 
-function getAppointmentStatus(lead: DoctorAppointmentLead) {
-  if (isIpdLead(lead)) {
-    return lead.admissionRecord?.ipdStatus || lead.caseStage
+function getAppointmentStatusForRow(appointment: DoctorFlatAppointment) {
+  if (appointment.appointmentType === 'ipd') {
+    return appointment.lead.admissionRecord?.ipdStatus || appointment.lead.caseStage
   }
 
-  if (lead.followUpDate) {
-    return 'FOLLOW_UP'
+  switch (appointment.opdEntry?.status) {
+    case LeadOpdStatus.DONE:
+      return 'DONE'
+    case LeadOpdStatus.CANCELLED:
+      return 'CANCELLED'
+    case LeadOpdStatus.NO_SHOW:
+      return 'NO_SHOW'
+    case LeadOpdStatus.SCHEDULED:
+    default:
+      return 'SCHEDULED'
   }
-
-  if (hasLeadOpdDone(lead) || isOpdDoneStatus(lead.status)) {
-    return 'DONE'
-  }
-
-  if (lead.opdScheduleDate) {
-    return 'SCHEDULED'
-  }
-
-  if (isOpdScheduledStatus(lead.status)) {
-    return 'SCHEDULED'
-  }
-
-  return lead.status
-}
-
-function matchesTypeFilter(lead: DoctorAppointmentLead, type: 'all' | 'opd' | 'ipd') {
-  if (type === 'all') {
-    return true
-  }
-
-  return getAppointmentType(lead) === type
 }
 
 function buildRequestedDate(input: ListDoctorAppointmentsInput) {
@@ -745,13 +823,13 @@ function buildRequestedDate(input: ListDoctorAppointmentsInput) {
   return null
 }
 
-function matchesDateFilter(lead: DoctorAppointmentLead, input: ListDoctorAppointmentsInput) {
+function matchesDateFilter(appointment: DoctorFlatAppointment, input: ListDoctorAppointmentsInput) {
   const requested = buildRequestedDate(input)
   if (!requested) {
     return true
   }
 
-  const value = getAppointmentDate(lead)
+  const value = getAppointmentDateForRow(appointment)
   if (!value) {
     return false
   }
@@ -773,15 +851,41 @@ function matchesDateFilter(lead: DoctorAppointmentLead, input: ListDoctorAppoint
   return date.getFullYear() === requested.year
 }
 
-function matchesStatusFilter(lead: DoctorAppointmentLead, status?: string) {
+function matchesTypeFilter(appointment: DoctorFlatAppointment, type: 'all' | 'opd' | 'ipd') {
+  if (type === 'all') {
+    return true
+  }
+
+  return appointment.appointmentType === type
+}
+
+function matchesStatusFilter(appointment: DoctorFlatAppointment, status?: string) {
   if (!status) {
     return true
   }
 
   const normalized = status.trim().toLowerCase()
-  const appointmentStatus = String(getAppointmentStatus(lead) || '').trim().toLowerCase()
-  const leadStatus = String(lead.status || '').trim().toLowerCase()
-  const caseStage = String(lead.caseStage || '').trim().toLowerCase()
+  const doctorFollowUpRequired = isDoctorFollowUpOpd(appointment)
+  const appointmentStatus = String(getAppointmentStatusForRow(appointment) || '').trim().toLowerCase()
+  const leadStatus = String(appointment.lead.status || '').trim().toLowerCase()
+  const caseStage = String(appointment.lead.caseStage || '').trim().toLowerCase()
+
+  if (
+    doctorFollowUpRequired &&
+    [
+      'follow_up_required',
+      'follow-up-required',
+      'follow_up_pending',
+      'follow-up-pending',
+      'doctor_follow_up_required',
+      'doctor-follow-up-required',
+      'follow_up',
+      'follow-up',
+      'followup',
+    ].includes(normalized)
+  ) {
+    return true
+  }
 
   return (
     appointmentStatus === normalized ||
@@ -790,23 +894,31 @@ function matchesStatusFilter(lead: DoctorAppointmentLead, status?: string) {
   )
 }
 
-function mapAppointmentSummary(lead: DoctorAppointmentLead) {
-  const type = getAppointmentType(lead)
+function mapAppointmentSummary(appointment: DoctorFlatAppointment) {
+  const { lead, appointmentType, opdEntry, opdCounts } = appointment
+  const doctorFollowUpRequired = isDoctorFollowUpOpd(appointment)
   const ipdPrescriptionFileUrl = lead.admissionRecord?.prescriptionImages[0]?.fileUrl || null
-  const opdPrescriptionFileUrl = lead.opdPrescriptionImages[0]?.fileUrl || null
+  const opdPrescriptionFileUrl =
+    appointmentType === 'opd'
+      ? opdEntry?.prescriptionImages[0]?.fileUrl || null
+      : lead.opdPrescriptionImages[0]?.fileUrl || null
   const primaryPrescriptionFileUrl =
-    (type === 'ipd' ? ipdPrescriptionFileUrl || opdPrescriptionFileUrl : opdPrescriptionFileUrl || ipdPrescriptionFileUrl) ||
+    (appointmentType === 'ipd'
+      ? ipdPrescriptionFileUrl || opdPrescriptionFileUrl
+      : opdPrescriptionFileUrl || ipdPrescriptionFileUrl) ||
     lead.kypSubmission?.prescriptionFileUrl ||
     lead.docUpload ||
     null
 
   return {
-    id: lead.id,
-    leadId: lead.id,
+    id: appointment.id,
+    leadId: appointment.leadId,
     leadRef: lead.leadRef,
-    appointmentType: type,
-    appointmentDate: getAppointmentDate(lead),
-    appointmentStatus: getAppointmentStatus(lead),
+    appointmentType,
+    appointmentDate: getAppointmentDateForRow(appointment),
+    appointmentStatus: getAppointmentStatusForRow(appointment),
+    doctorFollowUpRequired,
+    opdCounts,
     patient: {
       name: lead.patientName,
       age: lead.age,
@@ -816,10 +928,16 @@ function mapAppointmentSummary(lead: DoctorAppointmentLead) {
       whatsapp: lead.whatsapp,
     },
     doctor: {
-      name: getAppointmentDoctorName(lead),
+      name:
+        appointmentType === 'opd'
+          ? opdEntry?.doctorName || lead.surgeonName || null
+          : getAppointmentDoctorName(lead),
     },
     hospital: {
-      name: getAppointmentHospitalName(lead),
+      name:
+        appointmentType === 'opd'
+          ? opdEntry?.hospitalName || lead.hospitalName || null
+          : getAppointmentHospitalName(lead),
       circle: lead.circle,
     },
     lead: {
@@ -832,12 +950,20 @@ function mapAppointmentSummary(lead: DoctorAppointmentLead) {
       remarks: lead.remarks,
     },
     opd: {
-      hospital: lead.opdHospital,
-      doctorName: lead.opdDrName,
-      contactNumber: lead.opdContactNo,
-      charges: lead.opdCharges,
-      scheduledDate: lead.opdScheduleDate,
-      meetingCount: lead.opdMeeting,
+      appointmentId: appointmentType === 'opd' ? appointment.id : null,
+      phase: appointmentType === 'opd' ? opdEntry?.phase ?? null : null,
+      slot: appointmentType === 'opd' ? opdEntry?.slot ?? null : null,
+      isLegacy: appointmentType === 'opd' ? opdEntry?.source === 'legacy' : false,
+      hospital: appointmentType === 'opd' ? opdEntry?.hospitalName ?? null : lead.opdHospital,
+      doctorName: appointmentType === 'opd' ? opdEntry?.doctorName ?? null : lead.opdDrName,
+      contactNumber:
+        appointmentType === 'opd' ? opdEntry?.contactNumber ?? null : lead.opdContactNo,
+      charges: appointmentType === 'opd' ? opdEntry?.charges ?? null : lead.opdCharges,
+      scheduledDate:
+        appointmentType === 'opd' ? opdEntry?.scheduleDate ?? null : lead.opdScheduleDate,
+      meetingCount:
+        appointmentType === 'opd' ? opdEntry?.meetingType ?? null : lead.opdMeeting,
+      status: appointmentType === 'opd' ? opdEntry?.status ?? null : null,
     },
     ipd: {
       admissionDate: lead.admissionRecord?.admissionDate || lead.ipdAdmissionDate,
@@ -861,8 +987,14 @@ function mapAppointmentSummary(lead: DoctorAppointmentLead) {
   }
 }
 
-function mapAppointmentDetail(lead: DoctorAppointmentLead) {
-  const opdPrescriptionFiles = lead.opdPrescriptionImages.map((image) => ({
+function mapAppointmentDetail(appointment: DoctorFlatAppointment) {
+  const { lead, appointmentType, opdEntry, opdCounts } = appointment
+  const effectiveOpds = getEffectiveOpdEntriesForLead(lead)
+  const currentOpdEntry =
+    appointmentType === 'opd'
+      ? opdEntry
+      : effectiveOpds.find((entry) => entry.isFirstEffectivePreOpd) ?? effectiveOpds[0] ?? null
+  const opdPrescriptionFiles = (currentOpdEntry?.prescriptionImages ?? []).map((image) => ({
     name: image.fileName,
     url: image.fileUrl,
     key: image.storageKey,
@@ -874,7 +1006,7 @@ function mapAppointmentDetail(lead: DoctorAppointmentLead) {
       key: image.storageKey,
     })) || []
   const primaryPrescriptionFiles =
-    getAppointmentType(lead) === 'ipd' && ipdPrescriptionFiles.length > 0
+    appointmentType === 'ipd' && ipdPrescriptionFiles.length > 0
       ? ipdPrescriptionFiles
       : opdPrescriptionFiles.length > 0
         ? opdPrescriptionFiles
@@ -886,7 +1018,7 @@ function mapAppointmentDetail(lead: DoctorAppointmentLead) {
     null
 
   return {
-    ...mapAppointmentSummary(lead),
+    ...mapAppointmentSummary(appointment),
     lead: {
       id: lead.id,
       leadRef: lead.leadRef,
@@ -905,18 +1037,35 @@ function mapAppointmentDetail(lead: DoctorAppointmentLead) {
       createdAt: lead.createdDate,
       updatedAt: lead.updatedDate,
     },
+    effectiveOpds: {
+      pre: effectiveOpds.filter((entry) => entry.phase === LeadOpdPhase.PRE),
+      post: effectiveOpds.filter((entry) => entry.phase === LeadOpdPhase.POST),
+      all: effectiveOpds,
+    },
+    currentOpd:
+      currentOpdEntry && appointmentType === 'opd'
+        ? {
+            id: currentOpdEntry.id,
+            phase: currentOpdEntry.phase,
+            slot: currentOpdEntry.slot,
+            source: currentOpdEntry.source,
+            status: currentOpdEntry.status,
+          }
+        : null,
     prescription: {
       fileUrl: primaryPrescriptionFileUrl,
       files: primaryPrescriptionFiles,
     },
+    opdCounts,
     opdRecording: {
-      surgeryAdvised: lead.opdSurgeryAdvised ?? null,
-      surgeryRemarksType: lead.opdSurgeryRemarkCode ?? null,
-      surgeryRemark: lead.opdSurgeryRemark ?? null,
-      reasonNoSurgery: lead.opdReasonNoSurgery ?? null,
-      followUpReason: lead.opdFollowUpReason ?? null,
-      implantRequired: lead.opdImplantRequired ?? null,
-      diagnosis: lead.opdDiagnosis ?? lead.diseaseDetails ?? null,
+      surgeryAdvised: currentOpdEntry?.surgeryAdvised ?? null,
+      surgeryRemarksType: currentOpdEntry?.surgeryRemarkCode ?? null,
+      surgeryRemark: currentOpdEntry?.surgeryRemark ?? null,
+      reasonNoSurgery: currentOpdEntry?.reasonNoSurgery ?? null,
+      followUpReason: currentOpdEntry?.followUpReason ?? null,
+      implantRequired: currentOpdEntry?.implantRequired ?? null,
+      diagnosis: currentOpdEntry?.diagnosis ?? lead.diseaseDetails ?? null,
+      remarks: currentOpdEntry?.remarks ?? null,
       prescriptionImages: opdPrescriptionFiles,
     },
     ipdRecording: {
@@ -978,6 +1127,59 @@ async function findDoctorScopedLead(user: DoctorAppSessionUser, leadId: string) 
   return { account, lead }
 }
 
+async function findDoctorScopedAppointment(user: DoctorAppSessionUser, appointmentId: string) {
+  const account = await getDoctorAccount(user)
+
+  const loadLead = async (leadId: string) =>
+    prisma.lead.findFirst({
+      where: {
+        id: leadId,
+        AND: [getDoctorScopedLeadWhere(account.doctor.name)],
+      },
+      select: doctorAppointmentLeadSelect,
+    })
+
+  let lead: DoctorAppointmentLead | null = null
+
+  if (isLegacyLeadOpdId(appointmentId)) {
+    const leadId = getLeadIdFromLegacyLeadOpdId(appointmentId)
+    if (!leadId) {
+      throw new DoctorAppApiError('Appointment not found', 404)
+    }
+    lead = await loadLead(leadId)
+  } else {
+    lead = await loadLead(appointmentId)
+
+    if (!lead) {
+      const opdAppointment = await prisma.leadOpdAppointment.findUnique({
+        where: { id: appointmentId },
+        select: { leadId: true },
+      })
+
+      if (opdAppointment) {
+        lead = await loadLead(opdAppointment.leadId)
+      }
+    }
+  }
+
+  if (!lead) {
+    throw new DoctorAppApiError('Appointment not found', 404)
+  }
+
+  const appointments = mapLeadToDoctorAppointments(lead, account.doctor.name)
+  const appointment =
+    appointments.find((item) => item.id === appointmentId) ||
+    appointments.find((item) => item.appointmentType === 'ipd' && item.id === lead.id) ||
+    appointments[0] ||
+    null
+
+  if (!appointment) {
+    throw new DoctorAppApiError('Appointment not found', 404)
+  }
+
+  return { account, lead, appointment }
+}
+
 export async function listDoctorAppointments(
   user: DoctorAppSessionUser,
   input: ListDoctorAppointmentsInput
@@ -992,13 +1194,16 @@ export async function listDoctorAppointments(
     orderBy: { updatedDate: 'desc' },
   })
 
-  const filtered = leads
-    .filter(lead => matchesTypeFilter(lead, input.type))
-    .filter(lead => matchesStatusFilter(lead, input.status))
-    .filter(lead => matchesDateFilter(lead, input))
+  const appointments = leads.flatMap((lead) => mapLeadToDoctorAppointments(lead, account.doctor.name))
+  const filtered = appointments
+    .filter((appointment) => matchesTypeFilter(appointment, input.type))
+    .filter((appointment) => matchesStatusFilter(appointment, input.status))
+    .filter((appointment) => matchesDateFilter(appointment, input))
     .sort((a, b) => {
-      const aDate = getAppointmentDate(a)?.getTime() || 0
-      const bDate = getAppointmentDate(b)?.getTime() || 0
+      const aDateValue = getAppointmentDateForRow(a)
+      const bDateValue = getAppointmentDateForRow(b)
+      const aDate = aDateValue ? new Date(aDateValue).getTime() : 0
+      const bDate = bDateValue ? new Date(bDateValue).getTime() : 0
       return bDate - aDate
     })
 
@@ -1029,13 +1234,16 @@ export async function searchDoctorAppointments(
     orderBy: { updatedDate: 'desc' },
   })
 
-  const filtered = leads
-    .filter(lead => matchesTypeFilter(lead, input.type))
-    .filter(lead => matchesStatusFilter(lead, input.status))
-    .filter(lead => matchesDateFilter(lead, input))
+  const appointments = leads.flatMap((lead) => mapLeadToDoctorAppointments(lead, account.doctor.name))
+  const filtered = appointments
+    .filter((appointment) => matchesTypeFilter(appointment, input.type))
+    .filter((appointment) => matchesStatusFilter(appointment, input.status))
+    .filter((appointment) => matchesDateFilter(appointment, input))
     .sort((a, b) => {
-      const aDate = getAppointmentDate(a)?.getTime() || 0
-      const bDate = getAppointmentDate(b)?.getTime() || 0
+      const aDateValue = getAppointmentDateForRow(a)
+      const bDateValue = getAppointmentDateForRow(b)
+      const aDate = aDateValue ? new Date(aDateValue).getTime() : 0
+      const bDate = bDateValue ? new Date(bDateValue).getTime() : 0
       return bDate - aDate
     })
 
@@ -1052,22 +1260,30 @@ export async function searchDoctorAppointments(
   }
 }
 
-export async function getDoctorAppointmentById(user: DoctorAppSessionUser, leadId: string) {
-  const { lead } = await findDoctorScopedLead(user, leadId)
-  return mapAppointmentDetail(lead)
+export async function getDoctorAppointmentById(user: DoctorAppSessionUser, appointmentId: string) {
+  const { appointment } = await findDoctorScopedAppointment(user, appointmentId)
+  return mapAppointmentDetail(appointment)
 }
 
 export async function updateDoctorOpdAppointment(
   user: DoctorAppSessionUser,
-  leadId: string,
+  appointmentId: string,
   input: UpdateDoctorOpdInput
 ) {
-  const { lead } = await findDoctorScopedLead(user, leadId)
+  const { lead, appointment } = await findDoctorScopedAppointment(user, appointmentId)
+  if (appointment.appointmentType !== 'opd' || !appointment.opdEntry) {
+    throw new DoctorAppApiError('OPD appointment not found', 404)
+  }
+
   const nextOpdDoctorName = normalizeDoctorName(
-    input.opdDrName !== undefined ? input.opdDrName : lead.opdDrName || lead.surgeonName
+    appointment.opdEntry.doctorName || lead.opdDrName || lead.surgeonName
   )
   const nextOpdScheduleDate =
-    input.opdScheduleDate !== undefined ? input.opdScheduleDate : lead.opdScheduleDate
+    input.opdScheduleDate !== undefined
+      ? input.opdScheduleDate
+      : appointment.opdEntry.scheduleDate
+        ? new Date(appointment.opdEntry.scheduleDate).toISOString()
+        : null
 
   await assertDoctorAvailableOnDate(
     prisma,
@@ -1076,26 +1292,14 @@ export async function updateDoctorOpdAppointment(
     'Selected doctor is on approved leave for this date.'
   )
 
-  let targetCaseStage = input.caseStage
-  let targetStatus = input.status?.trim()
-  const shouldMarkOpdDone = input.markOpdDone || isOpdDoneStatus(targetStatus)
+  const shouldMarkOpdDone = input.markOpdDone || isOpdDoneStatus(input.status?.trim())
 
   if (shouldMarkOpdDone) {
-    if (hasLeadOpdDone(lead)) {
+    if (appointment.opdEntry.status === LeadOpdStatus.DONE) {
       throw new DoctorAppApiError('OPD is already marked done', 400)
     }
-
-    targetCaseStage = getNextStageAfterOpdDone(lead) ?? undefined
-    if (!targetCaseStage) {
-      throw new DoctorAppApiError('Appointment is not ready to mark as OPD done', 400)
-    }
-
-    targetStatus = OPD_DONE_STATUS
   }
 
-  const nextStage = targetCaseStage ?? lead.caseStage
-  const stageChanged = nextStage !== lead.caseStage
-  const changedById = stageChanged ? lead.bdId : null
   const uploadedPrescriptionImages: StoredPrescriptionImage[] = []
 
   if (input.prescriptionImages?.length) {
@@ -1111,170 +1315,48 @@ export async function updateDoctorOpdAppointment(
     }
   }
 
-  const updatedLead = await prisma.$transaction(async (tx) => {
-    const resolvedSurgeryRemark = await resolveMasterOptionByCode(
-      tx,
-      'surgeryRemark',
-      input.surgeryRemarksType
-    )
-    const resolvedReasonNoSurgery = await resolveMasterOptionByCode(
-      tx,
-      'reasonNoSurgery',
-      input.reasonNoSurgery
-    )
-    const resolvedFollowUpReason = await resolveMasterOptionByCode(
-      tx,
-      'followUpReason',
-      input.followUpReason
-    )
-
-    const surgeryAdvised =
-      input.surgeryAdvised !== undefined
-        ? normalizeSurgeryAdvised(input.surgeryAdvised)
-        : lead.opdSurgeryAdvised ?? null
-
-    const nextSurgeryRemark =
-      resolvedSurgeryRemark !== undefined
-        ? resolvedSurgeryRemark
-        : lead.opdSurgeryRemark
-    const nextReasonNoSurgery =
-      resolvedReasonNoSurgery !== undefined
-        ? resolvedReasonNoSurgery
-        : lead.opdReasonNoSurgery
-    const nextFollowUpReason =
-      resolvedFollowUpReason !== undefined
-        ? resolvedFollowUpReason
-        : lead.opdFollowUpReason
-
-    const nextSurgeryRemarkCode =
-      surgeryAdvised === 'no' || surgeryAdvised === 'follow_up'
-        ? null
-        : nextSurgeryRemark?.code ?? lead.opdSurgeryRemarkCode ?? null
-    const nextReasonNoSurgeryCode =
-      surgeryAdvised === 'yes' || surgeryAdvised === 'follow_up'
-        ? null
-        : nextReasonNoSurgery?.code ?? lead.opdReasonNoSurgeryCode ?? null
-    const nextFollowUpReasonCode =
-      surgeryAdvised === 'yes' || surgeryAdvised === 'no'
-        ? null
-        : nextFollowUpReason?.code ?? lead.opdFollowUpReasonCode ?? null
-    const nextDiagnosis =
-      input.diagnosis !== undefined
-        ? normalizeText(input.diagnosis)
-        : lead.opdDiagnosis ?? lead.diseaseDetails ?? null
-    const nextImplantRequired =
-      input.implantRequired !== undefined
-        ? input.implantRequired
-        : lead.opdImplantRequired ?? null
-    const nextRemarks =
-      input.remarks !== undefined
-        ? normalizeText(input.remarks)
-        : shouldMarkOpdDone
-          ? `OPD marked done by ${user.name}`
-          : undefined
-
-    await tx.lead.update({
-      where: { id: leadId },
-      data: {
-        ...(input.opdHospital !== undefined ? { opdHospital: input.opdHospital.trim() } : {}),
-        ...(input.opdDrName !== undefined ? { opdDrName: input.opdDrName.trim() } : {}),
-        ...(input.opdContactNo !== undefined ? { opdContactNo: input.opdContactNo.trim() } : {}),
-        ...(input.opdCharges !== undefined ? { opdCharges: input.opdCharges } : {}),
-        ...(input.opdScheduleDate !== undefined
-          ? { opdScheduleDate: parseOptionalDate(input.opdScheduleDate, 'opdScheduleDate') }
-          : {}),
-        ...(input.followUpDate !== undefined
-          ? { followUpDate: parseOptionalDate(input.followUpDate, 'followUpDate') }
-          : {}),
-        ...(nextRemarks !== undefined ? { remarks: nextRemarks } : {}),
-        opdSurgeryAdvised: surgeryAdvised,
-        opdSurgeryRemarkCode: nextSurgeryRemarkCode,
-        opdReasonNoSurgeryCode: nextReasonNoSurgeryCode,
-        opdFollowUpReasonCode: nextFollowUpReasonCode,
-        opdImplantRequired: nextImplantRequired,
-        opdDiagnosis: nextDiagnosis,
-        diseaseDetails: nextDiagnosis,
-        ...(uploadedPrescriptionImages.length > 0
-          ? { docUpload: uploadedPrescriptionImages[0]?.url ?? lead.docUpload }
-          : {}),
-        ...(targetStatus !== undefined ? { status: targetStatus } : {}),
-        ...(targetCaseStage !== undefined ? { caseStage: targetCaseStage } : {}),
-      },
-      select: doctorAppointmentLeadSelect,
-    })
-
-    if (uploadedPrescriptionImages.length > 0) {
-      if (lead.kypSubmission?.id) {
-        await tx.kYPSubmission.update({
-          where: { leadId },
-          data: {
-            prescriptionFileUrl: uploadedPrescriptionImages[0]?.url ?? null,
-          },
-        })
-      }
-
-      await tx.leadOpdPrescriptionImage.deleteMany({
-        where: { leadId },
-      })
-
-      await tx.leadOpdPrescriptionImage.createMany({
-        data: uploadedPrescriptionImages.map((image, index) => ({
-          leadId,
-          fileName: image.name,
-          fileUrl: image.url,
-          storageKey: image.key ?? null,
-          sortOrder: index,
-        })),
-      })
-    }
-
-    if (stageChanged) {
-      await tx.caseStageHistory.create({
-        data: {
-          leadId,
-          fromStage: lead.caseStage,
-          toStage: nextStage,
-          changedById: changedById!,
-          note: shouldMarkOpdDone
-            ? `OPD marked done by ${user.name}`
-            : `OPD stage updated by ${user.name}`,
-        },
-      })
-    }
-
-    return tx.lead.findUniqueOrThrow({
-      where: { id: leadId },
-      select: doctorAppointmentLeadSelect,
-    })
+  await mutateLeadOpd({
+    leadId: lead.id,
+    actorName: user.name,
+    appointmentId: appointment.id,
+    hospitalName: input.opdHospital,
+    charges: input.opdCharges,
+    scheduleDate: input.opdScheduleDate,
+    surgeryAdvised: input.surgeryAdvised,
+    surgeryRemarkCode: input.surgeryRemarksType,
+    reasonNoSurgeryCode: input.reasonNoSurgery,
+    followUpReasonCode: input.followUpReason,
+    implantRequired: input.implantRequired,
+    diagnosis: input.diagnosis,
+    remarks: input.remarks !== undefined ? normalizeText(input.remarks) : undefined,
+    followUpDate: input.followUpDate,
+    prescriptionImages: uploadedPrescriptionImages,
+    markDone: shouldMarkOpdDone,
   })
 
-  return mapAppointmentDetail(updatedLead)
+  return getDoctorAppointmentById(user, appointment.id)
 }
 
 export async function cancelDoctorOpdAppointment(
   user: DoctorAppSessionUser,
-  leadId: string,
+  appointmentId: string,
   input: CancelDoctorOpdInput
 ) {
-  await findDoctorScopedLead(user, leadId)
+  const { lead, appointment } = await findDoctorScopedAppointment(user, appointmentId)
+  if (appointment.appointmentType !== 'opd') {
+    throw new DoctorAppApiError('OPD appointment not found', 404)
+  }
 
-  const updatedLead = await prisma.lead.update({
-    where: { id: leadId },
-    data: {
-      opdScheduleDate: null,
-      followUpDate:
-        input.followUpDate !== undefined
-          ? parseOptionalDate(input.followUpDate, 'followUpDate')
-          : null,
-      remarks:
-        input.remarks !== undefined
-          ? normalizeText(input.remarks)
-          : 'OPD cancelled by doctor app',
-    },
-    select: doctorAppointmentLeadSelect,
+  await mutateLeadOpd({
+    leadId: lead.id,
+    actorName: user.name,
+    appointmentId: appointment.id,
+    followUpDate: input.followUpDate,
+    remarks: input.remarks !== undefined ? normalizeText(input.remarks) : undefined,
+    cancel: true,
   })
 
-  return mapAppointmentDetail(updatedLead)
+  return getDoctorAppointmentById(user, appointment.id)
 }
 
 export async function updateDoctorIpdAppointment(
@@ -1290,6 +1372,8 @@ export async function updateDoctorIpdAppointment(
       400
     )
   }
+
+  const admissionRecord = lead.admissionRecord
 
   const normalizedDoctorStatus = normalizeDoctorMobileIpdStatus(
     input.status
@@ -1310,17 +1394,13 @@ export async function updateDoctorIpdAppointment(
   const normalizedStatusReason = normalizeText(input.ipdStatusReason)
   const normalizedIpdHospital =
     input.ipdHospital !== undefined ? input.ipdHospital.trim() : undefined
-  const normalizedIpdDoctor =
-    input.ipdDrName !== undefined ? input.ipdDrName.trim() : undefined
-  const normalizedIpdContact =
-    input.ipdContactNo !== undefined ? input.ipdContactNo.trim() : undefined
   const normalizedOperationTime = normalizeText(input.operationTime)
   const normalizedAdmissionTime = normalizeText(input.admissionTime)
   const normalizedStatusNotes =
     normalizedProcedureNotes !== undefined ? normalizedProcedureNotes : undefined
   const isCashFlow = lead.flowType === 'CASH'
   const nextIpdDoctorName = normalizeDoctorName(
-    normalizedIpdDoctor ?? lead.ipdDrName ?? lead.surgeonName
+    lead.ipdDrName ?? lead.surgeonName
   )
   const nextAdmissionDate =
     input.ipdAdmissionDate !== undefined
@@ -1348,7 +1428,7 @@ export async function updateDoctorIpdAppointment(
     getCaseStageForDoctorMobileIpdStatus(normalizedDoctorStatus, isCashFlow) ??
     getCaseStageForIpdEnumStatus(effectiveIpdStatus, isCashFlow)
   const stageChanged = Boolean(targetCaseStage && targetCaseStage !== lead.caseStage)
-  const stageChangedById = stageChanged ? lead.admissionRecord.initiatedById : null
+  const stageChangedById = stageChanged ? admissionRecord.initiatedById : null
 
   if (normalizedDoctorStatus === 'surgery_done') {
     if (input.implantUsed === undefined || input.implantUsed === null) {
@@ -1396,7 +1476,7 @@ export async function updateDoctorIpdAppointment(
       key: null,
     }))
 
-  const updatedLead = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     const resolvedImplantUsages = await resolveImplantUsages(
       tx,
       normalizedDoctorStatus === 'no_show'
@@ -1406,7 +1486,7 @@ export async function updateDoctorIpdAppointment(
           : input.implantsUsed
     )
 
-    const admissionRecordId = lead.admissionRecord.id
+    const admissionRecordId = admissionRecord.id
 
     await tx.admissionRecord.update({
       where: { leadId },
@@ -1466,8 +1546,6 @@ export async function updateDoctorIpdAppointment(
     const leadUpdateData: Prisma.LeadUpdateInput = {
       ...(input.ipdAdmissionDate !== undefined ? { ipdAdmissionDate: admissionDate } : {}),
       ...(normalizedIpdHospital !== undefined ? { ipdHospital: normalizedIpdHospital } : {}),
-      ...(normalizedIpdDoctor !== undefined ? { ipdDrName: normalizedIpdDoctor } : {}),
-      ...(normalizedIpdContact !== undefined ? { ipdContactNo: normalizedIpdContact } : {}),
       ...(input.surgeryDate !== undefined ? { surgeryDate } : {}),
       ...(input.operationTime !== undefined ? { operationTime: normalizedOperationTime } : {}),
     }
@@ -1553,13 +1631,9 @@ export async function updateDoctorIpdAppointment(
       })
     }
 
-    return tx.lead.findUniqueOrThrow({
-      where: { id: leadId },
-      select: doctorAppointmentLeadSelect,
-    })
   })
 
-  return mapAppointmentDetail(updatedLead)
+  return getDoctorAppointmentById(user, leadId)
 }
 
 export async function dischargeDoctorAppointment(

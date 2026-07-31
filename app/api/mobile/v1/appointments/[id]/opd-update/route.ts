@@ -9,12 +9,11 @@ import {
 } from '@/lib/doctor-api-validation'
 import { getDoctorAppSessionFromRequest } from '@/lib/doctor-app/auth'
 import { DoctorAppApiError, updateDoctorOpdAppointment } from '@/lib/doctor-app/appointments'
+import { LeadOpdMutationError } from '@/lib/lead-opd-mutations'
 import { KYP_UPLOAD_MAX_BYTES } from '@/lib/upload-limits'
 
 const opdUpdateSchema = z.object({
   opdHospital: optionalStringField('OPD hospital'),
-  opdDrName: optionalStringField('OPD doctor name'),
-  opdContactNo: optionalStringField('OPD contact number'),
   opdCharges: optionalIntField('OPD charges', { min: 0 }),
   opdScheduleDate: nullableOptionalStringField('OPD schedule date'),
   followUpDate: nullableOptionalStringField('Follow-up date'),
@@ -31,6 +30,23 @@ const opdUpdateSchema = z.object({
   implantRequired: z.boolean().nullable().optional(),
   diagnosis: nullableOptionalStringField('Diagnosis'),
 })
+
+const forbiddenOpdFields = ['opdDrName', 'opdContactNo'] as const
+
+function assertNoForbiddenFields(
+  payload: unknown,
+  fields: readonly string[],
+  message: string
+) {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    return
+  }
+
+  const hasForbiddenField = fields.some((field) => field in payload)
+  if (hasForbiddenField) {
+    throw new DoctorAppApiError(message, 400)
+  }
+}
 
 function getOptionalFormValue(formData: FormData, key: string) {
   const value = formData.get(key)
@@ -78,8 +94,6 @@ function parseMultipartPayload(formData: FormData) {
 
   const payload = {
     opdHospital: getOptionalFormValue(formData, 'opdHospital'),
-    opdDrName: getOptionalFormValue(formData, 'opdDrName'),
-    opdContactNo: getOptionalFormValue(formData, 'opdContactNo'),
     opdCharges: getOptionalFormValue(formData, 'opdCharges'),
     opdScheduleDate: getOptionalFormValue(formData, 'opdScheduleDate'),
     followUpDate: getOptionalFormValue(formData, 'followUpDate'),
@@ -100,6 +114,12 @@ function parseMultipartPayload(formData: FormData) {
     diagnosis: getOptionalFormValue(formData, 'diagnosis'),
   }
 
+  assertNoForbiddenFields(
+    Object.fromEntries(formData.entries()),
+    forbiddenOpdFields,
+    'Doctors cannot update OPD doctor name or contact number.'
+  )
+
   return {
     ...opdUpdateSchema.parse(payload),
     prescriptionImages: files,
@@ -118,9 +138,18 @@ export async function PUT(
 
     const { id } = await params
     const contentType = request.headers.get('content-type') || ''
-    const input = contentType.includes('multipart/form-data')
-      ? parseMultipartPayload(await request.formData())
-      : opdUpdateSchema.parse(await request.json())
+    let input
+    if (contentType.includes('multipart/form-data')) {
+      input = parseMultipartPayload(await request.formData())
+    } else {
+      const payload = await request.json()
+      assertNoForbiddenFields(
+        payload,
+        forbiddenOpdFields,
+        'Doctors cannot update OPD doctor name or contact number.'
+      )
+      input = opdUpdateSchema.parse(payload)
+    }
     const result = await updateDoctorOpdAppointment(session, id, input)
 
     return successResponse(result, 'OPD updated')
@@ -129,6 +158,9 @@ export async function PUT(
       return zodErrorResponse(error)
     }
     if (error instanceof DoctorAppApiError) {
+      return errorResponse(error.message, error.status)
+    }
+    if (error instanceof LeadOpdMutationError) {
       return errorResponse(error.message, error.status)
     }
 
