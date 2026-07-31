@@ -14,6 +14,12 @@ import {
   type CumulativeReportStatus,
   CUMULATIVE_REPORT_STATUSES,
 } from '@/lib/cumulative-report'
+import {
+  buildCumulativeSurgeryLeadWhere,
+  buildPatientSummaryFromLeads,
+  pickKpiPerformanceMonth,
+  sumSatisfactionFromLeads,
+} from '@/lib/cumulative-report-monthly'
 
 const DEFAULT_PAGE_SIZE = 20
 const MAX_PAGE_SIZE = 100
@@ -48,8 +54,10 @@ export async function GET(request: NextRequest) {
     )
     const sort = searchParams.get('sort')
     const dir = searchParams.get('dir')
+    const kpiMonth = searchParams.get('kpiMonth')
 
     const where = buildCumulativeLeadWhere(filters)
+    const surgeryWhere = buildCumulativeSurgeryLeadWhere(filters)
     const skip = (page - 1) * limit
 
     const summaryWhere = buildCumulativeLeadWhere({
@@ -57,7 +65,7 @@ export async function GET(request: NextRequest) {
       status: null,
     })
 
-    const [totalRecords, rows, totalPatients, totalSurgeries, planning, ipdDone, pending, cancelled, followUp] =
+    const [totalRecords, rows, totalPatients, totalSurgeries, planning, ipdDone, pending, cancelled, followUp, surgeryLeads] =
       await Promise.all([
         prisma.lead.count({ where }),
         prisma.lead.findMany({
@@ -84,7 +92,23 @@ export async function GET(request: NextRequest) {
         prisma.lead.count({
           where: { AND: [summaryWhere, buildCumulativeStatusWhere('Follow-up')] },
         }),
+        prisma.lead.findMany({
+          where: surgeryWhere,
+          select: {
+            surgeryDate: true,
+            complianceCall: {
+              select: {
+                status: true,
+                satisfaction: true,
+              },
+            },
+          },
+        }),
       ])
+
+    const patientSummary = buildPatientSummaryFromLeads(surgeryLeads)
+    const kpiPerformance = pickKpiPerformanceMonth(patientSummary, kpiMonth)
+    const satisfaction = sumSatisfactionFromLeads(surgeryLeads)
 
     const data = rows.map((lead, index) => ({
       ...mapLeadToCumulativeRow(lead),
@@ -100,6 +124,8 @@ export async function GET(request: NextRequest) {
         pending,
         cancelled,
         followUp,
+        patientSatisfied: satisfaction.patientSatisfied,
+        patientNotSatisfied: satisfaction.patientNotSatisfied,
       },
       totalRecords,
       page,
@@ -107,6 +133,8 @@ export async function GET(request: NextRequest) {
       totalPages: Math.max(1, Math.ceil(totalRecords / limit)),
       data,
       statusOptions: CUMULATIVE_REPORT_STATUSES,
+      patientSummary,
+      kpiPerformance,
     })
   } catch (error) {
     console.error('Error fetching cumulative report:', error)
