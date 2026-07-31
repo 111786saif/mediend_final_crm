@@ -63,6 +63,25 @@
   --sidebar-accent-foreground: 6 45 76;
   --sidebar-border: 52 59 69;
   --sidebar-ring: 30 197 183;
+
+  /* Disease distribution chart widget */
+  --dd-surface: #ffffff;
+  --dd-text-primary: #101014;
+  --dd-text-secondary: #52514e;
+  --dd-text-muted: #898781;
+  --dd-border: rgba(11, 11, 11, 0.1);
+  --dd-grid: #e1e0d9;
+  --dd-bar: #2a78d6;
+  --dd-bar-neutral: #b4b2a9;
+  --dd-tile-bg: #f7f7f5;
+  --dd-slice-1: #2a78d6;
+  --dd-slice-2: #22a06b;
+  --dd-slice-3: #e56910;
+  --dd-slice-4: #ae4787;
+  --dd-slice-5: #5e4db2;
+  --dd-slice-6: #0891b2;
+  --dd-slice-7: #c9372c;
+  --dd-slice-8: #6a9a23;
 }
 
 .dark {
@@ -108,6 +127,66 @@
 
   --sidebar-border: 32 42 60;
   --sidebar-ring: 99 102 241;
+
+  --dd-surface: #1a1a19;
+  --dd-text-primary: #ffffff;
+  --dd-text-secondary: #c3c2b7;
+  --dd-text-muted: #898781;
+  --dd-border: rgba(255, 255, 255, 0.1);
+  --dd-grid: #2c2c2a;
+  --dd-bar: #3987e5;
+  --dd-bar-neutral: #5f5e5a;
+  --dd-tile-bg: #232322;
+  --dd-slice-1: #4a9ff0;
+  --dd-slice-2: #3dd68c;
+  --dd-slice-3: #f68d2e;
+  --dd-slice-4: #d66db9;
+  --dd-slice-5: #8777d9;
+  --dd-slice-6: #22b8cf;
+  --dd-slice-7: #f15b50;
+  --dd-slice-8: #94c748;
+}
+
+[data-theme='dark'] {
+  --dd-surface: #1a1a19;
+  --dd-text-primary: #ffffff;
+  --dd-text-secondary: #c3c2b7;
+  --dd-text-muted: #898781;
+  --dd-border: rgba(255, 255, 255, 0.1);
+  --dd-grid: #2c2c2a;
+  --dd-bar: #3987e5;
+  --dd-bar-neutral: #5f5e5a;
+  --dd-tile-bg: #232322;
+  --dd-slice-1: #4a9ff0;
+  --dd-slice-2: #3dd68c;
+  --dd-slice-3: #f68d2e;
+  --dd-slice-4: #d66db9;
+  --dd-slice-5: #8777d9;
+  --dd-slice-6: #22b8cf;
+  --dd-slice-7: #f15b50;
+  --dd-slice-8: #94c748;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --dd-surface: #1a1a19;
+    --dd-text-primary: #ffffff;
+    --dd-text-secondary: #c3c2b7;
+    --dd-text-muted: #898781;
+    --dd-border: rgba(255, 255, 255, 0.1);
+    --dd-grid: #2c2c2a;
+    --dd-bar: #3987e5;
+    --dd-bar-neutral: #5f5e5a;
+    --dd-tile-bg: #232322;
+    --dd-slice-1: #4a9ff0;
+    --dd-slice-2: #3dd68c;
+    --dd-slice-3: #f68d2e;
+    --dd-slice-4: #d66db9;
+    --dd-slice-5: #8777d9;
+    --dd-slice-6: #22b8cf;
+    --dd-slice-7: #f15b50;
+    --dd-slice-8: #94c748;
+  }
 }
 
 @layer base {

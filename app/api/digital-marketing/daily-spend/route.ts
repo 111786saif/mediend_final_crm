@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { hasEffectiveCrmPermission } from '@/lib/crm-permissions'
+import { canViewCampaignCpl, canManageCampaignCpl } from '@/lib/campaign-cpl-access'
 
 function dayRange(dateStr: string) {
   const d = new Date(dateStr + 'T00:00:00.000Z')
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!(await hasEffectiveCrmPermission(user.id, 'crm.cpl.view')))
+    if (!(await canViewCampaignCpl(user.id)))
       return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!(await hasEffectiveCrmPermission(user.id, 'crm.cpl.manage')))
+    if (!(await canManageCampaignCpl(user.id)))
       return errorResponse('Forbidden', 403)
 
     const body = await request.json()

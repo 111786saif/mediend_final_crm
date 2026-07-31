@@ -23,7 +23,6 @@ import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 import {
   BarChart3,
   DollarSign,
-  PieChart as PieChartIcon,
   Stethoscope,
   TrendingUp,
   Wallet,
@@ -33,18 +32,15 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import {
-  PieChart,
-  Pie,
-  Cell,
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts'
 import { cn } from '@/lib/utils'
+import { DiseaseDistribution } from '@/components/dashboard/DiseaseDistribution'
 
 function generateMonthOptions() {
   const months: { key: string; label: string }[] = []
@@ -71,7 +67,19 @@ function currentMonthKey() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
-const PIE_COLORS = ['#6366f1', '#22c55e', '#f97316', '#ec4899', '#06b6d4', '#eab308', '#a855f7', '#64748b']
+function inNumberRange(value: number, filter: unknown): boolean {
+  if (filter == null) return true
+  if (Array.isArray(filter) && filter.length === 2) {
+    return value >= filter[0] && value <= filter[1]
+  }
+  if (typeof filter === 'object' && ('min' in filter || 'max' in filter)) {
+    const { min, max } = filter as { min?: number | null; max?: number | null }
+    if (min != null && value < min) return false
+    if (max != null && value > max) return false
+    return true
+  }
+  return true
+}
 
 export interface SurgeryDashboardData {
   surgeryCount: number
@@ -107,6 +115,33 @@ export default function PLSurgeryDashboardPage() {
   const [expensesFilter, setExpensesFilter] = useState<[number, number] | undefined>()
   const [netProfitFilter, setNetProfitFilter] = useState<[number, number] | undefined>()
 
+  const defaultMonthKey = currentMonthKey()
+  const monthsChanged =
+    selectedMonths.length !== 1 || selectedMonths[0] !== defaultMonthKey
+  const activeFilterCount =
+    bdFilter.length +
+    teamFilter.length +
+    (surgeriesFilter ? 1 : 0) +
+    (revenueFilter ? 1 : 0) +
+    (expensesFilter ? 1 : 0) +
+    (netProfitFilter ? 1 : 0) +
+    (teamTab !== 'all' ? 1 : 0)
+
+  const clearFilters = () => {
+    setBdFilter([])
+    setTeamFilter([])
+    setSurgeriesFilter(undefined)
+    setRevenueFilter(undefined)
+    setExpensesFilter(undefined)
+    setNetProfitFilter(undefined)
+    setTeamTab('all')
+  }
+
+  const handleReset = () => {
+    setSelectedMonths([defaultMonthKey])
+    clearFilters()
+  }
+
   useEffect(() => {
     if (selectedMonths.length === 0) {
       setDateRange({ startDate: '', endDate: '' })
@@ -133,12 +168,14 @@ export default function PLSurgeryDashboardPage() {
     enabled: !!dateRange.startDate && !!dateRange.endDate,
   })
 
-  const pieData =
-    data?.diseaseDistribution?.map((d) => ({
-      name: d.category,
-      value: d.count,
-      revenue: d.revenue,
-    })) ?? []
+  const diseaseDistributionInput = useMemo(
+    () =>
+      (data?.diseaseDistribution ?? []).map((row) => ({
+        category: row.category,
+        count: row.count,
+      })),
+    [data?.diseaseDistribution],
+  )
 
   const barData =
     data?.hospitalDistribution?.slice(0, 12).map((h) => ({
@@ -189,16 +226,16 @@ export default function PLSurgeryDashboardPage() {
       rows = rows.filter((r) => teamFilter.includes(r.teamName ?? '—'))
     }
     if (surgeriesFilter) {
-      rows = rows.filter((r) => r.surgeries >= surgeriesFilter[0] && r.surgeries <= surgeriesFilter[1])
+      rows = rows.filter((r) => inNumberRange(r.surgeries, surgeriesFilter))
     }
     if (revenueFilter) {
-      rows = rows.filter((r) => r.revenue >= revenueFilter[0] && r.revenue <= revenueFilter[1])
+      rows = rows.filter((r) => inNumberRange(r.revenue, revenueFilter))
     }
     if (expensesFilter) {
-      rows = rows.filter((r) => r.expenses >= expensesFilter[0] && r.expenses <= expensesFilter[1])
+      rows = rows.filter((r) => inNumberRange(r.expenses, expensesFilter))
     }
     if (netProfitFilter) {
-      rows = rows.filter((r) => r.netProfit >= netProfitFilter[0] && r.netProfit <= netProfitFilter[1])
+      rows = rows.filter((r) => inNumberRange(r.netProfit, netProfitFilter))
     }
 
     return rows
@@ -387,9 +424,16 @@ export default function PLSurgeryDashboardPage() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              {selectedMonths.length > 0 && selectedMonths.length < MONTH_OPTIONS.length && (
-                <Button type="button" variant="ghost" size="sm" className="h-8 gap-1" onClick={() => setSelectedMonths([currentMonthKey()])}>
-                  <X className="h-3 w-3" />Reset
+              {(monthsChanged || activeFilterCount > 0) && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 gap-1 text-rose-600 dark:text-rose-400 hover:text-rose-700 hover:bg-rose-500/10"
+                  onClick={handleReset}
+                >
+                  <X className="h-3 w-3" />
+                  Reset{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
                 </Button>
               )}
             </div>
@@ -458,27 +502,10 @@ export default function PLSurgeryDashboardPage() {
                   </div>
 
                   <div className="grid gap-6 lg:grid-cols-2">
-                    <Card className="overflow-hidden border-fuchsia-200/50 shadow-md dark:border-fuchsia-800/35">
-                      <CardHeader className="border-b bg-gradient-to-r from-fuchsia-500/12 via-pink-500/8 to-transparent">
-                        <CardTitle className="flex items-center gap-2 text-lg text-fuchsia-950 dark:text-fuchsia-100"><PieChartIcon className="h-5 w-5 text-fuchsia-600 dark:text-fuchsia-400" />Disease distribution</CardTitle>
-                        <CardDescription>By case count</CardDescription>
-                      </CardHeader>
-                      <CardContent className="h-[320px]">
-                        {pieData.length === 0 ? (
-                          <p className="text-sm text-muted-foreground text-center py-12">No data</p>
-                        ) : (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                              <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                                {pieData.map((_, i) => (<Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />))}
-                              </Pie>
-                              <Tooltip />
-                              <Legend />
-                            </PieChart>
-                          </ResponsiveContainer>
-                        )}
-                      </CardContent>
-                    </Card>
+                    <DiseaseDistribution
+                      data={diseaseDistributionInput}
+                      loading={isLoading}
+                    />
 
                     <Card className="overflow-hidden border-indigo-200/50 shadow-md dark:border-indigo-800/35">
                       <CardHeader className="border-b bg-gradient-to-r from-indigo-500/12 via-blue-500/8 to-transparent">

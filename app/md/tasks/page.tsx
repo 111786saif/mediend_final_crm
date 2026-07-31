@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { Plus } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
 import { useAuth } from "@/hooks/use-auth"
 import { useTabPermissions } from "@/hooks/use-tab-permissions"
 import { PermissionsGuard } from "@/components/permissions-guard"
@@ -17,7 +16,7 @@ import { PerformanceTab } from "@/components/tasks/performance-tab"
 import { Button } from "@/components/ui/button"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { apiGet } from "@/lib/api-client"
-import type { BadgeCounts } from "@/app/api/badge-counts/route"
+import { useBadgeCounts } from "@/hooks/use-badge-counts"
 
 export default function MDTasksPage() {
   const { user } = useAuth()
@@ -26,11 +25,7 @@ export default function MDTasksPage() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const isMobile = useIsMobile()
 
-  const { data: badges } = useQuery<BadgeCounts>({
-    queryKey: ["badge-counts"],
-    queryFn: () => apiGet<BadgeCounts>("/api/badge-counts"),
-    refetchInterval: 60_000,
-  })
+  const { data: badgeCounts } = useBadgeCounts()
 
   useEffect(() => {
     let cancelled = false
@@ -53,14 +48,14 @@ export default function MDTasksPage() {
       {
         value: "overview",
         label: "Overview",
-        badge: (badges?.taskOverdueCount || 0) + (badges?.taskApprovalCount || 0) || undefined,
+        badge: badgeCounts?.taskOverviewCount || undefined,
         perm: "main.tasks.overview",
       },
       ...(isManager !== false ? [{ value: "team", label: "Team" as const, perm: "main.tasks.overview" }] : []),
       { value: "mytasks", label: "My Tasks", perm: "main.tasks.my_tasks" },
       ...(user?.role === "MD" ? [{ value: "performance", label: "Performance" as const, perm: "main.tasks.my_tasks" }] : []),
     ],
-    [isManager, user?.role, badges]
+    [isManager, user?.role, badgeCounts]
   )
 
   const { allowedTabs, isLoading: isPermsLoading } = useTabPermissions(tabs, activeTab, setActiveTab)

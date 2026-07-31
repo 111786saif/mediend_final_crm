@@ -19,10 +19,9 @@ import { useBadgeCounts } from '@/hooks/use-badge-counts'
 import { useNotifications } from '@/hooks/use-notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useSidebar } from '@/components/ui/sidebar'
-import { getCampaignCplNavItem, getFilteredNavItemsWithUrls, navItems } from '@/lib/sidebar-nav'
-import { useQuery } from '@tanstack/react-query'
-import { apiGet } from '@/lib/api-client'
+import { getFilteredNavItemsWithUrls, navItems } from '@/lib/sidebar-nav'
 import { usePermissions } from '@/hooks/use-permissions'
+import { hasPermission } from '@/lib/rbac'
 import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -71,14 +70,13 @@ function getBadgeCount(
     /** Same pending normalization count rolled into Engagement’s aggregate; show on Attendance & Leaves instead. */
     hrPendingNormalizations?: number
     pendingOnboardingApprovals?: number
+    taskOverviewCount?: number
   } | undefined,
-  isMdOrAdmin: boolean
+  _isMdOrAdmin: boolean
 ): number {
   if (!counts) return 0
   if (itemTitle === 'Tasks') {
-    return isMdOrAdmin
-      ? (counts.pendingTaskReviews ?? 0) + (counts.pendingDueDateApprovals ?? 0)
-      : (counts.myPendingTasks ?? 0)
+    return counts.taskOverviewCount ?? 0
   }
   if (itemTitle === 'Fin Approvals') return counts.pendingFinanceApprovals ?? 0
   if (itemTitle === 'MD Messages') return counts.unreadMessages ?? 0
@@ -122,13 +120,6 @@ export function AppSidebar() {
     [unreadNotifications]
   )
   const isMdOrAdmin = user?.role === 'MD' || user?.role === 'ADMIN'
-
-  const { data: cplAccessData } = useQuery({
-    queryKey: ['sidebar-cpl-access', user?.id],
-    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=crm.cpl.view'),
-    enabled: !!user,
-    staleTime: 60_000,
-  })
 
   const closeSidebarOnMobile = React.useCallback(() => {
     if (isMobile) {
@@ -231,7 +222,7 @@ export function AppSidebar() {
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
 
   const HRM_TITLES = ['Attendance & Normalizations', 'People & Org', 'Compensation & Docs', 'Engagement']
-  const SALES_TITLES = ['Sales Dashboard', 'DM Dashboard', 'Pipeline', 'Case Tracker', 'Pending Surgery', 'Targets', 'Sales P&L', 'Incentive']
+  const SALES_TITLES = ['Sales Dashboard', 'DM Dashboard', 'Campaign CPL', 'Pipeline', 'Case Tracker', 'Pending Surgery', 'Targets', 'Sales P&L', 'Incentive']
   const INSURANCE_PL_TITLES = ['Insurance', 'Cash Cases', 'P/L Ledger', 'P/L Surgery', 'P/L Outstanding', 'Doctor List', 'Hospital List']
   const EA_HRM_TITLES = ['MD HR Dashboard', 'HR Dashboard', 'Recruitment', ...HRM_TITLES]
   const EA_MYHRMS_EXTRA = ['Ask MD Approval']
@@ -247,16 +238,11 @@ export function AppSidebar() {
 
   const navigationItems = itemsWithUrls
 
-  const navigationItemsWithCpl =
-    cplAccessData?.allowed === true && !navigationItems.some((i) => i.title === 'Campaign CPL')
-      ? [...navigationItems, getCampaignCplNavItem()]
-      : navigationItems
-
   const isEa = user.role === 'EXECUTIVE_ASSISTANT'
 
-  const filterByPermission = (item: any) => {
-    // Dynamic checks for generic/legacy pages with role-specific resource keys
+  const filterByPermission = (item: (typeof itemsWithUrls)[number]) => {
     if (item.title === 'Pipeline') {
+      if (!permissionsReady) return true
       return (
         hasAccess('sales.sales_pipeline', 'READ') ||
         hasAccess('sales.team_lead_pipeline', 'READ') ||
@@ -265,6 +251,7 @@ export function AppSidebar() {
     }
 
     if (item.title === 'Targets') {
+      if (!permissionsReady) return true
       return (
         hasAccess('sales.targets', 'READ') ||
         hasAccess('sales.team_lead_targets', 'READ') ||
@@ -272,28 +259,34 @@ export function AppSidebar() {
       )
     }
 
-    // 1. Try to match the current item URL against RESOURCE_MAP paths
     let resourceKey = Object.keys(RESOURCE_MAP).find(
-      (key) => (RESOURCE_MAP as any)[key].path === item.url
+      (key) => RESOURCE_MAP[key as keyof typeof RESOURCE_MAP].path === item.url,
     )
 
-    // 2. If no match (due to dynamic URL rewriting), match the static item URL
     if (!resourceKey) {
       const originalItem = navItems.find((ni) => ni.title === item.title)
       if (originalItem) {
         resourceKey = Object.keys(RESOURCE_MAP).find(
-          (key) => (RESOURCE_MAP as any)[key].path === originalItem.url
+          (key) => RESOURCE_MAP[key as keyof typeof RESOURCE_MAP].path === originalItem.url,
         )
       }
     }
 
-    if (resourceKey) {
-      return hasAccess(resourceKey, 'READ')
+    if (resourceKey && permissionsReady) {
+      if (hasAccess(resourceKey, 'READ')) return true
+      if (item.permission && hasPermission(user, item.permission)) return true
+      if (item.title === 'Dashboard' && item.url.startsWith('/pl/') && hasPermission(user, 'pl:read')) {
+        return true
+      }
+      return false
+    }
+    if (item.permission && permissionsReady) {
+      return hasPermission(user, item.permission)
     }
     return true
   }
 
-  const mainItems = navigationItemsWithCpl
+  const mainItems = navigationItems
     .filter((item) => {
       if (item.title.startsWith('My ')) return false
       if (HRM_TITLES.includes(item.title)) return user.role !== 'HR_HEAD'
@@ -307,18 +300,18 @@ export function AppSidebar() {
     })
     .filter(filterByPermission)
 
-  const salesItems = (isEa ? navigationItemsWithCpl.filter((item) => SALES_TITLES.includes(item.title)) : [])
+  const salesItems = (isEa ? navigationItems.filter((item) => SALES_TITLES.includes(item.title)) : [])
     .filter(filterByPermission)
-  const insurancePlItems = (isEa ? navigationItemsWithCpl.filter((item) => INSURANCE_PL_TITLES.includes(item.title)) : [])
+  const insurancePlItems = (isEa ? navigationItems.filter((item) => INSURANCE_PL_TITLES.includes(item.title)) : [])
     .filter(filterByPermission)
-  const hrItems = navigationItemsWithCpl
+  const hrItems = navigationItems
     .filter((item) => (isEa ? EA_HRM_TITLES.includes(item.title) : HRM_TITLES.includes(item.title)))
     .filter(filterByPermission)
-  const myHrmsItems = navigationItemsWithCpl
+  const myHrmsItems = navigationItems
     .filter((item) => (isEa ? (item.title.startsWith('My ') || EA_MYHRMS_EXTRA.includes(item.title)) : item.title.startsWith('My ')))
     .filter(filterByPermission)
 
-  const crmItems = navigationItemsWithCpl.filter((item) => CRM_TITLES.includes(item.title)).filter(filterByPermission)
+  const crmItems = navigationItems.filter((item) => CRM_TITLES.includes(item.title)).filter(filterByPermission)
 
   const showHrSection = (user.role === 'HR_HEAD' || isEa) && hrItems.length > 0
   const showMyHrmsSection = myHrmsItems.length > 0
