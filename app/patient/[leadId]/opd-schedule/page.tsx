@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { isReadOnlyPatientRole } from '@/lib/case-permissions'
 import { useMemo } from 'react'
-import { CaseStage, FlowType } from '@/generated/prisma/enums'
+import { CaseStage, FlowType, LeadOpdPhase, LeadOpdStatus } from '@/generated/prisma/enums'
 
 interface Lead {
   id: string
@@ -39,6 +39,19 @@ interface Lead {
   opdCharges?: number | null
   opdScheduleDate?: string | null
   opdMeeting?: number | null
+  effectiveOpdAppointments?: Array<{
+    id: string
+    source: 'legacy' | 'record'
+    phase: LeadOpdPhase
+    slot: 1 | 2
+    status: LeadOpdStatus
+    hospitalName?: string | null
+    doctorName?: string | null
+    contactNumber?: string | null
+    charges?: number | null
+    scheduleDate?: string | null
+    meetingType?: number | null
+  }> | null
   kypSubmission?: {
     location?: string | null
     area?: string | null
@@ -53,6 +66,8 @@ export default function OPDSchedulePage() {
   const { user } = useAuth()
   const leadId = params.leadId as string
   const returnToParam = searchParams.get('returnTo')
+  const opdIdParam = searchParams.get('opdId')
+  const phaseParam = searchParams.get('phase')
   const returnHref = useMemo(
     () =>
       typeof returnToParam === 'string' && returnToParam.startsWith('/')
@@ -119,6 +134,15 @@ export default function OPDSchedulePage() {
     )
   }
 
+  const selectedOpd = lead.effectiveOpdAppointments?.find((entry) =>
+    opdIdParam === 'legacy'
+      ? entry.source === 'legacy'
+      : Boolean(opdIdParam) && entry.id === opdIdParam
+  ) ?? null
+  const selectedPhase =
+    selectedOpd?.phase ??
+    (phaseParam === 'POST' ? LeadOpdPhase.POST : LeadOpdPhase.PRE)
+
   return (
     <AuthenticatedLayout>
       <div className="space-y-6">
@@ -135,6 +159,9 @@ export default function OPDSchedulePage() {
           <CardContent>
             <OPDScheduleForm
               leadId={leadId}
+              opdAppointmentId={selectedOpd?.source === 'legacy' ? 'legacy' : selectedOpd?.id ?? null}
+              opdPhase={selectedPhase}
+              hideContactFields={user?.role === 'DOCTOR'}
               leadRef={lead.leadRef}
               currentCaseStage={lead.caseStage}
               flowType={lead.flowType}
@@ -150,14 +177,14 @@ export default function OPDSchedulePage() {
               category={lead.category}
               treatment={lead.treatment}
               quantityGrade={lead.quantityGrade}
-              surgeonName={lead.opdDrName || lead.ipdDrName || lead.surgeonName}
+              surgeonName={selectedOpd?.doctorName || lead.opdDrName || lead.ipdDrName || lead.surgeonName}
               surgeonType={lead.surgeonType}
-              hospitalName={lead.opdHospital || lead.hospitalName}
+              hospitalName={selectedOpd?.hospitalName || lead.opdHospital || lead.hospitalName}
               opdHospital={lead.opdHospital}
-              opdDrName={lead.opdDrName}
-              opdCharges={lead.opdCharges}
-              opdScheduleDate={lead.opdScheduleDate}
-              opdMeeting={lead.opdMeeting}
+              opdDrName={selectedOpd?.doctorName || lead.opdDrName}
+              opdCharges={selectedOpd?.charges ?? lead.opdCharges}
+              opdScheduleDate={selectedOpd?.scheduleDate || lead.opdScheduleDate}
+              opdMeeting={selectedOpd?.meetingType ?? lead.opdMeeting}
               onSuccess={() => {
                 queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
                 queryClient.invalidateQueries({ queryKey: ['leads'] })
