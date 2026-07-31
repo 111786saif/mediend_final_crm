@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { getFirstNavUrl } from '@/lib/sidebar-nav'
 import { GuidedTour } from '@/components/onboarding/guided-tour'
 import { Button } from '@/components/ui/button'
@@ -13,6 +14,14 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import {
@@ -21,12 +30,19 @@ import {
   Camera,
   Check,
   CheckCircle2,
+  ChevronRight,
   Clock,
+  CreditCard,
   FileUp,
   PartyPopper,
   Upload,
   UserPlus,
 } from 'lucide-react'
+import {
+  getOnboardingDocFields,
+  type ExperienceType,
+  type OnboardingDocKey,
+} from '@/lib/onboarding-docs'
 
 type WizardStep = 'welcome' | 'profile' | 'tour' | 'preview'
 
@@ -73,6 +89,11 @@ interface ProfileResponse {
     resumeDocUrl: string | null
     educationalCertDocUrl: string | null
     experienceCertDocUrl: string | null
+    appointmentLetterDocUrl: string | null
+    salarySlipDocUrl: string | null
+    bankStatementDocUrl: string | null
+    experienceType: ExperienceType | null
+    personalEmail: string | null
     designation: string | null
     department: { id: string; name: string } | null
     onboardingStatus?: string
@@ -80,35 +101,39 @@ interface ProfileResponse {
   documents?: Array<{ id: string; label: string; url: string; fileName: string }>
 }
 
-const DOC_FIELDS: Array<{
-  key: keyof Pick<
-    NonNullable<ProfileResponse['employee']>,
-    | 'aadharDocUrl'
-    | 'panDocUrl'
-    | 'passportDocUrl'
-    | 'resumeDocUrl'
-    | 'educationalCertDocUrl'
-    | 'experienceCertDocUrl'
-  >
-  label: string
-}> = [
-  { key: 'aadharDocUrl', label: 'Aadhaar Card' },
-  { key: 'panDocUrl', label: 'PAN Card' },
-  { key: 'resumeDocUrl', label: 'Resume' },
-  { key: 'educationalCertDocUrl', label: 'Educational Certificate' },
-  { key: 'experienceCertDocUrl', label: 'Experience Certificate' },
-  { key: 'passportDocUrl', label: 'Passport (optional)' },
-]
+type OnboardingForm = {
+  name: string
+  phoneNumber: string
+  gender: string
+  dateOfBirth: string
+  address: string
+  emergencyContactName: string
+  emergencyContactPhone: string
+  panNumber: string
+  aadharNumber: string
+  uanNumber: string
+  bankAccountName: string
+  bankAccountNumber: string
+  ifscCode: string
+  profilePicture: string
+  aadharDocUrl: string
+  panDocUrl: string
+  resumeDocUrl: string
+  educationalCertDocUrl: string
+  appointmentLetterDocUrl: string
+  salarySlipDocUrl: string
+  bankStatementDocUrl: string
+}
 
 const STEPS: WizardStep[] = ['welcome', 'profile', 'tour', 'preview']
+const STEP_LABELS = ['Welcome', 'Profile', 'Tour', 'Confirm']
 
 function StepIndicator({ current }: { current: WizardStep }) {
-  const labels = ['Welcome', 'Profile', 'Tour', 'Confirm']
   const idx = STEPS.indexOf(current)
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-      {labels.map((label, i) => (
-        <div key={label} className="flex items-center gap-2">
+    <div className="flex items-center justify-center gap-1.5 sm:gap-3">
+      {STEP_LABELS.map((label, i) => (
+        <div key={label} className="flex items-center gap-1.5 sm:gap-2">
           <div
             className={cn(
               'flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold',
@@ -124,13 +149,13 @@ function StepIndicator({ current }: { current: WizardStep }) {
           <span
             className={cn(
               'text-xs sm:text-sm',
-              i === idx ? 'font-medium text-foreground' : 'text-muted-foreground'
+              i === idx ? 'font-medium text-foreground' : 'hidden text-muted-foreground sm:inline'
             )}
           >
             {label}
           </span>
-          {i < labels.length - 1 && (
-            <div className={cn('mx-1 hidden h-px w-6 sm:block', i < idx ? 'bg-sky-400/50' : 'bg-border')} />
+          {i < STEP_LABELS.length - 1 && (
+            <div className={cn('mx-0.5 h-px w-4 sm:mx-1 sm:w-6', i < idx ? 'bg-sky-400/50' : 'bg-border')} />
           )}
         </div>
       ))}
@@ -140,16 +165,14 @@ function StepIndicator({ current }: { current: WizardStep }) {
 
 function WaitingForApproval({ name }: { name: string }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-sky-50 via-background to-violet-50 px-4 dark:from-sky-950/40 dark:to-violet-950/30">
+    <div className="flex min-h-dvh items-center justify-center bg-gradient-to-b from-sky-50 via-background to-violet-50 px-4 dark:from-sky-950/40 dark:to-violet-950/30">
       <Card className="w-full max-w-lg border-sky-200/60 shadow-lg dark:border-sky-900/50">
-        <CardHeader className="text-center space-y-3">
+        <CardHeader className="space-y-3 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
             <Clock className="h-8 w-8" />
           </div>
           <CardTitle className="text-2xl">Welcome, {name.split(' ')[0]}!</CardTitle>
-          <CardDescription className="text-base">
-            Your profile is with HR for review
-          </CardDescription>
+          <CardDescription className="text-base">Your profile is with HR for review</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-center">
           <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
@@ -167,17 +190,182 @@ function WaitingForApproval({ name }: { name: string }) {
   )
 }
 
+function PreviewRow({ label, value }: { label: string; value?: string | null }) {
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-0.5 break-words text-sm font-medium">{value?.trim() || '—'}</p>
+    </div>
+  )
+}
+
+function IdentityBankFields({
+  form,
+  setForm,
+}: {
+  form: OnboardingForm
+  setForm: Dispatch<SetStateAction<OnboardingForm>>
+}) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="space-y-1.5">
+        <Label>Aadhaar *</Label>
+        <Input
+          value={form.aadharNumber}
+          onChange={(e) =>
+            setForm((p) => ({
+              ...p,
+              aadharNumber: e.target.value.replace(/\D/g, '').slice(0, 12),
+            }))
+          }
+          maxLength={12}
+          className="font-mono"
+          placeholder="12 digits"
+          inputMode="numeric"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label>PAN *</Label>
+        <Input
+          value={form.panNumber}
+          onChange={(e) =>
+            setForm((p) => ({ ...p, panNumber: e.target.value.toUpperCase().slice(0, 10) }))
+          }
+          maxLength={10}
+          className="font-mono"
+          placeholder="ABCDE1234F"
+          autoCapitalize="characters"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label>UAN</Label>
+        <Input
+          value={form.uanNumber}
+          onChange={(e) =>
+            setForm((p) => ({
+              ...p,
+              uanNumber: e.target.value.replace(/\D/g, '').slice(0, 12),
+            }))
+          }
+          maxLength={12}
+          className="font-mono"
+          inputMode="numeric"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label>Account holder name *</Label>
+        <Input
+          value={form.bankAccountName}
+          onChange={(e) => setForm((p) => ({ ...p, bankAccountName: e.target.value }))}
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label>Account number *</Label>
+        <Input
+          value={form.bankAccountNumber}
+          onChange={(e) =>
+            setForm((p) => ({
+              ...p,
+              bankAccountNumber: e.target.value.replace(/\D/g, ''),
+            }))
+          }
+          className="font-mono"
+          inputMode="numeric"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label>IFSC *</Label>
+        <Input
+          value={form.ifscCode}
+          onChange={(e) =>
+            setForm((p) => ({
+              ...p,
+              ifscCode: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11),
+            }))
+          }
+          maxLength={11}
+          className="font-mono"
+          placeholder="SBIN0001234"
+          autoCapitalize="characters"
+        />
+      </div>
+    </div>
+  )
+}
+
+function DocumentsList({
+  form,
+  docFields,
+  uploadingDoc,
+  onUploadClick,
+}: {
+  form: OnboardingForm
+  docFields: ReturnType<typeof getOnboardingDocFields>
+  uploadingDoc: string | null
+  onUploadClick: (key: OnboardingDocKey) => void
+}) {
+  return (
+    <div className="space-y-2">
+      {docFields.map((doc) => {
+        const url = form[doc.key]
+        const isUploading = uploadingDoc === doc.key
+        const accept = doc.key === 'profilePicture' ? 'image/*' : undefined
+        return (
+          <div
+            key={doc.key}
+            className="flex items-center justify-between gap-3 rounded-lg border bg-muted/30 px-3 py-2.5"
+          >
+            <div className="min-w-0">
+              <p className="flex items-center gap-1.5 text-sm font-medium">
+                <FileUp className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                {doc.label}
+              </p>
+              {url ? (
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-0.5 block truncate text-xs text-sky-600 hover:underline"
+                >
+                  Uploaded — view
+                </a>
+              ) : (
+                <p className="mt-0.5 text-xs text-muted-foreground">Not uploaded</p>
+              )}
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 shrink-0 gap-1.5 text-xs"
+              disabled={!!isUploading}
+              onClick={() => onUploadClick(doc.key)}
+              data-accept={accept}
+            >
+              <Upload className="h-3.5 w-3.5" />
+              {isUploading ? 'Uploading…' : url ? 'Replace' : 'Upload'}
+            </Button>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function OnboardingPage() {
   const { user, isLoading: authLoading } = useAuth()
   const router = useRouter()
   const queryClient = useQueryClient()
+  const isMobile = useIsMobile()
   const photoRef = useRef<HTMLInputElement>(null)
   const docFileRef = useRef<HTMLInputElement>(null)
-  const [pendingDocKey, setPendingDocKey] = useState<string | null>(null)
+  const [pendingDocKey, setPendingDocKey] = useState<OnboardingDocKey | null>(null)
   const [step, setStep] = useState<WizardStep>('welcome')
   const [acknowledged, setAcknowledged] = useState(false)
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [uploadingDoc, setUploadingDoc] = useState<string | null>(null)
+  const [identityDrawerOpen, setIdentityDrawerOpen] = useState(false)
+  const [docsDrawerOpen, setDocsDrawerOpen] = useState(false)
 
   const { data: profile, isLoading: profileLoading, refetch } = useQuery<ProfileResponse>({
     queryKey: ['profile', 'onboarding'],
@@ -185,7 +373,7 @@ export default function OnboardingPage() {
     enabled: !!user,
   })
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<OnboardingForm>({
     name: '',
     phoneNumber: '',
     gender: '',
@@ -202,11 +390,15 @@ export default function OnboardingPage() {
     profilePicture: '',
     aadharDocUrl: '',
     panDocUrl: '',
-    passportDocUrl: '',
     resumeDocUrl: '',
     educationalCertDocUrl: '',
-    experienceCertDocUrl: '',
+    appointmentLetterDocUrl: '',
+    salarySlipDocUrl: '',
+    bankStatementDocUrl: '',
   })
+
+  const experienceType = profile?.employee?.experienceType ?? 'FRESHER'
+  const docFields = useMemo(() => getOnboardingDocFields(experienceType), [experienceType])
 
   useEffect(() => {
     if (!profile) return
@@ -229,10 +421,11 @@ export default function OnboardingPage() {
       profilePicture: profile.user.profilePicture ?? '',
       aadharDocUrl: emp?.aadharDocUrl ?? '',
       panDocUrl: emp?.panDocUrl ?? '',
-      passportDocUrl: emp?.passportDocUrl ?? '',
       resumeDocUrl: emp?.resumeDocUrl ?? '',
       educationalCertDocUrl: emp?.educationalCertDocUrl ?? '',
-      experienceCertDocUrl: emp?.experienceCertDocUrl ?? '',
+      appointmentLetterDocUrl: emp?.appointmentLetterDocUrl ?? '',
+      salarySlipDocUrl: emp?.salarySlipDocUrl ?? '',
+      bankStatementDocUrl: emp?.bankStatementDocUrl ?? '',
     })
   }, [profile])
 
@@ -284,37 +477,74 @@ export default function OnboardingPage() {
     }
   }
 
-  const handleDocUpload = async (file: File, key: string) => {
+  const handleDocUpload = async (file: File, key: OnboardingDocKey) => {
     setUploadingDoc(key)
     try {
       const res = await uploadFile(file)
       if (res?.url) {
         setForm((p) => ({ ...p, [key]: res.url }))
-        toast.success('Document uploaded')
+        toast.success(key === 'profilePicture' ? 'Passport photo uploaded' : 'Document uploaded')
       }
     } catch {
-      toast.error('Document upload failed')
+      toast.error(key === 'profilePicture' ? 'Photo upload failed' : 'Document upload failed')
     } finally {
       setUploadingDoc(null)
       setPendingDocKey(null)
     }
   }
 
+  const triggerDocUpload = (key: OnboardingDocKey) => {
+    setPendingDocKey(key)
+    if (key === 'profilePicture') {
+      photoRef.current?.click()
+    } else {
+      docFileRef.current?.click()
+    }
+  }
+
   const profileValid = useMemo(() => {
     return (
-      form.name.trim() &&
-      form.phoneNumber.trim() &&
+      !!form.name.trim() &&
+      !!form.phoneNumber.trim() &&
       form.aadharNumber.trim().length >= 12 &&
       form.panNumber.trim().length >= 10 &&
-      form.bankAccountName.trim() &&
-      form.bankAccountNumber.trim() &&
+      !!form.bankAccountName.trim() &&
+      !!form.bankAccountNumber.trim() &&
       form.ifscCode.trim().length >= 11
     )
   }, [form])
 
+  const missingProfileFields = useMemo(() => {
+    const missing: string[] = []
+    if (!form.name.trim()) missing.push('Full name')
+    if (!form.phoneNumber.trim()) missing.push('Phone')
+    if (form.aadharNumber.trim().length < 12) missing.push('Aadhaar (12 digits)')
+    if (form.panNumber.trim().length < 10) missing.push('PAN (10 characters)')
+    if (!form.bankAccountName.trim()) missing.push('Account holder name')
+    if (!form.bankAccountNumber.trim()) missing.push('Account number')
+    if (form.ifscCode.trim().length < 11) missing.push('IFSC (11 characters)')
+    return missing
+  }, [form])
+
+  const identityComplete = useMemo(
+    () =>
+      form.aadharNumber.trim().length >= 12 &&
+      form.panNumber.trim().length >= 10 &&
+      !!form.bankAccountName.trim() &&
+      !!form.bankAccountNumber.trim() &&
+      form.ifscCode.trim().length >= 11,
+    [form]
+  )
+
+  const docsUploadedCount = useMemo(
+    () => docFields.filter((d) => !!form[d.key]).length,
+    [form, docFields]
+  )
+
   const saveProfile = async () => {
     if (!profileValid) {
-      toast.error('Please fill all required profile fields')
+      toast.error(`Please fill: ${missingProfileFields.join(', ')}`)
+      if (isMobile && !identityComplete) setIdentityDrawerOpen(true)
       return false
     }
 
@@ -329,12 +559,14 @@ export default function OnboardingPage() {
       emergencyContactPhone: form.emergencyContactPhone.trim() || null,
       profilePicture: form.profilePicture || null,
       dateOfBirth: form.dateOfBirth || null,
-      aadharDocUrl: form.aadharDocUrl || null,
-      panDocUrl: form.panDocUrl || null,
-      passportDocUrl: form.passportDocUrl || null,
-      resumeDocUrl: form.resumeDocUrl || null,
-      educationalCertDocUrl: form.educationalCertDocUrl || null,
-      experienceCertDocUrl: form.experienceCertDocUrl || null,
+    }
+
+    // Only send doc URLs that are set — avoids rejecting relative paths as unused nulls
+    // and skips columns the employee type does not need.
+    for (const doc of docFields) {
+      if (doc.key === 'profilePicture') continue
+      const value = form[doc.key]?.trim()
+      if (value) payload[doc.key] = value
     }
 
     // Only send identity/bank fields when still empty (first-time). Avoids 403 on re-save.
@@ -345,9 +577,13 @@ export default function OnboardingPage() {
     if (!emp?.bankAccountNumber) payload.bankAccountNumber = form.bankAccountNumber.replace(/\D/g, '') || null
     if (!emp?.ifscCode) payload.ifscCode = form.ifscCode.trim().toUpperCase() || null
 
-    await saveMutation.mutateAsync(payload)
-    await refetch()
-    return true
+    try {
+      await saveMutation.mutateAsync(payload)
+      await refetch()
+      return true
+    } catch {
+      return false
+    }
   }
 
   const goNextFromProfile = async () => {
@@ -360,13 +596,12 @@ export default function OnboardingPage() {
       toast.error('Please acknowledge that your details are correct')
       return
     }
-    // Data was already saved on the profile step — submit without re-patching locked fields
     await completeMutation.mutateAsync()
   }
 
   if (authLoading || profileLoading || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-dvh items-center justify-center">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent" />
           <p className="mt-4 text-sm text-muted-foreground">Loading onboarding...</p>
@@ -386,37 +621,72 @@ export default function OnboardingPage() {
     .slice(0, 2)
     .toUpperCase()
 
+  const stickyFooter =
+    step === 'profile' || step === 'preview' || step === 'tour' || step === 'welcome'
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50/80 via-background to-violet-50/50 dark:from-sky-950/30 dark:to-violet-950/20">
-      <div className="border-b border-sky-200/40 bg-gradient-to-r from-sky-600/10 via-background to-violet-600/10 px-4 py-4 dark:border-sky-900/40 sm:px-6">
-        <div className="mx-auto flex max-w-3xl items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-600 text-white shadow-sm">
-            <UserPlus className="h-5 w-5" />
+    <div className="flex min-h-dvh flex-col bg-gradient-to-b from-sky-50/80 via-background to-violet-50/50 dark:from-sky-950/30 dark:to-violet-950/20">
+      <div className="sticky top-0 z-20 border-b border-sky-200/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 dark:border-sky-900/40">
+        <div className="bg-gradient-to-r from-sky-600/10 via-transparent to-violet-600/10 px-4 py-3 sm:px-6 sm:py-4">
+          <div className="mx-auto flex max-w-3xl items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-600 text-white shadow-sm">
+              <UserPlus className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="truncate text-base font-semibold sm:text-xl">Employee onboarding</h1>
+              <p className="truncate text-xs text-muted-foreground sm:text-sm">
+                Complete your profile so HR can activate your account
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg font-semibold sm:text-xl">Employee onboarding</h1>
-            <p className="text-xs text-muted-foreground sm:text-sm">
-              Complete your profile so HR can activate your account
-            </p>
+        </div>
+        <div className="px-4 py-2.5 sm:px-6">
+          <div className="mx-auto max-w-3xl">
+            <StepIndicator current={step} />
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
-        <StepIndicator current={step} />
+      <div
+        className={cn(
+          'mx-auto w-full max-w-3xl flex-1 space-y-4 px-4 py-4 sm:space-y-6 sm:px-6 sm:py-8',
+          stickyFooter && 'pb-[calc(5.5rem+env(safe-area-inset-bottom))]'
+        )}
+      >
+        <input
+          ref={photoRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => e.target.files?.[0] && handlePhotoUpload(e.target.files[0])}
+        />
+        <input
+          ref={docFileRef}
+          type="file"
+          accept=".pdf,.jpg,.jpeg,.png"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (file && pendingDocKey) handleDocUpload(file, pendingDocKey)
+            e.target.value = ''
+          }}
+        />
 
         {step === 'welcome' && (
           <Card>
-            <CardHeader className="text-center space-y-3">
+            <CardHeader className="space-y-3 text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sky-600/15 text-sky-700 dark:text-sky-300">
                 <PartyPopper className="h-7 w-7" />
               </div>
-              <CardTitle className="text-2xl">Welcome to Mediend, {user.name.split(' ')[0]}!</CardTitle>
-              <CardDescription className="text-base">
-                A few steps and you will be ready. Fill your profile, take a quick tour, then confirm your details for HR review.
+              <CardTitle className="text-xl sm:text-2xl">
+                Welcome to Mediend, {user.name.split(' ')[0]}!
+              </CardTitle>
+              <CardDescription className="text-sm sm:text-base">
+                A few steps and you will be ready. Fill your profile, take a quick tour, then confirm
+                your details for HR review.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex justify-center">
+            <CardContent className="hidden justify-center sm:flex">
               <Button className="bg-sky-600 hover:bg-sky-700" onClick={() => setStep('profile')}>
                 Get started <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
@@ -426,34 +696,16 @@ export default function OnboardingPage() {
 
         {step === 'profile' && (
           <Card>
-            <CardHeader>
-              <CardTitle>Your profile</CardTitle>
-              <CardDescription>
-                Fields marked * are required. PAN, Aadhaar and bank details can only be changed by HR once saved.
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg sm:text-xl">Your profile</CardTitle>
+              <CardDescription className="text-sm">
+                Fields marked * are required. PAN, Aadhaar and bank details can only be changed by HR
+                once saved.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
-              <input
-                ref={photoRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => e.target.files?.[0] && handlePhotoUpload(e.target.files[0])}
-              />
-              <input
-                ref={docFileRef}
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0]
-                  if (file && pendingDocKey) handleDocUpload(file, pendingDocKey)
-                  e.target.value = ''
-                }}
-              />
-
               <div className="flex items-center gap-4">
-                <Avatar className="size-20 ring-2 ring-sky-500/30">
+                <Avatar className="size-16 ring-2 ring-sky-500/30 sm:size-20">
                   <AvatarImage src={form.profilePicture || undefined} alt={form.name} />
                   <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
@@ -464,13 +716,21 @@ export default function OnboardingPage() {
                     size="sm"
                     className="gap-2"
                     disabled={uploadingPhoto}
-                    onClick={() => photoRef.current?.click()}
+                    onClick={() => {
+                      setPendingDocKey('profilePicture')
+                      photoRef.current?.click()
+                    }}
                   >
                     <Camera className="h-4 w-4" />
-                    {uploadingPhoto ? 'Uploading…' : form.profilePicture ? 'Change photo' : 'Upload photo'}
+                    {uploadingPhoto
+                      ? 'Uploading…'
+                      : form.profilePicture
+                        ? 'Change passport photo'
+                        : 'Upload passport photo'}
                   </Button>
                   <p className="text-xs text-muted-foreground">
-                    Optional — a default avatar is used if you skip this.
+                    Required — passport-size photo for your profile.
+                    {experienceType === 'EXPERIENCED' ? ' Experienced hire document list applies.' : ' Fresher document list applies.'}
                   </p>
                 </div>
               </div>
@@ -493,6 +753,7 @@ export default function OnboardingPage() {
                     value={form.phoneNumber}
                     onChange={(e) => setForm((p) => ({ ...p, phoneNumber: e.target.value }))}
                     placeholder="+91 98765 43210"
+                    inputMode="tel"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -523,151 +784,98 @@ export default function OnboardingPage() {
                   <Input
                     value={form.emergencyContactPhone}
                     onChange={(e) => setForm((p) => ({ ...p, emergencyContactPhone: e.target.value }))}
+                    inputMode="tel"
                   />
                 </div>
               </div>
 
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground border-t pt-4">
-                Identity & bank
-              </p>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <Label>Aadhaar *</Label>
-                  <Input
-                    value={form.aadharNumber}
-                    onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        aadharNumber: e.target.value.replace(/\D/g, '').slice(0, 12),
-                      }))
-                    }
-                    maxLength={12}
-                    className="font-mono"
-                    placeholder="12 digits"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>PAN *</Label>
-                  <Input
-                    value={form.panNumber}
-                    onChange={(e) =>
-                      setForm((p) => ({ ...p, panNumber: e.target.value.toUpperCase().slice(0, 10) }))
-                    }
-                    maxLength={10}
-                    className="font-mono"
-                    placeholder="ABCDE1234F"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>UAN</Label>
-                  <Input
-                    value={form.uanNumber}
-                    onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        uanNumber: e.target.value.replace(/\D/g, '').slice(0, 12),
-                      }))
-                    }
-                    maxLength={12}
-                    className="font-mono"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>Account holder name *</Label>
-                  <Input
-                    value={form.bankAccountName}
-                    onChange={(e) => setForm((p) => ({ ...p, bankAccountName: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>Account number *</Label>
-                  <Input
-                    value={form.bankAccountNumber}
-                    onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        bankAccountNumber: e.target.value.replace(/\D/g, ''),
-                      }))
-                    }
-                    className="font-mono"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>IFSC *</Label>
-                  <Input
-                    value={form.ifscCode}
-                    onChange={(e) =>
-                      setForm((p) => ({ ...p, ifscCode: e.target.value.toUpperCase().slice(0, 11) }))
-                    }
-                    maxLength={11}
-                    className="font-mono"
-                    placeholder="SBIN0001234"
-                  />
-                </div>
-              </div>
-
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground border-t pt-4">
-                Documents
-              </p>
-              <div className="space-y-2">
-                {DOC_FIELDS.map((doc) => {
-                  const url = form[doc.key]
-                  const isUploading = uploadingDoc === doc.key
-                  return (
-                    <div
-                      key={doc.key}
-                      className="flex items-center justify-between gap-3 rounded-lg border bg-muted/30 px-3 py-2.5"
-                    >
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium flex items-center gap-1.5">
-                          <FileUp className="h-3.5 w-3.5 text-muted-foreground" />
-                          {doc.label}
-                        </p>
-                        {url ? (
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-xs text-sky-600 hover:underline truncate block mt-0.5"
-                          >
-                            Uploaded — view
-                          </a>
-                        ) : (
-                          <p className="text-xs text-muted-foreground mt-0.5">Not uploaded</p>
-                        )}
-                      </div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="h-8 gap-1.5 shrink-0 text-xs"
-                        disabled={!!isUploading}
-                        onClick={() => {
-                          setPendingDocKey(doc.key)
-                          docFileRef.current?.click()
-                        }}
-                      >
-                        <Upload className="h-3.5 w-3.5" />
-                        {isUploading ? 'Uploading…' : url ? 'Replace' : 'Upload'}
-                      </Button>
+              {/* Mobile: open dense sections in drawers */}
+              {isMobile ? (
+                <div className="space-y-2 border-t pt-4">
+                  {!identityComplete && (
+                    <p className="rounded-lg border border-amber-200 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+                      Tap <strong>Identity & bank</strong> and fill Aadhaar, PAN, and bank details to continue.
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setIdentityDrawerOpen(true)}
+                    className={cn(
+                      'flex w-full items-center gap-3 rounded-xl border bg-muted/30 px-3 py-3 text-left active:bg-muted/50',
+                      !identityComplete && 'border-amber-300 dark:border-amber-700'
+                    )}
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-600/15 text-sky-700 dark:text-sky-300">
+                      <CreditCard className="h-5 w-5" />
                     </div>
-                  )
-                })}
-              </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">Identity & bank *</p>
+                      <p className="text-xs text-muted-foreground">
+                        {identityComplete ? 'Complete' : 'Aadhaar, PAN, bank details required'}
+                      </p>
+                    </div>
+                    {identityComplete ? (
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+                    ) : (
+                      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
+                    )}
+                  </button>
 
-              <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setDocsDrawerOpen(true)}
+                    className="flex w-full items-center gap-3 rounded-xl border bg-muted/30 px-3 py-3 text-left active:bg-muted/50"
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-600/15 text-violet-700 dark:text-violet-300">
+                      <FileUp className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">Documents</p>
+                      <p className="text-xs text-muted-foreground">
+                        {docsUploadedCount}/{docFields.length} uploaded
+                      </p>
+                    </div>
+                    <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <p className="border-t pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Identity & bank
+                  </p>
+                  <IdentityBankFields form={form} setForm={setForm} />
+
+                  <p className="border-t pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Documents
+                  </p>
+                  <DocumentsList
+                    form={form}
+                    docFields={docFields}
+                    uploadingDoc={uploadingDoc}
+                    onUploadClick={triggerDocUpload}
+                  />
+                </>
+              )}
+
+              <div className="hidden pt-2 sm:flex sm:flex-row sm:justify-between sm:gap-2">
                 <Button variant="outline" onClick={() => setStep('welcome')}>
                   <ArrowLeft className="mr-1 h-4 w-4" /> Back
                 </Button>
                 <Button
                   className="bg-sky-600 hover:bg-sky-700"
-                  disabled={!profileValid || saveMutation.isPending}
+                  disabled={saveMutation.isPending}
                   onClick={goNextFromProfile}
                 >
                   {saveMutation.isPending ? 'Saving…' : 'Save & continue'}
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
+              {!profileValid && (
+                <p className="text-xs text-amber-700 dark:text-amber-300 sm:hidden">
+                  Still needed: {missingProfileFields.join(', ')}
+                  {!identityComplete ? ' — open Identity & bank below.' : ''}
+                </p>
+              )}
             </CardContent>
           </Card>
         )}
@@ -676,7 +884,7 @@ export default function OnboardingPage() {
           <Card>
             <CardContent className="pt-6">
               <GuidedTour role={user.role} onComplete={() => setStep('preview')} />
-              <div className="mt-6 flex justify-start">
+              <div className="mt-6 hidden justify-start sm:flex">
                 <Button variant="outline" onClick={() => setStep('profile')}>
                   <ArrowLeft className="mr-1 h-4 w-4" /> Back
                 </Button>
@@ -687,30 +895,35 @@ export default function OnboardingPage() {
 
         {step === 'preview' && (
           <Card>
-            <CardHeader>
-              <CardTitle>Review & confirm</CardTitle>
-              <CardDescription>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg sm:text-xl">Review & confirm</CardTitle>
+              <CardDescription className="text-sm">
                 Double-check everything below. Submitting sends this to HR for approval.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center gap-4 rounded-xl border p-4 bg-muted/20">
-                <Avatar className="size-20 ring-2 ring-violet-500/30">
+              <div className="flex items-center gap-4 rounded-xl border bg-muted/20 p-3 sm:p-4">
+                <Avatar className="size-16 ring-2 ring-violet-500/30 sm:size-20">
                   <AvatarImage src={form.profilePicture || undefined} alt={form.name} />
                   <AvatarFallback className="text-lg">{initials}</AvatarFallback>
                 </Avatar>
-                <div>
-                  <p className="font-semibold text-lg">{form.name}</p>
-                  <p className="text-sm text-muted-foreground">{profile?.user.email ?? user.email}</p>
+                <div className="min-w-0">
+                  <p className="truncate text-lg font-semibold">{form.name}</p>
+                  <p className="truncate text-sm text-muted-foreground">
+                    {profile?.user.email ?? user.email}
+                  </p>
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2 rounded-xl border p-4 bg-muted/20">
+              <div className="grid gap-3 rounded-xl border bg-muted/20 p-3 sm:grid-cols-2 sm:p-4">
                 <PreviewRow label="Phone" value={form.phoneNumber} />
                 <PreviewRow label="Employee code" value={profile?.employee?.employeeCode} />
                 <PreviewRow label="Department" value={profile?.employee?.department?.name} />
                 <PreviewRow label="Date of birth" value={form.dateOfBirth || undefined} />
-                <PreviewRow label="Aadhaar" value={form.aadharNumber ? `••••${form.aadharNumber.slice(-4)}` : undefined} />
+                <PreviewRow
+                  label="Aadhaar"
+                  value={form.aadharNumber ? `••••${form.aadharNumber.slice(-4)}` : undefined}
+                />
                 <PreviewRow label="PAN" value={form.panNumber || undefined} />
                 <PreviewRow label="Bank holder" value={form.bankAccountName} />
                 <PreviewRow
@@ -723,14 +936,21 @@ export default function OnboardingPage() {
                 />
                 <PreviewRow label="IFSC" value={form.ifscCode} />
                 <PreviewRow label="UAN" value={form.uanNumber || undefined} />
-                <PreviewRow label="Emergency contact" value={[form.emergencyContactName, form.emergencyContactPhone].filter(Boolean).join(' · ') || undefined} />
+                <PreviewRow
+                  label="Emergency contact"
+                  value={
+                    [form.emergencyContactName, form.emergencyContactPhone]
+                      .filter(Boolean)
+                      .join(' · ') || undefined
+                  }
+                />
                 <PreviewRow label="Address" value={form.address || undefined} />
               </div>
 
-              <div className="rounded-xl border p-4 space-y-2">
+              <div className="space-y-2 rounded-xl border p-3 sm:p-4">
                 <p className="text-sm font-medium">Documents</p>
                 <div className="flex flex-wrap gap-2">
-                  {DOC_FIELDS.map((doc) => (
+                  {docFields.map((doc) => (
                     <span
                       key={doc.key}
                       className={cn(
@@ -741,33 +961,32 @@ export default function OnboardingPage() {
                       )}
                     >
                       {form[doc.key] ? <CheckCircle2 className="h-3 w-3" /> : null}
-                      {doc.label.replace(' (optional)', '')}
+                      {doc.label}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <label className="flex items-start gap-3 rounded-xl border p-4 cursor-pointer">
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-3 sm:p-4">
                 <Checkbox
                   checked={acknowledged}
                   onCheckedChange={(v) => setAcknowledged(v === true)}
                   className="mt-0.5"
                 />
                 <span className="text-sm leading-relaxed">
-                  I confirm that the profile details and documents above are accurate. I understand HR will review and approve my account before I can use the workspace.
+                  I confirm that the profile details and documents above are accurate. I understand HR
+                  will review and approve my account before I can use the workspace.
                 </span>
               </label>
 
-              <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between pt-2">
+              <div className="hidden pt-2 sm:flex sm:flex-row sm:justify-between sm:gap-2">
                 <Button variant="outline" onClick={() => setStep('tour')}>
                   <ArrowLeft className="mr-1 h-4 w-4" /> Back
                 </Button>
                 <Button
                   className="bg-violet-600 hover:bg-violet-700"
                   disabled={
-                    !acknowledged ||
-                    completeMutation.isPending ||
-                    saveMutation.isPending
+                    !acknowledged || completeMutation.isPending || saveMutation.isPending
                   }
                   onClick={handleSubmit}
                 >
@@ -778,15 +997,101 @@ export default function OnboardingPage() {
           </Card>
         )}
       </div>
-    </div>
-  )
-}
 
-function PreviewRow({ label, value }: { label: string; value?: string | null }) {
-  return (
-    <div>
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-sm font-medium mt-0.5 break-words">{value?.trim() || '—'}</p>
+      {/* Mobile sticky footer actions */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/90 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:hidden">
+        {step === 'welcome' && (
+          <Button className="w-full bg-sky-600 hover:bg-sky-700" onClick={() => setStep('profile')}>
+            Get started <ArrowRight className="ml-1 h-4 w-4" />
+          </Button>
+        )}
+        {step === 'profile' && (
+          <div className="flex gap-2">
+            <Button variant="outline" className="shrink-0" onClick={() => setStep('welcome')}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              className="min-w-0 flex-1 bg-sky-600 hover:bg-sky-700"
+              disabled={saveMutation.isPending}
+              onClick={goNextFromProfile}
+            >
+              {saveMutation.isPending ? 'Saving…' : 'Save & continue'}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+        )}
+        {step === 'tour' && (
+          <Button variant="outline" className="w-full" onClick={() => setStep('profile')}>
+            <ArrowLeft className="mr-1 h-4 w-4" /> Back to profile
+          </Button>
+        )}
+        {step === 'preview' && (
+          <div className="flex gap-2">
+            <Button variant="outline" className="shrink-0" onClick={() => setStep('tour')}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              className="min-w-0 flex-1 bg-violet-600 hover:bg-violet-700"
+              disabled={!acknowledged || completeMutation.isPending || saveMutation.isPending}
+              onClick={handleSubmit}
+            >
+              {completeMutation.isPending ? 'Submitting…' : 'Submit for approval'}
+            </Button>
+          </div>
+        )}
+      </div>
+
+      <Drawer open={identityDrawerOpen} onOpenChange={setIdentityDrawerOpen}>
+        <DrawerContent className="max-h-[90dvh]">
+          <DrawerHeader className="text-left">
+            <DrawerTitle>Identity & bank</DrawerTitle>
+            <DrawerDescription>
+              Required for payroll. These can only be changed by HR after you save.
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="overflow-y-auto overscroll-contain px-4 pb-2">
+            <IdentityBankFields form={form} setForm={setForm} />
+          </div>
+          <DrawerFooter className="pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <Button
+              className="w-full bg-sky-600 hover:bg-sky-700"
+              onClick={() => {
+                if (!identityComplete) {
+                  toast.error('Please fill Aadhaar, PAN, and bank details')
+                  return
+                }
+                setIdentityDrawerOpen(false)
+              }}
+            >
+              Done
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+      <Drawer open={docsDrawerOpen} onOpenChange={setDocsDrawerOpen}>
+        <DrawerContent className="max-h-[90dvh]">
+          <DrawerHeader className="text-left">
+            <DrawerTitle>Documents</DrawerTitle>
+            <DrawerDescription>
+              Upload PDF or clear photos. You can replace a file anytime before submitting.
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="overflow-y-auto overscroll-contain px-4 pb-2">
+            <DocumentsList
+              form={form}
+              docFields={docFields}
+              uploadingDoc={uploadingDoc}
+              onUploadClick={triggerDocUpload}
+            />
+          </div>
+          <DrawerFooter className="pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <Button className="w-full" variant="outline" onClick={() => setDocsDrawerOpen(false)}>
+              Done ({docsUploadedCount}/{docFields.length} uploaded)
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   )
 }

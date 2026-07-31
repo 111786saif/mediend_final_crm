@@ -74,6 +74,8 @@ export function buildProfileDocuments(input: {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: unknown
   hrDocuments?: Array<{
     id: string
@@ -102,9 +104,11 @@ export function buildProfileDocuments(input: {
   add('passport', 'Passport', input.passportDocUrl)
   add('driving-license', 'Driving License', input.drivingLicenseDocUrl)
   add('resume', 'Resume', input.resumeDocUrl)
-  add('appointment-letter', 'Appointment Letter', input.appointmentLetterDocUrl)
+  add('appointment-letter', 'Previous company offer letter', input.appointmentLetterDocUrl)
   add('education', 'Educational Certificates', input.educationalCertDocUrl)
   add('experience-static', 'Experience Certificates', input.experienceCertDocUrl)
+  add('salary-slip', 'Salary slip', input.salarySlipDocUrl)
+  add('bank-statement', 'Bank statement', input.bankStatementDocUrl)
 
   for (const doc of parseOtherDocuments(input.otherDocuments)) {
     add(`other-${doc.name}`, doc.name, doc.url)

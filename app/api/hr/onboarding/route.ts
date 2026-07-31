@@ -79,6 +79,8 @@ export async function GET(request: NextRequest) {
         educationalCertDocUrl: emp.educationalCertDocUrl,
         experienceCertDocUrl: emp.experienceCertDocUrl,
         appointmentLetterDocUrl: emp.appointmentLetterDocUrl,
+        salarySlipDocUrl: emp.salarySlipDocUrl,
+        bankStatementDocUrl: emp.bankStatementDocUrl,
         otherDocuments: emp.otherDocuments,
         hrDocuments,
       })

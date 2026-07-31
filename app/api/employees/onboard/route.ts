@@ -1,19 +1,23 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
-import { UserRole } from '@/generated/prisma/enums'
+import { ExperienceType, UserRole } from '@/generated/prisma/enums'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission, canCreateRole } from '@/lib/rbac'
 import { hashPassword } from '@/lib/auth'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { sendOnboardingInviteEmail } from '@/lib/resend'
 import { z } from 'zod'
 
 const employeeSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
+  /** Personal inbox for welcome/login credentials email (often Gmail). */
+  personalEmail: z.string().email(),
   password: z.string().min(6),
   role: z.nativeEnum(UserRole),
   employeeCode: z.string().min(1),
+  experienceType: z.nativeEnum(ExperienceType),
   bdNumber: z.number().int().positive().optional().nullable(),
   circle: z.string().trim().max(100).optional().nullable(),
   departmentId: z.string().optional().nullable(),
@@ -24,6 +28,8 @@ const employeeSchema = z.object({
 
 const onboardSchema = z.object({
   employees: z.array(employeeSchema).min(1).max(50),
+  /** Send login credentials + portal link + onboarding checklist to personalEmail. */
+  sendInviteEmail: z.boolean().optional().default(true),
 })
 
 export async function POST(request: NextRequest) {
@@ -35,9 +41,20 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { employees: employeesData } = onboardSchema.parse(body)
+    const { employees: employeesData, sendInviteEmail } = onboardSchema.parse(body)
 
-    const results: Array<{ employeeId: string; userId: string; name: string; email: string; employeeCode: string; bdNumber: number | null }> = []
+    const results: Array<{
+      employeeId: string
+      userId: string
+      name: string
+      email: string
+      personalEmail: string
+      employeeCode: string
+      bdNumber: number | null
+      experienceType: ExperienceType
+      inviteEmailSent?: boolean
+      inviteEmailError?: string
+    }> = []
     const errors: Array<{ index: number; name: string; error: string }> = []
 
     for (let i = 0; i < employeesData.length; i++) {
@@ -53,10 +70,11 @@ export async function POST(request: NextRequest) {
         }
 
         const normalizedEmail = data.email.toLowerCase().trim()
+        const normalizedPersonalEmail = data.personalEmail.toLowerCase().trim()
 
         const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } })
         if (existingUser) {
-          errors.push({ index: i, name: data.name, error: 'Email already exists' })
+          errors.push({ index: i, name: data.name, error: 'Login email already exists' })
           continue
         }
 
@@ -115,6 +133,8 @@ export async function POST(request: NextRequest) {
               circle: data.circle?.trim() || null,
               joinDate: data.joinDate ? new Date(data.joinDate) : null,
               dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+              experienceType: data.experienceType,
+              personalEmail: normalizedPersonalEmail,
               onboardingStatus: 'PENDING_PROFILE',
             },
           })
@@ -122,14 +142,43 @@ export async function POST(request: NextRequest) {
           return { userId: newUser.id, employeeId: employee.id }
         })
 
-        results.push({
+        const created = {
           employeeId: result.employeeId,
           userId: result.userId,
           name: data.name,
           email: normalizedEmail,
+          personalEmail: normalizedPersonalEmail,
           employeeCode: data.employeeCode.trim(),
           bdNumber: data.bdNumber ?? null,
-        })
+          experienceType: data.experienceType,
+          inviteEmailSent: false as boolean | undefined,
+          inviteEmailError: undefined as string | undefined,
+        }
+
+        if (sendInviteEmail) {
+          try {
+            const emailResult = await sendOnboardingInviteEmail({
+              to: normalizedPersonalEmail,
+              name: data.name,
+              email: normalizedEmail,
+              password: data.password,
+              employeeCode: data.employeeCode.trim(),
+              experienceType: data.experienceType,
+            })
+            created.inviteEmailSent = emailResult.success
+            if (!emailResult.success) {
+              created.inviteEmailError = emailResult.error || 'Failed to send invite email'
+              console.error(`Onboarding invite email failed for ${normalizedPersonalEmail}:`, emailResult.error)
+            }
+          } catch (emailErr) {
+            created.inviteEmailSent = false
+            created.inviteEmailError =
+              emailErr instanceof Error ? emailErr.message : 'Failed to send invite email'
+            console.error(`Onboarding invite email failed for ${normalizedPersonalEmail}:`, emailErr)
+          }
+        }
+
+        results.push(created)
       } catch (err) {
         const msg = err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002'
           ? 'Duplicate unique field'

@@ -436,6 +436,11 @@ enum OnboardingStatus {
   APPROVED
 }
 
+enum ExperienceType {
+  FRESHER
+  EXPERIENCED
+}
+
 // Company-wide P&L (IT projects, department revenue, dynamic finance table)
 enum ITProjectStatus {
   ACTIVE
@@ -1303,8 +1308,12 @@ model Employee {
   educationalCertDocUrl String?
   experienceCertDocUrl  String?
   appointmentLetterDocUrl String?
+  salarySlipDocUrl      String?
+  bankStatementDocUrl   String?
   otherDocuments        Json?
   uanNumber             String?
+  experienceType        ExperienceType?
+  personalEmail         String?
   status                EmployeeStatus  @default(ACTIVE)
   onboardingStatus      OnboardingStatus @default(APPROVED)
   onboardingSubmittedAt DateTime?

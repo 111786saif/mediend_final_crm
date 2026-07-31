@@ -19,11 +19,13 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { toast } from 'sonner'
-import { Plus, Trash2, ArrowRight, ArrowLeft, Check, Users, UserPlus, X } from 'lucide-react'
+import { Plus, Trash2, ArrowRight, ArrowLeft, Check, Users, UserPlus, X, Mail } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { type UserRole } from '@/generated/prisma/enums'
 import { getAvailableRolesForCreator } from '@/lib/rbac'
 import { getRoleLabel } from '@/lib/roles'
+import { Checkbox } from '@/components/ui/checkbox'
+import { getOnboardingDocLabels, type ExperienceType } from '@/lib/onboarding-docs'
 
 type ManagerOption = {
   id: string
@@ -58,9 +60,11 @@ interface EmployeeFormData {
   id: string
   name: string
   email: string
+  personalEmail: string
   password: string
   role: UserRole
   employeeCode: string
+  experienceType: ExperienceType
   bdNumber: string
   circle: string
   departmentId: string
@@ -88,9 +92,11 @@ function createEmptyEmployee(): EmployeeFormData {
     id: createClientId(),
     name: '',
     email: '',
+    personalEmail: '',
     password: '',
     role: 'BD',
     employeeCode: '',
+    experienceType: 'FRESHER',
     bdNumber: '',
     circle: '',
     departmentId: '',
@@ -110,7 +116,18 @@ function getAvailableRoles(userRole: string): UserRole[] {
 }
 
 export interface OnboardResult {
-  created: Array<{ employeeId: string; userId: string; name: string; email: string; employeeCode: string; bdNumber: number | null }>
+  created: Array<{
+    employeeId: string
+    userId: string
+    name: string
+    email: string
+    personalEmail?: string
+    employeeCode: string
+    bdNumber: number | null
+    experienceType?: ExperienceType
+    inviteEmailSent?: boolean
+    inviteEmailError?: string
+  }>
   errors: Array<{ index: number; name: string; error: string }>
 }
 
@@ -127,6 +144,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
   const [employees, setEmployees] = useState<EmployeeFormData[]>([createEmptyEmployee()])
   const [activeIdx, setActiveIdx] = useState(0)
   const [managerSearch, setManagerSearch] = useState('')
+  const [sendInviteEmail, setSendInviteEmail] = useState(true)
 
   const availableRoles = currentUser ? getAvailableRoles(currentUser.role) : []
 
@@ -153,8 +171,24 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
   const circleOptions = employeeMeta?.circles ?? []
 
   const onboardMutation = useMutation({
-    mutationFn: (data: { employees: Array<{ name: string; email: string; password: string; role: string; employeeCode: string; bdNumber?: number | null; circle?: string | null; departmentId?: string | null; managerId?: string | null; joinDate?: string | null; dateOfBirth?: string | null }> }) =>
-      apiPost<OnboardResult>('/api/employees/onboard', data),
+    mutationFn: (data: {
+      employees: Array<{
+        name: string
+        email: string
+        personalEmail: string
+        password: string
+        role: string
+        employeeCode: string
+        experienceType: ExperienceType
+        bdNumber?: number | null
+        circle?: string | null
+        departmentId?: string | null
+        managerId?: string | null
+        joinDate?: string | null
+        dateOfBirth?: string | null
+      }>
+      sendInviteEmail: boolean
+    }) => apiPost<OnboardResult>('/api/employees/onboard', data),
     onSuccess: (result) => {
       if (result.errors?.length > 0) {
         result.errors.forEach((err) => toast.error(`${err.name}: ${err.error}`))
@@ -162,6 +196,19 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
 
       if (result.created?.length > 0) {
         toast.success(`${result.created.length} employee${result.created.length > 1 ? 's' : ''} created`)
+
+        const emailed = result.created.filter((c) => c.inviteEmailSent)
+        const emailFailed = result.created.filter((c) => c.inviteEmailSent === false)
+        if (emailed.length > 0) {
+          toast.success(
+            emailed.length === 1
+              ? `Welcome email sent to ${emailed[0].personalEmail || emailed[0].email}`
+              : `Welcome emails sent to ${emailed.length} personal addresses`
+          )
+        }
+        emailFailed.forEach((c) => {
+          toast.error(`${c.name}: invite email failed${c.inviteEmailError ? ` — ${c.inviteEmailError}` : ''}`)
+        })
 
         // Match each created employee back to the form data by employeeCode (unique, used for attendance sync)
         // bdNumber from the response tells us if lead sync is possible
@@ -195,6 +242,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
     setActiveIdx(0)
     setSubmittedEmployees([])
     setManagerSearch('')
+    setSendInviteEmail(true)
   }, [])
 
   const handleClose = useCallback(() => {
@@ -220,16 +268,27 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
   }
 
   const isStep1Valid = () =>
-    employees.every((e) => e.name.trim() && e.email.trim() && e.password && e.employeeCode.trim() && e.role)
+    employees.every(
+      (e) =>
+        e.name.trim() &&
+        e.email.trim() &&
+        e.personalEmail.trim() &&
+        e.password &&
+        e.employeeCode.trim() &&
+        e.role &&
+        e.experienceType
+    )
 
   const handleCreate = () => {
     setSubmittedEmployees([...employees])
     const payload = employees.map((e) => ({
       name: e.name.trim(),
       email: e.email.trim().toLowerCase(),
+      personalEmail: e.personalEmail.trim().toLowerCase(),
       password: e.password,
       role: e.role,
       employeeCode: e.employeeCode.trim(),
+      experienceType: e.experienceType,
       bdNumber: e.bdNumber.trim() ? parseInt(e.bdNumber, 10) : null,
       circle: e.circle.trim() || null,
       departmentId: e.departmentId || null,
@@ -237,7 +296,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
       joinDate: e.joinDate || null,
       dateOfBirth: e.dateOfBirth || null,
     }))
-    onboardMutation.mutate({ employees: payload })
+    onboardMutation.mutate({ employees: payload, sendInviteEmail })
   }
 
   const emp = employees[activeIdx]
@@ -360,15 +419,75 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                       <Input value={emp.name} onChange={(e) => updateEmployee(activeIdx, { name: e.target.value })} placeholder="Full name" />
                     </div>
                     <div className="space-y-1.5">
-                      <Label>Email *</Label>
-                      <Input type="email" value={emp.email} onChange={(e) => updateEmployee(activeIdx, { email: e.target.value.toLowerCase().trim() })} placeholder="email@company.com" />
+                      <Label>Experience *</Label>
+                      <Select
+                        value={emp.experienceType}
+                        onValueChange={(v) =>
+                          updateEmployee(activeIdx, { experienceType: v as ExperienceType })
+                        }
+                      >
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="FRESHER">Fresher</SelectItem>
+                          <SelectItem value="EXPERIENCED">Experienced</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Controls which documents they must upload during onboarding.
+                      </p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                     <div className="space-y-1.5">
-                      <Label>Password *</Label>
+                      <Label>Login email (username) *</Label>
+                      <Input
+                        type="email"
+                        value={emp.email}
+                        onChange={(e) => updateEmployee(activeIdx, { email: e.target.value.toLowerCase().trim() })}
+                        placeholder="login@example.com"
+                        autoComplete="off"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Used to sign in to Mediend Workspace.
+                      </p>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Personal email *</Label>
+                      <Input
+                        type="email"
+                        value={emp.personalEmail}
+                        onChange={(e) =>
+                          updateEmployee(activeIdx, { personalEmail: e.target.value.toLowerCase().trim() })
+                        }
+                        placeholder="name@gmail.com"
+                        autoComplete="off"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Welcome email with login credentials & portal link is sent here (personal Gmail is fine).
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border bg-muted/30 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Documents for {emp.experienceType === 'EXPERIENCED' ? 'experienced' : 'fresher'} onboarding
+                    </p>
+                    <ul className="mt-2 grid gap-1 sm:grid-cols-2">
+                      {getOnboardingDocLabels(emp.experienceType).map((label) => (
+                        <li key={label} className="text-sm text-foreground/90 flex items-start gap-1.5">
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-600" />
+                          {label}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                    <div className="space-y-1.5">
+                      <Label>Temporary password *</Label>
                       <Input type="password" value={emp.password} onChange={(e) => updateEmployee(activeIdx, { password: e.target.value })} placeholder="Min 6 characters" minLength={6} />
+                      <p className="text-xs text-muted-foreground">Included in the welcome email — ask them to change it after login.</p>
                     </div>
                     <div className="space-y-1.5">
                       <Label>Employee Code *</Label>
@@ -498,11 +617,13 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
           {step === 2 && (
             <div className="space-y-4">
               <div className="-mx-1 min-w-0 overflow-x-auto rounded-lg border border-violet-200/70 bg-violet-50/30 dark:border-violet-900/50 dark:bg-violet-950/20 sm:mx-0">
-                <Table className="min-w-[640px] w-full">
+                <Table className="min-w-[900px] w-full">
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
+                      <TableHead>Login</TableHead>
+                      <TableHead>Personal email</TableHead>
+                      <TableHead>Type</TableHead>
                       <TableHead>Role</TableHead>
                       <TableHead>Code</TableHead>
                       <TableHead>CRM #</TableHead>
@@ -514,6 +635,12 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                       <TableRow key={emp.id}>
                         <TableCell className="font-medium">{emp.name}</TableCell>
                         <TableCell className="text-sm text-muted-foreground">{emp.email}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">{emp.personalEmail}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="text-xs">
+                            {emp.experienceType === 'EXPERIENCED' ? 'Experienced' : 'Fresher'}
+                          </Badge>
+                        </TableCell>
                         <TableCell>
                           <Badge variant="secondary" className="text-xs">{getRoleLabel(emp.role)}</Badge>
                         </TableCell>
@@ -530,6 +657,24 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                   </TableBody>
                 </Table>
               </div>
+
+              <label className="flex items-start gap-3 rounded-lg border border-sky-200 bg-sky-50/60 p-3 dark:border-sky-800 dark:bg-sky-950/20 cursor-pointer">
+                <Checkbox
+                  checked={sendInviteEmail}
+                  onCheckedChange={(v) => setSendInviteEmail(v === true)}
+                  className="mt-0.5"
+                />
+                <span className="text-sm text-sky-900 dark:text-sky-200">
+                  <span className="font-medium inline-flex items-center gap-1.5">
+                    <Mail className="h-3.5 w-3.5" />
+                    Send welcome email to personal email
+                  </span>
+                  <span className="mt-1 block text-sky-800/90 dark:text-sky-300/90">
+                    Sends login username, temporary password, portal link, password-change steps, and the
+                    fresher/experienced document checklist from HR to each personal email.
+                  </span>
+                </span>
+              </label>
 
               <div className="rounded-lg border border-violet-200 bg-violet-50/60 dark:bg-violet-950/20 dark:border-violet-800 p-3 text-sm text-violet-800 dark:text-violet-300">
                 New employees start in onboarding. They must complete their profile and wait for HR approval before full access is unlocked.

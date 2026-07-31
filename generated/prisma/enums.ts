@@ -571,6 +571,14 @@ export const OnboardingStatus = {
 export type OnboardingStatus = (typeof OnboardingStatus)[keyof typeof OnboardingStatus]
 
 
+export const ExperienceType = {
+  FRESHER: 'FRESHER',
+  EXPERIENCED: 'EXPERIENCED'
+} as const
+
+export type ExperienceType = (typeof ExperienceType)[keyof typeof ExperienceType]
+
+
 export const ITProjectStatus = {
   ACTIVE: 'ACTIVE',
   COMPLETED: 'COMPLETED',
