@@ -116,6 +116,8 @@ function getSelectedHospitalRoomRent(
 
 function buildPreAuthHtml(params: {
   patientName: string
+  initialApproval: string | null
+  tentativeCost: string | null
   preAuth: {
     insurance: string | null
     tpa: string | null
@@ -134,7 +136,7 @@ function buildPreAuthHtml(params: {
   imageDataUrls: Array<{ data: string; mime: string }>
   pdfBase64List: string[]
 }): string {
-  const { patientName, preAuth, admissionDate, surgeryDate, imageDataUrls, pdfBase64List } = params
+  const { patientName, initialApproval, tentativeCost, preAuth, admissionDate, surgeryDate, imageDataUrls, pdfBase64List } = params
 
   /** hide = omit card; dash = show —; else show escaped text */
   function fieldCell(raw: string | null | undefined): 'hide' | 'dash' | string {
@@ -158,6 +160,18 @@ function buildPreAuthHtml(params: {
     patientCell === 'hide'
       ? ''
       : `<h1 class="patient-name">${patientCell === 'dash' ? escapeHtml('—') : patientCell}</h1>`
+
+  const initialApprovalCell = fieldCell(initialApproval)
+  const tentativeCostCell = fieldCell(tentativeCost)
+  const financialHeroHtml = `
+    <div class="financial-hero">
+      <div class="financial-label">Initial Approval</div>
+      <div class="financial-initial">${initialApprovalCell === 'hide' || initialApprovalCell === 'dash' ? escapeHtml('—') : initialApprovalCell}</div>
+      <div class="financial-divider">
+        <div class="financial-label">Tentative Cost</div>
+        <div class="financial-tentative">${tentativeCostCell === 'hide' || tentativeCostCell === 'dash' ? escapeHtml('—') : tentativeCostCell}</div>
+      </div>
+    </div>`
 
   const cardDefs: Array<{ label: string; cell: 'hide' | 'dash' | string; fullWidth?: boolean }> = [
     { label: 'Hospital', cell: fieldCell(preAuth.requestedHospitalName) },
@@ -218,6 +232,11 @@ function buildPreAuthHtml(params: {
     .patient-name { font-size: 28px; font-weight: 700; margin: 24px 24px 20px 24px; color: #0f172a; line-height: 1.2; }
     .content { padding: 0 0 24px 0; }
     .preauth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 24px; margin-bottom: 8px; }
+    .financial-hero { margin: 0 24px 20px auto; padding: 14px 18px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; max-width: 200px; text-align: right; }
+    .financial-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #bfdbfe; margin-bottom: 4px; }
+    .financial-initial { font-size: 28px; font-weight: 800; line-height: 1.1; }
+    .financial-tentative { font-size: 16px; font-weight: 600; line-height: 1.2; color: #dbeafe; margin-top: 2px; }
+    .financial-divider { border-top: 1px solid rgba(191, 219, 254, 0.4); margin-top: 10px; padding-top: 10px; }
     .card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; background: #f8fafc; }
     .card-full { grid-column: 1 / -1; }
     .card-label { font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight: 500; }
@@ -246,6 +265,7 @@ function buildPreAuthHtml(params: {
   </div>
   <div class="content">
     ${patientHeadingHtml}
+    ${financialHeroHtml}
     <div class="preauth-grid">${cardHtml}</div>
   </div>
   ${imagePages}
@@ -354,6 +374,13 @@ export async function GET(
             surgeryDate: true,
           },
         },
+        insuranceInitiateForm: {
+          select: {
+            totalAuthorizedAmount: true,
+            amountToBePaidByInsurance: true,
+            totalBillAmount: true,
+          },
+        },
       },
     })
 
@@ -429,6 +456,29 @@ export async function GET(
     const insuranceDisplay =
       (preAuth.insurance || lead.insuranceName || kyp.insuranceCard || null) ?? null
 
+    const fmtRupee = (n: number | null | undefined) => {
+      if (n == null || n <= 0) return null
+      return `₹${n.toLocaleString('en-IN')}`
+    }
+
+    const tentativeBill =
+      matchedHospital?.tentativeBill ??
+      suggestedHospitals.find((h) => (h.tentativeBill ?? 0) > 0)?.tentativeBill ??
+      null
+
+    const approvedRaw = preAuth.approvedAmount
+    const approvedNum =
+      approvedRaw != null && approvedRaw !== '' ? Number(String(approvedRaw).replace(/[₹,\s]/g, '')) : 0
+    const initialApprovalDisplay =
+      fmtRupee(!Number.isNaN(approvedNum) && approvedNum > 0 ? approvedNum : null) ??
+      fmtRupee(lead.insuranceInitiateForm?.totalAuthorizedAmount) ??
+      fmtRupee(lead.insuranceInitiateForm?.amountToBePaidByInsurance)
+
+    const tentativeCostDisplay =
+      fmtRupee(tentativeBill) ??
+      fmtRupee(lead.insuranceInitiateForm?.totalBillAmount) ??
+      (lead.billAmount && Number(lead.billAmount) > 0 ? fmtRupee(Number(lead.billAmount)) : null)
+
     const formatDate = (d: Date | null | undefined) => {
       if (!d) return null
       return new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
@@ -436,6 +486,8 @@ export async function GET(
 
     const html = buildPreAuthHtml({
       patientName: lead.patientName || '—',
+      initialApproval: initialApprovalDisplay,
+      tentativeCost: tentativeCostDisplay,
       admissionDate: formatDate(lead.admissionRecord?.admissionDate) ?? formatDate(lead.ipdAdmissionDate) ?? formatDate(preAuth.expectedAdmissionDate),
       surgeryDate: formatDate(lead.admissionRecord?.surgeryDate) ?? formatDate(preAuth.expectedSurgeryDate),
       preAuth: {

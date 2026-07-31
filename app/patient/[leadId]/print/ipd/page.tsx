@@ -369,18 +369,14 @@ export default function IPDPrintPage() {
   const initForm = lead.insuranceInitiateForm
   const tentativeBillFromHospital = (() => {
     const hospitals = pre?.suggestedHospitals
+    if (!hospitals?.length) return null
     const requested = pre?.requestedHospitalName?.trim()
-    if (!hospitals?.length || !requested) return null
-    const match = hospitals.find(h => h.hospitalName?.trim() === requested)
-    return match?.tentativeBill ?? null
-  })()
-  const billAmountDisplay = (() => {
-    // Prefer: initiate form totalBillAmount > approved amount > tentative bill > lead.billAmount
-    if (initForm?.totalBillAmount && initForm.totalBillAmount > 0) return formatMoneyLike(initForm.totalBillAmount)
-    if (pre?.approvedAmount && Number(pre.approvedAmount) > 0) return formatMoneyLike(pre.approvedAmount)
-    if (tentativeBillFromHospital && tentativeBillFromHospital > 0) return formatMoneyLike(tentativeBillFromHospital)
-    if (lead.billAmount && Number(lead.billAmount) > 0) return formatMoneyLike(lead.billAmount)
-    return EM_DASH
+    if (requested) {
+      const match = hospitals.find((h) => h.hospitalName?.trim() === requested)
+      if (match?.tentativeBill != null && match.tentativeBill > 0) return match.tentativeBill
+    }
+    const withBill = hospitals.find((h) => h.tentativeBill != null && h.tentativeBill > 0)
+    return withBill?.tentativeBill ?? null
   })()
 
   const isCash = lead.flowType === 'CASH'
@@ -388,6 +384,38 @@ export default function IPDPrintPage() {
   const discharge = lead.dischargeSheet
   const cashApprovedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : discharge?.settlementPart
   const cashFinalBillAmount = (lead.billAmount && Number(lead.billAmount) > 0) ? lead.billAmount : discharge?.billAmount
+
+  const initialApprovalDisplay = (() => {
+    if (pre?.approvedAmount != null && Number(pre.approvedAmount) > 0) {
+      return formatMoneyLike(pre.approvedAmount)
+    }
+    if (initForm?.totalAuthorizedAmount != null && initForm.totalAuthorizedAmount > 0) {
+      return formatMoneyLike(initForm.totalAuthorizedAmount)
+    }
+    if (initForm?.amountToBePaidByInsurance != null && initForm.amountToBePaidByInsurance > 0) {
+      return formatMoneyLike(initForm.amountToBePaidByInsurance)
+    }
+    if (cashApprovedAmount != null && Number(cashApprovedAmount) > 0) {
+      return formatMoneyLike(cashApprovedAmount)
+    }
+    return EM_DASH
+  })()
+  const tentativeCostDisplay = (() => {
+    if (tentativeBillFromHospital != null && tentativeBillFromHospital > 0) {
+      return formatMoneyLike(tentativeBillFromHospital)
+    }
+    if (initForm?.totalBillAmount != null && initForm.totalBillAmount > 0) {
+      return formatMoneyLike(initForm.totalBillAmount)
+    }
+    if (lead.billAmount != null && Number(lead.billAmount) > 0) {
+      return formatMoneyLike(lead.billAmount)
+    }
+    if (cashFinalBillAmount != null && Number(cashFinalBillAmount) > 0) {
+      return formatMoneyLike(cashFinalBillAmount)
+    }
+    return EM_DASH
+  })()
+
   const cashDiscount = (lead.discount ?? 0) > 0 ? lead.discount : discharge?.discountAmount
   const cashDeduction = (lead.deduction ?? 0) > 0 ? lead.deduction : discharge?.deductionAmount
   const cashCollectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : discharge?.collectedByMediend
@@ -489,22 +517,28 @@ export default function IPDPrintPage() {
                 )}
               </div>
 
-              {/* right: ref + bill */}
+              {/* right: ref + approval box */}
               <div className="flex flex-col items-end gap-2.5 shrink-0">
                 <div className="text-right">
                   <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Ref</p>
                   <p className="font-mono text-sm font-bold text-slate-600">{lead.leadRef}</p>
                 </div>
-                {billAmountDisplay !== EM_DASH && (
-                  <div className="rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-3 text-right shadow-sm">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-100">
-                      Tentative Bill
+                <div className="rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-3.5 text-right shadow-sm min-w-[180px]">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-100">
+                    Initial Approval
+                  </p>
+                  <p className="text-[28px] font-bold text-white leading-tight mt-0.5">
+                    {initialApprovalDisplay}
+                  </p>
+                  <div className="mt-2.5 pt-2.5 border-t border-blue-400/40">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-100">
+                      Tentative Cost
                     </p>
-                    <p className="text-[22px] font-bold text-white leading-tight mt-0.5">
-                      {billAmountDisplay}
+                    <p className="text-base font-semibold text-blue-50 leading-tight mt-0.5">
+                      {tentativeCostDisplay}
                     </p>
                   </div>
-                )}
+                </div>
               </div>
             </div>
 
@@ -633,7 +667,8 @@ export default function IPDPrintPage() {
                 />
                 <Field label="Room type" value={display(pre.requestedRoomType)} />
                 <Field label="Approval status" value={humanizeEnum(pre.approvalStatus)} />
-                <Field label="Approved amount" value={formatMoneyLike(pre.approvedAmount)} />
+                <Field label="Initial Approval" value={initialApprovalDisplay} />
+                <Field label="Tentative Cost" value={tentativeCostDisplay} />
                 <Field
                   label="Expected admission"
                   value={formatDate(pre.expectedAdmissionDate ?? undefined)}
