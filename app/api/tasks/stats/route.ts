@@ -2,7 +2,7 @@ import { NextRequest } from "next/server"
 import { getSessionFromRequest } from "@/lib/session"
 import { successResponse, unauthorizedResponse } from "@/lib/api-utils"
 import { prisma } from "@/lib/prisma"
-import { getEmployeeByUserId, getSubordinates, getMDTeamAndWatchlistUserIds } from "@/lib/hierarchy"
+import { getTaskStatsBaseWhere } from "@/lib/tasks/stats-scope"
 
 export async function GET(_request: NextRequest) {
   const user = getSessionFromRequest(_request)
@@ -10,27 +10,11 @@ export async function GET(_request: NextRequest) {
 
   const isAdmin = user.role === "ADMIN"
   const isMD = user.role === "MD"
-  let assigneeWhere: { assigneeId: { in: string[] } } | undefined
-  if (isAdmin) {
-    // Admin sees all
-  } else if (isMD) {
-    // MD sees only their team + watchlist
-    const ids = await getMDTeamAndWatchlistUserIds(user.id)
-    if (ids.length > 0) {
-      assigneeWhere = { assigneeId: { in: ids } }
-    }
-  } else {
-    const employee = await getEmployeeByUserId(user.id)
-    if (!employee) {
-      assigneeWhere = { assigneeId: { in: [user.id] } }
-    } else {
-      const subordinates = await getSubordinates(employee.id, true)
-      const subordinateUserIds = subordinates.map((s) => s.userId)
-      assigneeWhere = { assigneeId: { in: [user.id, ...subordinateUserIds] } }
-    }
-  }
-
-  const baseWhere = assigneeWhere ?? {}
+  const baseWhere = await getTaskStatsBaseWhere(user)
+  const assigneeWhere =
+    "assigneeId" in baseWhere && baseWhere.assigneeId
+      ? { assigneeId: baseWhere.assigneeId as { in: string[] } }
+      : undefined
 
   const now = new Date()
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())

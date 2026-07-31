@@ -6,6 +6,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { LedgerStatus, LeaveRequestStatus } from '@/generated/prisma/client'
 import { employeeNotInMDManagedCohortWhere } from '@/lib/hierarchy'
 import { mdPendingNormalizationsWhere } from '@/lib/hrms/normalization-md-pending'
+import { getTaskOverviewCount } from '@/lib/tasks/stats-scope'
 
 export interface BadgeCounts {
   pendingFinanceApprovals: number
@@ -39,6 +40,7 @@ export interface BadgeCounts {
   hrPendingIncrements: number
   taskApprovalCount: number
   taskOverdueCount: number
+  taskOverviewCount: number
   upcomingMeetsToday: number
   pendingOnboardingApprovals: number
 }
@@ -83,6 +85,7 @@ export async function GET(request: NextRequest) {
       hrPendingIncrements: 0,
       taskApprovalCount: 0,
       taskOverdueCount: 0,
+      taskOverviewCount: 0,
       upcomingMeetsToday: 0,
       pendingOnboardingApprovals: 0,
     }
@@ -485,6 +488,13 @@ export async function GET(request: NextRequest) {
         },
       }).then((c) => {
         counts.upcomingMeetsToday = c
+      })
+    )
+
+    // Task overview count (team approvals + overdue — matches Overview tab)
+    promises.push(
+      getTaskOverviewCount(user).then((c) => {
+        counts.taskOverviewCount = c
       })
     )
 

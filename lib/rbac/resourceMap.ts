@@ -87,6 +87,7 @@ export const RESOURCE_MAP = {
   "sales.team_lead_pipeline": { path: "/team-lead/pipeline", component: "TeamLeadPipelinePage" },
   "sales.ea_pipeline": { path: "/executive-assistant/pipeline", component: "EAPipelinePage" },
   "sales.blueprint_dashboard": { path: "/sales/blueprint", component: "BluePrintDashboardPage" },
+  "sales.opd_monitoring": { path: "/opd-monitoring", component: "OpdMonitoringPage" },
 
   // Insurance Group Pages
   "insurance_pl.insurance": { path: "/insurance/dashboard", component: "InsurancePage" },
@@ -312,6 +313,26 @@ export const RESOURCE_MAP = {
   "sales.team_lead_pipeline.table.lead.column.doctor": { label: "Table Column: Doctor", component: "DoctorColumn" },
   "sales.team_lead_pipeline.table.lead.column.stage": { label: "Table Column: Stage", component: "StageColumn" },
   "sales.team_lead_pipeline.table.lead.column.actions": { label: "Table Column: Actions", component: "ActionsColumn" },
+
+  // OPD Monitoring (sales.opd_monitoring)
+  "sales.opd_monitoring.analytics": { label: "OPD Monitoring Analytics Summary", component: "OpdMonitoringAnalytics" },
+  "sales.opd_monitoring.analytics.scheduled": { label: "Scheduled Card", component: "OpdScheduledCard" },
+  "sales.opd_monitoring.analytics.done": { label: "Done Card", component: "OpdDoneCard" },
+  "sales.opd_monitoring.analytics.no_show": { label: "No Show Card", component: "OpdNoShowCard" },
+  "sales.opd_monitoring.analytics.cancelled": { label: "Cancelled Card", component: "OpdCancelledCard" },
+
+  "sales.opd_monitoring.daily": { label: "OPD Monitoring: Daily View Tab", component: "OpdDailyViewTab" },
+  "sales.opd_monitoring.doctor": { label: "OPD Monitoring: Doctor-wise View Tab", component: "OpdDoctorViewTab" },
+  "sales.opd_monitoring.overdue": { label: "OPD Monitoring: Pending / Overdue Tab", component: "OpdOverdueTab" },
+
+  "sales.opd_monitoring.table": { label: "OPD Monitoring Table", component: "OpdMonitoringTable" },
+  "sales.opd_monitoring.table.lead.column.patient_name": { label: "Table Column: Patient Name", component: "OpdPatientNameColumn" },
+  "sales.opd_monitoring.table.lead.column.lead_ref": { label: "Table Column: Lead Ref", component: "OpdLeadRefColumn" },
+  "sales.opd_monitoring.table.lead.column.doctor": { label: "Table Column: Doctor", component: "OpdDoctorColumn" },
+  "sales.opd_monitoring.table.lead.column.hospital": { label: "Table Column: Hospital", component: "OpdHospitalColumn" },
+  "sales.opd_monitoring.table.lead.column.date": { label: "Table Column: Appointment Date", component: "OpdAppointmentDateColumn" },
+  "sales.opd_monitoring.table.lead.column.status": { label: "Table Column: Status", component: "OpdStatusColumn" },
+  "sales.opd_monitoring.table.lead.column.bd": { label: "Table Column: BD", component: "OpdBdColumn" },
 
   // --- MODULE 5: INSURANCE & P/L ---
   "insurance_pl.pl_surgery.analytics": { label: "PL Surgery Analytics Section", component: "PLSurgeryAnalytics" },

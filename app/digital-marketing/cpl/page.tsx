@@ -99,13 +99,13 @@ export default function DailySpendPage() {
   const [draftSpend, setDraftSpend] = useState<Record<string, string>>({})
 
   const { data: viewAccessData, isLoading: viewAccessLoading } = useQuery({
-    queryKey: ['permissions-check', 'crm.cpl.view'],
-    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=crm.cpl.view'),
+    queryKey: ['permissions-check', 'campaign_cpl.view'],
+    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=campaign_cpl.view'),
     enabled: !!user,
   })
   const { data: manageAccessData, isLoading: manageAccessLoading } = useQuery({
-    queryKey: ['permissions-check', 'crm.cpl.manage'],
-    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=crm.cpl.manage'),
+    queryKey: ['permissions-check', 'campaign_cpl.manage'],
+    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=campaign_cpl.manage'),
     enabled: !!user,
   })
   const canView = viewAccessData?.allowed === true
