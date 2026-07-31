@@ -9,11 +9,12 @@ import { useAuth } from '@/hooks/use-auth'
 import { apiGet } from '@/lib/api-client'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, ArrowLeft, MapPin, Shield, Stethoscope, Tag, User } from 'lucide-react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { PreAuthInlineApproval } from '@/components/insurance/pre-auth-inline-approval'
 import { ResetPatientDialog } from '@/components/insurance/reset-patient-dialog'
 import { canCompletePreAuth, canResetPatient } from '@/lib/case-permissions'
+import { resolveReturnTo } from '@/lib/navigation/return-to'
 import { PreAuthStatus } from '@/generated/prisma/enums'
 
 interface KYPSubmission {
@@ -72,9 +73,11 @@ export default function PreAuthPage() {
   const { user } = useAuth()
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const leadId = params.leadId as string
   const [showResetDialog, setShowResetDialog] = useState(false)
+  const returnHref = resolveReturnTo(searchParams) ?? `/patient/${leadId}`
 
   const { data: lead } = useQuery<any>({
     queryKey: ['lead', leadId],
@@ -107,7 +110,7 @@ export default function PreAuthPage() {
         <div className="space-y-6">
           <Button
             variant="ghost"
-            onClick={() => router.push(`/patient/${leadId}`)}
+            onClick={() => router.push(returnHref)}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
@@ -132,7 +135,7 @@ export default function PreAuthPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push(`/patient/${leadId}`)}
+            onClick={() => router.push(returnHref)}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>

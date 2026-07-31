@@ -52,12 +52,13 @@ import {
 } from '@/lib/case-permissions'
 import { getKYPStatusLabel } from '@/lib/kyp-status-labels'
 import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { getNextStageAfterOpdDone, hasLeadOpdDone, hasLeadOpdScheduled, OPD_DONE_STATUS } from '@/lib/lead-opd-workflow'
 import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 type KypUploadedFile = { name?: string; url?: string }
@@ -474,6 +475,15 @@ export default function PatientDetailsPage() {
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const leadId = params.leadId as string
+  const listReturnTo = resolveReturnTo(searchParams)
+  const withReturnTo = useMemo(
+    () => (href: string) => hrefWithReturnTo(href, listReturnTo),
+    [listReturnTo],
+  )
+  const handleBack = () => {
+    if (listReturnTo) router.push(listReturnTo)
+    else router.back()
+  }
 
   const { data: lead, isLoading, error } = useQuery<Lead, Error>({
     queryKey: ['lead', leadId],
@@ -575,7 +585,7 @@ export default function PatientDetailsPage() {
           <div className="text-destructive font-semibold text-lg">
             {error ? error.message : 'Patient not found'}
           </div>
-          <Button variant="outline" onClick={() => router.back()}>
+          <Button variant="outline" onClick={handleBack}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Go Back
           </Button>
@@ -930,7 +940,7 @@ export default function PatientDetailsPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => router.back()}
+                  onClick={handleBack}
                   className="-ml-2 mt-0.5 shrink-0 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -1529,7 +1539,7 @@ export default function PatientDetailsPage() {
                     asChild
                     className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/discharge-cash`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/discharge-cash`)}>
                       <Receipt className="h-4 w-4" />
                       Fill Discharge Form
                     </Link>
@@ -1648,7 +1658,7 @@ export default function PatientDetailsPage() {
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/pre-auth`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/pre-auth`)}>
                       <Shield className="h-4 w-4" />
                       Suggest hospitals
                     </Link>
@@ -1660,7 +1670,7 @@ export default function PatientDetailsPage() {
                     asChild
                     className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/pre-auth`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/pre-auth`)}>
                       <Shield className="h-4 w-4" />
                       Modify Hospital Suggestions
                     </Link>
@@ -1671,7 +1681,7 @@ export default function PatientDetailsPage() {
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/pre-auth`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/pre-auth`)}>
                       <Plus className="h-4 w-4" />
                       Add KYP Details
                     </Link>
@@ -1682,7 +1692,7 @@ export default function PatientDetailsPage() {
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/pre-auth`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/pre-auth`)}>
                       <CheckCircle2 className="h-4 w-4" />
                       Complete Pre-Auth
                     </Link>
@@ -1693,7 +1703,7 @@ export default function PatientDetailsPage() {
                     asChild
                     className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/pre-auth?initiate=true`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/pre-auth?initiate=true`)}>
                       <FileText className="h-4 w-4" />
                       {isInitiateFormFilled ? 'View Initial Form' : 'Fill Initial Form'}
                     </Link>
@@ -1734,7 +1744,7 @@ export default function PatientDetailsPage() {
                     asChild
                     className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/discharge`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/discharge`)}>
                       <Receipt className="h-4 w-4" />
                       {lead.dischargeSheet ? 'View Discharge Sheet' : 'Fill Discharge Form'}
                     </Link>
@@ -2275,7 +2285,7 @@ export default function PatientDetailsPage() {
             <CardContent className="space-y-4">
               <PatientDischargeInfo leadId={leadId} lead={lead} />
               <Button asChild variant="outline">
-                <Link href={lead.flowType === FlowType.CASH ? `/patient/${leadId}/discharge-cash` : `/patient/${leadId}/discharge`}>
+                <Link href={withReturnTo(lead.flowType === FlowType.CASH ? `/patient/${leadId}/discharge-cash` : `/patient/${leadId}/discharge`)}>
                   <Receipt className="h-4 w-4 mr-2" />
                   {canFillDischargeForm ? 'Open Discharge Form' : 'View Discharge Sheet'}
                 </Link>

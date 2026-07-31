@@ -72,6 +72,7 @@ const INSURANCE_TABLE_COLUMNS: { id: string; label: string }[] = [
   { id: 'hospital', label: 'Hospital' },
   { id: 'admissionDate', label: 'Admission date' },
   { id: 'surgeryDate', label: 'Surgery date' },
+  { id: 'dischargeDate', label: 'Discharge date' },
   { id: 'paymentType', label: 'Payment type' },
   { id: 'dischargeSheetFillStatus', label: 'Filled Discharge Sheet Status' },
   { id: 'status', label: 'Status' },
@@ -111,10 +112,13 @@ export type InsuranceTableLead = Record<string, unknown> & {
 
 type InsurancePatientTableProps = {
   leads: InsuranceTableLead[]
+  /** When set, column filters are also applied to these leads for KPI callbacks. */
+  kpiLeads?: InsuranceTableLead[]
   isLoading?: boolean
   emptyMessage?: string
   onRowClick: (lead: InsuranceTableLead) => void
   renderActions?: (lead: InsuranceTableLead) => React.ReactNode
+  onFilteredLeadsChange?: (leads: InsuranceTableLead[]) => void
 }
 
 function matchesDateRange(value: unknown, range: string[]): boolean {
@@ -138,12 +142,84 @@ function matchesNumberRange(value: unknown, range: { min: number | null; max: nu
   return true
 }
 
+function applyInsuranceTableFilters(
+  leads: InsuranceTableLead[],
+  filters: {
+    tableMonthFilter: string[]
+    bdFilter: string[]
+    hospitalFilter: string[]
+    doctorFilter: string[]
+    categoryFilter: string[]
+    circleFilter: string[]
+    paymentTypeFilter: string[]
+    sheetFillFilter: string[]
+    patientFilter: string
+    treatmentFilter: string
+    admissionDateFilter: string[]
+    surgeryDateFilter: string[]
+    dischargeDateFilter: string[]
+    totalBillFilter: { min: number | null; max: number | null } | null
+    approvedAmountFilter: { min: number | null; max: number | null } | null
+  },
+) {
+  return leads.filter((row) => {
+    const resolved = resolvePlRow(row)
+    const fillStatus = getDischargeSheetFillStatus(row)
+
+    if (filters.tableMonthFilter.length > 0) {
+      const rowMonth = resolved.month
+      if (!rowMonth) return false
+      const key = `${rowMonth.getFullYear()}-${String(rowMonth.getMonth() + 1).padStart(2, '0')}`
+      if (!filters.tableMonthFilter.includes(key)) return false
+    }
+
+    if (filters.bdFilter.length > 0 && (!resolved.bdm || !filters.bdFilter.includes(resolved.bdm))) return false
+    if (filters.hospitalFilter.length > 0 && (!resolved.hospital || !filters.hospitalFilter.includes(resolved.hospital))) {
+      return false
+    }
+    if (filters.doctorFilter.length > 0 && (!resolved.doctor || !filters.doctorFilter.includes(resolved.doctor))) return false
+    if (filters.categoryFilter.length > 0 && (!resolved.category || !filters.categoryFilter.includes(resolved.category))) {
+      return false
+    }
+    if (filters.circleFilter.length > 0) {
+      const circle = row.circle as string | null | undefined
+      if (!circle || !filters.circleFilter.includes(circle)) return false
+    }
+    if (
+      filters.paymentTypeFilter.length > 0 &&
+      (!resolved.paymentType || !filters.paymentTypeFilter.includes(resolved.paymentType))
+    ) {
+      return false
+    }
+    if (filters.sheetFillFilter.length > 0 && !filters.sheetFillFilter.includes(fillStatus)) return false
+
+    if (filters.patientFilter.trim()) {
+      const q = filters.patientFilter.trim().toLowerCase()
+      if (!(resolved.patient || '').toLowerCase().includes(q)) return false
+    }
+    if (filters.treatmentFilter.trim()) {
+      const q = filters.treatmentFilter.trim().toLowerCase()
+      if (!(resolved.treatment || '').toLowerCase().includes(q)) return false
+    }
+
+    if (!matchesDateRange(resolved.admission, filters.admissionDateFilter)) return false
+    if (!matchesDateRange(resolved.surgery, filters.surgeryDateFilter)) return false
+    if (!matchesDateRange(resolved.discharge, filters.dischargeDateFilter)) return false
+    if (!matchesNumberRange(resolved.totalBill, filters.totalBillFilter)) return false
+    if (!matchesNumberRange(resolved.approvedAmount, filters.approvedAmountFilter)) return false
+
+    return true
+  })
+}
+
 export function InsurancePatientTable({
   leads,
+  kpiLeads,
   isLoading = false,
   emptyMessage = 'No cases found',
   onRowClick,
   renderActions,
+  onFilteredLeadsChange,
 }: InsurancePatientTableProps) {
   const [visibleCols, setVisibleCols] = useState<Record<string, boolean>>(DEFAULT_COLS)
   const [tableMonthFilter, setTableMonthFilter] = useState<string[]>([])
@@ -158,6 +234,7 @@ export function InsurancePatientTable({
   const [patientFilter, setPatientFilter] = useState('')
   const [admissionDateFilter, setAdmissionDateFilter] = useState<string[]>([])
   const [surgeryDateFilter, setSurgeryDateFilter] = useState<string[]>([])
+  const [dischargeDateFilter, setDischargeDateFilter] = useState<string[]>([])
   const [totalBillFilter, setTotalBillFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [approvedAmountFilter, setApprovedAmountFilter] = useState<{ min: number | null; max: number | null } | null>(
     null,
@@ -224,45 +301,22 @@ export function InsurancePatientTable({
   )
 
   const filteredLeads = useMemo(() => {
-    return leads.filter((row) => {
-      const resolved = resolvePlRow(row)
-      const fillStatus = getDischargeSheetFillStatus(row)
-
-      if (tableMonthFilter.length > 0) {
-        const rowMonth = resolved.month
-        if (!rowMonth) return false
-        const key = `${rowMonth.getFullYear()}-${String(rowMonth.getMonth() + 1).padStart(2, '0')}`
-        if (!tableMonthFilter.includes(key)) return false
-      }
-
-      if (bdFilter.length > 0 && (!resolved.bdm || !bdFilter.includes(resolved.bdm))) return false
-      if (hospitalFilter.length > 0 && (!resolved.hospital || !hospitalFilter.includes(resolved.hospital))) return false
-      if (doctorFilter.length > 0 && (!resolved.doctor || !doctorFilter.includes(resolved.doctor))) return false
-      if (categoryFilter.length > 0 && (!resolved.category || !categoryFilter.includes(resolved.category))) return false
-      if (circleFilter.length > 0) {
-        const circle = row.circle as string | null | undefined
-        if (!circle || !circleFilter.includes(circle)) return false
-      }
-      if (paymentTypeFilter.length > 0 && (!resolved.paymentType || !paymentTypeFilter.includes(resolved.paymentType))) {
-        return false
-      }
-      if (sheetFillFilter.length > 0 && !sheetFillFilter.includes(fillStatus)) return false
-
-      if (patientFilter.trim()) {
-        const q = patientFilter.trim().toLowerCase()
-        if (!(resolved.patient || '').toLowerCase().includes(q)) return false
-      }
-      if (treatmentFilter.trim()) {
-        const q = treatmentFilter.trim().toLowerCase()
-        if (!(resolved.treatment || '').toLowerCase().includes(q)) return false
-      }
-
-      if (!matchesDateRange(resolved.admission, admissionDateFilter)) return false
-      if (!matchesDateRange(resolved.surgery, surgeryDateFilter)) return false
-      if (!matchesNumberRange(resolved.totalBill, totalBillFilter)) return false
-      if (!matchesNumberRange(resolved.approvedAmount, approvedAmountFilter)) return false
-
-      return true
+    return applyInsuranceTableFilters(leads, {
+      tableMonthFilter,
+      bdFilter,
+      hospitalFilter,
+      doctorFilter,
+      categoryFilter,
+      circleFilter,
+      paymentTypeFilter,
+      sheetFillFilter,
+      patientFilter,
+      treatmentFilter,
+      admissionDateFilter,
+      surgeryDateFilter,
+      dischargeDateFilter,
+      totalBillFilter,
+      approvedAmountFilter,
     })
   }, [
     leads,
@@ -278,9 +332,53 @@ export function InsurancePatientTable({
     treatmentFilter,
     admissionDateFilter,
     surgeryDateFilter,
+    dischargeDateFilter,
     totalBillFilter,
     approvedAmountFilter,
   ])
+
+  const filteredKpiLeads = useMemo(() => {
+    const source = kpiLeads ?? leads
+    return applyInsuranceTableFilters(source, {
+      tableMonthFilter,
+      bdFilter,
+      hospitalFilter,
+      doctorFilter,
+      categoryFilter,
+      circleFilter,
+      paymentTypeFilter,
+      sheetFillFilter,
+      patientFilter,
+      treatmentFilter,
+      admissionDateFilter,
+      surgeryDateFilter,
+      dischargeDateFilter,
+      totalBillFilter,
+      approvedAmountFilter,
+    })
+  }, [
+    kpiLeads,
+    leads,
+    tableMonthFilter,
+    bdFilter,
+    hospitalFilter,
+    doctorFilter,
+    categoryFilter,
+    circleFilter,
+    paymentTypeFilter,
+    sheetFillFilter,
+    patientFilter,
+    treatmentFilter,
+    admissionDateFilter,
+    surgeryDateFilter,
+    dischargeDateFilter,
+    totalBillFilter,
+    approvedAmountFilter,
+  ])
+
+  useEffect(() => {
+    onFilteredLeadsChange?.(filteredKpiLeads)
+  }, [filteredKpiLeads, onFilteredLeadsChange])
 
   const columns = useMemo<ColumnDef<InsuranceTableLead>[]>(
     () => [
@@ -435,11 +533,22 @@ export function InsurancePatientTable({
         id: 'surgeryDate',
         header: () => (
           <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-            <span>Surgery</span>
+            <span>Surgery date</span>
             <ColumnFilter value={surgeryDateFilter} onChange={setSurgeryDateFilter} type="dateRange" />
           </div>
         ),
         accessorFn: (row) => resolvePlRow(row).surgery,
+        cell: ({ getValue }) => formatPlDate(getValue() as Date | null),
+      },
+      {
+        id: 'dischargeDate',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Discharge date</span>
+            <ColumnFilter value={dischargeDateFilter} onChange={setDischargeDateFilter} type="dateRange" />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row).discharge,
         cell: ({ getValue }) => formatPlDate(getValue() as Date | null),
       },
       {
@@ -550,6 +659,7 @@ export function InsurancePatientTable({
       treatmentFilter,
       admissionDateFilter,
       surgeryDateFilter,
+      dischargeDateFilter,
       totalBillFilter,
       approvedAmountFilter,
       renderActions,
