@@ -10,14 +10,17 @@ import { apiGet } from '@/lib/api-client'
 import { canFillCashDischarge } from '@/lib/case-permissions'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Loader2 } from 'lucide-react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { resolveReturnTo } from '@/lib/navigation/return-to'
 
 export default function DischargeCashPage() {
   const { user } = useAuth()
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const leadId = params.leadId as string
+  const returnHref = resolveReturnTo(searchParams) ?? `/patient/${leadId}`
 
   const { data: lead, isLoading } = useQuery<any>({
     queryKey: ['lead', leadId],
@@ -66,7 +69,7 @@ export default function DischargeCashPage() {
     <AuthenticatedLayout>
       <div className="max-w-5xl mx-auto p-6 space-y-6">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+          <Button variant="ghost" size="icon" onClick={() => router.push(returnHref)}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>

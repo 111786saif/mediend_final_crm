@@ -24,6 +24,10 @@ import { apiGet, apiPost } from '@/lib/api-client'
 import { format, startOfDay, startOfMonth } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { CaseStage, FlowType } from '@/generated/prisma/enums'
+import { appendReturnTo } from '@/lib/navigation/return-to'
+import { formatPlDate, resolvePlRow } from '@/lib/pl/resolve-pl-row'
+
+const CASH_CASES_LIST_RETURN = '/insurance/cash-cases'
 import { useState, useMemo, useEffect } from 'react'
 import {
   FileText, AlertCircle, CheckCircle2, Clock, ArrowRight,
@@ -709,6 +713,8 @@ export default function InsuranceCashCasesPage() {
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">BD</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Circle</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Treatment</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Surgery date</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Discharge date</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">IPD Mark</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">ATS Status</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Stage</TableHead>
@@ -721,6 +727,7 @@ export default function InsuranceCashCasesPage() {
                         const tier = getPriorityTier(lead)
                         const isDischargeUrgent = tier === 2
                         const isReviewUrgent = tier === 1
+                        const plRow = resolvePlRow(lead as unknown as Record<string, unknown>)
 
                         const rowBg = isDischargeUrgent
                           ? 'bg-orange-50/60 dark:bg-orange-950/20'
@@ -740,7 +747,7 @@ export default function InsuranceCashCasesPage() {
                           <TableRow
                             key={lead.id}
                             className={`transition-colors cursor-pointer hover:brightness-95 ${rowBg} ${borderLeft}`}
-                            onClick={() => router.push(`/patient/${lead.id}`)}
+                            onClick={() => router.push(appendReturnTo(`/patient/${lead.id}`, CASH_CASES_LIST_RETURN))}
                           >
                             <TableCell className="font-semibold text-gray-900 dark:text-gray-100">
                               <span className="px-2 py-1 rounded bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-sm font-mono">
@@ -769,6 +776,12 @@ export default function InsuranceCashCasesPage() {
                             <TableCell className="text-gray-700 dark:text-gray-300">{lead.bd?.name || <span className="text-gray-400">-</span>}</TableCell>
                             <TableCell className="text-gray-700 dark:text-gray-300">{lead.circle || <span className="text-gray-400">-</span>}</TableCell>
                             <TableCell className="text-gray-700 dark:text-gray-300">{lead.treatment || <span className="text-gray-400">-</span>}</TableCell>
+                            <TableCell className="text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                              {formatPlDate(plRow.surgery)}
+                            </TableCell>
+                            <TableCell className="text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                              {formatPlDate(plRow.discharge)}
+                            </TableCell>
                             <TableCell>
                               {lead.admissionRecord?.ipdStatus ? (
                                 <Badge variant="outline" className={getIpdMarkBadgeClass(lead.admissionRecord.ipdStatus)}>
@@ -827,7 +840,7 @@ export default function InsuranceCashCasesPage() {
                                     size="sm"
                                     onClick={(e) => {
                                       e.stopPropagation()
-                                      router.push(`/patient/${lead.id}/discharge-cash`)
+                                      router.push(appendReturnTo(`/patient/${lead.id}/discharge-cash`, CASH_CASES_LIST_RETURN))
                                     }}
                                     className="bg-teal-600 hover:bg-teal-700 text-white"
                                   >
@@ -841,7 +854,7 @@ export default function InsuranceCashCasesPage() {
                                     size="sm"
                                     onClick={(e) => {
                                       e.stopPropagation()
-                                      router.push(`/patient/${lead.id}/discharge-cash`)
+                                      router.push(appendReturnTo(`/patient/${lead.id}/discharge-cash`, CASH_CASES_LIST_RETURN))
                                     }}
                                     className="border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950"
                                   >

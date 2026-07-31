@@ -8,11 +8,12 @@ import { apiGet } from '@/lib/api-client'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, CalendarCheck } from 'lucide-react'
-import { useRouter, useParams } from 'next/navigation'
+import { useRouter, useParams, useSearchParams } from 'next/navigation'
 import { DischargeSheetView } from '@/components/discharge/discharge-sheet-view'
 import { DischargeSheetForm } from '@/components/discharge/discharge-sheet-form'
 import { MarkDischargedDialog } from '@/components/discharge/mark-discharged-dialog'
 import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { resolveReturnTo } from '@/lib/navigation/return-to'
 
 interface DischargeSheet {
   id: string
@@ -43,9 +44,11 @@ export default function DischargeSheetPage() {
   const { user } = useAuth()
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const leadId = params.leadId as string
   const [markDialogOpen, setMarkDialogOpen] = useState(false)
+  const returnHref = resolveReturnTo(searchParams) ?? `/patient/${leadId}`
 
   const { data: dischargeSheet, isLoading: sheetLoading } = useQuery<DischargeSheet | null>({
     queryKey: ['discharge-sheet', leadId],
@@ -103,7 +106,7 @@ export default function DischargeSheetPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push(`/patient/${leadId}`)}
+            onClick={() => router.push(returnHref)}
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -136,7 +139,7 @@ export default function DischargeSheetPage() {
             onSuccess={async () => {
               await queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
               await queryClient.invalidateQueries({ queryKey: ['discharge-sheet', leadId] })
-              router.push(`/patient/${leadId}`)
+              router.push(returnHref)
             }}
           />
         ) : canMark ? (
