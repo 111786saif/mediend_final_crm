@@ -45,6 +45,9 @@ const updateProfileSchema = z.object({
   resumeDocUrl: z.string().url().optional().nullable().or(z.literal('')),
   educationalCertDocUrl: z.string().url().optional().nullable().or(z.literal('')),
   experienceCertDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  appointmentLetterDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  salarySlipDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  bankStatementDocUrl: z.string().url().optional().nullable().or(z.literal('')),
 })
 
 const managerSelect = {
@@ -133,6 +136,8 @@ export async function GET(request: NextRequest) {
           educationalCertDocUrl: employee.educationalCertDocUrl,
           experienceCertDocUrl: employee.experienceCertDocUrl,
           appointmentLetterDocUrl: employee.appointmentLetterDocUrl,
+          salarySlipDocUrl: employee.salarySlipDocUrl,
+          bankStatementDocUrl: employee.bankStatementDocUrl,
           otherDocuments: employee.otherDocuments,
           hrDocuments: employee.documents,
         })
@@ -280,6 +285,9 @@ export async function PATCH(request: NextRequest) {
         'resumeDocUrl',
         'educationalCertDocUrl',
         'experienceCertDocUrl',
+        'appointmentLetterDocUrl',
+        'salarySlipDocUrl',
+        'bankStatementDocUrl',
       ] as const
       for (const field of docFields) {
         const val = data[field]

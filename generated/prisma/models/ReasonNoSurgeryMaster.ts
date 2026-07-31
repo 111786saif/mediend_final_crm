@@ -232,6 +232,7 @@ export type ReasonNoSurgeryMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"ReasonNoSurgeryMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ReasonNoSurgeryMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReasonNoSurgeryMaster"> | Date | string
+  opdLeads?: Prisma.LeadListRelationFilter
 }
 
 export type ReasonNoSurgeryMasterOrderByWithRelationInput = {
@@ -242,6 +243,7 @@ export type ReasonNoSurgeryMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  opdLeads?: Prisma.LeadOrderByRelationAggregateInput
 }
 
 export type ReasonNoSurgeryMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -255,6 +257,7 @@ export type ReasonNoSurgeryMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"ReasonNoSurgeryMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ReasonNoSurgeryMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReasonNoSurgeryMaster"> | Date | string
+  opdLeads?: Prisma.LeadListRelationFilter
 }, "id" | "code">
 
 export type ReasonNoSurgeryMasterOrderByWithAggregationInput = {
@@ -293,6 +296,7 @@ export type ReasonNoSurgeryMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdLeads?: Prisma.LeadCreateNestedManyWithoutOpdReasonNoSurgeryInput
 }
 
 export type ReasonNoSurgeryMasterUncheckedCreateInput = {
@@ -303,6 +307,7 @@ export type ReasonNoSurgeryMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutOpdReasonNoSurgeryInput
 }
 
 export type ReasonNoSurgeryMasterUpdateInput = {
@@ -313,6 +318,7 @@ export type ReasonNoSurgeryMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUpdateManyWithoutOpdReasonNoSurgeryNestedInput
 }
 
 export type ReasonNoSurgeryMasterUncheckedUpdateInput = {
@@ -323,6 +329,7 @@ export type ReasonNoSurgeryMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUncheckedUpdateManyWithoutOpdReasonNoSurgeryNestedInput
 }
 
 export type ReasonNoSurgeryMasterCreateManyInput = {
@@ -353,6 +360,11 @@ export type ReasonNoSurgeryMasterUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReasonNoSurgeryMasterNullableScalarRelationFilter = {
+  is?: Prisma.ReasonNoSurgeryMasterWhereInput | null
+  isNot?: Prisma.ReasonNoSurgeryMasterWhereInput | null
 }
 
 export type ReasonNoSurgeryMasterCountOrderByAggregateInput = {
@@ -393,6 +405,107 @@ export type ReasonNoSurgeryMasterSumOrderByAggregateInput = {
   displayOrder?: Prisma.SortOrder
 }
 
+export type ReasonNoSurgeryMasterCreateNestedOneWithoutOpdLeadsInput = {
+  create?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateWithoutOpdLeadsInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateWithoutOpdLeadsInput>
+  connectOrCreate?: Prisma.ReasonNoSurgeryMasterCreateOrConnectWithoutOpdLeadsInput
+  connect?: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
+}
+
+export type ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput = {
+  create?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateWithoutOpdLeadsInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateWithoutOpdLeadsInput>
+  connectOrCreate?: Prisma.ReasonNoSurgeryMasterCreateOrConnectWithoutOpdLeadsInput
+  upsert?: Prisma.ReasonNoSurgeryMasterUpsertWithoutOpdLeadsInput
+  disconnect?: Prisma.ReasonNoSurgeryMasterWhereInput | boolean
+  delete?: Prisma.ReasonNoSurgeryMasterWhereInput | boolean
+  connect?: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ReasonNoSurgeryMasterUpdateToOneWithWhereWithoutOpdLeadsInput, Prisma.ReasonNoSurgeryMasterUpdateWithoutOpdLeadsInput>, Prisma.ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdLeadsInput>
+}
+
+export type ReasonNoSurgeryMasterCreateWithoutOpdLeadsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReasonNoSurgeryMasterUncheckedCreateWithoutOpdLeadsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ReasonNoSurgeryMasterCreateOrConnectWithoutOpdLeadsInput = {
+  where: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateWithoutOpdLeadsInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateWithoutOpdLeadsInput>
+}
+
+export type ReasonNoSurgeryMasterUpsertWithoutOpdLeadsInput = {
+  update: Prisma.XOR<Prisma.ReasonNoSurgeryMasterUpdateWithoutOpdLeadsInput, Prisma.ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdLeadsInput>
+  create: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateWithoutOpdLeadsInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateWithoutOpdLeadsInput>
+  where?: Prisma.ReasonNoSurgeryMasterWhereInput
+}
+
+export type ReasonNoSurgeryMasterUpdateToOneWithWhereWithoutOpdLeadsInput = {
+  where?: Prisma.ReasonNoSurgeryMasterWhereInput
+  data: Prisma.XOR<Prisma.ReasonNoSurgeryMasterUpdateWithoutOpdLeadsInput, Prisma.ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdLeadsInput>
+}
+
+export type ReasonNoSurgeryMasterUpdateWithoutOpdLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type ReasonNoSurgeryMasterCountOutputType
+ */
+
+export type ReasonNoSurgeryMasterCountOutputType = {
+  opdLeads: number
+}
+
+export type ReasonNoSurgeryMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  opdLeads?: boolean | ReasonNoSurgeryMasterCountOutputTypeCountOpdLeadsArgs
+}
+
+/**
+ * ReasonNoSurgeryMasterCountOutputType without action
+ */
+export type ReasonNoSurgeryMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReasonNoSurgeryMasterCountOutputType
+   */
+  select?: Prisma.ReasonNoSurgeryMasterCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ReasonNoSurgeryMasterCountOutputType without action
+ */
+export type ReasonNoSurgeryMasterCountOutputTypeCountOpdLeadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadWhereInput
+}
 
 
 export type ReasonNoSurgeryMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -403,6 +516,8 @@ export type ReasonNoSurgeryMasterSelect<ExtArgs extends runtime.Types.Extensions
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  opdLeads?: boolean | Prisma.ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs>
+  _count?: boolean | Prisma.ReasonNoSurgeryMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reasonNoSurgeryMaster"]>
 
 export type ReasonNoSurgeryMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -436,10 +551,18 @@ export type ReasonNoSurgeryMasterSelectScalar = {
 }
 
 export type ReasonNoSurgeryMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "label" | "displayOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["reasonNoSurgeryMaster"]>
+export type ReasonNoSurgeryMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  opdLeads?: boolean | Prisma.ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs>
+  _count?: boolean | Prisma.ReasonNoSurgeryMasterCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ReasonNoSurgeryMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ReasonNoSurgeryMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $ReasonNoSurgeryMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ReasonNoSurgeryMaster"
-  objects: {}
+  objects: {
+    opdLeads: Prisma.$LeadPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     code: string
@@ -842,6 +965,7 @@ readonly fields: ReasonNoSurgeryMasterFieldRefs;
  */
 export interface Prisma__ReasonNoSurgeryMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  opdLeads<T extends Prisma.ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -895,6 +1019,10 @@ export type ReasonNoSurgeryMasterFindUniqueArgs<ExtArgs extends runtime.Types.Ex
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
+  /**
    * Filter, which ReasonNoSurgeryMaster to fetch.
    */
   where: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
@@ -913,6 +1041,10 @@ export type ReasonNoSurgeryMasterFindUniqueOrThrowArgs<ExtArgs extends runtime.T
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
+  /**
    * Filter, which ReasonNoSurgeryMaster to fetch.
    */
   where: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
@@ -930,6 +1062,10 @@ export type ReasonNoSurgeryMasterFindFirstArgs<ExtArgs extends runtime.Types.Ext
    * Omit specific fields from the ReasonNoSurgeryMaster
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
   /**
    * Filter, which ReasonNoSurgeryMaster to fetch.
    */
@@ -979,6 +1115,10 @@ export type ReasonNoSurgeryMasterFindFirstOrThrowArgs<ExtArgs extends runtime.Ty
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
+  /**
    * Filter, which ReasonNoSurgeryMaster to fetch.
    */
   where?: Prisma.ReasonNoSurgeryMasterWhereInput
@@ -1026,6 +1166,10 @@ export type ReasonNoSurgeryMasterFindManyArgs<ExtArgs extends runtime.Types.Exte
    * Omit specific fields from the ReasonNoSurgeryMaster
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
   /**
    * Filter, which ReasonNoSurgeryMasters to fetch.
    */
@@ -1075,6 +1219,10 @@ export type ReasonNoSurgeryMasterCreateArgs<ExtArgs extends runtime.Types.Extens
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
+  /**
    * The data needed to create a ReasonNoSurgeryMaster.
    */
   data: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateInput>
@@ -1122,6 +1270,10 @@ export type ReasonNoSurgeryMasterUpdateArgs<ExtArgs extends runtime.Types.Extens
    * Omit specific fields from the ReasonNoSurgeryMaster
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
   /**
    * The data needed to update a ReasonNoSurgeryMaster.
    */
@@ -1189,6 +1341,10 @@ export type ReasonNoSurgeryMasterUpsertArgs<ExtArgs extends runtime.Types.Extens
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
+  /**
    * The filter to search for the ReasonNoSurgeryMaster to update in case it exists.
    */
   where: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
@@ -1215,6 +1371,10 @@ export type ReasonNoSurgeryMasterDeleteArgs<ExtArgs extends runtime.Types.Extens
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
+  /**
    * Filter which ReasonNoSurgeryMaster to delete.
    */
   where: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
@@ -1235,6 +1395,30 @@ export type ReasonNoSurgeryMasterDeleteManyArgs<ExtArgs extends runtime.Types.Ex
 }
 
 /**
+ * ReasonNoSurgeryMaster.opdLeads
+ */
+export type ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lead
+   */
+  select?: Prisma.LeadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lead
+   */
+  omit?: Prisma.LeadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadInclude<ExtArgs> | null
+  where?: Prisma.LeadWhereInput
+  orderBy?: Prisma.LeadOrderByWithRelationInput | Prisma.LeadOrderByWithRelationInput[]
+  cursor?: Prisma.LeadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
  * ReasonNoSurgeryMaster without action
  */
 export type ReasonNoSurgeryMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1246,4 +1430,8 @@ export type ReasonNoSurgeryMasterDefaultArgs<ExtArgs extends runtime.Types.Exten
    * Omit specific fields from the ReasonNoSurgeryMaster
    */
   omit?: Prisma.ReasonNoSurgeryMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReasonNoSurgeryMasterInclude<ExtArgs> | null
 }

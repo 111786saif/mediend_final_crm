@@ -232,6 +232,7 @@ export type FollowUpReasonMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"FollowUpReasonMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FollowUpReasonMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FollowUpReasonMaster"> | Date | string
+  opdLeads?: Prisma.LeadListRelationFilter
 }
 
 export type FollowUpReasonMasterOrderByWithRelationInput = {
@@ -242,6 +243,7 @@ export type FollowUpReasonMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  opdLeads?: Prisma.LeadOrderByRelationAggregateInput
 }
 
 export type FollowUpReasonMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -255,6 +257,7 @@ export type FollowUpReasonMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"FollowUpReasonMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"FollowUpReasonMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FollowUpReasonMaster"> | Date | string
+  opdLeads?: Prisma.LeadListRelationFilter
 }, "id" | "code">
 
 export type FollowUpReasonMasterOrderByWithAggregationInput = {
@@ -293,6 +296,7 @@ export type FollowUpReasonMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdLeads?: Prisma.LeadCreateNestedManyWithoutOpdFollowUpReasonInput
 }
 
 export type FollowUpReasonMasterUncheckedCreateInput = {
@@ -303,6 +307,7 @@ export type FollowUpReasonMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutOpdFollowUpReasonInput
 }
 
 export type FollowUpReasonMasterUpdateInput = {
@@ -313,6 +318,7 @@ export type FollowUpReasonMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUpdateManyWithoutOpdFollowUpReasonNestedInput
 }
 
 export type FollowUpReasonMasterUncheckedUpdateInput = {
@@ -323,6 +329,7 @@ export type FollowUpReasonMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUncheckedUpdateManyWithoutOpdFollowUpReasonNestedInput
 }
 
 export type FollowUpReasonMasterCreateManyInput = {
@@ -353,6 +360,11 @@ export type FollowUpReasonMasterUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FollowUpReasonMasterNullableScalarRelationFilter = {
+  is?: Prisma.FollowUpReasonMasterWhereInput | null
+  isNot?: Prisma.FollowUpReasonMasterWhereInput | null
 }
 
 export type FollowUpReasonMasterCountOrderByAggregateInput = {
@@ -393,6 +405,107 @@ export type FollowUpReasonMasterSumOrderByAggregateInput = {
   displayOrder?: Prisma.SortOrder
 }
 
+export type FollowUpReasonMasterCreateNestedOneWithoutOpdLeadsInput = {
+  create?: Prisma.XOR<Prisma.FollowUpReasonMasterCreateWithoutOpdLeadsInput, Prisma.FollowUpReasonMasterUncheckedCreateWithoutOpdLeadsInput>
+  connectOrCreate?: Prisma.FollowUpReasonMasterCreateOrConnectWithoutOpdLeadsInput
+  connect?: Prisma.FollowUpReasonMasterWhereUniqueInput
+}
+
+export type FollowUpReasonMasterUpdateOneWithoutOpdLeadsNestedInput = {
+  create?: Prisma.XOR<Prisma.FollowUpReasonMasterCreateWithoutOpdLeadsInput, Prisma.FollowUpReasonMasterUncheckedCreateWithoutOpdLeadsInput>
+  connectOrCreate?: Prisma.FollowUpReasonMasterCreateOrConnectWithoutOpdLeadsInput
+  upsert?: Prisma.FollowUpReasonMasterUpsertWithoutOpdLeadsInput
+  disconnect?: Prisma.FollowUpReasonMasterWhereInput | boolean
+  delete?: Prisma.FollowUpReasonMasterWhereInput | boolean
+  connect?: Prisma.FollowUpReasonMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FollowUpReasonMasterUpdateToOneWithWhereWithoutOpdLeadsInput, Prisma.FollowUpReasonMasterUpdateWithoutOpdLeadsInput>, Prisma.FollowUpReasonMasterUncheckedUpdateWithoutOpdLeadsInput>
+}
+
+export type FollowUpReasonMasterCreateWithoutOpdLeadsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FollowUpReasonMasterUncheckedCreateWithoutOpdLeadsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FollowUpReasonMasterCreateOrConnectWithoutOpdLeadsInput = {
+  where: Prisma.FollowUpReasonMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.FollowUpReasonMasterCreateWithoutOpdLeadsInput, Prisma.FollowUpReasonMasterUncheckedCreateWithoutOpdLeadsInput>
+}
+
+export type FollowUpReasonMasterUpsertWithoutOpdLeadsInput = {
+  update: Prisma.XOR<Prisma.FollowUpReasonMasterUpdateWithoutOpdLeadsInput, Prisma.FollowUpReasonMasterUncheckedUpdateWithoutOpdLeadsInput>
+  create: Prisma.XOR<Prisma.FollowUpReasonMasterCreateWithoutOpdLeadsInput, Prisma.FollowUpReasonMasterUncheckedCreateWithoutOpdLeadsInput>
+  where?: Prisma.FollowUpReasonMasterWhereInput
+}
+
+export type FollowUpReasonMasterUpdateToOneWithWhereWithoutOpdLeadsInput = {
+  where?: Prisma.FollowUpReasonMasterWhereInput
+  data: Prisma.XOR<Prisma.FollowUpReasonMasterUpdateWithoutOpdLeadsInput, Prisma.FollowUpReasonMasterUncheckedUpdateWithoutOpdLeadsInput>
+}
+
+export type FollowUpReasonMasterUpdateWithoutOpdLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FollowUpReasonMasterUncheckedUpdateWithoutOpdLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type FollowUpReasonMasterCountOutputType
+ */
+
+export type FollowUpReasonMasterCountOutputType = {
+  opdLeads: number
+}
+
+export type FollowUpReasonMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  opdLeads?: boolean | FollowUpReasonMasterCountOutputTypeCountOpdLeadsArgs
+}
+
+/**
+ * FollowUpReasonMasterCountOutputType without action
+ */
+export type FollowUpReasonMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FollowUpReasonMasterCountOutputType
+   */
+  select?: Prisma.FollowUpReasonMasterCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * FollowUpReasonMasterCountOutputType without action
+ */
+export type FollowUpReasonMasterCountOutputTypeCountOpdLeadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadWhereInput
+}
 
 
 export type FollowUpReasonMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -403,6 +516,8 @@ export type FollowUpReasonMasterSelect<ExtArgs extends runtime.Types.Extensions.
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  opdLeads?: boolean | Prisma.FollowUpReasonMaster$opdLeadsArgs<ExtArgs>
+  _count?: boolean | Prisma.FollowUpReasonMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["followUpReasonMaster"]>
 
 export type FollowUpReasonMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -436,10 +551,18 @@ export type FollowUpReasonMasterSelectScalar = {
 }
 
 export type FollowUpReasonMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "label" | "displayOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["followUpReasonMaster"]>
+export type FollowUpReasonMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  opdLeads?: boolean | Prisma.FollowUpReasonMaster$opdLeadsArgs<ExtArgs>
+  _count?: boolean | Prisma.FollowUpReasonMasterCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type FollowUpReasonMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type FollowUpReasonMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $FollowUpReasonMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FollowUpReasonMaster"
-  objects: {}
+  objects: {
+    opdLeads: Prisma.$LeadPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     code: string
@@ -842,6 +965,7 @@ readonly fields: FollowUpReasonMasterFieldRefs;
  */
 export interface Prisma__FollowUpReasonMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  opdLeads<T extends Prisma.FollowUpReasonMaster$opdLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FollowUpReasonMaster$opdLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -895,6 +1019,10 @@ export type FollowUpReasonMasterFindUniqueArgs<ExtArgs extends runtime.Types.Ext
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
+  /**
    * Filter, which FollowUpReasonMaster to fetch.
    */
   where: Prisma.FollowUpReasonMasterWhereUniqueInput
@@ -913,6 +1041,10 @@ export type FollowUpReasonMasterFindUniqueOrThrowArgs<ExtArgs extends runtime.Ty
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
+  /**
    * Filter, which FollowUpReasonMaster to fetch.
    */
   where: Prisma.FollowUpReasonMasterWhereUniqueInput
@@ -930,6 +1062,10 @@ export type FollowUpReasonMasterFindFirstArgs<ExtArgs extends runtime.Types.Exte
    * Omit specific fields from the FollowUpReasonMaster
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
   /**
    * Filter, which FollowUpReasonMaster to fetch.
    */
@@ -979,6 +1115,10 @@ export type FollowUpReasonMasterFindFirstOrThrowArgs<ExtArgs extends runtime.Typ
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
+  /**
    * Filter, which FollowUpReasonMaster to fetch.
    */
   where?: Prisma.FollowUpReasonMasterWhereInput
@@ -1026,6 +1166,10 @@ export type FollowUpReasonMasterFindManyArgs<ExtArgs extends runtime.Types.Exten
    * Omit specific fields from the FollowUpReasonMaster
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
   /**
    * Filter, which FollowUpReasonMasters to fetch.
    */
@@ -1075,6 +1219,10 @@ export type FollowUpReasonMasterCreateArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
+  /**
    * The data needed to create a FollowUpReasonMaster.
    */
   data: Prisma.XOR<Prisma.FollowUpReasonMasterCreateInput, Prisma.FollowUpReasonMasterUncheckedCreateInput>
@@ -1122,6 +1270,10 @@ export type FollowUpReasonMasterUpdateArgs<ExtArgs extends runtime.Types.Extensi
    * Omit specific fields from the FollowUpReasonMaster
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
   /**
    * The data needed to update a FollowUpReasonMaster.
    */
@@ -1189,6 +1341,10 @@ export type FollowUpReasonMasterUpsertArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
+  /**
    * The filter to search for the FollowUpReasonMaster to update in case it exists.
    */
   where: Prisma.FollowUpReasonMasterWhereUniqueInput
@@ -1215,6 +1371,10 @@ export type FollowUpReasonMasterDeleteArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
+  /**
    * Filter which FollowUpReasonMaster to delete.
    */
   where: Prisma.FollowUpReasonMasterWhereUniqueInput
@@ -1235,6 +1395,30 @@ export type FollowUpReasonMasterDeleteManyArgs<ExtArgs extends runtime.Types.Ext
 }
 
 /**
+ * FollowUpReasonMaster.opdLeads
+ */
+export type FollowUpReasonMaster$opdLeadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lead
+   */
+  select?: Prisma.LeadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lead
+   */
+  omit?: Prisma.LeadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadInclude<ExtArgs> | null
+  where?: Prisma.LeadWhereInput
+  orderBy?: Prisma.LeadOrderByWithRelationInput | Prisma.LeadOrderByWithRelationInput[]
+  cursor?: Prisma.LeadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
  * FollowUpReasonMaster without action
  */
 export type FollowUpReasonMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1246,4 +1430,8 @@ export type FollowUpReasonMasterDefaultArgs<ExtArgs extends runtime.Types.Extens
    * Omit specific fields from the FollowUpReasonMaster
    */
   omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
 }
