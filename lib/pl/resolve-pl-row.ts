@@ -54,6 +54,7 @@ export type ResolvedPlRow = {
   hospital: string | null
   admission: Date | null
   surgery: Date | null
+  discharge: Date | null
   paymentType: string | null
   status: string | null
   totalBill: number | null
@@ -122,6 +123,11 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
     admission?.admissionDate,
     record.arrivalDate
   )
+  const dischargeDate = pickDate(
+    ds?.dischargeDate,
+    pl?.dischargeDate,
+    admission?.ipdDischargeDate,
+  )
   const monthDate = pickDate(pl?.month, ds?.month) ?? firstOfMonth(surgery) ?? firstOfMonth(admissionDate)
 
   let managerName = pickString(
@@ -170,6 +176,7 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
     hospital: resolvedHospital,
     admission: admissionDate,
     surgery,
+    discharge: dischargeDate,
     paymentType: resolvedPaymentType,
     status: pickString(pl?.status, ds?.status, record.caseStage),
     totalBill: pickNumber(pl?.billAmount, ds?.totalFinalBill, record.billAmount),

@@ -42,6 +42,7 @@ export function getDoctorScopedLeadWhere(doctorName: string): Prisma.LeadWhereIn
   return {
     OR: [
       { opdDrName: { equals: doctorName, mode: 'insensitive' } },
+      { opdAppointments: { some: { doctorName: { equals: doctorName, mode: 'insensitive' } } } },
       { ipdDrName: { equals: doctorName, mode: 'insensitive' } },
       { surgeonName: { equals: doctorName, mode: 'insensitive' } },
     ],

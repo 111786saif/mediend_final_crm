@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Prisma, ComplianceCallStatus, ReviewStatus } from '@/generated/prisma/client'
+import { Prisma, ComplianceCallStatus, ReviewStatus, SatisfactionLevel } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -61,6 +61,8 @@ export async function GET(request: NextRequest) {
       statusGroups,
       reviewDoneCount,
       reviewNotDoneCount,
+      satisfiedCount,
+      notSatisfiedCount,
       ratingGroups,
       aggregate,
       dischargesToday,
@@ -76,6 +78,20 @@ export async function GET(request: NextRequest) {
       }),
       prisma.complianceCall.count({
         where: { ...baseWhere, reviewStatus: ReviewStatus.NOT_DONE },
+      }),
+      prisma.complianceCall.count({
+        where: {
+          ...baseWhere,
+          status: ComplianceCallStatus.COMPLETED,
+          satisfaction: SatisfactionLevel.SATISFIED,
+        },
+      }),
+      prisma.complianceCall.count({
+        where: {
+          ...baseWhere,
+          status: ComplianceCallStatus.COMPLETED,
+          satisfaction: SatisfactionLevel.NOT_SATISFIED,
+        },
       }),
       prisma.complianceCall.groupBy({
         by: ['rating'],
@@ -114,6 +130,8 @@ export async function GET(request: NextRequest) {
       dnpCount: statusCount(ComplianceCallStatus.DID_NOT_PICK),
       reviewDoneCount,
       reviewNotDoneCount,
+      satisfiedCount,
+      notSatisfiedCount,
       // Legacy fields kept for MD dashboard compatibility
       pending: statusCount(ComplianceCallStatus.PENDING),
       totalCompleted: aggregate._count._all,

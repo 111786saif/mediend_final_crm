@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useMemo, useState, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
+import { format } from "date-fns"
 import {
   Building2,
   CheckCircle2,
@@ -10,16 +11,20 @@ import {
   ClipboardX,
   Clock3,
   Filter,
+  Pencil,
   PhoneCall,
   PhoneOff,
   Scissors,
   Search,
   Stethoscope,
+  ThumbsDown,
+  ThumbsUp,
   UserRound,
   X,
   type LucideIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { resolveLeadHospitalDoctor } from "@/lib/lead-display"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -32,11 +37,21 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  CONCERN_CATEGORY_LABEL,
   useComplianceCalls,
   useComplianceFilterOptions,
   useComplianceStats,
   type ComplianceCall,
   type ComplianceCallStatus,
+  type SatisfactionLevel,
 } from "@/hooks/use-compliance-calls"
 import { ComplianceCallRow } from "./compliance-call-row"
 import { ComplianceFeedbackDrawer } from "./compliance-feedback-drawer"
@@ -44,6 +59,13 @@ import { ComplianceFeedbackDrawer } from "./compliance-feedback-drawer"
 const ALL = "ALL"
 
 type StatusFilter = "ALL" | ComplianceCallStatus
+
+type SatisfactionFilter = SatisfactionLevel | null
+
+const SATISFACTION_LABEL: Record<Exclude<SatisfactionLevel, "NEUTRAL">, string> = {
+  SATISFIED: "Satisfied",
+  NOT_SATISFIED: "Not satisfied",
+}
 
 const FILTERS: {
   value: StatusFilter
@@ -137,6 +159,7 @@ function currentMonthValue() {
 
 export function ComplianceOfficerDashboard() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL")
+  const [satisfactionFilter, setSatisfactionFilter] = useState<SatisfactionFilter>(null)
   const [monthFilter, setMonthFilter] = useState<string>(() => currentMonthValue())
   const [hospitalFilter, setHospitalFilter] = useState<string>(ALL)
   const [doctorFilter, setDoctorFilter] = useState<string>(ALL)
@@ -145,6 +168,7 @@ export function ComplianceOfficerDashboard() {
   const [debouncedSearch, setDebouncedSearch] = useState("")
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [editing, setEditing] = useState<ComplianceCall | null>(null)
+  const satisfactionTableRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(searchInput.trim()), 300)
@@ -164,17 +188,51 @@ export function ComplianceOfficerDashboard() {
     dischargeEnd: dischargeRange?.end ?? null,
   })
 
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useComplianceCalls({
-      status: statusFilter === "ALL" ? null : statusFilter,
-      sort: "discharge",
+  const sharedCallFilters = useMemo(
+    () => ({
+      sort: "discharge" as const,
       dischargeStart: dischargeRange?.start ?? null,
       dischargeEnd: dischargeRange?.end ?? null,
       q: debouncedSearch || null,
       hospitalName: hospitalFilter === ALL ? null : hospitalFilter,
       surgeonName: doctorFilter === ALL ? null : doctorFilter,
       bdId: bdFilter === ALL ? null : bdFilter,
+    }),
+    [
+      dischargeRange,
+      debouncedSearch,
+      hospitalFilter,
+      doctorFilter,
+      bdFilter,
+    ],
+  )
+
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useComplianceCalls({
+      status: statusFilter === "ALL" ? null : statusFilter,
+      ...sharedCallFilters,
     })
+
+  const {
+    data: satisfactionData,
+    isLoading: satisfactionLoading,
+    isError: satisfactionError,
+    fetchNextPage: fetchNextSatisfactionPage,
+    hasNextPage: hasNextSatisfactionPage,
+    isFetchingNextPage: isFetchingNextSatisfactionPage,
+  } = useComplianceCalls(
+    {
+      status: "COMPLETED",
+      satisfaction: satisfactionFilter,
+      ...sharedCallFilters,
+    },
+    { enabled: satisfactionFilter != null },
+  )
+
+  const satisfactionCalls = useMemo(
+    () => satisfactionData?.pages.flatMap((p) => p.calls) ?? [],
+    [satisfactionData],
+  )
 
   const allCalls = useMemo(
     () => data?.pages.flatMap((p) => p.calls) ?? [],
@@ -210,6 +268,14 @@ export function ComplianceOfficerDashboard() {
     setDoctorFilter(ALL)
     setBdFilter(ALL)
     setMonthFilter(currentMonthValue())
+    setSatisfactionFilter(null)
+  }
+
+  const toggleSatisfactionFilter = (value: Exclude<SatisfactionLevel, "NEUTRAL">) => {
+    setSatisfactionFilter((current) => (current === value ? null : value))
+    requestAnimationFrame(() => {
+      satisfactionTableRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    })
   }
 
   const totalTracked =
@@ -253,7 +319,7 @@ export function ComplianceOfficerDashboard() {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-8">
           <HeroMetricCard
             label="Total surgeries"
             value={stats?.totalSurgeries ?? 0}
@@ -283,6 +349,24 @@ export function ComplianceOfficerDashboard() {
             tone="orange"
           />
           <HeroMetricCard
+            label="Satisfied"
+            value={stats?.satisfiedCount ?? 0}
+            hint="Click to view list"
+            icon={ThumbsUp}
+            tone="emerald"
+            active={satisfactionFilter === "SATISFIED"}
+            onClick={() => toggleSatisfactionFilter("SATISFIED")}
+          />
+          <HeroMetricCard
+            label="Not satisfied"
+            value={stats?.notSatisfiedCount ?? 0}
+            hint="Click to view list"
+            icon={ThumbsDown}
+            tone="rose"
+            active={satisfactionFilter === "NOT_SATISFIED"}
+            onClick={() => toggleSatisfactionFilter("NOT_SATISFIED")}
+          />
+          <HeroMetricCard
             label="Review done"
             value={stats?.reviewDoneCount ?? 0}
             hint="Google review posted"
@@ -298,6 +382,133 @@ export function ComplianceOfficerDashboard() {
           />
         </div>
       </section>
+
+      {satisfactionFilter && (
+        <div ref={satisfactionTableRef}>
+          <Card className="overflow-hidden border-slate-200/80 bg-white/95 shadow-sm dark:border-slate-800 dark:bg-slate-950/75">
+            <CardContent className="px-0 pt-0">
+              <div className="border-b border-slate-200/80 bg-slate-50/70 px-5 py-4 dark:border-slate-800 dark:bg-slate-900/60">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                      {SATISFACTION_LABEL[satisfactionFilter]} patients
+                    </h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      {selectedMonthLabel} · Completed calls with{" "}
+                      {SATISFACTION_LABEL[satisfactionFilter].toLowerCase()} feedback
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full"
+                    onClick={() => setSatisfactionFilter(null)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+
+              {satisfactionLoading ? (
+                <DashboardMessage
+                  title="Loading patients"
+                  body="Fetching satisfaction details…"
+                />
+              ) : satisfactionError ? (
+                <DashboardMessage
+                  title="Failed to load patients"
+                  body="Refresh the page to try again."
+                  tone="error"
+                />
+              ) : satisfactionCalls.length === 0 ? (
+                <DashboardMessage
+                  title="No patients found"
+                  body={`No ${SATISFACTION_LABEL[satisfactionFilter].toLowerCase()} records for the selected filters.`}
+                />
+              ) : (
+                <>
+                  <div className="max-h-[min(60vh,560px)] overflow-auto">
+                    <Table>
+                      <TableHeader className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-900">
+                        <TableRow>
+                          <TableHead className="w-12 text-center">S.No</TableHead>
+                          <TableHead>Patient name</TableHead>
+                          <TableHead>Contact</TableHead>
+                          <TableHead>Hospital</TableHead>
+                          <TableHead>Doctor</TableHead>
+                          <TableHead>BD</TableHead>
+                          <TableHead>Discharge date</TableHead>
+                          <TableHead className="text-center">Rating</TableHead>
+                          <TableHead>Concern categories</TableHead>
+                          <TableHead className="w-20 text-center">Action</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {satisfactionCalls.map((call, index) => {
+                          const { hospital, doctor } = resolveLeadHospitalDoctor(call.lead)
+                          const dischargeDate = call.lead.dischargeSheet?.dischargeDate
+                          const concerns = call.concernCategories
+                            .map((c) => CONCERN_CATEGORY_LABEL[c])
+                            .join(", ")
+
+                          return (
+                            <TableRow key={call.id}>
+                              <TableCell className="text-center tabular-nums">{index + 1}</TableCell>
+                              <TableCell className="font-medium">{call.lead.patientName}</TableCell>
+                              <TableCell className="tabular-nums">{call.lead.phoneNumber || "—"}</TableCell>
+                              <TableCell>{hospital || "—"}</TableCell>
+                              <TableCell>{doctor || "—"}</TableCell>
+                              <TableCell>{call.lead.bd?.name ?? "—"}</TableCell>
+                              <TableCell className="whitespace-nowrap">
+                                {dischargeDate
+                                  ? format(new Date(dischargeDate), "dd MMM yyyy")
+                                  : "—"}
+                              </TableCell>
+                              <TableCell className="text-center tabular-nums">
+                                {call.rating ?? "—"}
+                              </TableCell>
+                              <TableCell className="max-w-[220px] text-sm text-muted-foreground">
+                                {concerns || "—"}
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 rounded-full"
+                                  onClick={() => setEditing(call)}
+                                  aria-label="Edit feedback"
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  {hasNextSatisfactionPage && (
+                    <div className="border-t border-slate-200/80 bg-slate-50/70 px-5 py-4 text-center dark:border-slate-800 dark:bg-slate-900/40">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => fetchNextSatisfactionPage()}
+                        disabled={isFetchingNextSatisfactionPage}
+                        className="rounded-full px-5"
+                      >
+                        {isFetchingNextSatisfactionPage ? "Loading more…" : "Load more"}
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <Card className="border-slate-200/80 bg-white/90 shadow-sm dark:border-slate-800 dark:bg-slate-950/70">
         <CardContent className="space-y-5 pt-6">
@@ -570,12 +781,16 @@ function HeroMetricCard({
   hint,
   icon: Icon,
   tone,
+  active = false,
+  onClick,
 }: {
   label: string
   value: number
   hint: string
   icon: LucideIcon
   tone: "emerald" | "sky" | "amber" | "slate" | "orange" | "rose"
+  active?: boolean
+  onClick?: () => void
 }) {
   const toneClasses = {
     emerald: "border-emerald-200/80 bg-white/80 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/20 dark:text-emerald-200",
@@ -586,8 +801,15 @@ function HeroMetricCard({
     rose: "border-rose-200/80 bg-white/80 text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/20 dark:text-rose-200",
   } as const
 
-  return (
-    <div className={cn("rounded-2xl border p-4 shadow-sm backdrop-blur", toneClasses[tone])}>
+  const className = cn(
+    "rounded-2xl border p-4 shadow-sm backdrop-blur transition-all",
+    toneClasses[tone],
+    onClick && "cursor-pointer hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40",
+    active && "ring-2 ring-emerald-500/50 shadow-md",
+  )
+
+  const content = (
+    <>
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-current/70">
@@ -602,8 +824,18 @@ function HeroMetricCard({
           <Icon className="h-4 w-4" />
         </div>
       </div>
-    </div>
+    </>
   )
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={className}>
+        {content}
+      </button>
+    )
+  }
+
+  return <div className={className}>{content}</div>
 }
 
 function FilterField({

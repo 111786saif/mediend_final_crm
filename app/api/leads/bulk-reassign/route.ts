@@ -12,6 +12,10 @@ import { getSessionFromRequest } from '@/lib/session'
 
 export const runtime = 'nodejs'
 
+function canAccessBulkReassign(role: string) {
+  return role !== 'BD' && role !== 'USER'
+}
+
 type SubStatusOption = {
   key: number
   value: string
@@ -56,6 +60,10 @@ export async function GET(request: NextRequest) {
     return unauthorizedResponse()
   }
 
+  if (!canAccessBulkReassign(user.role)) {
+    return errorResponse('Forbidden', 403)
+  }
+
   if (user.role !== 'SUPER_ADMIN' && !hasPermission(user, 'leads:read')) {
     return errorResponse('Forbidden', 403)
   }
@@ -84,6 +92,10 @@ export async function POST(request: NextRequest) {
     const user = getSessionFromRequest(request)
     if (!user) {
       return unauthorizedResponse()
+    }
+
+    if (!canAccessBulkReassign(user.role)) {
+      return errorResponse('Forbidden', 403)
     }
 
     if (user.role !== 'SUPER_ADMIN' && !hasPermission(user, 'leads:write')) {

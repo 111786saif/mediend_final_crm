@@ -59,8 +59,6 @@ const ipdSurgeryUpdateSchema = z
     ipdAdmissionDate: nullableOptionalStringField('IPD admission date'),
     admissionTime: nullableOptionalStringField('Admission time'),
     ipdHospital: optionalStringField('IPD hospital'),
-    ipdDrName: optionalStringField('IPD doctor name'),
-    ipdContactNo: optionalStringField('IPD contact number'),
     surgeryDate: nullableOptionalStringField('Surgery date'),
     operationTime: nullableOptionalStringField('Operation time'),
     hospitalAddress: nullableOptionalStringField('Hospital address'),
@@ -119,6 +117,23 @@ const ipdSurgeryUpdateSchema = z
       })
     }
   })
+
+const forbiddenIpdFields = ['ipdDrName', 'ipdContactNo'] as const
+
+function assertNoForbiddenFields(
+  payload: unknown,
+  fields: readonly string[],
+  message: string
+) {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    return
+  }
+
+  const hasForbiddenField = fields.some((field) => field in payload)
+  if (hasForbiddenField) {
+    throw new DoctorAppApiError(message, 400)
+  }
+}
 
 function getOptionalFormValue(formData: FormData, key: string) {
   const value = formData.get(key)
@@ -240,8 +255,6 @@ function parseMultipartPayload(formData: FormData) {
     ipdAdmissionDate: getOptionalFormValue(formData, 'ipdAdmissionDate'),
     admissionTime: getOptionalFormValue(formData, 'admissionTime'),
     ipdHospital: getOptionalFormValue(formData, 'ipdHospital'),
-    ipdDrName: getOptionalFormValue(formData, 'ipdDrName'),
-    ipdContactNo: getOptionalFormValue(formData, 'ipdContactNo'),
     surgeryDate: getOptionalFormValue(formData, 'surgeryDate'),
     operationTime: getOptionalFormValue(formData, 'operationTime'),
     hospitalAddress: getOptionalFormValue(formData, 'hospitalAddress'),
@@ -262,6 +275,12 @@ function parseMultipartPayload(formData: FormData) {
     ...parsePrescriptionImageUrls(formData),
   }
 
+  assertNoForbiddenFields(
+    Object.fromEntries(formData.entries()),
+    forbiddenIpdFields,
+    'Doctors cannot update IPD doctor name or contact number.'
+  )
+
   return {
     ...ipdSurgeryUpdateSchema.parse(payload),
     prescriptionImages: files,
@@ -280,9 +299,18 @@ export async function PUT(
 
     const { id } = await params
     const contentType = request.headers.get('content-type') || ''
-    const input = contentType.includes('multipart/form-data')
-      ? parseMultipartPayload(await request.formData())
-      : ipdSurgeryUpdateSchema.parse(await request.json())
+    let input
+    if (contentType.includes('multipart/form-data')) {
+      input = parseMultipartPayload(await request.formData())
+    } else {
+      const payload = await request.json()
+      assertNoForbiddenFields(
+        payload,
+        forbiddenIpdFields,
+        'Doctors cannot update IPD doctor name or contact number.'
+      )
+      input = ipdSurgeryUpdateSchema.parse(payload)
+    }
     const result = await updateDoctorIpdAppointment(session, id, input)
 
     return successResponse(result, 'IPD surgery updated')

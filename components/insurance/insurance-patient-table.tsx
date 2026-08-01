@@ -33,6 +33,7 @@ import {
 import { getStatusBadgeClass } from '@/lib/pl/status-colors'
 import { cn } from '@/lib/utils'
 import { Settings2 } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 const LS_COLUMNS = 'insurance-dashboard-column-visibility-v1'
 
@@ -72,6 +73,7 @@ const INSURANCE_TABLE_COLUMNS: { id: string; label: string }[] = [
   { id: 'hospital', label: 'Hospital' },
   { id: 'admissionDate', label: 'Admission date' },
   { id: 'surgeryDate', label: 'Surgery date' },
+  { id: 'dischargeDate', label: 'Discharge date' },
   { id: 'paymentType', label: 'Payment type' },
   { id: 'dischargeSheetFillStatus', label: 'Filled Discharge Sheet Status' },
   { id: 'status', label: 'Status' },
@@ -111,10 +113,13 @@ export type InsuranceTableLead = Record<string, unknown> & {
 
 type InsurancePatientTableProps = {
   leads: InsuranceTableLead[]
+  /** When set, column filters are also applied to these leads for KPI callbacks. */
+  kpiLeads?: InsuranceTableLead[]
   isLoading?: boolean
   emptyMessage?: string
   onRowClick: (lead: InsuranceTableLead) => void
   renderActions?: (lead: InsuranceTableLead) => React.ReactNode
+  onFilteredLeadsChange?: (leads: InsuranceTableLead[]) => void
 }
 
 function matchesDateRange(value: unknown, range: string[]): boolean {
@@ -138,12 +143,109 @@ function matchesNumberRange(value: unknown, range: { min: number | null; max: nu
   return true
 }
 
+function TruncatedTextCell({ text, className }: { text: string | null | undefined; className?: string }) {
+  const value = text?.trim() || ''
+  if (!value) return <>—</>
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className={cn('block max-w-[180px] truncate', className)} title={value}>
+          {value}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-sm whitespace-normal break-words text-left">
+        {value}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+function applyInsuranceTableFilters(
+  leads: InsuranceTableLead[],
+  filters: {
+    tableMonthFilter: string[]
+    bdFilter: string[]
+    hospitalFilter: string[]
+    doctorFilter: string[]
+    categoryFilter: string[]
+    circleFilter: string[]
+    paymentTypeFilter: string[]
+    sheetFillFilter: string[]
+    statusFilter: string[]
+    patientFilter: string
+    treatmentFilter: string
+    admissionDateFilter: string[]
+    surgeryDateFilter: string[]
+    dischargeDateFilter: string[]
+    totalBillFilter: { min: number | null; max: number | null } | null
+    approvedAmountFilter: { min: number | null; max: number | null } | null
+  },
+) {
+  return leads.filter((row) => {
+    const resolved = resolvePlRow(row)
+    const fillStatus = getDischargeSheetFillStatus(row)
+
+    if (filters.tableMonthFilter.length > 0) {
+      const rowMonth = resolved.month
+      if (!rowMonth) return false
+      const key = `${rowMonth.getFullYear()}-${String(rowMonth.getMonth() + 1).padStart(2, '0')}`
+      if (!filters.tableMonthFilter.includes(key)) return false
+    }
+
+    if (filters.bdFilter.length > 0 && (!resolved.bdm || !filters.bdFilter.includes(resolved.bdm))) return false
+    if (filters.hospitalFilter.length > 0 && (!resolved.hospital || !filters.hospitalFilter.includes(resolved.hospital))) {
+      return false
+    }
+    if (filters.doctorFilter.length > 0 && (!resolved.doctor || !filters.doctorFilter.includes(resolved.doctor))) return false
+    if (filters.categoryFilter.length > 0 && (!resolved.category || !filters.categoryFilter.includes(resolved.category))) {
+      return false
+    }
+    if (filters.circleFilter.length > 0) {
+      const circle = row.circle as string | null | undefined
+      if (!circle || !filters.circleFilter.includes(circle)) return false
+    }
+    if (
+      filters.paymentTypeFilter.length > 0 &&
+      (!resolved.paymentType || !filters.paymentTypeFilter.includes(resolved.paymentType))
+    ) {
+      return false
+    }
+    if (filters.sheetFillFilter.length > 0 && !filters.sheetFillFilter.includes(fillStatus)) return false
+    if (
+      filters.statusFilter.length > 0 &&
+      (!resolved.status || !filters.statusFilter.includes(resolved.status))
+    ) {
+      return false
+    }
+
+    if (filters.patientFilter.trim()) {
+      const q = filters.patientFilter.trim().toLowerCase()
+      if (!(resolved.patient || '').toLowerCase().includes(q)) return false
+    }
+    if (filters.treatmentFilter.trim()) {
+      const q = filters.treatmentFilter.trim().toLowerCase()
+      if (!(resolved.treatment || '').toLowerCase().includes(q)) return false
+    }
+
+    if (!matchesDateRange(resolved.admission, filters.admissionDateFilter)) return false
+    if (!matchesDateRange(resolved.surgery, filters.surgeryDateFilter)) return false
+    if (!matchesDateRange(resolved.discharge, filters.dischargeDateFilter)) return false
+    if (!matchesNumberRange(resolved.totalBill, filters.totalBillFilter)) return false
+    if (!matchesNumberRange(resolved.approvedAmount, filters.approvedAmountFilter)) return false
+
+    return true
+  })
+}
+
 export function InsurancePatientTable({
   leads,
+  kpiLeads,
   isLoading = false,
   emptyMessage = 'No cases found',
   onRowClick,
   renderActions,
+  onFilteredLeadsChange,
 }: InsurancePatientTableProps) {
   const [visibleCols, setVisibleCols] = useState<Record<string, boolean>>(DEFAULT_COLS)
   const [tableMonthFilter, setTableMonthFilter] = useState<string[]>([])
@@ -154,10 +256,12 @@ export function InsurancePatientTable({
   const [circleFilter, setCircleFilter] = useState<string[]>([])
   const [paymentTypeFilter, setPaymentTypeFilter] = useState<string[]>([])
   const [sheetFillFilter, setSheetFillFilter] = useState<string[]>([])
+  const [statusFilter, setStatusFilter] = useState<string[]>([])
   const [treatmentFilter, setTreatmentFilter] = useState('')
   const [patientFilter, setPatientFilter] = useState('')
   const [admissionDateFilter, setAdmissionDateFilter] = useState<string[]>([])
   const [surgeryDateFilter, setSurgeryDateFilter] = useState<string[]>([])
+  const [dischargeDateFilter, setDischargeDateFilter] = useState<string[]>([])
   const [totalBillFilter, setTotalBillFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [approvedAmountFilter, setApprovedAmountFilter] = useState<{ min: number | null; max: number | null } | null>(
     null,
@@ -223,46 +327,35 @@ export function InsurancePatientTable({
     [],
   )
 
+  const statusOptions = useMemo(() => {
+    const values = new Set<string>()
+    for (const row of leads) {
+      const status = resolvePlRow(row).status
+      if (status) values.add(status)
+    }
+    return Array.from(values)
+      .sort((a, b) => a.localeCompare(b))
+      .map((value) => ({ label: value, value }))
+  }, [leads])
+
   const filteredLeads = useMemo(() => {
-    return leads.filter((row) => {
-      const resolved = resolvePlRow(row)
-      const fillStatus = getDischargeSheetFillStatus(row)
-
-      if (tableMonthFilter.length > 0) {
-        const rowMonth = resolved.month
-        if (!rowMonth) return false
-        const key = `${rowMonth.getFullYear()}-${String(rowMonth.getMonth() + 1).padStart(2, '0')}`
-        if (!tableMonthFilter.includes(key)) return false
-      }
-
-      if (bdFilter.length > 0 && (!resolved.bdm || !bdFilter.includes(resolved.bdm))) return false
-      if (hospitalFilter.length > 0 && (!resolved.hospital || !hospitalFilter.includes(resolved.hospital))) return false
-      if (doctorFilter.length > 0 && (!resolved.doctor || !doctorFilter.includes(resolved.doctor))) return false
-      if (categoryFilter.length > 0 && (!resolved.category || !categoryFilter.includes(resolved.category))) return false
-      if (circleFilter.length > 0) {
-        const circle = row.circle as string | null | undefined
-        if (!circle || !circleFilter.includes(circle)) return false
-      }
-      if (paymentTypeFilter.length > 0 && (!resolved.paymentType || !paymentTypeFilter.includes(resolved.paymentType))) {
-        return false
-      }
-      if (sheetFillFilter.length > 0 && !sheetFillFilter.includes(fillStatus)) return false
-
-      if (patientFilter.trim()) {
-        const q = patientFilter.trim().toLowerCase()
-        if (!(resolved.patient || '').toLowerCase().includes(q)) return false
-      }
-      if (treatmentFilter.trim()) {
-        const q = treatmentFilter.trim().toLowerCase()
-        if (!(resolved.treatment || '').toLowerCase().includes(q)) return false
-      }
-
-      if (!matchesDateRange(resolved.admission, admissionDateFilter)) return false
-      if (!matchesDateRange(resolved.surgery, surgeryDateFilter)) return false
-      if (!matchesNumberRange(resolved.totalBill, totalBillFilter)) return false
-      if (!matchesNumberRange(resolved.approvedAmount, approvedAmountFilter)) return false
-
-      return true
+    return applyInsuranceTableFilters(leads, {
+      tableMonthFilter,
+      bdFilter,
+      hospitalFilter,
+      doctorFilter,
+      categoryFilter,
+      circleFilter,
+      paymentTypeFilter,
+      sheetFillFilter,
+      statusFilter,
+      patientFilter,
+      treatmentFilter,
+      admissionDateFilter,
+      surgeryDateFilter,
+      dischargeDateFilter,
+      totalBillFilter,
+      approvedAmountFilter,
     })
   }, [
     leads,
@@ -274,13 +367,60 @@ export function InsurancePatientTable({
     circleFilter,
     paymentTypeFilter,
     sheetFillFilter,
+    statusFilter,
     patientFilter,
     treatmentFilter,
     admissionDateFilter,
     surgeryDateFilter,
+    dischargeDateFilter,
     totalBillFilter,
     approvedAmountFilter,
   ])
+
+  const filteredKpiLeads = useMemo(() => {
+    const source = kpiLeads ?? leads
+    return applyInsuranceTableFilters(source, {
+      tableMonthFilter,
+      bdFilter,
+      hospitalFilter,
+      doctorFilter,
+      categoryFilter,
+      circleFilter,
+      paymentTypeFilter,
+      sheetFillFilter,
+      statusFilter,
+      patientFilter,
+      treatmentFilter,
+      admissionDateFilter,
+      surgeryDateFilter,
+      dischargeDateFilter,
+      totalBillFilter,
+      approvedAmountFilter,
+    })
+  }, [
+    kpiLeads,
+    leads,
+    tableMonthFilter,
+    bdFilter,
+    hospitalFilter,
+    doctorFilter,
+    categoryFilter,
+    circleFilter,
+    paymentTypeFilter,
+    sheetFillFilter,
+    statusFilter,
+    patientFilter,
+    treatmentFilter,
+    admissionDateFilter,
+    surgeryDateFilter,
+    dischargeDateFilter,
+    totalBillFilter,
+    approvedAmountFilter,
+  ])
+
+  useEffect(() => {
+    onFilteredLeadsChange?.(filteredKpiLeads)
+  }, [filteredKpiLeads, onFilteredLeadsChange])
 
   const columns = useMemo<ColumnDef<InsuranceTableLead>[]>(
     () => [
@@ -407,7 +547,7 @@ export function InsurancePatientTable({
           </div>
         ),
         accessorFn: (row) => resolvePlRow(row).doctor,
-        cell: ({ getValue }) => (getValue() as string) || '—',
+        cell: ({ getValue }) => <TruncatedTextCell text={getValue() as string} />,
       },
       {
         id: 'hospital',
@@ -418,7 +558,7 @@ export function InsurancePatientTable({
           </div>
         ),
         accessorFn: (row) => resolvePlRow(row).hospital,
-        cell: ({ getValue }) => (getValue() as string) || '—',
+        cell: ({ getValue }) => <TruncatedTextCell text={getValue() as string} />,
       },
       {
         id: 'admissionDate',
@@ -435,11 +575,22 @@ export function InsurancePatientTable({
         id: 'surgeryDate',
         header: () => (
           <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-            <span>Surgery</span>
+            <span>Surgery date</span>
             <ColumnFilter value={surgeryDateFilter} onChange={setSurgeryDateFilter} type="dateRange" />
           </div>
         ),
         accessorFn: (row) => resolvePlRow(row).surgery,
+        cell: ({ getValue }) => formatPlDate(getValue() as Date | null),
+      },
+      {
+        id: 'dischargeDate',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Discharge date</span>
+            <ColumnFilter value={dischargeDateFilter} onChange={setDischargeDateFilter} type="dateRange" />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row).discharge,
         cell: ({ getValue }) => formatPlDate(getValue() as Date | null),
       },
       {
@@ -473,13 +624,18 @@ export function InsurancePatientTable({
       },
       {
         id: 'status',
-        header: 'Status',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Status</span>
+            <ColumnFilter options={statusOptions} value={statusFilter} onChange={setStatusFilter} type="multiSelect" />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row).status,
         cell: ({ getValue }) => {
           const val = getValue() as string
           if (!val) return '—'
           return (
-            <Badge variant="outline" className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap', getStatusBadgeClass(val, 'case'))}>
+            <Badge variant="outline" className={cn('max-w-[160px] truncate text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap', getStatusBadgeClass(val, 'case'))}>
               {val}
             </Badge>
           )
@@ -546,10 +702,13 @@ export function InsurancePatientTable({
       paymentTypeFilter,
       sheetFillFilter,
       sheetFillOptions,
+      statusFilter,
+      statusOptions,
       patientFilter,
       treatmentFilter,
       admissionDateFilter,
       surgeryDateFilter,
+      dischargeDateFilter,
       totalBillFilter,
       approvedAmountFilter,
       renderActions,

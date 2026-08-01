@@ -1,10 +1,11 @@
-import { IpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
+import { LeadOpdStatus, Prisma } from '@/generated/prisma/client'
 import type { SessionUser } from '@/lib/auth'
-import { hasLeadOpdDone } from '@/lib/lead-opd-workflow'
+import { buildEffectiveOpdEntries, type EffectiveOpdEntry } from '@/lib/lead-opd-appointments'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
+import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 import { prisma } from '@/lib/prisma'
 
-const SALES_OPD_MONITORING_ROLES = new Set([
+const SALES_OPD_MONITORING_ROLES = new Set<string>([
   'SUPER_ADMIN',
   'ADMIN',
   'MD',
@@ -24,25 +25,60 @@ const opdMonitoringLeadSelect = {
   phoneNumber: true,
   whatsapp: true,
   status: true,
-  pipelineStage: true,
-  lostAt: true,
+  hospitalName: true,
+  surgeonName: true,
   followUpDate: true,
   surgeryDate: true,
+  updatedDate: true,
   opdHospital: true,
   opdDrName: true,
+  opdContactNo: true,
+  opdCharges: true,
   opdScheduleDate: true,
-  updatedDate: true,
+  opdMeeting: true,
+  opdSurgeryAdvised: true,
+  opdSurgeryRemarkCode: true,
+  opdReasonNoSurgeryCode: true,
+  opdFollowUpReasonCode: true,
+  opdImplantRequired: true,
+  opdDiagnosis: true,
+  opdSurgeryRemark: {
+    select: {
+      code: true,
+      label: true,
+    },
+  },
+  opdReasonNoSurgery: {
+    select: {
+      code: true,
+      label: true,
+    },
+  },
+  opdFollowUpReason: {
+    select: {
+      code: true,
+      label: true,
+    },
+  },
+  opdPrescriptionImages: {
+    orderBy: [{ sortOrder: 'asc' as const }, { createdAt: 'asc' as const }],
+    select: {
+      id: true,
+      fileName: true,
+      fileUrl: true,
+      storageKey: true,
+      sortOrder: true,
+    },
+  },
+  opdAppointments: {
+    orderBy: [{ phase: 'asc' as const }, { slot: 'asc' as const }, { scheduleDate: 'asc' as const }],
+    select: leadOpdAppointmentSelect,
+  },
   bdId: true,
   bd: {
     select: {
       id: true,
       name: true,
-    },
-  },
-  admissionRecord: {
-    select: {
-      id: true,
-      ipdStatus: true,
     },
   },
 } satisfies Prisma.LeadSelect
@@ -54,6 +90,21 @@ type OpdMonitoringLead = Prisma.LeadGetPayload<{
 type DateRange = {
   start: Date | null
   end: Date | null
+}
+
+type MonitoringAppointment = {
+  id: string
+  leadId: string
+  leadRef: string
+  patientName: string
+  phoneNumber: string | null
+  whatsapp: string | null
+  doctorName: string
+  hospitalName: string
+  appointmentDate: Date | string | null
+  statusKey: 'scheduled' | 'done' | 'cancelled' | 'no_show'
+  statusLabel: 'Scheduled' | 'Done' | 'Cancelled' | 'No Show'
+  bdName: string | null
 }
 
 export type SalesOpdMonitoringFilters =
@@ -124,7 +175,7 @@ function buildRange(startDate?: string, endDate?: string): DateRange {
   return { start, end }
 }
 
-function isWithinRange(value: Date | null | undefined, range: DateRange) {
+function isWithinRange(value: Date | string | null | undefined, range: DateRange) {
   if (!value) return false
   if (!range.start && !range.end) return true
 
@@ -134,7 +185,7 @@ function isWithinRange(value: Date | null | undefined, range: DateRange) {
   return true
 }
 
-function isSameDay(value: Date | null | undefined, date: Date | null) {
+function isSameDay(value: Date | string | null | undefined, date: Date | null) {
   if (!value || !date) return false
   const a = new Date(value)
   return (
@@ -144,75 +195,73 @@ function isSameDay(value: Date | null | undefined, date: Date | null) {
   )
 }
 
-function isNoShowLead(lead: OpdMonitoringLead) {
-  const status = normalizeText(lead.status)
-  return ['no show', 'no-show', 'no_show', 'noshow'].includes(status)
-}
-
-function isCancelledLead(lead: OpdMonitoringLead) {
-  const status = normalizeText(lead.status)
-  return lead.admissionRecord?.ipdStatus === IpdStatus.CANCELLED || status.includes('cancel')
-}
-
-function isLostLead(lead: OpdMonitoringLead) {
-  const status = normalizeText(lead.status)
-  return (
-    lead.pipelineStage === PipelineStage.LOST ||
-    Boolean(lead.lostAt) ||
-    [
-      'lost',
-      'ipd lost',
-      'junk',
-      'invalid number',
-      'fund issues',
-      'not interested',
-      'duplicate lead',
-      'language barrier',
-    ].includes(status)
-  )
-}
-
-function getAppointmentDate(lead: OpdMonitoringLead) {
-  return lead.opdScheduleDate || lead.followUpDate || lead.surgeryDate || lead.updatedDate
-}
-
-function getAppointmentStatusKey(lead: OpdMonitoringLead) {
-  if (isNoShowLead(lead)) return 'no_show'
-  if (isCancelledLead(lead) || isLostLead(lead)) return 'cancelled'
-  if (hasLeadOpdDone(lead)) return 'done'
-  return 'scheduled'
-}
-
-function getAppointmentDisplayStatus(lead: OpdMonitoringLead) {
-  const key = getAppointmentStatusKey(lead)
-  if (key === 'no_show') return 'No Show'
-  if (key === 'cancelled') return 'Cancelled'
-  if (key === 'done') return 'Done'
-  return 'Scheduled'
-}
-
-function matchesDoctorName(lead: OpdMonitoringLead, doctorName?: string) {
-  if (!doctorName?.trim()) return true
-  return normalizeText(lead.opdDrName) === normalizeText(doctorName)
-}
-
-function mapMonitoringItem(lead: OpdMonitoringLead) {
-  return {
-    id: lead.id,
-    leadRef: lead.leadRef,
-    patientName: lead.patientName,
-    phoneNumber: lead.phoneNumber,
-    whatsapp: lead.whatsapp,
-    doctorName: lead.opdDrName || 'Unassigned',
-    hospitalName: lead.opdHospital || 'Unassigned',
-    appointmentDate: getAppointmentDate(lead),
-    statusKey: getAppointmentStatusKey(lead),
-    statusLabel: getAppointmentDisplayStatus(lead),
-    bdName: lead.bd?.name || null,
+function getMonitoringStatus(entry: EffectiveOpdEntry): MonitoringAppointment['statusKey'] {
+  switch (entry.status) {
+    case LeadOpdStatus.DONE:
+      return 'done'
+    case LeadOpdStatus.CANCELLED:
+      return 'cancelled'
+    case LeadOpdStatus.NO_SHOW:
+      return 'no_show'
+    case LeadOpdStatus.SCHEDULED:
+    default:
+      return 'scheduled'
   }
 }
 
-async function fetchScopedOpdLeads(user: SessionUser) {
+function getMonitoringStatusLabel(statusKey: MonitoringAppointment['statusKey']) {
+  switch (statusKey) {
+    case 'done':
+      return 'Done'
+    case 'cancelled':
+      return 'Cancelled'
+    case 'no_show':
+      return 'No Show'
+    case 'scheduled':
+    default:
+      return 'Scheduled'
+  }
+}
+
+function hasMonitoringSignals(entry: EffectiveOpdEntry) {
+  return Boolean(
+    entry.scheduleDate ||
+      entry.doctorName ||
+      entry.hospitalName ||
+      entry.contactNumber ||
+      typeof entry.charges === 'number' ||
+      entry.status !== LeadOpdStatus.SCHEDULED
+  )
+}
+
+function mapLeadToMonitoringAppointments(lead: OpdMonitoringLead): MonitoringAppointment[] {
+  return buildEffectiveOpdEntries(lead, lead.opdAppointments)
+    .filter(hasMonitoringSignals)
+    .map((entry) => {
+      const statusKey = getMonitoringStatus(entry)
+      return {
+        id: entry.id,
+        leadId: lead.id,
+        leadRef: lead.leadRef,
+        patientName: lead.patientName,
+        phoneNumber: lead.phoneNumber,
+        whatsapp: lead.whatsapp,
+        doctorName: entry.doctorName || 'Unassigned',
+        hospitalName: entry.hospitalName || 'Unassigned',
+        appointmentDate: entry.scheduleDate || lead.followUpDate || lead.surgeryDate || lead.updatedDate,
+        statusKey,
+        statusLabel: getMonitoringStatusLabel(statusKey),
+        bdName: lead.bd?.name || null,
+      }
+    })
+}
+
+function matchesDoctorName(item: MonitoringAppointment, doctorName?: string) {
+  if (!doctorName?.trim()) return true
+  return normalizeText(item.doctorName) === normalizeText(doctorName)
+}
+
+async function fetchScopedMonitoringAppointments(user: SessionUser) {
   if (!SALES_OPD_MONITORING_ROLES.has(user.role)) {
     throw new SalesOpdMonitoringError('Forbidden', 403)
   }
@@ -221,16 +270,17 @@ async function fetchScopedOpdLeads(user: SessionUser) {
     user.role === 'SUPER_ADMIN' ? null : await getLeadVisibilityScopeUserIds(user)
 
   if (Array.isArray(scopeUserIds) && scopeUserIds.length === 0) {
-    return [] satisfies OpdMonitoringLead[]
+    return [] satisfies MonitoringAppointment[]
   }
 
-  return prisma.lead.findMany({
+  const leads = await prisma.lead.findMany({
     where: {
       ...(scopeUserIds === null ? {} : { bdId: { in: scopeUserIds } }),
       OR: [
         { opdScheduleDate: { not: null } },
         { opdDrName: { not: null } },
         { opdHospital: { not: null } },
+        { opdAppointments: { some: {} } },
         { status: { contains: 'opd', mode: 'insensitive' } },
       ],
     },
@@ -238,15 +288,17 @@ async function fetchScopedOpdLeads(user: SessionUser) {
     orderBy: { updatedDate: 'desc' },
     take: 2000,
   })
+
+  return leads.flatMap(mapLeadToMonitoringAppointments)
 }
 
 export async function listSalesOpdMonitoringDoctors(user: SessionUser) {
-  const leads = await fetchScopedOpdLeads(user)
+  const appointments = await fetchScopedMonitoringAppointments(user)
   const byName = new Map<string, { id: string; name: string }>()
 
-  for (const lead of leads) {
-    const name = lead.opdDrName?.trim()
-    if (!name) continue
+  for (const appointment of appointments) {
+    const name = appointment.doctorName.trim()
+    if (!name || normalizeText(name) === 'unassigned') continue
     const key = normalizeText(name)
     if (!byName.has(key)) {
       byName.set(key, { id: name, name })
@@ -262,21 +314,21 @@ export async function getSalesOpdMonitoring(
   user: SessionUser,
   filters: SalesOpdMonitoringFilters
 ) {
-  const leads = await fetchScopedOpdLeads(user)
+  const appointments = await fetchScopedMonitoringAppointments(user)
 
   if (filters.mode === 'summary') {
     const requestedDate =
       filters.range === 'day' ? parseDateInput(filters.date || '') : null
 
     const relevant = requestedDate
-      ? leads.filter((lead) => isSameDay(getAppointmentDate(lead), requestedDate))
-      : leads.filter((lead) => Boolean(getAppointmentDate(lead)))
+      ? appointments.filter((appointment) => isSameDay(appointment.appointmentDate, requestedDate))
+      : appointments.filter((appointment) => Boolean(appointment.appointmentDate))
 
     return {
-      scheduled: relevant.filter((lead) => getAppointmentStatusKey(lead) === 'scheduled').length,
-      done: relevant.filter((lead) => getAppointmentStatusKey(lead) === 'done').length,
-      noShow: relevant.filter((lead) => getAppointmentStatusKey(lead) === 'no_show').length,
-      cancelled: relevant.filter((lead) => getAppointmentStatusKey(lead) === 'cancelled').length,
+      scheduled: relevant.filter((appointment) => appointment.statusKey === 'scheduled').length,
+      done: relevant.filter((appointment) => appointment.statusKey === 'done').length,
+      noShow: relevant.filter((appointment) => appointment.statusKey === 'no_show').length,
+      cancelled: relevant.filter((appointment) => appointment.statusKey === 'cancelled').length,
     }
   }
 
@@ -286,9 +338,7 @@ export async function getSalesOpdMonitoring(
       throw new SalesOpdMonitoringError('date is required for daily monitoring', 400)
     }
 
-    return leads
-      .filter((lead) => isSameDay(getAppointmentDate(lead), date))
-      .map(mapMonitoringItem)
+    return appointments.filter((appointment) => isSameDay(appointment.appointmentDate, date))
   }
 
   if (filters.mode === 'overdue') {
@@ -297,26 +347,24 @@ export async function getSalesOpdMonitoring(
     cutoff.setDate(cutoff.getDate() - daysOverdue)
     cutoff.setHours(23, 59, 59, 999)
 
-    return leads
-      .filter((lead) => matchesDoctorName(lead, filters.doctorName))
-      .filter((lead) => getAppointmentStatusKey(lead) === 'scheduled')
-      .filter((lead) => {
-        const date = getAppointmentDate(lead)
+    return appointments
+      .filter((appointment) => matchesDoctorName(appointment, filters.doctorName))
+      .filter((appointment) => appointment.statusKey === 'scheduled')
+      .filter((appointment) => {
+        const date = appointment.appointmentDate
         return Boolean(date && new Date(date).getTime() <= cutoff.getTime())
       })
-      .map(mapMonitoringItem)
   }
 
   const range = buildRange(filters.startDate, filters.endDate)
   const requestedStatus = normalizeText(filters.status)
 
-  return leads
-    .filter((lead) => matchesDoctorName(lead, filters.doctorName))
-    .filter((lead) => isWithinRange(getAppointmentDate(lead), range))
-    .filter((lead) =>
+  return appointments
+    .filter((appointment) => matchesDoctorName(appointment, filters.doctorName))
+    .filter((appointment) => isWithinRange(appointment.appointmentDate, range))
+    .filter((appointment) =>
       requestedStatus && requestedStatus !== 'all'
-        ? getAppointmentStatusKey(lead) === requestedStatus
+        ? appointment.statusKey === requestedStatus
         : true
     )
-    .map(mapMonitoringItem)
 }

@@ -556,16 +556,19 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
   const [searchInput, setSearchInput] = useState(state.q)
   const debouncedSearch = useDebouncedValue(searchInput, 300)
+  const isBulkReassignAllowedRole =
+    user?.role !== 'BD' && user?.role !== 'USER'
 
   const availableColumns = useMemo(() => getPipelineColumnDefinitions(variant), [variant])
   const { data: bulkReassignOptions } = useQuery<BulkLeadReassignOptionsResponse>({
     queryKey: ['lead-bulk-reassign-options'],
     queryFn: () => apiGet<BulkLeadReassignOptionsResponse>('/api/leads/bulk-reassign'),
-    enabled: !!user,
+    enabled: Boolean(user) && isBulkReassignAllowedRole,
     retry: false,
     staleTime: 5 * 60_000,
   })
-  const showBulkReassign = Boolean(bulkReassignOptions)
+  const showBulkReassign =
+    isBulkReassignAllowedRole && bulkReassignOptions?.canBulkReassign === true
   const {
     data: activeBulkReassignRun,
   } = useQuery<BulkLeadReassignmentRunResponse>({

@@ -10,11 +10,11 @@ import { apiGet } from '@/lib/api-client'
 import { format, startOfDay, startOfMonth } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { CaseStage } from '@/generated/prisma/enums'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import {
   FileText, AlertCircle, CheckCircle2, ArrowRight,
   Receipt, Activity, Search, LayoutList, CalendarDays, BarChart3,
-  AlertTriangle, CalendarCheck, X, Stethoscope,
+  AlertTriangle, CalendarCheck, X, Stethoscope, IndianRupee,
 } from 'lucide-react'
 import { PreAuthStatus } from '@/generated/prisma/enums'
 import { getLatestActivityTime } from '@/lib/lead-activity'
@@ -32,6 +32,11 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
+import { computeInsuranceAmountPaidKpis } from '@/lib/insurance/dashboard-kpis'
+import { appendReturnTo } from '@/lib/navigation/return-to'
+import { resolvePlRow } from '@/lib/pl/resolve-pl-row'
+
+const INSURANCE_LIST_RETURN = '/insurance/dashboard'
 
 interface LeadWithStage {
   id: string
@@ -195,6 +200,8 @@ export default function InsuranceDashboardPage() {
   const [bdFilter, setBdFilter] = useState<string>('') // bd user id, '' = all
   const [circleFilter, setCircleFilter] = useState<string>('')
   const [treatmentFilter, setTreatmentFilter] = useState<string>('')
+  const [hospitalFilter, setHospitalFilter] = useState<string>('')
+  const [tableFilteredLeads, setTableFilteredLeads] = useState<LeadWithStage[] | null>(null)
   const [hydrated, setHydrated] = useState(false)
 
   // Restore from localStorage (client-only)
@@ -204,13 +211,14 @@ export default function InsuranceDashboardPage() {
       if (raw) {
         const saved = JSON.parse(raw) as Partial<{
           activityMonth: number; activityYear: number; dateMode: 'activity' | 'surgery';
-          bdFilter: string; circleFilter: string; treatmentFilter: string;
+          bdFilter: string; circleFilter: string; treatmentFilter: string; hospitalFilter: string;
         }>
         if (typeof saved.activityMonth === 'number') setActivityMonth(saved.activityMonth)
         if (typeof saved.activityYear === 'number') setActivityYear(saved.activityYear)
         if (typeof saved.bdFilter === 'string') setBdFilter(saved.bdFilter)
         if (typeof saved.circleFilter === 'string') setCircleFilter(saved.circleFilter)
         if (typeof saved.treatmentFilter === 'string') setTreatmentFilter(saved.treatmentFilter)
+        if (typeof saved.hospitalFilter === 'string') setHospitalFilter(saved.hospitalFilter)
         if (saved.dateMode === 'activity' || saved.dateMode === 'surgery') setDateMode(saved.dateMode)
       }
     } catch { /* ignore */ }
@@ -222,10 +230,10 @@ export default function InsuranceDashboardPage() {
     if (!hydrated) return
     try {
       window.localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({
-        activityMonth, activityYear, dateMode, bdFilter, circleFilter, treatmentFilter,
+        activityMonth, activityYear, dateMode, bdFilter, circleFilter, treatmentFilter, hospitalFilter,
       }))
     } catch { /* ignore */ }
-  }, [hydrated, activityMonth, activityYear, dateMode, bdFilter, circleFilter, treatmentFilter])
+  }, [hydrated, activityMonth, activityYear, dateMode, bdFilter, circleFilter, treatmentFilter, hospitalFilter])
 
   // Build server query: activity mode sends activityMonth/activityYear;
   // surgery mode computes startDate/endDate from the same month/year pickers.
@@ -263,12 +271,18 @@ export default function InsuranceDashboardPage() {
 
   // Universe for dropdown options — unfiltered by activity month so users can
   // always find their BD / circle / treatment regardless of the active window.
-  const { data: universeLeads } = useQuery<Pick<LeadWithStage, 'bdId' | 'bd' | 'circle' | 'treatment'>[]>({
+  const { data: universeLeads } = useQuery<Pick<LeadWithStage, 'bdId' | 'bd' | 'circle' | 'treatment' | 'hospitalName'>[]>({
     queryKey: ['leads', 'insurance', 'universe'],
     queryFn: async () => {
       try {
         const data = await apiGet<LeadWithStage[]>('/api/leads')
-        return (data || []).map(l => ({ bdId: l.bdId, bd: l.bd, circle: l.circle, treatment: l.treatment }))
+        return (data || []).map(l => ({
+          bdId: l.bdId,
+          bd: l.bd,
+          circle: l.circle,
+          treatment: l.treatment,
+          hospitalName: l.hospitalName,
+        }))
       } catch { return [] }
     },
     enabled: hydrated,
@@ -295,6 +309,15 @@ export default function InsuranceDashboardPage() {
     return Array.from(set).sort()
   }, [universeLeads])
 
+  const hospitalOptions = useMemo(() => {
+    const set = new Set<string>()
+    ;(universeLeads || []).forEach(l => {
+      const hospital = resolvePlRow(l as unknown as Record<string, unknown>).hospital ?? l.hospitalName
+      if (hospital) set.add(hospital)
+    })
+    return Array.from(set).sort()
+  }, [universeLeads])
+
   const yearOptions = useMemo(() => {
     const y = now.getFullYear()
     return [y - 2, y - 1, y, y + 1]
@@ -306,23 +329,43 @@ export default function InsuranceDashboardPage() {
     setBdFilter('')
     setCircleFilter('')
     setTreatmentFilter('')
+    setHospitalFilter('')
     setDateMode('activity')
   }
   const filtersActive =
     activityMonth !== now.getMonth() + 1 ||
     activityYear !== now.getFullYear() ||
     dateMode !== 'activity' ||
-    !!bdFilter || !!circleFilter || !!treatmentFilter
+    !!bdFilter || !!circleFilter || !!treatmentFilter || !!hospitalFilter
 
-  // Apply client-side circle + treatment filters so dropdown universe stays full
+  const handleTableFilteredLeadsChange = useCallback((rows: LeadWithStage[]) => {
+    setTableFilteredLeads(rows)
+  }, [])
+
+  // Apply client-side circle, treatment, and hospital filters
   const scopedLeads = useMemo(() => {
     if (!leads) return []
     return leads.filter(l => {
       if (circleFilter && l.circle !== circleFilter) return false
       if (treatmentFilter && l.treatment !== treatmentFilter) return false
+      if (hospitalFilter) {
+        const hospital = resolvePlRow(l as unknown as Record<string, unknown>).hospital ?? l.hospitalName
+        if (hospital !== hospitalFilter) return false
+      }
       return true
     })
-  }, [leads, circleFilter, treatmentFilter])
+  }, [leads, circleFilter, treatmentFilter, hospitalFilter])
+
+  useEffect(() => {
+    setTableFilteredLeads(null)
+  }, [scopedLeads])
+
+  const leadsForKpi = tableFilteredLeads ?? scopedLeads
+
+  const amountPaidKpis = useMemo(
+    () => computeInsuranceAmountPaidKpis(leadsForKpi as unknown as Array<Record<string, unknown>>),
+    [leadsForKpi],
+  )
 
   // ── Stats ─────────────────────────────────────────────────────────────────
   const stats = useMemo(() => {
@@ -513,7 +556,7 @@ export default function InsuranceDashboardPage() {
                       <Button 
                         size="sm" 
                         className="bg-amber-600 hover:bg-amber-700 text-white border-0"
-                        onClick={() => router.push(`/patient/${lead.id}/pre-auth`)}
+                        onClick={() => router.push(appendReturnTo(`/patient/${lead.id}/pre-auth`, INSURANCE_LIST_RETURN))}
                       >
                         Update Hospitals
                         <ArrowRight className="ml-2 h-3 w-3" />
@@ -528,7 +571,7 @@ export default function InsuranceDashboardPage() {
           {/* ── IPD Metrics Row ─────────────────────────────────────────── */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Quick IPD counters */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950 dark:to-cyan-950 border-teal-200 dark:border-teal-800 border-2">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
@@ -555,6 +598,24 @@ export default function InsuranceDashboardPage() {
                 <CardContent>
                   <div className="text-3xl font-bold bg-gradient-to-r from-indigo-500 to-blue-500 bg-clip-text text-transparent">{stats.ipdScheduled}</div>
                   <p className="text-xs text-gray-500 mt-1">Currently admitted / initiated</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950 border-violet-200 dark:border-violet-800 border-2">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300">ATS</CardTitle>
+                    <div className="p-2 rounded-lg bg-white/50 dark:bg-black/20 text-violet-600 dark:text-violet-400">
+                      <IndianRupee className="w-4 h-4" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">
+                    {amountPaidKpis.ats != null ? `₹${amountPaidKpis.ats.toLocaleString('en-IN')}` : '—'}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {amountPaidKpis.caseCount} discharged with payment · filtered scope
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -702,6 +763,21 @@ export default function InsuranceDashboardPage() {
                       <SelectItem value={ANY_VALUE}>All treatments</SelectItem>
                       {treatmentOptions.map(t => (
                         <SelectItem key={t} value={t}>{t}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-semibold uppercase text-gray-500">Hospital</label>
+                  <Select value={hospitalFilter || ANY_VALUE} onValueChange={(v) => setHospitalFilter(v === ANY_VALUE ? '' : v)}>
+                    <SelectTrigger className="w-[200px] h-9">
+                      <SelectValue placeholder="All hospitals" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={ANY_VALUE}>All hospitals</SelectItem>
+                      {hospitalOptions.map(h => (
+                        <SelectItem key={h} value={h}>{h}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -872,9 +948,11 @@ export default function InsuranceDashboardPage() {
             <CardContent className="p-0">
               <InsurancePatientTable
                 leads={filteredLeads}
+                kpiLeads={scopedLeads}
+                onFilteredLeadsChange={handleTableFilteredLeadsChange}
                 isLoading={isLoading}
                 emptyMessage={error ? `Error loading leads: ${error instanceof Error ? error.message : 'Unknown error'}` : 'No cases found'}
-                onRowClick={(lead) => router.push(`/patient/${lead.id}`)}
+                onRowClick={(lead) => router.push(appendReturnTo(`/patient/${lead.id}`, INSURANCE_LIST_RETURN))}
                 renderActions={(lead) => {
                   const tier = getPriorityTier(lead as LeadWithStage)
                   const isSuggestionPending = tier === 3
@@ -891,7 +969,7 @@ export default function InsuranceDashboardPage() {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            router.push(`/patient/${record.id}/pre-auth`)
+                            router.push(appendReturnTo(`/patient/${record.id}/pre-auth`, INSURANCE_LIST_RETURN))
                           }}
                           className="bg-amber-600 hover:bg-amber-700 text-white shadow-md"
                         >
@@ -905,7 +983,7 @@ export default function InsuranceDashboardPage() {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            router.push(`/patient/${record.id}/pre-auth`)
+                            router.push(appendReturnTo(`/patient/${record.id}/pre-auth`, INSURANCE_LIST_RETURN))
                           }}
                           className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md"
                         >
@@ -919,7 +997,7 @@ export default function InsuranceDashboardPage() {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            router.push(`/patient/${record.id}/pre-auth`)
+                            router.push(appendReturnTo(`/patient/${record.id}/pre-auth`, INSURANCE_LIST_RETURN))
                           }}
                           className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white shadow-md"
                         >
@@ -933,7 +1011,7 @@ export default function InsuranceDashboardPage() {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            router.push(`/patient/${record.id}/discharge`)
+                            router.push(appendReturnTo(`/patient/${record.id}/discharge`, INSURANCE_LIST_RETURN))
                           }}
                           className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md"
                         >
@@ -947,7 +1025,7 @@ export default function InsuranceDashboardPage() {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            router.push(`/patient/${record.id}/discharge`)
+                            router.push(appendReturnTo(`/patient/${record.id}/discharge`, INSURANCE_LIST_RETURN))
                           }}
                           className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white shadow-md"
                         >
@@ -961,7 +1039,7 @@ export default function InsuranceDashboardPage() {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            router.push(`/patient/${record.id}/discharge`)
+                            router.push(appendReturnTo(`/patient/${record.id}/discharge`, INSURANCE_LIST_RETURN))
                           }}
                           className="border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950"
                         >
