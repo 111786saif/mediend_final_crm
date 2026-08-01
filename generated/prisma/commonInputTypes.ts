@@ -1340,6 +1340,40 @@ export type EnumIpdStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumIpdStatusNullableFilter<$PrismaModel>
 }
 
+export type EnumLeadOpdPhaseFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadOpdPhase | Prisma.EnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadOpdPhase[] | Prisma.ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadOpdPhase[] | Prisma.ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadOpdPhaseFilter<$PrismaModel> | $Enums.LeadOpdPhase
+}
+
+export type EnumLeadOpdStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadOpdStatus | Prisma.EnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadOpdStatus[] | Prisma.ListEnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadOpdStatus[] | Prisma.ListEnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadOpdStatusFilter<$PrismaModel> | $Enums.LeadOpdStatus
+}
+
+export type EnumLeadOpdPhaseWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadOpdPhase | Prisma.EnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadOpdPhase[] | Prisma.ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadOpdPhase[] | Prisma.ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadOpdPhaseWithAggregatesFilter<$PrismaModel> | $Enums.LeadOpdPhase
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeadOpdPhaseFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeadOpdPhaseFilter<$PrismaModel>
+}
+
+export type EnumLeadOpdStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadOpdStatus | Prisma.EnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadOpdStatus[] | Prisma.ListEnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadOpdStatus[] | Prisma.ListEnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadOpdStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeadOpdStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeadOpdStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeadOpdStatusFilter<$PrismaModel>
+}
+
 export type EnumCaseStageNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.CaseStage | Prisma.EnumCaseStageFieldRefInput<$PrismaModel> | null
   in?: $Enums.CaseStage[] | Prisma.ListEnumCaseStageFieldRefInput<$PrismaModel> | null
@@ -2992,6 +3026,40 @@ export type NestedEnumIpdStatusNullableWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumIpdStatusNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumIpdStatusNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumLeadOpdPhaseFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadOpdPhase | Prisma.EnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadOpdPhase[] | Prisma.ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadOpdPhase[] | Prisma.ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadOpdPhaseFilter<$PrismaModel> | $Enums.LeadOpdPhase
+}
+
+export type NestedEnumLeadOpdStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadOpdStatus | Prisma.EnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadOpdStatus[] | Prisma.ListEnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadOpdStatus[] | Prisma.ListEnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadOpdStatusFilter<$PrismaModel> | $Enums.LeadOpdStatus
+}
+
+export type NestedEnumLeadOpdPhaseWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadOpdPhase | Prisma.EnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadOpdPhase[] | Prisma.ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadOpdPhase[] | Prisma.ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadOpdPhaseWithAggregatesFilter<$PrismaModel> | $Enums.LeadOpdPhase
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeadOpdPhaseFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeadOpdPhaseFilter<$PrismaModel>
+}
+
+export type NestedEnumLeadOpdStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadOpdStatus | Prisma.EnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadOpdStatus[] | Prisma.ListEnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadOpdStatus[] | Prisma.ListEnumLeadOpdStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadOpdStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeadOpdStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeadOpdStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeadOpdStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumCaseStageNullableFilter<$PrismaModel = never> = {

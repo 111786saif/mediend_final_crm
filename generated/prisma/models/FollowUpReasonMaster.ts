@@ -233,6 +233,7 @@ export type FollowUpReasonMasterWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"FollowUpReasonMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FollowUpReasonMaster"> | Date | string
   opdLeads?: Prisma.LeadListRelationFilter
+  opdAppointments?: Prisma.LeadOpdAppointmentListRelationFilter
 }
 
 export type FollowUpReasonMasterOrderByWithRelationInput = {
@@ -244,6 +245,7 @@ export type FollowUpReasonMasterOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   opdLeads?: Prisma.LeadOrderByRelationAggregateInput
+  opdAppointments?: Prisma.LeadOpdAppointmentOrderByRelationAggregateInput
 }
 
 export type FollowUpReasonMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -258,6 +260,7 @@ export type FollowUpReasonMasterWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"FollowUpReasonMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FollowUpReasonMaster"> | Date | string
   opdLeads?: Prisma.LeadListRelationFilter
+  opdAppointments?: Prisma.LeadOpdAppointmentListRelationFilter
 }, "id" | "code">
 
 export type FollowUpReasonMasterOrderByWithAggregationInput = {
@@ -297,6 +300,7 @@ export type FollowUpReasonMasterCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   opdLeads?: Prisma.LeadCreateNestedManyWithoutOpdFollowUpReasonInput
+  opdAppointments?: Prisma.LeadOpdAppointmentCreateNestedManyWithoutFollowUpReasonInput
 }
 
 export type FollowUpReasonMasterUncheckedCreateInput = {
@@ -308,6 +312,7 @@ export type FollowUpReasonMasterUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   opdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutOpdFollowUpReasonInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutFollowUpReasonInput
 }
 
 export type FollowUpReasonMasterUpdateInput = {
@@ -319,6 +324,7 @@ export type FollowUpReasonMasterUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   opdLeads?: Prisma.LeadUpdateManyWithoutOpdFollowUpReasonNestedInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUpdateManyWithoutFollowUpReasonNestedInput
 }
 
 export type FollowUpReasonMasterUncheckedUpdateInput = {
@@ -330,6 +336,7 @@ export type FollowUpReasonMasterUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   opdLeads?: Prisma.LeadUncheckedUpdateManyWithoutOpdFollowUpReasonNestedInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutFollowUpReasonNestedInput
 }
 
 export type FollowUpReasonMasterCreateManyInput = {
@@ -421,6 +428,22 @@ export type FollowUpReasonMasterUpdateOneWithoutOpdLeadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FollowUpReasonMasterUpdateToOneWithWhereWithoutOpdLeadsInput, Prisma.FollowUpReasonMasterUpdateWithoutOpdLeadsInput>, Prisma.FollowUpReasonMasterUncheckedUpdateWithoutOpdLeadsInput>
 }
 
+export type FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput = {
+  create?: Prisma.XOR<Prisma.FollowUpReasonMasterCreateWithoutOpdAppointmentsInput, Prisma.FollowUpReasonMasterUncheckedCreateWithoutOpdAppointmentsInput>
+  connectOrCreate?: Prisma.FollowUpReasonMasterCreateOrConnectWithoutOpdAppointmentsInput
+  connect?: Prisma.FollowUpReasonMasterWhereUniqueInput
+}
+
+export type FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.FollowUpReasonMasterCreateWithoutOpdAppointmentsInput, Prisma.FollowUpReasonMasterUncheckedCreateWithoutOpdAppointmentsInput>
+  connectOrCreate?: Prisma.FollowUpReasonMasterCreateOrConnectWithoutOpdAppointmentsInput
+  upsert?: Prisma.FollowUpReasonMasterUpsertWithoutOpdAppointmentsInput
+  disconnect?: Prisma.FollowUpReasonMasterWhereInput | boolean
+  delete?: Prisma.FollowUpReasonMasterWhereInput | boolean
+  connect?: Prisma.FollowUpReasonMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FollowUpReasonMasterUpdateToOneWithWhereWithoutOpdAppointmentsInput, Prisma.FollowUpReasonMasterUpdateWithoutOpdAppointmentsInput>, Prisma.FollowUpReasonMasterUncheckedUpdateWithoutOpdAppointmentsInput>
+}
+
 export type FollowUpReasonMasterCreateWithoutOpdLeadsInput = {
   id?: string
   code: string
@@ -429,6 +452,7 @@ export type FollowUpReasonMasterCreateWithoutOpdLeadsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdAppointments?: Prisma.LeadOpdAppointmentCreateNestedManyWithoutFollowUpReasonInput
 }
 
 export type FollowUpReasonMasterUncheckedCreateWithoutOpdLeadsInput = {
@@ -439,6 +463,7 @@ export type FollowUpReasonMasterUncheckedCreateWithoutOpdLeadsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutFollowUpReasonInput
 }
 
 export type FollowUpReasonMasterCreateOrConnectWithoutOpdLeadsInput = {
@@ -465,6 +490,7 @@ export type FollowUpReasonMasterUpdateWithoutOpdLeadsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdAppointments?: Prisma.LeadOpdAppointmentUpdateManyWithoutFollowUpReasonNestedInput
 }
 
 export type FollowUpReasonMasterUncheckedUpdateWithoutOpdLeadsInput = {
@@ -475,6 +501,67 @@ export type FollowUpReasonMasterUncheckedUpdateWithoutOpdLeadsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutFollowUpReasonNestedInput
+}
+
+export type FollowUpReasonMasterCreateWithoutOpdAppointmentsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  opdLeads?: Prisma.LeadCreateNestedManyWithoutOpdFollowUpReasonInput
+}
+
+export type FollowUpReasonMasterUncheckedCreateWithoutOpdAppointmentsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  opdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutOpdFollowUpReasonInput
+}
+
+export type FollowUpReasonMasterCreateOrConnectWithoutOpdAppointmentsInput = {
+  where: Prisma.FollowUpReasonMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.FollowUpReasonMasterCreateWithoutOpdAppointmentsInput, Prisma.FollowUpReasonMasterUncheckedCreateWithoutOpdAppointmentsInput>
+}
+
+export type FollowUpReasonMasterUpsertWithoutOpdAppointmentsInput = {
+  update: Prisma.XOR<Prisma.FollowUpReasonMasterUpdateWithoutOpdAppointmentsInput, Prisma.FollowUpReasonMasterUncheckedUpdateWithoutOpdAppointmentsInput>
+  create: Prisma.XOR<Prisma.FollowUpReasonMasterCreateWithoutOpdAppointmentsInput, Prisma.FollowUpReasonMasterUncheckedCreateWithoutOpdAppointmentsInput>
+  where?: Prisma.FollowUpReasonMasterWhereInput
+}
+
+export type FollowUpReasonMasterUpdateToOneWithWhereWithoutOpdAppointmentsInput = {
+  where?: Prisma.FollowUpReasonMasterWhereInput
+  data: Prisma.XOR<Prisma.FollowUpReasonMasterUpdateWithoutOpdAppointmentsInput, Prisma.FollowUpReasonMasterUncheckedUpdateWithoutOpdAppointmentsInput>
+}
+
+export type FollowUpReasonMasterUpdateWithoutOpdAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUpdateManyWithoutOpdFollowUpReasonNestedInput
+}
+
+export type FollowUpReasonMasterUncheckedUpdateWithoutOpdAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUncheckedUpdateManyWithoutOpdFollowUpReasonNestedInput
 }
 
 
@@ -484,10 +571,12 @@ export type FollowUpReasonMasterUncheckedUpdateWithoutOpdLeadsInput = {
 
 export type FollowUpReasonMasterCountOutputType = {
   opdLeads: number
+  opdAppointments: number
 }
 
 export type FollowUpReasonMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   opdLeads?: boolean | FollowUpReasonMasterCountOutputTypeCountOpdLeadsArgs
+  opdAppointments?: boolean | FollowUpReasonMasterCountOutputTypeCountOpdAppointmentsArgs
 }
 
 /**
@@ -507,6 +596,13 @@ export type FollowUpReasonMasterCountOutputTypeCountOpdLeadsArgs<ExtArgs extends
   where?: Prisma.LeadWhereInput
 }
 
+/**
+ * FollowUpReasonMasterCountOutputType without action
+ */
+export type FollowUpReasonMasterCountOutputTypeCountOpdAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadOpdAppointmentWhereInput
+}
+
 
 export type FollowUpReasonMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -517,6 +613,7 @@ export type FollowUpReasonMasterSelect<ExtArgs extends runtime.Types.Extensions.
   createdAt?: boolean
   updatedAt?: boolean
   opdLeads?: boolean | Prisma.FollowUpReasonMaster$opdLeadsArgs<ExtArgs>
+  opdAppointments?: boolean | Prisma.FollowUpReasonMaster$opdAppointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.FollowUpReasonMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["followUpReasonMaster"]>
 
@@ -553,6 +650,7 @@ export type FollowUpReasonMasterSelectScalar = {
 export type FollowUpReasonMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "label" | "displayOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["followUpReasonMaster"]>
 export type FollowUpReasonMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   opdLeads?: boolean | Prisma.FollowUpReasonMaster$opdLeadsArgs<ExtArgs>
+  opdAppointments?: boolean | Prisma.FollowUpReasonMaster$opdAppointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.FollowUpReasonMasterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FollowUpReasonMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -562,6 +660,7 @@ export type $FollowUpReasonMasterPayload<ExtArgs extends runtime.Types.Extension
   name: "FollowUpReasonMaster"
   objects: {
     opdLeads: Prisma.$LeadPayload<ExtArgs>[]
+    opdAppointments: Prisma.$LeadOpdAppointmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -966,6 +1065,7 @@ readonly fields: FollowUpReasonMasterFieldRefs;
 export interface Prisma__FollowUpReasonMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   opdLeads<T extends Prisma.FollowUpReasonMaster$opdLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FollowUpReasonMaster$opdLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  opdAppointments<T extends Prisma.FollowUpReasonMaster$opdAppointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FollowUpReasonMaster$opdAppointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadOpdAppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1416,6 +1516,30 @@ export type FollowUpReasonMaster$opdLeadsArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
+ * FollowUpReasonMaster.opdAppointments
+ */
+export type FollowUpReasonMaster$opdAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadOpdAppointment
+   */
+  select?: Prisma.LeadOpdAppointmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeadOpdAppointment
+   */
+  omit?: Prisma.LeadOpdAppointmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadOpdAppointmentInclude<ExtArgs> | null
+  where?: Prisma.LeadOpdAppointmentWhereInput
+  orderBy?: Prisma.LeadOpdAppointmentOrderByWithRelationInput | Prisma.LeadOpdAppointmentOrderByWithRelationInput[]
+  cursor?: Prisma.LeadOpdAppointmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadOpdAppointmentScalarFieldEnum | Prisma.LeadOpdAppointmentScalarFieldEnum[]
 }
 
 /**

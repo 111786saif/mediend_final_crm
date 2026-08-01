@@ -549,6 +549,7 @@ model User {
 
   // Compliance Relations
   complianceCallsHandled ComplianceCall[] @relation("ComplianceCallCaller")
+  cumulativeReportManualEntriesUpdated CumulativeReportManualEntry[] @relation("CumulativeReportManualEntryUpdatedBy")
 
   // Department Head Relations
   departmentHeadOf Department[] @relation("DepartmentHead")
@@ -3586,6 +3587,20 @@ model ComplianceCall {
   @@index([completedAt])
   @@index([satisfaction])
   @@index([reviewStatus])
+}
+
+// Manual monthly counts for /cumulative-report (Patient Summary + Concern Category tabs).
+model CumulativeReportManualEntry {
+  id              String   @id @default(cuid())
+  year            Int      @unique
+  patientSummary  Json
+  concernCategory Json
+  updatedByUserId String?
+  updatedBy       User?    @relation("CumulativeReportManualEntryUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([updatedAt])
 }
 
 // Finance: append-only incentive / seating / misc cost entries per sales org employee

@@ -1,7 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
-import { apiGet } from '@/lib/api-client'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { apiGet, apiPatch } from '@/lib/api-client'
 import type {
+  CumulativeConcernCategoryKey,
   CumulativeConcernCategoryReport,
+  CumulativeKpiCounts,
   CumulativePatientSummaryMonth,
 } from '@/lib/cumulative-report-monthly-shared'
 
@@ -17,6 +19,12 @@ export interface CumulativeReportResponse {
   concernCategory: CumulativeConcernCategoryReport
 }
 
+export interface SaveCumulativeReportInput {
+  year: number
+  patientCountsByMonth: Record<string, CumulativeKpiCounts>
+  concernCountsByCategory: Record<CumulativeConcernCategoryKey, number[]>
+}
+
 function buildQueryString(filters: CumulativeReportFilters): string {
   const params = new URLSearchParams()
   params.set('year', String(filters.year))
@@ -28,6 +36,18 @@ export function useCumulativeReport(filters: CumulativeReportFilters) {
     queryKey: ['cumulative-report', filters],
     queryFn: () => apiGet<CumulativeReportResponse>(`/api/cumulative-report${buildQueryString(filters)}`),
     placeholderData: (prev) => prev,
+  })
+}
+
+export function useSaveCumulativeReport() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (input: SaveCumulativeReportInput) =>
+      apiPatch<CumulativeReportResponse>('/api/cumulative-report', input),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['cumulative-report', { year: data.year }], data)
+    },
   })
 }
 
