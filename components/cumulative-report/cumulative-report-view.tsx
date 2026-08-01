@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState, Fragment, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, useState, Fragment, type ReactNode } from "react"
 import { Download, FileSpreadsheet } from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
@@ -26,6 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   buildCumulativeExportUrl,
   useCumulativeReport,
+  useSaveCumulativeReport,
 } from "@/hooks/use-cumulative-report"
 import {
   computeCumulativeKpiPercentages,
@@ -61,6 +62,7 @@ const PATIENT_SUMMARY_COLUMNS: { key: CumulativeKpiKey; label: string }[] = [
 ]
 
 type ReportTab = "patient-summary" | "concern-category"
+type SaveStatus = "idle" | "saving" | "saved" | "error"
 
 function buildYearOptions(): number[] {
   const current = new Date().getFullYear()
@@ -91,26 +93,58 @@ export function CumulativeReportView() {
   const [concernCountsByCategory, setConcernCountsByCategory] = useState<
     Record<CumulativeConcernCategoryKey, number[]>
   >({} as Record<CumulativeConcernCategoryKey, number[]>)
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle")
+  const skipNextSaveRef = useRef(true)
+  const hydratedRef = useRef(false)
 
   const { data, isLoading, isError } = useCumulativeReport({ year })
+  const { mutate: saveReport } = useSaveCumulativeReport()
 
   useEffect(() => {
     if (!data?.patientSummary) return
-    const next: Record<string, CumulativeKpiCounts> = {}
+    const nextPatient: Record<string, CumulativeKpiCounts> = {}
     for (const month of data.patientSummary) {
-      next[month.monthKey] = cloneCounts(month.counts)
+      nextPatient[month.monthKey] = cloneCounts(month.counts)
     }
-    setPatientCountsByMonth(next)
-  }, [data?.patientSummary, year])
+    setPatientCountsByMonth(nextPatient)
+
+    if (data.concernCategory) {
+      const nextConcern = {} as Record<CumulativeConcernCategoryKey, number[]>
+      for (const row of data.concernCategory.rows) {
+        nextConcern[row.key] = cloneMonthlyCounts(row.monthlyCounts)
+      }
+      setConcernCountsByCategory(nextConcern)
+    }
+
+    skipNextSaveRef.current = true
+    hydratedRef.current = true
+    setSaveStatus("idle")
+  }, [data?.patientSummary, data?.concernCategory, year])
 
   useEffect(() => {
-    if (!data?.concernCategory) return
-    const next = {} as Record<CumulativeConcernCategoryKey, number[]>
-    for (const row of data.concernCategory.rows) {
-      next[row.key] = cloneMonthlyCounts(row.monthlyCounts)
+    if (!hydratedRef.current || isLoading) return
+    if (skipNextSaveRef.current) {
+      skipNextSaveRef.current = false
+      return
     }
-    setConcernCountsByCategory(next)
-  }, [data?.concernCategory, year])
+
+    const timer = window.setTimeout(() => {
+      setSaveStatus("saving")
+      saveReport(
+        {
+          year,
+          patientCountsByMonth,
+          concernCountsByCategory,
+        },
+        {
+          onSuccess: () => setSaveStatus("saved"),
+          onError: () => setSaveStatus("error"),
+        },
+      )
+    }, 800)
+
+    return () => window.clearTimeout(timer)
+  }, [year, patientCountsByMonth, concernCountsByCategory, isLoading, saveReport])
 
   const patientSummaryRows = useMemo(() => {
     if (!data?.patientSummary) return []
@@ -285,20 +319,23 @@ export function CumulativeReportView() {
                   <TabsTrigger value="patient-summary">Patient Summary</TabsTrigger>
                   <TabsTrigger value="concern-category">Concern Category</TabsTrigger>
                 </TabsList>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Year</span>
-                  <Select value={String(year)} onValueChange={(v) => setYear(parseInt(v, 10))}>
-                    <SelectTrigger className="h-9 w-[120px] rounded-xl">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {buildYearOptions().map((y) => (
-                        <SelectItem key={y} value={String(y)}>
-                          {y}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Year</span>
+                    <Select value={String(year)} onValueChange={(v) => setYear(parseInt(v, 10))}>
+                      <SelectTrigger className="h-9 w-[120px] rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {buildYearOptions().map((y) => (
+                          <SelectItem key={y} value={String(y)}>
+                            {y}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <SaveStatusLabel status={saveStatus} />
                 </div>
               </div>
             </div>
@@ -364,9 +401,13 @@ export function CumulativeReportView() {
 
                 <TabsContent value="concern-category" className="mt-0">
                   <div className="max-h-[min(75vh,800px)] overflow-auto p-5">
-                    <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                       Concern Category (Patient Satisfaction)
                     </h2>
+                    <p className="mt-2 mb-4 text-sm text-slate-600 dark:text-slate-400">
+                      Note: A single patient may report multiple concerns. Therefore, the total number of
+                      concerns can exceed the total number of unsatisfied patients.
+                    </p>
                     <ConcernCategoryTable
                       year={year}
                       rows={concernCategoryRows}
@@ -383,6 +424,26 @@ export function CumulativeReportView() {
       </Card>
     </div>
   )
+}
+
+function SaveStatusLabel({ status }: { status: SaveStatus }) {
+  if (status === "idle") return null
+
+  const label =
+    status === "saving"
+      ? "Saving…"
+      : status === "saved"
+        ? "Saved"
+        : "Save failed — retry by editing a value"
+
+  const tone =
+    status === "error"
+      ? "text-rose-600 dark:text-rose-400"
+      : status === "saved"
+        ? "text-emerald-600 dark:text-emerald-400"
+        : "text-slate-500 dark:text-slate-400"
+
+  return <span className={cn("text-xs font-medium", tone)}>{label}</span>
 }
 
 function SummaryKpiCard({

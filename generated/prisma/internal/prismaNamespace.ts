@@ -387,6 +387,7 @@ export const ModelName = {
   User: 'User',
   UserStatus: 'UserStatus',
   Lead: 'Lead',
+  LeadOpdPrescriptionImage: 'LeadOpdPrescriptionImage',
   CallNote: 'CallNote',
   LeadRemarkEntry: 'LeadRemarkEntry',
   LeadQrCallAuditLog: 'LeadQrCallAuditLog',
@@ -471,6 +472,8 @@ export const ModelName = {
   InsuranceQuery: 'InsuranceQuery',
   PreAuthPDF: 'PreAuthPDF',
   AdmissionRecord: 'AdmissionRecord',
+  AdmissionRecordImplantUsage: 'AdmissionRecordImplantUsage',
+  AdmissionRecordPrescriptionImage: 'AdmissionRecordPrescriptionImage',
   InsuranceInitiateForm: 'InsuranceInitiateForm',
   CaseStageHistory: 'CaseStageHistory',
   WorkflowResetLog: 'WorkflowResetLog',
@@ -480,6 +483,7 @@ export const ModelName = {
   OutstandingCase: 'OutstandingCase',
   PaymentInstallment: 'PaymentInstallment',
   ComplianceCall: 'ComplianceCall',
+  CumulativeReportManualEntry: 'CumulativeReportManualEntry',
   SalesTeamCostEntry: 'SalesTeamCostEntry',
   EmployeeMonthlyIncentive: 'EmployeeMonthlyIncentive',
   EmployeeMasterSeatingCost: 'EmployeeMasterSeatingCost',
@@ -556,7 +560,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
+    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -779,6 +783,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LeadCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LeadCountAggregateOutputType> | number
+        }
+      }
+    }
+    LeadOpdPrescriptionImage: {
+      payload: Prisma.$LeadOpdPrescriptionImagePayload<ExtArgs>
+      fields: Prisma.LeadOpdPrescriptionImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadOpdPrescriptionImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadOpdPrescriptionImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>
+        }
+        findFirst: {
+          args: Prisma.LeadOpdPrescriptionImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadOpdPrescriptionImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>
+        }
+        findMany: {
+          args: Prisma.LeadOpdPrescriptionImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>[]
+        }
+        create: {
+          args: Prisma.LeadOpdPrescriptionImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>
+        }
+        createMany: {
+          args: Prisma.LeadOpdPrescriptionImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadOpdPrescriptionImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>[]
+        }
+        delete: {
+          args: Prisma.LeadOpdPrescriptionImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>
+        }
+        update: {
+          args: Prisma.LeadOpdPrescriptionImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadOpdPrescriptionImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadOpdPrescriptionImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadOpdPrescriptionImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadOpdPrescriptionImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdPrescriptionImagePayload>
+        }
+        aggregate: {
+          args: Prisma.LeadOpdPrescriptionImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeadOpdPrescriptionImage>
+        }
+        groupBy: {
+          args: Prisma.LeadOpdPrescriptionImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadOpdPrescriptionImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadOpdPrescriptionImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadOpdPrescriptionImageCountAggregateOutputType> | number
         }
       }
     }
@@ -6998,6 +7076,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdmissionRecordImplantUsage: {
+      payload: Prisma.$AdmissionRecordImplantUsagePayload<ExtArgs>
+      fields: Prisma.AdmissionRecordImplantUsageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdmissionRecordImplantUsageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdmissionRecordImplantUsageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>
+        }
+        findFirst: {
+          args: Prisma.AdmissionRecordImplantUsageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdmissionRecordImplantUsageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>
+        }
+        findMany: {
+          args: Prisma.AdmissionRecordImplantUsageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>[]
+        }
+        create: {
+          args: Prisma.AdmissionRecordImplantUsageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>
+        }
+        createMany: {
+          args: Prisma.AdmissionRecordImplantUsageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdmissionRecordImplantUsageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>[]
+        }
+        delete: {
+          args: Prisma.AdmissionRecordImplantUsageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>
+        }
+        update: {
+          args: Prisma.AdmissionRecordImplantUsageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>
+        }
+        deleteMany: {
+          args: Prisma.AdmissionRecordImplantUsageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdmissionRecordImplantUsageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdmissionRecordImplantUsageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>[]
+        }
+        upsert: {
+          args: Prisma.AdmissionRecordImplantUsageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordImplantUsagePayload>
+        }
+        aggregate: {
+          args: Prisma.AdmissionRecordImplantUsageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdmissionRecordImplantUsage>
+        }
+        groupBy: {
+          args: Prisma.AdmissionRecordImplantUsageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdmissionRecordImplantUsageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdmissionRecordImplantUsageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdmissionRecordImplantUsageCountAggregateOutputType> | number
+        }
+      }
+    }
+    AdmissionRecordPrescriptionImage: {
+      payload: Prisma.$AdmissionRecordPrescriptionImagePayload<ExtArgs>
+      fields: Prisma.AdmissionRecordPrescriptionImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdmissionRecordPrescriptionImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdmissionRecordPrescriptionImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>
+        }
+        findFirst: {
+          args: Prisma.AdmissionRecordPrescriptionImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdmissionRecordPrescriptionImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>
+        }
+        findMany: {
+          args: Prisma.AdmissionRecordPrescriptionImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>[]
+        }
+        create: {
+          args: Prisma.AdmissionRecordPrescriptionImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>
+        }
+        createMany: {
+          args: Prisma.AdmissionRecordPrescriptionImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdmissionRecordPrescriptionImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>[]
+        }
+        delete: {
+          args: Prisma.AdmissionRecordPrescriptionImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>
+        }
+        update: {
+          args: Prisma.AdmissionRecordPrescriptionImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.AdmissionRecordPrescriptionImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdmissionRecordPrescriptionImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdmissionRecordPrescriptionImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.AdmissionRecordPrescriptionImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdmissionRecordPrescriptionImagePayload>
+        }
+        aggregate: {
+          args: Prisma.AdmissionRecordPrescriptionImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdmissionRecordPrescriptionImage>
+        }
+        groupBy: {
+          args: Prisma.AdmissionRecordPrescriptionImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdmissionRecordPrescriptionImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdmissionRecordPrescriptionImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdmissionRecordPrescriptionImageCountAggregateOutputType> | number
+        }
+      }
+    }
     InsuranceInitiateForm: {
       payload: Prisma.$InsuranceInitiateFormPayload<ExtArgs>
       fields: Prisma.InsuranceInitiateFormFieldRefs
@@ -7661,6 +7887,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ComplianceCallCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ComplianceCallCountAggregateOutputType> | number
+        }
+      }
+    }
+    CumulativeReportManualEntry: {
+      payload: Prisma.$CumulativeReportManualEntryPayload<ExtArgs>
+      fields: Prisma.CumulativeReportManualEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CumulativeReportManualEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CumulativeReportManualEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.CumulativeReportManualEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CumulativeReportManualEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>
+        }
+        findMany: {
+          args: Prisma.CumulativeReportManualEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>[]
+        }
+        create: {
+          args: Prisma.CumulativeReportManualEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>
+        }
+        createMany: {
+          args: Prisma.CumulativeReportManualEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CumulativeReportManualEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.CumulativeReportManualEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>
+        }
+        update: {
+          args: Prisma.CumulativeReportManualEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.CumulativeReportManualEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CumulativeReportManualEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CumulativeReportManualEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.CumulativeReportManualEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CumulativeReportManualEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.CumulativeReportManualEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCumulativeReportManualEntry>
+        }
+        groupBy: {
+          args: Prisma.CumulativeReportManualEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CumulativeReportManualEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CumulativeReportManualEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CumulativeReportManualEntryCountAggregateOutputType> | number
         }
       }
     }
@@ -12330,6 +12630,12 @@ export const LeadScalarFieldEnum = {
   opdCharges: 'opdCharges',
   opdScheduleDate: 'opdScheduleDate',
   opdMeeting: 'opdMeeting',
+  opdSurgeryAdvised: 'opdSurgeryAdvised',
+  opdSurgeryRemarkCode: 'opdSurgeryRemarkCode',
+  opdReasonNoSurgeryCode: 'opdReasonNoSurgeryCode',
+  opdFollowUpReasonCode: 'opdFollowUpReasonCode',
+  opdImplantRequired: 'opdImplantRequired',
+  opdDiagnosis: 'opdDiagnosis',
   ipdAdmissionDate: 'ipdAdmissionDate',
   ipdHospital: 'ipdHospital',
   ipdDrName: 'ipdDrName',
@@ -12365,6 +12671,20 @@ export const LeadScalarFieldEnum = {
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const LeadOpdPrescriptionImageScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  storageKey: 'storageKey',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadOpdPrescriptionImageScalarFieldEnum = (typeof LeadOpdPrescriptionImageScalarFieldEnum)[keyof typeof LeadOpdPrescriptionImageScalarFieldEnum]
 
 
 export const CallNoteScalarFieldEnum = {
@@ -13913,6 +14233,8 @@ export const AdmissionRecordScalarFieldEnum = {
   cabDischargeTo: 'cabDischargeTo',
   ipdStatus: 'ipdStatus',
   ipdStatusReason: 'ipdStatusReason',
+  ipdImplantUsed: 'ipdImplantUsed',
+  ipdNoShowReason: 'ipdNoShowReason',
   newSurgeryDate: 'newSurgeryDate',
   ipdDischargeDate: 'ipdDischargeDate',
   ipdStatusNotes: 'ipdStatusNotes',
@@ -13923,6 +14245,34 @@ export const AdmissionRecordScalarFieldEnum = {
 } as const
 
 export type AdmissionRecordScalarFieldEnum = (typeof AdmissionRecordScalarFieldEnum)[keyof typeof AdmissionRecordScalarFieldEnum]
+
+
+export const AdmissionRecordImplantUsageScalarFieldEnum = {
+  id: 'id',
+  admissionRecordId: 'admissionRecordId',
+  implantId: 'implantId',
+  quantity: 'quantity',
+  notes: 'notes',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdmissionRecordImplantUsageScalarFieldEnum = (typeof AdmissionRecordImplantUsageScalarFieldEnum)[keyof typeof AdmissionRecordImplantUsageScalarFieldEnum]
+
+
+export const AdmissionRecordPrescriptionImageScalarFieldEnum = {
+  id: 'id',
+  admissionRecordId: 'admissionRecordId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  storageKey: 'storageKey',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdmissionRecordPrescriptionImageScalarFieldEnum = (typeof AdmissionRecordPrescriptionImageScalarFieldEnum)[keyof typeof AdmissionRecordPrescriptionImageScalarFieldEnum]
 
 
 export const InsuranceInitiateFormScalarFieldEnum = {
@@ -14188,6 +14538,19 @@ export const ComplianceCallScalarFieldEnum = {
 } as const
 
 export type ComplianceCallScalarFieldEnum = (typeof ComplianceCallScalarFieldEnum)[keyof typeof ComplianceCallScalarFieldEnum]
+
+
+export const CumulativeReportManualEntryScalarFieldEnum = {
+  id: 'id',
+  year: 'year',
+  patientSummary: 'patientSummary',
+  concernCategory: 'concernCategory',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CumulativeReportManualEntryScalarFieldEnum = (typeof CumulativeReportManualEntryScalarFieldEnum)[keyof typeof CumulativeReportManualEntryScalarFieldEnum]
 
 
 export const SalesTeamCostEntryScalarFieldEnum = {
@@ -16354,6 +16717,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   userStatus?: Prisma.UserStatusOmit
   lead?: Prisma.LeadOmit
+  leadOpdPrescriptionImage?: Prisma.LeadOpdPrescriptionImageOmit
   callNote?: Prisma.CallNoteOmit
   leadRemarkEntry?: Prisma.LeadRemarkEntryOmit
   leadQrCallAuditLog?: Prisma.LeadQrCallAuditLogOmit
@@ -16438,6 +16802,8 @@ export type GlobalOmitConfig = {
   insuranceQuery?: Prisma.InsuranceQueryOmit
   preAuthPDF?: Prisma.PreAuthPDFOmit
   admissionRecord?: Prisma.AdmissionRecordOmit
+  admissionRecordImplantUsage?: Prisma.AdmissionRecordImplantUsageOmit
+  admissionRecordPrescriptionImage?: Prisma.AdmissionRecordPrescriptionImageOmit
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormOmit
   caseStageHistory?: Prisma.CaseStageHistoryOmit
   workflowResetLog?: Prisma.WorkflowResetLogOmit
@@ -16447,6 +16813,7 @@ export type GlobalOmitConfig = {
   outstandingCase?: Prisma.OutstandingCaseOmit
   paymentInstallment?: Prisma.PaymentInstallmentOmit
   complianceCall?: Prisma.ComplianceCallOmit
+  cumulativeReportManualEntry?: Prisma.CumulativeReportManualEntryOmit
   salesTeamCostEntry?: Prisma.SalesTeamCostEntryOmit
   employeeMonthlyIncentive?: Prisma.EmployeeMonthlyIncentiveOmit
   employeeMasterSeatingCost?: Prisma.EmployeeMasterSeatingCostOmit

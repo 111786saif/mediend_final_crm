@@ -256,6 +256,7 @@ export type ImplantMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"ImplantMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ImplantMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ImplantMaster"> | Date | string
+  ipdUsages?: Prisma.AdmissionRecordImplantUsageListRelationFilter
 }
 
 export type ImplantMasterOrderByWithRelationInput = {
@@ -269,6 +270,7 @@ export type ImplantMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  ipdUsages?: Prisma.AdmissionRecordImplantUsageOrderByRelationAggregateInput
 }
 
 export type ImplantMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -285,6 +287,7 @@ export type ImplantMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"ImplantMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ImplantMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ImplantMaster"> | Date | string
+  ipdUsages?: Prisma.AdmissionRecordImplantUsageListRelationFilter
 }, "id" | "name" | "code">
 
 export type ImplantMasterOrderByWithAggregationInput = {
@@ -332,6 +335,7 @@ export type ImplantMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  ipdUsages?: Prisma.AdmissionRecordImplantUsageCreateNestedManyWithoutImplantInput
 }
 
 export type ImplantMasterUncheckedCreateInput = {
@@ -345,6 +349,7 @@ export type ImplantMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  ipdUsages?: Prisma.AdmissionRecordImplantUsageUncheckedCreateNestedManyWithoutImplantInput
 }
 
 export type ImplantMasterUpdateInput = {
@@ -358,6 +363,7 @@ export type ImplantMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdUsages?: Prisma.AdmissionRecordImplantUsageUpdateManyWithoutImplantNestedInput
 }
 
 export type ImplantMasterUncheckedUpdateInput = {
@@ -371,6 +377,7 @@ export type ImplantMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdUsages?: Prisma.AdmissionRecordImplantUsageUncheckedUpdateManyWithoutImplantNestedInput
 }
 
 export type ImplantMasterCreateManyInput = {
@@ -410,6 +417,11 @@ export type ImplantMasterUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ImplantMasterScalarRelationFilter = {
+  is?: Prisma.ImplantMasterWhereInput
+  isNot?: Prisma.ImplantMasterWhereInput
 }
 
 export type ImplantMasterCountOrderByAggregateInput = {
@@ -459,6 +471,117 @@ export type ImplantMasterSumOrderByAggregateInput = {
   unitCost?: Prisma.SortOrder
 }
 
+export type ImplantMasterCreateNestedOneWithoutIpdUsagesInput = {
+  create?: Prisma.XOR<Prisma.ImplantMasterCreateWithoutIpdUsagesInput, Prisma.ImplantMasterUncheckedCreateWithoutIpdUsagesInput>
+  connectOrCreate?: Prisma.ImplantMasterCreateOrConnectWithoutIpdUsagesInput
+  connect?: Prisma.ImplantMasterWhereUniqueInput
+}
+
+export type ImplantMasterUpdateOneRequiredWithoutIpdUsagesNestedInput = {
+  create?: Prisma.XOR<Prisma.ImplantMasterCreateWithoutIpdUsagesInput, Prisma.ImplantMasterUncheckedCreateWithoutIpdUsagesInput>
+  connectOrCreate?: Prisma.ImplantMasterCreateOrConnectWithoutIpdUsagesInput
+  upsert?: Prisma.ImplantMasterUpsertWithoutIpdUsagesInput
+  connect?: Prisma.ImplantMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ImplantMasterUpdateToOneWithWhereWithoutIpdUsagesInput, Prisma.ImplantMasterUpdateWithoutIpdUsagesInput>, Prisma.ImplantMasterUncheckedUpdateWithoutIpdUsagesInput>
+}
+
+export type ImplantMasterCreateWithoutIpdUsagesInput = {
+  id?: string
+  name: string
+  code?: string | null
+  category?: string | null
+  manufacturer?: string | null
+  unitCost?: number | null
+  description?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ImplantMasterUncheckedCreateWithoutIpdUsagesInput = {
+  id?: string
+  name: string
+  code?: string | null
+  category?: string | null
+  manufacturer?: string | null
+  unitCost?: number | null
+  description?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ImplantMasterCreateOrConnectWithoutIpdUsagesInput = {
+  where: Prisma.ImplantMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.ImplantMasterCreateWithoutIpdUsagesInput, Prisma.ImplantMasterUncheckedCreateWithoutIpdUsagesInput>
+}
+
+export type ImplantMasterUpsertWithoutIpdUsagesInput = {
+  update: Prisma.XOR<Prisma.ImplantMasterUpdateWithoutIpdUsagesInput, Prisma.ImplantMasterUncheckedUpdateWithoutIpdUsagesInput>
+  create: Prisma.XOR<Prisma.ImplantMasterCreateWithoutIpdUsagesInput, Prisma.ImplantMasterUncheckedCreateWithoutIpdUsagesInput>
+  where?: Prisma.ImplantMasterWhereInput
+}
+
+export type ImplantMasterUpdateToOneWithWhereWithoutIpdUsagesInput = {
+  where?: Prisma.ImplantMasterWhereInput
+  data: Prisma.XOR<Prisma.ImplantMasterUpdateWithoutIpdUsagesInput, Prisma.ImplantMasterUncheckedUpdateWithoutIpdUsagesInput>
+}
+
+export type ImplantMasterUpdateWithoutIpdUsagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manufacturer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ImplantMasterUncheckedUpdateWithoutIpdUsagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  manufacturer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type ImplantMasterCountOutputType
+ */
+
+export type ImplantMasterCountOutputType = {
+  ipdUsages: number
+}
+
+export type ImplantMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  ipdUsages?: boolean | ImplantMasterCountOutputTypeCountIpdUsagesArgs
+}
+
+/**
+ * ImplantMasterCountOutputType without action
+ */
+export type ImplantMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ImplantMasterCountOutputType
+   */
+  select?: Prisma.ImplantMasterCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ImplantMasterCountOutputType without action
+ */
+export type ImplantMasterCountOutputTypeCountIpdUsagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdmissionRecordImplantUsageWhereInput
+}
 
 
 export type ImplantMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -472,6 +595,8 @@ export type ImplantMasterSelect<ExtArgs extends runtime.Types.Extensions.Interna
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  ipdUsages?: boolean | Prisma.ImplantMaster$ipdUsagesArgs<ExtArgs>
+  _count?: boolean | Prisma.ImplantMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["implantMaster"]>
 
 export type ImplantMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -514,10 +639,18 @@ export type ImplantMasterSelectScalar = {
 }
 
 export type ImplantMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "code" | "category" | "manufacturer" | "unitCost" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["implantMaster"]>
+export type ImplantMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  ipdUsages?: boolean | Prisma.ImplantMaster$ipdUsagesArgs<ExtArgs>
+  _count?: boolean | Prisma.ImplantMasterCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ImplantMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ImplantMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $ImplantMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ImplantMaster"
-  objects: {}
+  objects: {
+    ipdUsages: Prisma.$AdmissionRecordImplantUsagePayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -923,6 +1056,7 @@ readonly fields: ImplantMasterFieldRefs;
  */
 export interface Prisma__ImplantMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  ipdUsages<T extends Prisma.ImplantMaster$ipdUsagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ImplantMaster$ipdUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdmissionRecordImplantUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -979,6 +1113,10 @@ export type ImplantMasterFindUniqueArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
+  /**
    * Filter, which ImplantMaster to fetch.
    */
   where: Prisma.ImplantMasterWhereUniqueInput
@@ -997,6 +1135,10 @@ export type ImplantMasterFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Ext
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
+  /**
    * Filter, which ImplantMaster to fetch.
    */
   where: Prisma.ImplantMasterWhereUniqueInput
@@ -1014,6 +1156,10 @@ export type ImplantMasterFindFirstArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the ImplantMaster
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
   /**
    * Filter, which ImplantMaster to fetch.
    */
@@ -1063,6 +1209,10 @@ export type ImplantMasterFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
+  /**
    * Filter, which ImplantMaster to fetch.
    */
   where?: Prisma.ImplantMasterWhereInput
@@ -1110,6 +1260,10 @@ export type ImplantMasterFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the ImplantMaster
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
   /**
    * Filter, which ImplantMasters to fetch.
    */
@@ -1159,6 +1313,10 @@ export type ImplantMasterCreateArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
+  /**
    * The data needed to create a ImplantMaster.
    */
   data: Prisma.XOR<Prisma.ImplantMasterCreateInput, Prisma.ImplantMasterUncheckedCreateInput>
@@ -1206,6 +1364,10 @@ export type ImplantMasterUpdateArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the ImplantMaster
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
   /**
    * The data needed to update a ImplantMaster.
    */
@@ -1273,6 +1435,10 @@ export type ImplantMasterUpsertArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
+  /**
    * The filter to search for the ImplantMaster to update in case it exists.
    */
   where: Prisma.ImplantMasterWhereUniqueInput
@@ -1299,6 +1465,10 @@ export type ImplantMasterDeleteArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
+  /**
    * Filter which ImplantMaster to delete.
    */
   where: Prisma.ImplantMasterWhereUniqueInput
@@ -1319,6 +1489,30 @@ export type ImplantMasterDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
+ * ImplantMaster.ipdUsages
+ */
+export type ImplantMaster$ipdUsagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdmissionRecordImplantUsage
+   */
+  select?: Prisma.AdmissionRecordImplantUsageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdmissionRecordImplantUsage
+   */
+  omit?: Prisma.AdmissionRecordImplantUsageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdmissionRecordImplantUsageInclude<ExtArgs> | null
+  where?: Prisma.AdmissionRecordImplantUsageWhereInput
+  orderBy?: Prisma.AdmissionRecordImplantUsageOrderByWithRelationInput | Prisma.AdmissionRecordImplantUsageOrderByWithRelationInput[]
+  cursor?: Prisma.AdmissionRecordImplantUsageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdmissionRecordImplantUsageScalarFieldEnum | Prisma.AdmissionRecordImplantUsageScalarFieldEnum[]
+}
+
+/**
  * ImplantMaster without action
  */
 export type ImplantMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1330,4 +1524,8 @@ export type ImplantMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the ImplantMaster
    */
   omit?: Prisma.ImplantMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImplantMasterInclude<ExtArgs> | null
 }

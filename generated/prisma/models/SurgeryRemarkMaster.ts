@@ -232,6 +232,7 @@ export type SurgeryRemarkMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"SurgeryRemarkMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SurgeryRemarkMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SurgeryRemarkMaster"> | Date | string
+  opdLeads?: Prisma.LeadListRelationFilter
 }
 
 export type SurgeryRemarkMasterOrderByWithRelationInput = {
@@ -242,6 +243,7 @@ export type SurgeryRemarkMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  opdLeads?: Prisma.LeadOrderByRelationAggregateInput
 }
 
 export type SurgeryRemarkMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -255,6 +257,7 @@ export type SurgeryRemarkMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"SurgeryRemarkMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SurgeryRemarkMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SurgeryRemarkMaster"> | Date | string
+  opdLeads?: Prisma.LeadListRelationFilter
 }, "id" | "code">
 
 export type SurgeryRemarkMasterOrderByWithAggregationInput = {
@@ -293,6 +296,7 @@ export type SurgeryRemarkMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdLeads?: Prisma.LeadCreateNestedManyWithoutOpdSurgeryRemarkInput
 }
 
 export type SurgeryRemarkMasterUncheckedCreateInput = {
@@ -303,6 +307,7 @@ export type SurgeryRemarkMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutOpdSurgeryRemarkInput
 }
 
 export type SurgeryRemarkMasterUpdateInput = {
@@ -313,6 +318,7 @@ export type SurgeryRemarkMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUpdateManyWithoutOpdSurgeryRemarkNestedInput
 }
 
 export type SurgeryRemarkMasterUncheckedUpdateInput = {
@@ -323,6 +329,7 @@ export type SurgeryRemarkMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUncheckedUpdateManyWithoutOpdSurgeryRemarkNestedInput
 }
 
 export type SurgeryRemarkMasterCreateManyInput = {
@@ -353,6 +360,11 @@ export type SurgeryRemarkMasterUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SurgeryRemarkMasterNullableScalarRelationFilter = {
+  is?: Prisma.SurgeryRemarkMasterWhereInput | null
+  isNot?: Prisma.SurgeryRemarkMasterWhereInput | null
 }
 
 export type SurgeryRemarkMasterCountOrderByAggregateInput = {
@@ -393,6 +405,107 @@ export type SurgeryRemarkMasterSumOrderByAggregateInput = {
   displayOrder?: Prisma.SortOrder
 }
 
+export type SurgeryRemarkMasterCreateNestedOneWithoutOpdLeadsInput = {
+  create?: Prisma.XOR<Prisma.SurgeryRemarkMasterCreateWithoutOpdLeadsInput, Prisma.SurgeryRemarkMasterUncheckedCreateWithoutOpdLeadsInput>
+  connectOrCreate?: Prisma.SurgeryRemarkMasterCreateOrConnectWithoutOpdLeadsInput
+  connect?: Prisma.SurgeryRemarkMasterWhereUniqueInput
+}
+
+export type SurgeryRemarkMasterUpdateOneWithoutOpdLeadsNestedInput = {
+  create?: Prisma.XOR<Prisma.SurgeryRemarkMasterCreateWithoutOpdLeadsInput, Prisma.SurgeryRemarkMasterUncheckedCreateWithoutOpdLeadsInput>
+  connectOrCreate?: Prisma.SurgeryRemarkMasterCreateOrConnectWithoutOpdLeadsInput
+  upsert?: Prisma.SurgeryRemarkMasterUpsertWithoutOpdLeadsInput
+  disconnect?: Prisma.SurgeryRemarkMasterWhereInput | boolean
+  delete?: Prisma.SurgeryRemarkMasterWhereInput | boolean
+  connect?: Prisma.SurgeryRemarkMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SurgeryRemarkMasterUpdateToOneWithWhereWithoutOpdLeadsInput, Prisma.SurgeryRemarkMasterUpdateWithoutOpdLeadsInput>, Prisma.SurgeryRemarkMasterUncheckedUpdateWithoutOpdLeadsInput>
+}
+
+export type SurgeryRemarkMasterCreateWithoutOpdLeadsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SurgeryRemarkMasterUncheckedCreateWithoutOpdLeadsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SurgeryRemarkMasterCreateOrConnectWithoutOpdLeadsInput = {
+  where: Prisma.SurgeryRemarkMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.SurgeryRemarkMasterCreateWithoutOpdLeadsInput, Prisma.SurgeryRemarkMasterUncheckedCreateWithoutOpdLeadsInput>
+}
+
+export type SurgeryRemarkMasterUpsertWithoutOpdLeadsInput = {
+  update: Prisma.XOR<Prisma.SurgeryRemarkMasterUpdateWithoutOpdLeadsInput, Prisma.SurgeryRemarkMasterUncheckedUpdateWithoutOpdLeadsInput>
+  create: Prisma.XOR<Prisma.SurgeryRemarkMasterCreateWithoutOpdLeadsInput, Prisma.SurgeryRemarkMasterUncheckedCreateWithoutOpdLeadsInput>
+  where?: Prisma.SurgeryRemarkMasterWhereInput
+}
+
+export type SurgeryRemarkMasterUpdateToOneWithWhereWithoutOpdLeadsInput = {
+  where?: Prisma.SurgeryRemarkMasterWhereInput
+  data: Prisma.XOR<Prisma.SurgeryRemarkMasterUpdateWithoutOpdLeadsInput, Prisma.SurgeryRemarkMasterUncheckedUpdateWithoutOpdLeadsInput>
+}
+
+export type SurgeryRemarkMasterUpdateWithoutOpdLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SurgeryRemarkMasterUncheckedUpdateWithoutOpdLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type SurgeryRemarkMasterCountOutputType
+ */
+
+export type SurgeryRemarkMasterCountOutputType = {
+  opdLeads: number
+}
+
+export type SurgeryRemarkMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  opdLeads?: boolean | SurgeryRemarkMasterCountOutputTypeCountOpdLeadsArgs
+}
+
+/**
+ * SurgeryRemarkMasterCountOutputType without action
+ */
+export type SurgeryRemarkMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SurgeryRemarkMasterCountOutputType
+   */
+  select?: Prisma.SurgeryRemarkMasterCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SurgeryRemarkMasterCountOutputType without action
+ */
+export type SurgeryRemarkMasterCountOutputTypeCountOpdLeadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadWhereInput
+}
 
 
 export type SurgeryRemarkMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -403,6 +516,8 @@ export type SurgeryRemarkMasterSelect<ExtArgs extends runtime.Types.Extensions.I
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  opdLeads?: boolean | Prisma.SurgeryRemarkMaster$opdLeadsArgs<ExtArgs>
+  _count?: boolean | Prisma.SurgeryRemarkMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["surgeryRemarkMaster"]>
 
 export type SurgeryRemarkMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -436,10 +551,18 @@ export type SurgeryRemarkMasterSelectScalar = {
 }
 
 export type SurgeryRemarkMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "label" | "displayOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["surgeryRemarkMaster"]>
+export type SurgeryRemarkMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  opdLeads?: boolean | Prisma.SurgeryRemarkMaster$opdLeadsArgs<ExtArgs>
+  _count?: boolean | Prisma.SurgeryRemarkMasterCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type SurgeryRemarkMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SurgeryRemarkMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $SurgeryRemarkMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SurgeryRemarkMaster"
-  objects: {}
+  objects: {
+    opdLeads: Prisma.$LeadPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     code: string
@@ -842,6 +965,7 @@ readonly fields: SurgeryRemarkMasterFieldRefs;
  */
 export interface Prisma__SurgeryRemarkMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  opdLeads<T extends Prisma.SurgeryRemarkMaster$opdLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SurgeryRemarkMaster$opdLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -895,6 +1019,10 @@ export type SurgeryRemarkMasterFindUniqueArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
+  /**
    * Filter, which SurgeryRemarkMaster to fetch.
    */
   where: Prisma.SurgeryRemarkMasterWhereUniqueInput
@@ -913,6 +1041,10 @@ export type SurgeryRemarkMasterFindUniqueOrThrowArgs<ExtArgs extends runtime.Typ
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
+  /**
    * Filter, which SurgeryRemarkMaster to fetch.
    */
   where: Prisma.SurgeryRemarkMasterWhereUniqueInput
@@ -930,6 +1062,10 @@ export type SurgeryRemarkMasterFindFirstArgs<ExtArgs extends runtime.Types.Exten
    * Omit specific fields from the SurgeryRemarkMaster
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
   /**
    * Filter, which SurgeryRemarkMaster to fetch.
    */
@@ -979,6 +1115,10 @@ export type SurgeryRemarkMasterFindFirstOrThrowArgs<ExtArgs extends runtime.Type
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
+  /**
    * Filter, which SurgeryRemarkMaster to fetch.
    */
   where?: Prisma.SurgeryRemarkMasterWhereInput
@@ -1026,6 +1166,10 @@ export type SurgeryRemarkMasterFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Omit specific fields from the SurgeryRemarkMaster
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
   /**
    * Filter, which SurgeryRemarkMasters to fetch.
    */
@@ -1075,6 +1219,10 @@ export type SurgeryRemarkMasterCreateArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
+  /**
    * The data needed to create a SurgeryRemarkMaster.
    */
   data: Prisma.XOR<Prisma.SurgeryRemarkMasterCreateInput, Prisma.SurgeryRemarkMasterUncheckedCreateInput>
@@ -1122,6 +1270,10 @@ export type SurgeryRemarkMasterUpdateArgs<ExtArgs extends runtime.Types.Extensio
    * Omit specific fields from the SurgeryRemarkMaster
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
   /**
    * The data needed to update a SurgeryRemarkMaster.
    */
@@ -1189,6 +1341,10 @@ export type SurgeryRemarkMasterUpsertArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
+  /**
    * The filter to search for the SurgeryRemarkMaster to update in case it exists.
    */
   where: Prisma.SurgeryRemarkMasterWhereUniqueInput
@@ -1215,6 +1371,10 @@ export type SurgeryRemarkMasterDeleteArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
+  /**
    * Filter which SurgeryRemarkMaster to delete.
    */
   where: Prisma.SurgeryRemarkMasterWhereUniqueInput
@@ -1235,6 +1395,30 @@ export type SurgeryRemarkMasterDeleteManyArgs<ExtArgs extends runtime.Types.Exte
 }
 
 /**
+ * SurgeryRemarkMaster.opdLeads
+ */
+export type SurgeryRemarkMaster$opdLeadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lead
+   */
+  select?: Prisma.LeadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lead
+   */
+  omit?: Prisma.LeadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadInclude<ExtArgs> | null
+  where?: Prisma.LeadWhereInput
+  orderBy?: Prisma.LeadOrderByWithRelationInput | Prisma.LeadOrderByWithRelationInput[]
+  cursor?: Prisma.LeadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
  * SurgeryRemarkMaster without action
  */
 export type SurgeryRemarkMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1246,4 +1430,8 @@ export type SurgeryRemarkMasterDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Omit specific fields from the SurgeryRemarkMaster
    */
   omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
 }

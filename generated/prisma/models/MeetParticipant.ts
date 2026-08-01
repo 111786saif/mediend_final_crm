@@ -409,10 +409,6 @@ export type MeetParticipantUncheckedUpdateManyWithoutMeetNestedInput = {
   deleteMany?: Prisma.MeetParticipantScalarWhereInput | Prisma.MeetParticipantScalarWhereInput[]
 }
 
-export type NullableBoolFieldUpdateOperationsInput = {
-  set?: boolean | null
-}
-
 export type MeetParticipantCreateWithoutUserInput = {
   id?: string
   attended?: boolean | null

@@ -57,6 +57,11 @@ export type UserStatus = Prisma.UserStatusModel
  */
 export type Lead = Prisma.LeadModel
 /**
+ * Model LeadOpdPrescriptionImage
+ * 
+ */
+export type LeadOpdPrescriptionImage = Prisma.LeadOpdPrescriptionImageModel
+/**
  * Model CallNote
  * 
  */
@@ -477,6 +482,16 @@ export type PreAuthPDF = Prisma.PreAuthPDFModel
  */
 export type AdmissionRecord = Prisma.AdmissionRecordModel
 /**
+ * Model AdmissionRecordImplantUsage
+ * 
+ */
+export type AdmissionRecordImplantUsage = Prisma.AdmissionRecordImplantUsageModel
+/**
+ * Model AdmissionRecordPrescriptionImage
+ * 
+ */
+export type AdmissionRecordPrescriptionImage = Prisma.AdmissionRecordPrescriptionImageModel
+/**
  * Model InsuranceInitiateForm
  * 
  */
@@ -522,6 +537,11 @@ export type PaymentInstallment = Prisma.PaymentInstallmentModel
  * 
  */
 export type ComplianceCall = Prisma.ComplianceCallModel
+/**
+ * Model CumulativeReportManualEntry
+ * 
+ */
+export type CumulativeReportManualEntry = Prisma.CumulativeReportManualEntryModel
 /**
  * Model SalesTeamCostEntry
  * 

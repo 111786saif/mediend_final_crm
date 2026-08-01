@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   UserStatus: 'UserStatus',
   Lead: 'Lead',
+  LeadOpdPrescriptionImage: 'LeadOpdPrescriptionImage',
   CallNote: 'CallNote',
   LeadRemarkEntry: 'LeadRemarkEntry',
   LeadQrCallAuditLog: 'LeadQrCallAuditLog',
@@ -138,6 +139,8 @@ export const ModelName = {
   InsuranceQuery: 'InsuranceQuery',
   PreAuthPDF: 'PreAuthPDF',
   AdmissionRecord: 'AdmissionRecord',
+  AdmissionRecordImplantUsage: 'AdmissionRecordImplantUsage',
+  AdmissionRecordPrescriptionImage: 'AdmissionRecordPrescriptionImage',
   InsuranceInitiateForm: 'InsuranceInitiateForm',
   CaseStageHistory: 'CaseStageHistory',
   WorkflowResetLog: 'WorkflowResetLog',
@@ -147,6 +150,7 @@ export const ModelName = {
   OutstandingCase: 'OutstandingCase',
   PaymentInstallment: 'PaymentInstallment',
   ComplianceCall: 'ComplianceCall',
+  CumulativeReportManualEntry: 'CumulativeReportManualEntry',
   SalesTeamCostEntry: 'SalesTeamCostEntry',
   EmployeeMonthlyIncentive: 'EmployeeMonthlyIncentive',
   EmployeeMasterSeatingCost: 'EmployeeMasterSeatingCost',
@@ -339,6 +343,12 @@ export const LeadScalarFieldEnum = {
   opdCharges: 'opdCharges',
   opdScheduleDate: 'opdScheduleDate',
   opdMeeting: 'opdMeeting',
+  opdSurgeryAdvised: 'opdSurgeryAdvised',
+  opdSurgeryRemarkCode: 'opdSurgeryRemarkCode',
+  opdReasonNoSurgeryCode: 'opdReasonNoSurgeryCode',
+  opdFollowUpReasonCode: 'opdFollowUpReasonCode',
+  opdImplantRequired: 'opdImplantRequired',
+  opdDiagnosis: 'opdDiagnosis',
   ipdAdmissionDate: 'ipdAdmissionDate',
   ipdHospital: 'ipdHospital',
   ipdDrName: 'ipdDrName',
@@ -374,6 +384,20 @@ export const LeadScalarFieldEnum = {
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const LeadOpdPrescriptionImageScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  storageKey: 'storageKey',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadOpdPrescriptionImageScalarFieldEnum = (typeof LeadOpdPrescriptionImageScalarFieldEnum)[keyof typeof LeadOpdPrescriptionImageScalarFieldEnum]
 
 
 export const CallNoteScalarFieldEnum = {
@@ -1922,6 +1946,8 @@ export const AdmissionRecordScalarFieldEnum = {
   cabDischargeTo: 'cabDischargeTo',
   ipdStatus: 'ipdStatus',
   ipdStatusReason: 'ipdStatusReason',
+  ipdImplantUsed: 'ipdImplantUsed',
+  ipdNoShowReason: 'ipdNoShowReason',
   newSurgeryDate: 'newSurgeryDate',
   ipdDischargeDate: 'ipdDischargeDate',
   ipdStatusNotes: 'ipdStatusNotes',
@@ -1932,6 +1958,34 @@ export const AdmissionRecordScalarFieldEnum = {
 } as const
 
 export type AdmissionRecordScalarFieldEnum = (typeof AdmissionRecordScalarFieldEnum)[keyof typeof AdmissionRecordScalarFieldEnum]
+
+
+export const AdmissionRecordImplantUsageScalarFieldEnum = {
+  id: 'id',
+  admissionRecordId: 'admissionRecordId',
+  implantId: 'implantId',
+  quantity: 'quantity',
+  notes: 'notes',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdmissionRecordImplantUsageScalarFieldEnum = (typeof AdmissionRecordImplantUsageScalarFieldEnum)[keyof typeof AdmissionRecordImplantUsageScalarFieldEnum]
+
+
+export const AdmissionRecordPrescriptionImageScalarFieldEnum = {
+  id: 'id',
+  admissionRecordId: 'admissionRecordId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  storageKey: 'storageKey',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdmissionRecordPrescriptionImageScalarFieldEnum = (typeof AdmissionRecordPrescriptionImageScalarFieldEnum)[keyof typeof AdmissionRecordPrescriptionImageScalarFieldEnum]
 
 
 export const InsuranceInitiateFormScalarFieldEnum = {
@@ -2197,6 +2251,19 @@ export const ComplianceCallScalarFieldEnum = {
 } as const
 
 export type ComplianceCallScalarFieldEnum = (typeof ComplianceCallScalarFieldEnum)[keyof typeof ComplianceCallScalarFieldEnum]
+
+
+export const CumulativeReportManualEntryScalarFieldEnum = {
+  id: 'id',
+  year: 'year',
+  patientSummary: 'patientSummary',
+  concernCategory: 'concernCategory',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CumulativeReportManualEntryScalarFieldEnum = (typeof CumulativeReportManualEntryScalarFieldEnum)[keyof typeof CumulativeReportManualEntryScalarFieldEnum]
 
 
 export const SalesTeamCostEntryScalarFieldEnum = {
