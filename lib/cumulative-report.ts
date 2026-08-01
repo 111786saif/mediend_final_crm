@@ -1,29 +1,22 @@
 import { Prisma } from '@/generated/prisma/client'
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
 import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
+import type {
+  CumulativeDatePreset,
+  CumulativeReportFilters,
+  CumulativeReportRow,
+  CumulativeReportStatus,
+  CumulativeReportSummary,
+} from '@/lib/cumulative-report-types'
 
-export type CumulativeReportStatus =
-  | 'Planning'
-  | 'IPD Done'
-  | 'Pending'
-  | 'Cancelled'
-  | 'Follow-up'
-
-export const CUMULATIVE_REPORT_STATUSES: CumulativeReportStatus[] = [
-  'Planning',
-  'IPD Done',
-  'Pending',
-  'Cancelled',
-  'Follow-up',
-]
-
-export type CumulativeDatePreset =
-  | 'today'
-  | 'this_week'
-  | 'this_month'
-  | 'last_month'
-  | 'custom'
-  | 'all'
+export type {
+  CumulativeReportStatus,
+  CumulativeDatePreset,
+  CumulativeReportFilters,
+  CumulativeReportRow,
+  CumulativeReportSummary,
+} from '@/lib/cumulative-report-types'
+export { CUMULATIVE_REPORT_STATUSES } from '@/lib/cumulative-report-types'
 
 const IPD_DONE_STAGES = [
   'IPD_DONE',
@@ -54,43 +47,6 @@ const STATUS_CODES = {
   planning: ['27', '28', '39', '37', '14', '12'],
   cancelled: ['15', '10', '33', '34', '26', '36', '23', '18', '41', '4', '5', '6', '7', '8', '9'],
 } as const
-
-export interface CumulativeReportFilters {
-  datePreset?: CumulativeDatePreset | null
-  startDate?: string | null
-  endDate?: string | null
-  hospital?: string | null
-  circle?: string | null
-  treatment?: string | null
-  referralName?: string | null
-  bdId?: string | null
-  status?: CumulativeReportStatus | null
-  search?: string | null
-}
-
-export interface CumulativeReportRow {
-  id: string
-  date: string
-  patientName: string
-  patientContact: string
-  referralName: string
-  referralContact: string
-  treatment: string
-  hospitalName: string
-  circle: string
-  businessDeveloper: string
-  status: CumulativeReportStatus
-}
-
-export interface CumulativeReportSummary {
-  totalPatients: number
-  totalSurgeries: number
-  planning: number
-  ipdDone: number
-  pending: number
-  cancelled: number
-  followUp: number
-}
 
 type LeadForStatus = {
   status: string

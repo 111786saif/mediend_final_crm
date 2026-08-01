@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState, type ReactNode } from "react"
+import { useEffect, useMemo, useState, Fragment, type ReactNode } from "react"
 import {
   Building2,
   ChevronDown,
@@ -16,7 +16,6 @@ import {
 } from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -35,6 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   buildCumulativeExportUrl,
   useCumulativeReport,
@@ -42,8 +42,24 @@ import {
   type CumulativeDatePreset,
   type CumulativeReportStatus,
 } from "@/hooks/use-cumulative-report"
+import type { CumulativeKpiKey } from "@/lib/cumulative-report-monthly-shared"
 
 const ALL = "ALL"
+
+const PATIENT_SUMMARY_COLUMNS: { key: CumulativeKpiKey; label: string }[] = [
+  { key: "totalSurgeries", label: "Total Surgeries Done" },
+  { key: "mediendManaged", label: "MediEnd Managed Cases" },
+  { key: "offlineBusiness", label: "Offline Business" },
+  { key: "connectedCalls", label: "Connected Calls" },
+  { key: "callsNotConnected", label: "Calls Not Connected" },
+  { key: "patientSatisfied", label: "Patient Satisfied" },
+  { key: "patientNotSatisfied", label: "Patient Not Satisfied" },
+]
+
+function formatKpiPercentage(value: number | null | undefined): string {
+  if (value == null) return "—"
+  return `${value % 1 === 0 ? value.toFixed(0) : value.toFixed(1)}%`
+}
 
 const DATE_PRESETS: { value: CumulativeDatePreset; label: string }[] = [
   { value: "today", label: "Today" },
@@ -54,11 +70,11 @@ const DATE_PRESETS: { value: CumulativeDatePreset; label: string }[] = [
   { value: "all", label: "All Time" },
 ]
 
-type SortKey = "date" | "patientName" | "hospitalName" | "circle" | "status" | "bd"
-
-const PAGE_SIZE = 20
+type ReportTab = "patient-summary" | "kpi-performance"
 
 export function CumulativeReportView() {
+  const [activeTab, setActiveTab] = useState<ReportTab>("patient-summary")
+  const [kpiMonth, setKpiMonth] = useState<string | null>(null)
   const [datePreset, setDatePreset] = useState<CumulativeDatePreset>("this_month")
   const [customStart, setCustomStart] = useState("")
   const [customEnd, setCustomEnd] = useState("")
@@ -71,9 +87,6 @@ export function CumulativeReportView() {
   const [searchInput, setSearchInput] = useState("")
   const [debouncedSearch, setDebouncedSearch] = useState("")
   const [filtersOpen, setFiltersOpen] = useState(true)
-  const [page, setPage] = useState(1)
-  const [sortKey, setSortKey] = useState<SortKey>("date")
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc")
   const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
@@ -82,7 +95,7 @@ export function CumulativeReportView() {
   }, [searchInput])
 
   useEffect(() => {
-    setPage(1)
+    setKpiMonth(null)
   }, [
     datePreset,
     customStart,
@@ -94,8 +107,6 @@ export function CumulativeReportView() {
     bdFilter,
     statusFilter,
     debouncedSearch,
-    sortKey,
-    sortDir,
   ])
 
   const { data: filterOptions } = useCumulativeReportFilterOptions()
@@ -112,10 +123,7 @@ export function CumulativeReportView() {
       bdId: bdFilter === ALL ? null : bdFilter,
       status: statusFilter === ALL ? null : (statusFilter as CumulativeReportStatus),
       search: debouncedSearch || null,
-      page,
-      limit: PAGE_SIZE,
-      sort: sortKey,
-      dir: sortDir,
+      kpiMonth: activeTab === "kpi-performance" ? kpiMonth : null,
     }),
     [
       datePreset,
@@ -128,14 +136,21 @@ export function CumulativeReportView() {
       bdFilter,
       statusFilter,
       debouncedSearch,
-      page,
-      sortKey,
-      sortDir,
+      activeTab,
+      kpiMonth,
     ],
   )
 
   const { data, isLoading, isError } = useCumulativeReport(queryFilters)
   const summary = data?.summary
+  const patientSummary = data?.patientSummary ?? []
+  const kpiPerformance = data?.kpiPerformance
+
+  useEffect(() => {
+    if (!patientSummary.length) return
+    if (kpiMonth && patientSummary.some((m) => m.monthKey === kpiMonth)) return
+    setKpiMonth(patientSummary[patientSummary.length - 1]?.monthKey ?? null)
+  }, [patientSummary, kpiMonth])
 
   const hasActiveFilters =
     datePreset !== "this_month" ||
@@ -159,16 +174,7 @@ export function CumulativeReportView() {
     setStatusFilter(ALL)
     setSearchInput("")
     setDebouncedSearch("")
-    setPage(1)
-  }
-
-  const toggleSort = (key: SortKey) => {
-    if (sortKey === key) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"))
-    } else {
-      setSortKey(key)
-      setSortDir("asc")
-    }
+    setKpiMonth(null)
   }
 
   const handleExport = async () => {
@@ -216,7 +222,7 @@ export function CumulativeReportView() {
           </Button>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-9">
           <SummaryCard label="Total patients" value={summary?.totalPatients ?? 0} tone="emerald" />
           <SummaryCard label="Total surgeries" value={summary?.totalSurgeries ?? 0} tone="sky" />
           <SummaryCard label="Planning" value={summary?.planning ?? 0} tone="slate" />
@@ -224,6 +230,8 @@ export function CumulativeReportView() {
           <SummaryCard label="Pending" value={summary?.pending ?? 0} tone="orange" />
           <SummaryCard label="Cancelled" value={summary?.cancelled ?? 0} tone="rose" />
           <SummaryCard label="Follow-up" value={summary?.followUp ?? 0} tone="sky" />
+          <SummaryCard label="Satisfied" value={summary?.patientSatisfied ?? 0} tone="emerald" />
+          <SummaryCard label="Not satisfied" value={summary?.patientNotSatisfied ?? 0} tone="rose" />
         </div>
       </section>
 
@@ -445,105 +453,147 @@ export function CumulativeReportView() {
 
       <Card className="overflow-hidden border-slate-200/80 bg-white/95 shadow-sm dark:border-slate-800 dark:bg-slate-950/75">
         <CardContent className="px-0 pt-0">
-          <div className="border-b border-slate-200/80 bg-slate-50/70 px-5 py-4 dark:border-slate-800 dark:bg-slate-900/60">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Report</h2>
-              <Badge variant="outline" className="rounded-full px-3 py-1">
-                {data?.totalRecords ?? 0} records
-              </Badge>
-            </div>
-          </div>
-
-          {isLoading ? (
-            <div className="flex min-h-[240px] items-center justify-center text-sm text-muted-foreground">
-              Loading report…
-            </div>
-          ) : isError ? (
-            <div className="flex min-h-[240px] items-center justify-center text-sm text-destructive">
-              Failed to load report. Refresh and try again.
-            </div>
-          ) : (
-            <>
-              <div className="max-h-[min(70vh,720px)] overflow-auto">
-                <Table>
-                  <TableHeader className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-900">
-                    <TableRow>
-                      <TableHead className="whitespace-nowrap">Sr. No.</TableHead>
-                      <SortHead label="Date" active={sortKey === "date"} dir={sortDir} onClick={() => toggleSort("date")} />
-                      <SortHead label="Patient Name" active={sortKey === "patientName"} dir={sortDir} onClick={() => toggleSort("patientName")} />
-                      <TableHead className="whitespace-nowrap">Patient Contact</TableHead>
-                      <TableHead className="whitespace-nowrap">Referral Name</TableHead>
-                      <TableHead className="whitespace-nowrap">Referral Contact</TableHead>
-                      <TableHead className="whitespace-nowrap">Treatment</TableHead>
-                      <SortHead label="Hospital Name" active={sortKey === "hospitalName"} dir={sortDir} onClick={() => toggleSort("hospitalName")} />
-                      <SortHead label="Circle" active={sortKey === "circle"} dir={sortDir} onClick={() => toggleSort("circle")} />
-                      <SortHead label="Business Developer" active={sortKey === "bd"} dir={sortDir} onClick={() => toggleSort("bd")} />
-                      <SortHead label="Status" active={sortKey === "status"} dir={sortDir} onClick={() => toggleSort("status")} />
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {(data?.data ?? []).length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={11} className="py-12 text-center text-muted-foreground">
-                          No records match the selected filters.
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      data?.data.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell className="tabular-nums">{row.srNo}</TableCell>
-                          <TableCell className="whitespace-nowrap">{row.date || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap font-medium">{row.patientName}</TableCell>
-                          <TableCell className="whitespace-nowrap tabular-nums">{row.patientContact || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap">{row.referralName || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap tabular-nums">{row.referralContact || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap">{row.treatment || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap">{row.hospitalName || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap">{row.circle || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap">{row.businessDeveloper || "—"}</TableCell>
-                          <TableCell className="whitespace-nowrap">
-                            <Badge variant="outline" className="rounded-full">
-                              {row.status}
-                            </Badge>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-
-              {(data?.totalPages ?? 1) > 1 && (
-                <div className="flex items-center justify-between gap-3 border-t border-slate-200/80 bg-slate-50/70 px-5 py-4 dark:border-slate-800 dark:bg-slate-900/40">
-                  <p className="text-sm text-muted-foreground">
-                    Page {data?.page ?? 1} of {data?.totalPages ?? 1}
-                  </p>
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="rounded-full"
-                      disabled={page <= 1}
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as ReportTab)}
+            className="gap-0"
+          >
+            <div className="border-b border-slate-200/80 bg-slate-50/70 px-5 py-4 dark:border-slate-800 dark:bg-slate-900/60">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <TabsList className="h-10">
+                  <TabsTrigger value="patient-summary">Patient Summary</TabsTrigger>
+                  <TabsTrigger value="kpi-performance">KPI Performance</TabsTrigger>
+                </TabsList>
+                {activeTab === "kpi-performance" && patientSummary.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Month</span>
+                    <Select
+                      value={kpiMonth ?? undefined}
+                      onValueChange={setKpiMonth}
                     >
-                      Previous
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="rounded-full"
-                      disabled={page >= (data?.totalPages ?? 1)}
-                      onClick={() => setPage((p) => p + 1)}
-                    >
-                      Next
-                    </Button>
+                      <SelectTrigger className="h-9 w-[200px] rounded-xl">
+                        <SelectValue placeholder="Select month" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {patientSummary.map((m) => (
+                          <SelectItem key={m.monthKey} value={m.monthKey}>
+                            {m.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                </div>
-              )}
-            </>
-          )}
+                )}
+              </div>
+            </div>
+
+            {isLoading ? (
+              <div className="flex min-h-[280px] items-center justify-center text-sm text-muted-foreground">
+                Loading report…
+              </div>
+            ) : isError ? (
+              <div className="flex min-h-[280px] items-center justify-center text-sm text-destructive">
+                Failed to load report. Refresh and try again.
+              </div>
+            ) : (
+              <>
+                <TabsContent value="patient-summary" className="mt-0">
+                  <div className="max-h-[min(70vh,720px)] overflow-auto p-5">
+                    <ReportTable>
+                      <TableHeader className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-900">
+                        <TableRow>
+                          <TableHead className="min-w-[140px] text-center">Month</TableHead>
+                          {PATIENT_SUMMARY_COLUMNS.map((col) => (
+                            <TableHead key={col.key} className="min-w-[120px] text-center">
+                              {col.label}
+                            </TableHead>
+                          ))}
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {patientSummary.length === 0 ? (
+                          <TableRow>
+                            <TableCell
+                              colSpan={PATIENT_SUMMARY_COLUMNS.length + 1}
+                              className="py-12 text-center text-muted-foreground"
+                            >
+                              No surgery data for the selected filters.
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          patientSummary.map((month) => (
+                            <Fragment key={month.monthKey}>
+                              <TableRow>
+                                <TableCell
+                                  rowSpan={2}
+                                  className="align-middle text-center font-medium"
+                                >
+                                  {month.label}
+                                </TableCell>
+                                {PATIENT_SUMMARY_COLUMNS.map((col) => (
+                                  <TableCell
+                                    key={col.key}
+                                    className="text-center tabular-nums"
+                                  >
+                                    {month.counts[col.key]}
+                                  </TableCell>
+                                ))}
+                              </TableRow>
+                              <TableRow>
+                                {PATIENT_SUMMARY_COLUMNS.map((col) => (
+                                  <TableCell
+                                    key={col.key}
+                                    className="text-center tabular-nums text-muted-foreground"
+                                  >
+                                    {formatKpiPercentage(month.percentages[col.key])}
+                                  </TableCell>
+                                ))}
+                              </TableRow>
+                            </Fragment>
+                          ))
+                        )}
+                      </TableBody>
+                    </ReportTable>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="kpi-performance" className="mt-0">
+                  <div className="max-h-[min(70vh,720px)] overflow-auto p-5">
+                    {!kpiPerformance ? (
+                      <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
+                        No KPI data for the selected filters.
+                      </div>
+                    ) : (
+                      <ReportTable>
+                        <TableHeader className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-900">
+                          <TableRow>
+                            <TableHead className="w-16 text-center">S.No</TableHead>
+                            <TableHead className="min-w-[200px]">KPI</TableHead>
+                            <TableHead className="min-w-[140px] text-center">
+                              {kpiPerformance.label} Performance
+                            </TableHead>
+                            <TableHead className="min-w-[100px] text-center">Percentage</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {kpiPerformance.rows.map((row) => (
+                            <TableRow key={row.sno}>
+                              <TableCell className="text-center tabular-nums">{row.sno}</TableCell>
+                              <TableCell className="font-medium">{row.kpi}</TableCell>
+                              <TableCell className="text-center tabular-nums">{row.count}</TableCell>
+                              <TableCell className="text-center tabular-nums text-muted-foreground">
+                                {formatKpiPercentage(row.percentage)}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </ReportTable>
+                    )}
+                  </div>
+                </TabsContent>
+              </>
+            )}
+          </Tabs>
         </CardContent>
       </Card>
     </div>
@@ -576,6 +626,14 @@ function SummaryCard({
   )
 }
 
+function ReportTable({ children }: { children: ReactNode }) {
+  return (
+    <Table className="border-collapse [&_th]:border [&_td]:border [&_th]:border-slate-200 [&_td]:border-slate-200 dark:[&_th]:border-slate-700 dark:[&_td]:border-slate-700">
+      {children}
+    </Table>
+  )
+}
+
 function FilterField({
   label,
   icon: Icon,
@@ -593,33 +651,5 @@ function FilterField({
       </div>
       {content}
     </div>
-  )
-}
-
-function SortHead({
-  label,
-  active,
-  dir,
-  onClick,
-}: {
-  label: string
-  active: boolean
-  dir: "asc" | "desc"
-  onClick: () => void
-}) {
-  return (
-    <TableHead className="whitespace-nowrap">
-      <button
-        type="button"
-        onClick={onClick}
-        className={cn(
-          "inline-flex items-center gap-1 font-medium hover:text-emerald-700 dark:hover:text-emerald-300",
-          active && "text-emerald-700 dark:text-emerald-300",
-        )}
-      >
-        {label}
-        {active && <span className="text-[10px]">{dir === "asc" ? "↑" : "↓"}</span>}
-      </button>
-    </TableHead>
   )
 }

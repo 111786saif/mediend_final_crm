@@ -5,9 +5,14 @@ import type {
   CumulativeReportRow,
   CumulativeReportStatus,
   CumulativeReportSummary,
-} from '@/lib/cumulative-report'
+} from '@/lib/cumulative-report-types'
+import type {
+  CumulativeKpiPerformance,
+  CumulativePatientSummaryMonth,
+} from '@/lib/cumulative-report-monthly-shared'
 
-export type { CumulativeDatePreset, CumulativeReportStatus, CumulativeReportRow, CumulativeReportSummary }
+export type { CumulativeDatePreset, CumulativeReportStatus, CumulativeReportRow, CumulativeReportSummary } from '@/lib/cumulative-report-types'
+export type { CumulativeKpiPerformance, CumulativePatientSummaryMonth } from '@/lib/cumulative-report-monthly-shared'
 
 export interface CumulativeReportFilters {
   datePreset: CumulativeDatePreset
@@ -24,6 +29,7 @@ export interface CumulativeReportFilters {
   limit?: number
   sort?: string | null
   dir?: 'asc' | 'desc' | null
+  kpiMonth?: string | null
 }
 
 export interface CumulativeReportResponse {
@@ -34,6 +40,8 @@ export interface CumulativeReportResponse {
   totalPages: number
   data: Array<CumulativeReportRow & { srNo: number }>
   statusOptions: CumulativeReportStatus[]
+  patientSummary: CumulativePatientSummaryMonth[]
+  kpiPerformance: CumulativeKpiPerformance | null
 }
 
 export interface CumulativeFilterOptions {
@@ -59,6 +67,7 @@ function buildQueryString(filters: CumulativeReportFilters): string {
   if (filters.limit) params.set('limit', String(filters.limit))
   if (filters.sort) params.set('sort', filters.sort)
   if (filters.dir) params.set('dir', filters.dir)
+  if (filters.kpiMonth) params.set('kpiMonth', filters.kpiMonth)
   const qs = params.toString()
   return qs ? `?${qs}` : ''
 }
