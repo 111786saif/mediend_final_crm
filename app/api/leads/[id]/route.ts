@@ -5,12 +5,12 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
-import { Prisma, PipelineStage } from '@/generated/prisma/client'
+import { CaseStage, FlowType, Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
-import { OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
+import { isOpdDoneStatus, OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
 import {
   assertDoctorAvailableOnDate,
   DoctorAvailabilityError,
@@ -31,6 +31,8 @@ import {
   canUserUpdateLeadStatus,
   canUserViewLeadOwner,
 } from '@/lib/lead-ownership'
+import { buildEffectiveOpdEntries, getEffectiveOpdCounts } from '@/lib/lead-opd-appointments'
+import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 
 function parseFollowUpDateInput(value: unknown) {
   if (value === undefined) return { provided: false, value: undefined as Date | null | undefined }
@@ -54,6 +56,23 @@ import { recomputeOutstandingFromInstallments } from '@/lib/pl/installments'
 
 function normalizeStatusLabel(value: string | null | undefined) {
   return String(value ?? '').trim().toLowerCase()
+}
+
+function resolveCaseStageFromManualStatus(
+  status: string | null | undefined,
+  flowType: FlowType | null | undefined
+): CaseStage | undefined {
+  const normalized = normalizeStatusLabel(status)
+
+  if (normalized === 'opd_done' || normalized === 'opd done') {
+    return flowType === FlowType.CASH ? CaseStage.CASH_OPD_DONE : CaseStage.OPD_DONE
+  }
+
+  if (normalized === 'ipd_done' || normalized === 'ipd done') {
+    return flowType === FlowType.CASH ? CaseStage.CASH_IPD_DONE : CaseStage.IPD_DONE
+  }
+
+  return undefined
 }
 
 export async function GET(
@@ -311,6 +330,18 @@ export async function GET(
       console.error('[DEBUG] Error fetching opdRecordingRelations:', e);
     }
 
+    let opdAppointments: any[] = []
+    try {
+      opdAppointments = await prisma.leadOpdAppointment.findMany({
+        where: { leadId: id },
+        orderBy: [{ phase: 'asc' }, { slot: 'asc' }, { scheduleDate: 'asc' }],
+        select: leadOpdAppointmentSelect,
+      })
+      console.log('[DEBUG] opdAppointments fetched successfully')
+    } catch (e) {
+      console.error('[DEBUG] Error fetching opdAppointments:', e)
+    }
+
     // Resolve hospital name to fetch hospitalShare if the column exists in HospitalMaster
     const pl = (plRecord as Record<string, unknown> | null) ?? {}
     const ds = (dischargeSheet as Record<string, unknown> | null) ?? {}
@@ -362,7 +393,11 @@ export async function GET(
       opdReasonNoSurgery: opdRecordingRelations?.opdReasonNoSurgery ?? null,
       opdFollowUpReason: opdRecordingRelations?.opdFollowUpReason ?? null,
       opdPrescriptionImages: opdRecordingRelations?.opdPrescriptionImages ?? [],
+      opdAppointments,
     } as any
+
+    fullLead.effectiveOpdAppointments = buildEffectiveOpdEntries(fullLead, opdAppointments)
+    fullLead.opdCounts = getEffectiveOpdCounts(fullLead.effectiveOpdAppointments)
 
     console.log('[DEBUG] Full lead object constructed successfully with all relations')
 
@@ -776,6 +811,14 @@ export async function PATCH(
       updateData.followUpDate = parsedFollowUpDateInput.value
     }
 
+    const autoCaseStageFromStatus = statusChanged
+      ? resolveCaseStageFromManualStatus(requestedStatus, lead.flowType)
+      : undefined
+
+    if (autoCaseStageFromStatus) {
+      updateData.caseStage = autoCaseStageFromStatus
+    }
+
     let churnAutomationResult:
       | Awaited<ReturnType<typeof planChurnLeadReassignment>>
       | null = null
@@ -805,6 +848,10 @@ export async function PATCH(
     if (assigneeChanged && !churnAutomationResult) {
       Object.assign(updateData, buildLeadOwnershipTransferUpdate(String(body.bdId)))
     }
+
+    const nextCaseStage =
+      (updateData.caseStage as CaseStage | undefined) ?? lead.caseStage
+    const caseStageChanged = nextCaseStage !== lead.caseStage
 
     const { updatedLead, statusRemarkEntry } = await prisma.$transaction(async (tx) => {
       const updatedLead = await tx.lead.update({
@@ -847,6 +894,23 @@ export async function PATCH(
               },
             })
           : null
+
+      if (caseStageChanged) {
+        await tx.caseStageHistory.create({
+          data: {
+            leadId: lead.id,
+            fromStage: lead.caseStage,
+            toStage: nextCaseStage,
+            changedById: user.id,
+            note:
+              typeof body.stageChangeNote === 'string' && body.stageChangeNote.trim()
+                ? body.stageChangeNote.trim()
+                : statusChanged
+                  ? `Case stage synced from lead status: ${requestedStatus}`
+                  : 'Case stage updated from lead edit',
+          },
+        })
+      }
 
       return { updatedLead, statusRemarkEntry }
     })

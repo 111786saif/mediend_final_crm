@@ -6,6 +6,10 @@ import { getSessionFromRequest } from '@/lib/session'
 
 export const runtime = 'nodejs'
 
+function canAccessBulkReassign(role: string) {
+  return role !== 'BD' && role !== 'USER'
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ jobId: string }> }
@@ -14,6 +18,10 @@ export async function GET(
     const user = getSessionFromRequest(request)
     if (!user) {
       return unauthorizedResponse()
+    }
+
+    if (!canAccessBulkReassign(user.role)) {
+      return errorResponse('Forbidden', 403)
     }
 
     if (user.role !== 'SUPER_ADMIN' && !hasPermission(user, 'leads:read')) {

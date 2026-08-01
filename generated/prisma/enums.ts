@@ -473,6 +473,24 @@ export const IpdStatus = {
 export type IpdStatus = (typeof IpdStatus)[keyof typeof IpdStatus]
 
 
+export const LeadOpdPhase = {
+  PRE: 'PRE',
+  POST: 'POST'
+} as const
+
+export type LeadOpdPhase = (typeof LeadOpdPhase)[keyof typeof LeadOpdPhase]
+
+
+export const LeadOpdStatus = {
+  SCHEDULED: 'SCHEDULED',
+  DONE: 'DONE',
+  CANCELLED: 'CANCELLED',
+  NO_SHOW: 'NO_SHOW'
+} as const
+
+export type LeadOpdStatus = (typeof LeadOpdStatus)[keyof typeof LeadOpdStatus]
+
+
 export const PaidByParty = {
   MEDIEND: 'MEDIEND',
   HOSPITAL: 'HOSPITAL'
@@ -569,6 +587,14 @@ export const OnboardingStatus = {
 } as const
 
 export type OnboardingStatus = (typeof OnboardingStatus)[keyof typeof OnboardingStatus]
+
+
+export const ExperienceType = {
+  FRESHER: 'FRESHER',
+  EXPERIENCED: 'EXPERIENCED'
+} as const
+
+export type ExperienceType = (typeof ExperienceType)[keyof typeof ExperienceType]
 
 
 export const ITProjectStatus = {

@@ -139,6 +139,8 @@ export const ModelName = {
   InsuranceQuery: 'InsuranceQuery',
   PreAuthPDF: 'PreAuthPDF',
   AdmissionRecord: 'AdmissionRecord',
+  LeadOpdAppointment: 'LeadOpdAppointment',
+  LeadOpdAppointmentPrescriptionImage: 'LeadOpdAppointmentPrescriptionImage',
   AdmissionRecordImplantUsage: 'AdmissionRecordImplantUsage',
   AdmissionRecordPrescriptionImage: 'AdmissionRecordPrescriptionImage',
   InsuranceInitiateForm: 'InsuranceInitiateForm',
@@ -728,8 +730,12 @@ export const EmployeeScalarFieldEnum = {
   educationalCertDocUrl: 'educationalCertDocUrl',
   experienceCertDocUrl: 'experienceCertDocUrl',
   appointmentLetterDocUrl: 'appointmentLetterDocUrl',
+  salarySlipDocUrl: 'salarySlipDocUrl',
+  bankStatementDocUrl: 'bankStatementDocUrl',
   otherDocuments: 'otherDocuments',
   uanNumber: 'uanNumber',
+  experienceType: 'experienceType',
+  personalEmail: 'personalEmail',
   status: 'status',
   onboardingStatus: 'onboardingStatus',
   onboardingSubmittedAt: 'onboardingSubmittedAt',
@@ -1958,6 +1964,48 @@ export const AdmissionRecordScalarFieldEnum = {
 } as const
 
 export type AdmissionRecordScalarFieldEnum = (typeof AdmissionRecordScalarFieldEnum)[keyof typeof AdmissionRecordScalarFieldEnum]
+
+
+export const LeadOpdAppointmentScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  phase: 'phase',
+  slot: 'slot',
+  status: 'status',
+  hospitalName: 'hospitalName',
+  doctorName: 'doctorName',
+  contactNumber: 'contactNumber',
+  charges: 'charges',
+  scheduleDate: 'scheduleDate',
+  meetingType: 'meetingType',
+  surgeryAdvised: 'surgeryAdvised',
+  surgeryRemarkCode: 'surgeryRemarkCode',
+  reasonNoSurgeryCode: 'reasonNoSurgeryCode',
+  followUpReasonCode: 'followUpReasonCode',
+  implantRequired: 'implantRequired',
+  diagnosis: 'diagnosis',
+  remarks: 'remarks',
+  createdById: 'createdById',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadOpdAppointmentScalarFieldEnum = (typeof LeadOpdAppointmentScalarFieldEnum)[keyof typeof LeadOpdAppointmentScalarFieldEnum]
+
+
+export const LeadOpdAppointmentPrescriptionImageScalarFieldEnum = {
+  id: 'id',
+  opdAppointmentId: 'opdAppointmentId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  storageKey: 'storageKey',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadOpdAppointmentPrescriptionImageScalarFieldEnum = (typeof LeadOpdAppointmentPrescriptionImageScalarFieldEnum)[keyof typeof LeadOpdAppointmentPrescriptionImageScalarFieldEnum]
 
 
 export const AdmissionRecordImplantUsageScalarFieldEnum = {

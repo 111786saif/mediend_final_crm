@@ -482,6 +482,16 @@ export type PreAuthPDF = Prisma.PreAuthPDFModel
  */
 export type AdmissionRecord = Prisma.AdmissionRecordModel
 /**
+ * Model LeadOpdAppointment
+ * 
+ */
+export type LeadOpdAppointment = Prisma.LeadOpdAppointmentModel
+/**
+ * Model LeadOpdAppointmentPrescriptionImage
+ * 
+ */
+export type LeadOpdAppointmentPrescriptionImage = Prisma.LeadOpdAppointmentPrescriptionImageModel
+/**
  * Model AdmissionRecordImplantUsage
  * 
  */

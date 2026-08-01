@@ -472,6 +472,8 @@ export const ModelName = {
   InsuranceQuery: 'InsuranceQuery',
   PreAuthPDF: 'PreAuthPDF',
   AdmissionRecord: 'AdmissionRecord',
+  LeadOpdAppointment: 'LeadOpdAppointment',
+  LeadOpdAppointmentPrescriptionImage: 'LeadOpdAppointmentPrescriptionImage',
   AdmissionRecordImplantUsage: 'AdmissionRecordImplantUsage',
   AdmissionRecordPrescriptionImage: 'AdmissionRecordPrescriptionImage',
   InsuranceInitiateForm: 'InsuranceInitiateForm',
@@ -560,7 +562,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
+    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "leadOpdAppointment" | "leadOpdAppointmentPrescriptionImage" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -7076,6 +7078,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LeadOpdAppointment: {
+      payload: Prisma.$LeadOpdAppointmentPayload<ExtArgs>
+      fields: Prisma.LeadOpdAppointmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadOpdAppointmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadOpdAppointmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>
+        }
+        findFirst: {
+          args: Prisma.LeadOpdAppointmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadOpdAppointmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>
+        }
+        findMany: {
+          args: Prisma.LeadOpdAppointmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>[]
+        }
+        create: {
+          args: Prisma.LeadOpdAppointmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>
+        }
+        createMany: {
+          args: Prisma.LeadOpdAppointmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadOpdAppointmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>[]
+        }
+        delete: {
+          args: Prisma.LeadOpdAppointmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>
+        }
+        update: {
+          args: Prisma.LeadOpdAppointmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadOpdAppointmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadOpdAppointmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadOpdAppointmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadOpdAppointmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPayload>
+        }
+        aggregate: {
+          args: Prisma.LeadOpdAppointmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeadOpdAppointment>
+        }
+        groupBy: {
+          args: Prisma.LeadOpdAppointmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadOpdAppointmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadOpdAppointmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadOpdAppointmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    LeadOpdAppointmentPrescriptionImage: {
+      payload: Prisma.$LeadOpdAppointmentPrescriptionImagePayload<ExtArgs>
+      fields: Prisma.LeadOpdAppointmentPrescriptionImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>
+        }
+        findFirst: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>
+        }
+        findMany: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>[]
+        }
+        create: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>
+        }
+        createMany: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>[]
+        }
+        delete: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>
+        }
+        update: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload>
+        }
+        aggregate: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeadOpdAppointmentPrescriptionImage>
+        }
+        groupBy: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadOpdAppointmentPrescriptionImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadOpdAppointmentPrescriptionImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadOpdAppointmentPrescriptionImageCountAggregateOutputType> | number
+        }
+      }
+    }
     AdmissionRecordImplantUsage: {
       payload: Prisma.$AdmissionRecordImplantUsagePayload<ExtArgs>
       fields: Prisma.AdmissionRecordImplantUsageFieldRefs
@@ -13015,8 +13165,12 @@ export const EmployeeScalarFieldEnum = {
   educationalCertDocUrl: 'educationalCertDocUrl',
   experienceCertDocUrl: 'experienceCertDocUrl',
   appointmentLetterDocUrl: 'appointmentLetterDocUrl',
+  salarySlipDocUrl: 'salarySlipDocUrl',
+  bankStatementDocUrl: 'bankStatementDocUrl',
   otherDocuments: 'otherDocuments',
   uanNumber: 'uanNumber',
+  experienceType: 'experienceType',
+  personalEmail: 'personalEmail',
   status: 'status',
   onboardingStatus: 'onboardingStatus',
   onboardingSubmittedAt: 'onboardingSubmittedAt',
@@ -14245,6 +14399,48 @@ export const AdmissionRecordScalarFieldEnum = {
 } as const
 
 export type AdmissionRecordScalarFieldEnum = (typeof AdmissionRecordScalarFieldEnum)[keyof typeof AdmissionRecordScalarFieldEnum]
+
+
+export const LeadOpdAppointmentScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  phase: 'phase',
+  slot: 'slot',
+  status: 'status',
+  hospitalName: 'hospitalName',
+  doctorName: 'doctorName',
+  contactNumber: 'contactNumber',
+  charges: 'charges',
+  scheduleDate: 'scheduleDate',
+  meetingType: 'meetingType',
+  surgeryAdvised: 'surgeryAdvised',
+  surgeryRemarkCode: 'surgeryRemarkCode',
+  reasonNoSurgeryCode: 'reasonNoSurgeryCode',
+  followUpReasonCode: 'followUpReasonCode',
+  implantRequired: 'implantRequired',
+  diagnosis: 'diagnosis',
+  remarks: 'remarks',
+  createdById: 'createdById',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadOpdAppointmentScalarFieldEnum = (typeof LeadOpdAppointmentScalarFieldEnum)[keyof typeof LeadOpdAppointmentScalarFieldEnum]
+
+
+export const LeadOpdAppointmentPrescriptionImageScalarFieldEnum = {
+  id: 'id',
+  opdAppointmentId: 'opdAppointmentId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  storageKey: 'storageKey',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadOpdAppointmentPrescriptionImageScalarFieldEnum = (typeof LeadOpdAppointmentPrescriptionImageScalarFieldEnum)[keyof typeof LeadOpdAppointmentPrescriptionImageScalarFieldEnum]
 
 
 export const AdmissionRecordImplantUsageScalarFieldEnum = {
@@ -15767,6 +15963,20 @@ export type ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel> = Field
 
 
 /**
+ * Reference to a field of type 'ExperienceType'
+ */
+export type EnumExperienceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExperienceType'>
+    
+
+
+/**
+ * Reference to a field of type 'ExperienceType[]'
+ */
+export type ListEnumExperienceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExperienceType[]'>
+    
+
+
+/**
  * Reference to a field of type 'EmployeeStatus'
  */
 export type EnumEmployeeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployeeStatus'>
@@ -16299,6 +16509,34 @@ export type ListEnumIpdStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 
 
 /**
+ * Reference to a field of type 'LeadOpdPhase'
+ */
+export type EnumLeadOpdPhaseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadOpdPhase'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadOpdPhase[]'
+ */
+export type ListEnumLeadOpdPhaseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadOpdPhase[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadOpdStatus'
+ */
+export type EnumLeadOpdStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadOpdStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadOpdStatus[]'
+ */
+export type ListEnumLeadOpdStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadOpdStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'ChatMessageType'
  */
 export type EnumChatMessageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChatMessageType'>
@@ -16802,6 +17040,8 @@ export type GlobalOmitConfig = {
   insuranceQuery?: Prisma.InsuranceQueryOmit
   preAuthPDF?: Prisma.PreAuthPDFOmit
   admissionRecord?: Prisma.AdmissionRecordOmit
+  leadOpdAppointment?: Prisma.LeadOpdAppointmentOmit
+  leadOpdAppointmentPrescriptionImage?: Prisma.LeadOpdAppointmentPrescriptionImageOmit
   admissionRecordImplantUsage?: Prisma.AdmissionRecordImplantUsageOmit
   admissionRecordPrescriptionImage?: Prisma.AdmissionRecordPrescriptionImageOmit
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormOmit

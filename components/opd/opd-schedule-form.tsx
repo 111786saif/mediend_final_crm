@@ -9,9 +9,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { CaseStage, FlowType } from '@/generated/prisma/enums'
-import { apiGet, apiPatch } from '@/lib/api-client'
-import { getNextStageAfterOpdSchedule, OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
+import { CaseStage, FlowType, LeadOpdPhase } from '@/generated/prisma/enums'
+import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import { cn } from '@/lib/utils'
 
@@ -143,6 +142,9 @@ function FieldError({ message }: { message?: string }) {
 
 export interface OPDScheduleFormProps {
   leadId: string
+  opdAppointmentId?: string | null
+  opdPhase?: LeadOpdPhase
+  hideContactFields?: boolean
   leadRef: string
   currentCaseStage?: CaseStage | null
   flowType?: FlowType | null
@@ -172,6 +174,9 @@ export interface OPDScheduleFormProps {
 
 export function OPDScheduleForm({
   leadId,
+  opdAppointmentId = null,
+  opdPhase = LeadOpdPhase.PRE,
+  hideContactFields = false,
   leadRef,
   currentCaseStage,
   flowType,
@@ -373,8 +378,6 @@ export function OPDScheduleForm({
     const trimmedPatientName = formData.patientName.trim()
     const trimmedAge = formData.age.trim()
     const trimmedSex = formData.sex.trim()
-    const trimmedPhone = formData.phoneNumber.trim()
-    const trimmedAltPhone = formData.alternateNumber.trim()
     const trimmedCircle = formData.circle.trim()
     const trimmedCategory = formData.category.trim()
     const trimmedTreatment = formData.treatment.trim()
@@ -401,23 +404,6 @@ export function OPDScheduleForm({
     const normalizedSex = normalizeLeadSexValue(trimmedSex)
     if (!normalizedSex) {
       nextErrors.sex = 'Sex is required'
-    }
-
-    const normalizedPhone = normalizeIndianPhone(trimmedPhone)
-    if (!trimmedPhone) {
-      nextErrors.phoneNumber = 'Patient number is required'
-    } else if (!normalizedPhone) {
-      nextErrors.phoneNumber = 'Patient number must be a valid 10-digit Indian mobile number'
-    }
-
-    const normalizedAltPhone = trimmedAltPhone ? normalizeIndianPhone(trimmedAltPhone) : null
-    if (trimmedAltPhone && !normalizedAltPhone) {
-      nextErrors.alternateNumber =
-        'Alternative number must be a valid 10-digit Indian mobile number'
-    }
-    if (normalizedPhone && normalizedAltPhone && normalizedPhone === normalizedAltPhone) {
-      nextErrors.alternateNumber =
-        'Alternative number must be different from the patient number'
     }
 
     if (!trimmedCircle) {
@@ -484,7 +470,6 @@ export function OPDScheduleForm({
 
     const trimmedPatientName = formData.patientName.trim()
     const trimmedSex = formData.sex.trim()
-    const trimmedPhone = formData.phoneNumber.trim()
     const trimmedHospital = formData.hospitalName.trim()
     const trimmedDoctor = formData.surgeonName.trim()
 
@@ -497,104 +482,86 @@ export function OPDScheduleForm({
         : 0
 
     const scheduleDateTime = composeScheduleDateTime(formData.arrivalDate, formData.arrivalTime)
-    const nextStatus = OPD_SCHEDULED_STATUS
-    const statusNeedsUpdate = normalizeStatus(currentStatus) !== normalizeStatus(nextStatus)
-    const nextCaseStage = getNextStageAfterOpdSchedule({
-      caseStage: currentCaseStage,
-      flowType,
-    })
-
-    const payload: Record<string, string | number | null> = {}
+    const leadPayload: Record<string, string | number | null> = {}
+    const shouldSyncPrimaryLeadFields = opdAppointmentId === 'legacy'
 
     if (trimmedPatientName !== (patientName?.trim() || '')) {
-      payload.patientName = trimmedPatientName
-    }
-
-    if (trimmedPhone !== (phoneNumber?.trim() || '')) {
-      payload.phoneNumber = trimmedPhone || null
-    }
-
-    if (formData.alternateNumber.trim() !== (alternateNumber?.trim() || '')) {
-      payload.alternateNumber = formData.alternateNumber.trim() || null
+      leadPayload.patientName = trimmedPatientName
     }
 
     if (formData.age.trim() !== initialAgeValue && parsedAge !== null) {
-      payload.age = parsedAge
+      leadPayload.age = parsedAge
     }
 
     const normalizedSex = normalizeLeadSexValue(trimmedSex)
     if (normalizedSex !== initialNormalizedSex) {
-      payload.sex = normalizedSex || ''
+      leadPayload.sex = normalizedSex || ''
     }
 
     if (formData.circle.trim() !== (circle?.trim() || '')) {
-      payload.circle = formData.circle.trim() || null
+      leadPayload.circle = formData.circle.trim() || null
     }
 
     if (formData.category.trim() !== (category?.trim() || '')) {
-      payload.category = formData.category.trim() || null
+      leadPayload.category = formData.category.trim() || null
     }
 
     if (formData.treatment.trim() !== (treatment?.trim() || '')) {
-      payload.treatment = formData.treatment.trim() || null
+      leadPayload.treatment = formData.treatment.trim() || null
     }
 
     if (formData.quantityGrade.trim() !== (quantityGrade?.trim() || '')) {
-      payload.quantityGrade = formData.quantityGrade.trim() || null
+      leadPayload.quantityGrade = formData.quantityGrade.trim() || null
     }
 
-    if (trimmedDoctor !== initialDoctorName) {
-      payload.surgeonName = trimmedDoctor
-      payload.opdDrName = trimmedDoctor
+    if (trimmedDoctor !== initialDoctorName && shouldSyncPrimaryLeadFields) {
+      leadPayload.surgeonName = trimmedDoctor
     }
 
     if (formData.surgeonType.trim() !== (surgeonType?.trim() || '')) {
-      payload.surgeonType = formData.surgeonType.trim() || null
+      leadPayload.surgeonType = formData.surgeonType.trim() || null
     }
 
-    if (trimmedHospital !== initialHospitalName) {
-      payload.hospitalName = trimmedHospital
-      payload.opdHospital = trimmedHospital
+    if (trimmedHospital !== initialHospitalName && shouldSyncPrimaryLeadFields) {
+      leadPayload.hospitalName = trimmedHospital
     }
 
-    if (formData.opdChargeAmount.trim() !== initialChargeValue) {
-      payload.opdCharges = parsedCharge
+    const opdPayload: Record<string, string | number | null> = {
+      opdHospital: trimmedHospital,
+      opdDrName: trimmedDoctor,
+      opdCharges: parsedCharge,
+      opdScheduleDate: scheduleDateTime,
+      opdMeeting: mapOpdModeToPayload(formData.opdMode),
     }
 
     if (
-      formData.arrivalDate !== initialScheduleDateValue ||
-      formData.arrivalTime !== initialScheduleTimeValue
+      formData.opdChargeAmount.trim() === initialChargeValue &&
+      formData.arrivalDate === initialScheduleDateValue &&
+      formData.arrivalTime === initialScheduleTimeValue &&
+      formData.opdMode === initialOpdMode &&
+      trimmedDoctor === initialDoctorName &&
+      trimmedHospital === initialHospitalName &&
+      Object.keys(leadPayload).length === 0
     ) {
-      payload.opdScheduleDate = scheduleDateTime
-    }
-
-    if (formData.opdMode !== initialOpdMode) {
-      payload.opdMeeting = mapOpdModeToPayload(formData.opdMode)
-    }
-
-    if (statusNeedsUpdate) {
-      payload.status = nextStatus
-      payload.requireStatusChangeRemark = 'true'
-      payload.statusChangeRemark = [
-        'OPD scheduled',
-        `${trimmedHospital}`,
-        `for ${formData.arrivalDate}${formData.arrivalTime ? ` ${formData.arrivalTime}` : ''}`,
-      ].join(' ')
-    }
-
-    if (nextCaseStage) {
-      payload.caseStage = nextCaseStage
-      payload.stageChangeNote = 'OPD scheduled'
-    }
-
-    if (Object.keys(payload).length === 0) {
       toast.error('No OPD changes to save')
       return
     }
 
     setSubmitting(true)
     try {
-      await apiPatch(`/api/leads/${leadId}`, payload)
+      if (Object.keys(leadPayload).length > 0) {
+        await apiPatch(`/api/leads/${leadId}`, leadPayload)
+      }
+
+      if (opdAppointmentId) {
+        await apiPatch(`/api/leads/${leadId}/opds/${opdAppointmentId}`, opdPayload)
+      } else {
+        await apiPost(`/api/leads/${leadId}/opds`, {
+          phase: opdPhase,
+          ...opdPayload,
+        })
+      }
+
       toast.success('OPD form saved successfully')
       onSuccess?.()
     } catch (error) {
@@ -677,26 +644,28 @@ export function OPDScheduleForm({
             </Select>
             <FieldError message={errors.sex} />
           </div>
-          <div>
-            <RequiredLabel htmlFor="opd-phone">Patient number</RequiredLabel>
-            <Input
-              id="opd-phone"
-              value={formData.phoneNumber}
-              onChange={(event) => setField('phoneNumber', event.target.value)}
-              className={cn('mt-1', errors.phoneNumber && 'border-destructive')}
-            />
-            <FieldError message={errors.phoneNumber} />
-          </div>
-          <div>
-            <Label htmlFor="opd-alt-phone">Alternative number</Label>
-            <Input
-              id="opd-alt-phone"
-              value={formData.alternateNumber}
-              onChange={(event) => setField('alternateNumber', event.target.value)}
-              className={cn('mt-1', errors.alternateNumber && 'border-destructive')}
-            />
-            <FieldError message={errors.alternateNumber} />
-          </div>
+          {!hideContactFields ? (
+            <>
+              <div>
+                <Label htmlFor="opd-phone">Patient number</Label>
+                <Input
+                  id="opd-phone"
+                  value={formData.phoneNumber}
+                  className="mt-1"
+                  disabled
+                />
+              </div>
+              <div>
+                <Label htmlFor="opd-alt-phone">Alternative number</Label>
+                <Input
+                  id="opd-alt-phone"
+                  value={formData.alternateNumber}
+                  className="mt-1"
+                  disabled
+                />
+              </div>
+            </>
+          ) : null}
           <div>
             <RequiredLabel htmlFor="opd-circle">Circle</RequiredLabel>
             <Input

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
 import { Check, RefreshCw } from 'lucide-react'
 import { BADGE_COUNTS_QUERY_KEY } from '@/hooks/use-badge-counts'
+import { useHomeBlockers } from '@/hooks/use-home-blockers'
 import { toast } from 'sonner'
 
 interface PendingNotice {
@@ -19,6 +20,7 @@ interface PendingNotice {
 
 export function NoticeBlockerModal() {
   const queryClient = useQueryClient()
+  const { showNoticeBlocker } = useHomeBlockers()
 
   const { data: pending, isLoading, isError } = useQuery<PendingNotice | null>({
     queryKey: ['notices-pending'],
@@ -37,7 +39,7 @@ export function NoticeBlockerModal() {
     },
   })
 
-  if (isLoading || isError || !pending) return null
+  if (!showNoticeBlocker || isLoading || isError || !pending) return null
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">

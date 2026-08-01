@@ -111,6 +111,8 @@ export const navItems: NavItem[] = [
       'ADMIN',
       'SALES_HEAD',
       'CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
       'DIGITAL_MARKETING_HEAD',
       'EXECUTIVE_ASSISTANT',
     ],
@@ -337,7 +339,7 @@ export const navItems: NavItem[] = [
     title: 'Blue Print Dashboard',
     url: '/sales/blueprint',
     icon: LayoutDashboard,
-    roles: ['SALES_HEAD'],
+    roles: ['SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Sales P&L',
@@ -429,7 +431,7 @@ export const navItems: NavItem[] = [
     title: 'Outstanding List',
     url: '/pl/outstanding',
     icon: CreditCard,
-    permission: 'finance:read',
+    // Gated via RBAC resource insurance_pl.pl_outstanding (see nav-resource-map)
   },
   {
     title: 'Doctor List',
@@ -573,7 +575,7 @@ export const navItems: NavItem[] = [
     title: 'Fin Team Approvals',
     url: '/finance/team-approvals',
     icon: CheckCircle,
-    roles: ['FINANCE_HEAD'],
+    roles: ['FINANCE_HEAD', 'TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER'],
   },
   {
     title: 'MD Team Approvals',
@@ -700,6 +702,7 @@ export function getDashboardUrl(role: string): string {
   if (role === 'PL_HEAD') return '/pl/surgery-dashboard'
   if (role === 'INSURANCE_HEAD') return '/insurance/dashboard'
   if (role === 'OUTSTANDING_HEAD') return '/pl/outstanding'
+  if (role === 'FINANCE_HEAD') return '/md/finance'
   return '/md/tasks'
 }
 
@@ -727,11 +730,13 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
     if (item.title === 'Dashboard') {
       return { ...item, url: getDashboardUrl(role) }
     }
-    if (
-      item.title === 'Sales Dashboard' &&
-      (role === 'SALES_HEAD' || role === 'CATEGORY_MANAGER')
-    ) {
-      return { ...item, url: '/sales/dashboard' }
+    if (item.title === 'Sales Dashboard') {
+      if (role === 'SALES_HEAD' || role === 'CATEGORY_MANAGER') {
+        return { ...item, url: '/sales/dashboard' }
+      }
+      if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
+        return { ...item, url: '/team-lead/dashboard' }
+      }
     }
     if (item.title === 'Pipeline') {
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }

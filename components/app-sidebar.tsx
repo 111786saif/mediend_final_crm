@@ -19,22 +19,22 @@ import { useBadgeCounts } from '@/hooks/use-badge-counts'
 import { useNotifications } from '@/hooks/use-notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useSidebar } from '@/components/ui/sidebar'
-import { getFilteredNavItemsWithUrls, navItems } from '@/lib/sidebar-nav'
+import { getFilteredNavItemsWithUrls, type NavItem } from '@/lib/sidebar-nav'
 import { usePermissions } from '@/hooks/use-permissions'
-import { hasPermission } from '@/lib/rbac'
-import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
+import { resolveNavResourceKey } from '@/lib/nav-resource-map'
+import {
+  getRoleSidebarLayout,
+  resolveLayoutTitle,
+} from '@/lib/role-sidebar-layout'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   ChevronDown,
   DollarSign,
   LogOut,
   Shield,
-  ShieldCheck,
-  Sparkles,
   Sun,
   Moon,
-  Target,
-  Ticket,
+  Sparkles,
   TrendingUp,
   User,
   UserCircle,
@@ -47,6 +47,8 @@ import * as React from 'react'
 import logo from '@/public/logo-mediend.png'
 import { UserRole } from '@/generated/prisma/enums'
 import { useTheme } from 'next-themes'
+
+type NavItemWithUrl = NavItem & { url: string }
 
 function getBadgeCount(
   itemTitle: string,
@@ -67,7 +69,6 @@ function getBadgeCount(
     pendingMDApprovals?: number
     pendingMDTeamNormalizations?: number
     pendingLeaveBalanceEditRequests?: number
-    /** Same pending normalization count rolled into Engagement’s aggregate; show on Attendance & Leaves instead. */
     hrPendingNormalizations?: number
     pendingOnboardingApprovals?: number
     taskOverviewCount?: number
@@ -84,8 +85,7 @@ function getBadgeCount(
   if (itemTitle === 'Home') return counts.pendingNotices ?? 0
   if (itemTitle === 'Chat') return counts.unreadChatMessages ?? 0
   if (itemTitle === 'Attendance & Normalizations') {
-    const norms = counts.hrPendingNormalizations ?? 0
-    return norms
+    return counts.hrPendingNormalizations ?? 0
   }
   if (itemTitle === 'Engagement') {
     const hr = counts.pendingHRActions ?? 0
@@ -93,13 +93,36 @@ function getBadgeCount(
     return Math.max(0, hr - norms)
   }
   if (itemTitle === 'My Support & Services') return counts.pendingTickets ?? 0
-  if (itemTitle === 'Fin Team Approvals') return counts.pendingFinanceTeamApprovals ?? 0
+  if (itemTitle === 'Fin Team Approvals' || itemTitle === 'Team Approvals') {
+    return counts.pendingFinanceTeamApprovals ?? 0
+  }
   if (itemTitle === 'MD Team Approvals') return counts.pendingMDApprovals ?? 0
-  if (itemTitle === 'MD Attendance')
-    return counts.pendingMDTeamNormalizations ?? 0
+  if (itemTitle === 'MD Attendance') return counts.pendingMDTeamNormalizations ?? 0
   if (itemTitle === 'MD Leave balances') return counts.pendingLeaveBalanceEditRequests ?? 0
   if (itemTitle === 'Onboarding') return counts.pendingOnboardingApprovals ?? 0
   return 0
+}
+
+function displayLabel(title: string): string {
+  if (title.startsWith('MD ')) return title.replace('MD ', '')
+  if (title.startsWith('Fin ')) return title.replace('Fin ', '')
+  if (title.startsWith('CRM ')) return title.replace('CRM ', '')
+  if (title.startsWith('Svc ')) return title.replace('Svc ', '')
+  return title
+}
+
+function orderByTitles(
+  items: NavItemWithUrl[],
+  titles: string[]
+): NavItemWithUrl[] {
+  const byTitle = new Map(items.map((item) => [item.title, item]))
+  const ordered: NavItemWithUrl[] = []
+  for (const layoutTitle of titles) {
+    const resolved = resolveLayoutTitle(layoutTitle)
+    const item = byTitle.get(resolved)
+    if (item) ordered.push(item)
+  }
+  return ordered
 }
 
 export function AppSidebar() {
@@ -129,7 +152,6 @@ export function AppSidebar() {
   }, [isMobile, setOpenMobile, navigatingRef])
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
     crm: pathname?.startsWith('/crm') ?? false,
-    services: false,
     finance: false,
     hr: false,
     myHrms: false,
@@ -170,19 +192,18 @@ export function AppSidebar() {
           <SidebarGroup className="p-0">
             <SidebarGroupContent>
               <SidebarMenu className="gap-1">
-                {/* Simulated Main Navigation Items */}
                 {Array.from({ length: 5 }).map((_, i) => (
                   <SidebarMenuItem key={`main-${i}`}>
                     <div className="flex items-center gap-3 px-3 py-2.5 rounded-md">
                       <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
-                      <Skeleton className={`h-4 bg-sidebar-foreground/15 ${
-                        i % 3 === 0 ? 'w-24' : i % 3 === 1 ? 'w-32' : 'w-28'
-                      }`} />
+                      <Skeleton
+                        className={`h-4 bg-sidebar-foreground/15 ${
+                          i % 3 === 0 ? 'w-24' : i % 3 === 1 ? 'w-32' : 'w-28'
+                        }`}
+                      />
                     </div>
                   </SidebarMenuItem>
                 ))}
-
-                {/* Simulated Collapsible Section Header */}
                 <div className="mt-4 mb-2 flex items-center justify-between px-3 py-2">
                   <div className="flex items-center gap-3">
                     <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
@@ -190,27 +211,18 @@ export function AppSidebar() {
                   </div>
                   <Skeleton className="h-3 w-3 bg-sidebar-foreground/15" />
                 </div>
-
-                {/* Simulated Sub-navigation Items */}
                 {Array.from({ length: 3 }).map((_, i) => (
                   <SidebarMenuItem key={`sub-${i}`}>
                     <div className="flex items-center gap-3 px-3 py-2.5 rounded-md">
                       <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
-                      <Skeleton className={`h-4 bg-sidebar-foreground/15 ${
-                        i % 2 === 0 ? 'w-20' : 'w-24'
-                      }`} />
+                      <Skeleton
+                        className={`h-4 bg-sidebar-foreground/15 ${
+                          i % 2 === 0 ? 'w-20' : 'w-24'
+                        }`}
+                      />
                     </div>
                   </SidebarMenuItem>
                 ))}
-
-                {/* Another Collapsible Header */}
-                <div className="mt-4 mb-2 flex items-center justify-between px-3 py-2">
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
-                    <Skeleton className="h-4 w-20 bg-sidebar-foreground/15" />
-                  </div>
-                  <Skeleton className="h-3 w-3 bg-sidebar-foreground/15" />
-                </div>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -219,122 +231,249 @@ export function AppSidebar() {
     )
   }
 
+  const role = user.role
+  const layout = getRoleSidebarLayout(role)
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
 
-  const HRM_TITLES = ['Attendance & Normalizations', 'People & Org', 'Compensation & Docs', 'Engagement']
-  const SALES_TITLES = ['Sales Dashboard', 'DM Dashboard', 'Campaign CPL', 'Pipeline', 'Case Tracker', 'Pending Surgery', 'Targets', 'Sales P&L', 'Incentive']
-  const INSURANCE_PL_TITLES = ['Insurance', 'Cash Cases', 'P/L Ledger', 'P/L Surgery', 'P/L Outstanding', 'Doctor List', 'Hospital List']
-  const EA_HRM_TITLES = ['MD HR Dashboard', 'HR Dashboard', 'Recruitment', ...HRM_TITLES]
-  const EA_MYHRMS_EXTRA = ['Ask MD Approval']
-  const CRM_TITLES = [
-    'CRM Campaigns',
-    'CRM Incoming Leads',
-    'CRM KPIs',
-    'CRM Activity',
-    'CRM Masters',
-    'CRM Access Matrix',
-    'CRM Churn Rules',
-  ]
+  const filterByPermission = (item: NavItemWithUrl) => {
+    const resourceKey = resolveNavResourceKey(item.title, role)
+    if (!resourceKey) return false
+    if (!permissionsReady) return true
 
-  const navigationItems = itemsWithUrls
+    if (hasAccess(resourceKey, 'READ')) return true
 
-  const isEa = user.role === 'EXECUTIVE_ASSISTANT'
-
-  const filterByPermission = (item: (typeof itemsWithUrls)[number]) => {
+    // Pipeline / Targets may be granted under alternate role-specific keys
     if (item.title === 'Pipeline') {
-      if (!permissionsReady) return true
       return (
         hasAccess('sales.sales_pipeline', 'READ') ||
         hasAccess('sales.team_lead_pipeline', 'READ') ||
         hasAccess('sales.ea_pipeline', 'READ')
       )
     }
-
     if (item.title === 'Targets') {
-      if (!permissionsReady) return true
       return (
         hasAccess('sales.targets', 'READ') ||
         hasAccess('sales.team_lead_targets', 'READ') ||
         hasAccess('sales.sales_head_targets', 'READ')
       )
     }
-
-    let resourceKey = Object.keys(RESOURCE_MAP).find(
-      (key) => RESOURCE_MAP[key as keyof typeof RESOURCE_MAP].path === item.url,
-    )
-
-    if (!resourceKey) {
-      const originalItem = navItems.find((ni) => ni.title === item.title)
-      if (originalItem) {
-        resourceKey = Object.keys(RESOURCE_MAP).find(
-          (key) => RESOURCE_MAP[key as keyof typeof RESOURCE_MAP].path === originalItem.url,
-        )
-      }
+    if (item.title === 'Sales Dashboard') {
+      return (
+        hasAccess('sales.sales_dashboard', 'READ') ||
+        hasAccess('sales.md_sales_dashboard', 'READ')
+      )
     }
 
-    if (resourceKey && permissionsReady) {
-      if (hasAccess(resourceKey, 'READ')) return true
-      if (item.permission && hasPermission(user, item.permission)) return true
-      if (item.title === 'Dashboard' && item.url.startsWith('/pl/') && hasPermission(user, 'pl:read')) {
-        return true
-      }
-      return false
+    // Full-access roles: allow if parent module is granted
+    if (role === 'ADMIN' || role === 'TESTER' || role === 'MD') {
+      const moduleKey = resourceKey.split('.')[0]
+      if (moduleKey && hasAccess(moduleKey, 'READ')) return true
     }
-    if (item.permission && permissionsReady) {
-      return hasPermission(user, item.permission)
-    }
-    return true
+
+    return false
   }
 
-  const mainItems = navigationItems
-    .filter((item) => {
-      if (item.title.startsWith('My ')) return false
-      if (HRM_TITLES.includes(item.title)) return user.role !== 'HR_HEAD'
-      if (isEa) {
-        if (SALES_TITLES.includes(item.title)) return false
-        if (INSURANCE_PL_TITLES.includes(item.title)) return false
-        if (EA_HRM_TITLES.includes(item.title)) return false
-        if (EA_MYHRMS_EXTRA.includes(item.title)) return false
-      }
-      return true
-    })
-    .filter(filterByPermission)
+  const permitted = itemsWithUrls.filter(filterByPermission)
 
-  const salesItems = (isEa ? navigationItems.filter((item) => SALES_TITLES.includes(item.title)) : [])
-    .filter(filterByPermission)
-  const insurancePlItems = (isEa ? navigationItems.filter((item) => INSURANCE_PL_TITLES.includes(item.title)) : [])
-    .filter(filterByPermission)
-  const hrItems = navigationItems
-    .filter((item) => (isEa ? EA_HRM_TITLES.includes(item.title) : HRM_TITLES.includes(item.title)))
-    .filter(filterByPermission)
-  const myHrmsItems = navigationItems
-    .filter((item) => (isEa ? (item.title.startsWith('My ') || EA_MYHRMS_EXTRA.includes(item.title)) : item.title.startsWith('My ')))
-    .filter(filterByPermission)
+  const pickSection = (titles: string[] | undefined) => {
+    if (!titles?.length) return [] as NavItemWithUrl[]
+    return orderByTitles(permitted, titles)
+  }
 
-  const crmItems = navigationItems.filter((item) => CRM_TITLES.includes(item.title)).filter(filterByPermission)
+  let primaryMainItems: NavItemWithUrl[]
+  let hrItems: NavItemWithUrl[] = []
+  let myHrmsItems: NavItemWithUrl[] = []
+  let salesItems: NavItemWithUrl[] = []
+  let insurancePlItems: NavItemWithUrl[] = []
+  let financeItems: NavItemWithUrl[] = []
+  let crmItems: NavItemWithUrl[] = []
 
-  const showHrSection = (user.role === 'HR_HEAD' || isEa) && hrItems.length > 0
+  if (layout) {
+    primaryMainItems = pickSection(layout.main)
+    hrItems = pickSection(layout.hrm)
+    myHrmsItems = pickSection(layout.myhrms)
+    salesItems = pickSection(layout.sales)
+    insurancePlItems = pickSection(layout.insurancePl)
+    financeItems = pickSection(layout.finance)
+    crmItems = pickSection(layout.crm)
+  } else {
+    // Fallback for MD / ADMIN / other roles without a fixed layout:
+    // permission-filtered catalog with conventional section grouping.
+    const HRM_TITLES = [
+      'Attendance & Normalizations',
+      'People & Org',
+      'Compensation & Docs',
+      'Engagement',
+      'Recruitment',
+      'HR Dashboard',
+      'Onboarding',
+    ]
+    const SALES_TITLES = [
+      'Sales Dashboard',
+      'DM Dashboard',
+      'Campaign CPL',
+      'Pipeline',
+      'Case Tracker',
+      'Pending Surgery',
+      'Targets',
+      'Sales P&L',
+      'Incentive',
+      'Blue Print Dashboard',
+      'OPD Monitoring',
+    ]
+    const INSURANCE_PL_TITLES = [
+      'Insurance',
+      'Cash Cases',
+      'P/L Ledger',
+      'P/L Surgery',
+      'P/L Outstanding',
+      'Doctor List',
+      'Hospital List',
+      'Outstanding List',
+    ]
+    const CRM_TITLES = [
+      'CRM Campaigns',
+      'CRM Incoming Leads',
+      'CRM KPIs',
+      'CRM Activity',
+      'CRM Masters',
+      'CRM Access Matrix',
+      'CRM Churn Rules',
+    ]
+    const FINANCE_TITLES = permitted
+      .filter((item) => item.title.startsWith('Fin '))
+      .map((item) => item.title)
+
+    const sectionTitleSet = new Set([
+      ...HRM_TITLES,
+      ...SALES_TITLES,
+      ...INSURANCE_PL_TITLES,
+      ...CRM_TITLES,
+      ...FINANCE_TITLES,
+    ])
+
+    myHrmsItems = permitted.filter(
+      (item) => item.title.startsWith('My ') || item.title === 'Ask MD Approval'
+    )
+    const myHrmsTitles = new Set(myHrmsItems.map((i) => i.title))
+
+    primaryMainItems = permitted.filter(
+      (item) => !sectionTitleSet.has(item.title) && !myHrmsTitles.has(item.title)
+    )
+    hrItems = permitted.filter((item) => HRM_TITLES.includes(item.title))
+    salesItems = permitted.filter((item) => SALES_TITLES.includes(item.title))
+    insurancePlItems = permitted.filter((item) =>
+      INSURANCE_PL_TITLES.includes(item.title)
+    )
+    financeItems = permitted.filter((item) => item.title.startsWith('Fin '))
+    crmItems = permitted.filter((item) => CRM_TITLES.includes(item.title))
+  }
+
+  const showHrSection = hrItems.length > 0
   const showMyHrmsSection = myHrmsItems.length > 0
-  const showSalesSection = isEa && salesItems.length > 0
-  const showInsurancePlSection = isEa && insurancePlItems.length > 0
-  const primaryMainItems = mainItems.filter((item) => !CRM_TITLES.includes(item.title))
+  const showSalesSection = salesItems.length > 0
+  const showInsurancePlSection = insurancePlItems.length > 0
+  const showFinanceSection = financeItems.length > 0
   const showCrmSection = crmItems.length > 0
+
+  // Hide footer mediend AI when it already appears in main nav
+  const mediendAiInMain = primaryMainItems.some((item) => item.title === 'mediend AI')
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
-      (sum, item) => {
-        if (isEa && !HRM_TITLES.includes(item.title)) return sum
-        return sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
-      },
-      0
-    )
+        (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
+        0
+      )
     : 0
   const myHrmsSectionBadge = myHrmsItems.reduce(
-    (sum, item) => {
-      if (isEa && EA_MYHRMS_EXTRA.includes(item.title)) return sum
-      return sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
-    },
+    (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
     0
+  )
+
+  const renderNavItem = (item: NavItemWithUrl) => {
+    const Icon = item.icon
+    const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
+    const label = displayLabel(item.title)
+    const badgeCount =
+      item.title === 'Meets'
+        ? (badgeCounts as { upcomingMeetsToday?: number } | undefined)?.upcomingMeetsToday ??
+          meetNotificationBadge
+        : getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
+    return (
+      <SidebarMenuItem key={item.title}>
+        <SidebarMenuButton asChild isActive={isActive} tooltip={label}>
+          <Link href={item.url} onClick={closeSidebarOnMobile}>
+            <Icon />
+            <span>{label}</span>
+            {badgeCount > 0 && (
+              <SidebarMenuBadge className="bg-destructive text-white">
+                {badgeCount > 99 ? '99+' : badgeCount}
+              </SidebarMenuBadge>
+            )}
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    )
+  }
+
+  const renderCollapsible = (
+    key: string,
+    label: string,
+    icon: React.ReactNode,
+    items: NavItemWithUrl[],
+    sectionBadge = 0,
+    useSub = false
+  ) => (
+    <SidebarGroup className="pb-1">
+      <button
+        onClick={() => toggleSection(key)}
+        className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
+      >
+        <div className="flex items-center gap-2">
+          {icon}
+          <span>{label}</span>
+          {sectionBadge > 0 && (
+            <SidebarMenuBadge className="bg-destructive text-white">
+              {sectionBadge > 99 ? '99+' : sectionBadge}
+            </SidebarMenuBadge>
+          )}
+        </div>
+        <ChevronDown
+          className={`h-4 w-4 transition-transform duration-200 ${
+            openSections[key] ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
+      <div
+        className={`overflow-hidden transition-all duration-200 ease-in-out ${
+          openSections[key] ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        {openSections[key] && (
+          <SidebarGroupContent>
+            {useSub ? (
+              <SidebarMenuSub className="mx-0 mt-1">
+                {items.map((item) => {
+                  const isActive =
+                    pathname === item.url || pathname.startsWith(item.url + '/')
+                  return (
+                    <SidebarMenuSubItem key={item.url}>
+                      <SidebarMenuSubButton asChild isActive={isActive}>
+                        <Link href={item.url} onClick={closeSidebarOnMobile}>
+                          <span>{displayLabel(item.title)}</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )
+                })}
+              </SidebarMenuSub>
+            ) : (
+              <SidebarMenu>{items.map(renderNavItem)}</SidebarMenu>
+            )}
+          </SidebarGroupContent>
+        )}
+      </div>
+    </SidebarGroup>
   )
 
   return (
@@ -356,379 +495,70 @@ export function AppSidebar() {
       <SidebarContent className="gap-1">
         <SidebarGroup className="pb-1">
           <SidebarGroupContent>
-            <SidebarMenu>
-              {primaryMainItems.map((item) => {
-                const Icon = item.icon
-                const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                const label = item.title.startsWith('MD ') ? item.title.replace('MD ', '') : item.title
-                const badgeCount =
-                  item.title === 'Meets'
-                    ? (badgeCounts as any)?.upcomingMeetsToday ?? 0
-                    : getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive} tooltip={label}>
-                      <Link href={item.url} onClick={closeSidebarOnMobile}>
-                        <Icon />
-                        <span>{label}</span>
-                        {badgeCount > 0 && (
-                          <SidebarMenuBadge className="bg-destructive text-white">
-                            {badgeCount > 99 ? '99+' : badgeCount}
-                          </SidebarMenuBadge>
-                        )}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
+            <SidebarMenu>{primaryMainItems.map(renderNavItem)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        {showCrmSection && (
-          <SidebarGroup className="pb-1">
-            <button
-              onClick={() => toggleSection('crm')}
-              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4" />
-                <span>CRM</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  openSections.crm ? 'rotate-180' : ''
-                }`}
-              />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                openSections.crm ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'
-              }`}
-            >
-              {openSections.crm && (
-                <SidebarGroupContent>
-                  <SidebarMenuSub className="mx-0 mt-1">
-                    {crmItems.map((item) => {
-                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                      return (
-                        <SidebarMenuSubItem key={item.url}>
-                          <SidebarMenuSubButton asChild isActive={isActive}>
-                            <Link href={item.url} onClick={closeSidebarOnMobile}>
-                              <span>{item.title.replace('CRM ', '')}</span>
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      )
-                    })}
-                  </SidebarMenuSub>
-                </SidebarGroupContent>
-              )}
-            </div>
-          </SidebarGroup>
-        )}
-        {showHrSection && (
-          <SidebarGroup className="pb-1">
-            <button
-              onClick={() => toggleSection('hr')}
-              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                <span>HRM</span>
-                {hrSectionBadge > 0 && (
-                  <SidebarMenuBadge className="bg-destructive text-white">
-                    {hrSectionBadge > 99 ? '99+' : hrSectionBadge}
-                  </SidebarMenuBadge>
-                )}
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${openSections.hr ? 'rotate-180' : ''
-                  }`}
-              />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.hr ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-              {openSections.hr && (
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {hrItems.map((item) => {
-                      const Icon = item.icon
-                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                      const badgeCount = getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
-                            <Link href={item.url} onClick={closeSidebarOnMobile}>
-                              <Icon />
-                              <span>{item.title}</span>
-                              {badgeCount > 0 && (
-                                <SidebarMenuBadge className="bg-destructive text-white">
-                                  {badgeCount > 99 ? '99+' : badgeCount}
-                                </SidebarMenuBadge>
-                              )}
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              )}
-            </div>
-          </SidebarGroup>
-        )}
-        {showMyHrmsSection && (
-          <SidebarGroup className="pb-1">
-            <button
-              onClick={() => toggleSection('myHrms')}
-              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <UserCircle className="h-4 w-4" />
-                <span>MyHrms</span>
-                {myHrmsSectionBadge > 0 && (
-                  <SidebarMenuBadge className="bg-destructive text-white">
-                    {myHrmsSectionBadge > 99 ? '99+' : myHrmsSectionBadge}
-                  </SidebarMenuBadge>
-                )}
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${openSections.myHrms ? 'rotate-180' : ''
-                  }`}
-              />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.myHrms ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-              {openSections.myHrms && (
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {myHrmsItems.map((item) => {
-                      const Icon = item.icon
-                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                      const badgeCount = getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
-                            <Link href={item.url} onClick={closeSidebarOnMobile}>
-                              <Icon />
-                              <span>{item.title}</span>
-                              {badgeCount > 0 && (
-                                <SidebarMenuBadge className="bg-destructive text-white">
-                                  {badgeCount > 99 ? '99+' : badgeCount}
-                                </SidebarMenuBadge>
-                              )}
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              )}
-            </div>
-          </SidebarGroup>
-        )}
-        {showSalesSection && (
-          <SidebarGroup className="pb-1">
-            <button
-              onClick={() => toggleSection('sales')}
-              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                <span>Sales</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${openSections.sales ? 'rotate-180' : ''
-                  }`}
-              />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.sales ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-              {openSections.sales && (
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {salesItems.map((item) => {
-                      const Icon = item.icon
-                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                      const badgeCount = getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
-                            <Link href={item.url} onClick={closeSidebarOnMobile}>
-                              <Icon />
-                              <span>{item.title}</span>
-                              {badgeCount > 0 && (
-                                <SidebarMenuBadge className="bg-destructive text-white">
-                                  {badgeCount > 99 ? '99+' : badgeCount}
-                                </SidebarMenuBadge>
-                              )}
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              )}
-            </div>
-          </SidebarGroup>
-        )}
-        {showInsurancePlSection && (
-          <SidebarGroup className="pb-1">
-            <button
-              onClick={() => toggleSection('insurancePl')}
-              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                <span>Insurance & P/L</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${openSections.insurancePl ? 'rotate-180' : ''
-                  }`}
-              />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.insurancePl ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-              {openSections.insurancePl && (
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {insurancePlItems.map((item) => {
-                      const Icon = item.icon
-                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
-                            <Link href={item.url} onClick={closeSidebarOnMobile}>
-                              <Icon />
-                              <span>{item.title}</span>
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              )}
-            </div>
-          </SidebarGroup>
-        )}
-        {user.role !== 'ADMIN' && user.role !== 'TESTER' && itemsWithUrls.some((item) => item.title.startsWith('Svc ')) && (
-          <SidebarGroup className="pb-1">
-            <button
-              onClick={() => toggleSection('services')}
-              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4" />
-                <span>Services</span>
-              </div>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${openSections.services ? 'rotate-180' : ''
-                  }`}
-              />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.services ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-              {openSections.services && (
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {itemsWithUrls
-                      .filter((item) => item.title.startsWith('Svc '))
-                      .map((item) => {
-                        const Icon = item.icon
-                        const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                        return (
-                          <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton asChild isActive={isActive} tooltip={item.title.replace('Svc ', '')}>
-                              <Link href={item.url} onClick={closeSidebarOnMobile}>
-                                <Icon />
-                                <span>{item.title.replace('Svc ', '')}</span>
-                              </Link>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        )
-                      })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              )}
-            </div>
-          </SidebarGroup>
-        )}
-        {(() => {
-          const allowedFinanceItems = itemsWithUrls
-            .filter((item) => item.title.startsWith('Fin '))
-            .filter(filterByPermission)
 
-          if (user.role === 'HR_HEAD' || allowedFinanceItems.length === 0) return null
+        {showCrmSection &&
+          renderCollapsible(
+            'crm',
+            'CRM',
+            <Sparkles className="h-4 w-4" />,
+            crmItems,
+            0,
+            true
+          )}
 
-          return (
-            <SidebarGroup className="pb-1">
-              <button
-                onClick={() => toggleSection('finance')}
-                className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" />
-                  <span>Finance</span>
-                </div>
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform duration-200 ${openSections.finance ? 'rotate-180' : ''
-                    }`}
-                />
-              </button>
-              <div
-                className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.finance ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                  }`}
-              >
-                {openSections.finance && (
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {allowedFinanceItems.map((item) => {
-                        const Icon = item.icon
-                        const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                        const badgeCount = getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
-                        return (
-                          <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton asChild isActive={isActive} tooltip={item.title.replace('Fin ', '')}>
-                              <Link href={item.url} onClick={closeSidebarOnMobile}>
-                                <Icon />
-                                <span>{item.title.replace('Fin ', '')}</span>
-                                {badgeCount > 0 && (
-                                  <SidebarMenuBadge className="bg-destructive text-white">
-                                    {badgeCount > 99 ? '99+' : badgeCount}
-                                  </SidebarMenuBadge>
-                                )}
-                              </Link>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        )
-                      })}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                )}
-              </div>
-            </SidebarGroup>
-          )
-        })()}
+        {showHrSection &&
+          renderCollapsible(
+            'hr',
+            'HRM',
+            <Users className="h-4 w-4" />,
+            hrItems,
+            hrSectionBadge
+          )}
+
+        {showMyHrmsSection &&
+          renderCollapsible(
+            'myHrms',
+            'MyHrms',
+            <UserCircle className="h-4 w-4" />,
+            myHrmsItems,
+            myHrmsSectionBadge
+          )}
+
+        {showSalesSection &&
+          renderCollapsible(
+            'sales',
+            'Sales',
+            <TrendingUp className="h-4 w-4" />,
+            salesItems
+          )}
+
+        {showInsurancePlSection &&
+          renderCollapsible(
+            'insurancePl',
+            'Insurance & P/L',
+            <Shield className="h-4 w-4" />,
+            insurancePlItems
+          )}
+
+        {showFinanceSection &&
+          renderCollapsible(
+            'finance',
+            'Finance',
+            <DollarSign className="h-4 w-4" />,
+            financeItems
+          )}
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border">
         <SidebarMenu>
           {isTester && (
             <SidebarMenuItem>
               <div className="px-2 py-2 space-y-1">
-                <p className="text-[10px] uppercase text-muted-foreground font-bold">View as role</p>
+                <p className="text-[10px] uppercase text-muted-foreground font-bold">
+                  View as role
+                </p>
                 <select
                   value={user?.role ?? 'TESTER'}
                   onChange={(e) => setActiveRole(e.target.value as UserRole)}
@@ -746,6 +576,7 @@ export function AppSidebar() {
                   <option value="FINANCE_HEAD">FINANCE_HEAD</option>
                   <option value="IT_HEAD">IT_HEAD</option>
                   <option value="EXECUTIVE_ASSISTANT">EXECUTIVE_ASSISTANT</option>
+                  <option value="COMPLIANCE_HEAD">COMPLIANCE_HEAD</option>
                   <option value="ADMIN">ADMIN</option>
                   <option value="SUPER_ADMIN">SUPER_ADMIN</option>
                   <option value="CRM_ADMIN">CRM_ADMIN</option>
@@ -754,14 +585,16 @@ export function AppSidebar() {
               </div>
             </SidebarMenuItem>
           )}
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="mediend AI">
-              <Link href="/training" onClick={closeSidebarOnMobile}>
-                <Sparkles className="text-purple-400" />
-                <span>mediend AI</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {!mediendAiInMain && (
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="mediend AI">
+                <Link href="/training" onClick={closeSidebarOnMobile}>
+                  <Sparkles className="text-purple-400" />
+                  <span>mediend AI</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}

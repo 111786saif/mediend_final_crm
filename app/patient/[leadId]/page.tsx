@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
@@ -26,7 +27,7 @@ import { Field, Section } from '@/components/patient/details-section'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { CaseStage, FlowType } from '@/generated/prisma/enums'
+import { CaseStage, FlowType, LeadOpdPhase, LeadOpdStatus } from '@/generated/prisma/enums'
 import {
   canAddKYPDetails,
   canCompletePreAuth,
@@ -37,7 +38,6 @@ import {
   canFillIPDCashForm,
   canGeneratePDF,
   canInitiate,
-  canMarkOpdDone,
   canMarkIPD,
   canMarkLost,
   canModifyHospitals,
@@ -52,9 +52,14 @@ import {
 } from '@/lib/case-permissions'
 import { getKYPStatusLabel } from '@/lib/kyp-status-labels'
 import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
-import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
+import {
+  getEffectiveOpdCounts,
+  getNextAvailableOpdSlot,
+  type EffectiveOpdEntry,
+} from '@/lib/lead-opd-appointments'
 import { getNextStageAfterOpdDone, hasLeadOpdDone, hasLeadOpdScheduled, OPD_DONE_STATUS } from '@/lib/lead-opd-workflow'
 import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
+import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
@@ -176,6 +181,43 @@ interface Lead {
     storageKey?: string | null
     sortOrder?: number | null
   }> | null
+  effectiveOpdAppointments?: Array<{
+    id: string
+    leadId: string
+    source: 'legacy' | 'record'
+    phase: LeadOpdPhase
+    slot: 1 | 2
+    status: LeadOpdStatus
+    hospitalName?: string | null
+    doctorName?: string | null
+    contactNumber?: string | null
+    charges?: number | null
+    scheduleDate?: string | null
+    meetingType?: number | null
+    surgeryAdvised?: string | null
+    surgeryRemark?: { code?: string | null; label?: string | null } | null
+    surgeryRemarkCode?: string | null
+    reasonNoSurgery?: { code?: string | null; label?: string | null } | null
+    reasonNoSurgeryCode?: string | null
+    followUpReason?: { code?: string | null; label?: string | null } | null
+    followUpReasonCode?: string | null
+    implantRequired?: boolean | null
+    diagnosis?: string | null
+    remarks?: string | null
+    prescriptionImages?: Array<{
+      id: string
+      fileName: string
+      fileUrl: string
+      storageKey?: string | null
+      sortOrder?: number | null
+    }> | null
+    isFirstEffectivePreOpd?: boolean
+    editableByBd?: boolean
+  }> | null
+  opdCounts?: {
+    pre: number
+    post: number
+  } | null
   kypSubmission?: {
     id: string
     status: string
@@ -468,6 +510,22 @@ function getOpdSurgeryAdvisedLabel(value: string | null | undefined) {
   return value || null
 }
 
+function getVisibleOpdDoctorRemarks(value: string | null | undefined) {
+  const trimmed = value?.trim()
+  if (!trimmed) return null
+
+  if (
+    /^opd marked done by\b/i.test(trimmed) ||
+    /^opd cancelled by\b/i.test(trimmed) ||
+    /^opd scheduled by\b/i.test(trimmed) ||
+    /^doctor follow-up required marked by\b/i.test(trimmed)
+  ) {
+    return null
+  }
+
+  return trimmed
+}
+
 export default function PatientDetailsPage() {
   const { user } = useAuth()
   const router = useRouter()
@@ -531,6 +589,7 @@ export default function PatientDetailsPage() {
   const [markLostDetail, setMarkLostDetail] = useState('')
   const [markLostSubmitting, setMarkLostSubmitting] = useState(false)
   const [switchingMode, setSwitchingMode] = useState(false)
+  const [markingOpdId, setMarkingOpdId] = useState<string | null>(null)
   const [showResetStepperDialog, setShowResetStepperDialog] = useState(false)
   const [handledQuickAction, setHandledQuickAction] = useState<string | null>(null)
   const quickAction = searchParams.get('action')
@@ -811,10 +870,17 @@ export default function PatientDetailsPage() {
   const canRevertCash = !readOnly && user && canRevertCashMode(user as any, lead)
   const hasScheduledOpd = hasLeadOpdScheduled(lead)
   const hasDoneOpd = hasLeadOpdDone(lead)
-  const canMarkOpd = !readOnly && !!user && canMarkOpdDone(user as any, lead)
+  const canMarkOpdAction =
+    !readOnly &&
+    !!user &&
+    (isSalesLeadWorkerRole(user.role) || user.role === 'ADMIN')
   const canFillIPDCash = !readOnly && !!user && canFillIPDCashForm(user as any, lead)
   const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
   const displayStatus = normalizeLeadStatus(lead.status)
+  const effectiveOpdAppointments = (lead.effectiveOpdAppointments ?? []) as EffectiveOpdEntry[]
+  const opdCounts = lead.opdCounts ?? getEffectiveOpdCounts(effectiveOpdAppointments)
+  const preOpds = effectiveOpdAppointments.filter((entry) => entry.phase === LeadOpdPhase.PRE)
+  const postOpds = effectiveOpdAppointments.filter((entry) => entry.phase === LeadOpdPhase.POST)
   const canManageOpd =
     !!user &&
     (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') &&
@@ -845,30 +911,36 @@ export default function PatientDetailsPage() {
             CaseStage.OUTSTANDING,
           ] as CaseStage[]).includes(lead.caseStage as CaseStage)
     )
-  const canEditOpdSchedule = canManageOpd && !(user?.role === 'BD' && hasDoneOpd)
-  const showOpdDetails =
-    hasScheduledOpd ||
-    hasDoneOpd ||
-    Boolean(lead.opdHospital || lead.opdDrName || lead.opdScheduleDate) ||
-    typeof lead.opdCharges === 'number' ||
-    typeof lead.opdMeeting === 'number'
-  const opdStatusLabel = hasDoneOpd ? 'OPD Done' : hasScheduledOpd ? 'OPD Scheduled' : null
-  const formattedOpdScheduleDate = lead.opdScheduleDate
-    ? format(new Date(lead.opdScheduleDate), 'dd MMM yyyy · hh:mm a')
-    : null
-  const opdChargeValue =
-    lead.opdCharges != null ? `₹${Number(lead.opdCharges).toLocaleString('en-IN')}` : null
-  const hasOpdDoctorNotes =
-    Boolean(
-      lead.remarks ||
-      lead.opdSurgeryAdvised ||
-      lead.opdDiagnosis ||
-      lead.opdSurgeryRemark?.label ||
-      lead.opdReasonNoSurgery?.label ||
-      lead.opdFollowUpReason?.label ||
-      typeof lead.opdImplantRequired === 'boolean'
-    )
-  const opdPrescriptionImages = lead.opdPrescriptionImages ?? []
+  const canAddPreOpd = canManageOpd && getNextAvailableOpdSlot(effectiveOpdAppointments, LeadOpdPhase.PRE) !== null
+  const canAddPostOpd =
+    canManageOpd &&
+    getNextAvailableOpdSlot(effectiveOpdAppointments, LeadOpdPhase.POST) !== null &&
+    ([CaseStage.IPD_DONE, CaseStage.CASH_IPD_DONE, CaseStage.DISCHARGED, CaseStage.CASH_DISCHARGED, CaseStage.PL_PENDING, CaseStage.OUTSTANDING] as CaseStage[]).includes(lead.caseStage)
+  const showOpdDetails = effectiveOpdAppointments.length > 0
+  const canEditOpdEntry = (entry: EffectiveOpdEntry) =>
+    canManageOpd && !(user?.role === 'BD' && entry.status === LeadOpdStatus.DONE)
+  const canMarkOpdEntry = (entry: EffectiveOpdEntry) =>
+    canMarkOpdAction &&
+    entry.status !== LeadOpdStatus.DONE &&
+    entry.status !== LeadOpdStatus.CANCELLED
+
+  async function handleMarkOpdDone(entry: EffectiveOpdEntry) {
+    try {
+      setMarkingOpdId(entry.id)
+      const targetId = entry.source === 'legacy' ? 'legacy' : entry.id
+      await apiPatch(`/api/leads/${leadId}/opds/${targetId}`, {
+        markDone: true,
+      })
+      toast.success('OPD marked done')
+      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+    } catch {
+      toast.error('Failed to mark OPD done')
+    } finally {
+      setMarkingOpdId(null)
+    }
+  }
 
   // Collect all uploaded documents for grid (KYP + PreAuth)
   const uploadedDocuments = (() => {
@@ -1546,46 +1618,27 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
-                {canEditOpdSchedule && (
+                {canAddPreOpd && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/opd-schedule`}>
-                      {hasScheduledOpd ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                      {hasScheduledOpd ? 'Edit OPD Schedule' : 'Schedule OPD'}
+                    <Link href={`/patient/${leadId}/opd-schedule?phase=PRE`}>
+                      <Plus className="h-4 w-4" />
+                      Add Pre OPD
                     </Link>
                   </Button>
                 )}
 
-                {canMarkOpd && (
+                {canAddPostOpd && (
                   <Button
-                    className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white border-0"
-                    onClick={async () => {
-                      const nextStage = getNextStageAfterOpdDone(lead)
-                      if (!nextStage) {
-                        toast.error('This case is not ready to mark OPD done')
-                        return
-                      }
-                      try {
-                        await apiPatch(`/api/leads/${leadId}`, {
-                          status: OPD_DONE_STATUS,
-                          caseStage: nextStage,
-                          stageChangeNote: 'OPD marked done',
-                          requireStatusChangeRemark: 'true',
-                          statusChangeRemark: 'OPD marked done',
-                        })
-                        toast.success('OPD marked done')
-                        queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
-                        queryClient.invalidateQueries({ queryKey: ['leads'] })
-                        queryClient.invalidateQueries({ queryKey: ['pipeline'] })
-                      } catch {
-                        toast.error('Failed to mark OPD done')
-                      }
-                    }}
+                    asChild
+                    className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white border-0"
                   >
-                    <CheckCircle2 className="h-4 w-4" />
-                    Mark OPD Done
+                    <Link href={`/patient/${leadId}/opd-schedule?phase=POST`}>
+                      <Plus className="h-4 w-4" />
+                      Add Post OPD
+                    </Link>
                   </Button>
                 )}
 
@@ -1787,123 +1840,218 @@ export default function PatientDetailsPage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <CalendarIcon className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
                   <CardTitle>OPD Details</CardTitle>
-                  {opdStatusLabel ? (
-                    <Badge className="border-0 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300">
-                      {opdStatusLabel}
-                    </Badge>
-                  ) : null}
+                  <Badge className="border-0 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300">
+                    {opdCounts.pre} Pre OPD{opdCounts.pre === 1 ? '' : 's'}
+                  </Badge>
+                  <Badge className="border-0 bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
+                    {opdCounts.post} Post OPD{opdCounts.post === 1 ? '' : 's'}
+                  </Badge>
                   <span className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white/70 px-2 py-0.5 text-[11px] text-gray-600 dark:border-gray-700 dark:bg-black/30 dark:text-gray-400">
                     <Activity className="w-3 h-3" />
                     {formatCaseStageLabel(lead.caseStage)}
                   </span>
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  {formattedOpdScheduleDate ? `Scheduled for ${formattedOpdScheduleDate}` : 'OPD summary'}
-                </div>
+                <div className="text-xs text-muted-foreground">Grouped OPD history</div>
               </div>
             </CardHeader>
-            <CardContent className="pt-6">
-              <Section
-                icon={Stethoscope}
-                iconClassName="text-cyan-600"
-                title="Appointment Snapshot"
-                hasContent={showOpdDetails}
-              >
-                <Field label="OPD ID" value={`OPD-${lead.leadRef}`} />
-                <Field label="Patient Name" value={lead.patientName} />
-                <Field
-                  label="Age / Sex"
-                  value={
-                    lead.age != null || lead.sex
-                      ? `${lead.age ?? '—'} / ${lead.sex ?? '—'}`
-                      : null
-                  }
-                />
-                <Field label="Patient Number" value={lead.phoneNumber} />
-                <Field label="Alternative Number" value={lead.alternateNumber} />
-                <Field label="Circle" value={lead.circle} />
-                <Field label="Category" value={lead.category} />
-                <Field label="Treatment" value={lead.treatment} />
-                <Field
-                  label="Quantity / Grade"
-                  value={lead.quantityGrade}
-                />
-                <Field label="Hospital / Clinic" value={lead.opdHospital || lead.hospitalName} />
-                <Field label="Doctor" value={lead.opdDrName || lead.surgeonName} />
-                <Field label="Doctor Type" value={lead.surgeonType} />
-                <Field label="Scheduled At" value={formattedOpdScheduleDate} />
-                <Field label="OPD Mode" value={getOpdModeLabel(lead.opdMeeting)} />
-                <Field label="Charges" value={opdChargeValue} />
-              </Section>
-              <div className="mt-4 grid gap-4">
-                <Section
-                  icon={FileText}
-                  iconClassName="text-emerald-600"
-                  title="Doctor Notes"
-                  hasContent={hasOpdDoctorNotes}
-                >
-                  <Field
-                    label="Surgery Advised"
-                    value={getOpdSurgeryAdvisedLabel(lead.opdSurgeryAdvised)}
-                  />
-                  <Field
-                    label="Surgery Remark"
-                    value={lead.opdSurgeryRemark?.label}
-                  />
-                  <Field
-                    label="Reason for No Surgery"
-                    value={lead.opdReasonNoSurgery?.label}
-                  />
-                  <Field
-                    label="Follow-up Reason"
-                    value={lead.opdFollowUpReason?.label}
-                  />
-                  <Field
-                    label="Implant Required"
-                    value={
-                      typeof lead.opdImplantRequired === 'boolean'
-                        ? lead.opdImplantRequired
-                          ? 'Yes'
-                          : 'No'
-                        : null
-                    }
-                  />
-                  <Field label="Diagnosis" value={lead.opdDiagnosis} />
-                  {lead.remarks ? (
-                    <div className="col-span-2 sm:col-span-3 md:col-span-4">
-                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold mb-1">
-                        Doctor Remarks
-                      </p>
-                      <p className="text-sm rounded-lg border bg-card p-3 whitespace-pre-wrap">
-                        {lead.remarks}
-                      </p>
-                    </div>
-                  ) : null}
-                </Section>
-                <Section
-                  icon={File}
-                  iconClassName="text-blue-600"
-                  title="Prescription Images"
-                  hasContent={opdPrescriptionImages.length > 0}
-                >
-                  <div className="col-span-2 sm:col-span-3 md:col-span-4 flex flex-wrap gap-2">
-                    {opdPrescriptionImages.map((image, index) => (
-                      <Button
-                        key={image.id}
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="h-8 text-[11px] gap-1"
-                      >
-                        <a href={image.fileUrl} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="w-3 h-3" />
-                          {image.fileName?.trim() || `Prescription ${index + 1}`}
-                        </a>
-                      </Button>
-                    ))}
+            <CardContent className="space-y-6 pt-6">
+              {[
+                { title: 'Pre OPDs', items: preOpds },
+                { title: 'Post OPDs', items: postOpds },
+              ].map((group) => (
+                <div key={group.title} className="space-y-4">
+                  <div className="flex items-center justify-between gap-2 border-b pb-2">
+                    <h3 className="text-sm font-semibold">{group.title}</h3>
+                    <span className="text-xs text-muted-foreground">
+                      {group.items.length} item{group.items.length === 1 ? '' : 's'}
+                    </span>
                   </div>
-                </Section>
-              </div>
+                  {group.items.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No {group.title.toLowerCase()} yet.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {group.items.map((entry) => {
+                        const scheduleLabel = entry.scheduleDate
+                          ? format(new Date(entry.scheduleDate), 'dd MMM yyyy · hh:mm a')
+                          : null
+                        const entryChargeValue =
+                          entry.charges != null
+                            ? `₹${Number(entry.charges).toLocaleString('en-IN')}`
+                            : null
+                        const entryImages = entry.prescriptionImages ?? []
+                        const visibleDoctorRemarks = getVisibleOpdDoctorRemarks(entry.remarks)
+
+                        return (
+                            <div key={entry.id} className="rounded-xl border bg-card p-4">
+                            <div className="mb-4 flex items-center justify-between gap-2 flex-wrap">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <Badge
+                                  className={cn(
+                                    'border-0',
+                                    entry.status === LeadOpdStatus.DONE
+                                      ? 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300'
+                                      : entry.status === LeadOpdStatus.CANCELLED
+                                        ? 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300'
+                                        : 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300'
+                                  )}
+                                >
+                                  {String(entry.status).replace(/_/g, ' ')}
+                                </Badge>
+                                {entry.source === 'legacy' ? (
+                                  <Badge variant="secondary">Legacy</Badge>
+                                ) : null}
+                                {entry.isFirstEffectivePreOpd ? (
+                                  <Badge variant="secondary">Primary OPD</Badge>
+                                ) : null}
+                                {entry.surgeryAdvised === 'follow_up' ? (
+                                  <Badge className="border-0 bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300">
+                                    Doctor Follow-up Required
+                                  </Badge>
+                                ) : null}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {canMarkOpdEntry(entry) ? (
+                                  <Button
+                                    size="sm"
+                                    className="bg-teal-600 hover:bg-teal-700 text-white border-0"
+                                    disabled={markingOpdId === entry.id}
+                                    onClick={() => handleMarkOpdDone(entry)}
+                                  >
+                                    {markingOpdId === entry.id ? (
+                                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                                    ) : (
+                                      <CheckCircle2 className="mr-2 h-3.5 w-3.5" />
+                                    )}
+                                    Mark OPD Done
+                                  </Button>
+                                ) : null}
+                                {canEditOpdEntry(entry) ? (
+                                  <Button asChild size="sm" variant="outline">
+                                    <Link
+                                      href={
+                                        entry.source === 'legacy'
+                                          ? `/patient/${leadId}/opd-schedule?opdId=legacy`
+                                          : `/patient/${leadId}/opd-schedule?opdId=${entry.id}`
+                                      }
+                                    >
+                                      <Pencil className="mr-2 h-3.5 w-3.5" />
+                                      Edit
+                                    </Link>
+                                  </Button>
+                                ) : null}
+                              </div>
+                            </div>
+
+                            <Section
+                              icon={Stethoscope}
+                              iconClassName="text-cyan-600"
+                              title="Appointment Snapshot"
+                              hasContent
+                            >
+                              <Field label="OPD ID" value={`OPD-${lead.leadRef}`} />
+                              <Field label="Patient Name" value={lead.patientName} />
+                              <Field
+                                label="Age / Sex"
+                                value={
+                                  lead.age != null || lead.sex
+                                    ? `${lead.age ?? '—'} / ${lead.sex ?? '—'}`
+                                    : null
+                                }
+                              />
+                              <Field label="Patient Number" value={lead.phoneNumber} />
+                              <Field label="Alternative Number" value={lead.alternateNumber} />
+                              <Field label="Circle" value={lead.circle} />
+                              <Field label="Category" value={lead.category} />
+                              <Field label="Treatment" value={lead.treatment} />
+                              <Field label="Quantity / Grade" value={lead.quantityGrade} />
+                              <Field label="Hospital / Clinic" value={entry.hospitalName || lead.hospitalName} />
+                              <Field label="Doctor" value={entry.doctorName || lead.surgeonName} />
+                              <Field label="Doctor Type" value={lead.surgeonType} />
+                              <Field label="Scheduled At" value={scheduleLabel} />
+                              <Field label="OPD Mode" value={getOpdModeLabel(entry.meetingType)} />
+                              <Field label="Charges" value={entryChargeValue} />
+                            </Section>
+
+                            <div className="mt-4 grid gap-4">
+                              <Section
+                                icon={FileText}
+                                iconClassName="text-emerald-600"
+                                title="Doctor Notes"
+                                hasContent={
+                                  Boolean(
+                                    visibleDoctorRemarks ||
+                                      entry.surgeryAdvised ||
+                                      entry.diagnosis ||
+                                      entry.surgeryRemark?.label ||
+                                      entry.reasonNoSurgery?.label ||
+                                      entry.followUpReason?.label ||
+                                      typeof entry.implantRequired === 'boolean'
+                                  )
+                                }
+                              >
+                                <Field
+                                  label="Surgery Advised"
+                                  value={getOpdSurgeryAdvisedLabel(entry.surgeryAdvised)}
+                                />
+                                <Field label="Surgery Remark" value={entry.surgeryRemark?.label} />
+                                <Field
+                                  label="Reason for No Surgery"
+                                  value={entry.reasonNoSurgery?.label}
+                                />
+                                <Field label="Follow-up Reason" value={entry.followUpReason?.label} />
+                                <Field
+                                  label="Implant Required"
+                                  value={
+                                    typeof entry.implantRequired === 'boolean'
+                                      ? entry.implantRequired
+                                        ? 'Yes'
+                                        : 'No'
+                                      : null
+                                  }
+                                />
+                                <Field label="Diagnosis" value={entry.diagnosis} />
+                                {visibleDoctorRemarks ? (
+                                  <div className="col-span-2 sm:col-span-3 md:col-span-4">
+                                    <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                      Doctor Remarks
+                                    </p>
+                                    <p className="whitespace-pre-wrap rounded-lg border bg-card p-3 text-sm">
+                                      {visibleDoctorRemarks}
+                                    </p>
+                                  </div>
+                                ) : null}
+                              </Section>
+                              <Section
+                                icon={File}
+                                iconClassName="text-blue-600"
+                                title="Prescription Images"
+                                hasContent={entryImages.length > 0}
+                              >
+                                <div className="col-span-2 flex flex-wrap gap-2 sm:col-span-3 md:col-span-4">
+                                  {entryImages.map((image, imageIndex) => (
+                                    <Button
+                                      key={image.id}
+                                      asChild
+                                      variant="outline"
+                                      size="sm"
+                                      className="h-8 gap-1 text-[11px]"
+                                    >
+                                      <a href={image.fileUrl} target="_blank" rel="noopener noreferrer">
+                                        <ExternalLink className="h-3 w-3" />
+                                        {image.fileName?.trim() || `Prescription ${imageIndex + 1}`}
+                                      </a>
+                                    </Button>
+                                  ))}
+                                </div>
+                              </Section>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
             </CardContent>
           </Card>
         )}

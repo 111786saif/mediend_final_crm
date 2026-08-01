@@ -68,7 +68,11 @@ export type EmployeeMinAggregateOutputType = {
   educationalCertDocUrl: string | null
   experienceCertDocUrl: string | null
   appointmentLetterDocUrl: string | null
+  salarySlipDocUrl: string | null
+  bankStatementDocUrl: string | null
   uanNumber: string | null
+  experienceType: $Enums.ExperienceType | null
+  personalEmail: string | null
   status: $Enums.EmployeeStatus | null
   onboardingStatus: $Enums.OnboardingStatus | null
   onboardingSubmittedAt: Date | null
@@ -121,7 +125,11 @@ export type EmployeeMaxAggregateOutputType = {
   educationalCertDocUrl: string | null
   experienceCertDocUrl: string | null
   appointmentLetterDocUrl: string | null
+  salarySlipDocUrl: string | null
+  bankStatementDocUrl: string | null
   uanNumber: string | null
+  experienceType: $Enums.ExperienceType | null
+  personalEmail: string | null
   status: $Enums.EmployeeStatus | null
   onboardingStatus: $Enums.OnboardingStatus | null
   onboardingSubmittedAt: Date | null
@@ -174,8 +182,12 @@ export type EmployeeCountAggregateOutputType = {
   educationalCertDocUrl: number
   experienceCertDocUrl: number
   appointmentLetterDocUrl: number
+  salarySlipDocUrl: number
+  bankStatementDocUrl: number
   otherDocuments: number
   uanNumber: number
+  experienceType: number
+  personalEmail: number
   status: number
   onboardingStatus: number
   onboardingSubmittedAt: number
@@ -240,7 +252,11 @@ export type EmployeeMinAggregateInputType = {
   educationalCertDocUrl?: true
   experienceCertDocUrl?: true
   appointmentLetterDocUrl?: true
+  salarySlipDocUrl?: true
+  bankStatementDocUrl?: true
   uanNumber?: true
+  experienceType?: true
+  personalEmail?: true
   status?: true
   onboardingStatus?: true
   onboardingSubmittedAt?: true
@@ -293,7 +309,11 @@ export type EmployeeMaxAggregateInputType = {
   educationalCertDocUrl?: true
   experienceCertDocUrl?: true
   appointmentLetterDocUrl?: true
+  salarySlipDocUrl?: true
+  bankStatementDocUrl?: true
   uanNumber?: true
+  experienceType?: true
+  personalEmail?: true
   status?: true
   onboardingStatus?: true
   onboardingSubmittedAt?: true
@@ -346,8 +366,12 @@ export type EmployeeCountAggregateInputType = {
   educationalCertDocUrl?: true
   experienceCertDocUrl?: true
   appointmentLetterDocUrl?: true
+  salarySlipDocUrl?: true
+  bankStatementDocUrl?: true
   otherDocuments?: true
   uanNumber?: true
+  experienceType?: true
+  personalEmail?: true
   status?: true
   onboardingStatus?: true
   onboardingSubmittedAt?: true
@@ -487,8 +511,12 @@ export type EmployeeGroupByOutputType = {
   educationalCertDocUrl: string | null
   experienceCertDocUrl: string | null
   appointmentLetterDocUrl: string | null
+  salarySlipDocUrl: string | null
+  bankStatementDocUrl: string | null
   otherDocuments: runtime.JsonValue | null
   uanNumber: string | null
+  experienceType: $Enums.ExperienceType | null
+  personalEmail: string | null
   status: $Enums.EmployeeStatus
   onboardingStatus: $Enums.OnboardingStatus
   onboardingSubmittedAt: Date | null
@@ -564,8 +592,12 @@ export type EmployeeWhereInput = {
   educationalCertDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   experienceCertDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   appointmentLetterDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
+  salarySlipDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
+  bankStatementDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   otherDocuments?: Prisma.JsonNullableFilter<"Employee">
   uanNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
+  experienceType?: Prisma.EnumExperienceTypeNullableFilter<"Employee"> | $Enums.ExperienceType | null
+  personalEmail?: Prisma.StringNullableFilter<"Employee"> | string | null
   status?: Prisma.EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Employee"> | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
@@ -657,8 +689,12 @@ export type EmployeeOrderByWithRelationInput = {
   educationalCertDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   experienceCertDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   appointmentLetterDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  salarySlipDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankStatementDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   otherDocuments?: Prisma.SortOrderInput | Prisma.SortOrder
   uanNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  experienceType?: Prisma.SortOrderInput | Prisma.SortOrder
+  personalEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -753,8 +789,12 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   educationalCertDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   experienceCertDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   appointmentLetterDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
+  salarySlipDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
+  bankStatementDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   otherDocuments?: Prisma.JsonNullableFilter<"Employee">
   uanNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
+  experienceType?: Prisma.EnumExperienceTypeNullableFilter<"Employee"> | $Enums.ExperienceType | null
+  personalEmail?: Prisma.StringNullableFilter<"Employee"> | string | null
   status?: Prisma.EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Employee"> | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
@@ -846,8 +886,12 @@ export type EmployeeOrderByWithAggregationInput = {
   educationalCertDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   experienceCertDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   appointmentLetterDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  salarySlipDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankStatementDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   otherDocuments?: Prisma.SortOrderInput | Prisma.SortOrder
   uanNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  experienceType?: Prisma.SortOrderInput | Prisma.SortOrder
+  personalEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -908,8 +952,12 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   educationalCertDocUrl?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   experienceCertDocUrl?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   appointmentLetterDocUrl?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  salarySlipDocUrl?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  bankStatementDocUrl?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   otherDocuments?: Prisma.JsonNullableWithAggregatesFilter<"Employee">
   uanNumber?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  experienceType?: Prisma.EnumExperienceTypeNullableWithAggregatesFilter<"Employee"> | $Enums.ExperienceType | null
+  personalEmail?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   status?: Prisma.EnumEmployeeStatusWithAggregatesFilter<"Employee"> | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusWithAggregatesFilter<"Employee"> | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
@@ -958,8 +1006,12 @@ export type EmployeeCreateInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -1049,8 +1101,12 @@ export type EmployeeUncheckedCreateInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -1132,8 +1188,12 @@ export type EmployeeUpdateInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1223,8 +1283,12 @@ export type EmployeeUncheckedUpdateInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1310,8 +1374,12 @@ export type EmployeeCreateManyInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -1360,8 +1428,12 @@ export type EmployeeUpdateManyMutationInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1412,8 +1484,12 @@ export type EmployeeUncheckedUpdateManyInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1481,8 +1557,12 @@ export type EmployeeCountOrderByAggregateInput = {
   educationalCertDocUrl?: Prisma.SortOrder
   experienceCertDocUrl?: Prisma.SortOrder
   appointmentLetterDocUrl?: Prisma.SortOrder
+  salarySlipDocUrl?: Prisma.SortOrder
+  bankStatementDocUrl?: Prisma.SortOrder
   otherDocuments?: Prisma.SortOrder
   uanNumber?: Prisma.SortOrder
+  experienceType?: Prisma.SortOrder
+  personalEmail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrder
@@ -1540,7 +1620,11 @@ export type EmployeeMaxOrderByAggregateInput = {
   educationalCertDocUrl?: Prisma.SortOrder
   experienceCertDocUrl?: Prisma.SortOrder
   appointmentLetterDocUrl?: Prisma.SortOrder
+  salarySlipDocUrl?: Prisma.SortOrder
+  bankStatementDocUrl?: Prisma.SortOrder
   uanNumber?: Prisma.SortOrder
+  experienceType?: Prisma.SortOrder
+  personalEmail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrder
@@ -1593,7 +1677,11 @@ export type EmployeeMinOrderByAggregateInput = {
   educationalCertDocUrl?: Prisma.SortOrder
   experienceCertDocUrl?: Prisma.SortOrder
   appointmentLetterDocUrl?: Prisma.SortOrder
+  salarySlipDocUrl?: Prisma.SortOrder
+  bankStatementDocUrl?: Prisma.SortOrder
   uanNumber?: Prisma.SortOrder
+  experienceType?: Prisma.SortOrder
+  personalEmail?: Prisma.SortOrder
   status?: Prisma.SortOrder
   onboardingStatus?: Prisma.SortOrder
   onboardingSubmittedAt?: Prisma.SortOrder
@@ -1858,6 +1946,10 @@ export type EmployeeUncheckedCreateNestedManyWithoutManagerInput = {
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutManagerInput | Prisma.EmployeeCreateOrConnectWithoutManagerInput[]
   createMany?: Prisma.EmployeeCreateManyManagerInputEnvelope
   connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+}
+
+export type NullableEnumExperienceTypeFieldUpdateOperationsInput = {
+  set?: $Enums.ExperienceType | null
 }
 
 export type EnumEmployeeStatusFieldUpdateOperationsInput = {
@@ -2380,8 +2472,12 @@ export type EmployeeCreateWithoutUserInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -2469,8 +2565,12 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -2557,8 +2657,12 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -2647,8 +2751,12 @@ export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -2739,8 +2847,12 @@ export type EmployeeCreateWithoutOnboardingApprovedByInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -2829,8 +2941,12 @@ export type EmployeeUncheckedCreateWithoutOnboardingApprovedByInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -2932,8 +3048,12 @@ export type EmployeeUpdateWithoutUserInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3021,8 +3141,12 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3127,8 +3251,12 @@ export type EmployeeScalarWhereInput = {
   educationalCertDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   experienceCertDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   appointmentLetterDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
+  salarySlipDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
+  bankStatementDocUrl?: Prisma.StringNullableFilter<"Employee"> | string | null
   otherDocuments?: Prisma.JsonNullableFilter<"Employee">
   uanNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
+  experienceType?: Prisma.EnumExperienceTypeNullableFilter<"Employee"> | $Enums.ExperienceType | null
+  personalEmail?: Prisma.StringNullableFilter<"Employee"> | string | null
   status?: Prisma.EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Employee"> | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
@@ -3193,8 +3321,12 @@ export type EmployeeCreateWithoutDepartmentInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -3282,8 +3414,12 @@ export type EmployeeUncheckedCreateWithoutDepartmentInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -3391,8 +3527,12 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -3481,8 +3621,12 @@ export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -3568,8 +3712,12 @@ export type EmployeeCreateWithoutTeamInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -3657,8 +3805,12 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -3761,8 +3913,12 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3851,8 +4007,12 @@ export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3949,8 +4109,12 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -4039,8 +4203,12 @@ export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -4126,8 +4294,12 @@ export type EmployeeCreateWithoutManagerInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -4215,8 +4387,12 @@ export type EmployeeUncheckedCreateWithoutManagerInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -4319,8 +4495,12 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4409,8 +4589,12 @@ export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4507,8 +4691,12 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -4597,8 +4785,12 @@ export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -4695,8 +4887,12 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4785,8 +4981,12 @@ export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4867,8 +5067,12 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -4957,8 +5161,12 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -5044,8 +5252,12 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -5134,8 +5346,12 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -5221,8 +5437,12 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -5311,8 +5531,12 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput 
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -5398,8 +5622,12 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -5488,8 +5716,12 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprove
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -5586,8 +5818,12 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5676,8 +5912,12 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5769,8 +6009,12 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5859,8 +6103,12 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5952,8 +6200,12 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6042,8 +6294,12 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput 
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6135,8 +6391,12 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6225,8 +6485,12 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprove
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6307,8 +6571,12 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -6397,8 +6665,12 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -6484,8 +6756,12 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -6574,8 +6850,12 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -6672,8 +6952,12 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6762,8 +7046,12 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6855,8 +7143,12 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6945,8 +7237,12 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7027,8 +7323,12 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -7117,8 +7417,12 @@ export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -7215,8 +7519,12 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7305,8 +7613,12 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7387,8 +7699,12 @@ export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -7477,8 +7793,12 @@ export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -7575,8 +7895,12 @@ export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7665,8 +7989,12 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7747,8 +8075,12 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -7837,8 +8169,12 @@ export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -7935,8 +8271,12 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8025,8 +8365,12 @@ export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8107,8 +8451,12 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -8197,8 +8545,12 @@ export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -8295,8 +8647,12 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8385,8 +8741,12 @@ export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8467,8 +8827,12 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -8557,8 +8921,12 @@ export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -8655,8 +9023,12 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8745,8 +9117,12 @@ export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8827,8 +9203,12 @@ export type EmployeeCreateWithoutDocumentsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -8917,8 +9297,12 @@ export type EmployeeUncheckedCreateWithoutDocumentsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -9015,8 +9399,12 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9105,8 +9493,12 @@ export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9187,8 +9579,12 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -9277,8 +9673,12 @@ export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -9375,8 +9775,12 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9465,8 +9869,12 @@ export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9547,8 +9955,12 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -9637,8 +10049,12 @@ export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -9735,8 +10151,12 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9825,8 +10245,12 @@ export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9907,8 +10331,12 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -9997,8 +10425,12 @@ export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -10095,8 +10527,12 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10185,8 +10621,12 @@ export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10267,8 +10707,12 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -10357,8 +10801,12 @@ export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -10455,8 +10903,12 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10545,8 +10997,12 @@ export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10627,8 +11083,12 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -10717,8 +11177,12 @@ export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -10815,8 +11279,12 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10905,8 +11373,12 @@ export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10987,8 +11459,12 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -11077,8 +11553,12 @@ export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -11175,8 +11655,12 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11265,8 +11749,12 @@ export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11347,8 +11835,12 @@ export type EmployeeCreateWithoutCrmAssignmentRuleMembershipsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -11437,8 +11929,12 @@ export type EmployeeUncheckedCreateWithoutCrmAssignmentRuleMembershipsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -11535,8 +12031,12 @@ export type EmployeeUpdateWithoutCrmAssignmentRuleMembershipsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11625,8 +12125,12 @@ export type EmployeeUncheckedUpdateWithoutCrmAssignmentRuleMembershipsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11707,8 +12211,12 @@ export type EmployeeCreateWithoutCampaignTeamLeadAssignmentsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -11797,8 +12305,12 @@ export type EmployeeUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -11895,8 +12407,12 @@ export type EmployeeUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11985,8 +12501,12 @@ export type EmployeeUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12067,8 +12587,12 @@ export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -12157,8 +12681,12 @@ export type EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -12255,8 +12783,12 @@ export type EmployeeUpdateWithoutSalesTeamCostEntriesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12345,8 +12877,12 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12427,8 +12963,12 @@ export type EmployeeCreateWithoutMonthlyIncentivesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -12517,8 +13057,12 @@ export type EmployeeUncheckedCreateWithoutMonthlyIncentivesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -12615,8 +13159,12 @@ export type EmployeeUpdateWithoutMonthlyIncentivesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12705,8 +13253,12 @@ export type EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12787,8 +13339,12 @@ export type EmployeeCreateWithoutMasterSeatingCostInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -12877,8 +13433,12 @@ export type EmployeeUncheckedCreateWithoutMasterSeatingCostInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -12975,8 +13535,12 @@ export type EmployeeUpdateWithoutMasterSeatingCostInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13065,8 +13629,12 @@ export type EmployeeUncheckedUpdateWithoutMasterSeatingCostInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13147,8 +13715,12 @@ export type EmployeeCreateWithoutMonthlySeatingMiscCostsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -13237,8 +13809,12 @@ export type EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -13335,8 +13911,12 @@ export type EmployeeUpdateWithoutMonthlySeatingMiscCostsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13425,8 +14005,12 @@ export type EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13507,8 +14091,12 @@ export type EmployeeCreateWithoutSalesTeamBulkCostEntriesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -13597,8 +14185,12 @@ export type EmployeeUncheckedCreateWithoutSalesTeamBulkCostEntriesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -13695,8 +14287,12 @@ export type EmployeeUpdateWithoutSalesTeamBulkCostEntriesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13785,8 +14381,12 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamBulkCostEntriesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13867,8 +14467,12 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverridesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -13957,8 +14561,12 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverridesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -14055,8 +14663,12 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverridesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14145,8 +14757,12 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverridesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14227,8 +14843,12 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -14317,8 +14937,12 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = 
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -14415,8 +15039,12 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14505,8 +15133,12 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = 
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14587,8 +15219,12 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -14677,8 +15313,12 @@ export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -14775,8 +15415,12 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14865,8 +15509,12 @@ export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14947,8 +15595,12 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -15037,8 +15689,12 @@ export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -15135,8 +15791,12 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15225,8 +15885,12 @@ export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15307,8 +15971,12 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -15397,8 +16065,12 @@ export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -15495,8 +16167,12 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15585,8 +16261,12 @@ export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15671,8 +16351,12 @@ export type EmployeeCreateManyFnfCompletedByInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -15724,8 +16408,12 @@ export type EmployeeCreateManyOnboardingApprovedByInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -15773,8 +16461,12 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15863,8 +16555,12 @@ export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15949,8 +16645,12 @@ export type EmployeeUncheckedUpdateManyWithoutFnfCompletedByInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15998,8 +16698,12 @@ export type EmployeeUpdateWithoutOnboardingApprovedByInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16088,8 +16792,12 @@ export type EmployeeUncheckedUpdateWithoutOnboardingApprovedByInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16174,8 +16882,12 @@ export type EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16226,8 +16938,12 @@ export type EmployeeCreateManyDepartmentInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -16276,8 +16992,12 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16365,8 +17085,12 @@ export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16451,8 +17175,12 @@ export type EmployeeUncheckedUpdateManyWithoutDepartmentInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16504,8 +17232,12 @@ export type EmployeeCreateManyTeamInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -16554,8 +17286,12 @@ export type EmployeeUpdateWithoutTeamInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16643,8 +17379,12 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16729,8 +17469,12 @@ export type EmployeeUncheckedUpdateManyWithoutTeamInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16782,8 +17526,12 @@ export type EmployeeCreateManyManagerInput = {
   educationalCertDocUrl?: string | null
   experienceCertDocUrl?: string | null
   appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
   status?: $Enums.EmployeeStatus
   onboardingStatus?: $Enums.OnboardingStatus
   onboardingSubmittedAt?: Date | string | null
@@ -16832,8 +17580,12 @@ export type EmployeeUpdateWithoutManagerInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16921,8 +17673,12 @@ export type EmployeeUncheckedUpdateWithoutManagerInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17007,8 +17763,12 @@ export type EmployeeUncheckedUpdateManyWithoutManagerInput = {
   educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
   onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
   onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17362,8 +18122,12 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   educationalCertDocUrl?: boolean
   experienceCertDocUrl?: boolean
   appointmentLetterDocUrl?: boolean
+  salarySlipDocUrl?: boolean
+  bankStatementDocUrl?: boolean
   otherDocuments?: boolean
   uanNumber?: boolean
+  experienceType?: boolean
+  personalEmail?: boolean
   status?: boolean
   onboardingStatus?: boolean
   onboardingSubmittedAt?: boolean
@@ -17456,8 +18220,12 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   educationalCertDocUrl?: boolean
   experienceCertDocUrl?: boolean
   appointmentLetterDocUrl?: boolean
+  salarySlipDocUrl?: boolean
+  bankStatementDocUrl?: boolean
   otherDocuments?: boolean
   uanNumber?: boolean
+  experienceType?: boolean
+  personalEmail?: boolean
   status?: boolean
   onboardingStatus?: boolean
   onboardingSubmittedAt?: boolean
@@ -17516,8 +18284,12 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   educationalCertDocUrl?: boolean
   experienceCertDocUrl?: boolean
   appointmentLetterDocUrl?: boolean
+  salarySlipDocUrl?: boolean
+  bankStatementDocUrl?: boolean
   otherDocuments?: boolean
   uanNumber?: boolean
+  experienceType?: boolean
+  personalEmail?: boolean
   status?: boolean
   onboardingStatus?: boolean
   onboardingSubmittedAt?: boolean
@@ -17576,8 +18348,12 @@ export type EmployeeSelectScalar = {
   educationalCertDocUrl?: boolean
   experienceCertDocUrl?: boolean
   appointmentLetterDocUrl?: boolean
+  salarySlipDocUrl?: boolean
+  bankStatementDocUrl?: boolean
   otherDocuments?: boolean
   uanNumber?: boolean
+  experienceType?: boolean
+  personalEmail?: boolean
   status?: boolean
   onboardingStatus?: boolean
   onboardingSubmittedAt?: boolean
@@ -17598,7 +18374,7 @@ export type EmployeeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeCode" | "bdNumber" | "circle" | "joinDate" | "salary" | "departmentId" | "teamId" | "managerId" | "dateOfBirth" | "aadharNumber" | "panNumber" | "aadharDocUrl" | "panDocUrl" | "designation" | "bankAccountName" | "bankAccountNumber" | "ifscCode" | "bankName" | "bankBranch" | "upiId" | "bloodGroup" | "employmentType" | "workLocation" | "passportDocUrl" | "drivingLicenseDocUrl" | "resumeDocUrl" | "educationalCertDocUrl" | "experienceCertDocUrl" | "appointmentLetterDocUrl" | "otherDocuments" | "uanNumber" | "status" | "onboardingStatus" | "onboardingSubmittedAt" | "onboardingApprovedAt" | "onboardingApprovedById" | "pipStartDate" | "pipEndDate" | "noticePeriodStartDate" | "noticePeriodEndDate" | "finalWorkingDay" | "terminationReason" | "statusNote" | "fnfDeadline" | "fnfCompleted" | "fnfCompletedAt" | "fnfCompletedById" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeCode" | "bdNumber" | "circle" | "joinDate" | "salary" | "departmentId" | "teamId" | "managerId" | "dateOfBirth" | "aadharNumber" | "panNumber" | "aadharDocUrl" | "panDocUrl" | "designation" | "bankAccountName" | "bankAccountNumber" | "ifscCode" | "bankName" | "bankBranch" | "upiId" | "bloodGroup" | "employmentType" | "workLocation" | "passportDocUrl" | "drivingLicenseDocUrl" | "resumeDocUrl" | "educationalCertDocUrl" | "experienceCertDocUrl" | "appointmentLetterDocUrl" | "salarySlipDocUrl" | "bankStatementDocUrl" | "otherDocuments" | "uanNumber" | "experienceType" | "personalEmail" | "status" | "onboardingStatus" | "onboardingSubmittedAt" | "onboardingApprovedAt" | "onboardingApprovedById" | "pipStartDate" | "pipEndDate" | "noticePeriodStartDate" | "noticePeriodEndDate" | "finalWorkingDay" | "terminationReason" | "statusNote" | "fnfDeadline" | "fnfCompleted" | "fnfCompletedAt" | "fnfCompletedById" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.Employee$departmentArgs<ExtArgs>
@@ -17733,8 +18509,12 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     educationalCertDocUrl: string | null
     experienceCertDocUrl: string | null
     appointmentLetterDocUrl: string | null
+    salarySlipDocUrl: string | null
+    bankStatementDocUrl: string | null
     otherDocuments: runtime.JsonValue | null
     uanNumber: string | null
+    experienceType: $Enums.ExperienceType | null
+    personalEmail: string | null
     status: $Enums.EmployeeStatus
     onboardingStatus: $Enums.OnboardingStatus
     onboardingSubmittedAt: Date | null
@@ -18246,8 +19026,12 @@ export interface EmployeeFieldRefs {
   readonly educationalCertDocUrl: Prisma.FieldRef<"Employee", 'String'>
   readonly experienceCertDocUrl: Prisma.FieldRef<"Employee", 'String'>
   readonly appointmentLetterDocUrl: Prisma.FieldRef<"Employee", 'String'>
+  readonly salarySlipDocUrl: Prisma.FieldRef<"Employee", 'String'>
+  readonly bankStatementDocUrl: Prisma.FieldRef<"Employee", 'String'>
   readonly otherDocuments: Prisma.FieldRef<"Employee", 'Json'>
   readonly uanNumber: Prisma.FieldRef<"Employee", 'String'>
+  readonly experienceType: Prisma.FieldRef<"Employee", 'ExperienceType'>
+  readonly personalEmail: Prisma.FieldRef<"Employee", 'String'>
   readonly status: Prisma.FieldRef<"Employee", 'EmployeeStatus'>
   readonly onboardingStatus: Prisma.FieldRef<"Employee", 'OnboardingStatus'>
   readonly onboardingSubmittedAt: Prisma.FieldRef<"Employee", 'DateTime'>

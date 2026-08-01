@@ -1,10 +1,12 @@
-import { IpdStatus, Prisma } from '@/generated/prisma/client'
+import { IpdStatus, LeadOpdStatus, Prisma } from '@/generated/prisma/client'
 import { DoctorAppSessionUser } from '@/lib/doctor-app/auth'
 import {
   getDoctorAppContext,
   getDoctorScopedLeadWhere,
 } from '@/lib/doctor-app/context'
+import { buildEffectiveOpdEntries, type EffectiveOpdEntry } from '@/lib/lead-opd-appointments'
 import { hasLeadOpdDone } from '@/lib/lead-opd-workflow'
+import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 import { prisma } from '@/lib/prisma'
 
 const dashboardLeadSelect = {
@@ -22,11 +24,15 @@ const dashboardLeadSelect = {
   remarks: true,
   followUpDate: true,
   opdScheduleDate: true,
+  opdDrName: true,
   surgeryDate: true,
   ipdAdmissionDate: true,
   opdHospital: true,
   ipdHospital: true,
   updatedDate: true,
+  opdAppointments: {
+    select: leadOpdAppointmentSelect,
+  },
   admissionRecord: {
     select: {
       id: true,
@@ -61,6 +67,11 @@ const dashboardLeadSelect = {
 type DashboardLead = Prisma.LeadGetPayload<{
   select: typeof dashboardLeadSelect
 }>
+
+type PendingScheduledOpd = {
+  lead: DashboardLead
+  entry: EffectiveOpdEntry
+}
 
 type DateFilters = {
   day?: number
@@ -150,6 +161,20 @@ function isDischarged(lead: DashboardLead) {
   )
 }
 
+function normalizeComparableText(value: string | null | undefined) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+}
+
+function matchesDoctorAssignment(value: string | null | undefined, doctorName: string) {
+  return normalizeComparableText(value) === normalizeComparableText(doctorName)
+}
+
+function getEffectiveOpdEntriesForLead(lead: DashboardLead) {
+  return buildEffectiveOpdEntries(lead, lead.opdAppointments)
+}
+
 function mapLeadItem(lead: DashboardLead) {
   return {
     id: lead.id,
@@ -198,34 +223,62 @@ function getPendingTasksCutoff() {
   return d
 }
 
-function getPendingTaskBuckets(leads: DashboardLead[]) {
-  const cutoff = getPendingTasksCutoff()
-  const overdueOpds = leads.filter(
-    lead =>
-      lead.opdScheduleDate &&
-      lead.opdScheduleDate <= cutoff &&
-      !hasLeadOpdDone(lead) &&
-      !isDischarged(lead) &&
-      !getAdmissionDate(lead)
+function getPendingIpdScheduledDate(lead: DashboardLead) {
+  return (
+    lead.admissionRecord?.newSurgeryDate ||
+    lead.admissionRecord?.expectedSurgeryDate ||
+    lead.admissionRecord?.surgeryDate ||
+    lead.surgeryDate ||
+    getAdmissionDate(lead)
   )
-  const surgeryNotConfirmed = leads.filter(
-    lead =>
-      Boolean(lead.surgeryDate) &&
-      new Date(lead.surgeryDate as Date).getTime() <= cutoff.getTime() &&
-      lead.admissionRecord?.ipdStatus !== IpdStatus.IPD_DONE &&
-      lead.admissionRecord?.ipdStatus !== IpdStatus.DISCHARGED &&
-      lead.admissionRecord?.ipdStatus !== IpdStatus.CANCELLED &&
-      !isDischarged(lead)
-  )
-  const ipdNotDischarged = leads.filter(
-    lead =>
-      Boolean(getAdmissionDate(lead)) &&
-      !isDischarged(lead) &&
-      (lead.admissionRecord?.ipdStatus === IpdStatus.IPD_DONE ||
-        Boolean(lead.surgeryDate && new Date(lead.surgeryDate).getTime() <= cutoff.getTime()))
-  )
+}
 
-  return { overdueOpds, surgeryNotConfirmed, ipdNotDischarged }
+function isPendingScheduledIpd(lead: DashboardLead, cutoff: Date) {
+  const scheduledDate = getPendingIpdScheduledDate(lead)
+  if (!scheduledDate || isDischarged(lead)) {
+    return false
+  }
+
+  if (new Date(scheduledDate).getTime() > cutoff.getTime()) {
+    return false
+  }
+
+  return lead.admissionRecord?.ipdStatus == null
+}
+
+function getPendingDoctorScheduledOpds(
+  lead: DashboardLead,
+  doctorName: string,
+  cutoff: Date
+) {
+  return getEffectiveOpdEntriesForLead(lead).filter((entry) => {
+    if (!matchesDoctorAssignment(entry.doctorName, doctorName)) {
+      return false
+    }
+
+    if (entry.status !== LeadOpdStatus.SCHEDULED || !entry.scheduleDate) {
+      return false
+    }
+
+    if (new Date(entry.scheduleDate).getTime() > cutoff.getTime()) {
+      return false
+    }
+
+    return !isDischarged(lead)
+  })
+}
+
+function getPendingTaskBuckets(leads: DashboardLead[], doctorName: string) {
+  const cutoff = getPendingTasksCutoff()
+  const overdueOpds = leads.flatMap((lead) =>
+    getPendingDoctorScheduledOpds(lead, doctorName, cutoff).map((entry) => ({
+      lead,
+      entry,
+    }))
+  )
+  const overdueIpds = leads.filter(lead => isPendingScheduledIpd(lead, cutoff))
+
+  return { overdueOpds, overdueIpds }
 }
 
 async function getDoctorDashboardLeads(user: DoctorAppSessionUser) {
@@ -330,44 +383,46 @@ export async function getDoctorDashboardDrilldown(
 }
 
 export async function getDoctorPendingTasksSummary(user: DoctorAppSessionUser) {
-  const { leads } = await getDoctorDashboardLeads(user)
-  const buckets = getPendingTaskBuckets(leads)
-  const total =
-    buckets.overdueOpds.length +
-    buckets.surgeryNotConfirmed.length +
-    buckets.ipdNotDischarged.length
+  const { context, leads } = await getDoctorDashboardLeads(user)
+  const buckets = getPendingTaskBuckets(leads, context.doctorName)
+  const total = buckets.overdueOpds.length + buckets.overdueIpds.length
 
   return {
     hasPendingTasks: total > 0,
     total,
     overdueOpds: buckets.overdueOpds.length,
-    surgeryNotConfirmed: buckets.surgeryNotConfirmed.length,
-    ipdNotDischarged: buckets.ipdNotDischarged.length,
+    overdueIpds: buckets.overdueIpds.length,
+    surgeryNotConfirmed: 0,
+    ipdNotDischarged: 0,
   }
 }
 
 export async function getDoctorPendingTasksList(user: DoctorAppSessionUser) {
-  const { leads } = await getDoctorDashboardLeads(user)
-  const buckets = getPendingTaskBuckets(leads)
+  const { context, leads } = await getDoctorDashboardLeads(user)
+  const buckets = getPendingTaskBuckets(leads, context.doctorName)
 
   const items = [
-    ...buckets.overdueOpds.map(lead => ({
+    ...buckets.overdueOpds.map(({ lead, entry }: PendingScheduledOpd) => ({
       ...mapLeadItem(lead),
+      id: entry.id,
+      leadId: lead.id,
+      appointmentId: entry.id,
       taskType: 'overdue_opd',
       appointmentType: 'opd',
+      opdPhase: entry.phase,
+      opdSlot: entry.slot,
+      opdStatus: entry.status,
+      hospitalName: entry.hospitalName || lead.opdHospital || lead.hospitalName,
+      opdScheduleDate: entry.scheduleDate,
       reason: 'Scheduled OPD is still pending',
     })),
-    ...buckets.surgeryNotConfirmed.map(lead => ({
+    ...buckets.overdueIpds.map(lead => ({
       ...mapLeadItem(lead),
-      taskType: 'surgery_not_confirmed',
+      leadId: lead.id,
+      appointmentId: lead.id,
+      taskType: 'overdue_ipd',
       appointmentType: 'ipd',
-      reason: 'Surgery date passed but surgery completion is not confirmed',
-    })),
-    ...buckets.ipdNotDischarged.map(lead => ({
-      ...mapLeadItem(lead),
-      taskType: 'ipd_not_discharged',
-      appointmentType: 'ipd',
-      reason: 'IPD case needs discharge update',
+      reason: 'Scheduled IPD is still pending',
     })),
   ].sort((a, b) => {
     const aTime =

@@ -10,6 +10,7 @@ export type PipelineStatusBucket =
   | 'all'
   | 'new_hot'
   | 'follow_up'
+  | 'opd_done'
   | 'ipd_done'
   | 'dnp'
   | 'junk'
@@ -74,6 +75,9 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   const s = normalizeLeadStatus(status)
   const lower = s.toLowerCase()
 
+  if (s === OPD_DONE_LABEL || lower.includes('opd done')) {
+    return 'opd_done'
+  }
   if (['New', 'New Lead', 'Hot Lead', 'Interested', 'Nurture'].includes(s) || lower.includes('new') || lower.includes('hot') || lower.includes('interested')) {
     return 'new_hot'
   }
@@ -95,7 +99,6 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
       'Out of station follow-up',
       'IPD Schedule',
       OPD_SCHEDULED_LABEL,
-      OPD_DONE_LABEL,
       'OPD Schedule',
     ].includes(s) ||
     lower.includes('follow') ||
@@ -135,6 +138,7 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
 export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>, string> = {
   new_hot: 'New / Hot',
   follow_up: 'Follow-up',
+  opd_done: 'OPD Done',
   ipd_done: 'IPD Done',
   dnp: 'DNP',
   junk: 'Junk / Invalid',
@@ -146,6 +150,7 @@ export function countBuckets(leads: { status?: string | null }[]) {
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
     follow_up: 0,
+    opd_done: 0,
     ipd_done: 0,
     dnp: 0,
     junk: 0,

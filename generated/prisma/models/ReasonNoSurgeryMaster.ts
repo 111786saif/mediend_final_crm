@@ -233,6 +233,7 @@ export type ReasonNoSurgeryMasterWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ReasonNoSurgeryMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReasonNoSurgeryMaster"> | Date | string
   opdLeads?: Prisma.LeadListRelationFilter
+  opdAppointments?: Prisma.LeadOpdAppointmentListRelationFilter
 }
 
 export type ReasonNoSurgeryMasterOrderByWithRelationInput = {
@@ -244,6 +245,7 @@ export type ReasonNoSurgeryMasterOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   opdLeads?: Prisma.LeadOrderByRelationAggregateInput
+  opdAppointments?: Prisma.LeadOpdAppointmentOrderByRelationAggregateInput
 }
 
 export type ReasonNoSurgeryMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -258,6 +260,7 @@ export type ReasonNoSurgeryMasterWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ReasonNoSurgeryMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ReasonNoSurgeryMaster"> | Date | string
   opdLeads?: Prisma.LeadListRelationFilter
+  opdAppointments?: Prisma.LeadOpdAppointmentListRelationFilter
 }, "id" | "code">
 
 export type ReasonNoSurgeryMasterOrderByWithAggregationInput = {
@@ -297,6 +300,7 @@ export type ReasonNoSurgeryMasterCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   opdLeads?: Prisma.LeadCreateNestedManyWithoutOpdReasonNoSurgeryInput
+  opdAppointments?: Prisma.LeadOpdAppointmentCreateNestedManyWithoutReasonNoSurgeryInput
 }
 
 export type ReasonNoSurgeryMasterUncheckedCreateInput = {
@@ -308,6 +312,7 @@ export type ReasonNoSurgeryMasterUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   opdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutOpdReasonNoSurgeryInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutReasonNoSurgeryInput
 }
 
 export type ReasonNoSurgeryMasterUpdateInput = {
@@ -319,6 +324,7 @@ export type ReasonNoSurgeryMasterUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   opdLeads?: Prisma.LeadUpdateManyWithoutOpdReasonNoSurgeryNestedInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUpdateManyWithoutReasonNoSurgeryNestedInput
 }
 
 export type ReasonNoSurgeryMasterUncheckedUpdateInput = {
@@ -330,6 +336,7 @@ export type ReasonNoSurgeryMasterUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   opdLeads?: Prisma.LeadUncheckedUpdateManyWithoutOpdReasonNoSurgeryNestedInput
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutReasonNoSurgeryNestedInput
 }
 
 export type ReasonNoSurgeryMasterCreateManyInput = {
@@ -421,6 +428,22 @@ export type ReasonNoSurgeryMasterUpdateOneWithoutOpdLeadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ReasonNoSurgeryMasterUpdateToOneWithWhereWithoutOpdLeadsInput, Prisma.ReasonNoSurgeryMasterUpdateWithoutOpdLeadsInput>, Prisma.ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdLeadsInput>
 }
 
+export type ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput = {
+  create?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateWithoutOpdAppointmentsInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateWithoutOpdAppointmentsInput>
+  connectOrCreate?: Prisma.ReasonNoSurgeryMasterCreateOrConnectWithoutOpdAppointmentsInput
+  connect?: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
+}
+
+export type ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateWithoutOpdAppointmentsInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateWithoutOpdAppointmentsInput>
+  connectOrCreate?: Prisma.ReasonNoSurgeryMasterCreateOrConnectWithoutOpdAppointmentsInput
+  upsert?: Prisma.ReasonNoSurgeryMasterUpsertWithoutOpdAppointmentsInput
+  disconnect?: Prisma.ReasonNoSurgeryMasterWhereInput | boolean
+  delete?: Prisma.ReasonNoSurgeryMasterWhereInput | boolean
+  connect?: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ReasonNoSurgeryMasterUpdateToOneWithWhereWithoutOpdAppointmentsInput, Prisma.ReasonNoSurgeryMasterUpdateWithoutOpdAppointmentsInput>, Prisma.ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdAppointmentsInput>
+}
+
 export type ReasonNoSurgeryMasterCreateWithoutOpdLeadsInput = {
   id?: string
   code: string
@@ -429,6 +452,7 @@ export type ReasonNoSurgeryMasterCreateWithoutOpdLeadsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdAppointments?: Prisma.LeadOpdAppointmentCreateNestedManyWithoutReasonNoSurgeryInput
 }
 
 export type ReasonNoSurgeryMasterUncheckedCreateWithoutOpdLeadsInput = {
@@ -439,6 +463,7 @@ export type ReasonNoSurgeryMasterUncheckedCreateWithoutOpdLeadsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedCreateNestedManyWithoutReasonNoSurgeryInput
 }
 
 export type ReasonNoSurgeryMasterCreateOrConnectWithoutOpdLeadsInput = {
@@ -465,6 +490,7 @@ export type ReasonNoSurgeryMasterUpdateWithoutOpdLeadsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdAppointments?: Prisma.LeadOpdAppointmentUpdateManyWithoutReasonNoSurgeryNestedInput
 }
 
 export type ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdLeadsInput = {
@@ -475,6 +501,67 @@ export type ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdLeadsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdAppointments?: Prisma.LeadOpdAppointmentUncheckedUpdateManyWithoutReasonNoSurgeryNestedInput
+}
+
+export type ReasonNoSurgeryMasterCreateWithoutOpdAppointmentsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  opdLeads?: Prisma.LeadCreateNestedManyWithoutOpdReasonNoSurgeryInput
+}
+
+export type ReasonNoSurgeryMasterUncheckedCreateWithoutOpdAppointmentsInput = {
+  id?: string
+  code: string
+  label: string
+  displayOrder?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  opdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutOpdReasonNoSurgeryInput
+}
+
+export type ReasonNoSurgeryMasterCreateOrConnectWithoutOpdAppointmentsInput = {
+  where: Prisma.ReasonNoSurgeryMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateWithoutOpdAppointmentsInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateWithoutOpdAppointmentsInput>
+}
+
+export type ReasonNoSurgeryMasterUpsertWithoutOpdAppointmentsInput = {
+  update: Prisma.XOR<Prisma.ReasonNoSurgeryMasterUpdateWithoutOpdAppointmentsInput, Prisma.ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdAppointmentsInput>
+  create: Prisma.XOR<Prisma.ReasonNoSurgeryMasterCreateWithoutOpdAppointmentsInput, Prisma.ReasonNoSurgeryMasterUncheckedCreateWithoutOpdAppointmentsInput>
+  where?: Prisma.ReasonNoSurgeryMasterWhereInput
+}
+
+export type ReasonNoSurgeryMasterUpdateToOneWithWhereWithoutOpdAppointmentsInput = {
+  where?: Prisma.ReasonNoSurgeryMasterWhereInput
+  data: Prisma.XOR<Prisma.ReasonNoSurgeryMasterUpdateWithoutOpdAppointmentsInput, Prisma.ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdAppointmentsInput>
+}
+
+export type ReasonNoSurgeryMasterUpdateWithoutOpdAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUpdateManyWithoutOpdReasonNoSurgeryNestedInput
+}
+
+export type ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdAppointmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  displayOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  opdLeads?: Prisma.LeadUncheckedUpdateManyWithoutOpdReasonNoSurgeryNestedInput
 }
 
 
@@ -484,10 +571,12 @@ export type ReasonNoSurgeryMasterUncheckedUpdateWithoutOpdLeadsInput = {
 
 export type ReasonNoSurgeryMasterCountOutputType = {
   opdLeads: number
+  opdAppointments: number
 }
 
 export type ReasonNoSurgeryMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   opdLeads?: boolean | ReasonNoSurgeryMasterCountOutputTypeCountOpdLeadsArgs
+  opdAppointments?: boolean | ReasonNoSurgeryMasterCountOutputTypeCountOpdAppointmentsArgs
 }
 
 /**
@@ -507,6 +596,13 @@ export type ReasonNoSurgeryMasterCountOutputTypeCountOpdLeadsArgs<ExtArgs extend
   where?: Prisma.LeadWhereInput
 }
 
+/**
+ * ReasonNoSurgeryMasterCountOutputType without action
+ */
+export type ReasonNoSurgeryMasterCountOutputTypeCountOpdAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadOpdAppointmentWhereInput
+}
+
 
 export type ReasonNoSurgeryMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -517,6 +613,7 @@ export type ReasonNoSurgeryMasterSelect<ExtArgs extends runtime.Types.Extensions
   createdAt?: boolean
   updatedAt?: boolean
   opdLeads?: boolean | Prisma.ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs>
+  opdAppointments?: boolean | Prisma.ReasonNoSurgeryMaster$opdAppointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ReasonNoSurgeryMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reasonNoSurgeryMaster"]>
 
@@ -553,6 +650,7 @@ export type ReasonNoSurgeryMasterSelectScalar = {
 export type ReasonNoSurgeryMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "label" | "displayOrder" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["reasonNoSurgeryMaster"]>
 export type ReasonNoSurgeryMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   opdLeads?: boolean | Prisma.ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs>
+  opdAppointments?: boolean | Prisma.ReasonNoSurgeryMaster$opdAppointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ReasonNoSurgeryMasterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ReasonNoSurgeryMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -562,6 +660,7 @@ export type $ReasonNoSurgeryMasterPayload<ExtArgs extends runtime.Types.Extensio
   name: "ReasonNoSurgeryMaster"
   objects: {
     opdLeads: Prisma.$LeadPayload<ExtArgs>[]
+    opdAppointments: Prisma.$LeadOpdAppointmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -966,6 +1065,7 @@ readonly fields: ReasonNoSurgeryMasterFieldRefs;
 export interface Prisma__ReasonNoSurgeryMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   opdLeads<T extends Prisma.ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  opdAppointments<T extends Prisma.ReasonNoSurgeryMaster$opdAppointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReasonNoSurgeryMaster$opdAppointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadOpdAppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1416,6 +1516,30 @@ export type ReasonNoSurgeryMaster$opdLeadsArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
+ * ReasonNoSurgeryMaster.opdAppointments
+ */
+export type ReasonNoSurgeryMaster$opdAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadOpdAppointment
+   */
+  select?: Prisma.LeadOpdAppointmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeadOpdAppointment
+   */
+  omit?: Prisma.LeadOpdAppointmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadOpdAppointmentInclude<ExtArgs> | null
+  where?: Prisma.LeadOpdAppointmentWhereInput
+  orderBy?: Prisma.LeadOpdAppointmentOrderByWithRelationInput | Prisma.LeadOpdAppointmentOrderByWithRelationInput[]
+  cursor?: Prisma.LeadOpdAppointmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadOpdAppointmentScalarFieldEnum | Prisma.LeadOpdAppointmentScalarFieldEnum[]
 }
 
 /**

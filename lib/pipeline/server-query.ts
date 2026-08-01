@@ -52,6 +52,7 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
     'all',
     'new_hot',
     'follow_up',
+    'opd_done',
     'ipd_done',
     'dnp',
     'junk',
@@ -192,13 +193,14 @@ export function statusBucketWhere(
               contains('call back'),
               contains('callback'),
               contains('schedule'),
-              contains('opd done'),
               contains('out of station'),
             ],
           },
           { NOT: contains('ipd done') },
         ],
       }
+    case 'opd_done':
+      return contains('opd done')
     case 'ipd_done':
       return contains('ipd done')
     case 'dnp':
@@ -439,6 +441,7 @@ export function bucketsFromStatusGroups(
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
     follow_up: 0,
+    opd_done: 0,
     ipd_done: 0,
     dnp: 0,
     junk: 0,
