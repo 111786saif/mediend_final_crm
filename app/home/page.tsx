@@ -623,8 +623,8 @@ const { data: workLogCheck } = useWorkLogCheck({
     <div className="flex flex-col gap-5 max-w-5xl mx-auto w-full">
       <BirthdayPopup />
       <RankUpPopup />
-      <NewHireWelcomePopup />
       <NoticeBlockerModal />
+      <NewHireWelcomePopup />
       {/* Banner + Greeting */}
        <BannerSection
         greeting={greeting}

@@ -5,7 +5,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
-import { useIsMobile } from '@/hooks/use-mobile'
 import { getFirstNavUrl } from '@/lib/sidebar-nav'
 import { GuidedTour } from '@/components/onboarding/guided-tour'
 import { Button } from '@/components/ui/button'
@@ -127,6 +126,75 @@ type OnboardingForm = {
 
 const STEPS: WizardStep[] = ['welcome', 'profile', 'tour', 'preview']
 const STEP_LABELS = ['Welcome', 'Profile', 'Tour', 'Confirm']
+
+function buildFormFromProfile(profile: ProfileResponse): OnboardingForm {
+  const emp = profile.employee
+  const dob = emp?.dateOfBirth ? new Date(emp.dateOfBirth).toISOString().slice(0, 10) : ''
+  return {
+    name: profile.user.name ?? '',
+    phoneNumber: profile.user.phoneNumber ?? '',
+    gender: profile.user.gender ?? '',
+    dateOfBirth: dob,
+    address: profile.user.address ?? profile.user.currentAddress?.line ?? '',
+    emergencyContactName: profile.user.emergencyContactName ?? '',
+    emergencyContactPhone: profile.user.emergencyContactPhone ?? '',
+    panNumber: emp?.panNumber ?? '',
+    aadharNumber: emp?.aadharNumber ?? '',
+    uanNumber: emp?.uanNumber ?? '',
+    bankAccountName: emp?.bankAccountName ?? '',
+    bankAccountNumber: emp?.bankAccountNumber ?? '',
+    ifscCode: emp?.ifscCode ?? '',
+    profilePicture: profile.user.profilePicture ?? '',
+    aadharDocUrl: emp?.aadharDocUrl ?? '',
+    panDocUrl: emp?.panDocUrl ?? '',
+    resumeDocUrl: emp?.resumeDocUrl ?? '',
+    educationalCertDocUrl: emp?.educationalCertDocUrl ?? '',
+    appointmentLetterDocUrl: emp?.appointmentLetterDocUrl ?? '',
+    salarySlipDocUrl: emp?.salarySlipDocUrl ?? '',
+    bankStatementDocUrl: emp?.bankStatementDocUrl ?? '',
+  }
+}
+
+/** Prefer in-form edits; fall back to values already saved on the employee record. */
+function effectiveIdentityFields(form: OnboardingForm, profile: ProfileResponse | undefined) {
+  const emp = profile?.employee
+  const aadhar = (form.aadharNumber || emp?.aadharNumber || '').replace(/\D/g, '')
+  const pan = (form.panNumber || emp?.panNumber || '').trim().toUpperCase()
+  const bankAccountName = (form.bankAccountName || emp?.bankAccountName || '').trim()
+  const bankAccountNumber = (form.bankAccountNumber || emp?.bankAccountNumber || '').replace(/\D/g, '')
+  const ifsc = (form.ifscCode || emp?.ifscCode || '').trim().toUpperCase()
+  return { aadhar, pan, bankAccountName, bankAccountNumber, ifsc }
+}
+
+function isIdentityComplete(form: OnboardingForm, profile: ProfileResponse | undefined) {
+  const { aadhar, pan, bankAccountName, bankAccountNumber, ifsc } = effectiveIdentityFields(
+    form,
+    profile
+  )
+  return (
+    aadhar.length >= 12 &&
+    pan.length >= 10 &&
+    !!bankAccountName &&
+    !!bankAccountNumber &&
+    ifsc.length >= 11
+  )
+}
+
+function missingProfileFieldLabels(form: OnboardingForm, profile: ProfileResponse | undefined) {
+  const { aadhar, pan, bankAccountName, bankAccountNumber, ifsc } = effectiveIdentityFields(
+    form,
+    profile
+  )
+  const missing: string[] = []
+  if (!form.name.trim()) missing.push('Full name')
+  if (!form.phoneNumber.trim()) missing.push('Phone')
+  if (aadhar.length < 12) missing.push('Aadhaar (12 digits)')
+  if (pan.length < 10) missing.push('PAN (10 characters)')
+  if (!bankAccountName) missing.push('Account holder name')
+  if (!bankAccountNumber) missing.push('Account number')
+  if (ifsc.length < 11) missing.push('IFSC (11 characters)')
+  return missing
+}
 
 function StepIndicator({ current }: { current: WizardStep }) {
   const idx = STEPS.indexOf(current)
@@ -356,7 +424,7 @@ export default function OnboardingPage() {
   const { user, isLoading: authLoading } = useAuth()
   const router = useRouter()
   const queryClient = useQueryClient()
-  const isMobile = useIsMobile()
+  const formInitializedRef = useRef(false)
   const photoRef = useRef<HTMLInputElement>(null)
   const docFileRef = useRef<HTMLInputElement>(null)
   const [pendingDocKey, setPendingDocKey] = useState<OnboardingDocKey | null>(null)
@@ -371,6 +439,7 @@ export default function OnboardingPage() {
     queryKey: ['profile', 'onboarding'],
     queryFn: () => apiGet<ProfileResponse>('/api/profile'),
     enabled: !!user,
+    staleTime: 60_000,
   })
 
   const [form, setForm] = useState<OnboardingForm>({
@@ -402,31 +471,11 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (!profile) return
-    const emp = profile.employee
-    const dob = emp?.dateOfBirth ? new Date(emp.dateOfBirth).toISOString().slice(0, 10) : ''
-    setForm({
-      name: profile.user.name ?? '',
-      phoneNumber: profile.user.phoneNumber ?? '',
-      gender: profile.user.gender ?? '',
-      dateOfBirth: dob,
-      address: profile.user.address ?? profile.user.currentAddress?.line ?? '',
-      emergencyContactName: profile.user.emergencyContactName ?? '',
-      emergencyContactPhone: profile.user.emergencyContactPhone ?? '',
-      panNumber: emp?.panNumber ?? '',
-      aadharNumber: emp?.aadharNumber ?? '',
-      uanNumber: emp?.uanNumber ?? '',
-      bankAccountName: emp?.bankAccountName ?? '',
-      bankAccountNumber: emp?.bankAccountNumber ?? '',
-      ifscCode: emp?.ifscCode ?? '',
-      profilePicture: profile.user.profilePicture ?? '',
-      aadharDocUrl: emp?.aadharDocUrl ?? '',
-      panDocUrl: emp?.panDocUrl ?? '',
-      resumeDocUrl: emp?.resumeDocUrl ?? '',
-      educationalCertDocUrl: emp?.educationalCertDocUrl ?? '',
-      appointmentLetterDocUrl: emp?.appointmentLetterDocUrl ?? '',
-      salarySlipDocUrl: emp?.salarySlipDocUrl ?? '',
-      bankStatementDocUrl: emp?.bankStatementDocUrl ?? '',
-    })
+    // Hydrate once — background refetches were wiping in-progress drawer edits on mobile.
+    if (!formInitializedRef.current) {
+      formInitializedRef.current = true
+      setForm(buildFormFromProfile(profile))
+    }
   }, [profile])
 
   useEffect(() => {
@@ -502,38 +551,19 @@ export default function OnboardingPage() {
     }
   }
 
-  const profileValid = useMemo(() => {
-    return (
-      !!form.name.trim() &&
-      !!form.phoneNumber.trim() &&
-      form.aadharNumber.trim().length >= 12 &&
-      form.panNumber.trim().length >= 10 &&
-      !!form.bankAccountName.trim() &&
-      !!form.bankAccountNumber.trim() &&
-      form.ifscCode.trim().length >= 11
-    )
-  }, [form])
+  const profileValid = useMemo(
+    () => missingProfileFieldLabels(form, profile).length === 0,
+    [form, profile]
+  )
 
-  const missingProfileFields = useMemo(() => {
-    const missing: string[] = []
-    if (!form.name.trim()) missing.push('Full name')
-    if (!form.phoneNumber.trim()) missing.push('Phone')
-    if (form.aadharNumber.trim().length < 12) missing.push('Aadhaar (12 digits)')
-    if (form.panNumber.trim().length < 10) missing.push('PAN (10 characters)')
-    if (!form.bankAccountName.trim()) missing.push('Account holder name')
-    if (!form.bankAccountNumber.trim()) missing.push('Account number')
-    if (form.ifscCode.trim().length < 11) missing.push('IFSC (11 characters)')
-    return missing
-  }, [form])
+  const missingProfileFields = useMemo(
+    () => missingProfileFieldLabels(form, profile),
+    [form, profile]
+  )
 
   const identityComplete = useMemo(
-    () =>
-      form.aadharNumber.trim().length >= 12 &&
-      form.panNumber.trim().length >= 10 &&
-      !!form.bankAccountName.trim() &&
-      !!form.bankAccountNumber.trim() &&
-      form.ifscCode.trim().length >= 11,
-    [form]
+    () => isIdentityComplete(form, profile),
+    [form, profile]
   )
 
   const docsUploadedCount = useMemo(
@@ -544,11 +574,12 @@ export default function OnboardingPage() {
   const saveProfile = async () => {
     if (!profileValid) {
       toast.error(`Please fill: ${missingProfileFields.join(', ')}`)
-      if (isMobile && !identityComplete) setIdentityDrawerOpen(true)
+      if (!identityComplete) setIdentityDrawerOpen(true)
       return false
     }
 
     const emp = profile?.employee
+    const identity = effectiveIdentityFields(form, profile)
     const payload: Record<string, unknown> = {
       name: form.name.trim(),
       phoneNumber: form.phoneNumber.trim() || null,
@@ -570,16 +601,19 @@ export default function OnboardingPage() {
     }
 
     // Only send identity/bank fields when still empty (first-time). Avoids 403 on re-save.
-    if (!emp?.panNumber) payload.panNumber = form.panNumber.trim().toUpperCase() || null
-    if (!emp?.aadharNumber) payload.aadharNumber = form.aadharNumber.replace(/\D/g, '').slice(0, 12) || null
+    if (!emp?.panNumber) payload.panNumber = identity.pan || null
+    if (!emp?.aadharNumber) payload.aadharNumber = identity.aadhar || null
     if (!emp?.uanNumber) payload.uanNumber = form.uanNumber.replace(/\D/g, '').slice(0, 12) || null
-    if (!emp?.bankAccountName) payload.bankAccountName = form.bankAccountName.trim() || null
-    if (!emp?.bankAccountNumber) payload.bankAccountNumber = form.bankAccountNumber.replace(/\D/g, '') || null
-    if (!emp?.ifscCode) payload.ifscCode = form.ifscCode.trim().toUpperCase() || null
+    if (!emp?.bankAccountName) payload.bankAccountName = identity.bankAccountName || null
+    if (!emp?.bankAccountNumber) payload.bankAccountNumber = identity.bankAccountNumber || null
+    if (!emp?.ifscCode) payload.ifscCode = identity.ifsc || null
 
     try {
       await saveMutation.mutateAsync(payload)
-      await refetch()
+      const { data: freshProfile } = await refetch()
+      if (freshProfile) {
+        setForm(buildFormFromProfile(freshProfile))
+      }
       return true
     } catch {
       return false
@@ -620,6 +654,8 @@ export default function OnboardingPage() {
     .join('')
     .slice(0, 2)
     .toUpperCase()
+
+  const previewIdentity = effectiveIdentityFields(form, profile)
 
   const stickyFooter =
     step === 'profile' || step === 'preview' || step === 'tour' || step === 'welcome'
@@ -789,9 +825,8 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              {/* Mobile: open dense sections in drawers */}
-              {isMobile ? (
-                <div className="space-y-2 border-t pt-4">
+              {/* Mobile: open dense sections in drawers (CSS — avoids hydration wiping layout) */}
+              <div className="space-y-2 border-t pt-4 md:hidden">
                   {!identityComplete && (
                     <p className="rounded-lg border border-amber-200 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
                       Tap <strong>Identity & bank</strong> and fill Aadhaar, PAN, and bank details to continue.
@@ -837,9 +872,9 @@ export default function OnboardingPage() {
                     </div>
                     <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
                   </button>
-                </div>
-              ) : (
-                <>
+              </div>
+
+              <div className="hidden md:block">
                   <p className="border-t pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Identity & bank
                   </p>
@@ -854,8 +889,7 @@ export default function OnboardingPage() {
                     uploadingDoc={uploadingDoc}
                     onUploadClick={triggerDocUpload}
                   />
-                </>
-              )}
+              </div>
 
               <div className="hidden pt-2 sm:flex sm:flex-row sm:justify-between sm:gap-2">
                 <Button variant="outline" onClick={() => setStep('welcome')}>
@@ -922,19 +956,21 @@ export default function OnboardingPage() {
                 <PreviewRow label="Date of birth" value={form.dateOfBirth || undefined} />
                 <PreviewRow
                   label="Aadhaar"
-                  value={form.aadharNumber ? `••••${form.aadharNumber.slice(-4)}` : undefined}
+                  value={
+                    previewIdentity.aadhar ? `••••${previewIdentity.aadhar.slice(-4)}` : undefined
+                  }
                 />
-                <PreviewRow label="PAN" value={form.panNumber || undefined} />
-                <PreviewRow label="Bank holder" value={form.bankAccountName} />
+                <PreviewRow label="PAN" value={previewIdentity.pan || undefined} />
+                <PreviewRow label="Bank holder" value={previewIdentity.bankAccountName} />
                 <PreviewRow
                   label="Account"
                   value={
-                    form.bankAccountNumber
-                      ? `••••${form.bankAccountNumber.slice(-4)}`
+                    previewIdentity.bankAccountNumber
+                      ? `••••${previewIdentity.bankAccountNumber.slice(-4)}`
                       : undefined
                   }
                 />
-                <PreviewRow label="IFSC" value={form.ifscCode} />
+                <PreviewRow label="IFSC" value={previewIdentity.ifsc} />
                 <PreviewRow label="UAN" value={form.uanNumber || undefined} />
                 <PreviewRow
                   label="Emergency contact"
@@ -1056,7 +1092,7 @@ export default function OnboardingPage() {
             <Button
               className="w-full bg-sky-600 hover:bg-sky-700"
               onClick={() => {
-                if (!identityComplete) {
+                if (!isIdentityComplete(form, profile)) {
                   toast.error('Please fill Aadhaar, PAN, and bank details')
                   return
                 }

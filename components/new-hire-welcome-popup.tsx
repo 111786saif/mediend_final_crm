@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { X, PartyPopper } from 'lucide-react'
 import confetti from 'canvas-confetti'
+import { useHomeBlockers } from '@/hooks/use-home-blockers'
 
 interface WelcomePayload {
   notificationId: string
@@ -50,6 +51,7 @@ export function NewHireWelcomePopup() {
   const queryClient = useQueryClient()
   const confettiOnce = useRef(false)
   const [dismissed, setDismissed] = useState(false)
+  const { showNewHireWelcome } = useHomeBlockers()
 
   const { data } = useQuery<WelcomePayload | null>({
     queryKey: ['new-hire-welcome'],
@@ -75,7 +77,7 @@ export function NewHireWelcomePopup() {
     runConfetti()
   }, [data, dismissed])
 
-  if (!data || dismissed) return null
+  if (!showNewHireWelcome || !data || dismissed) return null
 
   const hire = data.newHire
   const initials = hire.name
