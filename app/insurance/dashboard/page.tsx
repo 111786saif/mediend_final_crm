@@ -614,7 +614,7 @@ export default function InsuranceDashboardPage() {
                     {amountPaidKpis.ats != null ? `₹${amountPaidKpis.ats.toLocaleString('en-IN')}` : '—'}
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    {amountPaidKpis.caseCount} cases with payment · filtered scope
+                    {amountPaidKpis.caseCount} discharged with payment · filtered scope
                   </p>
                 </CardContent>
               </Card>

@@ -33,6 +33,7 @@ import {
 import { getStatusBadgeClass } from '@/lib/pl/status-colors'
 import { cn } from '@/lib/utils'
 import { Settings2 } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 const LS_COLUMNS = 'insurance-dashboard-column-visibility-v1'
 
@@ -142,6 +143,24 @@ function matchesNumberRange(value: unknown, range: { min: number | null; max: nu
   return true
 }
 
+function TruncatedTextCell({ text, className }: { text: string | null | undefined; className?: string }) {
+  const value = text?.trim() || ''
+  if (!value) return <>—</>
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className={cn('block max-w-[180px] truncate', className)} title={value}>
+          {value}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-sm whitespace-normal break-words text-left">
+        {value}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
 function applyInsuranceTableFilters(
   leads: InsuranceTableLead[],
   filters: {
@@ -153,6 +172,7 @@ function applyInsuranceTableFilters(
     circleFilter: string[]
     paymentTypeFilter: string[]
     sheetFillFilter: string[]
+    statusFilter: string[]
     patientFilter: string
     treatmentFilter: string
     admissionDateFilter: string[]
@@ -192,6 +212,12 @@ function applyInsuranceTableFilters(
       return false
     }
     if (filters.sheetFillFilter.length > 0 && !filters.sheetFillFilter.includes(fillStatus)) return false
+    if (
+      filters.statusFilter.length > 0 &&
+      (!resolved.status || !filters.statusFilter.includes(resolved.status))
+    ) {
+      return false
+    }
 
     if (filters.patientFilter.trim()) {
       const q = filters.patientFilter.trim().toLowerCase()
@@ -230,6 +256,7 @@ export function InsurancePatientTable({
   const [circleFilter, setCircleFilter] = useState<string[]>([])
   const [paymentTypeFilter, setPaymentTypeFilter] = useState<string[]>([])
   const [sheetFillFilter, setSheetFillFilter] = useState<string[]>([])
+  const [statusFilter, setStatusFilter] = useState<string[]>([])
   const [treatmentFilter, setTreatmentFilter] = useState('')
   const [patientFilter, setPatientFilter] = useState('')
   const [admissionDateFilter, setAdmissionDateFilter] = useState<string[]>([])
@@ -300,6 +327,17 @@ export function InsurancePatientTable({
     [],
   )
 
+  const statusOptions = useMemo(() => {
+    const values = new Set<string>()
+    for (const row of leads) {
+      const status = resolvePlRow(row).status
+      if (status) values.add(status)
+    }
+    return Array.from(values)
+      .sort((a, b) => a.localeCompare(b))
+      .map((value) => ({ label: value, value }))
+  }, [leads])
+
   const filteredLeads = useMemo(() => {
     return applyInsuranceTableFilters(leads, {
       tableMonthFilter,
@@ -310,6 +348,7 @@ export function InsurancePatientTable({
       circleFilter,
       paymentTypeFilter,
       sheetFillFilter,
+      statusFilter,
       patientFilter,
       treatmentFilter,
       admissionDateFilter,
@@ -328,6 +367,7 @@ export function InsurancePatientTable({
     circleFilter,
     paymentTypeFilter,
     sheetFillFilter,
+    statusFilter,
     patientFilter,
     treatmentFilter,
     admissionDateFilter,
@@ -348,6 +388,7 @@ export function InsurancePatientTable({
       circleFilter,
       paymentTypeFilter,
       sheetFillFilter,
+      statusFilter,
       patientFilter,
       treatmentFilter,
       admissionDateFilter,
@@ -367,6 +408,7 @@ export function InsurancePatientTable({
     circleFilter,
     paymentTypeFilter,
     sheetFillFilter,
+    statusFilter,
     patientFilter,
     treatmentFilter,
     admissionDateFilter,
@@ -505,7 +547,7 @@ export function InsurancePatientTable({
           </div>
         ),
         accessorFn: (row) => resolvePlRow(row).doctor,
-        cell: ({ getValue }) => (getValue() as string) || '—',
+        cell: ({ getValue }) => <TruncatedTextCell text={getValue() as string} />,
       },
       {
         id: 'hospital',
@@ -516,7 +558,7 @@ export function InsurancePatientTable({
           </div>
         ),
         accessorFn: (row) => resolvePlRow(row).hospital,
-        cell: ({ getValue }) => (getValue() as string) || '—',
+        cell: ({ getValue }) => <TruncatedTextCell text={getValue() as string} />,
       },
       {
         id: 'admissionDate',
@@ -582,13 +624,18 @@ export function InsurancePatientTable({
       },
       {
         id: 'status',
-        header: 'Status',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Status</span>
+            <ColumnFilter options={statusOptions} value={statusFilter} onChange={setStatusFilter} type="multiSelect" />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row).status,
         cell: ({ getValue }) => {
           const val = getValue() as string
           if (!val) return '—'
           return (
-            <Badge variant="outline" className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap', getStatusBadgeClass(val, 'case'))}>
+            <Badge variant="outline" className={cn('max-w-[160px] truncate text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap', getStatusBadgeClass(val, 'case'))}>
               {val}
             </Badge>
           )
@@ -655,6 +702,8 @@ export function InsurancePatientTable({
       paymentTypeFilter,
       sheetFillFilter,
       sheetFillOptions,
+      statusFilter,
+      statusOptions,
       patientFilter,
       treatmentFilter,
       admissionDateFilter,
