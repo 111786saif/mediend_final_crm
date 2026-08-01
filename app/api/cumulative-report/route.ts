@@ -4,39 +4,18 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import {
-  buildCumulativeLeadWhere,
-  buildCumulativeStatusWhere,
-  buildSurgeryWhere,
-  buildCumulativeOrderBy,
-  mapLeadToCumulativeRow,
-  LEAD_SELECT,
-  type CumulativeDatePreset,
-  type CumulativeReportStatus,
-  CUMULATIVE_REPORT_STATUSES,
-} from '@/lib/cumulative-report'
-import {
-  buildCumulativeSurgeryLeadWhere,
-  buildPatientSummaryFromLeads,
-  pickKpiPerformanceMonth,
-  sumSatisfactionFromLeads,
+  buildConcernCategoryReport,
+  buildCumulativeSurgeryLeadWhereForYear,
+  buildPatientSummaryForYear,
 } from '@/lib/cumulative-report-monthly'
 
-const DEFAULT_PAGE_SIZE = 20
-const MAX_PAGE_SIZE = 100
-
-function parseFilters(searchParams: URLSearchParams) {
-  return {
-    datePreset: (searchParams.get('datePreset') as CumulativeDatePreset | null) ?? 'all',
-    startDate: searchParams.get('startDate'),
-    endDate: searchParams.get('endDate'),
-    hospital: searchParams.get('hospital'),
-    circle: searchParams.get('circle'),
-    treatment: searchParams.get('treatment'),
-    referralName: searchParams.get('referralName'),
-    bdId: searchParams.get('bdId'),
-    status: searchParams.get('status') as CumulativeReportStatus | null,
-    search: searchParams.get('search'),
+function parseYear(searchParams: URLSearchParams): number {
+  const yearParam = searchParams.get('year')
+  const year = yearParam ? parseInt(yearParam, 10) : new Date().getFullYear()
+  if (!Number.isFinite(year) || year < 2000 || year > 3000) {
+    throw new Error('Invalid year')
   }
+  return year
 }
 
 export async function GET(request: NextRequest) {
@@ -46,95 +25,45 @@ export async function GET(request: NextRequest) {
     if (!hasPermission(user, 'compliance:read')) return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
-    const filters = parseFilters(searchParams)
-    const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1)
-    const limit = Math.min(
-      MAX_PAGE_SIZE,
-      Math.max(1, parseInt(searchParams.get('limit') ?? String(DEFAULT_PAGE_SIZE), 10) || DEFAULT_PAGE_SIZE),
-    )
-    const sort = searchParams.get('sort')
-    const dir = searchParams.get('dir')
-    const kpiMonth = searchParams.get('kpiMonth')
+    const year = parseYear(searchParams)
+    const surgeryWhere = buildCumulativeSurgeryLeadWhereForYear(year)
+    const start = new Date(year, 0, 1)
+    const end = new Date(year + 1, 0, 1)
 
-    const where = buildCumulativeLeadWhere(filters)
-    const surgeryWhere = buildCumulativeSurgeryLeadWhere(filters)
-    const skip = (page - 1) * limit
-
-    const summaryWhere = buildCumulativeLeadWhere({
-      ...filters,
-      status: null,
-    })
-
-    const [totalRecords, rows, totalPatients, totalSurgeries, planning, ipdDone, pending, cancelled, followUp, surgeryLeads] =
-      await Promise.all([
-        prisma.lead.count({ where }),
-        prisma.lead.findMany({
-          where,
-          select: LEAD_SELECT,
-          orderBy: buildCumulativeOrderBy(sort, dir),
-          skip,
-          take: limit,
-        }),
-        prisma.lead.count({ where: summaryWhere }),
-        prisma.lead.count({ where: { AND: [summaryWhere, buildSurgeryWhere()] } }),
-        prisma.lead.count({
-          where: { AND: [summaryWhere, buildCumulativeStatusWhere('Planning')] },
-        }),
-        prisma.lead.count({
-          where: { AND: [summaryWhere, buildCumulativeStatusWhere('IPD Done')] },
-        }),
-        prisma.lead.count({
-          where: { AND: [summaryWhere, buildCumulativeStatusWhere('Pending')] },
-        }),
-        prisma.lead.count({
-          where: { AND: [summaryWhere, buildCumulativeStatusWhere('Cancelled')] },
-        }),
-        prisma.lead.count({
-          where: { AND: [summaryWhere, buildCumulativeStatusWhere('Follow-up')] },
-        }),
-        prisma.lead.findMany({
-          where: surgeryWhere,
-          select: {
-            surgeryDate: true,
-            complianceCall: {
-              select: {
-                status: true,
-                satisfaction: true,
-              },
+    const [surgeryLeads, concernCalls] = await Promise.all([
+      prisma.lead.findMany({
+        where: surgeryWhere,
+        select: {
+          surgeryDate: true,
+          complianceCall: {
+            select: {
+              status: true,
+              satisfaction: true,
             },
           },
-        }),
-      ])
+        },
+      }),
+      prisma.complianceCall.findMany({
+        where: {
+          lead: {
+            surgeryDate: { gte: start, lt: end },
+          },
+        },
+        select: {
+          satisfaction: true,
+          concernCategories: true,
+          lead: { select: { surgeryDate: true } },
+        },
+      }),
+    ])
 
-    const patientSummary = buildPatientSummaryFromLeads(surgeryLeads)
-    const kpiPerformance = pickKpiPerformanceMonth(patientSummary, kpiMonth)
-    const satisfaction = sumSatisfactionFromLeads(surgeryLeads)
-
-    const data = rows.map((lead, index) => ({
-      ...mapLeadToCumulativeRow(lead),
-      srNo: skip + index + 1,
-    }))
+    const patientSummary = buildPatientSummaryForYear(surgeryLeads, year)
+    const concernCategory = buildConcernCategoryReport(concernCalls, year)
 
     return successResponse({
-      summary: {
-        totalPatients,
-        totalSurgeries,
-        planning,
-        ipdDone,
-        pending,
-        cancelled,
-        followUp,
-        patientSatisfied: satisfaction.patientSatisfied,
-        patientNotSatisfied: satisfaction.patientNotSatisfied,
-      },
-      totalRecords,
-      page,
-      pageSize: limit,
-      totalPages: Math.max(1, Math.ceil(totalRecords / limit)),
-      data,
-      statusOptions: CUMULATIVE_REPORT_STATUSES,
+      year,
       patientSummary,
-      kpiPerformance,
+      concernCategory,
     })
   } catch (error) {
     console.error('Error fetching cumulative report:', error)

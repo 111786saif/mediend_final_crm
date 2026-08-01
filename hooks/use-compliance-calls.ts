@@ -127,6 +127,7 @@ export interface ComplianceCall {
 
 export interface ComplianceCallsFilters {
   status?: ComplianceCallStatus | null
+  satisfaction?: SatisfactionLevel | null
   rating?: number | null
   startDate?: string | null
   endDate?: string | null
@@ -157,6 +158,8 @@ export interface ComplianceStats {
   dnpCount: number
   reviewDoneCount: number
   reviewNotDoneCount: number
+  satisfiedCount: number
+  notSatisfiedCount: number
   /** @deprecated use pendingCount */
   pending: number
   /** @deprecated use completedCount */
@@ -175,6 +178,7 @@ interface ComplianceCallsPage {
 function buildQueryString(filters: ComplianceCallsFilters, cursor?: string) {
   const params = new URLSearchParams()
   if (filters.status) params.set("status", filters.status)
+  if (filters.satisfaction) params.set("satisfaction", filters.satisfaction)
   if (filters.rating != null) params.set("rating", String(filters.rating))
   if (filters.startDate) params.set("startDate", filters.startDate)
   if (filters.endDate) params.set("endDate", filters.endDate)
@@ -192,7 +196,10 @@ function buildQueryString(filters: ComplianceCallsFilters, cursor?: string) {
   return qs ? `?${qs}` : ""
 }
 
-export function useComplianceCalls(filters: ComplianceCallsFilters = {}) {
+export function useComplianceCalls(
+  filters: ComplianceCallsFilters = {},
+  options?: { enabled?: boolean },
+) {
   return useInfiniteQuery<
     ComplianceCallsPage,
     Error,
@@ -207,6 +214,7 @@ export function useComplianceCalls(filters: ComplianceCallsFilters = {}) {
       ),
     initialPageParam: null,
     getNextPageParam: (last) => last.nextCursor,
+    enabled: options?.enabled ?? true,
   })
 }
 
