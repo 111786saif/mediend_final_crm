@@ -293,6 +293,7 @@ export type UserWhereInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormListRelationFilter
   outstandingCasesHandled?: Prisma.OutstandingCaseListRelationFilter
   complianceCallsHandled?: Prisma.ComplianceCallListRelationFilter
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryListRelationFilter
   departmentHeadOf?: Prisma.DepartmentListRelationFilter
   preAuthsRaised?: Prisma.PreAuthorizationListRelationFilter
   pdfsCreated?: Prisma.PreAuthPDFListRelationFilter
@@ -433,6 +434,7 @@ export type UserOrderByWithRelationInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormOrderByRelationAggregateInput
   outstandingCasesHandled?: Prisma.OutstandingCaseOrderByRelationAggregateInput
   complianceCallsHandled?: Prisma.ComplianceCallOrderByRelationAggregateInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryOrderByRelationAggregateInput
   departmentHeadOf?: Prisma.DepartmentOrderByRelationAggregateInput
   preAuthsRaised?: Prisma.PreAuthorizationOrderByRelationAggregateInput
   pdfsCreated?: Prisma.PreAuthPDFOrderByRelationAggregateInput
@@ -576,6 +578,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormListRelationFilter
   outstandingCasesHandled?: Prisma.OutstandingCaseListRelationFilter
   complianceCallsHandled?: Prisma.ComplianceCallListRelationFilter
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryListRelationFilter
   departmentHeadOf?: Prisma.DepartmentListRelationFilter
   preAuthsRaised?: Prisma.PreAuthorizationListRelationFilter
   pdfsCreated?: Prisma.PreAuthPDFListRelationFilter
@@ -758,6 +761,7 @@ export type UserCreateInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -898,6 +902,7 @@ export type UserUncheckedCreateInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1038,6 +1043,7 @@ export type UserUpdateInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -1178,6 +1184,7 @@ export type UserUncheckedUpdateInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2545,6 +2552,22 @@ export type UserUpdateOneWithoutComplianceCallsHandledNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutComplianceCallsHandledInput, Prisma.UserUpdateWithoutComplianceCallsHandledInput>, Prisma.UserUncheckedUpdateWithoutComplianceCallsHandledInput>
 }
 
+export type UserCreateNestedOneWithoutCumulativeReportManualEntriesUpdatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCumulativeReportManualEntriesUpdatedInput, Prisma.UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCumulativeReportManualEntriesUpdatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutCumulativeReportManualEntriesUpdatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCumulativeReportManualEntriesUpdatedInput, Prisma.UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCumulativeReportManualEntriesUpdatedInput
+  upsert?: Prisma.UserUpsertWithoutCumulativeReportManualEntriesUpdatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCumulativeReportManualEntriesUpdatedInput, Prisma.UserUpdateWithoutCumulativeReportManualEntriesUpdatedInput>, Prisma.UserUncheckedUpdateWithoutCumulativeReportManualEntriesUpdatedInput>
+}
+
 export type UserCreateNestedOneWithoutSalesTeamCostEntriesAddedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSalesTeamCostEntriesAddedInput, Prisma.UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSalesTeamCostEntriesAddedInput
@@ -3238,6 +3261,7 @@ export type UserCreateWithoutStatusesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -3377,6 +3401,7 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3532,6 +3557,7 @@ export type UserUpdateWithoutStatusesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -3671,6 +3697,7 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3809,6 +3836,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -3948,6 +3976,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4092,6 +4121,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -4231,6 +4261,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4375,6 +4406,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -4514,6 +4546,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4669,6 +4702,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -4808,6 +4842,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4958,6 +4993,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -5097,6 +5133,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5247,6 +5284,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -5386,6 +5424,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5526,6 +5565,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -5665,6 +5705,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5820,6 +5861,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -5959,6 +6001,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6098,6 +6141,7 @@ export type UserCreateWithoutLeadRemarkEntriesAuthoredInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -6237,6 +6281,7 @@ export type UserUncheckedCreateWithoutLeadRemarkEntriesAuthoredInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6392,6 +6437,7 @@ export type UserUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -6531,6 +6577,7 @@ export type UserUncheckedUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6670,6 +6717,7 @@ export type UserCreateWithoutLeadQrCallAuditLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -6809,6 +6857,7 @@ export type UserUncheckedCreateWithoutLeadQrCallAuditLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6964,6 +7013,7 @@ export type UserUpdateWithoutLeadQrCallAuditLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -7103,6 +7153,7 @@ export type UserUncheckedUpdateWithoutLeadQrCallAuditLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -7241,6 +7292,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -7380,6 +7432,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7535,6 +7588,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -7674,6 +7728,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -7813,6 +7868,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -7952,6 +8008,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8107,6 +8164,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -8246,6 +8304,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8386,6 +8445,7 @@ export type UserCreateWithoutCreatedTierDefinitionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -8525,6 +8585,7 @@ export type UserUncheckedCreateWithoutCreatedTierDefinitionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8680,6 +8741,7 @@ export type UserUpdateWithoutCreatedTierDefinitionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -8819,6 +8881,7 @@ export type UserUncheckedUpdateWithoutCreatedTierDefinitionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8957,6 +9020,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -9096,6 +9160,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9251,6 +9316,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -9390,6 +9456,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -9529,6 +9596,7 @@ export type UserCreateWithoutPlRecordsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -9668,6 +9736,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9823,6 +9892,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -9962,6 +10032,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10102,6 +10173,7 @@ export type UserCreateWithoutInvoiceRequestsSubmittedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -10241,6 +10313,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsSubmittedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10385,6 +10458,7 @@ export type UserCreateWithoutInvoiceRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -10524,6 +10598,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10679,6 +10754,7 @@ export type UserUpdateWithoutInvoiceRequestsSubmittedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -10818,6 +10894,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsSubmittedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10968,6 +11045,7 @@ export type UserUpdateWithoutInvoiceRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -11107,6 +11185,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11246,6 +11325,7 @@ export type UserCreateWithoutInvoiceRequestActivitiesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -11385,6 +11465,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestActivitiesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11540,6 +11621,7 @@ export type UserUpdateWithoutInvoiceRequestActivitiesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -11679,6 +11761,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestActivitiesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11818,6 +11901,7 @@ export type UserCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -11957,6 +12041,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12101,6 +12186,7 @@ export type UserCreateWithoutDoctorPayoffRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -12240,6 +12326,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12395,6 +12482,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -12534,6 +12622,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12684,6 +12773,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -12823,6 +12913,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12962,6 +13053,7 @@ export type UserCreateWithoutDoctorPayoffRequestActivitiesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -13101,6 +13193,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestActivitiesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13256,6 +13349,7 @@ export type UserUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -13395,6 +13489,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13534,6 +13629,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
@@ -13673,6 +13769,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
@@ -13828,6 +13925,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
@@ -13967,6 +14065,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
@@ -14105,6 +14204,7 @@ export type UserCreateWithoutEmployeeInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -14244,6 +14344,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14389,6 +14490,7 @@ export type UserCreateWithoutOnboardingApprovalsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -14528,6 +14630,7 @@ export type UserUncheckedCreateWithoutOnboardingApprovalsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14672,6 +14775,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -14811,6 +14915,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14965,6 +15070,7 @@ export type UserUpdateWithoutEmployeeInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -15104,6 +15210,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15255,6 +15362,7 @@ export type UserUpdateWithoutOnboardingApprovalsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -15394,6 +15502,7 @@ export type UserUncheckedUpdateWithoutOnboardingApprovalsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15544,6 +15653,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -15683,6 +15793,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15821,6 +15932,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -15960,6 +16072,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16115,6 +16228,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -16254,6 +16368,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -16393,6 +16508,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -16532,6 +16648,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16676,6 +16793,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -16815,6 +16933,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16970,6 +17089,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -17109,6 +17229,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17259,6 +17380,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -17398,6 +17520,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17538,6 +17661,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -17677,6 +17801,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17832,6 +17957,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -17971,6 +18097,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18110,6 +18237,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -18249,6 +18377,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18404,6 +18533,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -18543,6 +18673,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18681,6 +18812,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -18820,6 +18952,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18964,6 +19097,7 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -19103,6 +19237,7 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19247,6 +19382,7 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -19386,6 +19522,7 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19530,6 +19667,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -19669,6 +19807,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19813,6 +19952,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -19952,6 +20092,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20096,6 +20237,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -20235,6 +20377,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20379,6 +20522,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -20518,6 +20662,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20673,6 +20818,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -20812,6 +20958,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20962,6 +21109,7 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -21101,6 +21249,7 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21251,6 +21400,7 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -21390,6 +21540,7 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21540,6 +21691,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -21679,6 +21831,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21829,6 +21982,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -21968,6 +22122,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22118,6 +22273,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -22257,6 +22413,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22407,6 +22564,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -22546,6 +22704,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22685,6 +22844,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -22824,6 +22984,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22979,6 +23140,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -23118,6 +23280,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23257,6 +23420,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -23396,6 +23560,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23551,6 +23716,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -23690,6 +23856,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23829,6 +23996,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -23968,6 +24136,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24123,6 +24292,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -24262,6 +24432,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24401,6 +24572,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -24540,6 +24712,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24695,6 +24868,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -24834,6 +25008,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24973,6 +25148,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -25112,6 +25288,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25256,6 +25433,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -25395,6 +25573,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25550,6 +25729,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -25689,6 +25869,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -25839,6 +26020,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -25978,6 +26160,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -26117,6 +26300,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -26256,6 +26440,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -26411,6 +26596,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -26550,6 +26736,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -26690,6 +26877,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
@@ -26829,6 +27017,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
@@ -26972,6 +27161,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -27111,6 +27301,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27255,6 +27446,7 @@ export type UserCreateWithoutPreAuthHeldInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -27394,6 +27586,7 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27550,6 +27743,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
@@ -27689,6 +27883,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
@@ -27838,6 +28033,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -27977,6 +28173,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28127,6 +28324,7 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -28266,6 +28464,7 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28405,6 +28604,7 @@ export type UserCreateWithoutNotificationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -28544,6 +28744,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -28699,6 +28900,7 @@ export type UserUpdateWithoutNotificationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -28838,6 +29040,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28978,6 +29181,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -29117,6 +29321,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29272,6 +29477,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -29411,6 +29617,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -29550,6 +29757,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -29689,6 +29897,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29844,6 +30053,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -29983,6 +30193,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30122,6 +30333,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -30261,6 +30473,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30405,6 +30618,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -30544,6 +30758,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30688,6 +30903,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -30827,6 +31043,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30982,6 +31199,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -31121,6 +31339,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -31271,6 +31490,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -31410,6 +31630,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -31560,6 +31781,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -31699,6 +31921,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -31838,6 +32061,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -31977,6 +32201,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -32121,6 +32346,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -32260,6 +32486,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -32415,6 +32642,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -32554,6 +32782,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32704,6 +32933,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -32843,6 +33073,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32982,6 +33213,7 @@ export type UserCreateWithoutCrmPermissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -33121,6 +33353,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -33265,6 +33498,7 @@ export type UserCreateWithoutCrmPermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -33404,6 +33638,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -33559,6 +33794,7 @@ export type UserUpdateWithoutCrmPermissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -33698,6 +33934,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -33848,6 +34085,7 @@ export type UserUpdateWithoutCrmPermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -33987,6 +34225,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -34126,6 +34365,7 @@ export type UserCreateWithoutCrmAssignmentRulesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -34265,6 +34505,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -34409,6 +34650,7 @@ export type UserCreateWithoutCrmAssignmentRulesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -34548,6 +34790,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -34703,6 +34946,7 @@ export type UserUpdateWithoutCrmAssignmentRulesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -34842,6 +35086,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -34992,6 +35237,7 @@ export type UserUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -35131,6 +35377,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -35270,6 +35517,7 @@ export type UserCreateWithoutCampaignTeamLeadAssignmentsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -35409,6 +35657,7 @@ export type UserUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -35564,6 +35813,7 @@ export type UserUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -35703,6 +35953,7 @@ export type UserUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -35842,6 +36093,7 @@ export type UserCreateWithoutCrmActivityLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -35981,6 +36233,7 @@ export type UserUncheckedCreateWithoutCrmActivityLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -36136,6 +36389,7 @@ export type UserUpdateWithoutCrmActivityLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -36275,6 +36529,7 @@ export type UserUncheckedUpdateWithoutCrmActivityLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -36414,6 +36669,7 @@ export type UserCreateWithoutBulkLeadReassignmentRunsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -36553,6 +36809,7 @@ export type UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -36708,6 +36965,7 @@ export type UserUpdateWithoutBulkLeadReassignmentRunsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -36847,6 +37105,7 @@ export type UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -36986,6 +37245,7 @@ export type UserCreateWithoutPermissionSubjectsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -37125,6 +37385,7 @@ export type UserUncheckedCreateWithoutPermissionSubjectsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -37269,6 +37530,7 @@ export type UserCreateWithoutPermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -37408,6 +37670,7 @@ export type UserUncheckedCreateWithoutPermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -37563,6 +37826,7 @@ export type UserUpdateWithoutPermissionSubjectsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -37702,6 +37966,7 @@ export type UserUncheckedUpdateWithoutPermissionSubjectsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -37852,6 +38117,7 @@ export type UserUpdateWithoutPermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -37991,6 +38257,7 @@ export type UserUncheckedUpdateWithoutPermissionsGrantedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -38130,6 +38397,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -38269,6 +38537,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -38424,6 +38693,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -38563,6 +38833,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -38702,6 +38973,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -38841,6 +39113,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -38996,6 +39269,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -39135,6 +39409,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -39273,6 +39548,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -39412,6 +39688,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -39556,6 +39833,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -39695,6 +39973,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -39850,6 +40129,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -39989,6 +40269,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -40139,6 +40420,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -40278,6 +40560,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -40418,6 +40701,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
@@ -40557,6 +40841,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
@@ -40712,6 +40997,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
@@ -40851,6 +41137,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
@@ -40990,6 +41277,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -41129,6 +41417,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -41284,6 +41573,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -41423,6 +41713,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -41561,6 +41852,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -41700,6 +41992,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -41855,6 +42148,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -41994,6 +42288,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -42134,6 +42429,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -42273,6 +42569,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -42428,6 +42725,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -42567,6 +42865,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -42706,6 +43005,7 @@ export type UserCreateWithoutWorkflowResetsPerformedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -42845,6 +43145,7 @@ export type UserUncheckedCreateWithoutWorkflowResetsPerformedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -43000,6 +43301,7 @@ export type UserUpdateWithoutWorkflowResetsPerformedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -43139,6 +43441,7 @@ export type UserUncheckedUpdateWithoutWorkflowResetsPerformedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -43278,6 +43581,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -43417,6 +43721,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -43572,6 +43877,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -43711,6 +44017,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -43850,6 +44157,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -43989,6 +44297,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -44144,6 +44453,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -44283,6 +44593,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -44421,6 +44732,7 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -44560,6 +44872,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -44704,6 +45017,7 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -44843,6 +45157,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -44987,6 +45302,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -45126,6 +45442,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -45281,6 +45598,7 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -45420,6 +45738,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -45570,6 +45889,7 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -45709,6 +46029,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -45859,6 +46180,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -45998,6 +46320,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -46137,6 +46460,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -46276,6 +46600,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -46431,6 +46756,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -46570,6 +46896,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -46710,6 +47037,7 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -46849,6 +47177,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47004,6 +47333,7 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -47143,6 +47473,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -47281,6 +47612,7 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -47420,6 +47752,7 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47575,6 +47908,7 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -47714,6 +48048,583 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUncheckedUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCumulativeReportManualEntriesUpdatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageUncheckedCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCumulativeReportManualEntriesUpdatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCumulativeReportManualEntriesUpdatedInput, Prisma.UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput>
+}
+
+export type UserUpsertWithoutCumulativeReportManualEntriesUpdatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCumulativeReportManualEntriesUpdatedInput, Prisma.UserUncheckedUpdateWithoutCumulativeReportManualEntriesUpdatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCumulativeReportManualEntriesUpdatedInput, Prisma.UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCumulativeReportManualEntriesUpdatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCumulativeReportManualEntriesUpdatedInput, Prisma.UserUncheckedUpdateWithoutCumulativeReportManualEntriesUpdatedInput>
+}
+
+export type UserUpdateWithoutCumulativeReportManualEntriesUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCumulativeReportManualEntriesUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -47854,6 +48765,7 @@ export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -47993,6 +48905,7 @@ export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -48148,6 +49061,7 @@ export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -48287,6 +49201,7 @@ export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -48426,6 +49341,7 @@ export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -48565,6 +49481,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -48709,6 +49626,7 @@ export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -48848,6 +49766,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -49003,6 +49922,7 @@ export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -49142,6 +50062,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -49292,6 +50213,7 @@ export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -49431,6 +50353,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -49570,6 +50493,7 @@ export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -49709,6 +50633,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -49853,6 +50778,7 @@ export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -49992,6 +50918,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -50147,6 +51074,7 @@ export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -50286,6 +51214,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -50436,6 +51365,7 @@ export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -50575,6 +51505,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -50714,6 +51645,7 @@ export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -50853,6 +51785,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -50997,6 +51930,7 @@ export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -51136,6 +52070,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -51291,6 +52226,7 @@ export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -51430,6 +52366,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -51580,6 +52517,7 @@ export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -51719,6 +52657,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -51858,6 +52797,7 @@ export type UserCreateWithoutSeatingMiscCostHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -51997,6 +52937,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -52152,6 +53093,7 @@ export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -52291,6 +53233,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -52430,6 +53373,7 @@ export type UserCreateWithoutSalesTeamBulkCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -52569,6 +53513,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -52713,6 +53658,7 @@ export type UserCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -52852,6 +53798,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -53007,6 +53954,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -53146,6 +54094,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -53296,6 +54245,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -53435,6 +54385,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -53574,6 +54525,7 @@ export type UserCreateWithoutSalesTeamBulkCostHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -53713,6 +54665,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -53868,6 +54821,7 @@ export type UserUpdateWithoutSalesTeamBulkCostHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -54007,6 +54961,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -54146,6 +55101,7 @@ export type UserCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -54285,6 +55241,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -54440,6 +55397,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -54579,6 +55537,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -54718,6 +55677,7 @@ export type UserCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -54857,6 +55817,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -55012,6 +55973,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -55151,6 +56113,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -55290,6 +56253,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -55429,6 +56393,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -55573,6 +56538,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -55712,6 +56678,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -55856,6 +56823,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -55995,6 +56963,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -56150,6 +57119,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -56289,6 +57259,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -56439,6 +57410,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -56578,6 +57550,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -56728,6 +57701,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -56867,6 +57841,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -57006,6 +57981,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -57145,6 +58121,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -57300,6 +58277,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -57439,6 +58417,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -57578,6 +58557,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -57717,6 +58697,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -57872,6 +58853,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -58011,6 +58993,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -58150,6 +59133,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -58289,6 +59273,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -58433,6 +59418,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -58572,6 +59558,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -58727,6 +59714,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -58866,6 +59854,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -59016,6 +60005,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -59155,6 +60145,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -59294,6 +60285,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -59433,6 +60425,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -59588,6 +60581,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -59727,6 +60721,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -59866,6 +60861,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -60005,6 +61001,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -60160,6 +61157,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -60299,6 +61297,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -60438,6 +61437,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -60577,6 +61577,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -60732,6 +61733,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -60871,6 +61873,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -61010,6 +62013,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -61149,6 +62153,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -61293,6 +62298,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -61432,6 +62438,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -61587,6 +62594,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -61726,6 +62734,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -61876,6 +62885,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -62015,6 +63025,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -62154,6 +63165,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -62293,6 +63305,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -62448,6 +63461,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -62587,6 +63601,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -62726,6 +63741,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -62865,6 +63881,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63020,6 +64037,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -63159,6 +64177,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -63298,6 +64317,7 @@ export type UserCreateWithoutWorkLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -63437,6 +64457,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63592,6 +64613,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -63731,6 +64753,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -63870,6 +64893,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -64009,6 +65033,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -64164,6 +65189,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -64303,6 +65329,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64441,6 +65468,7 @@ export type UserCreateWithoutDoctorLeaveRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -64580,6 +65608,7 @@ export type UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -64735,6 +65764,7 @@ export type UserUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -64874,6 +65904,7 @@ export type UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -65013,6 +66044,7 @@ export type UserCreateWithoutDoctorCabRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -65152,6 +66184,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65296,6 +66329,7 @@ export type UserCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -65435,6 +66469,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65590,6 +66625,7 @@ export type UserUpdateWithoutDoctorCabRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -65729,6 +66765,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -65879,6 +66916,7 @@ export type UserUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -66018,6 +67056,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66158,6 +67197,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -66297,6 +67337,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -66452,6 +67493,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -66591,6 +67633,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66730,6 +67773,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -66869,6 +67913,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67024,6 +68069,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -67163,6 +68209,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -67302,6 +68349,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -67441,6 +68489,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67596,6 +68645,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -67735,6 +68785,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -67874,6 +68925,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -68013,6 +69065,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -68168,6 +69221,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -68307,6 +69361,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68446,6 +69501,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -68585,6 +69641,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -68740,6 +69797,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -68879,6 +69937,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -69018,6 +70077,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -69157,6 +70217,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69312,6 +70373,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -69451,6 +70513,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -69590,6 +70653,7 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -69729,6 +70793,7 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69884,6 +70949,7 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -70023,6 +71089,7 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70162,6 +71229,7 @@ export type UserCreateWithoutKnowledgeDocumentsUploadedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -70301,6 +71369,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentsUploadedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -70456,6 +71525,7 @@ export type UserUpdateWithoutKnowledgeDocumentsUploadedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -70595,6 +71665,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentsUploadedInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70734,6 +71805,7 @@ export type UserCreateWithoutKnowledgeDocumentUsersInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -70873,6 +71945,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentUsersInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71028,6 +72101,7 @@ export type UserUpdateWithoutKnowledgeDocumentUsersInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -71167,6 +72241,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentUsersInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -71306,6 +72381,7 @@ export type UserCreateWithoutAiConversationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -71445,6 +72521,7 @@ export type UserUncheckedCreateWithoutAiConversationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71600,6 +72677,7 @@ export type UserUpdateWithoutAiConversationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -71739,6 +72817,7 @@ export type UserUncheckedUpdateWithoutAiConversationsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -71878,6 +72957,7 @@ export type UserCreateWithoutAiMessagesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -72017,6 +73097,7 @@ export type UserUncheckedCreateWithoutAiMessagesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -72172,6 +73253,7 @@ export type UserUpdateWithoutAiMessagesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -72311,6 +73393,7 @@ export type UserUncheckedUpdateWithoutAiMessagesInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -72450,6 +73533,7 @@ export type UserCreateWithoutAiToolCallsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
@@ -72589,6 +73673,7 @@ export type UserUncheckedCreateWithoutAiToolCallsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
   departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
@@ -72744,6 +73829,7 @@ export type UserUpdateWithoutAiToolCallsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
@@ -72883,6 +73969,7 @@ export type UserUncheckedUpdateWithoutAiToolCallsInput = {
   insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
   outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
   complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
   departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
   preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
   pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -73011,6 +74098,7 @@ export type UserCountOutputType = {
   insuranceInitiateFormsCreated: number
   outstandingCasesHandled: number
   complianceCallsHandled: number
+  cumulativeReportManualEntriesUpdated: number
   departmentHeadOf: number
   preAuthsRaised: number
   pdfsCreated: number
@@ -73135,6 +74223,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   insuranceInitiateFormsCreated?: boolean | UserCountOutputTypeCountInsuranceInitiateFormsCreatedArgs
   outstandingCasesHandled?: boolean | UserCountOutputTypeCountOutstandingCasesHandledArgs
   complianceCallsHandled?: boolean | UserCountOutputTypeCountComplianceCallsHandledArgs
+  cumulativeReportManualEntriesUpdated?: boolean | UserCountOutputTypeCountCumulativeReportManualEntriesUpdatedArgs
   departmentHeadOf?: boolean | UserCountOutputTypeCountDepartmentHeadOfArgs
   preAuthsRaised?: boolean | UserCountOutputTypeCountPreAuthsRaisedArgs
   pdfsCreated?: boolean | UserCountOutputTypeCountPdfsCreatedArgs
@@ -73494,6 +74583,13 @@ export type UserCountOutputTypeCountOutstandingCasesHandledArgs<ExtArgs extends 
  */
 export type UserCountOutputTypeCountComplianceCallsHandledArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ComplianceCallWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCumulativeReportManualEntriesUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CumulativeReportManualEntryWhereInput
 }
 
 /**
@@ -74133,6 +75229,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   insuranceInitiateFormsCreated?: boolean | Prisma.User$insuranceInitiateFormsCreatedArgs<ExtArgs>
   outstandingCasesHandled?: boolean | Prisma.User$outstandingCasesHandledArgs<ExtArgs>
   complianceCallsHandled?: boolean | Prisma.User$complianceCallsHandledArgs<ExtArgs>
+  cumulativeReportManualEntriesUpdated?: boolean | Prisma.User$cumulativeReportManualEntriesUpdatedArgs<ExtArgs>
   departmentHeadOf?: boolean | Prisma.User$departmentHeadOfArgs<ExtArgs>
   preAuthsRaised?: boolean | Prisma.User$preAuthsRaisedArgs<ExtArgs>
   pdfsCreated?: boolean | Prisma.User$pdfsCreatedArgs<ExtArgs>
@@ -74314,6 +75411,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   insuranceInitiateFormsCreated?: boolean | Prisma.User$insuranceInitiateFormsCreatedArgs<ExtArgs>
   outstandingCasesHandled?: boolean | Prisma.User$outstandingCasesHandledArgs<ExtArgs>
   complianceCallsHandled?: boolean | Prisma.User$complianceCallsHandledArgs<ExtArgs>
+  cumulativeReportManualEntriesUpdated?: boolean | Prisma.User$cumulativeReportManualEntriesUpdatedArgs<ExtArgs>
   departmentHeadOf?: boolean | Prisma.User$departmentHeadOfArgs<ExtArgs>
   preAuthsRaised?: boolean | Prisma.User$preAuthsRaisedArgs<ExtArgs>
   pdfsCreated?: boolean | Prisma.User$pdfsCreatedArgs<ExtArgs>
@@ -74444,6 +75542,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     insuranceInitiateFormsCreated: Prisma.$InsuranceInitiateFormPayload<ExtArgs>[]
     outstandingCasesHandled: Prisma.$OutstandingCasePayload<ExtArgs>[]
     complianceCallsHandled: Prisma.$ComplianceCallPayload<ExtArgs>[]
+    cumulativeReportManualEntriesUpdated: Prisma.$CumulativeReportManualEntryPayload<ExtArgs>[]
     departmentHeadOf: Prisma.$DepartmentPayload<ExtArgs>[]
     preAuthsRaised: Prisma.$PreAuthorizationPayload<ExtArgs>[]
     pdfsCreated: Prisma.$PreAuthPDFPayload<ExtArgs>[]
@@ -74977,6 +76076,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   insuranceInitiateFormsCreated<T extends Prisma.User$insuranceInitiateFormsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$insuranceInitiateFormsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceInitiateFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   outstandingCasesHandled<T extends Prisma.User$outstandingCasesHandledArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$outstandingCasesHandledArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OutstandingCasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   complianceCallsHandled<T extends Prisma.User$complianceCallsHandledArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$complianceCallsHandledArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ComplianceCallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cumulativeReportManualEntriesUpdated<T extends Prisma.User$cumulativeReportManualEntriesUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cumulativeReportManualEntriesUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CumulativeReportManualEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   departmentHeadOf<T extends Prisma.User$departmentHeadOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentHeadOfArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   preAuthsRaised<T extends Prisma.User$preAuthsRaisedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$preAuthsRaisedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PreAuthorizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pdfsCreated<T extends Prisma.User$pdfsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pdfsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PreAuthPDFPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -76425,6 +77525,30 @@ export type User$complianceCallsHandledArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.ComplianceCallScalarFieldEnum | Prisma.ComplianceCallScalarFieldEnum[]
+}
+
+/**
+ * User.cumulativeReportManualEntriesUpdated
+ */
+export type User$cumulativeReportManualEntriesUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CumulativeReportManualEntry
+   */
+  select?: Prisma.CumulativeReportManualEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CumulativeReportManualEntry
+   */
+  omit?: Prisma.CumulativeReportManualEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CumulativeReportManualEntryInclude<ExtArgs> | null
+  where?: Prisma.CumulativeReportManualEntryWhereInput
+  orderBy?: Prisma.CumulativeReportManualEntryOrderByWithRelationInput | Prisma.CumulativeReportManualEntryOrderByWithRelationInput[]
+  cursor?: Prisma.CumulativeReportManualEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CumulativeReportManualEntryScalarFieldEnum | Prisma.CumulativeReportManualEntryScalarFieldEnum[]
 }
 
 /**
