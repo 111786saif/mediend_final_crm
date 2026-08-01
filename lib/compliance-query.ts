@@ -1,4 +1,4 @@
-import { Prisma } from '@/generated/prisma/client'
+import { Prisma, SatisfactionLevel } from '@/generated/prisma/client'
 import { stripDrPrefix } from '@/lib/lead-display'
 
 export interface ComplianceListFilters {
@@ -83,6 +83,7 @@ export function buildComplianceCallWhere(
   filters: ComplianceListFilters & {
     status?: string | null
     rating?: number | null
+    satisfaction?: string | null
     startDate?: string | null
     endDate?: string | null
   },
@@ -94,6 +95,9 @@ export function buildComplianceCallWhere(
   }
   if (filters.rating != null && !Number.isNaN(filters.rating)) {
     where.rating = filters.rating
+  }
+  if (filters.satisfaction) {
+    where.satisfaction = filters.satisfaction as SatisfactionLevel
   }
   if (filters.startDate || filters.endDate) {
     where.createdAt = {}

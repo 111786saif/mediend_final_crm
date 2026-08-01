@@ -1,17 +1,15 @@
-import { ComplianceCallStatus, SatisfactionLevel } from '@/generated/prisma/client'
-import {
-  buildCumulativeLeadWhere,
-  buildSurgeryWhere,
-  resolveCumulativeDateRange,
-} from '@/lib/cumulative-report'
-import type { CumulativeReportFilters } from '@/lib/cumulative-report-types'
+import { ComplianceCallStatus, ConcernCategory, SatisfactionLevel } from '@/generated/prisma/client'
+import { buildSurgeryWhere } from '@/lib/cumulative-report'
 import type { Prisma } from '@/generated/prisma/client'
-import type {
-  CumulativeKpiCounts,
-  CumulativeKpiPercentages,
-  CumulativeKpiPerformance,
-  CumulativeKpiPerformanceRow,
-  CumulativePatientSummaryMonth,
+import {
+  computeCumulativeKpiPercentages,
+  CUMULATIVE_CONCERN_CATEGORY_LABEL,
+  CUMULATIVE_CONCERN_CATEGORY_ORDER,
+  emptyCumulativeKpiCounts,
+  type CumulativeConcernCategoryKey,
+  type CumulativeConcernCategoryReport,
+  type CumulativeKpiCounts,
+  type CumulativePatientSummaryMonth,
 } from '@/lib/cumulative-report-monthly-shared'
 
 export type {
@@ -19,9 +17,10 @@ export type {
   CumulativeKpiCounts,
   CumulativeKpiPercentages,
   CumulativePatientSummaryMonth,
-  CumulativeKpiPerformanceRow,
-  CumulativeKpiPerformance,
+  CumulativeConcernCategoryReport,
 } from '@/lib/cumulative-report-monthly-shared'
+export { computeCumulativeKpiPercentages } from '@/lib/cumulative-report-monthly-shared'
+
 type SurgeryLeadRow = {
   surgeryDate: Date | null
   complianceCall: {
@@ -30,59 +29,17 @@ type SurgeryLeadRow = {
   } | null
 }
 
-export function buildCumulativeSurgeryLeadWhere(
-  filters: CumulativeReportFilters,
-): Prisma.LeadWhereInput {
-  const dateFilter = resolveCumulativeDateRange(
-    filters.datePreset ?? 'all',
-    filters.startDate,
-    filters.endDate,
-  )
-  const base = buildCumulativeLeadWhere({
-    ...filters,
-    datePreset: 'all',
-    startDate: null,
-    endDate: null,
-  })
-  const and: Prisma.LeadWhereInput[] = [base, buildSurgeryWhere()]
-  if (dateFilter) and.push({ surgeryDate: dateFilter })
-  return { AND: and }
+type ConcernCallRow = {
+  satisfaction: SatisfactionLevel | null
+  concernCategories: ConcernCategory[]
+  lead: { surgeryDate: Date | null }
 }
 
-function emptyCounts(): CumulativeKpiCounts {
+export function buildCumulativeSurgeryLeadWhereForYear(year: number): Prisma.LeadWhereInput {
+  const start = new Date(year, 0, 1)
+  const end = new Date(year + 1, 0, 1)
   return {
-    totalSurgeries: 0,
-    mediendManaged: 0,
-    offlineBusiness: 0,
-    connectedCalls: 0,
-    callsNotConnected: 0,
-    patientSatisfied: 0,
-    patientNotSatisfied: 0,
-  }
-}
-
-export function roundPct(n: number): number {
-  return Math.round(n)
-}
-
-export function computeCumulativeKpiPercentages(counts: CumulativeKpiCounts): CumulativeKpiPercentages {
-  const total = counts.totalSurgeries
-  const mediend = counts.mediendManaged
-  const connected = counts.connectedCalls
-
-  const pct = (num: number, den: number): number | null => {
-    if (den <= 0) return null
-    return roundPct((num / den) * 100)
-  }
-
-  return {
-    totalSurgeries: total > 0 ? 100 : null,
-    mediendManaged: pct(mediend, total),
-    offlineBusiness: pct(counts.offlineBusiness, total),
-    connectedCalls: pct(connected, mediend),
-    callsNotConnected: pct(counts.callsNotConnected, mediend),
-    patientSatisfied: pct(counts.patientSatisfied, connected),
-    patientNotSatisfied: pct(counts.patientNotSatisfied, connected),
+    AND: [buildSurgeryWhere(), { surgeryDate: { gte: start, lt: end } }],
   }
 }
 
@@ -113,23 +70,6 @@ function accumulateLead(counts: CumulativeKpiCounts, lead: SurgeryLeadRow) {
   }
 }
 
-export function sumSatisfactionFromLeads(leads: SurgeryLeadRow[]): {
-  patientSatisfied: number
-  patientNotSatisfied: number
-} {
-  let patientSatisfied = 0
-  let patientNotSatisfied = 0
-
-  for (const lead of leads) {
-    const call = lead.complianceCall
-    if (call?.status !== ComplianceCallStatus.COMPLETED) continue
-    if (call.satisfaction === SatisfactionLevel.SATISFIED) patientSatisfied += 1
-    else if (call.satisfaction === SatisfactionLevel.NOT_SATISFIED) patientNotSatisfied += 1
-  }
-
-  return { patientSatisfied, patientNotSatisfied }
-}
-
 export function buildPatientSummaryFromLeads(
   leads: SurgeryLeadRow[],
 ): CumulativePatientSummaryMonth[] {
@@ -138,7 +78,7 @@ export function buildPatientSummaryFromLeads(
   for (const lead of leads) {
     if (!lead.surgeryDate) continue
     const key = monthKeyFromDate(lead.surgeryDate)
-    if (!byMonth.has(key)) byMonth.set(key, emptyCounts())
+    if (!byMonth.has(key)) byMonth.set(key, emptyCumulativeKpiCounts())
     accumulateLead(byMonth.get(key)!, lead)
   }
 
@@ -152,70 +92,66 @@ export function buildPatientSummaryFromLeads(
     }))
 }
 
-export function buildKpiPerformanceForMonth(
-  month: CumulativePatientSummaryMonth | undefined,
-): CumulativeKpiPerformance | null {
-  if (!month) return null
+export function buildPatientSummaryForYear(
+  leads: SurgeryLeadRow[],
+  year: number,
+): CumulativePatientSummaryMonth[] {
+  const fromLeads = buildPatientSummaryFromLeads(leads)
+  const byKey = new Map(fromLeads.map((m) => [m.monthKey, m]))
 
-  const rows: CumulativeKpiPerformanceRow[] = [
-    {
-      sno: 1,
-      kpi: 'Total Surgeries Done',
-      count: month.counts.totalSurgeries,
-      percentage: month.percentages.totalSurgeries,
-    },
-    {
-      sno: 2,
-      kpi: 'MediEnd Managed Cases',
-      count: month.counts.mediendManaged,
-      percentage: month.percentages.mediendManaged,
-    },
-    {
-      sno: 3,
-      kpi: 'Offline Business',
-      count: month.counts.offlineBusiness,
-      percentage: month.percentages.offlineBusiness,
-    },
-    {
-      sno: 4,
-      kpi: 'Connected Calls',
-      count: month.counts.connectedCalls,
-      percentage: month.percentages.connectedCalls,
-    },
-    {
-      sno: 5,
-      kpi: 'Calls Not Connected',
-      count: month.counts.callsNotConnected,
-      percentage: month.percentages.callsNotConnected,
-    },
-    {
-      sno: 6,
-      kpi: 'Patient Satisfied',
-      count: month.counts.patientSatisfied,
-      percentage: month.percentages.patientSatisfied,
-    },
-    {
-      sno: 7,
-      kpi: 'Patient Not Satisfied',
-      count: month.counts.patientNotSatisfied,
-      percentage: month.percentages.patientNotSatisfied,
-    },
-  ]
-
-  return {
-    monthKey: month.monthKey,
-    label: month.label,
-    rows,
-  }
+  return Array.from({ length: 12 }, (_, i) => {
+    const monthKey = `${year}-${String(i + 1).padStart(2, '0')}`
+    const existing = byKey.get(monthKey)
+    if (existing) return existing
+    const counts = emptyCumulativeKpiCounts()
+    return {
+      monthKey,
+      label: monthLabelFromKey(monthKey),
+      counts,
+      percentages: computeCumulativeKpiPercentages(counts),
+    }
+  })
 }
 
-export function pickKpiPerformanceMonth(
-  patientSummary: CumulativePatientSummaryMonth[],
-  kpiMonth: string | null | undefined,
-): CumulativeKpiPerformance | null {
-  if (!patientSummary.length) return null
-  const selected =
-    (kpiMonth && patientSummary.find((m) => m.monthKey === kpiMonth)) ||
-    patientSummary[patientSummary.length - 1]
-  return buildKpiPerformanceForMonth(selected)
+export function buildConcernCategoryReport(
+  calls: ConcernCallRow[],
+  year: number,
+): CumulativeConcernCategoryReport {
+  const monthlyUnsatisfiedTotals = Array.from({ length: 12 }, () => 0)
+  const categoryMonthly = Object.fromEntries(
+    CUMULATIVE_CONCERN_CATEGORY_ORDER.map((key) => [key, Array.from({ length: 12 }, () => 0)]),
+  ) as Record<CumulativeConcernCategoryKey, number[]>
+
+  for (const call of calls) {
+    const d = call.lead.surgeryDate
+    if (!d || d.getFullYear() !== year) continue
+    if (call.satisfaction !== SatisfactionLevel.NOT_SATISFIED) continue
+
+    const monthIdx = d.getMonth()
+    monthlyUnsatisfiedTotals[monthIdx] += 1
+
+    for (const cat of call.concernCategories) {
+      const key = cat as CumulativeConcernCategoryKey
+      if (key in categoryMonthly) categoryMonthly[key][monthIdx] += 1
+    }
+  }
+
+  const totalUnsatisfiedYtd = monthlyUnsatisfiedTotals.reduce((sum, n) => sum + n, 0)
+
+  const rows = CUMULATIVE_CONCERN_CATEGORY_ORDER.map((key) => {
+    const monthlyCounts = categoryMonthly[key]
+    const totalYtd = monthlyCounts.reduce((sum, n) => sum + n, 0)
+    return {
+      key,
+      label: CUMULATIVE_CONCERN_CATEGORY_LABEL[key],
+      monthlyCounts,
+      totalYtd,
+      pctOfUnsatisfiedYtd:
+        totalUnsatisfiedYtd > 0
+          ? Math.round((totalYtd / totalUnsatisfiedYtd) * 10000) / 100
+          : null,
+    }
+  })
+
+  return { year, rows, monthlyUnsatisfiedTotals, totalUnsatisfiedYtd }
 }

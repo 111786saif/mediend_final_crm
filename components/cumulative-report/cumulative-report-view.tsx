@@ -1,19 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState, Fragment, type ReactNode } from "react"
-import {
-  Building2,
-  ChevronDown,
-  ChevronUp,
-  CircleDot,
-  Download,
-  FileSpreadsheet,
-  Filter,
-  Search,
-  Stethoscope,
-  UserRound,
-  X,
-} from "lucide-react"
+import { Download, FileSpreadsheet } from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -38,13 +26,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   buildCumulativeExportUrl,
   useCumulativeReport,
-  useCumulativeReportFilterOptions,
-  type CumulativeDatePreset,
-  type CumulativeReportStatus,
 } from "@/hooks/use-cumulative-report"
-import type { CumulativeKpiKey } from "@/lib/cumulative-report-monthly-shared"
+import {
+  computeCumulativeKpiPercentages,
+  formatKpiPercentage,
+  MONTH_SHORT_LABELS,
+  type CumulativeConcernCategoryKey,
+  type CumulativeConcernCategoryReport,
+  type CumulativeKpiCounts,
+  type CumulativeKpiKey,
+} from "@/lib/cumulative-report-monthly-shared"
 
-const ALL = "ALL"
+const KPI_CARD_TONES: Record<
+  CumulativeKpiKey,
+  "emerald" | "sky" | "slate" | "amber" | "orange" | "rose"
+> = {
+  totalSurgeries: "emerald",
+  mediendManaged: "sky",
+  offlineBusiness: "slate",
+  connectedCalls: "amber",
+  callsNotConnected: "orange",
+  patientSatisfied: "emerald",
+  patientNotSatisfied: "rose",
+}
 
 const PATIENT_SUMMARY_COLUMNS: { key: CumulativeKpiKey; label: string }[] = [
   { key: "totalSurgeries", label: "Total Surgeries Done" },
@@ -56,141 +60,173 @@ const PATIENT_SUMMARY_COLUMNS: { key: CumulativeKpiKey; label: string }[] = [
   { key: "patientNotSatisfied", label: "Patient Not Satisfied" },
 ]
 
-function formatKpiPercentage(value: number | null | undefined): string {
-  if (value == null) return "—"
-  return `${value % 1 === 0 ? value.toFixed(0) : value.toFixed(1)}%`
+type ReportTab = "patient-summary" | "concern-category"
+
+function buildYearOptions(): number[] {
+  const current = new Date().getFullYear()
+  return Array.from({ length: 6 }, (_, i) => current - i)
 }
 
-const DATE_PRESETS: { value: CumulativeDatePreset; label: string }[] = [
-  { value: "today", label: "Today" },
-  { value: "this_week", label: "This Week" },
-  { value: "this_month", label: "This Month" },
-  { value: "last_month", label: "Last Month" },
-  { value: "custom", label: "Custom Date Range" },
-  { value: "all", label: "All Time" },
-]
+function formatConcernPct(value: number | null | undefined): string {
+  if (value == null) return "—"
+  return `${value.toFixed(2)}%`
+}
 
-type ReportTab = "patient-summary" | "kpi-performance"
+function cloneCounts(counts: CumulativeKpiCounts): CumulativeKpiCounts {
+  return { ...counts }
+}
+
+function cloneMonthlyCounts(values: number[]): number[] {
+  return [...values]
+}
 
 export function CumulativeReportView() {
+  const currentYear = new Date().getFullYear()
   const [activeTab, setActiveTab] = useState<ReportTab>("patient-summary")
-  const [kpiMonth, setKpiMonth] = useState<string | null>(null)
-  const [datePreset, setDatePreset] = useState<CumulativeDatePreset>("this_month")
-  const [customStart, setCustomStart] = useState("")
-  const [customEnd, setCustomEnd] = useState("")
-  const [hospitalFilter, setHospitalFilter] = useState(ALL)
-  const [circleFilter, setCircleFilter] = useState(ALL)
-  const [treatmentFilter, setTreatmentFilter] = useState(ALL)
-  const [referralFilter, setReferralFilter] = useState("")
-  const [bdFilter, setBdFilter] = useState(ALL)
-  const [statusFilter, setStatusFilter] = useState<string>(ALL)
-  const [searchInput, setSearchInput] = useState("")
-  const [debouncedSearch, setDebouncedSearch] = useState("")
-  const [filtersOpen, setFiltersOpen] = useState(true)
+  const [year, setYear] = useState(currentYear)
   const [exporting, setExporting] = useState(false)
+  const [patientCountsByMonth, setPatientCountsByMonth] = useState<
+    Record<string, CumulativeKpiCounts>
+  >({})
+  const [concernCountsByCategory, setConcernCountsByCategory] = useState<
+    Record<CumulativeConcernCategoryKey, number[]>
+  >({} as Record<CumulativeConcernCategoryKey, number[]>)
+
+  const { data, isLoading, isError } = useCumulativeReport({ year })
 
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(searchInput.trim()), 300)
-    return () => clearTimeout(t)
-  }, [searchInput])
+    if (!data?.patientSummary) return
+    const next: Record<string, CumulativeKpiCounts> = {}
+    for (const month of data.patientSummary) {
+      next[month.monthKey] = cloneCounts(month.counts)
+    }
+    setPatientCountsByMonth(next)
+  }, [data?.patientSummary, year])
 
   useEffect(() => {
-    setKpiMonth(null)
-  }, [
-    datePreset,
-    customStart,
-    customEnd,
-    hospitalFilter,
-    circleFilter,
-    treatmentFilter,
-    referralFilter,
-    bdFilter,
-    statusFilter,
-    debouncedSearch,
-  ])
+    if (!data?.concernCategory) return
+    const next = {} as Record<CumulativeConcernCategoryKey, number[]>
+    for (const row of data.concernCategory.rows) {
+      next[row.key] = cloneMonthlyCounts(row.monthlyCounts)
+    }
+    setConcernCountsByCategory(next)
+  }, [data?.concernCategory, year])
 
-  const { data: filterOptions } = useCumulativeReportFilterOptions()
+  const patientSummaryRows = useMemo(() => {
+    if (!data?.patientSummary) return []
+    return data.patientSummary.map((month) => {
+      const counts = patientCountsByMonth[month.monthKey] ?? month.counts
+      return {
+        ...month,
+        counts,
+        percentages: computeCumulativeKpiPercentages(counts),
+      }
+    })
+  }, [data?.patientSummary, patientCountsByMonth])
 
-  const queryFilters = useMemo(
-    () => ({
-      datePreset,
-      startDate: datePreset === "custom" ? customStart || null : null,
-      endDate: datePreset === "custom" ? customEnd || null : null,
-      hospital: hospitalFilter === ALL ? null : hospitalFilter,
-      circle: circleFilter === ALL ? null : circleFilter,
-      treatment: treatmentFilter === ALL ? null : treatmentFilter,
-      referralName: referralFilter.trim() || null,
-      bdId: bdFilter === ALL ? null : bdFilter,
-      status: statusFilter === ALL ? null : (statusFilter as CumulativeReportStatus),
-      search: debouncedSearch || null,
-      kpiMonth: activeTab === "kpi-performance" ? kpiMonth : null,
-    }),
-    [
-      datePreset,
-      customStart,
-      customEnd,
-      hospitalFilter,
-      circleFilter,
-      treatmentFilter,
-      referralFilter,
-      bdFilter,
-      statusFilter,
-      debouncedSearch,
-      activeTab,
-      kpiMonth,
-    ],
+  const monthlyUnsatisfiedTotals = useMemo(
+    () =>
+      patientSummaryRows.map((month) => month.counts.patientNotSatisfied),
+    [patientSummaryRows],
   )
 
-  const { data, isLoading, isError } = useCumulativeReport(queryFilters)
-  const summary = data?.summary
-  const patientSummary = data?.patientSummary ?? []
-  const kpiPerformance = data?.kpiPerformance
+  const totalUnsatisfiedYtd = useMemo(
+    () => monthlyUnsatisfiedTotals.reduce((sum, n) => sum + n, 0),
+    [monthlyUnsatisfiedTotals],
+  )
 
-  useEffect(() => {
-    if (!patientSummary.length) return
-    if (kpiMonth && patientSummary.some((m) => m.monthKey === kpiMonth)) return
-    setKpiMonth(patientSummary[patientSummary.length - 1]?.monthKey ?? null)
-  }, [patientSummary, kpiMonth])
+  const concernCategoryRows = useMemo(() => {
+    if (!data?.concernCategory) return []
+    return data.concernCategory.rows.map((row) => {
+      const monthlyCounts = concernCountsByCategory[row.key] ?? row.monthlyCounts
+      const totalYtd = monthlyCounts.reduce((sum, n) => sum + n, 0)
+      return {
+        ...row,
+        monthlyCounts,
+        totalYtd,
+        pctOfUnsatisfiedYtd:
+          totalUnsatisfiedYtd > 0
+            ? Math.round((totalYtd / totalUnsatisfiedYtd) * 10000) / 100
+            : null,
+      }
+    })
+  }, [data?.concernCategory, concernCountsByCategory, totalUnsatisfiedYtd])
 
-  const hasActiveFilters =
-    datePreset !== "this_month" ||
-    hospitalFilter !== ALL ||
-    circleFilter !== ALL ||
-    treatmentFilter !== ALL ||
-    referralFilter.trim() !== "" ||
-    bdFilter !== ALL ||
-    statusFilter !== ALL ||
-    debouncedSearch !== ""
+  const ytdTotals = useMemo(() => {
+    const totals = {
+      totalSurgeries: 0,
+      mediendManaged: 0,
+      offlineBusiness: 0,
+      connectedCalls: 0,
+      callsNotConnected: 0,
+      patientSatisfied: 0,
+      patientNotSatisfied: 0,
+    }
+    for (const month of patientSummaryRows) {
+      for (const col of PATIENT_SUMMARY_COLUMNS) {
+        totals[col.key] += month.counts[col.key]
+      }
+    }
+    return totals
+  }, [patientSummaryRows])
 
-  const clearFilters = () => {
-    setDatePreset("this_month")
-    setCustomStart("")
-    setCustomEnd("")
-    setHospitalFilter(ALL)
-    setCircleFilter(ALL)
-    setTreatmentFilter(ALL)
-    setReferralFilter("")
-    setBdFilter(ALL)
-    setStatusFilter(ALL)
-    setSearchInput("")
-    setDebouncedSearch("")
-    setKpiMonth(null)
+  const ytdPercentages = useMemo(
+    () => computeCumulativeKpiPercentages(ytdTotals),
+    [ytdTotals],
+  )
+
+  const updatePatientCount = (monthKey: string, kpiKey: CumulativeKpiKey, raw: string) => {
+    const value = Math.max(0, parseInt(raw, 10) || 0)
+    setPatientCountsByMonth((prev) => ({
+      ...prev,
+      [monthKey]: {
+        ...(prev[monthKey] ?? cloneCounts(data?.patientSummary.find((m) => m.monthKey === monthKey)?.counts ?? {
+          totalSurgeries: 0,
+          mediendManaged: 0,
+          offlineBusiness: 0,
+          connectedCalls: 0,
+          callsNotConnected: 0,
+          patientSatisfied: 0,
+          patientNotSatisfied: 0,
+        })),
+        [kpiKey]: value,
+      },
+    }))
+  }
+
+  const updateConcernCount = (
+    categoryKey: CumulativeConcernCategoryKey,
+    monthIndex: number,
+    raw: string,
+  ) => {
+    const value = Math.max(0, parseInt(raw, 10) || 0)
+    setConcernCountsByCategory((prev) => {
+      const base =
+        prev[categoryKey] ??
+        cloneMonthlyCounts(
+          data?.concernCategory.rows.find((r) => r.key === categoryKey)?.monthlyCounts ??
+            Array.from({ length: 12 }, () => 0),
+        )
+      const next = cloneMonthlyCounts(base)
+      next[monthIndex] = value
+      return { ...prev, [categoryKey]: next }
+    })
   }
 
   const handleExport = async () => {
     setExporting(true)
     try {
-      const url = buildCumulativeExportUrl(queryFilters)
+      const url = buildCumulativeExportUrl({ year })
       const res = await fetch(url, { credentials: "include" })
       if (!res.ok) throw new Error("Export failed")
       const blob = await res.blob()
       const link = document.createElement("a")
       link.href = URL.createObjectURL(blob)
-      link.download = `cumulative-report-${format(new Date(), "yyyy-MM-dd")}.xlsx`
+      link.download = `cumulative-report-${year}-${format(new Date(), "yyyy-MM-dd")}.xlsx`
       link.click()
       URL.revokeObjectURL(link.href)
     } catch {
-      // silent — user sees no download
+      // silent
     } finally {
       setExporting(false)
     }
@@ -208,6 +244,7 @@ export function CumulativeReportView() {
               <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-50">
                 Cumulative Report
               </h1>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{year} year-to-date</p>
             </div>
           </div>
           <Button
@@ -222,234 +259,18 @@ export function CumulativeReportView() {
           </Button>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-9">
-          <SummaryCard label="Total patients" value={summary?.totalPatients ?? 0} tone="emerald" />
-          <SummaryCard label="Total surgeries" value={summary?.totalSurgeries ?? 0} tone="sky" />
-          <SummaryCard label="Planning" value={summary?.planning ?? 0} tone="slate" />
-          <SummaryCard label="IPD done" value={summary?.ipdDone ?? 0} tone="amber" />
-          <SummaryCard label="Pending" value={summary?.pending ?? 0} tone="orange" />
-          <SummaryCard label="Cancelled" value={summary?.cancelled ?? 0} tone="rose" />
-          <SummaryCard label="Follow-up" value={summary?.followUp ?? 0} tone="sky" />
-          <SummaryCard label="Satisfied" value={summary?.patientSatisfied ?? 0} tone="emerald" />
-          <SummaryCard label="Not satisfied" value={summary?.patientNotSatisfied ?? 0} tone="rose" />
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
+          {PATIENT_SUMMARY_COLUMNS.map((col) => (
+            <SummaryKpiCard
+              key={col.key}
+              label={col.label}
+              value={ytdTotals[col.key]}
+              percentage={ytdPercentages[col.key]}
+              tone={KPI_CARD_TONES[col.key]}
+            />
+          ))}
         </div>
       </section>
-
-      <Card className="border-slate-200/80 bg-white/90 shadow-sm dark:border-slate-800 dark:bg-slate-950/70">
-        <CardContent className="space-y-5 pt-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <button
-              type="button"
-              onClick={() => setFiltersOpen((open) => !open)}
-              className="flex items-center gap-2 text-left text-slate-900 transition hover:text-emerald-700 dark:text-slate-100 dark:hover:text-emerald-300"
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                <Filter className="h-4 w-4" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold">Filters</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  {hasActiveFilters ? "Filters applied" : "Narrow the report"}
-                </p>
-              </div>
-              {filtersOpen ? (
-                <ChevronUp className="h-4 w-4 text-slate-500" />
-              ) : (
-                <ChevronDown className="h-4 w-4 text-slate-500" />
-              )}
-            </button>
-            {hasActiveFilters && (
-              <Button type="button" variant="outline" size="sm" onClick={clearFilters} className="rounded-full">
-                Clear filters
-              </Button>
-            )}
-          </div>
-
-          {filtersOpen && (
-            <div className="grid gap-3 xl:grid-cols-[repeat(4,minmax(0,1fr))]">
-              <FilterField
-                label="Date range"
-                icon={FileSpreadsheet}
-                content={
-                  <div className="space-y-2">
-                    <Select
-                      value={datePreset}
-                      onValueChange={(v) => setDatePreset(v as CumulativeDatePreset)}
-                    >
-                      <SelectTrigger className="h-11 rounded-xl">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {DATE_PRESETS.map((p) => (
-                          <SelectItem key={p.value} value={p.value}>
-                            {p.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {datePreset === "custom" && (
-                      <div className="grid grid-cols-2 gap-2">
-                        <Input
-                          type="date"
-                          value={customStart}
-                          onChange={(e) => setCustomStart(e.target.value)}
-                          className="h-10 rounded-xl"
-                        />
-                        <Input
-                          type="date"
-                          value={customEnd}
-                          onChange={(e) => setCustomEnd(e.target.value)}
-                          className="h-10 rounded-xl"
-                        />
-                      </div>
-                    )}
-                  </div>
-                }
-              />
-
-              <FilterField
-                label="Hospital"
-                icon={Building2}
-                content={
-                  <Select value={hospitalFilter} onValueChange={setHospitalFilter}>
-                    <SelectTrigger className="h-11 rounded-xl">
-                      <SelectValue placeholder="All hospitals" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={ALL}>All hospitals</SelectItem>
-                      {filterOptions?.hospitals.map((h) => (
-                        <SelectItem key={h} value={h}>
-                          {h}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                }
-              />
-
-              <FilterField
-                label="Circle"
-                icon={CircleDot}
-                content={
-                  <Select value={circleFilter} onValueChange={setCircleFilter}>
-                    <SelectTrigger className="h-11 rounded-xl">
-                      <SelectValue placeholder="All circles" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={ALL}>All circles</SelectItem>
-                      {filterOptions?.circles.map((c) => (
-                        <SelectItem key={c} value={c}>
-                          {c}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                }
-              />
-
-              <FilterField
-                label="Treatment"
-                icon={Stethoscope}
-                content={
-                  <Select value={treatmentFilter} onValueChange={setTreatmentFilter}>
-                    <SelectTrigger className="h-11 rounded-xl">
-                      <SelectValue placeholder="All treatments" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[280px]">
-                      <SelectItem value={ALL}>All treatments</SelectItem>
-                      {filterOptions?.treatments.map((t) => (
-                        <SelectItem key={t} value={t}>
-                          {t}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                }
-              />
-
-              <FilterField
-                label="Referral name"
-                icon={UserRound}
-                content={
-                  <Input
-                    value={referralFilter}
-                    onChange={(e) => setReferralFilter(e.target.value)}
-                    placeholder="Referral name"
-                    className="h-11 rounded-xl"
-                  />
-                }
-              />
-
-              <FilterField
-                label="Business developer"
-                icon={UserRound}
-                content={
-                  <Select value={bdFilter} onValueChange={setBdFilter}>
-                    <SelectTrigger className="h-11 rounded-xl">
-                      <SelectValue placeholder="All BDs" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={ALL}>All BDs</SelectItem>
-                      {filterOptions?.bds.map((b) => (
-                        <SelectItem key={b.id} value={b.id}>
-                          {b.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                }
-              />
-
-              <FilterField
-                label="Status"
-                icon={CircleDot}
-                content={
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="h-11 rounded-xl">
-                      <SelectValue placeholder="All statuses" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={ALL}>All statuses</SelectItem>
-                      {(data?.statusOptions ?? []).map((s) => (
-                        <SelectItem key={s} value={s}>
-                          {s}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                }
-              />
-
-              <FilterField
-                label="Search"
-                icon={Search}
-                content={
-                  <div className="relative">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      type="search"
-                      value={searchInput}
-                      onChange={(e) => setSearchInput(e.target.value)}
-                      placeholder="Patient name or mobile"
-                      className="h-11 rounded-xl pl-9 pr-9"
-                    />
-                    {searchInput && (
-                      <button
-                        type="button"
-                        onClick={() => setSearchInput("")}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:bg-muted"
-                        aria-label="Clear search"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </div>
-                }
-              />
-            </div>
-          )}
-        </CardContent>
-      </Card>
 
       <Card className="overflow-hidden border-slate-200/80 bg-white/95 shadow-sm dark:border-slate-800 dark:bg-slate-950/75">
         <CardContent className="px-0 pt-0">
@@ -462,28 +283,23 @@ export function CumulativeReportView() {
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <TabsList className="h-10">
                   <TabsTrigger value="patient-summary">Patient Summary</TabsTrigger>
-                  <TabsTrigger value="kpi-performance">KPI Performance</TabsTrigger>
+                  <TabsTrigger value="concern-category">Concern Category</TabsTrigger>
                 </TabsList>
-                {activeTab === "kpi-performance" && patientSummary.length > 0 && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Month</span>
-                    <Select
-                      value={kpiMonth ?? undefined}
-                      onValueChange={setKpiMonth}
-                    >
-                      <SelectTrigger className="h-9 w-[200px] rounded-xl">
-                        <SelectValue placeholder="Select month" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {patientSummary.map((m) => (
-                          <SelectItem key={m.monthKey} value={m.monthKey}>
-                            {m.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Year</span>
+                  <Select value={String(year)} onValueChange={(v) => setYear(parseInt(v, 10))}>
+                    <SelectTrigger className="h-9 w-[120px] rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {buildYearOptions().map((y) => (
+                        <SelectItem key={y} value={String(y)}>
+                          {y}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
 
@@ -498,7 +314,7 @@ export function CumulativeReportView() {
             ) : (
               <>
                 <TabsContent value="patient-summary" className="mt-0">
-                  <div className="max-h-[min(70vh,720px)] overflow-auto p-5">
+                  <div className="max-h-[min(75vh,800px)] overflow-auto p-5">
                     <ReportTable>
                       <TableHeader className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-900">
                         <TableRow>
@@ -511,84 +327,53 @@ export function CumulativeReportView() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {patientSummary.length === 0 ? (
-                          <TableRow>
-                            <TableCell
-                              colSpan={PATIENT_SUMMARY_COLUMNS.length + 1}
-                              className="py-12 text-center text-muted-foreground"
-                            >
-                              No surgery data for the selected filters.
-                            </TableCell>
-                          </TableRow>
-                        ) : (
-                          patientSummary.map((month) => (
-                            <Fragment key={month.monthKey}>
-                              <TableRow>
-                                <TableCell
-                                  rowSpan={2}
-                                  className="align-middle text-center font-medium"
-                                >
-                                  {month.label}
+                        {patientSummaryRows.map((month) => (
+                          <Fragment key={month.monthKey}>
+                            <TableRow>
+                              <TableCell
+                                rowSpan={2}
+                                className="align-middle text-center font-medium"
+                              >
+                                {month.label}
+                              </TableCell>
+                              {PATIENT_SUMMARY_COLUMNS.map((col) => (
+                                <TableCell key={col.key} className="p-1 text-center">
+                                  <EditableCountInput
+                                    value={month.counts[col.key]}
+                                    onChange={(v) => updatePatientCount(month.monthKey, col.key, v)}
+                                  />
                                 </TableCell>
-                                {PATIENT_SUMMARY_COLUMNS.map((col) => (
-                                  <TableCell
-                                    key={col.key}
-                                    className="text-center tabular-nums"
-                                  >
-                                    {month.counts[col.key]}
-                                  </TableCell>
-                                ))}
-                              </TableRow>
-                              <TableRow>
-                                {PATIENT_SUMMARY_COLUMNS.map((col) => (
-                                  <TableCell
-                                    key={col.key}
-                                    className="text-center tabular-nums text-muted-foreground"
-                                  >
-                                    {formatKpiPercentage(month.percentages[col.key])}
-                                  </TableCell>
-                                ))}
-                              </TableRow>
-                            </Fragment>
-                          ))
-                        )}
+                              ))}
+                            </TableRow>
+                            <TableRow>
+                              {PATIENT_SUMMARY_COLUMNS.map((col) => (
+                                <TableCell
+                                  key={col.key}
+                                  className="text-center tabular-nums text-muted-foreground"
+                                >
+                                  {formatKpiPercentage(month.percentages[col.key])}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          </Fragment>
+                        ))}
                       </TableBody>
                     </ReportTable>
                   </div>
                 </TabsContent>
 
-                <TabsContent value="kpi-performance" className="mt-0">
-                  <div className="max-h-[min(70vh,720px)] overflow-auto p-5">
-                    {!kpiPerformance ? (
-                      <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
-                        No KPI data for the selected filters.
-                      </div>
-                    ) : (
-                      <ReportTable>
-                        <TableHeader className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-900">
-                          <TableRow>
-                            <TableHead className="w-16 text-center">S.No</TableHead>
-                            <TableHead className="min-w-[200px]">KPI</TableHead>
-                            <TableHead className="min-w-[140px] text-center">
-                              {kpiPerformance.label} Performance
-                            </TableHead>
-                            <TableHead className="min-w-[100px] text-center">Percentage</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {kpiPerformance.rows.map((row) => (
-                            <TableRow key={row.sno}>
-                              <TableCell className="text-center tabular-nums">{row.sno}</TableCell>
-                              <TableCell className="font-medium">{row.kpi}</TableCell>
-                              <TableCell className="text-center tabular-nums">{row.count}</TableCell>
-                              <TableCell className="text-center tabular-nums text-muted-foreground">
-                                {formatKpiPercentage(row.percentage)}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </ReportTable>
-                    )}
+                <TabsContent value="concern-category" className="mt-0">
+                  <div className="max-h-[min(75vh,800px)] overflow-auto p-5">
+                    <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">
+                      Concern Category (Patient Satisfaction)
+                    </h2>
+                    <ConcernCategoryTable
+                      year={year}
+                      rows={concernCategoryRows}
+                      monthlyUnsatisfiedTotals={monthlyUnsatisfiedTotals}
+                      totalUnsatisfiedYtd={totalUnsatisfiedYtd}
+                      onUpdateCount={updateConcernCount}
+                    />
                   </div>
                 </TabsContent>
               </>
@@ -600,14 +385,16 @@ export function CumulativeReportView() {
   )
 }
 
-function SummaryCard({
+function SummaryKpiCard({
   label,
   value,
+  percentage,
   tone,
 }: {
   label: string
   value: number
-  tone: "emerald" | "sky" | "amber" | "slate" | "orange" | "rose"
+  percentage: number | null
+  tone: "emerald" | "sky" | "slate" | "amber" | "orange" | "rose"
 }) {
   const toneClasses = {
     emerald: "border-emerald-200/80 bg-white/80 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/20 dark:text-emerald-200",
@@ -620,9 +407,111 @@ function SummaryCard({
 
   return (
     <div className={cn("rounded-2xl border p-4 shadow-sm backdrop-blur", toneClasses[tone])}>
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-current/70">{label}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-current/70">{label}</p>
       <p className="mt-2 text-3xl font-semibold tabular-nums text-slate-900 dark:text-white">{value}</p>
+      <p className="mt-1 text-sm tabular-nums text-current/80">
+        {formatKpiPercentage(percentage)}
+      </p>
     </div>
+  )
+}
+
+function EditableCountInput({
+  value,
+  onChange,
+}: {
+  value: number
+  onChange: (value: string) => void
+}) {
+  return (
+    <Input
+      type="number"
+      min={0}
+      inputMode="numeric"
+      value={String(value)}
+      onChange={(e) => onChange(e.target.value)}
+      className="mx-auto h-8 w-[72px] rounded-md border-slate-200 bg-white px-2 text-center tabular-nums dark:border-slate-700 dark:bg-slate-950"
+    />
+  )
+}
+
+function ConcernCategoryTable({
+  year,
+  rows,
+  monthlyUnsatisfiedTotals,
+  totalUnsatisfiedYtd,
+  onUpdateCount,
+}: {
+  year: number
+  rows: CumulativeConcernCategoryReport["rows"]
+  monthlyUnsatisfiedTotals: number[]
+  totalUnsatisfiedYtd: number
+  onUpdateCount: (
+    categoryKey: CumulativeConcernCategoryKey,
+    monthIndex: number,
+    raw: string,
+  ) => void
+}) {
+  return (
+    <ReportTable>
+      <TableHeader className="sticky top-0 z-10 bg-slate-50 dark:bg-slate-900">
+        <TableRow>
+          <TableHead className="w-14 text-center">S. No.</TableHead>
+          <TableHead className="min-w-[200px]">Concern Category</TableHead>
+          {MONTH_SHORT_LABELS.map((label) => (
+            <TableHead key={label} className="min-w-[88px] text-center">
+              {label} {year}
+            </TableHead>
+          ))}
+          <TableHead className="min-w-[100px] text-center">Total (YTD)</TableHead>
+          <TableHead className="min-w-[160px] text-center">
+            % of Unsatisfied Patients* (YTD)
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {rows.map((row, index) => (
+          <TableRow key={row.key}>
+            <TableCell className="text-center tabular-nums">{index + 1}</TableCell>
+            <TableCell className="font-medium">{row.label}</TableCell>
+            {row.monthlyCounts.map((count, monthIndex) => {
+              const monthDen = monthlyUnsatisfiedTotals[monthIndex] ?? 0
+              const monthPct =
+                monthDen > 0 ? Math.round((count / monthDen) * 10000) / 100 : null
+              return (
+                <TableCell key={`${row.key}-${monthIndex}`} className="p-1 text-center">
+                  <EditableCountInput
+                    value={count}
+                    onChange={(v) => onUpdateCount(row.key, monthIndex, v)}
+                  />
+                  <p className="mt-1 text-xs tabular-nums text-muted-foreground">
+                    {formatConcernPct(monthPct)}
+                  </p>
+                </TableCell>
+              )
+            })}
+            <TableCell className="text-center tabular-nums font-semibold">{row.totalYtd}</TableCell>
+            <TableCell className="text-center tabular-nums font-semibold text-emerald-700 dark:text-emerald-300">
+              {formatConcernPct(row.pctOfUnsatisfiedYtd)}
+            </TableCell>
+          </TableRow>
+        ))}
+        <TableRow className="bg-slate-50/80 font-semibold dark:bg-slate-900/60">
+          <TableCell colSpan={2} className="text-right">
+            Total Unsatisfied Patients
+          </TableCell>
+          {monthlyUnsatisfiedTotals.map((total, monthIndex) => (
+            <TableCell key={`unsatisfied-${monthIndex}`} className="text-center tabular-nums">
+              {total}
+            </TableCell>
+          ))}
+          <TableCell className="text-center tabular-nums">{totalUnsatisfiedYtd}</TableCell>
+          <TableCell className="text-center tabular-nums text-emerald-700 dark:text-emerald-300">
+            {totalUnsatisfiedYtd > 0 ? "100%" : "—"}
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </ReportTable>
   )
 }
 
@@ -631,25 +520,5 @@ function ReportTable({ children }: { children: ReactNode }) {
     <Table className="border-collapse [&_th]:border [&_td]:border [&_th]:border-slate-200 [&_td]:border-slate-200 dark:[&_th]:border-slate-700 dark:[&_td]:border-slate-700">
       {children}
     </Table>
-  )
-}
-
-function FilterField({
-  label,
-  icon: Icon,
-  content,
-}: {
-  label: string
-  icon: typeof Search
-  content: ReactNode
-}) {
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-        <Icon className="h-3.5 w-3.5" />
-        <span>{label}</span>
-      </div>
-      {content}
-    </div>
   )
 }
