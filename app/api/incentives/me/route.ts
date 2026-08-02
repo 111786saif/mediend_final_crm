@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { incentiveInclude, mapIncentiveRecord } from '@/lib/incentives/mapper'
+import { getIncentivePeriodForEmployeeView } from '@/lib/incentives/types'
 
 /**
  * GET /api/incentives/me?month=&year=
@@ -26,8 +27,9 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const now = new Date()
-    const month = Number(searchParams.get('month')) || now.getMonth() + 1
-    const year = Number(searchParams.get('year')) || now.getFullYear()
+    const earnedPeriod = getIncentivePeriodForEmployeeView(now)
+    const month = Number(searchParams.get('month')) || earnedPeriod.month
+    const year = Number(searchParams.get('year')) || earnedPeriod.year
 
     const employee = await prisma.employee.findUnique({
       where: { userId: user.id },

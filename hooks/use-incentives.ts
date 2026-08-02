@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import { getIncentivePeriodForEmployeeView } from '@/lib/incentives/types'
 import type { IncentiveEmployeeOption, IncentiveRecord } from '@/lib/incentives/types'
 
 export type { IncentiveRecord, IncentiveEmployeeOption }
@@ -39,9 +40,9 @@ export function useIncentives(filters: IncentiveFilters) {
  * needed — see GET /api/incentives/me.
  */
 export function useMyIncentive(month?: number, year?: number, enabled: boolean = true) {
-  const now = new Date()
-  const m = month ?? now.getMonth() + 1
-  const y = year ?? now.getFullYear()
+  const earnedPeriod = getIncentivePeriodForEmployeeView()
+  const m = month ?? earnedPeriod.month
+  const y = year ?? earnedPeriod.year
   return useQuery({
     queryKey: ['my-incentive', m, y],
     queryFn: () => apiGet<{ record: IncentiveRecord | null }>(`/api/incentives/me?month=${m}&year=${y}`),
@@ -88,6 +89,22 @@ export function useDeleteIncentive() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: string) => apiDelete(`/api/incentives/${id}`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['incentives'] }),
+  })
+}
+
+export function useBulkApproveIncentives() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (ids: string[]) => apiPost('/api/incentives/bulk-approve', { ids }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['incentives'] }),
+  })
+}
+
+export function useBulkPayIncentives() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (ids: string[]) => apiPost('/api/incentives/bulk-pay', { ids }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['incentives'] }),
   })
 }

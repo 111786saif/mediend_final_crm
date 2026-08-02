@@ -3,9 +3,14 @@ import { z } from 'zod'
 import { EmployeeIncentiveStatus, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { incentiveInclude, mapIncentiveRecord } from '@/lib/incentives/mapper'
+import {
+  canCreateIncentives,
+  canDeleteIncentive,
+  canEditIncentiveFields,
+  canTransitionIncentiveStatus,
+} from '@/lib/incentives/permissions'
 
 const updateSchema = z.object({
   amount: z.number().positive().optional(),
@@ -22,7 +27,6 @@ export async function PATCH(
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'incentive:write')) return errorResponse('Forbidden', 403)
 
     const { id } = await params
     const body = await request.json()
@@ -33,9 +37,26 @@ export async function PATCH(
 
     const existing = await prisma.employeeMonthlyIncentive.findUnique({
       where: { id },
-      select: { id: true, employeeId: true, month: true, year: true },
+      select: { id: true, employeeId: true, month: true, year: true, status: true },
     })
     if (!existing) return errorResponse('Incentive record not found', 404)
+
+    const nextStatus = (parsed.data.status ?? existing.status) as EmployeeIncentiveStatus
+    if (parsed.data.status && parsed.data.status !== existing.status) {
+      if (!canTransitionIncentiveStatus(user, existing.status, nextStatus)) {
+        return errorResponse('You cannot change the incentive to this status', 403)
+      }
+    }
+
+    const wantsFieldEdit =
+      parsed.data.amount != null ||
+      parsed.data.month != null ||
+      parsed.data.year != null ||
+      parsed.data.note !== undefined
+
+    if (wantsFieldEdit && !canEditIncentiveFields(user, existing.status)) {
+      return errorResponse('Only pending incentives can be edited', 403)
+    }
 
     const nextMonth = parsed.data.month ?? existing.month
     const nextYear = parsed.data.year ?? existing.year
@@ -59,7 +80,7 @@ export async function PATCH(
       where: { id },
       data: {
         ...(parsed.data.amount != null ? { amount: parsed.data.amount } : {}),
-        ...(parsed.data.status ? { status: parsed.data.status as EmployeeIncentiveStatus } : {}),
+        ...(parsed.data.status ? { status: nextStatus } : {}),
         ...(parsed.data.month != null ? { month: parsed.data.month } : {}),
         ...(parsed.data.year != null ? { year: parsed.data.year } : {}),
         ...(parsed.data.note !== undefined ? { note: parsed.data.note?.trim() || null } : {}),
@@ -85,11 +106,13 @@ export async function DELETE(
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'incentive:write')) return errorResponse('Forbidden', 403)
 
     const { id } = await params
     const existing = await prisma.employeeMonthlyIncentive.findUnique({ where: { id } })
     if (!existing) return errorResponse('Incentive record not found', 404)
+    if (!canDeleteIncentive(user, existing.status)) {
+      return errorResponse('Only pending incentives can be deleted', 403)
+    }
 
     await prisma.employeeMonthlyIncentive.delete({ where: { id } })
     return successResponse({ id })

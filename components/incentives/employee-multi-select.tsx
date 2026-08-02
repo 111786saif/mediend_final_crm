@@ -84,7 +84,11 @@ export function EmployeeMultiSelect({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+      <PopoverContent
+        className="w-[var(--radix-popover-trigger-width)] p-0"
+        align="start"
+        portalled={false}
+      >
         <div className="border-b p-2">
           <Input
             placeholder="Search by name, ID, department…"
@@ -113,7 +117,10 @@ export function EmployeeMultiSelect({
             {allFilteredSelected ? 'Clear filtered' : 'Select filtered'}
           </Button>
         </div>
-        <div className="max-h-48 overflow-y-auto p-1">
+        <div
+          className="max-h-48 overflow-y-auto overscroll-contain p-1"
+          onWheel={(e) => e.stopPropagation()}
+        >
           {filtered.length === 0 ? (
             <p className="py-6 text-center text-xs text-muted-foreground">No employees found</p>
           ) : (
