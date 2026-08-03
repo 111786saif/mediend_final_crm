@@ -44,6 +44,8 @@ function extractIncomingLeadSummary(payload: unknown) {
       campaignId: toNullableString(
         mysqlLead.campaign_id ?? mysqlLead.campaignId ?? mysqlLead['campaign id']
       ),
+      circle: toNullableString(mysqlLead.Circle ?? mysqlLead.circle),
+      city: toNullableString(mysqlLead.city_option ?? mysqlLead.city),
       patientName: toNullableString(
         mysqlLead.Patient_Name ?? mysqlLead.patientName ?? mysqlLead.patient_name
       ),
@@ -62,6 +64,8 @@ function extractIncomingLeadSummary(payload: unknown) {
     campaignId: toNullableString(
       record.campaignId ?? record['campaign id'] ?? record.campaign_id ?? record.campaign
     ),
+    circle: toNullableString(record.Circle ?? record.circle),
+    city: toNullableString(record.city_option ?? record.city),
     patientName: toNullableString(record.name ?? record.patientName ?? record.patient_name),
     phone: toNullableString(
       record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber

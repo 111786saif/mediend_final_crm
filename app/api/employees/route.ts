@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { initializeLeaveBalances } from '@/lib/hrms/leave-balance-utils'
+import { parseEmployeeCircleList, serializeEmployeeCircleList } from '@/lib/employee-circles'
 import { z } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 
@@ -11,6 +12,7 @@ const createEmployeeSchema = z.object({
   userId: z.string(),
   employeeCode: z.string(),
   circle: z.string().trim().max(100).optional().nullable(),
+  circles: z.array(z.string().trim().min(1).max(100)).optional(),
   joinDate: z.string().transform((str) => new Date(str)).optional().nullable(),
   salary: z.number().positive().optional().nullable(),
   departmentId: z.string().optional().nullable(),
@@ -37,6 +39,12 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const data = createEmployeeSchema.parse(body)
+    const normalizedCircles =
+      data.circles !== undefined
+        ? parseEmployeeCircleList(data.circles)
+        : data.circle !== undefined
+          ? parseEmployeeCircleList(data.circle)
+          : []
 
     // Check if employee already exists for this user
     const existing = await prisma.employee.findUnique({
@@ -65,13 +73,26 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (data.circle) {
-      const circle = await prisma.crmCampaignCircle.findFirst({
-        where: { name: data.circle.trim() },
-        select: { id: true },
+    if (normalizedCircles.length > 0) {
+      const circles = await prisma.crmCampaignCircle.findMany({
+        where: {
+          name: {
+            in: normalizedCircles,
+          },
+        },
+        select: { name: true },
       })
-      if (!circle) {
-        return errorResponse('Selected circle was not found in CRM masters', 400)
+      const foundNames = new Set(circles.map((circle) => circle.name.trim().toLowerCase()))
+      const missingCircles = normalizedCircles.filter(
+        (circle) => !foundNames.has(circle.trim().toLowerCase())
+      )
+      if (missingCircles.length > 0) {
+        return errorResponse(
+          missingCircles.length === 1
+            ? `Selected circle "${missingCircles[0]}" was not found in CRM masters`
+            : `Selected circles were not found in CRM masters: ${missingCircles.join(', ')}`,
+          400
+        )
       }
     }
 
@@ -86,7 +107,7 @@ export async function POST(request: NextRequest) {
       data: {
         userId: data.userId,
         employeeCode: data.employeeCode,
-        circle: data.circle?.trim() || null,
+        circle: serializeEmployeeCircleList(normalizedCircles),
         joinDate: data.joinDate || null,
         salary: data.salary || null,
         departmentId: data.departmentId || null,
