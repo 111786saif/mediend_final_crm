@@ -428,12 +428,6 @@ export const navItems: NavItem[] = [
     permission: 'pl:read',
   },
   {
-    title: 'Outstanding List',
-    url: '/pl/outstanding',
-    icon: CreditCard,
-    // Gated via RBAC resource insurance_pl.pl_outstanding (see nav-resource-map)
-  },
-  {
     title: 'Doctor List',
     url: '/doctors',
     icon: Stethoscope,
