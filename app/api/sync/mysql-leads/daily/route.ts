@@ -8,6 +8,7 @@ import { prisma } from '@/lib/prisma'
 import {
   mapMySQLLeadToPrisma,
   mapMySQLLeadToPrismaAsyncFallback,
+  mapMySQLLeadToPrismaWithoutOwner,
   getLeadLatestActivityDate,
   type MySQLLeadRow,
 } from '@/lib/sync/mysql-lead-mapper'
@@ -16,6 +17,12 @@ import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { UserRole } from '@/generated/prisma/client'
 import { errorResponse, successResponse } from '@/lib/api-utils'
 import pLimit from 'p-limit'
+import {
+  processMySQLIncomingLead,
+  processQueuedMySQLIncomingLeads,
+  queueMySQLIncomingLead,
+} from '@/lib/mysql-incoming-leads'
+import { stripImportedLeadOwnership } from '@/lib/imported-lead-ingestion'
 
 interface MySQLRemarkRow {
   id: number
@@ -119,7 +126,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch leads with any activity (receive / assignment / update) in the date range.
     const leads = await queryMySQL<MySQLLeadRow>(
-      `SELECT lead.* FROM lead
+      `SELECT \`lead\`.* FROM \`lead\`
        WHERE (
          (COALESCE(LeadEntryDate, create_date) >= ? AND COALESCE(LeadEntryDate, create_date) < ?)
          OR (Lead_Date IS NOT NULL AND Lead_Date >= ? AND Lead_Date < ?)
@@ -132,23 +139,9 @@ export async function POST(request: NextRequest) {
 
     console.log(`📥 MySQL query: Found ${leads.length} leads to sync`)
 
-    if (leads.length === 0) {
-      await closeMySQLPool()
-      return successResponse({
-        fromDate: syncFromDate.toISOString(),
-        toDate: todayIST.toISOString(),
-        message: 'No new leads to sync',
-        processed: 0,
-        synced: 0,
-        updated: 0,
-        errors: 0,
-        executionTimeMs: Date.now() - startTime,
-      })
-    }
-
     // Pre-fetch existing leads
     const leadRefs = leads.map((l) => String(l.id))
-    const existingLeadsMap = new Map<string, { updatedDate: Date | null; patientName: string; status: string; bdId: string }>()
+    const existingLeadsMap = new Map<string, { updatedDate: Date | null; patientName: string; status: string; bdId: string; bdeName: string | null }>()
     
     const CHUNK_SIZE = 1000
     for (let i = 0; i < leadRefs.length; i += CHUNK_SIZE) {
@@ -161,6 +154,7 @@ export async function POST(request: NextRequest) {
           patientName: true,
           status: true,
           bdId: true,
+          bdeName: true,
         },
       })
       existingLeads.forEach((lead) => {
@@ -169,22 +163,28 @@ export async function POST(request: NextRequest) {
           patientName: lead.patientName,
           status: lead.status,
           bdId: lead.bdId,
+          bdeName: lead.bdeName ?? null,
         })
       })
     }
 
     const lookups = await loadLookupMaps()
     const bdMap = await fetchBDUsersMap()
+    const queueDeps = { systemUserId: systemUser.id, lookups, bdMap }
 
     let syncedCount = 0
     let updatedCount = 0
     let errorCount = 0
+    let assignmentFailedCount = 0
     const syncedLeadIds: number[] = []
-    const leadsToCreate: any[] = []
     const leadsToUpdate: Array<{ leadRef: string; data: any }> = []
     const leadDates: Date[] = []
     const leadIds: number[] = []
     const errorDetails: Array<{ leadId: number; error: string }> = []
+    const queueRetryResult = await processQueuedMySQLIncomingLeads(
+      queueDeps,
+      Math.min(BATCH_SIZE, 100)
+    )
 
     // Process leads in parallel with concurrency limit
     const limit = pLimit(CONCURRENCY_LIMIT)
@@ -195,40 +195,49 @@ export async function POST(request: NextRequest) {
         leadDates.push(getLeadLatestActivityDate(mysqlLead))
         leadIds.push(mysqlLead.id)
 
-        let leadData = mapMySQLLeadToPrisma(mysqlLead, systemUser.id, lookups, bdMap)
-        if (!leadData) {
-          leadData = await mapMySQLLeadToPrismaAsyncFallback(mysqlLead, systemUser.id, lookups)
-        }
-
-        if (!leadData?.bdId) {
-          errorDetails.push({ leadId: mysqlLead.id, error: 'No bdId assigned' })
-          errorCount++
-          return
-        }
-
-        const { updatedDate, ...leadDataForPrisma } = leadData
+        const leadData =
+          mapMySQLLeadToPrisma(mysqlLead, systemUser.id, lookups, bdMap) ??
+          (await mapMySQLLeadToPrismaAsyncFallback(mysqlLead, systemUser.id, lookups, false)) ??
+          mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUser.id, lookups)
+        const { updatedDate, ...leadDataForPrisma } = stripImportedLeadOwnership(leadData)
         const existingLead = existingLeadsMap.get(leadRef)
 
         if (existingLead) {
           const hasChanged =
             existingLead.patientName !== leadDataForPrisma.patientName ||
             existingLead.status !== leadDataForPrisma.status ||
-            existingLead.bdId !== leadDataForPrisma.bdId ||
             (updatedDate && existingLead.updatedDate && updatedDate.getTime() !== existingLead.updatedDate.getTime()) ||
             (!existingLead.updatedDate && updatedDate)
 
           if (hasChanged) {
             leadsToUpdate.push({
               leadRef,
-              data: leadDataForPrisma,
+              data: {
+                ...leadDataForPrisma,
+                ...(updatedDate !== null && { updatedDate }),
+              },
             })
             updatedCount++
             syncedLeadIds.push(mysqlLead.id)
+            console.log(
+              `[mysql-sync:daily] leadRef=${leadRef} updated, assigned BD=${existingLead.bdeName ?? 'Unknown'}`
+            )
           }
         } else {
-          leadsToCreate.push(leadDataForPrisma)
-          syncedCount++
-          syncedLeadIds.push(mysqlLead.id)
+          const incomingLead = await queueMySQLIncomingLead(mysqlLead)
+          const result = await processMySQLIncomingLead(incomingLead.id, queueDeps)
+          if (result.status === 'processed' || result.status === 'already_processed') {
+            syncedCount++
+            syncedLeadIds.push(mysqlLead.id)
+            console.log(
+              `[mysql-sync:daily] leadRef=${leadRef} synced, assigned BD=${result.assignedBdName ?? 'Unknown'}`
+            )
+          } else if (result.status === 'failed') {
+            assignmentFailedCount++
+            errorCount++
+            errorDetails.push({ leadId: mysqlLead.id, error: result.error })
+            console.log(`[mysql-sync:daily] leadRef=${leadRef} failed assignment`)
+          }
         }
       } catch (error) {
         errorCount++
@@ -242,18 +251,6 @@ export async function POST(request: NextRequest) {
 
     const maxDate = leadDates.length > 0 ? new Date(Math.max(...leadDates.map(d => d.getTime()))) : syncFromDate
     const maxId = leadIds.length > 0 ? Math.max(...leadIds) : null
-
-    // Batch create new leads
-    if (leadsToCreate.length > 0) {
-      const CREATE_CHUNK_SIZE = 1000
-      for (let i = 0; i < leadsToCreate.length; i += CREATE_CHUNK_SIZE) {
-        const chunk = leadsToCreate.slice(i, i + CREATE_CHUNK_SIZE)
-        await prisma.lead.createMany({
-          data: chunk,
-          skipDuplicates: true,
-        })
-      }
-    }
 
     // Batch update existing leads
     if (leadsToUpdate.length > 0) {
@@ -381,6 +378,9 @@ export async function POST(request: NextRequest) {
       synced: syncedCount,
       updated: updatedCount,
       errors: errorCount,
+      assignmentFailed: assignmentFailedCount,
+      queueRetryProcessed: queueRetryResult.processed,
+      queueRetryFailed: queueRetryResult.failed,
       remarksSynced,
       lastSyncedDate: maxDate.toISOString(),
       lastSyncedId: maxId,

@@ -1,0 +1,614 @@
+import { EmployeeStatus, FlowType, PipelineStage, UserRole } from '@/generated/prisma/client'
+import { getBusinessDayRange, getBusinessMonthYear, getDefaultSystemUserId, normalizePhoneToLast10 } from '@/lib/crm-campaigns'
+import { prisma } from '@/lib/prisma'
+import { loadLookupMaps, type LookupMaps } from '@/lib/sync/mysql-lookup-cache'
+import { mapMySQLLeadToPrismaWithoutOwner, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
+
+type AssignableBdContext = {
+  userId: string
+  userName: string
+  managerUserId: string | null
+  managerEmployeeId: string | null
+}
+
+type IncomingLeadForManualAssign = {
+  id: string
+  source: string | null
+  status: string
+  payload: unknown
+  processedLeadId: string | null
+  externalCampaignId: string | null
+  normalizedPhone: string | null
+  receivedAt: Date
+}
+
+type ManualAssignResultItem = {
+  incomingLeadId: string
+  status: 'processed' | 'duplicate' | 'failed' | 'already_processed'
+  leadId?: string
+  leadRef?: string
+  bdName?: string
+  error?: string
+}
+
+export type ManualAssignIncomingLeadsResult = {
+  processedCount: number
+  duplicateCount: number
+  failedCount: number
+  results: ManualAssignResultItem[]
+}
+
+function getPayloadRecord(payload: unknown) {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    return null
+  }
+  return payload as Record<string, unknown>
+}
+
+function getMySQLLeadFromPayload(payload: unknown): MySQLLeadRow | null {
+  const record = getPayloadRecord(payload)
+  if (!record) return null
+  const mysqlLead = record.mysqlLead
+  if (!mysqlLead || typeof mysqlLead !== 'object' || Array.isArray(mysqlLead)) {
+    return null
+  }
+  return mysqlLead as MySQLLeadRow
+}
+
+function getSaveMyLeadsPayloadRecord(payload: unknown) {
+  const record = getPayloadRecord(payload)
+  if (!record) return {}
+  const nested = record.data
+  if (nested && typeof nested === 'object' && !Array.isArray(nested)) {
+    return nested as Record<string, unknown>
+  }
+  return record
+}
+
+function extractSaveMyLeadsFields(payload: unknown) {
+  const record = getSaveMyLeadsPayloadRecord(payload)
+  const campaignId =
+    record.campaignId ??
+    record['campaign id'] ??
+    record.campaign_id ??
+    record.campaign ??
+    null
+  const name = record.name ?? record.patientName ?? record.patient_name ?? null
+  const phone = record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber ?? null
+  const email = record.email ?? null
+
+  return {
+    campaignId: campaignId == null ? null : String(campaignId).trim(),
+    patientName: name == null ? null : String(name).trim(),
+    phone: phone == null ? null : String(phone).trim(),
+    email: email == null ? null : String(email).trim(),
+  }
+}
+
+async function findDuplicateSaveMyLeadsLead(
+  externalCampaignId: string,
+  normalizedPhone: string,
+  receivedAt: Date
+) {
+  const { start, end } = getBusinessDayRange(receivedAt)
+
+  return prisma.lead.findFirst({
+    where: {
+      campaignId: externalCampaignId,
+      createdDate: {
+        gte: start,
+        lte: end,
+      },
+      OR: [
+        { phoneNumber: { contains: normalizedPhone } },
+        { alternateNumber: { contains: normalizedPhone } },
+      ],
+    },
+    select: {
+      id: true,
+      leadRef: true,
+    },
+    orderBy: {
+      createdDate: 'desc',
+    },
+  })
+}
+
+async function getAssignableBdContexts(userIds: string[]) {
+  const users = await prisma.user.findMany({
+    where: {
+      id: { in: userIds },
+      role: UserRole.BD,
+      employee: {
+        is: {
+          status: EmployeeStatus.ACTIVE,
+        },
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      employee: {
+        select: {
+          id: true,
+          manager: {
+            select: {
+              id: true,
+              userId: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  return new Map<string, AssignableBdContext>(
+    users.map((user) => [
+      user.id,
+      {
+        userId: user.id,
+        userName: user.name,
+        managerUserId: user.employee?.manager?.userId ?? null,
+        managerEmployeeId: user.employee?.manager?.id ?? null,
+      },
+    ])
+  )
+}
+
+async function loadWebhookCampaign(externalCampaignId: string) {
+  return prisma.crmCampaign.findUnique({
+    where: { externalCampaignId },
+    include: {
+      source: true,
+      leadSource: true,
+      circle: true,
+      circleSelections: {
+        include: {
+          circle: true,
+        },
+        orderBy: {
+          circle: {
+            name: 'asc',
+          },
+        },
+      },
+      city: true,
+      department: true,
+    },
+  })
+}
+
+function getCampaignCircleNames(campaign: {
+  circle: { name: string } | null
+  circleSelections: Array<{ circle: { name: string } }>
+}) {
+  if (campaign.circleSelections.length > 0) {
+    return campaign.circleSelections.map((selection) => selection.circle.name)
+  }
+  return campaign.circle?.name ? [campaign.circle.name] : []
+}
+
+async function reassignExistingLead(
+  incomingLead: IncomingLeadForManualAssign,
+  bd: AssignableBdContext
+): Promise<ManualAssignResultItem> {
+  if (!incomingLead.processedLeadId) {
+    throw new Error('Incoming lead is not linked to a created lead yet')
+  }
+
+  const existingLead = await prisma.lead.findUnique({
+    where: { id: incomingLead.processedLeadId },
+    select: {
+      id: true,
+      leadRef: true,
+    },
+  })
+
+  if (!existingLead) {
+    throw new Error('Linked lead could not be found for reassignment')
+  }
+
+  await prisma.lead.update({
+    where: { id: existingLead.id },
+    data: {
+      bdId: bd.userId,
+      bdeName: bd.userName,
+    },
+  })
+
+  await prisma.incomingLead.update({
+    where: { id: incomingLead.id },
+    data: {
+      selectedTeamLeadUserId: bd.managerUserId,
+      selectedTeamLeadEmployeeId: bd.managerEmployeeId,
+      selectedBdUserId: bd.userId,
+      processedAt: new Date(),
+      errorMessage: null,
+    },
+  })
+
+  return {
+    incomingLeadId: incomingLead.id,
+    status: incomingLead.status === 'DUPLICATE' ? 'duplicate' : 'already_processed',
+    leadId: existingLead.id,
+    leadRef: existingLead.leadRef,
+    bdName: bd.userName,
+  }
+}
+
+async function processManualAssignedMySQLLead(
+  incomingLead: IncomingLeadForManualAssign,
+  bd: AssignableBdContext,
+  systemUserId: string,
+  lookups: LookupMaps
+): Promise<ManualAssignResultItem> {
+  const mysqlLead = getMySQLLeadFromPayload(incomingLead.payload)
+  if (!mysqlLead) {
+    const error = 'Stored MySQL payload is missing mysqlLead data.'
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'FAILED',
+        errorMessage: error,
+        processedAt: new Date(),
+      },
+    })
+    return { incomingLeadId: incomingLead.id, status: 'failed', error }
+  }
+
+  const leadRef = String(mysqlLead.id)
+  const existingLead = await prisma.lead.findUnique({
+    where: { leadRef },
+    select: { id: true, leadRef: true },
+  })
+
+  if (existingLead) {
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'PROCESSED',
+        processedLeadId: existingLead.id,
+        selectedTeamLeadUserId: bd.managerUserId,
+        selectedTeamLeadEmployeeId: bd.managerEmployeeId,
+        selectedBdUserId: bd.userId,
+        processedAt: new Date(),
+        errorMessage: null,
+      },
+    })
+    return {
+      incomingLeadId: incomingLead.id,
+      status: 'already_processed',
+      leadId: existingLead.id,
+      leadRef: existingLead.leadRef,
+      bdName: bd.userName,
+    }
+  }
+
+  const leadData = mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUserId, lookups)
+  const { bdId: _bdId, bdeName: _bdeName, updatedDate, ...leadDataWithoutOwner } = leadData
+
+  const createdLead = await prisma.lead.create({
+    data: {
+      ...leadDataWithoutOwner,
+      ...(updatedDate !== null ? { updatedDate } : {}),
+      bdId: bd.userId,
+      bdeName: bd.userName,
+    },
+    select: {
+      id: true,
+      leadRef: true,
+    },
+  })
+
+  await prisma.incomingLead.update({
+    where: { id: incomingLead.id },
+    data: {
+      status: 'PROCESSED',
+      processedLeadId: createdLead.id,
+      selectedTeamLeadUserId: bd.managerUserId,
+      selectedTeamLeadEmployeeId: bd.managerEmployeeId,
+      selectedBdUserId: bd.userId,
+      processedAt: new Date(),
+      errorMessage: null,
+    },
+  })
+
+  return {
+    incomingLeadId: incomingLead.id,
+    status: 'processed',
+    leadId: createdLead.id,
+    leadRef: createdLead.leadRef,
+    bdName: bd.userName,
+  }
+}
+
+async function processManualAssignedSaveMyLeadsLead(
+  incomingLead: IncomingLeadForManualAssign,
+  bd: AssignableBdContext,
+  systemUserId: string
+): Promise<ManualAssignResultItem> {
+  const extracted = extractSaveMyLeadsFields(incomingLead.payload)
+
+  if (!extracted.campaignId) {
+    const error = 'campaignId is required.'
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'FAILED',
+        errorMessage: error,
+        processedAt: new Date(),
+      },
+    })
+    return { incomingLeadId: incomingLead.id, status: 'failed', error }
+  }
+
+  if (!extracted.patientName) {
+    const error = 'name is required.'
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'FAILED',
+        errorMessage: error,
+        processedAt: new Date(),
+      },
+    })
+    return { incomingLeadId: incomingLead.id, status: 'failed', error }
+  }
+
+  if (!extracted.phone) {
+    const error = 'phone is required.'
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'FAILED',
+        errorMessage: error,
+        processedAt: new Date(),
+      },
+    })
+    return { incomingLeadId: incomingLead.id, status: 'failed', error }
+  }
+
+  const normalizedPhone = normalizePhoneToLast10(extracted.phone)
+  if (!normalizedPhone) {
+    const error = 'Phone number must contain at least 10 digits.'
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'FAILED',
+        errorMessage: error,
+        processedAt: new Date(),
+      },
+    })
+    return { incomingLeadId: incomingLead.id, status: 'failed', error }
+  }
+
+  const campaign = await loadWebhookCampaign(extracted.campaignId)
+  if (!campaign || !campaign.isActive) {
+    const error = 'Campaign is not configured or inactive.'
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'FAILED',
+        errorMessage: error,
+        processedAt: new Date(),
+      },
+    })
+    return { incomingLeadId: incomingLead.id, status: 'failed', error }
+  }
+
+  const duplicateLead = await findDuplicateSaveMyLeadsLead(
+    campaign.externalCampaignId,
+    normalizedPhone,
+    incomingLead.receivedAt
+  )
+
+  if (duplicateLead) {
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'DUPLICATE',
+        externalCampaignId: campaign.externalCampaignId,
+        normalizedPhone,
+        processedLeadId: duplicateLead.id,
+        selectedTeamLeadUserId: bd.managerUserId,
+        selectedTeamLeadEmployeeId: bd.managerEmployeeId,
+        selectedBdUserId: bd.userId,
+        processedAt: new Date(),
+        errorMessage: null,
+      },
+    })
+    return {
+      incomingLeadId: incomingLead.id,
+      status: 'duplicate',
+      leadId: duplicateLead.id,
+      leadRef: duplicateLead.leadRef,
+      bdName: bd.userName,
+    }
+  }
+
+  const { month } = getBusinessMonthYear(incomingLead.receivedAt)
+  const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
+  const campaignCircles = getCampaignCircleNames(campaign)
+
+  const lead = await prisma.lead.create({
+    data: {
+      leadRef,
+      patientName: extracted.patientName,
+      age: 0,
+      sex: 'Not Specified',
+      phoneNumber: extracted.phone,
+      status: 'New Lead',
+      pipelineStage: PipelineStage.SALES,
+      flowType: FlowType.INSURANCE,
+      hospitalName: 'Not Specified',
+      createdById: systemUserId,
+      updatedById: systemUserId,
+      createdDate: incomingLead.receivedAt,
+      leadEntryDate: incomingLead.receivedAt,
+      assignedDate: incomingLead.receivedAt,
+      source: campaign.source.name,
+      campaignName: campaign.leadSource.name || campaign.displayName,
+      campaignId: campaign.externalCampaignId,
+      category: campaign.category ?? null,
+      circle: campaignCircles[0] ?? campaign.circle?.name ?? 'Unknown',
+      bdeName: bd.userName,
+      bdId: bd.userId,
+      patientEmail: extracted.email || null,
+      month: `${month}`,
+    },
+    select: {
+      id: true,
+      leadRef: true,
+    },
+  })
+
+  await prisma.incomingLead.update({
+    where: { id: incomingLead.id },
+    data: {
+      status: 'PROCESSED',
+      externalCampaignId: campaign.externalCampaignId,
+      normalizedPhone,
+      processedLeadId: lead.id,
+      selectedTeamLeadUserId: bd.managerUserId,
+      selectedTeamLeadEmployeeId: bd.managerEmployeeId,
+      selectedBdUserId: bd.userId,
+      processedAt: new Date(),
+      errorMessage: null,
+    },
+  })
+
+  return {
+    incomingLeadId: incomingLead.id,
+    status: 'processed',
+    leadId: lead.id,
+    leadRef: lead.leadRef,
+    bdName: bd.userName,
+  }
+}
+
+export async function manuallyAssignIncomingLeads(
+  incomingLeadIds: string[],
+  bdUserIds: string[]
+): Promise<ManualAssignIncomingLeadsResult> {
+  if (incomingLeadIds.length === 0) {
+    throw new Error('Please select at least one incoming lead')
+  }
+
+  if (bdUserIds.length === 0) {
+    throw new Error('Please select at least one BD')
+  }
+
+  const [incomingLeads, bdContexts, systemUserId] = await Promise.all([
+    prisma.incomingLead.findMany({
+      where: {
+        id: { in: incomingLeadIds },
+      },
+      select: {
+        id: true,
+        source: true,
+        status: true,
+        payload: true,
+        processedLeadId: true,
+        externalCampaignId: true,
+        normalizedPhone: true,
+        receivedAt: true,
+      },
+    }),
+    getAssignableBdContexts(bdUserIds),
+    getDefaultSystemUserId(),
+  ])
+
+  if (incomingLeads.length !== incomingLeadIds.length) {
+    throw new Error('One or more selected incoming leads could not be found')
+  }
+
+  const orderedBdContexts = bdUserIds
+    .map((userId) => bdContexts.get(userId) ?? null)
+    .filter((value): value is AssignableBdContext => Boolean(value))
+
+  if (orderedBdContexts.length === 0) {
+    throw new Error('No valid active BDs were selected')
+  }
+
+  let mysqlLookupsPromise: Promise<LookupMaps> | null = null
+  let processedCount = 0
+  let duplicateCount = 0
+  let failedCount = 0
+  const results: ManualAssignResultItem[] = []
+
+  const orderedIncomingLeads = incomingLeadIds
+    .map((id) => incomingLeads.find((incomingLead) => incomingLead.id === id) ?? null)
+    .filter((value): value is IncomingLeadForManualAssign => Boolean(value))
+
+  for (const [index, incomingLead] of orderedIncomingLeads.entries()) {
+    const bd = orderedBdContexts[index % orderedBdContexts.length]
+
+    if (incomingLead.processedLeadId) {
+      const result = await reassignExistingLead(incomingLead, bd)
+      if (result.status === 'duplicate') {
+        duplicateCount += 1
+      } else {
+        processedCount += 1
+      }
+      results.push(result)
+      continue
+    }
+
+    try {
+      let result: ManualAssignResultItem
+      if (getMySQLLeadFromPayload(incomingLead.payload)) {
+        if (!mysqlLookupsPromise) {
+          mysqlLookupsPromise = loadLookupMaps()
+        }
+        result = await processManualAssignedMySQLLead(
+          incomingLead,
+          bd,
+          systemUserId,
+          await mysqlLookupsPromise
+        )
+      } else {
+        result = await processManualAssignedSaveMyLeadsLead(
+          incomingLead,
+          bd,
+          systemUserId
+        )
+      }
+
+      if (result.status === 'processed' || result.status === 'already_processed') {
+        processedCount += 1
+      } else if (result.status === 'duplicate') {
+        duplicateCount += 1
+      } else {
+        failedCount += 1
+      }
+
+      results.push(result)
+    } catch (error) {
+      failedCount += 1
+      const message =
+        error instanceof Error ? error.message : 'Failed to manually assign incoming lead'
+
+      await prisma.incomingLead.update({
+        where: { id: incomingLead.id },
+        data: {
+          status: 'FAILED',
+          errorMessage: message,
+          processedAt: new Date(),
+        },
+      }).catch(() => null)
+
+      results.push({
+        incomingLeadId: incomingLead.id,
+        status: 'failed',
+        error: message,
+      })
+    }
+  }
+
+  return {
+    processedCount,
+    duplicateCount,
+    failedCount,
+    results,
+  }
+}

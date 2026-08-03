@@ -34,6 +34,29 @@ function getIncomingLeadPayloadRecord(payload: unknown) {
 
 function extractIncomingLeadSummary(payload: unknown) {
   const record = getIncomingLeadPayloadRecord(payload)
+  const mysqlLead =
+    record.mysqlLead && typeof record.mysqlLead === 'object' && !Array.isArray(record.mysqlLead)
+      ? (record.mysqlLead as Record<string, unknown>)
+      : null
+
+  if (mysqlLead) {
+    return {
+      campaignId: toNullableString(
+        mysqlLead.campaign_id ?? mysqlLead.campaignId ?? mysqlLead['campaign id']
+      ),
+      patientName: toNullableString(
+        mysqlLead.Patient_Name ?? mysqlLead.patientName ?? mysqlLead.patient_name
+      ),
+      phone: toNullableString(
+        mysqlLead.Patient_Number ??
+          mysqlLead.phone ??
+          mysqlLead.phoneNumber ??
+          mysqlLead.mobile ??
+          mysqlLead.mobileNumber
+      ),
+      email: toNullableString(mysqlLead.PatientEmail ?? mysqlLead.email),
+    }
+  }
 
   return {
     campaignId: toNullableString(
@@ -83,19 +106,24 @@ export async function GET(request: NextRequest) {
     }
 
     const fallback = getBusinessMonthYear()
-    const month = parsed.data.month ?? fallback.month
-    const year = parsed.data.year ?? fallback.year
-    const { start, end } = getBusinessMonthRange(year, month)
+    const hasExplicitMonthFilter =
+      parsed.data.month !== undefined && parsed.data.year !== undefined
+    const month = hasExplicitMonthFilter ? parsed.data.month! : fallback.month
+    const year = hasExplicitMonthFilter ? parsed.data.year! : fallback.year
+    const dateRange = hasExplicitMonthFilter ? getBusinessMonthRange(year, month) : null
 
     const [campaignData, incomingLeads] = await Promise.all([
       getCampaignManagementPageData(month, year),
       prisma.incomingLead.findMany({
         where: {
-          source: 'savemyleads',
-          receivedAt: {
-            gte: start,
-            lte: end,
-          },
+          ...(dateRange
+            ? {
+                receivedAt: {
+                  gte: dateRange.start,
+                  lte: dateRange.end,
+                },
+              }
+            : {}),
         },
         orderBy: { receivedAt: 'desc' },
         take: 2000,
@@ -170,8 +198,8 @@ export async function GET(request: NextRequest) {
           })
 
     return successResponse({
-      month,
-      year,
+      month: hasExplicitMonthFilter ? month : null,
+      year: hasExplicitMonthFilter ? year : null,
       masters: campaignData.masters,
       campaigns: campaignData.campaigns,
       incomingLeads: filteredIncomingLeads.map((incomingLead) => {

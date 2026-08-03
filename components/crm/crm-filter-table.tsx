@@ -143,8 +143,14 @@ function CrmDateColumnFilter({
 function Table({
   className,
   filterableHeaders,
+  rowIds,
+  onVisibleRowIdsChange,
   ...props
-}: React.ComponentProps<"table"> & { filterableHeaders?: string[] }) {
+}: React.ComponentProps<"table"> & {
+  filterableHeaders?: string[]
+  rowIds?: string[]
+  onVisibleRowIdsChange?: (rowIds: string[]) => void
+}) {
   const [columnOptions, setColumnOptions] = React.useState<Record<number, string[]>>({})
   const [activeFilters, setActiveFilters] = React.useState<Record<number, string[]>>({})
 
@@ -270,6 +276,17 @@ function Table({
 
     return false
   }, [activeFilters, columnOptions])
+
+  React.useEffect(() => {
+    if (!onVisibleRowIdsChange) return
+
+    const nextVisibleRowIds = (rowIds ?? []).filter((rowId, rowIndex) => {
+      if (!rowId) return false
+      return !isRowFiltered(rowIndex)
+    })
+
+    onVisibleRowIdsChange(nextVisibleRowIds)
+  }, [isRowFiltered, onVisibleRowIdsChange, rowIds])
 
   const contextValue = React.useMemo(() => ({
     registerHeader,
@@ -435,6 +452,8 @@ function hasColumnFilter(node: React.ReactNode): boolean {
 function TableHead({
   className,
   colIndex,
+  rowIndex,
+  isHeader,
   ...props
 }: React.ComponentProps<"th"> & { colIndex?: number; rowIndex?: number; isHeader?: boolean }) {
   const context = React.useContext(TableFilterContext)
