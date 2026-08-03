@@ -289,7 +289,8 @@ export function AppSidebar() {
   let crmItems: NavItemWithUrl[] = []
 
   if (layout) {
-    primaryMainItems = pickSection(layout.main)
+    // mediend AI is footer-only — never place it in main even if listed in a layout
+    primaryMainItems = pickSection(layout.main).filter((item) => item.title !== 'mediend AI')
     hrItems = pickSection(layout.hrm)
     myHrmsItems = pickSection(layout.myhrms)
     salesItems = pickSection(layout.sales)
@@ -358,7 +359,10 @@ export function AppSidebar() {
     const myHrmsTitles = new Set(myHrmsItems.map((i) => i.title))
 
     primaryMainItems = permitted.filter(
-      (item) => !sectionTitleSet.has(item.title) && !myHrmsTitles.has(item.title)
+      (item) =>
+        item.title !== 'mediend AI' &&
+        !sectionTitleSet.has(item.title) &&
+        !myHrmsTitles.has(item.title)
     )
     hrItems = permitted.filter((item) => HRM_TITLES.includes(item.title))
     salesItems = permitted.filter((item) => SALES_TITLES.includes(item.title))
@@ -375,9 +379,6 @@ export function AppSidebar() {
   const showInsurancePlSection = insurancePlItems.length > 0
   const showFinanceSection = financeItems.length > 0
   const showCrmSection = crmItems.length > 0
-
-  // Hide footer mediend AI when it already appears in main nav
-  const mediendAiInMain = primaryMainItems.some((item) => item.title === 'mediend AI')
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
@@ -585,16 +586,14 @@ export function AppSidebar() {
               </div>
             </SidebarMenuItem>
           )}
-          {!mediendAiInMain && (
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="mediend AI">
-                <Link href="/training" onClick={closeSidebarOnMobile}>
-                  <Sparkles className="text-purple-400" />
-                  <span>mediend AI</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          )}
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="mediend AI">
+              <Link href="/training" onClick={closeSidebarOnMobile}>
+                <Sparkles className="text-purple-400" />
+                <span>mediend AI</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}
