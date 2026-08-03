@@ -25,7 +25,9 @@ import { type UserRole } from '@/generated/prisma/enums'
 import { getAvailableRolesForCreator } from '@/lib/rbac'
 import { getRoleLabel } from '@/lib/roles'
 import { Checkbox } from '@/components/ui/checkbox'
+import { MultiSelectDropdown } from '@/components/case-tracker/multi-select-dropdown'
 import { getOnboardingDocLabels, type ExperienceType } from '@/lib/onboarding-docs'
+import { parseEmployeeCircleList } from '@/lib/employee-circles'
 
 type ManagerOption = {
   id: string
@@ -66,7 +68,7 @@ interface EmployeeFormData {
   employeeCode: string
   experienceType: ExperienceType
   bdNumber: string
-  circle: string
+  circles: string[]
   departmentId: string
   managerId: string
   joinDate: string
@@ -98,7 +100,7 @@ function createEmptyEmployee(): EmployeeFormData {
     employeeCode: '',
     experienceType: 'FRESHER',
     bdNumber: '',
-    circle: '',
+    circles: [],
     departmentId: '',
     managerId: '',
     joinDate: '',
@@ -181,7 +183,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
         employeeCode: string
         experienceType: ExperienceType
         bdNumber?: number | null
-        circle?: string | null
+        circles?: string[]
         departmentId?: string | null
         managerId?: string | null
         joinDate?: string | null
@@ -290,7 +292,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
       employeeCode: e.employeeCode.trim(),
       experienceType: e.experienceType,
       bdNumber: e.bdNumber.trim() ? parseInt(e.bdNumber, 10) : null,
-      circle: e.circle.trim() || null,
+      circles: e.circles,
       departmentId: e.departmentId || null,
       managerId: e.managerId || null,
       joinDate: e.joinDate || null,
@@ -318,6 +320,15 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
         e.employeeCode.toLowerCase().includes(q)
     )
   }, [existingEmployees, managerSearch, selectedManager])
+
+  const circleSelectOptions = useMemo(
+    () =>
+      circleOptions.map((circle) => ({
+        value: circle.name,
+        label: `${circle.name}${!circle.isActive ? ' (Inactive)' : ''}`,
+      })),
+    [circleOptions]
+  )
 
   // Keep the combobox input in sync when switching employee tabs or changing selection
   useEffect(() => {
@@ -521,27 +532,30 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                  <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-1.5">
-                      <Label>Circle</Label>
-                      <Select
-                        value={emp.circle || 'none'}
-                        onValueChange={(value) =>
-                          updateEmployee(activeIdx, { circle: value === 'none' ? '' : value })
-                        }
-                      >
-                        <SelectTrigger><SelectValue placeholder="Select circle" /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">No circle</SelectItem>
-                          {circleOptions.map((circle) => (
-                            <SelectItem key={circle.id} value={circle.name}>
-                              {circle.name}{!circle.isActive ? ' (Inactive)' : ''}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label>Circles</Label>
+                      <MultiSelectDropdown
+                        options={[
+                          ...circleSelectOptions,
+                          ...parseEmployeeCircleList(emp.circles).flatMap((circle) =>
+                            circleSelectOptions.some(
+                              (option) => option.value.toLowerCase() === circle.toLowerCase()
+                            )
+                              ? []
+                              : [{ value: circle, label: `${circle} (Legacy)` }]
+                          ),
+                        ]}
+                        selected={emp.circles}
+                        onChange={(value) => updateEmployee(activeIdx, { circles: value })}
+                        placeholder="Select circles"
+                        searchPlaceholder="Search circles"
+                        emptyMeansAll={false}
+                        emptyLabel="No circles"
+                        className="w-full justify-between"
+                      />
                       <p className="text-xs text-muted-foreground">
-                        Used by CRM auto-assignment to match lead city for BD employees.
+                        Used for circle mapping and CRM auto-assignment where applicable.
                       </p>
                     </div>
                   </div>

@@ -282,11 +282,15 @@ export function LeadEditDrawer({
   const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
   const statusRequiresAgeSex = isStatusRequiringAgeSex(effectiveLeadStatus)
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
+  const ageChanged = effectiveAge !== (lead?.age == null ? '' : String(lead.age))
+  const sexChanged = effectiveSex !== currentNormalizedSex
 
   const profileDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
     effectiveWhatsapp !== (lead?.whatsapp ?? '') ||
-    effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate)
+    effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate) ||
+    ageChanged ||
+    sexChanged
   const assigneeDirty = effectiveAssigneeId !== currentAssigneeId
 
   const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged
@@ -433,16 +437,12 @@ export function LeadEditDrawer({
       payload.surgeryDate = effectiveSurgeryDate || null
     }
 
-    if (
-      requiresAgeSexForStatusChange &&
-      effectiveAge !== (lead.age == null ? '' : String(lead.age)) &&
-      parsedAge !== null
-    ) {
+    if (ageChanged) {
       payload.age = parsedAge
     }
 
-    if (requiresAgeSexForStatusChange && effectiveSex !== currentNormalizedSex && trimmedSex.length > 0) {
-      payload.sex = trimmedSex
+    if (sexChanged) {
+      payload.sex = trimmedSex || null
     }
 
     if (assigneeDirty) {

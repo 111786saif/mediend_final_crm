@@ -139,6 +139,8 @@ type IncomingLeadRecord = {
   receivedAt: string
   summary: {
     campaignId: string | null
+    circle: string | null
+    city: string | null
     patientName: string | null
     phone: string | null
     email: string | null
@@ -589,8 +591,8 @@ export function CrmIncomingLeadsPage() {
         leadSource: mappedCampaign?.leadSource.name ?? '—',
         category: mappedCampaign?.category ?? '—',
         department: mappedCampaign?.department?.name ?? '—',
-        circle: mappedCampaign?.circle.name ?? '—',
-        city: mappedCampaign?.city?.name ?? '—',
+        circle: incomingLead.summary.circle ?? mappedCampaign?.circle.name ?? '—',
+        city: incomingLead.summary.city ?? mappedCampaign?.city?.name ?? '—',
         patientName: incomingLead.summary.patientName ?? '—',
         email: incomingLead.summary.email ?? '—',
         normalizedPhone: incomingLead.normalizedPhone ?? '—',

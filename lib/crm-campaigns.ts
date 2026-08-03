@@ -7,6 +7,7 @@ import {
   UserRole,
 } from '@/generated/prisma/client'
 import type { CrmAssignmentDryRunResult } from '@/lib/crm-assignment'
+import { employeeHasAnyCircle, employeeHasCircle, parseEmployeeCircleList } from '@/lib/employee-circles'
 import { getManagementChain } from '@/lib/hierarchy'
 import { prisma } from '@/lib/prisma'
 
@@ -391,12 +392,10 @@ export async function getCampaignManagementPageData(month?: number, year?: numbe
       circles: [],
     }
     stats.count += 1
-    const normalizedCircle = bdEmployee.circle?.trim()
-    if (
-      normalizedCircle &&
-      !stats.circles.some((circle) => circle.toLowerCase() === normalizedCircle.toLowerCase())
-    ) {
-      stats.circles.push(normalizedCircle)
+    for (const circle of parseEmployeeCircleList(bdEmployee.circle)) {
+      if (!stats.circles.some((existing) => existing.toLowerCase() === circle.toLowerCase())) {
+        stats.circles.push(circle)
+      }
     }
     bdStatsByManagerId.set(bdEmployee.managerId, stats)
   }
@@ -688,7 +687,7 @@ export async function previewCampaignLeadAssignment(
           employeeName: selectedBd.user.name,
           eligible: true,
           reason:
-            contextCity && selectedBd.circle?.trim().toLowerCase() === contextCity.trim().toLowerCase()
+            contextCity && employeeHasCircle(selectedBd.circle, contextCity)
               ? `Selected from campaign pool with preferred circle "${contextCity}".`
               : preferredCircles.length > 1
                 ? `Selected from campaign pool within circles: ${preferredCircles.join(', ')}.`
@@ -753,7 +752,39 @@ async function chooseTeamLeadAssignment(
 
     const eligibleManagerIds = new Set(
       bdPool
-        .filter((bd) => normalizedCircles.includes(bd.circle?.trim().toLowerCase() ?? ''))
+        .filter((bd) =>
+          normalizedCircles.length > 0
+            ? normalizedCircles.some((circle) => employeeHasCircle(bd.circle, circle))
+            : employeeHasAnyCircle(bd.circle)
+        )
+        .map((bd) => bd.managerId)
+        .filter((managerId): managerId is string => Boolean(managerId))
+    )
+
+    eligibleAssignments = assignments.filter((assignment) =>
+      eligibleManagerIds.has(assignment.teamLeadEmployeeId)
+    )
+  } else if (assignments.length > 0) {
+    const bdPool = await prisma.employee.findMany({
+      where: {
+        status: EmployeeStatus.ACTIVE,
+        managerId: {
+          in: assignments.map((assignment) => assignment.teamLeadEmployeeId),
+        },
+        ...(requiredDepartmentId ? { departmentId: requiredDepartmentId } : {}),
+        user: {
+          role: UserRole.BD,
+        },
+      },
+      select: {
+        managerId: true,
+        circle: true,
+      },
+    })
+
+    const eligibleManagerIds = new Set(
+      bdPool
+        .filter((bd) => employeeHasAnyCircle(bd.circle))
         .map((bd) => bd.managerId)
         .filter((managerId): managerId is string => Boolean(managerId))
     )
@@ -884,7 +915,15 @@ async function chooseBdForTeamLead(
       requiredDepartmentName
         ? `Selected Team Lead has no active BDs in the "${requiredDepartmentName}" department.`
         : 'Selected Team Lead has no active BDs in the configured department.'
-    )
+      )
+  }
+
+  const configuredCirclePool = departmentMatchedPool.filter((employee) =>
+    employeeHasAnyCircle(employee.circle)
+  )
+
+  if (configuredCirclePool.length === 0) {
+    throw new Error('Selected Team Lead has no active BDs with circles configured.')
   }
 
   const normalizedCircles = Array.from(
@@ -896,9 +935,9 @@ async function chooseBdForTeamLead(
   )
   const circleMatchedPool =
     normalizedCircles.length > 0
-      ? departmentMatchedPool.filter(
+      ? configuredCirclePool.filter(
           (employee) =>
-            normalizedCircles.includes(employee.circle?.trim().toLowerCase() ?? '')
+            normalizedCircles.some((circle) => employeeHasCircle(employee.circle, circle))
         )
       : []
 
@@ -910,7 +949,7 @@ async function chooseBdForTeamLead(
     )
   }
 
-  const candidates = circleMatchedPool.length > 0 ? circleMatchedPool : departmentMatchedPool
+  const candidates = normalizedCircles.length > 0 ? circleMatchedPool : configuredCirclePool
 
   const historicalCounts = await prisma.incomingLead.groupBy({
     by: ['selectedBdUserId'],
