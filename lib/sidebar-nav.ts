@@ -121,7 +121,7 @@ export const navItems: NavItem[] = [
     title: 'Incentive',
     url: '/incentives',
     icon: Award,
-    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT', 'FINANCE_HEAD'],
   },
   {
     title: 'Finance Dashboard',

@@ -61,6 +61,40 @@ function statusVariant(status: InvoiceRequestStatus): 'default' | 'secondary' | 
   return 'outline'
 }
 
+function InvoiceFilePreview({
+  url,
+  name,
+  label = 'Invoice file',
+}: {
+  url: string
+  name?: string | null
+  label?: string
+}) {
+  return (
+    <div className="rounded-md border p-3 space-y-3">
+      {isInvoiceImageUrl(url) || isInvoiceImageUrl(name) ? (
+        <img
+          src={url}
+          alt={name ?? 'Invoice image'}
+          className="max-h-64 w-full rounded-md border object-contain bg-muted/20"
+        />
+      ) : null}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <span className="truncate font-medium">{name ?? label}</span>
+        </div>
+        <Button size="sm" variant="outline" asChild>
+          <Link href={url} target="_blank" rel="noreferrer">
+            <ExternalLink className="mr-1 h-3.5 w-3.5" />
+            Open file
+          </Link>
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 export function InvoiceRequestView() {
   const { user } = useAuth()
   const canWrite = user ? hasPermission(user, 'finance:write') : false
@@ -119,15 +153,16 @@ export function InvoiceRequestView() {
 
   const handleApprove = async () => {
     if (!reviewRequest) return
-    if (!uploadedFile?.url) {
-      toast.error('Please upload the invoice file (PDF or image) before approving')
+    const pdfUrl = uploadedFile?.url ?? reviewRequest.invoicePdfUrl
+    if (!pdfUrl) {
+      toast.error('No invoice file available. Ask P/L to upload or attach a file before approving.')
       return
     }
     try {
       await approveMutation.mutateAsync({
         id: reviewRequest.id,
-        invoicePdfUrl: uploadedFile.url,
-        invoicePdfName: uploadedFile.name,
+        invoicePdfUrl: uploadedFile?.url,
+        invoicePdfName: uploadedFile?.name ?? reviewRequest.invoicePdfName ?? undefined,
         financeRemarks: financeRemarks.trim() || undefined,
       })
       toast.success('Invoice request verified')
@@ -163,8 +198,9 @@ export function InvoiceRequestView() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Invoice Requests</h1>
         <p className="text-sm text-muted-foreground">
-          Review pending invoice requests submitted by the P/L team. Upload the invoice file (PDF or
-          image), add remarks, and verify or reject each request.
+          Review invoice requests from P/L. When P/L has uploaded an invoice, open the request to
+          preview it, add remarks, and verify or reject. You can also attach a replacement file if
+          needed.
         </p>
       </div>
 
@@ -225,6 +261,7 @@ export function InvoiceRequestView() {
                   <TableHead>Hospital</TableHead>
                   <TableHead>Requested By</TableHead>
                   <TableHead>Submitted</TableHead>
+                  <TableHead>Invoice</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
@@ -237,6 +274,20 @@ export function InvoiceRequestView() {
                     <TableCell>{req.lead.hospitalName}</TableCell>
                     <TableCell>{req.requestedBy.name}</TableCell>
                     <TableCell>{format(new Date(req.createdAt), 'dd MMM yyyy')}</TableCell>
+                    <TableCell>
+                      {req.invoicePdfUrl ? (
+                        <Button size="sm" variant="link" className="h-auto p-0" asChild>
+                          <Link href={req.invoicePdfUrl} target="_blank" rel="noreferrer">
+                            <FileText className="mr-1 h-3.5 w-3.5 inline" />
+                            {req.invoicePdfName ?? 'View file'}
+                          </Link>
+                        </Button>
+                      ) : req.status === 'PENDING' ? (
+                        <span className="text-xs text-muted-foreground">Awaiting upload</span>
+                      ) : (
+                        '—'
+                      )}
+                    </TableCell>
                     <TableCell>
                       <Badge variant={statusVariant(req.status)}>
                         {INVOICE_REQUEST_STATUS_LABEL[req.status]}
@@ -328,32 +379,24 @@ export function InvoiceRequestView() {
                 </div>
               )}
 
-              {reviewRequest.status === 'VERIFIED' && reviewRequest.invoicePdfUrl && (
-                <div className="rounded-md border p-3 space-y-3">
-                  {isInvoiceImageUrl(reviewRequest.invoicePdfUrl) ||
-                  isInvoiceImageUrl(reviewRequest.invoicePdfName) ? (
-                    <div className="space-y-2">
-                      <img
-                        src={reviewRequest.invoicePdfUrl}
-                        alt={reviewRequest.invoicePdfName ?? 'Invoice image'}
-                        className="max-h-64 w-full rounded-md border object-contain bg-muted/20"
-                      />
-                    </div>
-                  ) : null}
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <span className="truncate font-medium">
-                        {reviewRequest.invoicePdfName ?? 'Invoice file'}
-                      </span>
-                    </div>
-                    <Button size="sm" variant="outline" asChild>
-                      <Link href={reviewRequest.invoicePdfUrl} target="_blank" rel="noreferrer">
-                        <ExternalLink className="mr-1 h-3.5 w-3.5" />
-                        Open file
-                      </Link>
-                    </Button>
+              {reviewRequest.status === 'PENDING' &&
+                reviewRequest.invoicePdfUrl &&
+                !uploadedFile && (
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground">Invoice uploaded by P/L</p>
+                    <InvoiceFilePreview
+                      url={reviewRequest.invoicePdfUrl}
+                      name={reviewRequest.invoicePdfName}
+                    />
                   </div>
+                )}
+
+              {reviewRequest.status === 'VERIFIED' && reviewRequest.invoicePdfUrl && (
+                <div className="space-y-2">
+                  <InvoiceFilePreview
+                    url={reviewRequest.invoicePdfUrl}
+                    name={reviewRequest.invoicePdfName}
+                  />
                   {reviewRequest.financeRemarks && (
                     <p className="text-muted-foreground">{reviewRequest.financeRemarks}</p>
                   )}
@@ -374,7 +417,11 @@ export function InvoiceRequestView() {
                   {!rejectMode ? (
                     <>
                       <div className="space-y-2">
-                        <Label htmlFor="invoice-file">Invoice file (PDF or image)</Label>
+                        <Label htmlFor="invoice-file">
+                          {reviewRequest.invoicePdfUrl
+                            ? 'Replace invoice file (optional)'
+                            : 'Invoice file (PDF or image)'}
+                        </Label>
                         <div className="flex items-center gap-2">
                           <Input
                             id="invoice-file"
@@ -449,7 +496,14 @@ export function InvoiceRequestView() {
                   <Button variant="destructive" onClick={() => setRejectMode(true)} disabled={isPendingAction}>
                     Reject
                   </Button>
-                  <Button onClick={handleApprove} disabled={isPendingAction || uploading}>
+                  <Button
+                    onClick={handleApprove}
+                    disabled={
+                      isPendingAction ||
+                      uploading ||
+                      (!uploadedFile?.url && !reviewRequest.invoicePdfUrl)
+                    }
+                  >
                     {approveMutation.isPending ? 'Verifying…' : 'Approve & Verify'}
                   </Button>
                 </>

@@ -15,6 +15,7 @@ import {
   ExternalLink,
   Loader2,
   Calendar,
+  Upload,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { ProtectedRoute } from '@/components/protected-route'
@@ -56,13 +57,15 @@ import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
 import {
   useCreatePlInvoiceRequest,
+  usePlAttachInvoice,
   usePlInvoiceRequests,
 } from '@/hooks/use-invoice-requests'
+import { useFileUpload } from '@/hooks/use-file-upload'
+import { INVOICE_ATTACHMENT_ACCEPT } from '@/lib/finance/invoice-request/attachments'
 import { useInvoiceRequestActivity } from '@/hooks/use-doctor-payoff-requests'
 import {
   INVOICE_REQUEST_STATUS_LABEL,
   type InvoiceRequestRecord,
-  type InvoiceRequestStatus,
 } from '@/lib/finance/invoice-request/types'
 
 type HospitalCase = {
@@ -125,6 +128,13 @@ export default function HospitalDetailPage() {
   const [requestRemarks, setRequestRemarks] = useState('')
   const [invoiceNumber, setInvoiceNumber] = useState('')
   const [invoiceAmount, setInvoiceAmount] = useState('')
+  const [uploadTarget, setUploadTarget] = useState<{
+    caseRow: HospitalCase
+    invoiceReq: InvoiceRequestRecord
+  } | null>(null)
+  const [uploadInvoiceNumber, setUploadInvoiceNumber] = useState('')
+  const [uploadInvoiceAmount, setUploadInvoiceAmount] = useState('')
+  const [uploadFileMeta, setUploadFileMeta] = useState<{ url: string; name: string } | null>(null)
 
   // Column filter states
   const [selectedLeads, setSelectedLeads] = useState<string[]>([])
@@ -248,6 +258,10 @@ export default function HospitalDetailPage() {
   }, [data?.cases, invoiceByLeadId])
 
   const createInvoice = useCreatePlInvoiceRequest()
+  const attachInvoice = usePlAttachInvoice()
+  const { uploadFile, uploading: plInvoiceUploading } = useFileUpload({
+    endpoint: '/api/pl/invoice-requests/upload',
+  })
   const { data: invoiceActivityData, isLoading: invoiceActivityLoading } = useInvoiceRequestActivity({
     hospitalName: name,
     limit: 20,
@@ -340,6 +354,60 @@ export default function HospitalDetailPage() {
     setRequestRemarks('')
     setInvoiceNumber('')
     setInvoiceAmount('')
+  }
+
+  const openUploadDialog = (
+    c: HospitalCase,
+    invoiceReq: InvoiceRequestRecord,
+    e: React.MouseEvent,
+  ) => {
+    e.stopPropagation()
+    setUploadTarget({ caseRow: c, invoiceReq })
+    setUploadInvoiceNumber(invoiceReq.invoiceNumber ?? '')
+    setUploadInvoiceAmount(
+      invoiceReq.invoiceAmount != null ? String(invoiceReq.invoiceAmount) : '',
+    )
+    setUploadFileMeta(null)
+  }
+
+  const closeUploadDialog = () => {
+    setUploadTarget(null)
+    setUploadInvoiceNumber('')
+    setUploadInvoiceAmount('')
+    setUploadFileMeta(null)
+  }
+
+  const handleUploadFileSelect = async (file: File | undefined) => {
+    if (!file) return
+    const result = await uploadFile(file)
+    if (result?.url) {
+      setUploadFileMeta({ url: result.url, name: file.name })
+    }
+  }
+
+  const handleSubmitUpload = async () => {
+    if (!uploadTarget || !uploadFileMeta?.url) {
+      toast.error('Please select an invoice file to upload')
+      return
+    }
+    const amount = uploadInvoiceAmount.trim() ? Number(uploadInvoiceAmount) : undefined
+    if (amount != null && (Number.isNaN(amount) || amount < 0)) {
+      toast.error('Invoice amount must be a valid number')
+      return
+    }
+    try {
+      await attachInvoice.mutateAsync({
+        id: uploadTarget.invoiceReq.id,
+        invoicePdfUrl: uploadFileMeta.url,
+        invoicePdfName: uploadFileMeta.name,
+        invoiceNumber: uploadInvoiceNumber.trim() || undefined,
+        invoiceAmount: amount,
+      })
+      toast.success('Invoice uploaded for Finance review')
+      closeUploadDialog()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to upload invoice')
+    }
   }
 
   const handleSubmitRequest = async () => {
@@ -805,7 +873,11 @@ export default function HospitalDetailPage() {
                               requesting={
                                 createInvoice.isPending && requestCase?.leadId === c.leadId
                               }
+                              uploading={attachInvoice.isPending || plInvoiceUploading}
                               onRequest={(e) => openRequestDialog(c, e)}
+                              onUpload={
+                                invoiceReq ? (e) => openUploadDialog(c, invoiceReq, e) : undefined
+                              }
                             />
                           </TableCell>
                         </TableRow>
@@ -938,6 +1010,96 @@ export default function HospitalDetailPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!uploadTarget} onOpenChange={(open) => !open && closeUploadDialog()}>
+        <DialogContent className="max-w-md bg-[#191D2E] border-[#283150] text-[#dce1ff]">
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center gap-2">
+              <Upload className="h-5 w-5 text-[#22d3ee]" />
+              Upload Invoice
+            </DialogTitle>
+            <DialogDescription className="text-[#c7c6cd]">
+              {uploadTarget?.caseRow.leadRef ?? 'Case'} · {uploadTarget?.caseRow.patientName ?? 'Patient'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3 pt-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="upload-invoice-file" className="text-xs text-[#c7c6cd]">
+                Invoice file (PDF or image)
+              </Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="upload-invoice-file"
+                  type="file"
+                  accept={INVOICE_ATTACHMENT_ACCEPT}
+                  onChange={(e) => handleUploadFileSelect(e.target.files?.[0])}
+                  disabled={plInvoiceUploading || attachInvoice.isPending}
+                  className="bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
+                />
+                {plInvoiceUploading && <Loader2 className="h-4 w-4 animate-spin text-[#22d3ee]" />}
+              </div>
+              {uploadFileMeta && (
+                <p className="text-xs text-[#22d3ee] flex items-center gap-1">
+                  <FileText className="h-3.5 w-3.5" />
+                  Ready: {uploadFileMeta.name}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="upload-invoice-number" className="text-xs text-[#c7c6cd]">
+                Invoice number (optional)
+              </Label>
+              <Input
+                id="upload-invoice-number"
+                value={uploadInvoiceNumber}
+                onChange={(e) => setUploadInvoiceNumber(e.target.value)}
+                placeholder="INV-001"
+                className="bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="upload-invoice-amount" className="text-xs text-[#c7c6cd]">
+                Invoice amount (optional)
+              </Label>
+              <Input
+                id="upload-invoice-amount"
+                type="number"
+                min={0}
+                value={uploadInvoiceAmount}
+                onChange={(e) => setUploadInvoiceAmount(e.target.value)}
+                placeholder="0"
+                className="bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="pt-2 border-t border-[#283150]/30 mt-4">
+            <Button
+              variant="outline"
+              onClick={closeUploadDialog}
+              disabled={attachInvoice.isPending || plInvoiceUploading}
+              className="border-[#283150] bg-transparent text-[#c7c6cd] hover:bg-[#283150] hover:text-white"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmitUpload}
+              disabled={attachInvoice.isPending || plInvoiceUploading || !uploadFileMeta?.url}
+              className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold"
+            >
+              {attachInvoice.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving…
+                </>
+              ) : (
+                'Upload for Finance'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </ProtectedRoute>
   )
 }
@@ -962,6 +1124,15 @@ function InvoiceStatusCell({
     )
   }
 
+  if (invoiceReq.status === 'PENDING') {
+    const label = invoiceReq.invoicePdfUrl ? 'Uploaded' : INVOICE_REQUEST_STATUS_LABEL.PENDING
+    return (
+      <Badge variant={invoiceReq.invoicePdfUrl ? 'default' : 'secondary'}>
+        {label}
+      </Badge>
+    )
+  }
+
   const variant =
     invoiceReq.status === 'VERIFIED'
       ? 'default'
@@ -976,21 +1147,24 @@ function InvoiceStatusCell({
   )
 }
 
-/** Action column — shows request / view invoice button */
+/** Action column — shows request / upload / view invoice button */
 function InvoiceActionCell({
-  caseRow,
   invoiceReq,
   invoicesLoading,
   canRequest,
   requesting,
+  uploading,
   onRequest,
+  onUpload,
 }: {
   caseRow: HospitalCase
   invoiceReq?: InvoiceRequestRecord
   invoicesLoading: boolean
   canRequest: boolean
   requesting: boolean
+  uploading: boolean
   onRequest: (e: React.MouseEvent) => void
+  onUpload?: (e: React.MouseEvent) => void
 }) {
   if (invoicesLoading) return null
 
@@ -1040,7 +1214,41 @@ function InvoiceActionCell({
     )
   }
 
-  // PENDING (request submitted, awaiting review) → no action needed
+  // PENDING → upload or view uploaded invoice
+  if (invoiceReq?.status === 'PENDING' && canRequest && onUpload) {
+    return (
+      <div className="flex flex-col items-end gap-1">
+        {invoiceReq.invoicePdfUrl && (
+          <a
+            href={invoiceReq.invoicePdfUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-xs font-medium text-[#22d3ee] hover:underline"
+          >
+            <FileText className="h-3.5 w-3.5" />
+            View
+          </a>
+        )}
+        <Button
+          size="sm"
+          variant={invoiceReq.invoicePdfUrl ? 'secondary' : 'default'}
+          className="h-7 px-2 text-xs"
+          onClick={onUpload}
+          disabled={uploading}
+        >
+          {uploading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : invoiceReq.invoicePdfUrl ? (
+            'Replace'
+          ) : (
+            'Upload Invoice'
+          )}
+        </Button>
+      </div>
+    )
+  }
+
   if (invoiceReq?.status === 'PENDING') {
     return <span className="text-xs text-[#c7c6cd]/50">Awaiting review</span>
   }
