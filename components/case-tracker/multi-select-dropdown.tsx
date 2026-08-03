@@ -44,11 +44,12 @@ export function MultiSelectDropdown({
     return options.filter((o) => o.label.toLowerCase().includes(q))
   }, [options, query])
 
-  const allSelected = selected.length === 0
+  const allSelected = emptyMeansAll && selected.length === 0
   const showAll = emptyMeansAll && allSelected
 
   const triggerLabel = useMemo(() => {
     if (showAll) return emptyLabel
+    if (selected.length === 0) return placeholder
     if (selected.length === options.length) return emptyLabel
     if (selected.length === 1) {
       return options.find((o) => o.value === selected[0])?.label ?? placeholder
@@ -56,7 +57,7 @@ export function MultiSelectDropdown({
     return `${selected.length} selected`
   }, [showAll, selected, options, emptyLabel, placeholder])
 
-  const isChecked = (value: string) => allSelected || selected.includes(value)
+  const isChecked = (value: string) => (allSelected ? true : selected.includes(value))
 
   const toggle = (value: string) => {
     if (allSelected) {
@@ -72,7 +73,7 @@ export function MultiSelectDropdown({
     }
   }
 
-  const selectAll = () => onChange([])
+  const selectAll = () => onChange(emptyMeansAll ? [] : options.map((option) => option.value))
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

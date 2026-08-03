@@ -82,7 +82,7 @@ export async function queryMySQL<T = any>(
   params?: any[]
 ): Promise<T[]> {
   const pool = getMySQLPool()
-  const [rows] = await pool.execute(sql, params || [])
+  const [rows] = await pool.query(sql, params || [])
   return rows as T[]
 }
 

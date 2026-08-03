@@ -2737,9 +2737,24 @@ model CrmCampaignCircle {
   updatedAt DateTime         @updatedAt
   cities    CrmCampaignCity[]
   campaigns CrmCampaign[]
+  campaignSelections CrmCampaignCircleSelection[]
 
   @@index([name])
   @@index([isActive])
+}
+
+model CrmCampaignCircleSelection {
+  id         String            @id @default(cuid())
+  campaignId String
+  campaign   CrmCampaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  circleId   String
+  circle     CrmCampaignCircle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([campaignId, circleId])
+  @@index([campaignId])
+  @@index([circleId])
 }
 
 model CrmCampaignCity {
@@ -2784,6 +2799,7 @@ model CrmCampaign {
   leadSource         CrmCampaignLeadSource        @relation(fields: [leadSourceId], references: [id], onDelete: Restrict)
   circleId           String
   circle             CrmCampaignCircle            @relation(fields: [circleId], references: [id], onDelete: Restrict)
+  circleSelections   CrmCampaignCircleSelection[]
   cityId             String?
   city               CrmCampaignCity?             @relation(fields: [cityId], references: [id], onDelete: SetNull)
   isActive           Boolean                      @default(true)

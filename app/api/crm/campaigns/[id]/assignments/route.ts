@@ -1,7 +1,11 @@
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
-import { isSuperAdmin } from '@/lib/crm-campaigns'
+import {
+  CAMPAIGN_ASSIGNMENT_SENTINEL_MONTH,
+  CAMPAIGN_ASSIGNMENT_SENTINEL_YEAR,
+  isSuperAdmin,
+} from '@/lib/crm-campaigns'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 import { prisma } from '@/lib/prisma'
 import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
@@ -15,8 +19,6 @@ const assignmentMemberSchema = z.object({
 })
 
 const assignmentSchema = z.object({
-  month: z.number().int().min(1).max(12),
-  year: z.number().int().min(2000).max(2100),
   assignments: z.array(assignmentMemberSchema),
 })
 
@@ -113,8 +115,6 @@ export async function PUT(
       await tx.crmCampaignTeamLeadAssignment.deleteMany({
         where: {
           campaignId: campaign.id,
-          month: parsed.data.month,
-          year: parsed.data.year,
         },
       })
 
@@ -126,8 +126,8 @@ export async function PUT(
               campaignId: campaign.id,
               teamLeadEmployeeId: employee.id,
               teamLeadUserId: employee.userId,
-              month: parsed.data.month,
-              year: parsed.data.year,
+              month: CAMPAIGN_ASSIGNMENT_SENTINEL_MONTH,
+              year: CAMPAIGN_ASSIGNMENT_SENTINEL_YEAR,
               weight: assignment.weight,
               priority: assignment.priority,
               isActive: assignment.isActive,
@@ -140,8 +140,6 @@ export async function PUT(
     const updatedAssignments = await prisma.crmCampaignTeamLeadAssignment.findMany({
       where: {
         campaignId: campaign.id,
-        month: parsed.data.month,
-        year: parsed.data.year,
       },
       include: {
         teamLeadEmployee: {
@@ -158,18 +156,16 @@ export async function PUT(
     await logCrmActivity({
       action: 'CRM_CAMPAIGN_ASSIGNMENTS_REPLACED',
       entityType: 'CRM_CAMPAIGN_ASSIGNMENT',
-      entityId: `${campaign.id}:${parsed.data.month}:${parsed.data.year}`,
-      entityLabel: `${campaign.externalCampaignId} · ${parsed.data.month}/${parsed.data.year}`,
+      entityId: campaign.id,
+      entityLabel: `${campaign.externalCampaignId} · Active assignment pool`,
       actorUserId: currentUser.id,
       actorRole: currentUser.role,
       request,
-      summary: `Replaced Team Lead assignments for campaign ${campaign.externalCampaignId} (${parsed.data.month}/${parsed.data.year})`,
+      summary: `Replaced Team Lead assignments for campaign ${campaign.externalCampaignId}`,
       metadata: {
         campaignId: campaign.id,
         externalCampaignId: campaign.externalCampaignId,
         displayName: campaign.displayName,
-        month: parsed.data.month,
-        year: parsed.data.year,
         assignmentCount: updatedAssignments.length,
         assignments: updatedAssignments.map((assignment) => ({
           id: assignment.id,
@@ -187,8 +183,6 @@ export async function PUT(
     return successResponse(
       {
         campaign,
-        month: parsed.data.month,
-        year: parsed.data.year,
         assignments: updatedAssignments,
       },
       'Campaign assignments updated successfully'

@@ -1,15 +1,20 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSearchParams } from 'next/navigation'
 import { format } from 'date-fns'
-import { AlertTriangle, CalendarIcon, Eye, Inbox, RefreshCw, Settings2, X } from 'lucide-react'
+import { AlertTriangle, CalendarIcon, Eye, Inbox, RefreshCw, SlidersHorizontal, X } from 'lucide-react'
+import { toast } from 'sonner'
+import { IncomingLeadsManualAssignDialog } from '@/components/crm/incoming-leads-manual-assign-dialog'
+import { IncomingLeadsManualCreateDialog } from '@/components/crm/incoming-leads-manual-create-dialog'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -37,7 +42,7 @@ import {
   TableRow,
 } from '@/components/crm/crm-filter-table'
 import { useAuth } from '@/hooks/use-auth'
-import { apiGet } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 
 type SourceMaster = {
   id: string
@@ -73,12 +78,35 @@ type DepartmentOption = {
   name: string
 }
 
+type TreatmentCategoryOption = {
+  id: string
+  name: string
+  isActive: boolean
+}
+
+type TreatmentOption = {
+  id: string
+  name: string
+  category: string
+  isActive: boolean
+}
+
+type SubStatusOption = {
+  id: string
+  key: number
+  value: string
+  isActive: boolean
+}
+
 type CampaignMasters = {
   sources: SourceMaster[]
   leadSources: LeadSourceMaster[]
   circles: CircleMaster[]
   cities: CityMaster[]
+  subStatuses: SubStatusOption[]
   departments: DepartmentOption[]
+  treatmentCategories: TreatmentCategoryOption[]
+  treatments: TreatmentOption[]
 }
 
 type CampaignRecord = {
@@ -143,11 +171,49 @@ type IncomingLeadRecord = {
 }
 
 type IncomingLeadPageData = {
-  month: number
-  year: number
+  month: number | null
+  year: number | null
   masters: CampaignMasters
   campaigns: CampaignRecord[]
   incomingLeads: IncomingLeadRecord[]
+}
+
+type IncomingLeadManualAssignOptions = {
+  canManualAssign: boolean
+  assignableUsers: Array<{
+    id: string
+    name: string
+    email: string
+    role: string
+  }>
+}
+
+type IncomingLeadManualAssignResult = {
+  processedCount: number
+  duplicateCount: number
+  failedCount: number
+  results: Array<{
+    incomingLeadId: string
+    status: 'processed' | 'duplicate' | 'failed' | 'already_processed'
+    leadId?: string
+    leadRef?: string
+    bdName?: string
+    error?: string
+  }>
+}
+
+type IncomingLeadRetryResult = {
+  processedCount: number
+  failedCount: number
+  skippedCount: number
+  results: Array<{
+    incomingLeadId: string
+    status: 'processed' | 'already_processed' | 'failed' | 'skipped'
+    leadId?: string
+    leadRef?: string
+    assignedBdName?: string | null
+    error?: string
+  }>
 }
 
 type IncomingLeadTableRow = {
@@ -204,13 +270,13 @@ const INCOMING_LEAD_VIEW_ROLES = new Set([
   'SALES_HEAD',
 ])
 const ALL_FILTER_VALUE = '__all__'
+const ALL_MONTHS_VALUE = '__all_months__'
 const INCOMING_LEAD_HEADER_FILTERS = [
   'Received',
   'Processed',
   'Status',
   'Source',
   'Campaign ID',
-  'Payload Campaign ID',
   'Campaign Source',
   'Lead Source',
   'Category',
@@ -240,8 +306,6 @@ const INCOMING_LEAD_COLUMNS: IncomingLeadColumn[] = [
   { id: 'status', label: 'Status', type: 'string', cell: (row) => webhookStatusBadge(row.status) },
   { id: 'source', label: 'Source', type: 'string' },
   { id: 'externalCampaignId', label: 'Campaign ID', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.externalCampaignId}</span> },
-  { id: 'payloadCampaignId', label: 'Payload Campaign ID', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.payloadCampaignId}</span> },
-  { id: 'campaignName', label: 'Campaign', type: 'string' },
   { id: 'campaignSource', label: 'Campaign Source', type: 'string', masterKey: 'sources' },
   { id: 'leadSource', label: 'Lead Source', type: 'string', masterKey: 'leadSources' },
   { id: 'category', label: 'Category', type: 'string' },
@@ -277,6 +341,20 @@ function createInitialVisibleColumns() {
     IncomingLeadColumn['id'],
     boolean
   >
+}
+
+function getUniqueRowValues(rows: IncomingLeadTableRow[], columnId: IncomingLeadColumn['id']) {
+  return Array.from(
+    new Set(
+      rows
+        .map((row) => String(row[columnId] ?? '').trim())
+        .filter((value) => value.length > 0 && value !== '—')
+    )
+  ).sort((left, right) => left.localeCompare(right, undefined, { sensitivity: 'base' }))
+}
+
+function isSelectableIncomingLead(record: IncomingLeadRecord) {
+  return Boolean(record.id)
 }
 
 function formatDateOnly(value: string | null) {
@@ -420,15 +498,28 @@ function DateRangeFilter({
 
 export function CrmIncomingLeadsPage() {
   const { user, isLoading: isAuthLoading } = useAuth()
+  const queryClient = useQueryClient()
+  const searchParams = useSearchParams()
   const initialMonthYear = getInitialMonthYear()
-  const [month, setMonth] = useState(String(initialMonthYear.month))
+  const initialCampaignFilter = searchParams.get('campaignId')?.trim() ?? ''
+  const initialStatusFilter = searchParams.get('status')?.trim() ?? ''
+  const [month, setMonth] = useState(ALL_MONTHS_VALUE)
   const [year, setYear] = useState(String(initialMonthYear.year))
-  const [searchColumn, setSearchColumn] = useState<IncomingLeadColumn['id']>('patientName')
-  const [searchValue, setSearchValue] = useState('')
+  const [searchColumn, setSearchColumn] = useState<IncomingLeadColumn['id']>(
+    initialCampaignFilter ? 'externalCampaignId' : 'patientName'
+  )
+  const [searchValue, setSearchValue] = useState(initialCampaignFilter)
   const [sortColumn, setSortColumn] = useState<IncomingLeadColumn['id']>('receivedAt')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [visibleColumns, setVisibleColumns] = useState(createInitialVisibleColumns)
+  const [tableFilterVersion, setTableFilterVersion] = useState(0)
   const [selectedIncomingLead, setSelectedIncomingLead] = useState<IncomingLeadRecord | null>(null)
+  const [selectedManualAssignLeadIds, setSelectedManualAssignLeadIds] = useState<string[]>([])
+  const [visibleTableLeadIds, setVisibleTableLeadIds] = useState<string[]>([])
+  const [manualAssignDialogOpen, setManualAssignDialogOpen] = useState(false)
+  const [manualCreateDialogOpen, setManualCreateDialogOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState('50')
   const [assignDateFrom, setAssignDateFrom] = useState('')
   const [assignDateTo, setAssignDateTo] = useState('')
   const [leadDateFrom, setLeadDateFrom] = useState('')
@@ -437,16 +528,42 @@ export function CrmIncomingLeadsPage() {
   const [followUpDateTo, setFollowUpDateTo] = useState('')
   const [surgeryDateFrom, setSurgeryDateFrom] = useState('')
   const [surgeryDateTo, setSurgeryDateTo] = useState('')
+  const [statusFilter, setStatusFilter] = useState(
+    initialStatusFilter.length > 0 ? initialStatusFilter : ALL_FILTER_VALUE
+  )
+  const [sourceFilter, setSourceFilter] = useState(ALL_FILTER_VALUE)
+  const [campaignSourceFilter, setCampaignSourceFilter] = useState(ALL_FILTER_VALUE)
+  const [leadSourceFilter, setLeadSourceFilter] = useState(ALL_FILTER_VALUE)
+  const [categoryFilter, setCategoryFilter] = useState(ALL_FILTER_VALUE)
+  const [departmentFilter, setDepartmentFilter] = useState(ALL_FILTER_VALUE)
+  const [circleFilter, setCircleFilter] = useState(ALL_FILTER_VALUE)
+  const [cityFilter, setCityFilter] = useState(ALL_FILTER_VALUE)
+  const [teamLeadFilter, setTeamLeadFilter] = useState(ALL_FILTER_VALUE)
+  const [bdFilter, setBdFilter] = useState(ALL_FILTER_VALUE)
 
   const hasAccess = Boolean(user?.role && INCOMING_LEAD_VIEW_ROLES.has(user.role))
-  const selectedMonth = Number.parseInt(month, 10) || initialMonthYear.month
+  const canManuallyAssignFailedLeads = user?.role === 'SUPER_ADMIN'
+  const canCreateManualLeads = user?.role === 'SUPER_ADMIN'
+  const selectedMonth = month === ALL_MONTHS_VALUE ? null : Number.parseInt(month, 10) || initialMonthYear.month
   const selectedYear = Number.parseInt(year, 10) || initialMonthYear.year
 
   const { data, isLoading, error, refetch, isFetching } = useQuery<IncomingLeadPageData, Error>({
     queryKey: ['crm-incoming-leads', selectedMonth, selectedYear],
-    queryFn: () => apiGet<IncomingLeadPageData>(`/api/crm/incoming-leads?month=${selectedMonth}&year=${selectedYear}`),
+    queryFn: () =>
+      apiGet<IncomingLeadPageData>(
+        selectedMonth === null
+          ? '/api/crm/incoming-leads'
+          : `/api/crm/incoming-leads?month=${selectedMonth}&year=${selectedYear}`
+      ),
     retry: false,
     enabled: hasAccess,
+  })
+
+  const manualAssignOptionsQuery = useQuery<IncomingLeadManualAssignOptions, Error>({
+    queryKey: ['crm-incoming-leads-manual-assign-options'],
+    queryFn: () => apiGet<IncomingLeadManualAssignOptions>('/api/crm/incoming-leads/manual-assign'),
+    retry: false,
+    enabled: hasAccess && canManuallyAssignFailedLeads,
   })
 
   const rows = useMemo<IncomingLeadTableRow[]>(() => {
@@ -515,6 +632,17 @@ export function CrmIncomingLeadsPage() {
         if (!isWithinDateRange(row.surgeryDate, surgeryDateFrom, surgeryDateTo)) return false
       }
 
+      if (statusFilter !== ALL_FILTER_VALUE && row.status !== statusFilter) return false
+      if (sourceFilter !== ALL_FILTER_VALUE && row.source !== sourceFilter) return false
+      if (campaignSourceFilter !== ALL_FILTER_VALUE && row.campaignSource !== campaignSourceFilter) return false
+      if (leadSourceFilter !== ALL_FILTER_VALUE && row.leadSource !== leadSourceFilter) return false
+      if (categoryFilter !== ALL_FILTER_VALUE && row.category !== categoryFilter) return false
+      if (departmentFilter !== ALL_FILTER_VALUE && row.department !== departmentFilter) return false
+      if (circleFilter !== ALL_FILTER_VALUE && row.circle !== circleFilter) return false
+      if (cityFilter !== ALL_FILTER_VALUE && row.city !== cityFilter) return false
+      if (teamLeadFilter !== ALL_FILTER_VALUE && row.teamLeadName !== teamLeadFilter) return false
+      if (bdFilter !== ALL_FILTER_VALUE && row.bdName !== bdFilter) return false
+
       if (!normalizedSearch) return true
 
       const rawValue = String(row[searchColumn] ?? '')
@@ -532,6 +660,16 @@ export function CrmIncomingLeadsPage() {
     rows,
     searchColumn,
     searchValue,
+    statusFilter,
+    sourceFilter,
+    campaignSourceFilter,
+    leadSourceFilter,
+    categoryFilter,
+    departmentFilter,
+    circleFilter,
+    cityFilter,
+    teamLeadFilter,
+    bdFilter,
     assignDateFrom,
     assignDateTo,
     leadDateFrom,
@@ -565,6 +703,120 @@ export function CrmIncomingLeadsPage() {
     return nextRows
   }, [filteredRows, sortColumn, sortDirection])
 
+  const pageSizeNumber = Number.parseInt(pageSize, 10) || 50
+  const totalRows = sortedRows.length
+  const totalPages = Math.max(1, Math.ceil(totalRows / pageSizeNumber))
+  const safeCurrentPage = Math.min(currentPage, totalPages)
+  const pageStartIndex = totalRows === 0 ? 0 : (safeCurrentPage - 1) * pageSizeNumber
+  const pageEndIndex = totalRows === 0 ? 0 : Math.min(pageStartIndex + pageSizeNumber, totalRows)
+
+  const paginatedRows = useMemo(
+    () => sortedRows.slice(pageStartIndex, pageEndIndex),
+    [pageEndIndex, pageStartIndex, sortedRows]
+  )
+
+  const selectedManualAssignLeads = useMemo(
+    () =>
+      rows
+        .filter(
+          (row) =>
+            selectedManualAssignLeadIds.includes(row.id) && isSelectableIncomingLead(row.raw)
+        )
+        .map((row) => ({
+          id: row.id,
+          patientName: row.patientName,
+          externalCampaignId: row.externalCampaignId,
+          source: row.source,
+          status: row.status,
+        })),
+    [rows, selectedManualAssignLeadIds]
+  )
+
+  const selectedRetryableLeadIds = useMemo(
+    () =>
+      rows
+        .filter((row) => selectedManualAssignLeadIds.includes(row.id) && row.status === 'FAILED')
+        .map((row) => row.id),
+    [rows, selectedManualAssignLeadIds]
+  )
+
+  const visibleSelectableLeadIds = useMemo(
+    () =>
+      visibleTableLeadIds.filter((leadId) =>
+        paginatedRows.some((row) => row.id === leadId && isSelectableIncomingLead(row.raw))
+      ),
+    [paginatedRows, visibleTableLeadIds]
+  )
+
+  const allVisibleSelectableRowsSelected =
+    visibleSelectableLeadIds.length > 0 &&
+    visibleSelectableLeadIds.every((leadId) => selectedManualAssignLeadIds.includes(leadId))
+  const someVisibleSelectableRowsSelected =
+    visibleSelectableLeadIds.some((leadId) => selectedManualAssignLeadIds.includes(leadId)) &&
+    !allVisibleSelectableRowsSelected
+
+  const handleVisibleRowIdsChange = useCallback((nextVisibleRowIds: string[]) => {
+    setVisibleTableLeadIds((current) =>
+      current.length === nextVisibleRowIds.length &&
+      current.every((leadId, index) => leadId === nextVisibleRowIds[index])
+        ? current
+        : nextVisibleRowIds
+    )
+  }, [])
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [
+    month,
+    year,
+    searchColumn,
+    searchValue,
+    sortColumn,
+    sortDirection,
+    assignDateFrom,
+    assignDateTo,
+    leadDateFrom,
+    leadDateTo,
+    followUpDateFrom,
+    followUpDateTo,
+    surgeryDateFrom,
+    surgeryDateTo,
+    statusFilter,
+    sourceFilter,
+    campaignSourceFilter,
+    leadSourceFilter,
+    categoryFilter,
+    departmentFilter,
+    circleFilter,
+    cityFilter,
+    teamLeadFilter,
+    bdFilter,
+    pageSize,
+  ])
+
+  useEffect(() => {
+    const eligibleLeadIds = new Set(
+      rows
+        .filter((row) => isSelectableIncomingLead(row.raw))
+        .map((row) => row.id)
+    )
+
+    setSelectedManualAssignLeadIds((current) =>
+      current.filter((leadId) => eligibleLeadIds.has(leadId))
+    )
+  }, [rows])
+
+  useEffect(() => {
+    const paginatedLeadIdSet = new Set(paginatedRows.map((row) => row.id))
+    setVisibleTableLeadIds((current) => {
+      const next = current.filter((leadId) => paginatedLeadIdSet.has(leadId))
+      return current.length === next.length &&
+        current.every((leadId, index) => leadId === next[index])
+        ? current
+        : next
+    })
+  }, [paginatedRows])
+
   const visibleColumnDefinitions = useMemo(
     () => INCOMING_LEAD_COLUMNS.filter((column) => visibleColumns[column.id]),
     [visibleColumns]
@@ -583,6 +835,168 @@ export function CrmIncomingLeadsPage() {
     )
   }, [data?.masters, selectedSearchColumnDefinition])
 
+  const filterOptions = useMemo(() => {
+    const circleScopedRows =
+      circleFilter === ALL_FILTER_VALUE ? rows : rows.filter((row) => row.circle === circleFilter)
+    const teamLeadScopedRows =
+      teamLeadFilter === ALL_FILTER_VALUE ? rows : rows.filter((row) => row.teamLeadName === teamLeadFilter)
+
+    return {
+      statuses: getUniqueRowValues(rows, 'status'),
+      sources: getUniqueRowValues(rows, 'source'),
+      campaignSources: getUniqueRowValues(rows, 'campaignSource'),
+      leadSources: getUniqueRowValues(rows, 'leadSource'),
+      categories: getUniqueRowValues(rows, 'category'),
+      departments: getUniqueRowValues(rows, 'department'),
+      circles: getUniqueRowValues(rows, 'circle'),
+      cities: getUniqueRowValues(circleScopedRows, 'city'),
+      teamLeads: getUniqueRowValues(rows, 'teamLeadName'),
+      bds: getUniqueRowValues(teamLeadScopedRows, 'bdName'),
+    }
+  }, [circleFilter, rows, teamLeadFilter])
+
+  const activeFilterCount = useMemo(
+    () =>
+      [
+        searchValue.trim().length > 0,
+        assignDateFrom,
+        assignDateTo,
+        leadDateFrom,
+        leadDateTo,
+        followUpDateFrom,
+        followUpDateTo,
+        surgeryDateFrom,
+        surgeryDateTo,
+        statusFilter !== ALL_FILTER_VALUE,
+        sourceFilter !== ALL_FILTER_VALUE,
+        campaignSourceFilter !== ALL_FILTER_VALUE,
+        leadSourceFilter !== ALL_FILTER_VALUE,
+        categoryFilter !== ALL_FILTER_VALUE,
+        departmentFilter !== ALL_FILTER_VALUE,
+        circleFilter !== ALL_FILTER_VALUE,
+        cityFilter !== ALL_FILTER_VALUE,
+        teamLeadFilter !== ALL_FILTER_VALUE,
+        bdFilter !== ALL_FILTER_VALUE,
+      ].filter(Boolean).length,
+    [
+      assignDateFrom,
+      assignDateTo,
+      bdFilter,
+      campaignSourceFilter,
+      categoryFilter,
+      circleFilter,
+      cityFilter,
+      departmentFilter,
+      followUpDateFrom,
+      followUpDateTo,
+      leadDateFrom,
+      leadDateTo,
+      leadSourceFilter,
+      searchValue,
+      sourceFilter,
+      statusFilter,
+      surgeryDateFrom,
+      surgeryDateTo,
+      teamLeadFilter,
+    ]
+  )
+
+  const clearFilters = () => {
+    setSearchValue('')
+    setAssignDateFrom('')
+    setAssignDateTo('')
+    setLeadDateFrom('')
+    setLeadDateTo('')
+    setFollowUpDateFrom('')
+    setFollowUpDateTo('')
+    setSurgeryDateFrom('')
+    setSurgeryDateTo('')
+    setStatusFilter(ALL_FILTER_VALUE)
+    setSourceFilter(ALL_FILTER_VALUE)
+    setCampaignSourceFilter(ALL_FILTER_VALUE)
+    setLeadSourceFilter(ALL_FILTER_VALUE)
+    setCategoryFilter(ALL_FILTER_VALUE)
+    setDepartmentFilter(ALL_FILTER_VALUE)
+    setCircleFilter(ALL_FILTER_VALUE)
+    setCityFilter(ALL_FILTER_VALUE)
+    setTeamLeadFilter(ALL_FILTER_VALUE)
+    setBdFilter(ALL_FILTER_VALUE)
+  }
+
+  const clearColumnFilters = () => {
+    setTableFilterVersion((current) => current + 1)
+    setCurrentPage(1)
+  }
+
+  function toggleManualAssignLead(leadId: string, checked: boolean) {
+    if (checked) {
+      setSelectedManualAssignLeadIds((current) =>
+        current.includes(leadId) ? current : [...current, leadId]
+      )
+      return
+    }
+
+    setSelectedManualAssignLeadIds((current) => current.filter((id) => id !== leadId))
+  }
+
+  const manualAssignMutation = useMutation({
+    mutationFn: (payload: { incomingLeadIds: string[]; bdUserIds: string[] }) =>
+      apiPost<IncomingLeadManualAssignResult>(
+        '/api/crm/incoming-leads/manual-assign',
+        payload
+      ),
+    onSuccess: async (result) => {
+      const totalAssigned = result.processedCount + result.duplicateCount
+      if (result.failedCount > 0) {
+        toast.error(
+          `Assigned ${totalAssigned} incoming lead${totalAssigned === 1 ? '' : 's'}, ${result.failedCount} failed`
+        )
+      } else {
+        toast.success(
+          `Assigned ${totalAssigned} incoming lead${totalAssigned === 1 ? '' : 's'}`
+        )
+      }
+
+      setSelectedManualAssignLeadIds([])
+      setManualAssignDialogOpen(false)
+      await Promise.all([
+        refetch(),
+        queryClient.invalidateQueries({ queryKey: ['crm-incoming-leads-manual-assign-options'] }),
+      ])
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to assign incoming leads')
+    },
+  })
+
+  const retryFailedLeadsMutation = useMutation({
+    mutationFn: (payload: { incomingLeadIds: string[] }) =>
+      apiPost<IncomingLeadRetryResult>('/api/crm/incoming-leads/retry', payload),
+    onSuccess: async (result) => {
+      if (result.failedCount > 0) {
+        toast.error(
+          `Retried ${result.processedCount} failed lead${result.processedCount === 1 ? '' : 's'}, ${result.failedCount} still failed`
+        )
+      } else if (result.skippedCount > 0) {
+        toast.success(
+          `Retried ${result.processedCount} failed lead${result.processedCount === 1 ? '' : 's'}, ${result.skippedCount} skipped`
+        )
+      } else {
+        toast.success(
+          `Retried ${result.processedCount} failed lead${result.processedCount === 1 ? '' : 's'} successfully`
+        )
+      }
+
+      setSelectedManualAssignLeadIds((current) =>
+        current.filter((leadId) => !selectedRetryableLeadIds.includes(leadId))
+      )
+      await refetch()
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to retry selected incoming leads')
+    },
+  })
+
   const summary = useMemo(() => {
     const total = rows.length
     const processed = rows.filter((row) => row.status === 'PROCESSED').length
@@ -596,26 +1010,27 @@ export function CrmIncomingLeadsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="mx-auto max-w-[1800px] space-y-6 p-4 md:p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
+      <div className="mx-auto w-full min-w-0 max-w-full space-y-6 p-4 md:p-6 xl:max-w-[1800px]">
+        <div className="flex min-w-0 flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div className="min-w-0 flex-1">
             <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
               <Inbox className="h-8 w-8 text-cyan-600" />
               CRM Incoming Leads
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Review SaveMyLeads webhook intake with searchable columns, column-based sorting, and column visibility controls.
+            <p className="mt-1 max-w-4xl text-sm text-muted-foreground">
+              Review queued inbound leads from webhook and MySQL intake with searchable columns, column-based sorting, and column visibility controls.
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+          <div className="grid w-full min-w-0 gap-3 sm:grid-cols-2 xl:w-auto xl:grid-cols-[180px_140px_auto] xl:items-end">
             <div className="space-y-2">
               <Label>Month</Label>
               <Select value={month} onValueChange={setMonth}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full xl:w-[180px]">
                   <SelectValue placeholder="Month" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value={ALL_MONTHS_VALUE}>All months</SelectItem>
                   {MONTH_OPTIONS.map((option) => (
                     <SelectItem key={option.value} value={String(option.value)}>
                       {option.label}
@@ -632,10 +1047,11 @@ export function CrmIncomingLeadsPage() {
                 max={2100}
                 value={year}
                 onChange={(event) => setYear(event.target.value)}
-                className="w-[140px]"
+                className="w-full xl:w-[140px]"
+                disabled={selectedMonth === null}
               />
             </div>
-            <Button type="button" variant="outline" onClick={() => refetch()} disabled={isFetching || !hasAccess}>
+            <Button type="button" variant="outline" onClick={() => refetch()} disabled={isFetching || !hasAccess} className="w-full xl:w-auto">
               <RefreshCw className="mr-2 h-4 w-4" />
               Refresh
             </Button>
@@ -653,7 +1069,7 @@ export function CrmIncomingLeadsPage() {
           </Card>
         ) : (
           <>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
               <Card>
                 <CardHeader className="pb-2">
                   <CardDescription>Total webhooks</CardDescription>
@@ -685,8 +1101,8 @@ export function CrmIncomingLeadsPage() {
                 <CardTitle>View controls</CardTitle>
               </CardHeader>
               <CardContent className="space-y-5">
-                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-                  <div className="space-y-2">
+                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
+                  <div className="min-w-0 space-y-2">
                     <Label>Search column</Label>
                     <Select
                       value={searchColumn}
@@ -707,7 +1123,7 @@ export function CrmIncomingLeadsPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
+                  <div className="min-w-0 space-y-2">
                     <Label>Search value</Label>
                     {selectedSearchColumnDefinition?.type === 'date' ? (
                       <div className="flex items-center gap-2">
@@ -777,7 +1193,7 @@ export function CrmIncomingLeadsPage() {
                       />
                     )}
                   </div>
-                  <div className="space-y-2">
+                  <div className="min-w-0 space-y-2">
                     <Label>Sort by</Label>
                     <Select value={sortColumn} onValueChange={(value) => setSortColumn(value as IncomingLeadColumn['id'])}>
                       <SelectTrigger>
@@ -792,7 +1208,7 @@ export function CrmIncomingLeadsPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
+                  <div className="min-w-0 space-y-2">
                     <Label>Direction</Label>
                     <Select value={sortDirection} onValueChange={(value) => setSortDirection(value as 'asc' | 'desc')}>
                       <SelectTrigger>
@@ -804,41 +1220,197 @@ export function CrmIncomingLeadsPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Columns</Label>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button type="button" variant="outline" className="w-full justify-between">
-                          <span className="inline-flex items-center gap-2">
-                            <Settings2 className="h-4 w-4" />
-                            Select columns
-                          </span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="max-h-[360px] w-64 overflow-y-auto">
-                        <DropdownMenuLabel>Visible columns</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {INCOMING_LEAD_COLUMNS.map((column) => (
-                          <DropdownMenuCheckboxItem
-                            key={column.id}
-                            checked={visibleColumns[column.id]}
-                            onSelect={(event) => event.preventDefault()}
-                            onCheckedChange={(checked) =>
-                              setVisibleColumns((current) => ({
-                                ...current,
-                                [column.id]: checked === true,
-                              }))
-                            }
-                          >
-                            {column.label}
-                          </DropdownMenuCheckboxItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  <div className="min-w-0 space-y-2">
+                    <Label>&nbsp;</Label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={clearFilters}
+                      disabled={activeFilterCount === 0}
+                    >
+                      Clear filters
+                      {activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+                    </Button>
                   </div>
                 </div>
 
-                <div className="grid gap-4 border-t pt-5 md:grid-cols-2">
+                <div className="grid gap-3 border-t pt-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
+                  <div className="min-w-0 space-y-2">
+                    <Label>Status</Label>
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All statuses" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All statuses</SelectItem>
+                        {filterOptions.statuses.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>Source</Label>
+                    <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All sources" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All sources</SelectItem>
+                        {filterOptions.sources.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>Campaign source</Label>
+                    <Select value={campaignSourceFilter} onValueChange={setCampaignSourceFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All campaign sources" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All campaign sources</SelectItem>
+                        {filterOptions.campaignSources.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>Lead source</Label>
+                    <Select value={leadSourceFilter} onValueChange={setLeadSourceFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All lead sources" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All lead sources</SelectItem>
+                        {filterOptions.leadSources.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>Category</Label>
+                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All categories" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All categories</SelectItem>
+                        {filterOptions.categories.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>Department</Label>
+                    <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All departments" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All departments</SelectItem>
+                        {filterOptions.departments.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>Circle</Label>
+                    <Select
+                      value={circleFilter}
+                      onValueChange={(value) => {
+                        setCircleFilter(value)
+                        setCityFilter(ALL_FILTER_VALUE)
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="All circles" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All circles</SelectItem>
+                        {filterOptions.circles.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>City</Label>
+                    <Select value={cityFilter} onValueChange={setCityFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All cities" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All cities</SelectItem>
+                        {filterOptions.cities.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>Team Lead</Label>
+                    <Select
+                      value={teamLeadFilter}
+                      onValueChange={(value) => {
+                        setTeamLeadFilter(value)
+                        setBdFilter(ALL_FILTER_VALUE)
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="All team leads" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All team leads</SelectItem>
+                        {filterOptions.teamLeads.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <Label>BD</Label>
+                    <Select value={bdFilter} onValueChange={setBdFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All BDs" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL_FILTER_VALUE}>All BDs</SelectItem>
+                        {filterOptions.bds.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 border-t pt-5 md:grid-cols-2 2xl:grid-cols-4">
                   <DateRangeFilter
                     label="Assign Date"
                     fromValue={assignDateFrom}
@@ -883,18 +1455,151 @@ export function CrmIncomingLeadsPage() {
               </Card>
             ) : (
               <Card>
-                <CardHeader>
-                  <CardTitle>Incoming lead table</CardTitle>
-                  <CardDescription>
-                    Showing {formatWholeNumber(sortedRows.length)} rows for {MONTH_OPTIONS.find((option) => option.value === selectedMonth)?.label} {selectedYear}.
-                  </CardDescription>
+                <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
+                    <CardTitle>Incoming lead table</CardTitle>
+                    <CardDescription>
+                      {selectedMonth === null
+                        ? `${pageStartIndex + (totalRows > 0 ? 1 : 0)}-${pageEndIndex} of ${formatWholeNumber(sortedRows.length)} rows across all months.`
+                        : `${pageStartIndex + (totalRows > 0 ? 1 : 0)}-${pageEndIndex} of ${formatWholeNumber(sortedRows.length)} rows for ${MONTH_OPTIONS.find((option) => option.value === selectedMonth)?.label} ${selectedYear}.`}
+                    </CardDescription>
+                  </div>
+                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                    {canCreateManualLeads ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="w-full sm:w-auto"
+                        onClick={() => setManualCreateDialogOpen(true)}
+                      >
+                        Create manual leads
+                      </Button>
+                    ) : null}
+                    {canManuallyAssignFailedLeads ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="w-full sm:w-auto"
+                        onClick={() =>
+                          retryFailedLeadsMutation.mutate({
+                            incomingLeadIds: selectedRetryableLeadIds,
+                          })
+                        }
+                        disabled={
+                          selectedRetryableLeadIds.length === 0 ||
+                          retryFailedLeadsMutation.isPending
+                        }
+                      >
+                        Retry
+                        {selectedRetryableLeadIds.length > 0
+                          ? ` (${selectedRetryableLeadIds.length})`
+                          : ''}
+                      </Button>
+                    ) : null}
+                    {canManuallyAssignFailedLeads ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        className="w-full sm:w-auto"
+                        onClick={() => setManualAssignDialogOpen(true)}
+                        disabled={
+                          selectedManualAssignLeads.length === 0 ||
+                          manualAssignOptionsQuery.isLoading ||
+                          !manualAssignOptionsQuery.data?.canManualAssign
+                        }
+                      >
+                        Assign incoming leads
+                        {selectedManualAssignLeads.length > 0
+                          ? ` (${selectedManualAssignLeads.length})`
+                          : ''}
+                      </Button>
+                    ) : null}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="w-full sm:w-auto"
+                      onClick={clearColumnFilters}
+                    >
+                      Clear column filters
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button type="button" variant="outline" size="sm" className="w-full gap-2 sm:w-auto">
+                          <SlidersHorizontal className="h-4 w-4" />
+                          Columns
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="max-h-[360px] w-64 overflow-y-auto">
+                        <DropdownMenuLabel>Visible columns</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {INCOMING_LEAD_COLUMNS.map((column) => (
+                          <DropdownMenuCheckboxItem
+                            key={column.id}
+                            checked={visibleColumns[column.id]}
+                            onSelect={(event) => event.preventDefault()}
+                            onCheckedChange={(checked) =>
+                              setVisibleColumns((current) => ({
+                                ...current,
+                                [column.id]: checked === true,
+                              }))
+                            }
+                          >
+                            {column.label}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-xl border">
+                  <div className="w-full min-w-0 rounded-xl border">
                     <div className="overflow-x-auto">
-                      <Table filterableHeaders={[...INCOMING_LEAD_HEADER_FILTERS]}>
+                      <Table
+                        key={tableFilterVersion}
+                        filterableHeaders={[...INCOMING_LEAD_HEADER_FILTERS]}
+                        rowIds={paginatedRows.map((row) => row.id)}
+                        onVisibleRowIdsChange={handleVisibleRowIdsChange}
+                      >
                         <TableHeader>
                           <TableRow>
+                            {canManuallyAssignFailedLeads ? (
+                              <TableHead className="w-[52px] text-center">
+                                <Checkbox
+                                  checked={
+                                    allVisibleSelectableRowsSelected
+                                      ? true
+                                      : someVisibleSelectableRowsSelected
+                                        ? 'indeterminate'
+                                        : false
+                                  }
+                                  onCheckedChange={(checked) => {
+                                    const nextChecked = checked === true
+                                    if (nextChecked) {
+                                      setSelectedManualAssignLeadIds((current) =>
+                                        Array.from(
+                                          new Set([
+                                            ...current,
+                                            ...visibleSelectableLeadIds,
+                                          ])
+                                        )
+                                      )
+                                      return
+                                    }
+
+                                    setSelectedManualAssignLeadIds((current) =>
+                                      current.filter(
+                                        (leadId) => !visibleSelectableLeadIds.includes(leadId)
+                                      )
+                                    )
+                                  }}
+                                  disabled={visibleSelectableLeadIds.length === 0}
+                                  aria-label="Select incoming leads on this page"
+                                />
+                              </TableHead>
+                            ) : null}
                             {visibleColumnDefinitions.map((column) => (
                               <TableHead key={column.id}>{column.label}</TableHead>
                             ))}
@@ -904,19 +1609,38 @@ export function CrmIncomingLeadsPage() {
                         <TableBody>
                           {isLoading ? (
                             <TableRow>
-                              <TableCell colSpan={visibleColumnDefinitions.length + 1} className="py-10 text-center text-muted-foreground">
+                              <TableCell
+                                colSpan={visibleColumnDefinitions.length + 1 + (canManuallyAssignFailedLeads ? 1 : 0)}
+                                className="py-10 text-center text-muted-foreground"
+                              >
                                 Loading incoming leads...
                               </TableCell>
                             </TableRow>
                           ) : sortedRows.length === 0 ? (
                             <TableRow>
-                              <TableCell colSpan={visibleColumnDefinitions.length + 1} className="py-10 text-center text-muted-foreground">
+                              <TableCell
+                                colSpan={visibleColumnDefinitions.length + 1 + (canManuallyAssignFailedLeads ? 1 : 0)}
+                                className="py-10 text-center text-muted-foreground"
+                              >
                                 No incoming leads matched the selected month or filters.
                               </TableCell>
                             </TableRow>
                           ) : (
-                            sortedRows.map((row) => (
+                            paginatedRows.map((row) => (
                               <TableRow key={row.id}>
+                                {canManuallyAssignFailedLeads ? (
+                                  <TableCell className="text-center">
+                                    {isSelectableIncomingLead(row.raw) ? (
+                                      <Checkbox
+                                        checked={selectedManualAssignLeadIds.includes(row.id)}
+                                        onCheckedChange={(checked) =>
+                                          toggleManualAssignLead(row.id, checked === true)
+                                        }
+                                        aria-label={`Select incoming lead ${row.patientName}`}
+                                      />
+                                    ) : null}
+                                  </TableCell>
+                                ) : null}
                                 {visibleColumnDefinitions.map((column) => (
                                   <TableCell key={`${row.id}-${column.id}`}>
                                     {column.cell ? column.cell(row) : row[column.id]}
@@ -939,6 +1663,55 @@ export function CrmIncomingLeadsPage() {
                         </TableBody>
                       </Table>
                     </div>
+                    {!isLoading && sortedRows.length > 0 ? (
+                      <div className="flex flex-col gap-3 border-t px-4 py-3 text-sm lg:flex-row lg:items-center lg:justify-between">
+                        <p className="text-muted-foreground">
+                          Showing {pageStartIndex + 1}-{pageEndIndex} of {formatWholeNumber(totalRows)}
+                        </p>
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                          <Select
+                            value={pageSize}
+                            onValueChange={(value) => {
+                              setPageSize(value)
+                              setCurrentPage(1)
+                            }}
+                          >
+                            <SelectTrigger className="w-[110px]">
+                              <SelectValue placeholder="50 / page" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="25">25 / page</SelectItem>
+                              <SelectItem value="50">50 / page</SelectItem>
+                              <SelectItem value="100">100 / page</SelectItem>
+                              <SelectItem value="200">200 / page</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setCurrentPage((page) => Math.max(1, Math.min(page, totalPages) - 1))}
+                              disabled={safeCurrentPage <= 1}
+                            >
+                              Prev
+                            </Button>
+                            <span className="text-muted-foreground">
+                              Page {safeCurrentPage} of {totalPages}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setCurrentPage((page) => Math.min(totalPages, Math.min(page, totalPages) + 1))}
+                              disabled={safeCurrentPage >= totalPages}
+                            >
+                              Next
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 </CardContent>
               </Card>
@@ -946,6 +1719,45 @@ export function CrmIncomingLeadsPage() {
           </>
         )}
       </div>
+
+      <IncomingLeadsManualAssignDialog
+        open={manualAssignDialogOpen}
+        onOpenChange={setManualAssignDialogOpen}
+        leadOptions={rows
+          .filter((row) => isSelectableIncomingLead(row.raw))
+          .map((row) => ({
+            id: row.id,
+            patientName: row.patientName,
+            externalCampaignId: row.externalCampaignId,
+            source: row.source,
+            status: row.status,
+          }))}
+        selectedLeadIds={selectedManualAssignLeadIds}
+        onSelectedLeadIdsChange={setSelectedManualAssignLeadIds}
+        selectedLeads={selectedManualAssignLeads}
+        assignableUsers={manualAssignOptionsQuery.data?.assignableUsers ?? []}
+        isPending={manualAssignMutation.isPending}
+        onSubmit={async ({ leadIds, bdUserIds }) => {
+          await manualAssignMutation.mutateAsync({
+            incomingLeadIds: leadIds,
+            bdUserIds,
+          })
+        }}
+      />
+
+      <IncomingLeadsManualCreateDialog
+        open={manualCreateDialogOpen}
+        onOpenChange={setManualCreateDialogOpen}
+        masters={data?.masters}
+        onImported={async () => {
+          await Promise.all([
+            refetch(),
+            queryClient.invalidateQueries({
+              queryKey: ['crm-incoming-leads-manual-assign-options'],
+            }),
+          ])
+        }}
+      />
 
       <Sheet open={Boolean(selectedIncomingLead)} onOpenChange={(open) => !open && setSelectedIncomingLead(null)}>
         <SheetContent
