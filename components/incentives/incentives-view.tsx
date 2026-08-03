@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { format } from 'date-fns'
-import { Loader2, Pencil, Search, Trash2, Upload, UserPlus, X } from 'lucide-react'
+import { Loader2, Pencil, Search, Trash2, Upload, UserPlus, X, CheckCircle2, Banknote } from 'lucide-react'
 import { toast } from 'sonner'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import {
@@ -44,25 +44,34 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 import { formatCurrency, MONTHS } from '@/lib/finance/payroll-types'
 import {
   INCENTIVE_STATUS_LABEL,
-  INCENTIVE_STATUS_OPTIONS,
   formatIncentiveMonthYear,
+  getIncentivePeriodForCreation,
   type IncentiveRecord,
   type IncentiveEmployeeOption,
 } from '@/lib/incentives/types'
 import {
+  canApproveIncentives,
+  canCreateIncentives,
+  canPayIncentives,
+} from '@/lib/incentives/permissions'
+import {
+  useBulkApproveIncentives,
+  useBulkPayIncentives,
   useCreateIncentives,
   useDeleteIncentive,
   useIncentives,
   useUpdateIncentive,
 } from '@/hooks/use-incentives'
 import { useAuth } from '@/hooks/use-auth'
-import { hasPermission } from '@/lib/rbac'
 import { EmployeeMultiSelect } from '@/components/incentives/employee-multi-select'
 
 const ALL = 'all'
+
+const STATUS_FILTER_OPTIONS = ['PENDING', 'APPROVED', 'PAID'] as const
 
 function statusVariant(status: string): 'default' | 'secondary' | 'outline' {
   if (status === 'PAID') return 'default'
@@ -72,14 +81,19 @@ function statusVariant(status: string): 'default' | 'secondary' | 'outline' {
 
 export function IncentivesView() {
   const now = new Date()
+  const earnedPeriod = getIncentivePeriodForCreation(now)
   const { user } = useAuth()
-  const canWrite = user ? hasPermission(user, 'incentive:write') : false
+  const canCreate = user ? canCreateIncentives(user) : false
+  const canApprove = user ? canApproveIncentives(user) : false
+  const canPay = user ? canPayIncentives(user) : false
+  const isFinanceWorkflow = canApprove || canPay
 
-  const [filterMonth, setFilterMonth] = useState<string>(String(now.getMonth() + 1))
-  const [filterYear, setFilterYear] = useState<string>(String(now.getFullYear()))
-  const [filterStatus, setFilterStatus] = useState<string>(ALL)
+  const [filterMonth, setFilterMonth] = useState<string>(String(earnedPeriod.month))
+  const [filterYear, setFilterYear] = useState<string>(String(earnedPeriod.year))
+  const [filterStatus, setFilterStatus] = useState<string>(isFinanceWorkflow ? 'PENDING' : ALL)
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const [addEmployeeOpen, setAddEmployeeOpen] = useState(false)
   const [uploadOpen, setUploadOpen] = useState(false)
@@ -104,9 +118,39 @@ export function IncentivesView() {
   const createIncentives = useCreateIncentives()
   const updateIncentive = useUpdateIncentive()
   const deleteIncentive = useDeleteIncentive()
+  const bulkApprove = useBulkApproveIncentives()
+  const bulkPay = useBulkPayIncentives()
 
   const records = data?.records ?? []
   const employees = data?.employees ?? []
+
+  useEffect(() => {
+    setSelectedIds([])
+  }, [records, filterMonth, filterYear, filterStatus, debouncedSearch])
+
+  const selectableRecords = useMemo(
+    () =>
+      records.filter((r) =>
+        (canApprove && r.status === 'PENDING') || (canPay && r.status === 'APPROVED'),
+      ),
+    [records, canApprove, canPay],
+  )
+
+  const allSelectableSelected =
+    selectableRecords.length > 0 &&
+    selectableRecords.every((r) => selectedIds.includes(r.id))
+
+  const toggleSelectAll = () => {
+    if (allSelectableSelected) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(selectableRecords.map((r) => r.id))
+    }
+  }
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+  }
 
   const yearOptions = useMemo(() => {
     const y = now.getFullYear()
@@ -124,11 +168,14 @@ export function IncentivesView() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Incentive</h1>
           <p className="text-sm text-muted-foreground">
-            Manage monthly employee incentives. Duplicate entries for the same employee and month are
-            not allowed.
+            {canCreate
+              ? 'Managers upload incentives as Pending for the previous month. Finance approves and marks them Paid.'
+              : isFinanceWorkflow
+                ? 'Review pending incentives, approve in bulk, then mark approved records as paid.'
+                : 'View monthly employee incentives.'}
           </p>
         </div>
-        {canWrite && (
+        {canCreate && (
           <div className="flex flex-wrap gap-2 shrink-0">
             <Button variant="outline" onClick={() => setAddEmployeeOpen(true)} className="gap-2">
               <UserPlus className="h-4 w-4" />
@@ -151,7 +198,7 @@ export function IncentivesView() {
         )}
       </div>
 
-      {canWrite && queuedEmployees.length > 0 && (
+      {canCreate && queuedEmployees.length > 0 && (
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between gap-3">
@@ -225,9 +272,88 @@ export function IncentivesView() {
       <Card>
         <CardHeader>
           <CardTitle>Incentive records</CardTitle>
-          <CardDescription>Search and filter by month, year, or status</CardDescription>
+          <CardDescription>
+            Search and filter by month, year, or status
+            {canCreate && (
+              <span className="block mt-1">
+                New uploads are recorded for{' '}
+                <strong>{formatIncentiveMonthYear(earnedPeriod.month, earnedPeriod.year)}</strong>{' '}
+                (previous month).
+              </span>
+            )}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {(canApprove || canPay) && records.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              {canApprove && (
+                <Button
+                  size="sm"
+                  className="gap-2"
+                  disabled={
+                    selectedIds.length === 0 ||
+                    !records.some((r) => selectedIds.includes(r.id) && r.status === 'PENDING') ||
+                    bulkApprove.isPending
+                  }
+                  onClick={async () => {
+                    const ids = records
+                      .filter((r) => selectedIds.includes(r.id) && r.status === 'PENDING')
+                      .map((r) => r.id)
+                    if (ids.length === 0) return
+                    try {
+                      await bulkApprove.mutateAsync(ids)
+                      toast.success(`Approved ${ids.length} incentive(s)`)
+                      setSelectedIds([])
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : 'Failed to approve')
+                    }
+                  }}
+                >
+                  {bulkApprove.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="h-4 w-4" />
+                  )}
+                  Approve selected
+                </Button>
+              )}
+              {canPay && (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="gap-2"
+                  disabled={
+                    selectedIds.length === 0 ||
+                    !records.some((r) => selectedIds.includes(r.id) && r.status === 'APPROVED') ||
+                    bulkPay.isPending
+                  }
+                  onClick={async () => {
+                    const ids = records
+                      .filter((r) => selectedIds.includes(r.id) && r.status === 'APPROVED')
+                      .map((r) => r.id)
+                    if (ids.length === 0) return
+                    try {
+                      await bulkPay.mutateAsync(ids)
+                      toast.success(`Marked ${ids.length} incentive(s) as paid`)
+                      setSelectedIds([])
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : 'Failed to mark as paid')
+                    }
+                  }}
+                >
+                  {bulkPay.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Banknote className="h-4 w-4" />
+                  )}
+                  Mark selected as paid
+                </Button>
+              )}
+              {selectedIds.length > 0 && (
+                <span className="text-sm text-muted-foreground">{selectedIds.length} selected</span>
+              )}
+            </div>
+          )}
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -270,7 +396,7 @@ export function IncentivesView() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={ALL}>All statuses</SelectItem>
-                {INCENTIVE_STATUS_OPTIONS.map((s) => (
+                {STATUS_FILTER_OPTIONS.map((s) => (
                   <SelectItem key={s} value={s}>
                     {INCENTIVE_STATUS_LABEL[s]}
                   </SelectItem>
@@ -299,6 +425,16 @@ export function IncentivesView() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    {(canApprove || canPay) && (
+                      <TableHead className="w-10">
+                        <Checkbox
+                          checked={allSelectableSelected}
+                          onCheckedChange={toggleSelectAll}
+                          aria-label="Select all eligible rows"
+                          disabled={selectableRecords.length === 0}
+                        />
+                      </TableHead>
+                    )}
                     <TableHead>Employee Name</TableHead>
                     <TableHead>Employee ID</TableHead>
                     <TableHead>Department</TableHead>
@@ -306,12 +442,28 @@ export function IncentivesView() {
                     <TableHead>Month</TableHead>
                     <TableHead className="text-right">Incentive Amount</TableHead>
                     <TableHead>Status</TableHead>
-                    {canWrite && <TableHead className="text-right">Actions</TableHead>}
+                    {canCreate && <TableHead className="text-right">Actions</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {records.map((record) => (
+                  {records.map((record) => {
+                    const isSelectable =
+                      (canApprove && record.status === 'PENDING') ||
+                      (canPay && record.status === 'APPROVED')
+                    const canEditRow = canCreate && record.status === 'PENDING'
+
+                    return (
                     <TableRow key={record.id}>
+                      {(canApprove || canPay) && (
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedIds.includes(record.id)}
+                            onCheckedChange={() => toggleSelect(record.id)}
+                            disabled={!isSelectable}
+                            aria-label={`Select ${record.employeeName}`}
+                          />
+                        </TableCell>
+                      )}
                       <TableCell className="font-medium">{record.employeeName}</TableCell>
                       <TableCell>{record.employeeCode}</TableCell>
                       <TableCell>{record.department ?? '—'}</TableCell>
@@ -323,32 +475,37 @@ export function IncentivesView() {
                           {INCENTIVE_STATUS_LABEL[record.status]}
                         </Badge>
                       </TableCell>
-                      {canWrite && (
+                      {canCreate && (
                         <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() => setEditRecord(record)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-destructive"
-                              onClick={() => setDeleteRecord(record)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+                          {canEditRow ? (
+                            <div className="flex justify-end gap-1">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => setEditRecord(record)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-destructive"
+                                onClick={() => setDeleteRecord(record)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
                         </TableCell>
                       )}
                     </TableRow>
-                  ))}
+                    )
+                  })}
                 </TableBody>
               </Table>
             </div>
@@ -356,7 +513,7 @@ export function IncentivesView() {
         </CardContent>
       </Card>
 
-      {canWrite && (
+      {canCreate && (
         <>
           <AddEmployeeDialog
             open={addEmployeeOpen}
@@ -377,14 +534,15 @@ export function IncentivesView() {
             open={uploadOpen}
             onOpenChange={setUploadOpen}
             employees={queuedEmployees}
-            defaultMonth={filterMonth === ALL ? now.getMonth() + 1 : Number(filterMonth)}
-            defaultYear={filterYear === ALL ? now.getFullYear() : Number(filterYear)}
+            defaultMonth={filterMonth === ALL ? earnedPeriod.month : Number(filterMonth)}
+            defaultYear={filterYear === ALL ? earnedPeriod.year : Number(filterYear)}
             onSubmit={async (input) => {
               try {
                 await createIncentives.mutateAsync(input)
-                toast.success(`Incentive added for ${input.entries!.length} employee(s)`)
+                toast.success(`Incentive added for ${input.entries!.length} employee(s) as Pending`)
                 setQueuedEmployees([])
                 setUploadOpen(false)
+                setFilterStatus('PENDING')
               } catch (err) {
                 toast.error(err instanceof Error ? err.message : 'Failed to upload incentives')
               }
@@ -527,14 +685,12 @@ function UploadIncentiveDialog({
     entries: { employeeId: string; amount: number }[]
     month: number
     year: number
-    status?: 'PENDING' | 'APPROVED' | 'PAID'
     note?: string | null
   }) => Promise<void>
   isPending: boolean
 }) {
   const [month, setMonth] = useState(String(defaultMonth))
   const [year, setYear] = useState(String(defaultYear))
-  const [status, setStatus] = useState<'PENDING' | 'APPROVED' | 'PAID'>('PENDING')
   const [note, setNote] = useState('')
   const [amounts, setAmounts] = useState<Record<string, string>>({})
 
@@ -542,7 +698,6 @@ function UploadIncentiveDialog({
     if (open) {
       setMonth(String(defaultMonth))
       setYear(String(defaultYear))
-      setStatus('PENDING')
       setNote('')
       setAmounts(Object.fromEntries(employees.map((e) => [e.id, ''])))
     }
@@ -567,7 +722,6 @@ function UploadIncentiveDialog({
       entries,
       month: Number(month),
       year: Number(year),
-      status,
       note: note.trim() || null,
     })
   }
@@ -581,14 +735,15 @@ function UploadIncentiveDialog({
           <DialogHeader className="space-y-1 px-4 pt-4 pb-2">
             <DialogTitle>Upload incentive</DialogTitle>
             <DialogDescription className="text-xs">
-              Enter the incentive amount for each employee, then submit.
+              Enter the incentive amount for each employee. Records are saved as Pending for{' '}
+              {formatIncentiveMonthYear(Number(month), Number(year))}.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3 px-4 py-3">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-xs">Month</Label>
+                <Label className="text-xs">Incentive month</Label>
                 <Select value={month} onValueChange={setMonth}>
                   <SelectTrigger className="h-9">
                     <SelectValue />
@@ -612,21 +767,6 @@ function UploadIncentiveDialog({
                     {yearOptions.map((y) => (
                       <SelectItem key={y} value={String(y)}>
                         {y}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5 sm:col-span-1 col-span-2">
-                <Label className="text-xs">Status</Label>
-                <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
-                  <SelectTrigger className="h-9">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {INCENTIVE_STATUS_OPTIONS.map((s) => (
-                      <SelectItem key={s} value={s}>
-                        {INCENTIVE_STATUS_LABEL[s]}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -718,7 +858,6 @@ function EditIncentiveDialog({
   record: IncentiveRecord
   onSubmit: (input: {
     amount?: number
-    status?: 'PENDING' | 'APPROVED' | 'PAID'
     month?: number
     year?: number
     note?: string | null
@@ -728,7 +867,6 @@ function EditIncentiveDialog({
   const [amount, setAmount] = useState(String(record.amount))
   const [month, setMonth] = useState(String(record.month))
   const [year, setYear] = useState(String(record.year))
-  const [status, setStatus] = useState<'PENDING' | 'APPROVED' | 'PAID'>(record.status)
   const [note, setNote] = useState(record.note ?? '')
 
   const yearOptions = [record.year - 1, record.year, record.year + 1]
@@ -744,7 +882,6 @@ function EditIncentiveDialog({
       amount: parsedAmount,
       month: Number(month),
       year: Number(year),
-      status,
       note: note.trim() || null,
     })
   }
@@ -806,18 +943,12 @@ function EditIncentiveDialog({
             </div>
             <div className="grid gap-2">
               <Label>Status</Label>
-              <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {INCENTIVE_STATUS_OPTIONS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {INCENTIVE_STATUS_LABEL[s]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Badge variant={statusVariant(record.status)} className="w-fit">
+                {INCENTIVE_STATUS_LABEL[record.status]}
+              </Badge>
+              <p className="text-xs text-muted-foreground">
+                Status changes are handled by Finance (approve / paid).
+              </p>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit-note">Note</Label>

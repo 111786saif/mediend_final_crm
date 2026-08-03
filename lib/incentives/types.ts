@@ -35,6 +35,17 @@ export const INCENTIVE_STATUS_LABEL: Record<EmployeeIncentiveStatus, string> = {
 
 export const INCENTIVE_STATUS_OPTIONS: EmployeeIncentiveStatus[] = ['PENDING', 'APPROVED', 'PAID']
 
+/** Incentive is always recorded for the previous calendar month. */
+export function getIncentivePeriodForCreation(date = new Date()): { month: number; year: number } {
+  const d = new Date(date.getFullYear(), date.getMonth() - 1, 1)
+  return { month: d.getMonth() + 1, year: d.getFullYear() }
+}
+
+/** Employee-facing lookup defaults to the previous month (earned period). */
+export function getIncentivePeriodForEmployeeView(date = new Date()): { month: number; year: number } {
+  return getIncentivePeriodForCreation(date)
+}
+
 export function formatIncentiveMonthYear(month: number, year: number): string {
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',

@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useMyTargetProgress } from '@/app/bd/dashboard/BDDashboard'
 import { calculateIncentive } from '@/lib/analytics/incentives'
 import { useMyIncentive } from '@/hooks/use-incentives'
+import { formatIncentiveMonthYear, getIncentivePeriodForEmployeeView } from '@/lib/incentives/types'
 import { Target, Trophy, Percent, Gift } from 'lucide-react'
 
 interface TrendPoint {
@@ -93,9 +94,11 @@ export function MonthlySummaryCard() {
   // one yet). Only takes priority over the live estimate once it's been
   // approved or paid — while PENDING we keep showing the live projection so
   // the BD/TL isn't confused by a placeholder figure sitting in review.
+  const earnedPeriod = getIncentivePeriodForEmployeeView()
   const { data: myIncentiveData } = useMyIncentive(undefined, undefined, isTargetRole)
   const officialIncentive = myIncentiveData?.record ?? null
   const isOfficialConfirmed = officialIncentive?.status === 'APPROVED' || officialIncentive?.status === 'PAID'
+  const earnedLabel = formatIncentiveMonthYear(earnedPeriod.month, earnedPeriod.year)
 
   const incentiveValue = isOfficialConfirmed
     ? `₹${officialIncentive!.amount.toLocaleString('en-IN')}`
@@ -104,12 +107,16 @@ export function MonthlySummaryCard() {
     : '—'
 
   const incentiveSub = isOfficialConfirmed
-    ? officialIncentive!.status === 'PAID' ? 'Paid by Finance' : 'Approved by Finance'
+    ? `${formatIncentiveMonthYear(officialIncentive!.month, officialIncentive!.year)} · ${
+        officialIncentive!.status === 'PAID' ? 'Paid by Finance' : 'Approved by Finance'
+      }`
+    : officialIncentive?.status === 'PENDING'
+    ? `${earnedLabel} · Pending Finance approval`
     : incentive?.unresolvedRules.length
     ? 'Some bonus rules need a fixed amount configured'
     : incentive && incentive.totalReward > 0
-    ? 'Estimated · pending approval'
-    : 'No reward earned yet'
+    ? `${earnedLabel} · Estimated · pending approval`
+    : `${earnedLabel} · No reward earned yet`
 
   if (!isTargetRole) return null
 

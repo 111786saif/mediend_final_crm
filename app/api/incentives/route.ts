@@ -3,9 +3,15 @@ import { z } from 'zod'
 import { EmployeeIncentiveStatus, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { incentiveInclude, mapIncentiveRecord } from '@/lib/incentives/mapper'
+import {
+  canCreateIncentives,
+  canDeleteIncentive,
+  canEditIncentiveFields,
+  canReadIncentives,
+  canTransitionIncentiveStatus,
+} from '@/lib/incentives/permissions'
 import type { IncentiveEmployeeOption } from '@/lib/incentives/types'
 
 const entrySchema = z.object({
@@ -35,7 +41,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'incentive:read')) return errorResponse('Forbidden', 403)
+    if (!canReadIncentives(user)) return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
     const month = searchParams.get('month')
@@ -105,7 +111,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'incentive:write')) return errorResponse('Forbidden', 403)
+    if (!canCreateIncentives(user)) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
     const parsed = createSchema.safeParse(body)
@@ -113,7 +119,8 @@ export async function POST(request: NextRequest) {
       return errorResponse(parsed.error.errors[0]?.message ?? 'Invalid input', 400)
     }
 
-    const { month, year, status, note } = parsed.data
+    const { month, year, note } = parsed.data
+    const status = EmployeeIncentiveStatus.PENDING
 
     const rows =
       parsed.data.entries && parsed.data.entries.length > 0
@@ -149,7 +156,7 @@ export async function POST(request: NextRequest) {
             month,
             year,
             amount,
-            status: (status as EmployeeIncentiveStatus) ?? EmployeeIncentiveStatus.PENDING,
+            status,
             note: note?.trim() || null,
             createdByUserId: user.id,
           },
