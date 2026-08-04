@@ -12,8 +12,6 @@ import {
   computeNodeTotal,
 } from '@/lib/sales-team-cost/rollup'
 import { SALES_TEAM_COST_ROLE_LABEL, type SalesTeamCostRole } from '@/lib/sales-team-cost/types'
-import { SalaryActions } from '@/components/finance/sales-team-cost/salary-override-dialogs'
-
 interface RoleCostNodeProps {
   node: SalesTeamCostRole
   depth?: number
@@ -44,17 +42,42 @@ export function RoleCostNode({
           ? 'outline'
           : 'secondary'
 
+  const isExpandedActive = hasChildren && expanded
+
   return (
-    <div className={cn('space-y-2', depth > 0 && 'ml-4 border-l border-border pl-4')}>
-      <Card className="overflow-hidden">
-        <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0 p-4 pb-2">
+    <div
+      className={cn(
+        'space-y-2',
+        depth > 0 && 'ml-4 border-l pl-4',
+        depth > 0 && (isExpandedActive ? 'border-primary/50' : 'border-border'),
+      )}
+    >
+      <Card
+        className={cn(
+          'overflow-hidden transition-colors',
+          isExpandedActive
+            ? 'border-primary/40 bg-primary/5 shadow-sm ring-1 ring-primary/20'
+            : 'border-border',
+        )}
+      >
+        <CardHeader
+          className={cn(
+            'flex flex-row items-start justify-between gap-3 space-y-0 p-4 pb-2',
+            isExpandedActive && 'bg-primary/5',
+          )}
+        >
           <div className="flex min-w-0 flex-1 items-start gap-2">
             {hasChildren ? (
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="mt-0.5 h-7 w-7 shrink-0"
+                aria-expanded={expanded}
+                className={cn(
+                  'mt-0.5 h-7 w-7 shrink-0',
+                  isExpandedActive &&
+                    'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
+                )}
                 onClick={() => setExpanded((v) => !v)}
               >
                 {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -64,18 +87,35 @@ export function RoleCostNode({
             )}
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="truncate font-semibold">{node.name}</span>
-                <Badge variant={roleBadgeVariant}>{SALES_TEAM_COST_ROLE_LABEL[node.type]}</Badge>
+                <span
+                  className={cn(
+                    'truncate font-semibold',
+                    isExpandedActive && 'text-primary',
+                  )}
+                >
+                  {node.name}
+                </span>
+                <Badge variant={isExpandedActive ? 'default' : roleBadgeVariant}>
+                  {SALES_TEAM_COST_ROLE_LABEL[node.type]}
+                </Badge>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Subtree total: <span className="font-medium text-foreground">{formatCurrency(subtreeTotal)}</span>
+                Subtree total:{' '}
+                <span
+                  className={cn(
+                    'font-medium',
+                    isExpandedActive ? 'text-primary' : 'text-foreground',
+                  )}
+                >
+                  {formatCurrency(subtreeTotal)}
+                </span>
               </p>
             </div>
           </div>
         </CardHeader>
 
         <CardContent className="space-y-3 p-4 pt-2">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <div className="rounded-md border p-3">
               <p className="text-xs font-medium text-muted-foreground">Salary</p>
               <p className="text-sm font-semibold tabular-nums">{formatCurrency(node.salaryPerHead)}</p>
@@ -84,7 +124,6 @@ export function RoleCostNode({
                   ? '(Sales Team Cost override · payroll unchanged)'
                   : '(From Payroll)'}
               </p>
-              <SalaryActions node={node} month={month} year={year} canWrite={canWrite} />
             </div>
 
             <div className="rounded-md border p-3">
@@ -118,16 +157,6 @@ export function RoleCostNode({
             </div>
 
             <div className="rounded-md border p-3">
-              <p className="text-xs font-medium text-muted-foreground">Other cost</p>
-              <p className="text-sm font-semibold tabular-nums">{formatCurrency(node.otherAmount)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">
-                {node.otherAmount > 0
-                  ? '(Bulk Other + monthly seating/other)'
-                  : 'No other cost for selected month'}
-              </p>
-            </div>
-
-            <div className="rounded-md border p-3">
               <p className="text-xs font-medium text-muted-foreground">Marketing cost</p>
               <p className="text-sm font-semibold tabular-nums">
                 {formatCurrency(node.marketingCost ?? 0)}
@@ -144,25 +173,22 @@ export function RoleCostNode({
 
           <div className="flex flex-wrap gap-3 rounded-md bg-muted/40 px-3 py-2 text-xs">
             <span>
-              Direct salary: <strong>{formatCurrency(direct.salary)}</strong>
+              Total salary: <strong>{formatCurrency(direct.salary)}</strong>
             </span>
             <span>
-              Direct incentives: <strong>{formatCurrency(direct.incentives)}</strong>
+              Total incentives: <strong>{formatCurrency(direct.incentives)}</strong>
             </span>
             <span>
-              Direct seating: <strong>{formatCurrency(direct.seating)}</strong>
+              Total seating: <strong>{formatCurrency(direct.seating)}</strong>
             </span>
             <span>
-              Direct misc: <strong>{formatCurrency(direct.misc)}</strong>
+              Total misc: <strong>{formatCurrency(direct.misc)}</strong>
             </span>
             <span>
-              Direct other: <strong>{formatCurrency(direct.other)}</strong>
-            </span>
-            <span>
-              Direct marketing: <strong>{formatCurrency(direct.marketing)}</strong>
+              Total marketing: <strong>{formatCurrency(direct.marketing)}</strong>
             </span>
             <span className="font-medium">
-              Direct total: {formatCurrency(direct.total)}
+              Total: {formatCurrency(direct.total - direct.other)}
             </span>
           </div>
         </CardContent>
