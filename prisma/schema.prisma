@@ -614,6 +614,7 @@ model User {
 
   leadRemarkEntriesAuthored LeadRemarkEntry[]   @relation("LeadRemarkEntryAuthor")
   leadQrCallAuditLogs      LeadQrCallAuditLog[] @relation("LeadQrCallAuditActor")
+  leadQrPublicLinks        LeadQrPublicLink[]   @relation("LeadQrPublicLinkActor")
   leadCallNotes CallNote[] @relation("LeadCallNoteAuthor")
 
   // Outstanding payment installments
@@ -840,6 +841,7 @@ model Lead {
   doctorPayoffRequests  DoctorPayoffRequest[]
   leadRemarkEntries     LeadRemarkEntry[]
   qrCallAuditLogs       LeadQrCallAuditLog[]
+  qrPublicLinks         LeadQrPublicLink[]
   crmAssignmentPreviewLogs CrmAssignmentPreviewLog[]
   opdSurgeryRemark      SurgeryRemarkMaster?     @relation("LeadOpdSurgeryRemark", fields: [opdSurgeryRemarkCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
   opdReasonNoSurgery    ReasonNoSurgeryMaster?   @relation("LeadOpdReasonNoSurgery", fields: [opdReasonNoSurgeryCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
@@ -924,6 +926,21 @@ model LeadQrCallAuditLog {
   @@index([leadId, createdAt])
   @@index([userId, createdAt])
   @@index([action, createdAt])
+}
+
+model LeadQrPublicLink {
+  id           String   @id @default(cuid())
+  leadId       String
+  lead         Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actorUserId  String
+  actorUser    User     @relation("LeadQrPublicLinkActor", fields: [actorUserId], references: [id], onDelete: Cascade)
+  expiresAt    DateTime
+  lastOpenedAt DateTime?
+  createdAt    DateTime @default(now())
+
+  @@index([leadId, createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([expiresAt])
 }
 
 model LeadStageEvent {
