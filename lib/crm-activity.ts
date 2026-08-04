@@ -42,10 +42,20 @@ function getRouteFromRequest(request: CrmActivityRequestLike | Request | null | 
 
 function getIpAddress(headers: Headers) {
   const forwardedFor = headers.get('x-forwarded-for')
-  if (forwardedFor) {
-    return forwardedFor.split(',')[0]?.trim() || null
-  }
-  return headers.get('x-real-ip') || null
+  const realIp = headers.get('x-real-ip')
+
+  const values = [
+    ...(forwardedFor
+      ? forwardedFor
+          .split(',')
+          .map((value) => value.trim())
+          .filter(Boolean)
+      : []),
+    ...(realIp ? [realIp.trim()] : []),
+  ]
+
+  const uniqueValues = Array.from(new Set(values))
+  return uniqueValues.length > 0 ? uniqueValues.join(', ') : null
 }
 
 function toJsonSafeValue(value: unknown) {

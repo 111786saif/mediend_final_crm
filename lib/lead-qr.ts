@@ -46,7 +46,21 @@ export function normalizeLeadQrPhone(raw: string): string {
 }
 
 export function getLeadQrClientIp(headers: Headers): string | null {
-  return headers.get('x-forwarded-for')?.split(',')[0]?.trim() || headers.get('x-real-ip') || null
+  const forwardedFor = headers.get('x-forwarded-for')
+  const realIp = headers.get('x-real-ip')
+
+  const values = [
+    ...(forwardedFor
+      ? forwardedFor
+          .split(',')
+          .map((value) => value.trim())
+          .filter(Boolean)
+      : []),
+    ...(realIp ? [realIp.trim()] : []),
+  ]
+
+  const uniqueValues = Array.from(new Set(values))
+  return uniqueValues.length > 0 ? uniqueValues.join(', ') : null
 }
 
 export function parseLeadQrDeviceInfo(userAgent: string | null | undefined): LeadQrDeviceInfo {
@@ -163,6 +177,7 @@ export async function recordLeadQrEvent(params: {
   metadata?: Record<string, unknown> | null
 }) {
   const userAgent = params.headers.get('user-agent')
+  const ipAddress = getLeadQrClientIp(params.headers)
   const deviceInfo = parseLeadQrDeviceInfo(userAgent)
   const phoneNumber = params.phoneNumber ?? params.lead.phoneNumber ?? ''
 
@@ -176,6 +191,8 @@ export async function recordLeadQrEvent(params: {
     source: params.source ?? null,
     phoneNumber,
     actorName: params.actorName ?? null,
+    ipAddress,
+    userAgent,
     deviceInfo,
     ...(params.metadata ?? {}),
   }
@@ -187,7 +204,7 @@ export async function recordLeadQrEvent(params: {
       phoneNumber,
       action: params.auditAction,
       source: params.source ?? null,
-      ipAddress: getLeadQrClientIp(params.headers),
+      ipAddress,
       userAgent,
       metadata,
     },

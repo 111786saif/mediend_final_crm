@@ -121,6 +121,16 @@ type LeadActivityItem = {
   summary: string
   actorRole: string | null
   createdAt: string
+  ipAddress?: string | null
+  userAgent?: string | null
+  metadata?: {
+    deviceInfo?: {
+      browser?: string | null
+      operatingSystem?: string | null
+      deviceType?: string | null
+      label?: string | null
+    } | null
+  } | null
   actorUser: {
     id: string
     name: string | null
@@ -863,6 +873,9 @@ export function LeadEditDrawer({
                               activityLog.actorUser?.email ||
                               'System'
                             const actorRole = formatRoleLabel(activityLog.actorRole)
+                            const deviceLabel = activityLog.metadata?.deviceInfo?.label
+                            const browserLabel = activityLog.metadata?.deviceInfo?.browser
+                            const ipAddress = activityLog.ipAddress
 
                             return (
                               <div
@@ -876,6 +889,13 @@ export function LeadEditDrawer({
                                   <p className="text-sm leading-6 text-foreground">
                                     {activityLog.summary}
                                   </p>
+                                  {deviceLabel || browserLabel || ipAddress ? (
+                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                                      {deviceLabel ? <span>Device: {deviceLabel}</span> : null}
+                                      {!deviceLabel && browserLabel ? <span>Browser: {browserLabel}</span> : null}
+                                      {ipAddress ? <span>IP: {ipAddress}</span> : null}
+                                    </div>
+                                  ) : null}
                                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
                                     <span className="font-medium text-foreground">{actorName}</span>
                                     {actorRole ? <span>{actorRole}</span> : null}
