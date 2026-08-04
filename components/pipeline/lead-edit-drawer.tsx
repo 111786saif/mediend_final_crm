@@ -889,13 +889,6 @@ export function LeadEditDrawer({
                                   <p className="text-sm leading-6 text-foreground">
                                     {activityLog.summary}
                                   </p>
-                                  {deviceLabel || browserLabel || ipAddress ? (
-                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                                      {deviceLabel ? <span>Device: {deviceLabel}</span> : null}
-                                      {!deviceLabel && browserLabel ? <span>Browser: {browserLabel}</span> : null}
-                                      {ipAddress ? <span>IP: {ipAddress}</span> : null}
-                                    </div>
-                                  ) : null}
                                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
                                     <span className="font-medium text-foreground">{actorName}</span>
                                     {actorRole ? <span>{actorRole}</span> : null}

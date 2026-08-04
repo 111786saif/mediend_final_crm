@@ -16,6 +16,7 @@ export type LeadQrAuditLead = {
 export type LeadQrDeviceInfo = {
   deviceType: 'Mobile' | 'Tablet' | 'Desktop' | 'Unknown'
   operatingSystem: string
+  operatingSystemVersion: string | null
   browser: string
   label: string
 }
@@ -76,11 +77,27 @@ export function parseLeadQrDeviceInfo(userAgent: string | null | undefined): Lea
         : 'Unknown'
 
   let operatingSystem = 'Unknown OS'
+  let operatingSystemVersion: string | null = null
   if (/android/i.test(ua)) operatingSystem = 'Android'
   else if (/iphone|ipad|ipod/i.test(ua)) operatingSystem = 'iOS'
   else if (/windows/i.test(ua)) operatingSystem = 'Windows'
   else if (/mac os x|macintosh/i.test(ua)) operatingSystem = 'macOS'
   else if (/linux/i.test(ua)) operatingSystem = 'Linux'
+
+  const androidMatch = ua.match(/Android\s+([0-9.]+)/i)
+  const iosMatch = ua.match(/OS\s+([0-9_]+)\s+like Mac OS X/i)
+  const windowsMatch = ua.match(/Windows NT\s+([0-9.]+)/i)
+  const macMatch = ua.match(/Mac OS X\s+([0-9_]+)/i)
+
+  if (androidMatch?.[1]) {
+    operatingSystemVersion = androidMatch[1]
+  } else if (iosMatch?.[1]) {
+    operatingSystemVersion = iosMatch[1].replace(/_/g, '.')
+  } else if (windowsMatch?.[1]) {
+    operatingSystemVersion = windowsMatch[1]
+  } else if (macMatch?.[1]) {
+    operatingSystemVersion = macMatch[1].replace(/_/g, '.')
+  }
 
   let browser = 'Unknown Browser'
   if (lower.includes('edg/')) browser = 'Edge'
@@ -92,8 +109,9 @@ export function parseLeadQrDeviceInfo(userAgent: string | null | undefined): Lea
   return {
     deviceType,
     operatingSystem,
+    operatingSystemVersion,
     browser,
-    label: `${operatingSystem} ${deviceType} · ${browser}`,
+    label: `${operatingSystem}${operatingSystemVersion ? ` ${operatingSystemVersion}` : ''} ${deviceType} · ${browser}`,
   }
 }
 
