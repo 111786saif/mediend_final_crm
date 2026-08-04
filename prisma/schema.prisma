@@ -614,10 +614,12 @@ model User {
 
   leadRemarkEntriesAuthored LeadRemarkEntry[]   @relation("LeadRemarkEntryAuthor")
   leadQrCallAuditLogs      LeadQrCallAuditLog[] @relation("LeadQrCallAuditActor")
+  leadQrPublicLinks        LeadQrPublicLink[]   @relation("LeadQrPublicLinkActor")
   leadCallNotes CallNote[] @relation("LeadCallNoteAuthor")
 
   // Outstanding payment installments
   paymentInstallmentsRecorded PaymentInstallment[] @relation("InstallmentRecorder")
+  paymentInstallmentsVerified PaymentInstallment[] @relation("InstallmentVerifier")
 
   // Company P&L / IT project tracking
   itProjectsCreated         ITProject[]          @relation("ITProjectCreator")
@@ -840,6 +842,7 @@ model Lead {
   doctorPayoffRequests  DoctorPayoffRequest[]
   leadRemarkEntries     LeadRemarkEntry[]
   qrCallAuditLogs       LeadQrCallAuditLog[]
+  qrPublicLinks         LeadQrPublicLink[]
   crmAssignmentPreviewLogs CrmAssignmentPreviewLog[]
   opdSurgeryRemark      SurgeryRemarkMaster?     @relation("LeadOpdSurgeryRemark", fields: [opdSurgeryRemarkCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
   opdReasonNoSurgery    ReasonNoSurgeryMaster?   @relation("LeadOpdReasonNoSurgery", fields: [opdReasonNoSurgeryCode], references: [code], onDelete: SetNull, onUpdate: Cascade)
@@ -924,6 +927,21 @@ model LeadQrCallAuditLog {
   @@index([leadId, createdAt])
   @@index([userId, createdAt])
   @@index([action, createdAt])
+}
+
+model LeadQrPublicLink {
+  id           String   @id @default(cuid())
+  leadId       String
+  lead         Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actorUserId  String
+  actorUser    User     @relation("LeadQrPublicLinkActor", fields: [actorUserId], references: [id], onDelete: Cascade)
+  expiresAt    DateTime
+  lastOpenedAt DateTime?
+  createdAt    DateTime @default(now())
+
+  @@index([leadId, createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([expiresAt])
 }
 
 model LeadStageEvent {
@@ -2737,9 +2755,24 @@ model CrmCampaignCircle {
   updatedAt DateTime         @updatedAt
   cities    CrmCampaignCity[]
   campaigns CrmCampaign[]
+  campaignSelections CrmCampaignCircleSelection[]
 
   @@index([name])
   @@index([isActive])
+}
+
+model CrmCampaignCircleSelection {
+  id         String            @id @default(cuid())
+  campaignId String
+  campaign   CrmCampaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  circleId   String
+  circle     CrmCampaignCircle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([campaignId, circleId])
+  @@index([campaignId])
+  @@index([circleId])
 }
 
 model CrmCampaignCity {
@@ -2784,6 +2817,7 @@ model CrmCampaign {
   leadSource         CrmCampaignLeadSource        @relation(fields: [leadSourceId], references: [id], onDelete: Restrict)
   circleId           String
   circle             CrmCampaignCircle            @relation(fields: [circleId], references: [id], onDelete: Restrict)
+  circleSelections   CrmCampaignCircleSelection[]
   cityId             String?
   city               CrmCampaignCity?             @relation(fields: [cityId], references: [id], onDelete: SetNull)
   isActive           Boolean                      @default(true)
@@ -3504,6 +3538,12 @@ enum InstallmentMode {
   OTHER
 }
 
+enum InstallmentVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
 model PaymentInstallment {
   id           String               @id @default(cuid())
   leadId       String
@@ -3516,12 +3556,19 @@ model PaymentInstallment {
   notes        String?              @db.Text
   recordedById String
   recordedBy   User                 @relation("InstallmentRecorder", fields: [recordedById], references: [id])
+  /** Finance verification — hospital/P&L recorded payments await Finance confirm. */
+  verificationStatus InstallmentVerificationStatus @default(PENDING)
+  verifiedById       String?
+  verifiedBy         User?                         @relation("InstallmentVerifier", fields: [verifiedById], references: [id])
+  verifiedAt         DateTime?
+  rejectionRemarks   String?                       @db.Text
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
 
   @@index([leadId])
   @@index([recipient])
   @@index([paidOn])
+  @@index([verificationStatus])
 }
 
 // ==========================================

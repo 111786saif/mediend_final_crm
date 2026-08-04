@@ -401,14 +401,23 @@ function getLeadStageLabel(lead: Lead) {
   return getLeadStageBadge(lead)?.label ?? '—'
 }
 
+function stripRemarkMetadataPrefix(value: string) {
+  return value.replace(
+    /^\s*.+?\s+on\s+\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}:\s*/i,
+    ''
+  )
+}
+
 function getLeadLastRemarksText(lead: Lead) {
-  return typeof lead.remarks === 'string' && lead.remarks.trim().length > 0 ? lead.remarks.trim() : '—'
+  if (typeof lead.remarks !== 'string') return '—'
+  const trimmed = stripRemarkMetadataPrefix(lead.remarks.trim()).trim()
+  return trimmed.length > 0 ? trimmed : '—'
 }
 
 function getLeadNewRemarksText(lead: Lead) {
-  return typeof lead.latestRemark?.content === 'string' && lead.latestRemark.content.trim().length > 0
-    ? lead.latestRemark.content.trim()
-    : '—'
+  if (typeof lead.latestRemark?.content !== 'string') return '—'
+  const trimmed = stripRemarkMetadataPrefix(lead.latestRemark.content.trim()).trim()
+  return trimmed.length > 0 ? trimmed : '—'
 }
 
 function getLeadPlanningTreatmentText(lead: Lead) {
@@ -1483,7 +1492,7 @@ function getLatestRemarkPreview(lead: Lead) {
       : typeof lead.remarks === 'string'
         ? lead.remarks
         : ''
-  const trimmed = rawRemark.trim()
+  const trimmed = stripRemarkMetadataPrefix(rawRemark.trim()).trim()
   return trimmed.length > 0 ? trimmed : 'No remarks yet.'
 }
 
@@ -1731,11 +1740,8 @@ const PipelineRow = memo(function PipelineRow({
   const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
   const preferredLocation = resolveLeadCity(lead) ?? normalizedText(lead.circle, '—')
   const leadRefText = typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
-  const lastRemarksText = typeof lead.remarks === 'string' && lead.remarks.trim().length > 0 ? lead.remarks.trim() : '—'
-  const newRemarksText =
-    typeof lead.latestRemark?.content === 'string' && lead.latestRemark.content.trim().length > 0
-      ? lead.latestRemark.content.trim()
-      : '—'
+  const lastRemarksText = getLeadLastRemarksText(lead)
+  const newRemarksText = getLeadNewRemarksText(lead)
   const planningTreatmentText =
     typeof lead.diseaseDetails === 'string' && lead.diseaseDetails.trim().length > 0
       ? lead.diseaseDetails.trim()
@@ -1894,12 +1900,12 @@ const PipelineRow = memo(function PipelineRow({
         <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.modeOfPayment, '—')}</td>
       )}
       {show('lastRemarks') && (
-        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={lastRemarksText}>
+        <td className="max-w-[280px] whitespace-normal break-words px-3 py-2 text-sm align-top">
           {lastRemarksText}
         </td>
       )}
       {show('newRemarks') && (
-        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={newRemarksText}>
+        <td className="max-w-[280px] whitespace-normal break-words px-3 py-2 text-sm align-top">
           {newRemarksText}
         </td>
       )}

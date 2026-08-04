@@ -16,11 +16,12 @@ export interface SalesTeamCostRole {
   incentiveAmount: number
   /** Seating cost for the selected month (monthly approved or master seating). */
   seatingAmount: number
-  /** Misc cost for the selected month (from Sales Team Cost bulk entry). */
+  /** Misc: bulk Misc entries + approved monthly seating/misc for this employee. */
   miscAmount: number
-  /** Other cost for the selected month (from Sales Team Cost bulk entry). */
+  /** Other: bulk Other entries + approved monthly seating/other for this employee. */
   otherAmount: number
-  marketingCost?: number
+  /** Marketing share for this person (BD equal-split; 0 for non-BD). */
+  marketingCost: number
   children: SalesTeamCostRole[]
 }
 

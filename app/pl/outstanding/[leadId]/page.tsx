@@ -56,10 +56,17 @@ export default function PLOutstandingEditPage() {
   const canWrite = user ? hasPermission(user, 'pl:write') : false
   const leadId = params.leadId as string
 
-  const { data: record, isLoading: loadingLead } = useQuery<Lead>({
-    queryKey: ['lead', leadId],
-    queryFn: () => apiGet<Lead>(`/api/leads/${leadId}`),
+  const {
+    data: record,
+    isLoading: loadingLead,
+    isError,
+    error,
+    refetch,
+  } = useQuery<Lead>({
+    queryKey: ['outstanding-detail', leadId],
+    queryFn: () => apiGet<Lead>(`/api/outstanding/${leadId}`),
     enabled: !!leadId,
+    retry: 1,
   })
 
   const [formData, setFormData] = useState({
@@ -103,7 +110,7 @@ export default function PLOutstandingEditPage() {
       return apiPatch<Lead>(`/api/outstanding/${leadId}`, payload)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['outstanding-detail', leadId] })
       queryClient.invalidateQueries({ queryKey: ['outstanding'] })
       toast.success('Outstanding record updated')
       router.push('/pl/outstanding')
@@ -134,11 +141,38 @@ export default function PLOutstandingEditPage() {
     updateMutation.mutate(payload)
   }
 
-  if (loadingLead || !record) {
+  if (loadingLead) {
     return (
       <ProtectedRoute>
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-orange-50/40 p-6 flex items-center justify-center dark:from-slate-950 dark:via-amber-950/20 dark:to-slate-900">
           <Loader2 className="h-8 w-8 animate-spin text-amber-600 dark:text-amber-400" />
+        </div>
+      </ProtectedRoute>
+    )
+  }
+
+  if (isError || !record) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-orange-50/40 p-6 dark:from-slate-950 dark:via-amber-950/20 dark:to-slate-900">
+          <div className="mx-auto max-w-4xl">
+            <Card className="border-amber-200/60 shadow-md dark:border-amber-800/40">
+              <CardHeader>
+                <CardTitle>Unable to open outstanding record</CardTitle>
+                <CardDescription>
+                  {error instanceof Error ? error.message : 'Failed to load this case.'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex gap-2">
+                <Button variant="outline" onClick={() => refetch()}>
+                  Retry
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/pl/outstanding">Back to P/L Outstanding</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </ProtectedRoute>
     )

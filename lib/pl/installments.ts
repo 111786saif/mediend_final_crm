@@ -41,8 +41,9 @@ export async function recomputeOutstandingFromInstallments(leadId: string) {
   })
   if (!pl) return
 
+  // Only Finance-verified installments reduce outstanding / mark payouts paid.
   const installments = await prisma.paymentInstallment.findMany({
-    where: { leadId },
+    where: { leadId, verificationStatus: 'VERIFIED' },
     select: { recipient: true, amount: true },
   })
 

@@ -52,7 +52,12 @@ function sumDescendantDirectRollups(
   }, emptyRollup())
 }
 
-/** Direct costs for a node; TLs include BDs, and Sales Heads include TLs. */
+/**
+ * Direct costs for a node.
+ * - TL / ACM: own + all BD descendants
+ * - Sales Head: own + full subtree (CM / TL / ACM / BD) so Other matches entry totals
+ * - Others: own only
+ */
 export function computeDirectRollup(node: SalesTeamCostRole): SalesTeamCostRollup {
   const own = computeOwnDirectRollup(node)
 
@@ -61,7 +66,7 @@ export function computeDirectRollup(node: SalesTeamCostRole): SalesTeamCostRollu
   }
 
   if (node.type === 'salesHead') {
-    return addRollup(own, sumDescendantDirectRollups(node, 'tl'))
+    return computeDirectRollupTree(node)
   }
 
   return own

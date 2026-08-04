@@ -53,8 +53,8 @@ export interface MySQLLeadRow {
   AttendantContactNo?: string | null
   IPD_Details?: string | null
   WA_Format?: string | null
-  Source?: number | null
-  Lead_Source?: number | null
+  Source?: number | string | null
+  Lead_Source?: number | string | null
   WA_Message?: string | null
   Notification?: number | boolean | null
   email?: number | boolean | null
@@ -208,13 +208,27 @@ function parseBoolean(value: number | boolean | null | undefined): boolean {
 
 function toString(value: unknown): string | null {
   if (value === null || value === undefined) return null
-  return String(value)
+  const normalized = String(value).trim()
+  return normalized.length > 0 ? normalized : null
 }
 
 function toInt(value: unknown): number | null {
   if (value === null || value === undefined) return null
   const parsed = parseInt(String(value), 10)
   return isNaN(parsed) ? null : parsed
+}
+
+function resolveLookupValue(
+  value: number | string | null | undefined,
+  lookup: Map<number, string>
+) {
+  if (value === null || value === undefined) return null
+  const normalized = String(value).trim()
+  if (!normalized) return null
+  if (/^\d+$/.test(normalized)) {
+    return lookup.get(parseInt(normalized, 10)) ?? null
+  }
+  return normalized
 }
 
 function resolveStatus(
@@ -286,6 +300,10 @@ export interface MapMySQLLeadResult {
   [key: string]: unknown
 }
 
+export type MapMySQLLeadDraftResult = Omit<MapMySQLLeadResult, 'bdId'> & {
+  bdId: string | null
+}
+
 /**
  * Maps MySQL lead row to Prisma Lead create/update data (synchronous when BD is in bdMap).
  * Returns null if BD not found in bdMap — caller should use mapMySQLLeadToPrismaAsyncFallback.
@@ -353,41 +371,46 @@ export async function mapMySQLLeadToPrismaAsyncFallback(
   return buildLeadData(mysqlRow, systemUserId, lookups, bdInfo, bdmValue)
 }
 
+export function mapMySQLLeadToPrismaWithoutOwner(
+  mysqlRow: MySQLLeadRow,
+  systemUserId: string,
+  lookups: LookupMaps
+): MapMySQLLeadDraftResult {
+  return buildLeadData(mysqlRow, systemUserId, lookups, null, null)
+}
+
 function buildLeadData(
   mysqlRow: MySQLLeadRow,
   systemUserId: string,
   lookups: LookupMaps,
-  bdInfo: { id: string },
-  bdmValue: string
-): MapMySQLLeadResult {
+  bdInfo: { id: string } | null,
+  bdmValue: string | null
+): MapMySQLLeadDraftResult {
+  const normalizedLeadSource = toString(mysqlRow.Lead_Source)
   const campaignInfo =
-    mysqlRow.Lead_Source != null
-      ? lookups.campaign.get(Number(mysqlRow.Lead_Source))
+    normalizedLeadSource && /^\d+$/.test(normalizedLeadSource)
+      ? lookups.campaign.get(Number(normalizedLeadSource))
       : null
 
   const sourceName =
     campaignInfo?.sourceName ??
-    (mysqlRow.Source != null ? lookups.source.get(Number(mysqlRow.Source)) : null) ??
+    resolveLookupValue(mysqlRow.Source, lookups.source) ??
     null
 
-  const campaignName = campaignInfo?.campaignName ?? null
+  const campaignName =
+    campaignInfo?.campaignName ??
+    normalizedLeadSource ??
+    toString(mysqlRow.campaign_id) ??
+    null
 
   const treatmentName =
     campaignInfo?.treatmentName ??
-    (mysqlRow.Treatment != null
-      ? lookups.treatment.get(Number(mysqlRow.Treatment))
-      : null) ??
+    resolveLookupValue(mysqlRow.Treatment, lookups.treatment) ??
     null
 
-  const circleName =
-    mysqlRow.Circle != null
-      ? lookups.circle.get(Number(mysqlRow.Circle)) ?? null
-      : null
+  const circleName = resolveLookupValue(mysqlRow.Circle, lookups.circle)
 
-  const categoryName =
-    mysqlRow.Category != null
-      ? lookups.category.get(Number(mysqlRow.Category)) ?? null
-      : null
+  const categoryName = resolveLookupValue(mysqlRow.Category, lookups.category)
 
   const statusName = resolveStatus(mysqlRow.Status, lookups)
 
@@ -410,7 +433,7 @@ function buildLeadData(
     phoneNumber: mysqlRow.Patient_Number || '0000000000',
     alternateNumber: toString(mysqlRow.AlternativePhone),
     attendantName: toString(mysqlRow.AttendantName),
-    bdId: bdInfo.id,
+    bdId: bdInfo?.id ?? null,
     bdeName: bdmValue,
     status: statusName,
     pipelineStage,

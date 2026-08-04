@@ -253,7 +253,7 @@ async function syncOneBatch(
   // id > lastMaxId ensures forward progress. We pull rows whose receive (LeadEntryDate /
   // create_date), assignment (Lead_Date) or last update is newer than the cursor.
   const leads = await queryMySQL<MySQLLeadRow>(
-    `SELECT lead.* FROM lead
+    `SELECT \`lead\`.* FROM \`lead\`
      WHERE id > ?
        AND (
          COALESCE(LeadEntryDate, create_date) >= ?

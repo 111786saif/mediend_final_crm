@@ -44,6 +44,7 @@ const FINANCE_SECTION = [
   'Fin Team Approvals',
   'Fin Reports',
   'Fin Invoice Requests',
+  'Payment Verifications',
   'Fin Doctor Payoff',
 ] as const
 
@@ -88,7 +89,6 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Finance Dashboard',
       'P/L Ledger',
       'P/L Outstanding',
-      'Outstanding List',
       'Doctor List',
       'Hospital List',
       'People & Org',
@@ -121,7 +121,6 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Dept Targets',
       'Blue Print Dashboard',
       'Chat',
-      'Outstanding List',
       'Attendance & Normalizations',
       'People & Org',
       'Compensation & Docs',

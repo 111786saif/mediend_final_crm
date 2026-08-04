@@ -1,45 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { canUserViewLeadOwner } from '@/lib/lead-ownership'
-import { logCrmActivity } from '@/lib/crm-activity'
-import { prisma } from '@/lib/prisma'
+import {
+  loadLeadForQrAudit,
+  normalizeLeadQrPhone,
+  recordLeadQrEvent,
+} from '@/lib/lead-qr'
 import { getSessionWithFreshUser } from '@/lib/session'
 
 const VALID_POST_ACTIONS = new Set(['QR_VIEWED'])
 const VALID_GET_SOURCES = new Set(['qr', 'button'])
-
-function normalizePhone(raw: string): string {
-  const digits = raw.replace(/\D+/g, '')
-  if (!digits) return ''
-  if (digits.startsWith('91') && digits.length >= 12) return `+${digits}`
-  if (digits.length === 10) return `+91${digits}`
-  return `+${digits}`
-}
-
-function getClientIp(request: NextRequest): string | null {
-  return (
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    request.headers.get('x-real-ip') ||
-    null
-  )
-}
-
-async function loadLeadForQrAudit(id: string) {
-  return prisma.lead.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      bdId: true,
-      leadRef: true,
-      phoneNumber: true,
-      patientName: true,
-      campaignId: true,
-      campaignName: true,
-      circle: true,
-      category: true,
-    },
-  })
-}
 
 async function authorizeLeadAccess(request: NextRequest, id: string) {
   const user = await getSessionWithFreshUser()
@@ -58,78 +28,6 @@ async function authorizeLeadAccess(request: NextRequest, id: string) {
   }
 
   return { user, lead, response: null }
-}
-
-async function createAuditLog(params: {
-  leadId: string
-  userId: string
-  phoneNumber: string
-  action: string
-  source?: string | null
-  ipAddress?: string | null
-  userAgent?: string | null
-  metadata?: Record<string, unknown> | null
-}) {
-  await prisma.leadQrCallAuditLog.create({
-    data: {
-      leadId: params.leadId,
-      userId: params.userId,
-      phoneNumber: params.phoneNumber,
-      action: params.action,
-      source: params.source ?? null,
-      ipAddress: params.ipAddress ?? null,
-      userAgent: params.userAgent ?? null,
-      metadata: params.metadata ?? null,
-    },
-  })
-}
-
-async function logQrCrmActivity(params: {
-  request: NextRequest
-  userId: string
-  userRole: string
-  lead: {
-    id: string
-    leadRef: string | null
-    patientName: string | null
-    campaignId: string | null
-    campaignName: string | null
-    circle: string
-    category: string | null
-  }
-  action: string
-  source?: string | null
-  phoneNumber: string
-  status?: 'SUCCESS' | 'FAILED'
-  errorMessage?: string | null
-}) {
-  await logCrmActivity({
-    action: params.action,
-    entityType: 'CRM_LEAD_QR',
-    entityId: params.lead.id,
-    entityLabel: params.lead.patientName || params.lead.leadRef || params.lead.id,
-    actorUserId: params.userId,
-    actorRole: params.userRole,
-    request: params.request,
-    status: params.status,
-    errorMessage: params.errorMessage ?? null,
-    summary:
-      params.action === 'CRM_LEAD_QR_VIEWED'
-        ? `Viewed lead QR for ${params.lead.patientName || params.lead.leadRef || 'lead'}`
-        : params.action === 'CRM_LEAD_QR_CALL_BUTTON'
-          ? `Used lead call button for ${params.lead.patientName || params.lead.leadRef || 'lead'}`
-          : `Started QR call flow for ${params.lead.patientName || params.lead.leadRef || 'lead'}`,
-    metadata: {
-      leadRef: params.lead.leadRef,
-      patientName: params.lead.patientName,
-      campaignId: params.lead.campaignId,
-      campaignName: params.lead.campaignName,
-      circle: params.lead.circle,
-      category: params.lead.category,
-      source: params.source ?? null,
-      phoneNumber: params.phoneNumber,
-    },
-  })
 }
 
 export async function POST(
@@ -152,25 +50,18 @@ export async function POST(
       return errorResponse('Invalid QR audit action.', 400)
     }
 
-    await createAuditLog({
-      leadId: auth.lead.id,
-      userId: auth.user.id,
-      phoneNumber: auth.lead.phoneNumber,
-      action,
-      source: typeof body.source === 'string' ? body.source : 'popover',
-      ipAddress: getClientIp(request),
-      userAgent: request.headers.get('user-agent'),
-      metadata: {
-        patientName: auth.lead.patientName,
-      },
-    })
-
-    await logQrCrmActivity({
-      request,
-      userId: auth.user.id,
-      userRole: auth.user.role,
+    await recordLeadQrEvent({
+      headers: request.headers,
+      requestUrl: request.url,
+      route: request.nextUrl.pathname,
+      method: request.method,
       lead: auth.lead,
-      action: 'CRM_LEAD_QR_VIEWED',
+      actorUserId: auth.user.id,
+      actorRole: auth.user.role,
+      actorName: auth.user.name,
+      auditAction: action,
+      crmAction: 'CRM_LEAD_QR_VIEWED',
+      summary: `Viewed lead QR in workspace for ${auth.lead.patientName || auth.lead.leadRef || 'lead'}`,
       source: typeof body.source === 'string' ? body.source : 'popover',
       phoneNumber: auth.lead.phoneNumber,
     })
@@ -196,15 +87,21 @@ export async function GET(
     const { searchParams } = new URL(request.url)
     const sourceParam = searchParams.get('source')
     const source = sourceParam && VALID_GET_SOURCES.has(sourceParam) ? sourceParam : 'qr'
-    const normalizedPhone = normalizePhone(auth.lead.phoneNumber)
+    const normalizedPhone = normalizeLeadQrPhone(auth.lead.phoneNumber)
 
     if (!normalizedPhone) {
-      await logQrCrmActivity({
-        request,
-        userId: auth.user.id,
-        userRole: auth.user.role,
+      await recordLeadQrEvent({
+        headers: request.headers,
+        requestUrl: request.url,
+        route: request.nextUrl.pathname,
+        method: request.method,
         lead: auth.lead,
-        action: source === 'button' ? 'CRM_LEAD_QR_CALL_BUTTON' : 'CRM_LEAD_QR_CALL_STARTED',
+        actorUserId: auth.user.id,
+        actorRole: auth.user.role,
+        actorName: auth.user.name,
+        auditAction: source === 'button' ? 'CALL_BUTTON_INITIATED' : 'QR_CALL_INITIATED',
+        crmAction: source === 'button' ? 'CRM_LEAD_QR_CALL_BUTTON' : 'CRM_LEAD_QR_CALL_STARTED',
+        summary: `Lead QR call failed for ${auth.lead.patientName || auth.lead.leadRef || 'lead'} because no valid phone number was available`,
         source,
         phoneNumber: auth.lead.phoneNumber,
         status: 'FAILED',
@@ -213,25 +110,21 @@ export async function GET(
       return errorResponse('Lead does not have a valid phone number.', 400)
     }
 
-    await createAuditLog({
-      leadId: auth.lead.id,
-      userId: auth.user.id,
-      phoneNumber: auth.lead.phoneNumber,
-      action: source === 'button' ? 'CALL_BUTTON_INITIATED' : 'QR_CALL_INITIATED',
-      source,
-      ipAddress: getClientIp(request),
-      userAgent: request.headers.get('user-agent'),
-      metadata: {
-        patientName: auth.lead.patientName,
-      },
-    })
-
-    await logQrCrmActivity({
-      request,
-      userId: auth.user.id,
-      userRole: auth.user.role,
+    await recordLeadQrEvent({
+      headers: request.headers,
+      requestUrl: request.url,
+      route: request.nextUrl.pathname,
+      method: request.method,
       lead: auth.lead,
-      action: source === 'button' ? 'CRM_LEAD_QR_CALL_BUTTON' : 'CRM_LEAD_QR_CALL_STARTED',
+      actorUserId: auth.user.id,
+      actorRole: auth.user.role,
+      actorName: auth.user.name,
+      auditAction: source === 'button' ? 'CALL_BUTTON_INITIATED' : 'QR_CALL_INITIATED',
+      crmAction: source === 'button' ? 'CRM_LEAD_QR_CALL_BUTTON' : 'CRM_LEAD_QR_CALL_STARTED',
+      summary:
+        source === 'button'
+          ? `Used workspace call button for ${auth.lead.patientName || auth.lead.leadRef || 'lead'}`
+          : `Started QR call flow for ${auth.lead.patientName || auth.lead.leadRef || 'lead'}`,
       source,
       phoneNumber: auth.lead.phoneNumber,
     })

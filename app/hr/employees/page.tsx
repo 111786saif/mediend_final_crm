@@ -14,6 +14,7 @@ import { Building, Hash, Calendar, Search, Filter, X, Plus, Eye, Wallet } from '
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
+import { MultiSelectDropdown } from '@/components/case-tracker/multi-select-dropdown'
 import { useAuth } from '@/hooks/use-auth'
 import { getAvailableRolesForCreator, hasPermission } from '@/lib/rbac'
 import { cn } from '@/lib/utils'
@@ -22,6 +23,7 @@ import { getRoleLabel } from '@/lib/roles'
 import { EmployeeDetailDrawer } from '@/components/hr/employee-detail-drawer'
 import { AddEmployeeDialog, type OnboardResult } from '@/components/hr/add-employee-dialog'
 import { SyncProgressModal } from '@/components/hr/sync-progress-modal'
+import { parseEmployeeCircleList } from '@/lib/employee-circles'
 
 const EDIT_EMPLOYEE_ROLE_ORDER: UserRole[] = [
   'SALES_HEAD',
@@ -109,7 +111,7 @@ const DEFAULT_STATUS_FILTER = 'ACTIVE'
 interface EditFormData {
   employeeCode: string
   bdNumber: string
-  circle: string
+  circles: string[]
   joinDate: string
   departmentId: string
   managerId: string
@@ -129,6 +131,7 @@ interface EditFormData {
 interface EditPatchPayload {
   employeeCode?: string
   circle?: string | null
+  circles?: string[]
   joinDate?: string | null
   departmentId?: string | null
   designation?: string | null
@@ -203,7 +206,20 @@ export default function HREmployeesPage() {
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: EditPatchPayload }) =>
       apiPatch<Employee>(`/api/employees/${id}`, data),
-    onSuccess: (_data, variables) => {
+    onSuccess: (updatedEmployee, variables) => {
+      queryClient.setQueryData<Employee[] | undefined>(['employees'], (current) =>
+        current?.map((employee) =>
+          employee.id === variables.id
+            ? {
+                ...employee,
+                ...updatedEmployee,
+                user: updatedEmployee.user ?? employee.user,
+                department: updatedEmployee.department ?? employee.department,
+                manager: employee.manager,
+              }
+            : employee
+        )
+      )
       queryClient.invalidateQueries({ queryKey: ['employees'] })
       queryClient.invalidateQueries({ queryKey: ['employee', variables.id] })
 
@@ -514,7 +530,7 @@ export default function HREmployeesPage() {
         onOpenChange={handleEditDialogOpenChange}
         skipBackOnCloseRef={editDialogSkipBackRef}
       >
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[min(96vw,80rem)] max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Employee Details</DialogTitle>
             <DialogDescription>Update employee information. Salary and salary structure are managed separately by Finance.</DialogDescription>
@@ -588,7 +604,7 @@ function EmployeeEditForm({
   const [formData, setFormData] = useState<EditFormData>({
     employeeCode: employee.employeeCode,
     bdNumber: employee.bdNumber != null ? String(employee.bdNumber) : '',
-    circle: employee.circle || '',
+    circles: parseEmployeeCircleList(employee.circle),
     joinDate: toDateInput(employee.joinDate),
     departmentId: employee.department?.id || 'none',
     managerId: employee.manager?.id || 'none',
@@ -622,6 +638,23 @@ function EmployeeEditForm({
 
   const set = <K extends keyof EditFormData>(key: K, value: EditFormData[K]) =>
     setFormData((prev) => ({ ...prev, [key]: value }))
+  const circleSelectOptions = (() => {
+    const options = circleOptions.map((circle) => ({
+      value: circle.name,
+      label: `${circle.name}${!circle.isActive ? ' (Inactive)' : ''}`,
+    }))
+
+    for (const legacyCircle of formData.circles) {
+      if (!options.some((option) => option.value.toLowerCase() === legacyCircle.toLowerCase())) {
+        options.push({
+          value: legacyCircle,
+          label: `${legacyCircle} (Legacy)`,
+        })
+      }
+    }
+
+    return options.sort((a, b) => a.label.localeCompare(b.label))
+  })()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -643,7 +676,7 @@ function EmployeeEditForm({
 
     const payload: EditPatchPayload = {
       employeeCode: formData.employeeCode.trim(),
-      circle: formData.circle.trim() || null,
+      circles: formData.circles,
       joinDate: formData.joinDate || null,
       departmentId: formData.departmentId === 'none' ? null : formData.departmentId || null,
       managerId: formData.managerId === 'none' ? null : formData.managerId || null,
@@ -726,25 +759,20 @@ function EmployeeEditForm({
               Changing this will resync leads from the CRM.
             </p>
           </div>
-          <div>
-            <Label>Circle</Label>
-            <Select value={formData.circle || 'none'} onValueChange={(v) => set('circle', v === 'none' ? '' : v)}>
-              <SelectTrigger><SelectValue placeholder="Select circle" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">No circle</SelectItem>
-                {formData.circle &&
-                  !circleOptions.some((circle) => circle.name === formData.circle) && (
-                    <SelectItem value={formData.circle}>{formData.circle} (Legacy)</SelectItem>
-                  )}
-                {circleOptions.map((circle) => (
-                  <SelectItem key={circle.id} value={circle.name}>
-                    {circle.name}{!circle.isActive ? ' (Inactive)' : ''}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="md:col-span-2">
+            <Label>Circles</Label>
+            <MultiSelectDropdown
+              options={circleSelectOptions}
+              selected={formData.circles}
+              onChange={(value) => set('circles', value)}
+              placeholder="Select circles"
+              searchPlaceholder="Search circles"
+              emptyMeansAll={false}
+              emptyLabel="No circles"
+              className="w-full justify-between"
+            />
             <p className="text-xs text-muted-foreground mt-1">
-              CRM auto-assignment uses this to match lead city for BD employees.
+              Used for circle mapping and CRM auto-assignment where applicable.
             </p>
           </div>
           <div>

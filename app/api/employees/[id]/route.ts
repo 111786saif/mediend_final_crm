@@ -8,10 +8,12 @@ import { z } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 import { UserRole } from '@/generated/prisma/enums'
 import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
+import { parseEmployeeCircleList, serializeEmployeeCircleList } from '@/lib/employee-circles'
 
 const updateEmployeeSchema = z.object({
   employeeCode: z.string().optional(),
   circle: z.string().trim().max(100).optional().nullable(),
+  circles: z.array(z.string().trim().min(1).max(100)).optional(),
   joinDate: z.string().transform((str) => new Date(str)).optional().nullable(),
   salary: z.number().positive().optional().nullable(),
   departmentId: z.string().optional().nullable(),
@@ -118,6 +120,12 @@ export async function PATCH(
     const { id } = await params
     const body = await request.json()
     const data = updateEmployeeSchema.parse(body)
+    const normalizedCircles =
+      data.circles !== undefined
+        ? parseEmployeeCircleList(data.circles)
+        : data.circle !== undefined
+          ? parseEmployeeCircleList(data.circle)
+          : undefined
 
     // Finance can only update payroll-related fields
     const payrollOnlyFields = ['joinDate', 'designation', 'panNumber', 'bankAccountName', 'bankAccountNumber', 'ifscCode', 'uanNumber']
@@ -183,13 +191,26 @@ export async function PATCH(
       }
     }
 
-    if (data.circle !== undefined && data.circle) {
-      const circle = await prisma.crmCampaignCircle.findFirst({
-        where: { name: data.circle.trim() },
-        select: { id: true },
+    if (normalizedCircles !== undefined && normalizedCircles.length > 0) {
+      const circles = await prisma.crmCampaignCircle.findMany({
+        where: {
+          name: {
+            in: normalizedCircles,
+          },
+        },
+        select: { name: true },
       })
-      if (!circle) {
-        return errorResponse('Selected circle was not found in CRM masters', 400)
+      const foundNames = new Set(circles.map((circle) => circle.name.trim().toLowerCase()))
+      const missingCircles = normalizedCircles.filter(
+        (circle) => !foundNames.has(circle.trim().toLowerCase())
+      )
+      if (missingCircles.length > 0) {
+        return errorResponse(
+          missingCircles.length === 1
+            ? `Selected circle "${missingCircles[0]}" was not found in CRM masters`
+            : `Selected circles were not found in CRM masters: ${missingCircles.join(', ')}`,
+          400
+        )
       }
     }
 
@@ -267,7 +288,11 @@ export async function PATCH(
 
     const updateData: Prisma.EmployeeUpdateInput = {}
     if (data.employeeCode !== undefined) updateData.employeeCode = data.employeeCode
-    if (data.circle !== undefined) updateData.circle = data.circle?.trim() || null
+    if (normalizedCircles !== undefined) {
+      updateData.circle = serializeEmployeeCircleList(normalizedCircles)
+    } else if (data.circle !== undefined) {
+      updateData.circle = data.circle?.trim() || null
+    }
     if (data.joinDate !== undefined) updateData.joinDate = data.joinDate
     if (data.salary !== undefined) updateData.salary = data.salary
     if (data.departmentId !== undefined) {

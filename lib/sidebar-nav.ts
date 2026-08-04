@@ -121,7 +121,7 @@ export const navItems: NavItem[] = [
     title: 'Incentive',
     url: '/incentives',
     icon: Award,
-    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT', 'FINANCE_HEAD'],
   },
   {
     title: 'Finance Dashboard',
@@ -429,12 +429,6 @@ export const navItems: NavItem[] = [
     permission: 'pl:read',
   },
   {
-    title: 'Outstanding List',
-    url: '/pl/outstanding',
-    icon: CreditCard,
-    // Gated via RBAC resource insurance_pl.pl_outstanding (see nav-resource-map)
-  },
-  {
     title: 'Doctor List',
     url: '/doctors',
     icon: Stethoscope,
@@ -600,6 +594,12 @@ export const navItems: NavItem[] = [
     title: 'Fin Invoice Requests',
     url: '/finance/invoice-requests',
     icon: FileText,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Payment Verifications',
+    url: '/finance/payment-verifications',
+    icon: ShieldCheck,
     permission: 'finance:read',
   },
   {

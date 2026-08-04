@@ -9,7 +9,7 @@ import { invoiceRequestInclude, mapInvoiceRequest } from '@/lib/finance/invoice-
 import { logInvoiceRequestActivity } from '@/lib/finance/invoice-request/activity'
 
 const approveSchema = z.object({
-  invoicePdfUrl: z.string().min(1),
+  invoicePdfUrl: z.string().min(1).optional(),
   invoicePdfName: z.string().optional(),
   financeRemarks: z.string().max(5000).optional(),
 })
@@ -36,12 +36,20 @@ export async function POST(
       return errorResponse('Only pending invoice requests can be approved', 400)
     }
 
+    const invoicePdfUrl = parsed.data.invoicePdfUrl ?? existing.invoicePdfUrl
+    if (!invoicePdfUrl) {
+      return errorResponse(
+        'Invoice file is required. P/L must upload the invoice or Finance must attach a file.',
+        400,
+      )
+    }
+
     const updated = await prisma.invoiceRequest.update({
       where: { id },
       data: {
         status: InvoiceRequestStatus.VERIFIED,
-        invoicePdfUrl: parsed.data.invoicePdfUrl,
-        invoicePdfName: parsed.data.invoicePdfName ?? null,
+        invoicePdfUrl,
+        invoicePdfName: parsed.data.invoicePdfName ?? existing.invoicePdfName ?? null,
         financeRemarks: parsed.data.financeRemarks?.trim() || null,
         rejectionRemarks: null,
         reviewedById: user.id,

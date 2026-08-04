@@ -34,6 +34,8 @@ export type Permission =
   | 'finance:payroll:write'
   | 'incentive:read'
   | 'incentive:write'
+  | 'incentive:approve'
+  | 'incentive:pay'
   | 'departments:create'
   | 'departments:assign_head'
   | 'users:create_tl'
@@ -131,6 +133,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'compliance:write',
     'incentive:read',
     'incentive:write',
+    'incentive:approve',
+    'incentive:pay',
     'main.cumulative_report',
   ],
   SALES_HEAD: [
@@ -277,6 +281,9 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'it:pnl:read',
     'loan-demat:read',
     'loan-demat:write',
+    'incentive:read',
+    'incentive:approve',
+    'incentive:pay',
   ],
   DIGITAL_MARKETING_HEAD: [
     'analytics:read',
@@ -369,6 +376,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'compliance:write',
     'incentive:read',
     'incentive:write',
+    'incentive:approve',
+    'incentive:pay',
   ],
   USER: [
     'hrms:read',

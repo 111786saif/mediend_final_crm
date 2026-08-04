@@ -1,25 +1,36 @@
 import { prisma } from '@/lib/prisma'
+import type { SalesTeamCostPeriod } from '@/lib/sales-team-cost/incentives'
 
 /**
- * Marketing spend attributed to a BD's team (stub — equal split across active BDs).
+ * Marketing spend attributed to a BD (stub — equal split across active BDs).
  */
 export async function getMarketingCostForBD(
   bdUserId: string,
   bdEmployeeId?: string,
+  period?: SalesTeamCostPeriod,
 ): Promise<number> {
   void bdUserId
   void bdEmployeeId
-  return loadSharedBdMarketingCost()
+  return loadSharedBdMarketingCost(period)
 }
 
-/** Single aggregate + BD count — reuse for every BD node in the hierarchy. */
-export async function loadSharedBdMarketingCost(): Promise<number> {
+/** Equal marketing share per active BD for the selected month (0 if none). */
+export async function loadSharedBdMarketingCost(
+  period?: SalesTeamCostPeriod,
+): Promise<number> {
+  const now = new Date()
+  const month = period?.month ?? now.getMonth() + 1
+  const year = period?.year ?? now.getFullYear()
+  const monthStart = new Date(year, month - 1, 1)
+  const monthEnd = new Date(year, month, 0, 23, 59, 59, 999)
+
   const [recentSpend, bdCount] = await Promise.all([
     prisma.dailyCampaignSpend.aggregate({
       _sum: { spend: true },
       where: {
         date: {
-          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          gte: monthStart,
+          lte: monthEnd,
         },
       },
     }),

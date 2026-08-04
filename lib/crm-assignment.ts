@@ -5,6 +5,7 @@ import {
   Prisma,
   UserRole,
 } from '@/generated/prisma/client'
+import { employeeHasAnyCircle, employeeHasCircle } from '@/lib/employee-circles'
 import { prisma } from '@/lib/prisma'
 import { getManagementChain } from '@/lib/hierarchy'
 
@@ -417,14 +418,25 @@ export async function dryRunCrmLeadAssignment(input: AssignmentInput): Promise<C
       continue
     }
 
-    if (normalizedCity && normalize(employee.circle) !== normalizedCity) {
+    if (!employeeHasAnyCircle(employee.circle)) {
+      diagnostics.push({
+        employeeId: employee.id,
+        userId: employee.user.id,
+        employeeName: employee.user.name,
+        eligible: false,
+        reason: 'Employee circles are not configured.',
+      })
+      continue
+    }
+
+    if (normalizedCity && !employeeHasCircle(employee.circle, context.city)) {
       diagnostics.push({
         employeeId: employee.id,
         userId: employee.user.id,
         employeeName: employee.user.name,
         eligible: false,
         reason: employee.circle
-          ? `Employee circle "${employee.circle}" does not match lead city "${context.city}".`
+          ? `Employee circles "${employee.circle}" do not match lead city "${context.city}".`
           : `Employee circle is not configured for lead city "${context.city}".`,
       })
       continue

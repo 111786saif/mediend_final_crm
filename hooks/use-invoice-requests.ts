@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPost } from '@/lib/api-client'
+import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import type {
   InvoiceRequestListResponse,
   InvoiceRequestRecord,
@@ -81,9 +81,30 @@ export function useInvoiceRequest(id: string | null, enabled = true) {
   })
 }
 
-export interface ApproveInvoiceRequestInput {
+export interface PlAttachInvoiceInput {
   id: string
   invoicePdfUrl: string
+  invoicePdfName?: string
+  invoiceNumber?: string
+  invoiceAmount?: number
+}
+
+export function usePlAttachInvoice() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, ...body }: PlAttachInvoiceInput) =>
+      apiPatch<InvoiceRequestRecord>(`/api/pl/invoice-requests/${id}`, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pl-invoice-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['finance-invoice-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['invoice-request-activity'] })
+    },
+  })
+}
+
+export interface ApproveInvoiceRequestInput {
+  id: string
+  invoicePdfUrl?: string
   invoicePdfName?: string
   financeRemarks?: string
 }

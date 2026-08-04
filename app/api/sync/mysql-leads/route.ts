@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import {
   queryMySQL,
   closeMySQLPool,
@@ -8,6 +8,7 @@ import { prisma } from '@/lib/prisma'
 import {
   mapMySQLLeadToPrisma,
   mapMySQLLeadToPrismaAsyncFallback,
+  mapMySQLLeadToPrismaWithoutOwner,
   getLeadLatestActivityDate,
   type MySQLLeadRow,
 } from '@/lib/sync/mysql-lead-mapper'
@@ -15,6 +16,12 @@ import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { UserRole } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import {
+  processMySQLIncomingLead,
+  processQueuedMySQLIncomingLeads,
+  queueMySQLIncomingLead,
+} from '@/lib/mysql-incoming-leads'
+import { stripImportedLeadOwnership } from '@/lib/imported-lead-ingestion'
 
 interface MySQLRemarkRow {
   id: number
@@ -99,7 +106,7 @@ export async function POST(request: NextRequest) {
     // Fetch new/changed leads since the cursor — covers receive (LeadEntryDate / create_date),
     // assignment (Lead_Date) and update events.
     const leads = await queryMySQL<MySQLLeadRow>(
-      `SELECT lead.* FROM lead
+      `SELECT \`lead\`.* FROM \`lead\`
        WHERE COALESCE(LeadEntryDate, create_date) >= ?
           OR (Lead_Date IS NOT NULL AND Lead_Date >= ?)
           OR (update_date IS NOT NULL AND update_date >= ?)
@@ -108,27 +115,21 @@ export async function POST(request: NextRequest) {
       [lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
     )
 
-    if (leads.length === 0) {
-      await closeMySQLPool()
-      return successResponse({
-        message: 'No new leads to sync',
-        lastSyncedDate: lastSyncedDate.toISOString(),
-        processed: 0,
-        synced: 0,
-        updated: 0,
-        errors: 0,
-      })
-    }
-
     const lookups = await loadLookupMaps()
     const bdMap = await fetchBDUsersMap()
+    const queueDeps = { systemUserId: systemUser.id, lookups, bdMap }
 
     let syncedCount = 0
     let updatedCount = 0
     let errorCount = 0
+    let assignmentFailedCount = 0
     let maxDate = lastSyncedDate
     let maxId: number | null = null
     const syncedLeadIds: number[] = []
+    const queueRetryResult = await processQueuedMySQLIncomingLeads(
+      queueDeps,
+      Math.min(BATCH_SIZE, 100)
+    )
 
     // Process each lead with timeout check
     for (const mysqlLead of leads) {
@@ -146,62 +147,48 @@ export async function POST(request: NextRequest) {
           maxId = mysqlLead.id
         }
 
-        let leadData = mapMySQLLeadToPrisma(mysqlLead, systemUser.id, lookups, bdMap)
-        if (!leadData) {
-          leadData = await mapMySQLLeadToPrismaAsyncFallback(mysqlLead, systemUser.id, lookups)
-        }
-        if (!leadData) {
-          console.warn(`Could not map lead ${leadRef}, skipping`)
-          errorCount++
-          continue
-        }
-
-        // Verify BD user exists
-        if (leadData.bdId) {
-          const bdUserExists = await prisma.user.findUnique({
-            where: { id: leadData.bdId },
-            select: { id: true },
-          })
-
-          if (!bdUserExists) {
-            console.warn(`BD user ${leadData.bdId} does not exist for lead ${leadRef}, skipping`)
-            errorCount++
-            continue
-          }
-        } else {
-          console.warn(`Lead ${leadRef} has no bdId, skipping`)
-          errorCount++
-          continue
-        }
+        const leadData =
+          mapMySQLLeadToPrisma(mysqlLead, systemUser.id, lookups, bdMap) ??
+          (await mapMySQLLeadToPrismaAsyncFallback(mysqlLead, systemUser.id, lookups, false)) ??
+          mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUser.id, lookups)
 
         const existingLead = await prisma.lead.findUnique({
           where: { leadRef },
+          select: {
+            id: true,
+            bdeName: true,
+          },
         })
 
-        const { bdId, updatedDate, ...leadDataWithoutBdId } = leadData
-
         if (existingLead) {
+          const { updatedDate, ...leadDataWithoutOwner } = stripImportedLeadOwnership(leadData)
           await prisma.lead.update({
             where: { leadRef },
             data: {
-              ...leadDataWithoutBdId,
-              bdId,
+              ...leadDataWithoutOwner,
               ...(updatedDate !== null && { updatedDate }),
             },
           })
           updatedCount++
+          syncedLeadIds.push(mysqlLead.id)
+          console.log(
+            `[mysql-sync] leadRef=${leadRef} updated, assigned BD=${existingLead.bdeName ?? 'Unknown'}`
+          )
         } else {
-          await prisma.lead.create({
-            data: {
-              ...leadDataWithoutBdId,
-              bdId,
-              ...(updatedDate !== null && { updatedDate }),
-            },
-          })
-          syncedCount++
+          const incomingLead = await queueMySQLIncomingLead(mysqlLead)
+          const result = await processMySQLIncomingLead(incomingLead.id, queueDeps)
+          if (result.status === 'processed' || result.status === 'already_processed') {
+            syncedCount++
+            syncedLeadIds.push(mysqlLead.id)
+            console.log(
+              `[mysql-sync] leadRef=${leadRef} synced, assigned BD=${result.assignedBdName ?? 'Unknown'}`
+            )
+          } else if (result.status === 'failed') {
+            assignmentFailedCount++
+            errorCount++
+            console.log(`[mysql-sync] leadRef=${leadRef} failed assignment`)
+          }
         }
-
-        syncedLeadIds.push(mysqlLead.id)
       } catch (error) {
         errorCount++
         console.error(`Error processing lead ${mysqlLead.id}:`, error)
@@ -283,13 +270,19 @@ export async function POST(request: NextRequest) {
     const executionTime = Date.now() - startTime
 
     return successResponse({
-      message: 'Sync completed successfully',
+      message:
+        leads.length === 0 && queueRetryResult.processed === 0 && queueRetryResult.failed === 0
+          ? 'No new leads to sync'
+          : 'Sync completed successfully',
       lastSyncedDate: maxDate.toISOString(),
       lastSyncedId: maxId,
       processed: leads.length,
       synced: syncedCount,
       updated: updatedCount,
       errors: errorCount,
+      assignmentFailed: assignmentFailedCount,
+      queueRetryProcessed: queueRetryResult.processed,
+      queueRetryFailed: queueRetryResult.failed,
       executionTimeMs: executionTime,
     })
   } catch (error) {

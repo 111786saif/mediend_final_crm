@@ -422,6 +422,7 @@ export function BulkCostDialog({
         costType={costType}
         month={periodMonth}
         year={periodYear}
+        dashboardTotal={runningTotal}
       />
     </>
   )

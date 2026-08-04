@@ -17,7 +17,6 @@ const createUserSchema = z.object({
   employeeCode: z.string().min(1),
   managerId: z.string().nullable().optional(),
   bdNumber: z.number().int().positive().optional().nullable(),
-  circle: z.string().trim().max(100).optional().nullable(),
 })
 
 export async function GET(request: NextRequest) {
@@ -167,7 +166,6 @@ export async function POST(request: NextRequest) {
         departmentId: data.departmentId || null,
         managerId: data.managerId ?? null,
         bdNumber: data.bdNumber ?? null,
-        circle: data.circle?.trim() || null,
       },
     })
     await initializeLeaveBalances(employee.id)
