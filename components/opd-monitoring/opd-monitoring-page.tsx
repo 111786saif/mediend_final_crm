@@ -28,7 +28,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
-import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 
 type AppointmentTab = 'daily' | 'doctor' | 'overdue'
 

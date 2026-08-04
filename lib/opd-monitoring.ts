@@ -3,25 +3,8 @@ import type { SessionUser } from '@/lib/auth'
 import { buildEffectiveOpdEntries, type EffectiveOpdEntry } from '@/lib/lead-opd-appointments'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 import { prisma } from '@/lib/prisma'
-
-/** BD, TL, CM, ACM, Sales Head, Project Head (EA), plus admin/monitoring roles. */
-export const SALES_OPD_MONITORING_ROLES = new Set<string>([
-  'SUPER_ADMIN',
-  'ADMIN',
-  'MD',
-  'EXECUTIVE_ASSISTANT',
-  'TESTER',
-  'BD',
-  'TEAM_LEAD',
-  'ASSISTANT_CATEGORY_MANAGER',
-  'CATEGORY_MANAGER',
-  'SALES_HEAD',
-] as const)
-
-export function canAccessSalesOpdMonitoring(role: string | null | undefined): boolean {
-  return !!role && SALES_OPD_MONITORING_ROLES.has(role)
-}
 
 const opdMonitoringLeadSelect = {
   id: true,

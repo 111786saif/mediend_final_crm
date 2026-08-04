@@ -22,7 +22,7 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { getFilteredNavItemsWithUrls, type NavItem } from '@/lib/sidebar-nav'
 import { usePermissions } from '@/hooks/use-permissions'
 import { resolveNavResourceKey } from '@/lib/nav-resource-map'
-import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 import {
   getRoleSidebarLayout,
   resolveLayoutTitle,

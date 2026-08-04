@@ -58,6 +58,7 @@ export const ModelName = {
   CallNote: 'CallNote',
   LeadRemarkEntry: 'LeadRemarkEntry',
   LeadQrCallAuditLog: 'LeadQrCallAuditLog',
+  LeadQrPublicLink: 'LeadQrPublicLink',
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
@@ -125,6 +126,7 @@ export const ModelName = {
   CrmCampaignSource: 'CrmCampaignSource',
   CrmCampaignLeadSource: 'CrmCampaignLeadSource',
   CrmCampaignCircle: 'CrmCampaignCircle',
+  CrmCampaignCircleSelection: 'CrmCampaignCircleSelection',
   CrmCampaignCity: 'CrmCampaignCity',
   CrmSubStatusMaster: 'CrmSubStatusMaster',
   CrmCampaign: 'CrmCampaign',
@@ -438,6 +440,18 @@ export const LeadQrCallAuditLogScalarFieldEnum = {
 } as const
 
 export type LeadQrCallAuditLogScalarFieldEnum = (typeof LeadQrCallAuditLogScalarFieldEnum)[keyof typeof LeadQrCallAuditLogScalarFieldEnum]
+
+
+export const LeadQrPublicLinkScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  actorUserId: 'actorUserId',
+  expiresAt: 'expiresAt',
+  lastOpenedAt: 'lastOpenedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadQrPublicLinkScalarFieldEnum = (typeof LeadQrPublicLinkScalarFieldEnum)[keyof typeof LeadQrPublicLinkScalarFieldEnum]
 
 
 export const LeadStageEventScalarFieldEnum = {
@@ -1712,6 +1726,17 @@ export const CrmCampaignCircleScalarFieldEnum = {
 } as const
 
 export type CrmCampaignCircleScalarFieldEnum = (typeof CrmCampaignCircleScalarFieldEnum)[keyof typeof CrmCampaignCircleScalarFieldEnum]
+
+
+export const CrmCampaignCircleSelectionScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  circleId: 'circleId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignCircleSelectionScalarFieldEnum = (typeof CrmCampaignCircleSelectionScalarFieldEnum)[keyof typeof CrmCampaignCircleSelectionScalarFieldEnum]
 
 
 export const CrmCampaignCityScalarFieldEnum = {
