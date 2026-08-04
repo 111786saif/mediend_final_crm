@@ -72,6 +72,8 @@ import { EmployeeMultiSelect } from '@/components/incentives/employee-multi-sele
 const ALL = 'all'
 
 const STATUS_FILTER_OPTIONS = ['PENDING', 'APPROVED', 'PAID'] as const
+const EMPTY_RECORDS: IncentiveRecord[] = []
+const EMPTY_EMPLOYEES: IncentiveEmployeeOption[] = []
 
 function statusVariant(status: string): 'default' | 'secondary' | 'outline' {
   if (status === 'PAID') return 'default'
@@ -80,8 +82,7 @@ function statusVariant(status: string): 'default' | 'secondary' | 'outline' {
 }
 
 export function IncentivesView() {
-  const now = new Date()
-  const earnedPeriod = getIncentivePeriodForCreation(now)
+  const earnedPeriod = useMemo(() => getIncentivePeriodForCreation(new Date()), [])
   const { user } = useAuth()
   const canCreate = user ? canCreateIncentives(user) : false
   const canApprove = user ? canApproveIncentives(user) : false
@@ -107,12 +108,15 @@ export function IncentivesView() {
     return () => clearTimeout(t)
   }, [search])
 
-  const filters = {
-    month: filterMonth === ALL ? null : Number(filterMonth),
-    year: filterYear === ALL ? null : Number(filterYear),
-    status: filterStatus === ALL ? null : filterStatus,
-    search: debouncedSearch || null,
-  }
+  const filters = useMemo(
+    () => ({
+      month: filterMonth === ALL ? null : Number(filterMonth),
+      year: filterYear === ALL ? null : Number(filterYear),
+      status: filterStatus === ALL ? null : filterStatus,
+      search: debouncedSearch || null,
+    }),
+    [filterMonth, filterYear, filterStatus, debouncedSearch],
+  )
 
   const { data, isLoading, isError, refetch } = useIncentives(filters)
   const createIncentives = useCreateIncentives()
@@ -121,12 +125,14 @@ export function IncentivesView() {
   const bulkApprove = useBulkApproveIncentives()
   const bulkPay = useBulkPayIncentives()
 
-  const records = data?.records ?? []
-  const employees = data?.employees ?? []
+  // Stable empty fallbacks — `?? []` creates a new array every render and can
+  // infinite-loop effects that depend on `records` (React #185 in production).
+  const records = data?.records ?? EMPTY_RECORDS
+  const employees = data?.employees ?? EMPTY_EMPLOYEES
 
   useEffect(() => {
-    setSelectedIds([])
-  }, [records, filterMonth, filterYear, filterStatus, debouncedSearch])
+    setSelectedIds((prev) => (prev.length === 0 ? prev : []))
+  }, [filterMonth, filterYear, filterStatus, debouncedSearch])
 
   const selectableRecords = useMemo(
     () =>
@@ -153,9 +159,9 @@ export function IncentivesView() {
   }
 
   const yearOptions = useMemo(() => {
-    const y = now.getFullYear()
+    const y = new Date().getFullYear()
     return [y - 1, y, y + 1]
-  }, [now])
+  }, [])
 
   const totalAmount = useMemo(
     () => records.reduce((sum, r) => sum + r.amount, 0),
@@ -694,14 +700,21 @@ function UploadIncentiveDialog({
   const [note, setNote] = useState('')
   const [amounts, setAmounts] = useState<Record<string, string>>({})
 
+  const employeeIdsKey = useMemo(() => employees.map((e) => e.id).join(','), [employees])
+
   useEffect(() => {
-    if (open) {
-      setMonth(String(defaultMonth))
-      setYear(String(defaultYear))
-      setNote('')
-      setAmounts(Object.fromEntries(employees.map((e) => [e.id, ''])))
-    }
-  }, [open, defaultMonth, defaultYear, employees])
+    if (!open) return
+    setMonth(String(defaultMonth))
+    setYear(String(defaultYear))
+    setNote('')
+    setAmounts(
+      Object.fromEntries(
+        employeeIdsKey
+          ? employeeIdsKey.split(',').map((id) => [id, ''])
+          : [],
+      ),
+    )
+  }, [open, defaultMonth, defaultYear, employeeIdsKey])
 
   const yearOptions = [defaultYear - 1, defaultYear, defaultYear + 1]
 

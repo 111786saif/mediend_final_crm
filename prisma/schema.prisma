@@ -619,6 +619,7 @@ model User {
 
   // Outstanding payment installments
   paymentInstallmentsRecorded PaymentInstallment[] @relation("InstallmentRecorder")
+  paymentInstallmentsVerified PaymentInstallment[] @relation("InstallmentVerifier")
 
   // Company P&L / IT project tracking
   itProjectsCreated         ITProject[]          @relation("ITProjectCreator")
@@ -3537,6 +3538,12 @@ enum InstallmentMode {
   OTHER
 }
 
+enum InstallmentVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
 model PaymentInstallment {
   id           String               @id @default(cuid())
   leadId       String
@@ -3549,12 +3556,19 @@ model PaymentInstallment {
   notes        String?              @db.Text
   recordedById String
   recordedBy   User                 @relation("InstallmentRecorder", fields: [recordedById], references: [id])
+  /** Finance verification — hospital/P&L recorded payments await Finance confirm. */
+  verificationStatus InstallmentVerificationStatus @default(PENDING)
+  verifiedById       String?
+  verifiedBy         User?                         @relation("InstallmentVerifier", fields: [verifiedById], references: [id])
+  verifiedAt         DateTime?
+  rejectionRemarks   String?                       @db.Text
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
 
   @@index([leadId])
   @@index([recipient])
   @@index([paidOn])
+  @@index([verificationStatus])
 }
 
 // ==========================================

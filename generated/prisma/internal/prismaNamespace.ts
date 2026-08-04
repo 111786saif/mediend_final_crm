@@ -14692,6 +14692,10 @@ export const PaymentInstallmentScalarFieldEnum = {
   reference: 'reference',
   notes: 'notes',
   recordedById: 'recordedById',
+  verificationStatus: 'verificationStatus',
+  verifiedById: 'verifiedById',
+  verifiedAt: 'verifiedAt',
+  rejectionRemarks: 'rejectionRemarks',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -16575,6 +16579,20 @@ export type EnumInstallmentModeFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'InstallmentMode[]'
  */
 export type ListEnumInstallmentModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentMode[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InstallmentVerificationStatus'
+ */
+export type EnumInstallmentVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentVerificationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InstallmentVerificationStatus[]'
+ */
+export type ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentVerificationStatus[]'>
     
 
 

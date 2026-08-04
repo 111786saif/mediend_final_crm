@@ -827,6 +827,15 @@ export const InstallmentMode = {
 export type InstallmentMode = (typeof InstallmentMode)[keyof typeof InstallmentMode]
 
 
+export const InstallmentVerificationStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type InstallmentVerificationStatus = (typeof InstallmentVerificationStatus)[keyof typeof InstallmentVerificationStatus]
+
+
 export const KnowledgeSourceType = {
   UPLOAD: 'UPLOAD',
   TEXT: 'TEXT',

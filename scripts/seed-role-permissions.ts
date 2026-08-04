@@ -33,6 +33,7 @@ const FINANCE_SECTION = [
   'finance.fin_team_approvals',
   'finance.fin_reports',
   'finance.fin_invoice_requests',
+  'finance.payment_verifications',
   'finance.fin_doctor_payoff',
 ] as const
 

@@ -56,6 +56,10 @@ export async function POST(request: NextRequest) {
     const lead = await prisma.lead.findUnique({ where: { id: leadId }, select: { id: true } })
     if (!lead) return errorResponse('Lead not found', 404)
 
+    // MediEND receipts need Finance verification before they reduce outstanding.
+    // Hospital / Doctor payouts apply immediately (auto-verified).
+    const needsFinanceVerification = recipient === 'MEDIEND'
+
     const created = await prisma.paymentInstallment.create({
       data: {
         leadId,
@@ -66,6 +70,9 @@ export async function POST(request: NextRequest) {
         reference: body.reference ? String(body.reference).trim() || null : null,
         notes: body.notes ? String(body.notes).trim() || null : null,
         recordedById: user.id,
+        verificationStatus: needsFinanceVerification ? 'PENDING' : 'VERIFIED',
+        verifiedById: needsFinanceVerification ? null : user.id,
+        verifiedAt: needsFinanceVerification ? null : new Date(),
       },
       include: { recordedBy: { select: { id: true, name: true } } },
     })

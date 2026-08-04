@@ -158,7 +158,7 @@ export async function GET(
     const leadIds = records.map((r) => r.leadId)
     const installments = leadIds.length
       ? await prisma.paymentInstallment.findMany({
-          where: { leadId: { in: leadIds } },
+          where: { leadId: { in: leadIds }, verificationStatus: 'VERIFIED' },
           select: { leadId: true, recipient: true, amount: true, paidOn: true },
           orderBy: { paidOn: 'desc' },
         })
