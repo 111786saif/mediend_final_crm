@@ -1543,9 +1543,9 @@ function canShowPipelineOpdSchedule(lead: Lead) {
 function canShowPipelineCardUpload(lead: Lead) {
   if (!lead.caseStage || isCashCaseStage(lead.caseStage)) return false
   if (lead.caseStage === CaseStage.KYP_BASIC_COMPLETE) return true
-  if (lead.caseStage === CaseStage.OPD_DONE) return true
-  if (!([CaseStage.NEW_LEAD, CaseStage.OPD_SCHEDULED, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage)) return false
-  return hasLeadOpdDone(lead)
+  return ([CaseStage.NEW_LEAD, CaseStage.OPD_SCHEDULED, CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(
+    lead.caseStage as CaseStage
+  )
 }
 
 function canShowPipelinePreAuthRaised(lead: Lead) {
@@ -1592,7 +1592,7 @@ function appendReturnTo(href: string, returnTo: string) {
 
 function getPipelineCaseActions(lead: Lead, returnTo: string): PipelineCaseAction[] {
   const actions: PipelineCaseAction[] = []
-  const showInsuranceActions = isInsuranceModeOfPayment(lead.modeOfPayment)
+  const showInsuranceActions = !isCashCaseStage(lead.caseStage) && lead.flowType !== 'CASH'
 
   if (canShowPipelineOpdSchedule(lead)) {
     actions.push({

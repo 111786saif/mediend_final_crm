@@ -46,6 +46,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost, apiPut } from '@/lib/api-client'
+import { parseEmployeeCircleList } from '@/lib/employee-circles'
 import { toast } from 'sonner'
 
 type SourceMaster = {
@@ -231,8 +232,9 @@ function buildAssignmentDrafts(campaign: CampaignRecord, teamLeads: TeamLeadOpti
 
   return teamLeads.map((teamLead) => {
     const existing = assignmentMap.get(teamLead.id)
+    const eligibleBds = filterBdsForCampaign(teamLead, campaign)
     const bdLimits = Object.fromEntries(
-      teamLead.activeBds.map((bd) => {
+      eligibleBds.map((bd) => {
         const existingLimit = existing?.bdDailyLimits?.find((limit) => limit.bdEmployeeId === bd.id)
         return [bd.id, existingLimit ? String(existingLimit.maxLeadsPerDay) : '']
       })
@@ -274,6 +276,24 @@ function filterTeamLeadsForCampaign(teamLeads: TeamLeadOption[], campaign: Campa
 
   return departmentMatched.filter((teamLead) =>
     teamLead.activeBdCircles.some((circle) =>
+      selectedCircleNames.includes(circle.trim().toLowerCase())
+    )
+  )
+}
+
+function filterBdsForCampaign(teamLead: TeamLeadOption, campaign: CampaignRecord) {
+  const departmentMatched = campaign.departmentId
+    ? teamLead.activeBds.filter((bd) => bd.department?.id === campaign.departmentId)
+    : teamLead.activeBds
+
+  const selectedCircleNames = campaign.circles
+    .map((circle) => circle.name.trim().toLowerCase())
+    .filter(Boolean)
+
+  if (selectedCircleNames.length === 0) return departmentMatched
+
+  return departmentMatched.filter((bd) =>
+    parseEmployeeCircleList(bd.circle).some((circle) =>
       selectedCircleNames.includes(circle.trim().toLowerCase())
     )
   )
@@ -664,6 +684,7 @@ export default function CrmCampaignsPage() {
                 assignmentDrafts.map((draft) => {
                   const teamLead = teamLeadMap.get(draft.teamLeadEmployeeId)
                   if (!teamLead) return null
+                  const eligibleBds = filterBdsForCampaign(teamLead, campaign)
 
                   return (
                     <TableRow key={draft.teamLeadEmployeeId}>
@@ -687,14 +708,14 @@ export default function CrmCampaignsPage() {
                       </TableCell>
                       <TableCell>{teamLead.department?.name ?? '—'}</TableCell>
                       <TableCell className="min-w-[340px]">
-                        {teamLead.activeBds.length === 0 ? (
+                        {eligibleBds.length === 0 ? (
                           <div className="text-sm text-muted-foreground">No active BDs under this Team Lead.</div>
                         ) : (
                           <div className="space-y-2">
                             <div className="text-xs text-muted-foreground">
-                              {teamLead.activeBdCount} active BD{teamLead.activeBdCount === 1 ? '' : 's'}
+                              {eligibleBds.length} active BD{eligibleBds.length === 1 ? '' : 's'}
                             </div>
-                            {teamLead.activeBds.map((bd) => (
+                            {eligibleBds.map((bd) => (
                               <div
                                 key={bd.id}
                                 className="grid gap-2 rounded-lg border border-border/60 bg-muted/10 p-2 md:grid-cols-[minmax(0,1fr)_110px]"
