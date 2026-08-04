@@ -36,6 +36,16 @@ type ActivityLogRow = {
   actorRole: string | null
   route: string | null
   method: string | null
+  ipAddress: string | null
+  userAgent: string | null
+  metadata: {
+    deviceInfo?: {
+      browser?: string | null
+      operatingSystem?: string | null
+      deviceType?: string | null
+      label?: string | null
+    } | null
+  } | null
   errorMessage: string | null
   createdAt: string
   actorUser: {
@@ -211,6 +221,14 @@ export default function CrmActivityPage() {
                             <div className="space-y-1">
                               <p className="font-medium">{log.summary}</p>
                               {log.errorMessage ? <p className="text-xs text-destructive">{log.errorMessage}</p> : null}
+                              {log.metadata?.deviceInfo?.label || log.ipAddress ? (
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                                  {log.metadata?.deviceInfo?.label ? (
+                                    <span>Device: {log.metadata.deviceInfo.label}</span>
+                                  ) : null}
+                                  {log.ipAddress ? <span>IP: {log.ipAddress}</span> : null}
+                                </div>
+                              ) : null}
                               <p className="text-xs text-muted-foreground">{log.action}</p>
                             </div>
                           </TableCell>
