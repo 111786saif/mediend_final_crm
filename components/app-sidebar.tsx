@@ -330,7 +330,6 @@ export function AppSidebar() {
       'P/L Outstanding',
       'Doctor List',
       'Hospital List',
-      'Outstanding List',
     ]
     const CRM_TITLES = [
       'CRM Campaigns',

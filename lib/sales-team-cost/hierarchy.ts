@@ -5,6 +5,7 @@ import { loadSharedBdMarketingCost } from '@/lib/sales-team-cost/marketing'
 import { loadSalariesByEmployeeIds } from '@/lib/sales-team-cost/payroll'
 import { loadSalaryOverridesByEmployee, type SalaryOverrideEntry } from '@/lib/sales-team-cost/salary-override'
 import {
+  loadBulkCostPeriodTotals,
   loadBulkCostTotalsByEmployee,
   loadUnallocatedBulkCostTotals,
 } from '@/lib/sales-team-cost/bulk-cost-entries'
@@ -111,7 +112,8 @@ function buildRoleNode(
     seatingAmount: costs?.seating ?? 0,
     miscAmount: (costs?.misc ?? 0) + (bulk?.misc ?? 0),
     otherAmount: (costs?.other ?? 0) + (bulk?.other ?? 0),
-    marketingCost: roleType === 'bd' ? sharedMarketingCost : undefined,
+    // Marketing is attributed per BD; other roles show 0 on their own card.
+    marketingCost: roleType === 'bd' ? sharedMarketingCost : 0,
     children,
   }
 }
@@ -138,9 +140,10 @@ export async function buildSalesTeamCostHierarchy(
   const seatingMiscTotals = await loadApprovedSeatingMiscByEmployee(period)
   const bulkCostTotals = await loadBulkCostTotalsByEmployee(period)
   const unallocatedBulk = await loadUnallocatedBulkCostTotals(period)
+  const bulkPeriodTotals = await loadBulkCostPeriodTotals(period)
   const salaryOverrides = await loadSalaryOverridesByEmployee(period)
   const salaries = await loadSalariesByEmployeeIds(employees.map((e) => e.id))
-  const sharedMarketingCost = await loadSharedBdMarketingCost()
+  const sharedMarketingCost = await loadSharedBdMarketingCost(period)
 
   const employeesByManager = new Map<string, EmployeeRow[]>()
   for (const employee of employees) {
@@ -174,7 +177,26 @@ export async function buildSalesTeamCostHierarchy(
     if (node) roots.push(node)
   }
 
-  // Costs assigned to employees outside the sales hierarchy still count in totals.
+  // Orphan sales employees (manager gap / role mismatch) — attach as flat roots
+  // (no children) so each person is counted once and costs are not dropped.
+  const emptyByManager = new Map<string, EmployeeRow[]>()
+  for (const orphan of employees) {
+    if (hierarchyEmployeeIds.has(orphan.id)) continue
+    const node = buildRoleNode(
+      orphan,
+      emptyByManager,
+      incentiveTotals,
+      seatingMiscTotals,
+      bulkCostTotals,
+      salaryOverrides,
+      salaries,
+      sharedMarketingCost,
+      hierarchyEmployeeIds,
+    )
+    if (node) roots.push(node)
+  }
+
+  // Bulk assigned outside the sales-role set (e.g. HR employee picker) + null employee.
   let outsideMisc = 0
   let outsideOther = 0
   for (const [employeeId, totals] of bulkCostTotals) {
@@ -188,9 +210,32 @@ export async function buildSalesTeamCostHierarchy(
     other: unallocatedBulk.other + outsideOther,
   }
 
+  // Monthly seating-misc "other/misc" for sales employees (separate from bulk entries).
+  const salesEmployeeIds = new Set(employees.map((e) => e.id))
+  let seatingMiscFromMonthly = 0
+  let seatingOtherFromMonthly = 0
+  for (const [employeeId, totals] of seatingMiscTotals) {
+    if (!salesEmployeeIds.has(employeeId)) continue
+    seatingMiscFromMonthly += totals.misc
+    seatingOtherFromMonthly += totals.other
+  }
+
+  const summary = buildSummary(roots, unallocated)
+
+  // Authoritative Misc/Other: bulk entry list total + monthly seating-misc fields.
+  // Hierarchy walk alone can under-count when assignees sit outside the tree.
+  const authoritativeMisc = bulkPeriodTotals.misc + seatingMiscFromMonthly
+  const authoritativeOther = bulkPeriodTotals.other + seatingOtherFromMonthly
+  const miscDelta = authoritativeMisc - summary.rollup.misc
+  const otherDelta = authoritativeOther - summary.rollup.other
+  summary.rollup.misc = authoritativeMisc
+  summary.rollup.other = authoritativeOther
+  summary.rollup.total += miscDelta + otherDelta
+  summary.grandTotal = summary.rollup.total
+
   return {
     roots,
-    summary: buildSummary(roots, unallocated),
+    summary,
     month: period.month,
     year: period.year,
   }

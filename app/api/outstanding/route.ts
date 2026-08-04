@@ -20,22 +20,34 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
+    // Outstanding work queue: cases explicitly moved to OUTSTANDING from P/L Ledger.
+    // Month filter matches P/L Ledger (surgery / reporting month), not discharge date alone —
+    // discharge-only filtering was returning empty results when surgery fell in the selected month.
     let finalWhere: Prisma.LeadWhereInput = {
       pipelineStage: { in: ['PL', 'COMPLETED'] },
       plRecord: { outstandingStatus: 'OUTSTANDING' },
     }
 
     if (startDate || endDate) {
-      const dischargeRange: Prisma.DateTimeFilter = {}
-      if (startDate) dischargeRange.gte = new Date(startDate)
+      const range: Prisma.DateTimeFilter = {}
+      if (startDate) range.gte = new Date(startDate)
       if (endDate) {
         const end = new Date(endDate)
         end.setHours(23, 59, 59, 999)
-        dischargeRange.lte = end
+        range.lte = end
       }
-      finalWhere.dischargeSheet = { dischargeDate: dischargeRange }
-    } else {
-      finalWhere.dischargeSheet = { isNot: null }
+      finalWhere.AND = [
+        {
+          OR: [
+            { surgeryDate: range },
+            { plRecord: { surgeryDate: range } },
+            { plRecord: { month: range } },
+            { dischargeSheet: { surgeryDate: range } },
+            { dischargeSheet: { dischargeDate: range } },
+            { admissionRecord: { is: { surgeryDate: range } } },
+          ],
+        },
+      ]
     }
 
     const filtersParam = searchParams.get('filters')

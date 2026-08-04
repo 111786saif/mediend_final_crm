@@ -75,10 +75,10 @@ export function RoleCostNode({
         </CardHeader>
 
         <CardContent className="space-y-3 p-4 pt-2">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             <div className="rounded-md border p-3">
               <p className="text-xs font-medium text-muted-foreground">Salary</p>
-              <p className="text-sm font-semibold">{formatCurrency(node.salaryPerHead)}</p>
+              <p className="text-sm font-semibold tabular-nums">{formatCurrency(node.salaryPerHead)}</p>
               <p className="mt-1 text-[10px] text-muted-foreground">
                 {node.salaryIsOverride
                   ? '(Sales Team Cost override · payroll unchanged)'
@@ -89,7 +89,7 @@ export function RoleCostNode({
 
             <div className="rounded-md border p-3">
               <p className="text-xs font-medium text-muted-foreground">Incentive</p>
-              <p className="text-sm font-semibold">{formatCurrency(node.incentiveAmount)}</p>
+              <p className="text-sm font-semibold tabular-nums">{formatCurrency(node.incentiveAmount)}</p>
               <p className="mt-1 text-[10px] text-muted-foreground">
                 {node.incentiveAmount > 0
                   ? '(From Incentive module · approved)'
@@ -99,7 +99,7 @@ export function RoleCostNode({
 
             <div className="rounded-md border p-3">
               <p className="text-xs font-medium text-muted-foreground">Seating cost</p>
-              <p className="text-sm font-semibold">{formatCurrency(node.seatingAmount)}</p>
+              <p className="text-sm font-semibold tabular-nums">{formatCurrency(node.seatingAmount)}</p>
               <p className="mt-1 text-[10px] text-muted-foreground">
                 {node.seatingAmount > 0
                   ? '(From Master / monthly seating)'
@@ -109,31 +109,37 @@ export function RoleCostNode({
 
             <div className="rounded-md border p-3">
               <p className="text-xs font-medium text-muted-foreground">Misc cost</p>
-              <p className="text-sm font-semibold">{formatCurrency(node.miscAmount)}</p>
+              <p className="text-sm font-semibold tabular-nums">{formatCurrency(node.miscAmount)}</p>
               <p className="mt-1 text-[10px] text-muted-foreground">
                 {node.miscAmount > 0
-                  ? '(From Sales Team Cost · bulk entry)'
+                  ? '(Bulk Misc + monthly seating/misc)'
                   : 'No misc cost for selected month'}
               </p>
             </div>
 
             <div className="rounded-md border p-3">
               <p className="text-xs font-medium text-muted-foreground">Other cost</p>
-              <p className="text-sm font-semibold">{formatCurrency(node.otherAmount)}</p>
+              <p className="text-sm font-semibold tabular-nums">{formatCurrency(node.otherAmount)}</p>
               <p className="mt-1 text-[10px] text-muted-foreground">
                 {node.otherAmount > 0
-                  ? '(From Sales Team Cost · bulk entry)'
+                  ? '(Bulk Other + monthly seating/other)'
                   : 'No other cost for selected month'}
               </p>
             </div>
 
-            {node.type === 'bd' && (
-              <div className="rounded-md border p-3">
-                <p className="text-xs font-medium text-muted-foreground">Marketing cost</p>
-                <p className="text-sm font-semibold">{formatCurrency(node.marketingCost ?? 0)}</p>
-                <p className="mt-1 text-[10px] text-muted-foreground">(From Marketing)</p>
-              </div>
-            )}
+            <div className="rounded-md border p-3">
+              <p className="text-xs font-medium text-muted-foreground">Marketing cost</p>
+              <p className="text-sm font-semibold tabular-nums">
+                {formatCurrency(node.marketingCost ?? 0)}
+              </p>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                {node.type === 'bd'
+                  ? node.marketingCost > 0
+                    ? '(Campaign spend ÷ active BDs)'
+                    : 'No marketing spend for selected month'
+                  : 'Per-person share shown on BD cards'}
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-3 rounded-md bg-muted/40 px-3 py-2 text-xs">
@@ -152,11 +158,9 @@ export function RoleCostNode({
             <span>
               Direct other: <strong>{formatCurrency(direct.other)}</strong>
             </span>
-            {(node.type === 'bd' || node.type === 'tl' || node.type === 'salesHead') && (
-              <span>
-                Direct marketing: <strong>{formatCurrency(direct.marketing)}</strong>
-              </span>
-            )}
+            <span>
+              Direct marketing: <strong>{formatCurrency(direct.marketing)}</strong>
+            </span>
             <span className="font-medium">
               Direct total: {formatCurrency(direct.total)}
             </span>

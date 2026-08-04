@@ -139,6 +139,32 @@ export async function loadUnallocatedBulkCostTotals(
   return result
 }
 
+/**
+ * Authoritative Misc/Other totals for the period — sum of EVERY bulk entry.
+ * Use this for the Sales Team Cost summary so the front total always matches
+ * the Add Misc/Other Cost entry list (hierarchy walk can miss orphan assignees).
+ */
+export async function loadBulkCostPeriodTotals(
+  period: SalesTeamCostPeriod,
+): Promise<BulkCostTotalsByEmployee> {
+  const rows = await prisma.salesTeamBulkCostEntry.groupBy({
+    by: ['costType'],
+    where: {
+      month: period.month,
+      year: period.year,
+    },
+    _sum: { amount: true },
+  })
+
+  const result: BulkCostTotalsByEmployee = { misc: 0, other: 0 }
+  for (const row of rows) {
+    const amount = row._sum.amount ?? 0
+    if (row.costType === SalesTeamBulkCostType.MISC) result.misc += amount
+    else result.other += amount
+  }
+  return result
+}
+
 export async function listBulkCostEntries(
   period: SalesTeamCostPeriod,
   costType: SalesTeamBulkCostType,
@@ -165,7 +191,7 @@ export async function listBulkCostActivity(
     take: 200,
   })
 
-  return rows.map((row) => ({
+  const activity: BulkCostActivityDto[] = rows.map((row) => ({
     id: row.id,
     entryId: row.entryId,
     costType: row.costType,
@@ -183,4 +209,36 @@ export async function listBulkCostActivity(
     changedBy: row.changedBy.name,
     changedAt: row.changedAt.toISOString(),
   }))
+
+  // Live entries with no CREATE history (legacy / failed log) still appear as CREATE.
+  if (period) {
+    const entries = await listBulkCostEntries(period, costType)
+    const createEntryIds = new Set(
+      activity.filter((a) => a.action === 'CREATE' && a.entryId).map((a) => a.entryId as string),
+    )
+    for (const entry of entries) {
+      if (createEntryIds.has(entry.id)) continue
+      activity.push({
+        id: `legacy-create-${entry.id}`,
+        entryId: entry.id,
+        costType: entry.costType,
+        month: entry.month,
+        year: entry.year,
+        action: 'CREATE',
+        amount: entry.amount,
+        remark: entry.remark,
+        employeeId: entry.employeeId,
+        employeeName: entry.employeeName,
+        previousAmount: null,
+        previousRemark: null,
+        previousEmployeeId: null,
+        previousEmployeeName: null,
+        changedBy: entry.createdBy,
+        changedAt: entry.createdAt,
+      })
+    }
+    activity.sort((a, b) => +new Date(b.changedAt) - +new Date(a.changedAt))
+  }
+
+  return activity
 }
