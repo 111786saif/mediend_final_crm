@@ -2257,6 +2257,10 @@ export const PaymentInstallmentScalarFieldEnum = {
   reference: 'reference',
   notes: 'notes',
   recordedById: 'recordedById',
+  verificationStatus: 'verificationStatus',
+  verifiedById: 'verifiedById',
+  verifiedAt: 'verifiedAt',
+  rejectionRemarks: 'rejectionRemarks',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

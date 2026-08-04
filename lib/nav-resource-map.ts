@@ -74,6 +74,7 @@ export const NAV_TITLE_TO_RESOURCE: Record<string, string> = {
   'Ask MD Approval': 'myhrms.ask_md_approval',
   'Fin Reports': 'finance.fin_reports',
   'Fin Invoice Requests': 'finance.fin_invoice_requests',
+  'Payment Verifications': 'finance.payment_verifications',
   'Fin Doctor Payoff': 'finance.fin_doctor_payoff',
   'Sales Team Cost': 'finance.fin_sales_team_cost',
   'Master Seating Cost': 'finance.master_seating_cost',
