@@ -69,14 +69,6 @@ type CircleMaster = {
   isActive: boolean
 }
 
-type CityMaster = {
-  id: string
-  name: string
-  circleId: string
-  isActive: boolean
-  circle: CircleMaster
-}
-
 type DepartmentOption = {
   id: string
   name: string
@@ -95,6 +87,18 @@ type TeamLeadOption = {
   } | null
   activeBdCount: number
   activeBdCircles: string[]
+  activeBds: Array<{
+    id: string
+    userId: string
+    name: string
+    email: string
+    employeeCode: string
+    circle: string | null
+    department: {
+      id: string
+      name: string
+    } | null
+  }>
 }
 
 type CampaignAssignment = {
@@ -118,6 +122,12 @@ type CampaignAssignment = {
       role: string
     }
   }
+  bdDailyLimits?: Array<{
+    id: string
+    bdEmployeeId: string
+    bdUserId: string
+    maxLeadsPerDay: number
+  }>
 }
 
 type CampaignRecord = {
@@ -131,12 +141,10 @@ type CampaignRecord = {
   leadSourceId: string
   circleId: string
   circleIds: string[]
-  cityId: string | null
   source: SourceMaster
   leadSource: LeadSourceMaster
   circle: CircleMaster
   circles: CircleMaster[]
-  city: CityMaster | null
   department: DepartmentOption | null
   assignments: CampaignAssignment[]
 }
@@ -146,7 +154,6 @@ type CampaignPageData = {
     sources: SourceMaster[]
     leadSources: LeadSourceMaster[]
     circles: CircleMaster[]
-    cities: CityMaster[]
     departments: DepartmentOption[]
   }
   teamLeads: TeamLeadOption[]
@@ -174,7 +181,6 @@ type CampaignFormState = {
   sourceId: string
   leadSourceId: string
   circleIds: string[]
-  cityId: string
   isActive: boolean
 }
 
@@ -184,6 +190,7 @@ type AssignmentDraft = {
   weight: string
   priority: string
   isActive: boolean
+  bdLimits: Record<string, string>
 }
 
 function createEmptyCampaignForm(): CampaignFormState {
@@ -195,7 +202,6 @@ function createEmptyCampaignForm(): CampaignFormState {
     sourceId: '',
     leadSourceId: '',
     circleIds: [],
-    cityId: 'none',
     isActive: true,
   }
 }
@@ -214,7 +220,6 @@ function buildCampaignForm(drawer: DrawerState): CampaignFormState {
     sourceId: item?.sourceId ?? '',
     leadSourceId: item?.leadSourceId ?? '',
     circleIds: item?.circleIds ?? (item?.circleId ? [item.circleId] : []),
-    cityId: item?.cityId ?? 'none',
     isActive: item?.isActive ?? true,
   }
 }
@@ -226,12 +231,19 @@ function buildAssignmentDrafts(campaign: CampaignRecord, teamLeads: TeamLeadOpti
 
   return teamLeads.map((teamLead) => {
     const existing = assignmentMap.get(teamLead.id)
+    const bdLimits = Object.fromEntries(
+      teamLead.activeBds.map((bd) => {
+        const existingLimit = existing?.bdDailyLimits?.find((limit) => limit.bdEmployeeId === bd.id)
+        return [bd.id, existingLimit ? String(existingLimit.maxLeadsPerDay) : '']
+      })
+    )
     return {
       teamLeadEmployeeId: teamLead.id,
       enabled: Boolean(existing),
       weight: String(existing?.weight ?? 1),
       priority: String(existing?.priority ?? 100),
       isActive: existing?.isActive ?? true,
+      bdLimits,
     }
   })
 }
@@ -247,11 +259,6 @@ function statusBadge(isActive: boolean) {
 function filterLeadSources(leadSources: LeadSourceMaster[], sourceId: string) {
   if (!sourceId) return leadSources
   return leadSources.filter((leadSource) => leadSource.sourceId === sourceId)
-}
-
-function filterCities(cities: CityMaster[], circleIds: string[]) {
-  if (circleIds.length === 0) return cities
-  return cities.filter((city) => circleIds.includes(city.circleId))
 }
 
 function filterTeamLeadsForCampaign(teamLeads: TeamLeadOption[], campaign: CampaignRecord) {
@@ -348,11 +355,6 @@ export default function CrmCampaignsPage() {
     [data?.masters.leadSources, campaignForm.sourceId]
   )
 
-  const availableCities = useMemo(
-    () => filterCities(data?.masters.cities ?? [], campaignForm.circleIds),
-    [data?.masters.cities, campaignForm.circleIds]
-  )
-
   const drawerTitle =
     drawer?.type === 'campaign'
       ? drawer.mode === 'create'
@@ -396,7 +398,6 @@ export default function CrmCampaignsPage() {
       sourceId: campaignForm.sourceId,
       leadSourceId: campaignForm.leadSourceId,
       circleIds: campaignForm.circleIds,
-      cityId: campaignForm.cityId === 'none' ? null : campaignForm.cityId,
       isActive: campaignForm.isActive,
     }
 
@@ -433,6 +434,12 @@ export default function CrmCampaignsPage() {
           weight: Number.parseInt(assignment.weight, 10) || 1,
           priority: Number.parseInt(assignment.priority, 10) || 0,
           isActive: assignment.isActive,
+          bdLimits: Object.entries(assignment.bdLimits)
+            .map(([bdEmployeeId, maxLeadsPerDay]) => ({
+              bdEmployeeId,
+              maxLeadsPerDay: Number.parseInt(maxLeadsPerDay, 10),
+            }))
+            .filter((bdLimit) => Number.isFinite(bdLimit.maxLeadsPerDay) && bdLimit.maxLeadsPerDay > 0),
         })),
     }
 
@@ -539,20 +546,10 @@ export default function CrmCampaignsPage() {
                 }))}
                 selected={campaignForm.circleIds}
                 onChange={(selectedCircleIds) =>
-                  setCampaignForm((current) => {
-                    const nextCircleIds = [...selectedCircleIds]
-                    const currentCity = (data?.masters.cities ?? []).find(
-                      (city) => city.id === current.cityId
-                    )
-                    return {
-                      ...current,
-                      circleIds: nextCircleIds,
-                      cityId:
-                        currentCity && nextCircleIds.includes(currentCity.circleId)
-                          ? current.cityId
-                          : 'none',
-                    }
-                  })
+                  setCampaignForm((current) => ({
+                    ...current,
+                    circleIds: [...selectedCircleIds],
+                  }))
                 }
                 placeholder="Select circles"
                 searchPlaceholder="Search circles"
@@ -560,30 +557,6 @@ export default function CrmCampaignsPage() {
                 emptyLabel="All circles"
                 className="w-full justify-between"
               />
-            </div>
-            <div className="space-y-2">
-              <Label>City</Label>
-              <Select
-                value={campaignForm.cityId || 'none'}
-                onValueChange={(value) =>
-                  setCampaignForm((current) => ({
-                    ...current,
-                    cityId: value,
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Optional city" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No city</SelectItem>
-                  {availableCities.map((city) => (
-                    <SelectItem key={city.id} value={city.id}>
-                      {city.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
           </div>
 
@@ -672,7 +645,7 @@ export default function CrmCampaignsPage() {
                 <TableHead>Enable</TableHead>
                 <TableHead>Team Lead</TableHead>
                 <TableHead>Department</TableHead>
-                <TableHead>Active BDs</TableHead>
+                <TableHead>BDs / Daily Cap</TableHead>
                 <TableHead>Weight</TableHead>
                 <TableHead>Priority</TableHead>
                 <TableHead>Active</TableHead>
@@ -713,7 +686,53 @@ export default function CrmCampaignsPage() {
                         <div className="text-xs text-muted-foreground">{teamLead.employeeCode}</div>
                       </TableCell>
                       <TableCell>{teamLead.department?.name ?? '—'}</TableCell>
-                      <TableCell>{teamLead.activeBdCount}</TableCell>
+                      <TableCell className="min-w-[340px]">
+                        {teamLead.activeBds.length === 0 ? (
+                          <div className="text-sm text-muted-foreground">No active BDs under this Team Lead.</div>
+                        ) : (
+                          <div className="space-y-2">
+                            <div className="text-xs text-muted-foreground">
+                              {teamLead.activeBdCount} active BD{teamLead.activeBdCount === 1 ? '' : 's'}
+                            </div>
+                            {teamLead.activeBds.map((bd) => (
+                              <div
+                                key={bd.id}
+                                className="grid gap-2 rounded-lg border border-border/60 bg-muted/10 p-2 md:grid-cols-[minmax(0,1fr)_110px]"
+                              >
+                                <div className="min-w-0">
+                                  <div className="truncate text-sm font-medium">{bd.name}</div>
+                                  <div className="truncate text-xs text-muted-foreground">
+                                    {bd.employeeCode}
+                                    {bd.circle ? ` · ${bd.circle}` : ''}
+                                  </div>
+                                </div>
+                                <Input
+                                  type="number"
+                                  min={1}
+                                  value={draft.bdLimits[bd.id] ?? ''}
+                                  disabled={!draft.enabled}
+                                  onChange={(event) =>
+                                    setAssignmentDrafts((current) =>
+                                      current.map((item) =>
+                                        item.teamLeadEmployeeId === draft.teamLeadEmployeeId
+                                          ? {
+                                              ...item,
+                                              bdLimits: {
+                                                ...item.bdLimits,
+                                                [bd.id]: event.target.value,
+                                              },
+                                            }
+                                          : item
+                                      )
+                                    )
+                                  }
+                                  placeholder="Daily max"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Input
                           type="number"
@@ -888,7 +907,6 @@ export default function CrmCampaignsPage() {
                         <TableHead>Category</TableHead>
                         <TableHead>Department</TableHead>
                         <TableHead>Circles</TableHead>
-                        <TableHead>City</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="w-[120px] text-right">Action</TableHead>
                       </TableRow>
@@ -896,19 +914,19 @@ export default function CrmCampaignsPage() {
                     <TableBody>
                       {isLoading ? (
                         <TableRow>
-                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
                             Loading campaigns...
                           </TableCell>
                         </TableRow>
                       ) : error ? (
                         <TableRow>
-                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
                             Campaign data could not be loaded.
                           </TableCell>
                         </TableRow>
                       ) : (data?.campaigns.length ?? 0) === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
                             No campaigns created yet.
                           </TableCell>
                         </TableRow>
@@ -922,7 +940,6 @@ export default function CrmCampaignsPage() {
                             <TableCell>{campaign.category ?? '—'}</TableCell>
                             <TableCell>{campaign.department?.name ?? '—'}</TableCell>
                             <TableCell>{formatCircleNames(campaign.circles)}</TableCell>
-                            <TableCell>{campaign.city?.name ?? '—'}</TableCell>
                             <TableCell>{statusBadge(campaign.isActive)}</TableCell>
                             <TableCell className="text-right">
                               <Button
@@ -1026,7 +1043,11 @@ export default function CrmCampaignsPage() {
       <Sheet open={Boolean(drawer)} onOpenChange={(open) => !open && closeDrawer()}>
         <SheetContent
           side="right"
-          className="flex h-full w-full max-w-2xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-2xl"
+          className={
+            drawer?.type === 'assignment'
+              ? 'flex h-full w-full max-w-5xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-5xl'
+              : 'flex h-full w-full max-w-2xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-2xl'
+          }
         >
           <SheetHeader className="shrink-0 border-b p-4 text-left">
             <SheetTitle>{drawerTitle}</SheetTitle>

@@ -204,7 +204,6 @@ type PipelineColumnId =
   | 'stage'
   | 'mop'
   | 'lastRemarks'
-  | 'newRemarks'
   | 'followUpDate'
   | 'subStatus'
   | 'surgeryDate'
@@ -253,7 +252,6 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'mop', label: 'MOP', defaultVisible: { bd: false, 'team-lead': false } },
   { id: 'lastRemarks', label: 'Last Remarks', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'newRemarks', label: 'New Remarks', defaultVisible: { bd: false, 'team-lead': false } },
   { id: 'followUpDate', label: 'Follow Up Date', defaultVisible: { bd: false, 'team-lead': false } },
   { id: 'subStatus', label: 'Sub Status', defaultVisible: { bd: false, 'team-lead': false } },
   { id: 'surgeryDate', label: 'Surgery Date', defaultVisible: { bd: false, 'team-lead': true } },
@@ -409,14 +407,14 @@ function stripRemarkMetadataPrefix(value: string) {
 }
 
 function getLeadLastRemarksText(lead: Lead) {
-  if (typeof lead.remarks !== 'string') return '—'
-  const trimmed = stripRemarkMetadataPrefix(lead.remarks.trim()).trim()
-  return trimmed.length > 0 ? trimmed : '—'
-}
-
-function getLeadNewRemarksText(lead: Lead) {
-  if (typeof lead.latestRemark?.content !== 'string') return '—'
-  const trimmed = stripRemarkMetadataPrefix(lead.latestRemark.content.trim()).trim()
+  const candidate =
+    typeof lead.latestRemark?.content === 'string' && lead.latestRemark.content.trim().length > 0
+      ? lead.latestRemark.content
+      : typeof lead.remarks === 'string'
+        ? lead.remarks
+        : null
+  if (candidate == null) return '—'
+  const trimmed = stripRemarkMetadataPrefix(candidate.trim()).trim()
   return trimmed.length > 0 ? trimmed : '—'
 }
 
@@ -487,8 +485,6 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
       return normalizedText(lead.modeOfPayment, '—')
     case 'lastRemarks':
       return getLeadLastRemarksText(lead)
-    case 'newRemarks':
-      return getLeadNewRemarksText(lead)
     case 'followUpDate':
       return formatTableDate(lead.followUpDate)
     case 'subStatus':
@@ -1361,7 +1357,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           )}
                           {isColumnVisible('mop') && <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />}
                           {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remarks" {...getHeaderFilterProps('lastRemarks')} />}
-                          {isColumnVisible('newRemarks') && <HeaderCell label="New Remarks" {...getHeaderFilterProps('newRemarks')} />}
                           {isColumnVisible('followUpDate') && <HeaderCell label="Follow Up Date" {...getHeaderFilterProps('followUpDate')} />}
                           {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" {...getHeaderFilterProps('subStatus')} />}
                           {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />}
@@ -1741,7 +1736,6 @@ const PipelineRow = memo(function PipelineRow({
   const preferredLocation = resolveLeadCity(lead) ?? normalizedText(lead.circle, '—')
   const leadRefText = typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
   const lastRemarksText = getLeadLastRemarksText(lead)
-  const newRemarksText = getLeadNewRemarksText(lead)
   const planningTreatmentText =
     typeof lead.diseaseDetails === 'string' && lead.diseaseDetails.trim().length > 0
       ? lead.diseaseDetails.trim()
@@ -1900,13 +1894,8 @@ const PipelineRow = memo(function PipelineRow({
         <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.modeOfPayment, '—')}</td>
       )}
       {show('lastRemarks') && (
-        <td className="max-w-[280px] whitespace-normal break-words px-3 py-2 text-sm align-top">
+        <td className="max-w-[420px] whitespace-normal break-words px-3 py-2 text-sm align-top">
           {lastRemarksText}
-        </td>
-      )}
-      {show('newRemarks') && (
-        <td className="max-w-[280px] whitespace-normal break-words px-3 py-2 text-sm align-top">
-          {newRemarksText}
         </td>
       )}
       {show('followUpDate') && (

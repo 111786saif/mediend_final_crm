@@ -64,11 +64,83 @@ function parseNumberishOrText(value: unknown) {
   return /^-?\d+$/.test(normalized) ? Number.parseInt(normalized, 10) : normalized
 }
 
-function deriveMonthNameFromLeadDate(value: string) {
+function padDatePart(value: number) {
+  return String(value).padStart(2, '0')
+}
+
+function formatNormalizedDate(
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
+  minute: number,
+  second: number
+) {
+  return `${year}-${padDatePart(month)}-${padDatePart(day)}T${padDatePart(hour)}:${padDatePart(minute)}:${padDatePart(second)}`
+}
+
+function parseManualDateInput(value: unknown): string | null {
   const normalized = normalizeString(value)
   if (!normalized) return null
 
-  const date = new Date(normalized.replace(' ', 'T'))
+  const isoLikeMatch = normalized.match(
+    /^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2}))?)?$/
+  )
+
+  if (isoLikeMatch) {
+    const [, yearText, monthText, dayText, hourText, minuteText, secondText] = isoLikeMatch
+    return formatNormalizedDate(
+      Number.parseInt(yearText, 10),
+      Number.parseInt(monthText, 10),
+      Number.parseInt(dayText, 10),
+      Number.parseInt(hourText ?? '0', 10),
+      Number.parseInt(minuteText ?? '0', 10),
+      Number.parseInt(secondText ?? '0', 10)
+    )
+  }
+
+  const slashMatch = normalized.match(
+    /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2}))?)?$/
+  )
+
+  if (slashMatch) {
+    const [, firstText, secondText, yearText, hourText, minuteText, secondValueText] = slashMatch
+    const first = Number.parseInt(firstText, 10)
+    const second = Number.parseInt(secondText, 10)
+
+    // Manual imports may arrive as M/D/YYYY from exported sheets, while larger
+    // values in the first segment clearly indicate D/M/YYYY.
+    const month = first > 12 ? second : first
+    const day = first > 12 ? first : second
+
+    return formatNormalizedDate(
+      Number.parseInt(yearText, 10),
+      month,
+      day,
+      Number.parseInt(hourText ?? '0', 10),
+      Number.parseInt(minuteText ?? '0', 10),
+      Number.parseInt(secondValueText ?? '0', 10)
+    )
+  }
+
+  const parsed = new Date(normalized)
+  if (Number.isNaN(parsed.getTime())) return normalized
+
+  return formatNormalizedDate(
+    parsed.getFullYear(),
+    parsed.getMonth() + 1,
+    parsed.getDate(),
+    parsed.getHours(),
+    parsed.getMinutes(),
+    parsed.getSeconds()
+  )
+}
+
+function deriveMonthNameFromLeadDate(value: string) {
+  const normalized = parseManualDateInput(value)
+  if (!normalized) return null
+
+  const date = new Date(normalized)
   if (Number.isNaN(date.getTime())) return null
 
   return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date)
@@ -91,11 +163,11 @@ function validateManualRow(record: ManualLeadInputRecord) {
 }
 
 function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQLLeadRow {
-  const normalizedLeadDate = normalizeString(record.Lead_Date) || null
+  const normalizedLeadDate = parseManualDateInput(record.Lead_Date)
   const normalizedLeadEntryDate =
-    normalizeString(record.LeadEntryDate) || normalizedLeadDate
+    parseManualDateInput(record.LeadEntryDate) || normalizedLeadDate
   const normalizedCreateDate =
-    normalizeString(record.create_date) || normalizedLeadDate
+    parseManualDateInput(record.create_date) || normalizedLeadDate
   const normalizedMonth =
     normalizeString(record.month) || deriveMonthNameFromLeadDate(normalizedLeadDate ?? '')
 
@@ -124,17 +196,17 @@ function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQL
     remarks_id: normalizeString(record.remarks_id) || null,
     Remarks: normalizeString(record.Remarks) || null,
     LastRemarks: normalizeString(record.LastRemarks) || null,
-    Follow_up_Date: normalizeString(record.Follow_up_Date) || null,
+    Follow_up_Date: parseManualDateInput(record.Follow_up_Date),
     Status: parseNumberishOrText(record.Status),
     SubStatus: parseNumberish(record.SubStatus),
-    Surgery_Date: normalizeString(record.Surgery_Date) || null,
+    Surgery_Date: parseManualDateInput(record.Surgery_Date),
     OPD_Hospital: normalizeString(record.OPD_Hospital) || null,
     OPD_DrName: normalizeString(record.OPD_DrName) || null,
     OPD_ContactNo: normalizeString(record.OPD_ContactNo) || null,
     OPD_Charges: parseNumberish(record.OPD_Charges),
-    OPD_ScheduleDate: normalizeString(record.OPD_ScheduleDate) || null,
+    OPD_ScheduleDate: parseManualDateInput(record.OPD_ScheduleDate),
     OPD_Meeting: parseNumberish(record.OPD_Meeting),
-    IPD_AdmisisonDate: normalizeString(record.IPD_AdmisisonDate) || null,
+    IPD_AdmisisonDate: parseManualDateInput(record.IPD_AdmisisonDate),
     IPD_Hospital: normalizeString(record.IPD_Hospital) || null,
     IPD_DrName: normalizeString(record.IPD_DrName) || null,
     IPD_ContactNo: normalizeString(record.IPD_ContactNo) || null,
@@ -155,7 +227,7 @@ function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQL
     whatsapp_msg: parseBooleanish(record.whatsapp_msg),
     create_by: parseNumberish(record.create_by),
     update_by: parseNumberish(record.update_by),
-    update_date: normalizeString(record.update_date) || null,
+    update_date: parseManualDateInput(record.update_date),
     ip: normalizeString(record.ip) || null,
     website: normalizeString(record.website) || null,
     description: normalizeString(record.description) || null,

@@ -1642,13 +1642,13 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
-                {/* BD / TL Actions (Insurance Flow) — show when at Card Details step */}
-                {lead.flowType !== FlowType.CASH && hasDoneOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && ([CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage) && (
+                {/* BD / TL Actions (Insurance Flow) — OPD is optional, so card details can start directly from early stages */}
+                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && ([CaseStage.NEW_LEAD, CaseStage.OPD_SCHEDULED, CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage) && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/kyp/basic`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/kyp/basic`)}>
                       <Plus className="h-4 w-4" />
                       Fill Card Details
                     </Link>
