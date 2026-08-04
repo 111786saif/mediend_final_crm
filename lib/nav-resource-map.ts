@@ -45,7 +45,6 @@ export const NAV_TITLE_TO_RESOURCE: Record<string, string> = {
   'P/L Ledger': 'insurance_pl.pl_ledger',
   'P/L Surgery': 'insurance_pl.pl_surgery',
   'P/L Outstanding': 'insurance_pl.pl_outstanding',
-  'Outstanding List': 'insurance_pl.pl_outstanding',
   'Doctor List': 'insurance_pl.doctor_list',
   'Hospital List': 'insurance_pl.hospital_list',
   'My Core HR': 'myhrms.my_core_hr',

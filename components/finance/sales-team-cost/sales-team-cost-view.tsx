@@ -173,56 +173,60 @@ export function SalesTeamCostView() {
             <CardDescription>Rolled up across the full hierarchy</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3 lg:grid-cols-6">
-              <div>
+            <div className="grid grid-cols-2 items-start gap-x-4 gap-y-4 text-sm sm:grid-cols-3 lg:grid-cols-6">
+              <div className="flex min-w-0 flex-col gap-0.5">
                 <p className="text-xs text-muted-foreground">Salary</p>
-                <p className="font-semibold">{formatCurrency(summary.rollup.salary)}</p>
+                <p className="font-semibold tabular-nums">{formatCurrency(summary.rollup.salary)}</p>
               </div>
-              <div>
+              <div className="flex min-w-0 flex-col gap-0.5">
                 <p className="text-xs text-muted-foreground">Incentives</p>
-                <p className="font-semibold">{formatCurrency(summary.rollup.incentives)}</p>
+                <p className="font-semibold tabular-nums">{formatCurrency(summary.rollup.incentives)}</p>
               </div>
-              <div>
+              <div className="flex min-w-0 flex-col gap-0.5">
                 <p className="text-xs text-muted-foreground">Seating</p>
-                <p className="font-semibold">{formatCurrency(summary.rollup.seating)}</p>
+                <p className="font-semibold tabular-nums">{formatCurrency(summary.rollup.seating)}</p>
               </div>
               <button
                 type="button"
-                className="rounded-md text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring -m-1.5 p-1.5"
+                className="flex min-w-0 flex-col gap-0.5 rounded-md p-0 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={() => setActivityType('MISC')}
                 title="View Misc Cost activity"
               >
                 <p className="text-xs text-muted-foreground">Misc</p>
-                <p className="font-semibold underline decoration-dotted underline-offset-4">
+                <p className="font-semibold tabular-nums underline decoration-dotted underline-offset-4">
                   {formatCurrency(summary.rollup.misc)}
                 </p>
-                {(summary.unallocated?.misc ?? 0) > 0 && (
-                  <p className="text-[10px] text-muted-foreground">
+                {(summary.unallocated?.misc ?? 0) > 0 ? (
+                  <p className="truncate text-[10px] text-muted-foreground">
                     incl. {formatCurrency(summary.unallocated.misc)} unassigned
                   </p>
+                ) : (
+                  <p className="text-[10px] text-transparent select-none">—</p>
                 )}
                 <p className="text-[10px] text-primary">View activity</p>
               </button>
               <button
                 type="button"
-                className="rounded-md text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring -m-1.5 p-1.5"
+                className="flex min-w-0 flex-col gap-0.5 rounded-md p-0 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={() => setActivityType('OTHER')}
                 title="View Other Cost activity"
               >
                 <p className="text-xs text-muted-foreground">Other</p>
-                <p className="font-semibold underline decoration-dotted underline-offset-4">
+                <p className="font-semibold tabular-nums underline decoration-dotted underline-offset-4">
                   {formatCurrency(summary.rollup.other)}
                 </p>
-                {(summary.unallocated?.other ?? 0) > 0 && (
-                  <p className="text-[10px] text-muted-foreground">
+                {(summary.unallocated?.other ?? 0) > 0 ? (
+                  <p className="truncate text-[10px] text-muted-foreground">
                     incl. {formatCurrency(summary.unallocated.other)} unassigned
                   </p>
+                ) : (
+                  <p className="text-[10px] text-transparent select-none">—</p>
                 )}
                 <p className="text-[10px] text-primary">View activity</p>
               </button>
-              <div>
+              <div className="flex min-w-0 flex-col gap-0.5">
                 <p className="text-xs text-muted-foreground">Marketing (BD)</p>
-                <p className="font-semibold">{formatCurrency(summary.rollup.marketing)}</p>
+                <p className="font-semibold tabular-nums">{formatCurrency(summary.rollup.marketing)}</p>
               </div>
             </div>
           </CardContent>
@@ -271,6 +275,9 @@ export function SalesTeamCostView() {
           costType={activityType}
           month={filters.month}
           year={filters.year}
+          dashboardTotal={
+            activityType === 'MISC' ? summary.rollup.misc : summary.rollup.other
+          }
         />
       )}
     </div>

@@ -1,8 +1,55 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasPermission, hasPlOrFinanceRead } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+
+/** Light lead payload for P/L Outstanding detail — avoids /api/leads/[id] ownership gate. */
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) return unauthorizedResponse()
+    if (!hasPlOrFinanceRead(user)) return errorResponse('Forbidden', 403)
+
+    const { id } = await params
+    const lead = await prisma.lead.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        leadRef: true,
+        patientName: true,
+        phoneNumber: true,
+        hospitalName: true,
+        treatment: true,
+        category: true,
+        circle: true,
+        source: true,
+        billAmount: true,
+        surgeryDate: true,
+        bd: { select: { id: true, name: true } },
+        plRecord: true,
+        outstandingCase: {
+          select: {
+            id: true,
+            paymentReceived: true,
+            remark2: true,
+          },
+        },
+        dischargeSheet: true,
+      },
+    })
+
+    if (!lead) return errorResponse('Lead not found', 404)
+
+    return successResponse(lead)
+  } catch (error) {
+    console.error('Error fetching outstanding record:', error)
+    return errorResponse('Failed to fetch outstanding record', 500)
+  }
+}
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {

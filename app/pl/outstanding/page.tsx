@@ -57,11 +57,6 @@ function generateMonthOptions() {
 
 const MONTH_OPTIONS = generateMonthOptions()
 
-function currentMonthKey() {
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
-}
-
 function isPendingPayout(r: Lead) {
   return (
     r.plRecord?.hospitalPayoutStatus !== 'PAID' ||
@@ -72,7 +67,8 @@ function isPendingPayout(r: Lead) {
 
 export default function PLOutstandingPage() {
   const { hasAccess, permissions } = usePermissions()
-  const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
+  // Default: all months — outstanding is a work queue; current-month-only often showed ₹0
+  const [selectedMonths, setSelectedMonths] = useState<string[]>([])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
 
   useEffect(() => {
@@ -244,16 +240,15 @@ export default function PLOutstandingPage() {
         filters.push({ field: 'netProfit', operator: 'between', value: netProfitFilter })
       }
 
-      const params = new URLSearchParams({
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-      })
+      const params = new URLSearchParams()
+      if (dateRange.startDate) params.set('startDate', dateRange.startDate)
+      if (dateRange.endDate) params.set('endDate', dateRange.endDate)
       if (filters.length > 0) {
         params.set('filters', JSON.stringify(filters))
       }
-      return await apiGet<Lead[]>(`/api/outstanding?${params.toString()}`)
+      const qs = params.toString()
+      return await apiGet<Lead[]>(`/api/outstanding${qs ? `?${qs}` : ''}`)
     },
-    enabled: !!dateRange.startDate && !!dateRange.endDate,
   })
 
   const [page, setPage] = useState(1)
@@ -1018,7 +1013,9 @@ export default function PLOutstandingPage() {
                   <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-800 via-orange-700 to-amber-900 bg-clip-text text-transparent dark:from-amber-200 dark:via-orange-200 dark:to-amber-100">
                     P/L Outstanding
                   </h1>
-                  <p className="text-muted-foreground mt-1">Payout statuses and pending amounts for discharged cases</p>
+                  <p className="text-muted-foreground mt-1">
+                    Cases moved to Outstanding from P/L Ledger — payout statuses and pending amounts
+                  </p>
                 </div>
               </div>
             </div>
@@ -1027,11 +1024,13 @@ export default function PLOutstandingPage() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="gap-2 border-slate-300 bg-background/90">
                     <Calendar className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                    Months {selectedMonths.length > 0 && `(${selectedMonths.length})`}
+                    {selectedMonths.length === 0
+                      ? 'All months'
+                      : `Months (${selectedMonths.length})`}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 max-h-[min(70vh,420px)] overflow-y-auto">
-                  <DropdownMenuLabel>Select months</DropdownMenuLabel>
+                  <DropdownMenuLabel>Filter by surgery / month</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuCheckboxItem
                     checked={selectedMonths.length === MONTH_OPTIONS.length}
@@ -1057,14 +1056,14 @@ export default function PLOutstandingPage() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              {(selectedMonths.length !== 1 || selectedMonths[0] !== currentMonthKey() || activeFilterCount > 0) && (
+              {(selectedMonths.length > 0 || activeFilterCount > 0) && (
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   className="h-8 gap-1 text-rose-600 dark:text-rose-400 hover:text-rose-700 hover:bg-rose-500/10"
                   onClick={() => {
-                    setSelectedMonths([currentMonthKey()])
+                    setSelectedMonths([])
                     clearFilters()
                   }}
                 >

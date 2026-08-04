@@ -67,10 +67,17 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
   const { user } = useAuth()
   const canWrite = user ? hasPermission(user, 'pl:write') : false
 
-  const { data: record, isLoading: loadingLead } = useQuery<Lead>({
-    queryKey: ['lead', leadId],
-    queryFn: () => apiGet<Lead>(`/api/leads/${leadId}`),
+  const {
+    data: record,
+    isLoading: loadingLead,
+    isError,
+    error,
+    refetch,
+  } = useQuery<Lead>({
+    queryKey: ['outstanding-detail', leadId],
+    queryFn: () => apiGet<Lead>(`/api/outstanding/${leadId}`),
     enabled: !!leadId && open,
+    retry: 1,
   })
 
   const resolved = useMemo(() => {
@@ -124,7 +131,7 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
       return apiPatch<Lead>(`/api/outstanding/${leadId}`, payload)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['outstanding-detail', leadId] })
       queryClient.invalidateQueries({ queryKey: ['outstanding'] })
       toast.success('Outstanding record updated')
       onOpenChange(false)
@@ -158,11 +165,27 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-[65vw] sm:max-w-[65vw] p-0 gap-0 flex flex-col">
-        {loadingLead || !record ? (
+        {loadingLead ? (
           <div className="flex items-center justify-center h-full">
             <SheetTitle className="sr-only">Loading Record</SheetTitle>
             <SheetDescription className="sr-only">Please wait while the record is loading</SheetDescription>
             <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
+          </div>
+        ) : isError || !record ? (
+          <div className="flex flex-col items-center justify-center h-full gap-4 px-6">
+            <SheetTitle className="sr-only">Unable to load</SheetTitle>
+            <SheetDescription className="sr-only">Failed to load outstanding record</SheetDescription>
+            <p className="text-muted-foreground text-center">
+              {error instanceof Error ? error.message : 'Failed to load this case.'}
+            </p>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => refetch()}>
+                Retry
+              </Button>
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Close
+              </Button>
+            </div>
           </div>
         ) : !record.dischargeSheet ? (
           <div className="flex flex-col items-center justify-center h-full gap-4 px-6">
