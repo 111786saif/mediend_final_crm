@@ -4,6 +4,27 @@ import { createLeadQrPublicLink, loadLeadForQrAudit } from '@/lib/lead-qr'
 import { canUserViewLeadOwner } from '@/lib/lead-ownership'
 import { getSessionWithFreshUser } from '@/lib/session'
 
+function resolvePublicOrigin(request: NextRequest) {
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')
+  }
+
+  const forwardedHost = request.headers.get('x-forwarded-host')
+  const forwardedProto = request.headers.get('x-forwarded-proto')
+  if (forwardedHost) {
+    const protocol = forwardedProto || 'https'
+    return `${protocol}://${forwardedHost}`
+  }
+
+  const host = request.headers.get('host')
+  if (host) {
+    const protocol = forwardedProto || (host.includes('localhost') ? 'http' : 'https')
+    return `${protocol}://${host}`
+  }
+
+  return new URL(request.url).origin
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -30,7 +51,7 @@ export async function POST(
       actorUserId: currentUser.id,
     })
 
-    const origin = new URL(request.url).origin
+    const origin = resolvePublicOrigin(request)
     const encodedId = encodeURIComponent(publicLink.id)
 
     return Response.json({
