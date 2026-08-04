@@ -391,6 +391,7 @@ export const ModelName = {
   CallNote: 'CallNote',
   LeadRemarkEntry: 'LeadRemarkEntry',
   LeadQrCallAuditLog: 'LeadQrCallAuditLog',
+  LeadQrPublicLink: 'LeadQrPublicLink',
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
@@ -458,6 +459,7 @@ export const ModelName = {
   CrmCampaignSource: 'CrmCampaignSource',
   CrmCampaignLeadSource: 'CrmCampaignLeadSource',
   CrmCampaignCircle: 'CrmCampaignCircle',
+  CrmCampaignCircleSelection: 'CrmCampaignCircleSelection',
   CrmCampaignCity: 'CrmCampaignCity',
   CrmSubStatusMaster: 'CrmSubStatusMaster',
   CrmCampaign: 'CrmCampaign',
@@ -562,7 +564,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "leadOpdAppointment" | "leadOpdAppointmentPrescriptionImage" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
+    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadQrPublicLink" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCircleSelection" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "leadOpdAppointment" | "leadOpdAppointmentPrescriptionImage" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1081,6 +1083,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LeadQrCallAuditLogCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LeadQrCallAuditLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    LeadQrPublicLink: {
+      payload: Prisma.$LeadQrPublicLinkPayload<ExtArgs>
+      fields: Prisma.LeadQrPublicLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadQrPublicLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadQrPublicLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.LeadQrPublicLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadQrPublicLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>
+        }
+        findMany: {
+          args: Prisma.LeadQrPublicLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>[]
+        }
+        create: {
+          args: Prisma.LeadQrPublicLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>
+        }
+        createMany: {
+          args: Prisma.LeadQrPublicLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadQrPublicLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.LeadQrPublicLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>
+        }
+        update: {
+          args: Prisma.LeadQrPublicLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadQrPublicLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadQrPublicLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadQrPublicLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadQrPublicLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrPublicLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.LeadQrPublicLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeadQrPublicLink>
+        }
+        groupBy: {
+          args: Prisma.LeadQrPublicLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadQrPublicLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadQrPublicLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadQrPublicLinkCountAggregateOutputType> | number
         }
       }
     }
@@ -6039,6 +6115,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CrmCampaignCircleCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CrmCampaignCircleCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmCampaignCircleSelection: {
+      payload: Prisma.$CrmCampaignCircleSelectionPayload<ExtArgs>
+      fields: Prisma.CrmCampaignCircleSelectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmCampaignCircleSelectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmCampaignCircleSelectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>
+        }
+        findFirst: {
+          args: Prisma.CrmCampaignCircleSelectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmCampaignCircleSelectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>
+        }
+        findMany: {
+          args: Prisma.CrmCampaignCircleSelectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>[]
+        }
+        create: {
+          args: Prisma.CrmCampaignCircleSelectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>
+        }
+        createMany: {
+          args: Prisma.CrmCampaignCircleSelectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmCampaignCircleSelectionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>[]
+        }
+        delete: {
+          args: Prisma.CrmCampaignCircleSelectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>
+        }
+        update: {
+          args: Prisma.CrmCampaignCircleSelectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmCampaignCircleSelectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmCampaignCircleSelectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmCampaignCircleSelectionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmCampaignCircleSelectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCircleSelectionPayload>
+        }
+        aggregate: {
+          args: Prisma.CrmCampaignCircleSelectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmCampaignCircleSelection>
+        }
+        groupBy: {
+          args: Prisma.CrmCampaignCircleSelectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignCircleSelectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmCampaignCircleSelectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignCircleSelectionCountAggregateOutputType> | number
         }
       }
     }
@@ -12875,6 +13025,18 @@ export const LeadQrCallAuditLogScalarFieldEnum = {
 export type LeadQrCallAuditLogScalarFieldEnum = (typeof LeadQrCallAuditLogScalarFieldEnum)[keyof typeof LeadQrCallAuditLogScalarFieldEnum]
 
 
+export const LeadQrPublicLinkScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  actorUserId: 'actorUserId',
+  expiresAt: 'expiresAt',
+  lastOpenedAt: 'lastOpenedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadQrPublicLinkScalarFieldEnum = (typeof LeadQrPublicLinkScalarFieldEnum)[keyof typeof LeadQrPublicLinkScalarFieldEnum]
+
+
 export const LeadStageEventScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
@@ -14149,6 +14311,17 @@ export const CrmCampaignCircleScalarFieldEnum = {
 export type CrmCampaignCircleScalarFieldEnum = (typeof CrmCampaignCircleScalarFieldEnum)[keyof typeof CrmCampaignCircleScalarFieldEnum]
 
 
+export const CrmCampaignCircleSelectionScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  circleId: 'circleId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignCircleSelectionScalarFieldEnum = (typeof CrmCampaignCircleSelectionScalarFieldEnum)[keyof typeof CrmCampaignCircleSelectionScalarFieldEnum]
+
+
 export const CrmCampaignCityScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -14692,6 +14865,10 @@ export const PaymentInstallmentScalarFieldEnum = {
   reference: 'reference',
   notes: 'notes',
   recordedById: 'recordedById',
+  verificationStatus: 'verificationStatus',
+  verifiedById: 'verifiedById',
+  verifiedAt: 'verifiedAt',
+  rejectionRemarks: 'rejectionRemarks',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -16579,6 +16756,20 @@ export type ListEnumInstallmentModeFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'InstallmentVerificationStatus'
+ */
+export type EnumInstallmentVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentVerificationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InstallmentVerificationStatus[]'
+ */
+export type ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentVerificationStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'ComplianceCallStatus'
  */
 export type EnumComplianceCallStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ComplianceCallStatus'>
@@ -16959,6 +17150,7 @@ export type GlobalOmitConfig = {
   callNote?: Prisma.CallNoteOmit
   leadRemarkEntry?: Prisma.LeadRemarkEntryOmit
   leadQrCallAuditLog?: Prisma.LeadQrCallAuditLogOmit
+  leadQrPublicLink?: Prisma.LeadQrPublicLinkOmit
   leadStageEvent?: Prisma.LeadStageEventOmit
   target?: Prisma.TargetOmit
   bonusRule?: Prisma.BonusRuleOmit
@@ -17026,6 +17218,7 @@ export type GlobalOmitConfig = {
   crmCampaignSource?: Prisma.CrmCampaignSourceOmit
   crmCampaignLeadSource?: Prisma.CrmCampaignLeadSourceOmit
   crmCampaignCircle?: Prisma.CrmCampaignCircleOmit
+  crmCampaignCircleSelection?: Prisma.CrmCampaignCircleSelectionOmit
   crmCampaignCity?: Prisma.CrmCampaignCityOmit
   crmSubStatusMaster?: Prisma.CrmSubStatusMasterOmit
   crmCampaign?: Prisma.CrmCampaignOmit

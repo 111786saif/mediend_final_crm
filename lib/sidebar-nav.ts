@@ -597,6 +597,12 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
+    title: 'Payment Verifications',
+    url: '/finance/payment-verifications',
+    icon: ShieldCheck,
+    permission: 'finance:read',
+  },
+  {
     title: 'Fin Doctor Payoff',
     url: '/finance/doctor-payoff-requests',
     icon: Stethoscope,

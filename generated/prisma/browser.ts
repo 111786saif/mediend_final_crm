@@ -53,6 +53,11 @@ export type LeadRemarkEntry = Prisma.LeadRemarkEntryModel
  */
 export type LeadQrCallAuditLog = Prisma.LeadQrCallAuditLogModel
 /**
+ * Model LeadQrPublicLink
+ * 
+ */
+export type LeadQrPublicLink = Prisma.LeadQrPublicLinkModel
+/**
  * Model LeadStageEvent
  * 
  */
@@ -387,6 +392,11 @@ export type CrmCampaignLeadSource = Prisma.CrmCampaignLeadSourceModel
  * 
  */
 export type CrmCampaignCircle = Prisma.CrmCampaignCircleModel
+/**
+ * Model CrmCampaignCircleSelection
+ * 
+ */
+export type CrmCampaignCircleSelection = Prisma.CrmCampaignCircleSelectionModel
 /**
  * Model CrmCampaignCity
  * 

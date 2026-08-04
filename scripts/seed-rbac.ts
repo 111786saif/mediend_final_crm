@@ -113,9 +113,10 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'finance.md_team_approvals', label: 'MD Team Approvals', type: 'SECTION', parentKey: 'finance', sortOrder: 12 },
   { key: 'finance.fin_reports', label: 'Fin Reports', type: 'SECTION', parentKey: 'finance', sortOrder: 13 },
   { key: 'finance.fin_invoice_requests', label: 'Fin Invoice Requests', type: 'SECTION', parentKey: 'finance', sortOrder: 14 },
-  { key: 'finance.fin_doctor_payoff', label: 'Fin Doctor Payoff', type: 'SECTION', parentKey: 'finance', sortOrder: 15 },
-  { key: 'finance.fin_sales_team_cost', label: 'Sales Team Cost', type: 'SECTION', parentKey: 'finance', sortOrder: 16 },
-  { key: 'finance.master_seating_cost', label: 'Master Seating Cost', type: 'SECTION', parentKey: 'finance', sortOrder: 17 },
+  { key: 'finance.payment_verifications', label: 'Payment Verifications', type: 'SECTION', parentKey: 'finance', sortOrder: 15 },
+  { key: 'finance.fin_doctor_payoff', label: 'Fin Doctor Payoff', type: 'SECTION', parentKey: 'finance', sortOrder: 16 },
+  { key: 'finance.fin_sales_team_cost', label: 'Sales Team Cost', type: 'SECTION', parentKey: 'finance', sortOrder: 17 },
+  { key: 'finance.master_seating_cost', label: 'Master Seating Cost', type: 'SECTION', parentKey: 'finance', sortOrder: 18 },
 
   // Under crm
   { key: 'crm.campaigns', label: 'CRM Campaigns', type: 'SECTION', parentKey: 'crm', sortOrder: 1 },

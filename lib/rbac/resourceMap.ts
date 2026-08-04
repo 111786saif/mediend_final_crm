@@ -113,6 +113,7 @@ export const RESOURCE_MAP = {
   "finance.md_team_approvals": { path: "/md/md-approvals", component: "MDTeamApprovalsPage" },
   "finance.fin_reports": { path: "/finance/reports", component: "FinReportsPage" },
   "finance.fin_invoice_requests": { path: "/finance/invoice-requests", component: "FinInvoiceRequestsPage" },
+  "finance.payment_verifications": { path: "/finance/payment-verifications", component: "FinPaymentVerificationsPage" },
   "finance.fin_doctor_payoff": { path: "/finance/doctor-payoff-requests", component: "FinDoctorPayoffPage" },
   "finance.fin_sales_team_cost": { path: "/finance/sales-team-cost", component: "FinSalesTeamCostPage" },
   "finance.master_seating_cost": { path: "/finance/master-seating-cost", component: "MasterSeatingCostPage" },

@@ -1422,6 +1422,13 @@ export type EnumInstallmentModeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel> | $Enums.InstallmentMode | null
 }
 
+export type EnumInstallmentVerificationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentVerificationStatus | Prisma.EnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InstallmentVerificationStatus[] | Prisma.ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InstallmentVerificationStatus[] | Prisma.ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInstallmentVerificationStatusFilter<$PrismaModel> | $Enums.InstallmentVerificationStatus
+}
+
 export type EnumInstallmentRecipientWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.InstallmentRecipient | Prisma.EnumInstallmentRecipientFieldRefInput<$PrismaModel>
   in?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
@@ -1440,6 +1447,16 @@ export type EnumInstallmentModeNullableWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel>
+}
+
+export type EnumInstallmentVerificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentVerificationStatus | Prisma.EnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InstallmentVerificationStatus[] | Prisma.ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InstallmentVerificationStatus[] | Prisma.ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInstallmentVerificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.InstallmentVerificationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInstallmentVerificationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInstallmentVerificationStatusFilter<$PrismaModel>
 }
 
 export type EnumComplianceCallStatusFilter<$PrismaModel = never> = {
@@ -3110,6 +3127,13 @@ export type NestedEnumInstallmentModeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel> | $Enums.InstallmentMode | null
 }
 
+export type NestedEnumInstallmentVerificationStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentVerificationStatus | Prisma.EnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InstallmentVerificationStatus[] | Prisma.ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InstallmentVerificationStatus[] | Prisma.ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInstallmentVerificationStatusFilter<$PrismaModel> | $Enums.InstallmentVerificationStatus
+}
+
 export type NestedEnumInstallmentRecipientWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.InstallmentRecipient | Prisma.EnumInstallmentRecipientFieldRefInput<$PrismaModel>
   in?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
@@ -3128,6 +3152,16 @@ export type NestedEnumInstallmentModeNullableWithAggregatesFilter<$PrismaModel =
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumInstallmentVerificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentVerificationStatus | Prisma.EnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InstallmentVerificationStatus[] | Prisma.ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InstallmentVerificationStatus[] | Prisma.ListEnumInstallmentVerificationStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInstallmentVerificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.InstallmentVerificationStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInstallmentVerificationStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInstallmentVerificationStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumComplianceCallStatusFilter<$PrismaModel = never> = {

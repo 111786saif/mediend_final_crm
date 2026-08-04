@@ -290,22 +290,27 @@ export default function HospitalDetailPage() {
     }
   }, [filterConfig])
 
+  /** Cases still owed to MediEND (share − already received). */
+  const pendingMediendCases = useMemo(() => {
+    return (data?.cases ?? []).filter((c) => {
+      const due = Math.max((c.mediendShareAmount ?? 0) - (c.mediendReceived ?? 0), 0)
+      return due > 0.0001
+    })
+  }, [data?.cases])
+
   // ── Payment Collection Mutation (Reconciliation) ──────────────────────────
   const recordPaymentMutation = useMutation({
     mutationFn: async (payload: {
-      leadIds: string[]
-      amount: number
+      allocations: Array<{ leadId: string; amount: number }>
       mode: 'NEFT' | 'CHEQUE' | 'UPI' | 'OTHER'
       reference: string | null
       attachments?: Array<{ name: string; url: string; type: string }>
     }) => {
-      // Split the total amount equally among all selected cases
-      const splitAmount = payload.amount / payload.leadIds.length
-      const promises = payload.leadIds.map((leadId) =>
+      const promises = payload.allocations.map(({ leadId, amount }) =>
         apiPost('/api/installments', {
           leadId,
           recipient: 'MEDIEND',
-          amount: splitAmount,
+          amount,
           paidOn: new Date().toISOString(),
           mode: payload.mode,
           reference: payload.reference || null,
@@ -317,15 +322,69 @@ export default function HospitalDetailPage() {
       )
       return Promise.all(promises)
     },
-    onSuccess: () => {
-      toast.success('Hospital payment recorded successfully!')
+    onSuccess: (_data, variables) => {
+      const n = variables.allocations.length
+      toast.success(
+        n === 1
+          ? 'Hospital payment recorded successfully!'
+          : `Hospital payment recorded across ${n} cases (pending Finance verification).`,
+      )
       setSelectedLeads([])
       queryClient.invalidateQueries({ queryKey: ['hospitals', name] })
+      queryClient.invalidateQueries({ queryKey: ['finance-payment-installments'] })
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to record payment')
     },
   })
+
+  function buildPaymentAllocations(
+    leadIds: string[],
+    amount: number,
+  ): Array<{ leadId: string; amount: number }> {
+    if (leadIds.length === 0 || amount <= 0) return []
+
+    // Explicit selection → equal split (existing behaviour)
+    if (selectedLeads.length > 0) {
+      const split = amount / leadIds.length
+      return leadIds.map((leadId) => ({ leadId, amount: split }))
+    }
+
+    // No selection → FIFO fill against pending MediEND dues
+    const byId = new Map((data?.cases ?? []).map((c) => [c.leadId, c]))
+    const ordered = leadIds
+      .map((id) => byId.get(id))
+      .filter((c): c is HospitalCase => !!c)
+      .sort((a, b) => {
+        const ta = a.surgeryDate ? new Date(a.surgeryDate).getTime() : 0
+        const tb = b.surgeryDate ? new Date(b.surgeryDate).getTime() : 0
+        return ta - tb
+      })
+
+    let remaining = amount
+    const allocations: Array<{ leadId: string; amount: number }> = []
+    for (const c of ordered) {
+      if (remaining <= 0.0001) break
+      const due = Math.max((c.mediendShareAmount ?? 0) - (c.mediendReceived ?? 0), 0)
+      const pay = due > 0 ? Math.min(due, remaining) : 0
+      if (pay > 0.0001) {
+        allocations.push({ leadId: c.leadId, amount: Math.round(pay * 100) / 100 })
+        remaining = Math.round((remaining - pay) * 100) / 100
+      }
+    }
+
+    // Leftover (overpayment / no dues tracked) → attach to last allocated or first case
+    if (remaining > 0.0001) {
+      if (allocations.length > 0) {
+        allocations[allocations.length - 1].amount =
+          Math.round((allocations[allocations.length - 1].amount + remaining) * 100) / 100
+      } else if (ordered[0]) {
+        allocations.push({ leadId: ordered[0].leadId, amount: Math.round(remaining * 100) / 100 })
+      }
+    }
+
+    return allocations
+  }
 
   const openRequestDialog = (c: HospitalCase, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -609,6 +668,13 @@ export default function HospitalDetailPage() {
           {canRecordPayment && (
             <RecordPaymentForm
               title="Record Hospital Payment"
+              subtitle={
+                selectedLeads.length > 0
+                  ? `Will split across ${selectedLeads.length} selected case(s)`
+                  : pendingMediendCases.length > 0
+                    ? `No case selected — applies to ${pendingMediendCases.length} pending case(s) automatically`
+                    : 'No case selected — applies to available hospital cases'
+              }
               amountLabel="Amount Paid"
               onSubmit={async (amount, mode, txnId) => {
                 const amt = parseFloat(amount)
@@ -616,8 +682,22 @@ export default function HospitalDetailPage() {
                   toast.error('Please enter a valid payment amount')
                   return
                 }
-                if (selectedLeads.length === 0) {
-                  toast.error('Please select at least one case from the table to record payment')
+
+                const leadIds =
+                  selectedLeads.length > 0
+                    ? selectedLeads
+                    : pendingMediendCases.length > 0
+                      ? pendingMediendCases.map((c) => c.leadId)
+                      : (data?.cases ?? []).map((c) => c.leadId)
+
+                if (leadIds.length === 0) {
+                  toast.error('No cases available to record payment for this hospital')
+                  return
+                }
+
+                const allocations = buildPaymentAllocations(leadIds, amt)
+                if (allocations.length === 0) {
+                  toast.error('Could not allocate payment to any case')
                   return
                 }
 
@@ -627,10 +707,9 @@ export default function HospitalDetailPage() {
                       mode === 'UPI' ? 'UPI' : 'OTHER'
 
                 recordPaymentMutation.mutate({
-                  leadIds: selectedLeads,
-                  amount: amt,
+                  allocations,
                   mode: mappedMode,
-                  reference: txnId,
+                  reference: txnId || null,
                 })
               }}
             />

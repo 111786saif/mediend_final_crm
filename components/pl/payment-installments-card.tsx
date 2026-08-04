@@ -22,6 +22,8 @@ import { formatPlDate, formatPlRupee } from '@/lib/pl/resolve-pl-row'
 type Recipient = 'HOSPITAL' | 'DOCTOR' | 'MEDIEND'
 type Mode = 'CASH' | 'UPI' | 'NEFT' | 'RTGS' | 'CHEQUE' | 'CARD' | 'OTHER'
 
+type VerificationStatus = 'PENDING' | 'VERIFIED' | 'REJECTED'
+
 type Installment = {
   id: string
   leadId: string
@@ -31,6 +33,8 @@ type Installment = {
   mode: Mode | null
   reference: string | null
   notes: string | null
+  verificationStatus?: VerificationStatus
+  rejectionRemarks?: string | null
   recordedBy?: { id: string; name: string } | null
   createdAt: string
 }
@@ -128,8 +132,10 @@ export function PaymentInstallmentsCard({
     createMutation.mutate()
   }
 
+  // Outstanding uses Finance-verified amounts only (pending MediEND receipts excluded).
   const totals = (rows ?? []).reduce(
     (acc, r) => {
+      if ((r.verificationStatus ?? 'VERIFIED') !== 'VERIFIED') return acc
       acc[r.recipient] = (acc[r.recipient] ?? 0) + r.amount
       return acc
     },
@@ -141,7 +147,8 @@ export function PaymentInstallmentsCard({
       <CardHeader className="border-b bg-gradient-to-r from-violet-500/10 to-fuchsia-500/8">
         <CardTitle className="text-violet-950 dark:text-violet-100">Payment Installments</CardTitle>
         <CardDescription>
-          Each entry below updates the pending amount + payout status automatically.
+          MediEND receipts stay pending until Finance verifies them. Only verified amounts reduce
+          outstanding.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -252,12 +259,15 @@ export function PaymentInstallmentsCard({
                   <th className="px-3 py-2 text-left">Mode</th>
                   <th className="px-3 py-2 text-left">Reference</th>
                   <th className="px-3 py-2 text-left">Notes</th>
+                  <th className="px-3 py-2 text-left">Status</th>
                   <th className="px-3 py-2 text-left">By</th>
                   {canWrite && <th className="px-3 py-2"></th>}
                 </tr>
               </thead>
               <tbody>
-                {rows.map((r) => (
+                {rows.map((r) => {
+                  const status = r.verificationStatus ?? 'VERIFIED'
+                  return (
                   <tr key={r.id} className="border-t">
                     <td className="px-3 py-2 whitespace-nowrap">
                       {formatPlDate(new Date(r.paidOn))}
@@ -275,6 +285,24 @@ export function PaymentInstallmentsCard({
                     <td className="px-3 py-2">{r.reference ?? '—'}</td>
                     <td className="px-3 py-2 max-w-[200px] truncate" title={r.notes ?? ''}>
                       {r.notes ?? '—'}
+                    </td>
+                    <td className="px-3 py-2">
+                      <Badge
+                        variant={
+                          status === 'VERIFIED'
+                            ? 'default'
+                            : status === 'REJECTED'
+                              ? 'destructive'
+                              : 'outline'
+                        }
+                        title={r.rejectionRemarks ?? undefined}
+                      >
+                        {status === 'PENDING'
+                          ? 'Pending Finance'
+                          : status === 'REJECTED'
+                            ? 'Rejected'
+                            : 'Verified'}
+                      </Badge>
                     </td>
                     <td className="px-3 py-2 text-xs text-muted-foreground">
                       {r.recordedBy?.name ?? '—'}
@@ -295,7 +323,8 @@ export function PaymentInstallmentsCard({
                       </td>
                     )}
                   </tr>
-                ))}
+                  )
+                })}
               </tbody>
             </table>
           )}

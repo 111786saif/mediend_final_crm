@@ -44,6 +44,10 @@ export type PaymentInstallmentMinAggregateOutputType = {
   reference: string | null
   notes: string | null
   recordedById: string | null
+  verificationStatus: $Enums.InstallmentVerificationStatus | null
+  verifiedById: string | null
+  verifiedAt: Date | null
+  rejectionRemarks: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +62,10 @@ export type PaymentInstallmentMaxAggregateOutputType = {
   reference: string | null
   notes: string | null
   recordedById: string | null
+  verificationStatus: $Enums.InstallmentVerificationStatus | null
+  verifiedById: string | null
+  verifiedAt: Date | null
+  rejectionRemarks: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +80,10 @@ export type PaymentInstallmentCountAggregateOutputType = {
   reference: number
   notes: number
   recordedById: number
+  verificationStatus: number
+  verifiedById: number
+  verifiedAt: number
+  rejectionRemarks: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -96,6 +108,10 @@ export type PaymentInstallmentMinAggregateInputType = {
   reference?: true
   notes?: true
   recordedById?: true
+  verificationStatus?: true
+  verifiedById?: true
+  verifiedAt?: true
+  rejectionRemarks?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -110,6 +126,10 @@ export type PaymentInstallmentMaxAggregateInputType = {
   reference?: true
   notes?: true
   recordedById?: true
+  verificationStatus?: true
+  verifiedById?: true
+  verifiedAt?: true
+  rejectionRemarks?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +144,10 @@ export type PaymentInstallmentCountAggregateInputType = {
   reference?: true
   notes?: true
   recordedById?: true
+  verificationStatus?: true
+  verifiedById?: true
+  verifiedAt?: true
+  rejectionRemarks?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -225,6 +249,10 @@ export type PaymentInstallmentGroupByOutputType = {
   reference: string | null
   notes: string | null
   recordedById: string
+  verificationStatus: $Enums.InstallmentVerificationStatus
+  verifiedById: string | null
+  verifiedAt: Date | null
+  rejectionRemarks: string | null
   createdAt: Date
   updatedAt: Date
   _count: PaymentInstallmentCountAggregateOutputType | null
@@ -262,10 +290,15 @@ export type PaymentInstallmentWhereInput = {
   reference?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   notes?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentInstallment"> | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
+  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
   recordedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  verifiedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type PaymentInstallmentOrderByWithRelationInput = {
@@ -278,10 +311,15 @@ export type PaymentInstallmentOrderByWithRelationInput = {
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lead?: Prisma.LeadOrderByWithRelationInput
   recordedBy?: Prisma.UserOrderByWithRelationInput
+  verifiedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PaymentInstallmentWhereUniqueInput = Prisma.AtLeast<{
@@ -297,10 +335,15 @@ export type PaymentInstallmentWhereUniqueInput = Prisma.AtLeast<{
   reference?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   notes?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentInstallment"> | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
+  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
   recordedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  verifiedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
 
 export type PaymentInstallmentOrderByWithAggregationInput = {
@@ -313,6 +356,10 @@ export type PaymentInstallmentOrderByWithAggregationInput = {
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PaymentInstallmentCountOrderByAggregateInput
@@ -335,6 +382,10 @@ export type PaymentInstallmentScalarWhereWithAggregatesInput = {
   reference?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
   recordedById?: Prisma.StringWithAggregatesFilter<"PaymentInstallment"> | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusWithAggregatesFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
+  verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PaymentInstallment"> | Date | string | null
+  rejectionRemarks?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentInstallment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentInstallment"> | Date | string
 }
@@ -347,10 +398,14 @@ export type PaymentInstallmentCreateInput = {
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutPaymentInstallmentsInput
   recordedBy: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsRecordedInput
+  verifiedBy?: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsVerifiedInput
 }
 
 export type PaymentInstallmentUncheckedCreateInput = {
@@ -363,6 +418,10 @@ export type PaymentInstallmentUncheckedCreateInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedById?: string | null
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -375,10 +434,14 @@ export type PaymentInstallmentUpdateInput = {
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutPaymentInstallmentsNestedInput
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutPaymentInstallmentsRecordedNestedInput
+  verifiedBy?: Prisma.UserUpdateOneWithoutPaymentInstallmentsVerifiedNestedInput
 }
 
 export type PaymentInstallmentUncheckedUpdateInput = {
@@ -391,6 +454,10 @@ export type PaymentInstallmentUncheckedUpdateInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -405,6 +472,10 @@ export type PaymentInstallmentCreateManyInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedById?: string | null
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -417,6 +488,9 @@ export type PaymentInstallmentUpdateManyMutationInput = {
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -431,6 +505,10 @@ export type PaymentInstallmentUncheckedUpdateManyInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -455,6 +533,10 @@ export type PaymentInstallmentCountOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -473,6 +555,10 @@ export type PaymentInstallmentMaxOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -487,6 +573,10 @@ export type PaymentInstallmentMinOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -502,10 +592,24 @@ export type PaymentInstallmentCreateNestedManyWithoutRecordedByInput = {
   connect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
 }
 
+export type PaymentInstallmentCreateNestedManyWithoutVerifiedByInput = {
+  create?: Prisma.XOR<Prisma.PaymentInstallmentCreateWithoutVerifiedByInput, Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput> | Prisma.PaymentInstallmentCreateWithoutVerifiedByInput[] | Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput[]
+  connectOrCreate?: Prisma.PaymentInstallmentCreateOrConnectWithoutVerifiedByInput | Prisma.PaymentInstallmentCreateOrConnectWithoutVerifiedByInput[]
+  createMany?: Prisma.PaymentInstallmentCreateManyVerifiedByInputEnvelope
+  connect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+}
+
 export type PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput = {
   create?: Prisma.XOR<Prisma.PaymentInstallmentCreateWithoutRecordedByInput, Prisma.PaymentInstallmentUncheckedCreateWithoutRecordedByInput> | Prisma.PaymentInstallmentCreateWithoutRecordedByInput[] | Prisma.PaymentInstallmentUncheckedCreateWithoutRecordedByInput[]
   connectOrCreate?: Prisma.PaymentInstallmentCreateOrConnectWithoutRecordedByInput | Prisma.PaymentInstallmentCreateOrConnectWithoutRecordedByInput[]
   createMany?: Prisma.PaymentInstallmentCreateManyRecordedByInputEnvelope
+  connect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+}
+
+export type PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput = {
+  create?: Prisma.XOR<Prisma.PaymentInstallmentCreateWithoutVerifiedByInput, Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput> | Prisma.PaymentInstallmentCreateWithoutVerifiedByInput[] | Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput[]
+  connectOrCreate?: Prisma.PaymentInstallmentCreateOrConnectWithoutVerifiedByInput | Prisma.PaymentInstallmentCreateOrConnectWithoutVerifiedByInput[]
+  createMany?: Prisma.PaymentInstallmentCreateManyVerifiedByInputEnvelope
   connect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
 }
 
@@ -523,6 +627,20 @@ export type PaymentInstallmentUpdateManyWithoutRecordedByNestedInput = {
   deleteMany?: Prisma.PaymentInstallmentScalarWhereInput | Prisma.PaymentInstallmentScalarWhereInput[]
 }
 
+export type PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentInstallmentCreateWithoutVerifiedByInput, Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput> | Prisma.PaymentInstallmentCreateWithoutVerifiedByInput[] | Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput[]
+  connectOrCreate?: Prisma.PaymentInstallmentCreateOrConnectWithoutVerifiedByInput | Prisma.PaymentInstallmentCreateOrConnectWithoutVerifiedByInput[]
+  upsert?: Prisma.PaymentInstallmentUpsertWithWhereUniqueWithoutVerifiedByInput | Prisma.PaymentInstallmentUpsertWithWhereUniqueWithoutVerifiedByInput[]
+  createMany?: Prisma.PaymentInstallmentCreateManyVerifiedByInputEnvelope
+  set?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+  disconnect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+  delete?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+  connect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+  update?: Prisma.PaymentInstallmentUpdateWithWhereUniqueWithoutVerifiedByInput | Prisma.PaymentInstallmentUpdateWithWhereUniqueWithoutVerifiedByInput[]
+  updateMany?: Prisma.PaymentInstallmentUpdateManyWithWhereWithoutVerifiedByInput | Prisma.PaymentInstallmentUpdateManyWithWhereWithoutVerifiedByInput[]
+  deleteMany?: Prisma.PaymentInstallmentScalarWhereInput | Prisma.PaymentInstallmentScalarWhereInput[]
+}
+
 export type PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput = {
   create?: Prisma.XOR<Prisma.PaymentInstallmentCreateWithoutRecordedByInput, Prisma.PaymentInstallmentUncheckedCreateWithoutRecordedByInput> | Prisma.PaymentInstallmentCreateWithoutRecordedByInput[] | Prisma.PaymentInstallmentUncheckedCreateWithoutRecordedByInput[]
   connectOrCreate?: Prisma.PaymentInstallmentCreateOrConnectWithoutRecordedByInput | Prisma.PaymentInstallmentCreateOrConnectWithoutRecordedByInput[]
@@ -534,6 +652,20 @@ export type PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput = 
   connect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
   update?: Prisma.PaymentInstallmentUpdateWithWhereUniqueWithoutRecordedByInput | Prisma.PaymentInstallmentUpdateWithWhereUniqueWithoutRecordedByInput[]
   updateMany?: Prisma.PaymentInstallmentUpdateManyWithWhereWithoutRecordedByInput | Prisma.PaymentInstallmentUpdateManyWithWhereWithoutRecordedByInput[]
+  deleteMany?: Prisma.PaymentInstallmentScalarWhereInput | Prisma.PaymentInstallmentScalarWhereInput[]
+}
+
+export type PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentInstallmentCreateWithoutVerifiedByInput, Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput> | Prisma.PaymentInstallmentCreateWithoutVerifiedByInput[] | Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput[]
+  connectOrCreate?: Prisma.PaymentInstallmentCreateOrConnectWithoutVerifiedByInput | Prisma.PaymentInstallmentCreateOrConnectWithoutVerifiedByInput[]
+  upsert?: Prisma.PaymentInstallmentUpsertWithWhereUniqueWithoutVerifiedByInput | Prisma.PaymentInstallmentUpsertWithWhereUniqueWithoutVerifiedByInput[]
+  createMany?: Prisma.PaymentInstallmentCreateManyVerifiedByInputEnvelope
+  set?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+  disconnect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+  delete?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+  connect?: Prisma.PaymentInstallmentWhereUniqueInput | Prisma.PaymentInstallmentWhereUniqueInput[]
+  update?: Prisma.PaymentInstallmentUpdateWithWhereUniqueWithoutVerifiedByInput | Prisma.PaymentInstallmentUpdateWithWhereUniqueWithoutVerifiedByInput[]
+  updateMany?: Prisma.PaymentInstallmentUpdateManyWithWhereWithoutVerifiedByInput | Prisma.PaymentInstallmentUpdateManyWithWhereWithoutVerifiedByInput[]
   deleteMany?: Prisma.PaymentInstallmentScalarWhereInput | Prisma.PaymentInstallmentScalarWhereInput[]
 }
 
@@ -587,6 +719,10 @@ export type NullableEnumInstallmentModeFieldUpdateOperationsInput = {
   set?: $Enums.InstallmentMode | null
 }
 
+export type EnumInstallmentVerificationStatusFieldUpdateOperationsInput = {
+  set?: $Enums.InstallmentVerificationStatus
+}
+
 export type PaymentInstallmentCreateWithoutRecordedByInput = {
   id?: string
   recipient: $Enums.InstallmentRecipient
@@ -595,9 +731,13 @@ export type PaymentInstallmentCreateWithoutRecordedByInput = {
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutPaymentInstallmentsInput
+  verifiedBy?: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsVerifiedInput
 }
 
 export type PaymentInstallmentUncheckedCreateWithoutRecordedByInput = {
@@ -609,6 +749,10 @@ export type PaymentInstallmentUncheckedCreateWithoutRecordedByInput = {
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedById?: string | null
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -620,6 +764,50 @@ export type PaymentInstallmentCreateOrConnectWithoutRecordedByInput = {
 
 export type PaymentInstallmentCreateManyRecordedByInputEnvelope = {
   data: Prisma.PaymentInstallmentCreateManyRecordedByInput | Prisma.PaymentInstallmentCreateManyRecordedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type PaymentInstallmentCreateWithoutVerifiedByInput = {
+  id?: string
+  recipient: $Enums.InstallmentRecipient
+  amount: number
+  paidOn: Date | string
+  mode?: $Enums.InstallmentMode | null
+  reference?: string | null
+  notes?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lead: Prisma.LeadCreateNestedOneWithoutPaymentInstallmentsInput
+  recordedBy: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsRecordedInput
+}
+
+export type PaymentInstallmentUncheckedCreateWithoutVerifiedByInput = {
+  id?: string
+  leadId: string
+  recipient: $Enums.InstallmentRecipient
+  amount: number
+  paidOn: Date | string
+  mode?: $Enums.InstallmentMode | null
+  reference?: string | null
+  notes?: string | null
+  recordedById: string
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PaymentInstallmentCreateOrConnectWithoutVerifiedByInput = {
+  where: Prisma.PaymentInstallmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentInstallmentCreateWithoutVerifiedByInput, Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput>
+}
+
+export type PaymentInstallmentCreateManyVerifiedByInputEnvelope = {
+  data: Prisma.PaymentInstallmentCreateManyVerifiedByInput | Prisma.PaymentInstallmentCreateManyVerifiedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -652,8 +840,28 @@ export type PaymentInstallmentScalarWhereInput = {
   reference?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   notes?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentInstallment"> | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
+  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
+}
+
+export type PaymentInstallmentUpsertWithWhereUniqueWithoutVerifiedByInput = {
+  where: Prisma.PaymentInstallmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PaymentInstallmentUpdateWithoutVerifiedByInput, Prisma.PaymentInstallmentUncheckedUpdateWithoutVerifiedByInput>
+  create: Prisma.XOR<Prisma.PaymentInstallmentCreateWithoutVerifiedByInput, Prisma.PaymentInstallmentUncheckedCreateWithoutVerifiedByInput>
+}
+
+export type PaymentInstallmentUpdateWithWhereUniqueWithoutVerifiedByInput = {
+  where: Prisma.PaymentInstallmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PaymentInstallmentUpdateWithoutVerifiedByInput, Prisma.PaymentInstallmentUncheckedUpdateWithoutVerifiedByInput>
+}
+
+export type PaymentInstallmentUpdateManyWithWhereWithoutVerifiedByInput = {
+  where: Prisma.PaymentInstallmentScalarWhereInput
+  data: Prisma.XOR<Prisma.PaymentInstallmentUpdateManyMutationInput, Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByInput>
 }
 
 export type PaymentInstallmentCreateWithoutLeadInput = {
@@ -664,9 +872,13 @@ export type PaymentInstallmentCreateWithoutLeadInput = {
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   recordedBy: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsRecordedInput
+  verifiedBy?: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsVerifiedInput
 }
 
 export type PaymentInstallmentUncheckedCreateWithoutLeadInput = {
@@ -678,6 +890,10 @@ export type PaymentInstallmentUncheckedCreateWithoutLeadInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedById?: string | null
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -717,6 +933,27 @@ export type PaymentInstallmentCreateManyRecordedByInput = {
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedById?: string | null
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PaymentInstallmentCreateManyVerifiedByInput = {
+  id?: string
+  leadId: string
+  recipient: $Enums.InstallmentRecipient
+  amount: number
+  paidOn: Date | string
+  mode?: $Enums.InstallmentMode | null
+  reference?: string | null
+  notes?: string | null
+  recordedById: string
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -729,9 +966,13 @@ export type PaymentInstallmentUpdateWithoutRecordedByInput = {
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutPaymentInstallmentsNestedInput
+  verifiedBy?: Prisma.UserUpdateOneWithoutPaymentInstallmentsVerifiedNestedInput
 }
 
 export type PaymentInstallmentUncheckedUpdateWithoutRecordedByInput = {
@@ -743,6 +984,10 @@ export type PaymentInstallmentUncheckedUpdateWithoutRecordedByInput = {
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -756,6 +1001,61 @@ export type PaymentInstallmentUncheckedUpdateManyWithoutRecordedByInput = {
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PaymentInstallmentUpdateWithoutVerifiedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lead?: Prisma.LeadUpdateOneRequiredWithoutPaymentInstallmentsNestedInput
+  recordedBy?: Prisma.UserUpdateOneRequiredWithoutPaymentInstallmentsRecordedNestedInput
+}
+
+export type PaymentInstallmentUncheckedUpdateWithoutVerifiedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -769,6 +1069,10 @@ export type PaymentInstallmentCreateManyLeadInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedById?: string | null
+  verifiedAt?: Date | string | null
+  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -781,9 +1085,13 @@ export type PaymentInstallmentUpdateWithoutLeadInput = {
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutPaymentInstallmentsRecordedNestedInput
+  verifiedBy?: Prisma.UserUpdateOneWithoutPaymentInstallmentsVerifiedNestedInput
 }
 
 export type PaymentInstallmentUncheckedUpdateWithoutLeadInput = {
@@ -795,6 +1103,10 @@ export type PaymentInstallmentUncheckedUpdateWithoutLeadInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -808,6 +1120,10 @@ export type PaymentInstallmentUncheckedUpdateManyWithoutLeadInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -824,10 +1140,15 @@ export type PaymentInstallmentSelect<ExtArgs extends runtime.Types.Extensions.In
   reference?: boolean
   notes?: boolean
   recordedById?: boolean
+  verificationStatus?: boolean
+  verifiedById?: boolean
+  verifiedAt?: boolean
+  rejectionRemarks?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
 }, ExtArgs["result"]["paymentInstallment"]>
 
 export type PaymentInstallmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -840,10 +1161,15 @@ export type PaymentInstallmentSelectCreateManyAndReturn<ExtArgs extends runtime.
   reference?: boolean
   notes?: boolean
   recordedById?: boolean
+  verificationStatus?: boolean
+  verifiedById?: boolean
+  verifiedAt?: boolean
+  rejectionRemarks?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
 }, ExtArgs["result"]["paymentInstallment"]>
 
 export type PaymentInstallmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -856,10 +1182,15 @@ export type PaymentInstallmentSelectUpdateManyAndReturn<ExtArgs extends runtime.
   reference?: boolean
   notes?: boolean
   recordedById?: boolean
+  verificationStatus?: boolean
+  verifiedById?: boolean
+  verifiedAt?: boolean
+  rejectionRemarks?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
 }, ExtArgs["result"]["paymentInstallment"]>
 
 export type PaymentInstallmentSelectScalar = {
@@ -872,22 +1203,29 @@ export type PaymentInstallmentSelectScalar = {
   reference?: boolean
   notes?: boolean
   recordedById?: boolean
+  verificationStatus?: boolean
+  verifiedById?: boolean
+  verifiedAt?: boolean
+  rejectionRemarks?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PaymentInstallmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "recipient" | "amount" | "paidOn" | "mode" | "reference" | "notes" | "recordedById" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentInstallment"]>
+export type PaymentInstallmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "recipient" | "amount" | "paidOn" | "mode" | "reference" | "notes" | "recordedById" | "verificationStatus" | "verifiedById" | "verifiedAt" | "rejectionRemarks" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentInstallment"]>
 export type PaymentInstallmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
 }
 export type PaymentInstallmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
 }
 export type PaymentInstallmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
 }
 
 export type $PaymentInstallmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -895,6 +1233,7 @@ export type $PaymentInstallmentPayload<ExtArgs extends runtime.Types.Extensions.
   objects: {
     lead: Prisma.$LeadPayload<ExtArgs>
     recordedBy: Prisma.$UserPayload<ExtArgs>
+    verifiedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -906,6 +1245,13 @@ export type $PaymentInstallmentPayload<ExtArgs extends runtime.Types.Extensions.
     reference: string | null
     notes: string | null
     recordedById: string
+    /**
+     * * Finance verification — hospital/P&L recorded payments await Finance confirm.
+     */
+    verificationStatus: $Enums.InstallmentVerificationStatus
+    verifiedById: string | null
+    verifiedAt: Date | null
+    rejectionRemarks: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["paymentInstallment"]>
@@ -1304,6 +1650,7 @@ export interface Prisma__PaymentInstallmentClient<T, Null = never, ExtArgs exten
   readonly [Symbol.toStringTag]: "PrismaPromise"
   lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   recordedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  verifiedBy<T extends Prisma.PaymentInstallment$verifiedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1342,6 +1689,10 @@ export interface PaymentInstallmentFieldRefs {
   readonly reference: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly notes: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly recordedById: Prisma.FieldRef<"PaymentInstallment", 'String'>
+  readonly verificationStatus: Prisma.FieldRef<"PaymentInstallment", 'InstallmentVerificationStatus'>
+  readonly verifiedById: Prisma.FieldRef<"PaymentInstallment", 'String'>
+  readonly verifiedAt: Prisma.FieldRef<"PaymentInstallment", 'DateTime'>
+  readonly rejectionRemarks: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly createdAt: Prisma.FieldRef<"PaymentInstallment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PaymentInstallment", 'DateTime'>
 }
@@ -1742,6 +2093,25 @@ export type PaymentInstallmentDeleteManyArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many PaymentInstallments to delete.
    */
   limit?: number
+}
+
+/**
+ * PaymentInstallment.verifiedBy
+ */
+export type PaymentInstallment$verifiedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

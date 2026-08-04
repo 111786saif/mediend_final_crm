@@ -22,6 +22,7 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { getFilteredNavItemsWithUrls, type NavItem } from '@/lib/sidebar-nav'
 import { usePermissions } from '@/hooks/use-permissions'
 import { resolveNavResourceKey } from '@/lib/nav-resource-map'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 import {
   getRoleSidebarLayout,
   resolveLayoutTitle,
@@ -262,6 +263,9 @@ export function AppSidebar() {
         hasAccess('sales.sales_dashboard', 'READ') ||
         hasAccess('sales.md_sales_dashboard', 'READ')
       )
+    }
+    if (item.title === 'OPD Monitoring') {
+      return canAccessSalesOpdMonitoring(role)
     }
 
     // Full-access roles: allow if parent module is granted
