@@ -28,6 +28,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring'
 
 type AppointmentTab = 'daily' | 'doctor' | 'overdue'
 
@@ -47,19 +48,6 @@ type OpdMonitoringItem = {
   statusLabel: string
   bdName?: string | null
 }
-
-const ALLOWED_ROLES = new Set([
-  'SUPER_ADMIN',
-  'ADMIN',
-  'MD',
-  'EXECUTIVE_ASSISTANT',
-  'TESTER',
-  'BD',
-  'TEAM_LEAD',
-  'ASSISTANT_CATEGORY_MANAGER',
-  'CATEGORY_MANAGER',
-  'SALES_HEAD',
-])
 
 function todayDateValue() {
   return new Date().toISOString().slice(0, 10)
@@ -92,7 +80,7 @@ export function OpdMonitoringPage() {
   const doctorQuery = useQuery({
     queryKey: ['sales-opd-monitoring', 'doctors'],
     queryFn: () => apiGet<{ items: OpdDoctorOption[] }>('/api/opd-monitoring?mode=doctors'),
-    enabled: !!user && ALLOWED_ROLES.has(user.role),
+    enabled: !!user && canAccessSalesOpdMonitoring(user.role),
   })
 
   const summaryQuery = useQuery({
@@ -101,7 +89,7 @@ export function OpdMonitoringPage() {
       apiGet<{ scheduled: number; done: number; noShow: number; cancelled: number }>(
         `/api/opd-monitoring?mode=summary&range=${summaryRange}&date=${encodeURIComponent(summaryDate)}`
       ),
-    enabled: !!user && ALLOWED_ROLES.has(user.role),
+    enabled: !!user && canAccessSalesOpdMonitoring(user.role),
   })
 
   const dailyQuery = useQuery({
@@ -110,7 +98,7 @@ export function OpdMonitoringPage() {
       apiGet<{ items: OpdMonitoringItem[] }>(
         `/api/opd-monitoring?mode=daily&date=${encodeURIComponent(activeDailyDate)}`
       ),
-    enabled: !!user && ALLOWED_ROLES.has(user.role) && tab === 'daily',
+    enabled: !!user && canAccessSalesOpdMonitoring(user.role) && tab === 'daily',
   })
 
   const doctorViewQuery = useQuery({
@@ -123,7 +111,7 @@ export function OpdMonitoringPage() {
             : encodeURIComponent(submittedDoctorFilters.doctorName)
         }&startDate=${encodeURIComponent(submittedDoctorFilters.startDate)}&endDate=${encodeURIComponent(submittedDoctorFilters.endDate)}&status=${encodeURIComponent(submittedDoctorFilters.status)}`
       ),
-    enabled: !!user && ALLOWED_ROLES.has(user.role) && tab === 'doctor',
+    enabled: !!user && canAccessSalesOpdMonitoring(user.role) && tab === 'doctor',
   })
 
   const overdueQuery = useQuery({
@@ -136,7 +124,7 @@ export function OpdMonitoringPage() {
             : encodeURIComponent(submittedOverdueFilters.doctorName)
         }&daysOverdue=${submittedOverdueFilters.daysOverdue}`
       ),
-    enabled: !!user && ALLOWED_ROLES.has(user.role) && tab === 'overdue',
+    enabled: !!user && canAccessSalesOpdMonitoring(user.role) && tab === 'overdue',
   })
 
   const activeQuery =
@@ -154,7 +142,7 @@ export function OpdMonitoringPage() {
     )
   }
 
-  if (!user || !ALLOWED_ROLES.has(user.role)) {
+  if (!user || !canAccessSalesOpdMonitoring(user.role)) {
     return (
       <AuthenticatedLayout>
         <div className='mx-auto max-w-3xl p-6'>

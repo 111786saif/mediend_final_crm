@@ -5,7 +5,8 @@ import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 import { prisma } from '@/lib/prisma'
 
-const SALES_OPD_MONITORING_ROLES = new Set<string>([
+/** BD, TL, CM, ACM, Sales Head, Project Head (EA), plus admin/monitoring roles. */
+export const SALES_OPD_MONITORING_ROLES = new Set<string>([
   'SUPER_ADMIN',
   'ADMIN',
   'MD',
@@ -17,6 +18,10 @@ const SALES_OPD_MONITORING_ROLES = new Set<string>([
   'CATEGORY_MANAGER',
   'SALES_HEAD',
 ] as const)
+
+export function canAccessSalesOpdMonitoring(role: string | null | undefined): boolean {
+  return !!role && SALES_OPD_MONITORING_ROLES.has(role)
+}
 
 const opdMonitoringLeadSelect = {
   id: true,
@@ -262,7 +267,7 @@ function matchesDoctorName(item: MonitoringAppointment, doctorName?: string) {
 }
 
 async function fetchScopedMonitoringAppointments(user: SessionUser) {
-  if (!SALES_OPD_MONITORING_ROLES.has(user.role)) {
+  if (!canAccessSalesOpdMonitoring(user.role)) {
     throw new SalesOpdMonitoringError('Forbidden', 403)
   }
 
