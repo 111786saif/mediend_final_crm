@@ -91,7 +91,8 @@ const roleAllowedSections: Record<string, string[]> = {
 
   HR_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets',
-    'main.dept_targets', 'hrm.hr_dashboard', 'hrm.recruitment', 'myhrms.ask_md_approval',
+    'main.dept_targets', 'hrm.hr_dashboard', 'hrm.recruitment',
+    ...MYHRMS, 'myhrms.ask_md_approval',
     ...HRM_CORE,
   ],
 
@@ -122,6 +123,7 @@ const roleAllowedSections: Record<string, string[]> = {
   INSURANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'main.chat',
+    ...MYHRMS, 'myhrms.ask_md_approval',
   ],
 
   PL_HEAD: [
@@ -183,6 +185,7 @@ const roleAllowedSections: Record<string, string[]> = {
   COMPLIANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets',
     'main.chat', 'main.compliance', 'main.cumulative_report',
+    ...MYHRMS, 'myhrms.ask_md_approval',
   ],
 
   LOAN_DEMAT_HEAD: [
