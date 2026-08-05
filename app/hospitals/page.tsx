@@ -254,8 +254,8 @@ export default function HospitalsListPage() {
               <Table className="[&_td]:px-[20px] [&_th]:px-[20px]">
                 <TableHeader>
                   <TableRow className="bg-slate-100 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-950 border-b border-sky-200 dark:border-sky-800/80">
-                    <TableHead className="w-[280px]">
-                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                    <TableHead className="w-[280px] text-left">
+                      <div className="flex w-full items-center justify-start gap-1 whitespace-nowrap">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">Hospital</span>
                         <ColumnFilter
                           type="multiSelect"
@@ -265,8 +265,8 @@ export default function HospitalsListPage() {
                         />
                       </div>
                     </TableHead>
-                    <TableHead className="w-[120px]">
-                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                    <TableHead className="w-[120px] text-right">
+                      <div className="ml-auto flex w-full items-center justify-end gap-1 whitespace-nowrap">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">Cases</span>
                         <ColumnFilter
                           type="numberRange"
@@ -277,8 +277,8 @@ export default function HospitalsListPage() {
                         />
                       </div>
                     </TableHead>
-                    <TableHead className="w-[160px]">
-                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                    <TableHead className="w-[180px] text-right">
+                      <div className="ml-auto flex w-full items-center justify-end gap-1 whitespace-nowrap">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">Amount Received</span>
                         <ColumnFilter
                           type="numberRange"
@@ -289,8 +289,8 @@ export default function HospitalsListPage() {
                         />
                       </div>
                     </TableHead>
-                    <TableHead className="w-[180px]">
-                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                    <TableHead className="w-[200px] text-right">
+                      <div className="ml-auto flex w-full items-center justify-end gap-1 whitespace-nowrap">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">Pending Outstanding</span>
                         <ColumnFilter
                           type="numberRange"
@@ -301,8 +301,8 @@ export default function HospitalsListPage() {
                         />
                       </div>
                     </TableHead>
-                    <TableHead className="w-[160px]">
-                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                    <TableHead className="w-[180px] text-right">
+                      <div className="ml-auto flex w-full items-center justify-end gap-1 whitespace-nowrap">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">MediEND Share</span>
                         <ColumnFilter
                           type="numberRange"
