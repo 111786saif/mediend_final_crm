@@ -1,18 +1,28 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { apiGet } from '@/lib/api-client'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { apiGet, apiPatch } from '@/lib/api-client'
 import { format } from 'date-fns'
 import {
   User,
@@ -34,12 +44,17 @@ import {
   Wallet,
   StickyNote,
   CheckCircle2,
+  Bell,
+  PhoneCall,
+  ListChecks,
 } from 'lucide-react'
 import { differenceInCalendarDays } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import { EmployeeActionDialog, type EmployeeActionType } from './employee-action-dialog'
-import { useState, type RefObject } from 'react'
+import { useEffect, useState, type RefObject } from 'react'
+import { toast } from 'sonner'
+import { useAuth } from '@/hooks/use-auth'
 
 function maskPan(pan: string) {
   if (pan.length < 5) return pan
@@ -99,10 +114,27 @@ interface EmployeeData {
   fnfDeadline: string | null
   fnfCompleted: boolean
   fnfCompletedAt: string | null
+  knowlarityPhoneNumber: string | null
+  knowlarityCallerId: string | null
+  knowlarityNotificationsEnabled: boolean
   user: { id: string; name: string; email: string; role: string; phoneNumber: string | null; address: string | null; profilePicture?: string | null }
   department: { id: string; name: string } | null
   leaveBalances?: { leaveTypeName: string; allocated: number; used: number; remaining: number }[]
   documents?: { id: string; documentType: string; title: string | null; generatedAt: string }[]
+}
+
+interface EmployeeKnowlaritySettings {
+  knowlarityPhoneNumber: string | null
+  knowlarityCallerId: string | null
+  knowlarityNotificationsEnabled: boolean
+}
+
+interface EmployeeKnowlarityRegistrations {
+  registrations: string[]
+  total: number
+  currentNumber: string | null
+  normalizedCurrentNumber: string | null
+  currentNumberRegistered: boolean
 }
 
 function computeProfileCompletion(emp: EmployeeData): number {
@@ -307,6 +339,222 @@ function StatusDetailsSection({ employee }: { employee: EmployeeData }) {
   )
 }
 
+function EmployeeKnowlarityDialog({
+  employeeId,
+  employeeName,
+  open,
+  onOpenChange,
+  initialSettings,
+  onSuccess,
+}: {
+  employeeId: string
+  employeeName: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  initialSettings: EmployeeKnowlaritySettings
+  onSuccess: (settings: EmployeeKnowlaritySettings) => void
+}) {
+  const queryClient = useQueryClient()
+  const [phoneNumber, setPhoneNumber] = useState(initialSettings.knowlarityPhoneNumber ?? '')
+  const [callerId, setCallerId] = useState(initialSettings.knowlarityCallerId ?? '')
+  const [notificationsEnabled, setNotificationsEnabled] = useState(initialSettings.knowlarityNotificationsEnabled)
+
+  useEffect(() => {
+    if (!open) return
+    setPhoneNumber(initialSettings.knowlarityPhoneNumber ?? '')
+    setCallerId(initialSettings.knowlarityCallerId ?? '')
+    setNotificationsEnabled(initialSettings.knowlarityNotificationsEnabled)
+  }, [initialSettings, open])
+
+  const saveMutation = useMutation({
+    mutationFn: () =>
+      apiPatch<EmployeeKnowlaritySettings>(`/api/employees/${employeeId}/knowlarity`, {
+        phoneNumber,
+        callerId,
+        notificationsEnabled,
+      }),
+    onSuccess: (settings) => {
+      queryClient.invalidateQueries({ queryKey: ['employee', employeeId] })
+      toast.success(
+        settings.knowlarityNotificationsEnabled
+          ? 'Knowlarity settings saved and notifications are enabled.'
+          : 'Knowlarity settings saved.'
+      )
+      onSuccess(settings)
+      onOpenChange(false)
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to save Knowlarity settings')
+    },
+  })
+
+  const isDirty =
+    phoneNumber !== (initialSettings.knowlarityPhoneNumber ?? '') ||
+    callerId !== (initialSettings.knowlarityCallerId ?? '') ||
+    notificationsEnabled !== initialSettings.knowlarityNotificationsEnabled
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Setup Knowlarity</DialogTitle>
+          <DialogDescription>
+            Save a dedicated Knowlarity number and caller ID for {employeeName}. This is kept separate from the employee&apos;s regular workspace phone number.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="knowlarity-phone">Knowlarity number</Label>
+            <Input
+              id="knowlarity-phone"
+              placeholder="+91906911XXXX"
+              value={phoneNumber}
+              onChange={(event) => setPhoneNumber(event.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              Use the number that should receive Knowlarity call notifications.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="knowlarity-caller-id">Caller ID</Label>
+            <Input
+              id="knowlarity-caller-id"
+              placeholder="Caller ID"
+              value={callerId}
+              onChange={(event) => setCallerId(event.target.value)}
+            />
+          </div>
+
+          <label className="flex items-start gap-3 rounded-lg border border-border/70 p-3">
+            <Checkbox
+              checked={notificationsEnabled}
+              onCheckedChange={(checked) => setNotificationsEnabled(Boolean(checked))}
+              className="mt-0.5"
+            />
+            <div className="space-y-1">
+              <p className="text-sm font-medium leading-none">Allow Knowlarity notifications</p>
+              <p className="text-xs text-muted-foreground">
+                When enabled, the saved number is registered to receive Knowlarity notification events.
+              </p>
+            </div>
+          </label>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saveMutation.isPending}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending || !isDirty || !phoneNumber.trim() || !callerId.trim()}
+            >
+              {saveMutation.isPending ? 'Saving...' : 'Save settings'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function EmployeeKnowlarityRegistrationsDialog({
+  open,
+  onOpenChange,
+  phoneNumber,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  phoneNumber: string | null
+}) {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['knowlarity-registrations', phoneNumber],
+    queryFn: () =>
+      apiGet<EmployeeKnowlarityRegistrations>(
+        `/api/employees/knowlarity/registrations${phoneNumber ? `?phoneNumber=${encodeURIComponent(phoneNumber)}` : ''}`
+      ),
+    enabled: open,
+    staleTime: 30_000,
+  })
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>Knowlarity Registrations</DialogTitle>
+          <DialogDescription>
+            View the currently registered Knowlarity notification numbers and check whether this employee&apos;s saved number is already registered.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="rounded-lg border border-border/70 p-3">
+            <p className="text-xs text-muted-foreground">Saved employee Knowlarity number</p>
+            <p className="text-sm font-medium">{phoneNumber || 'Not set'}</p>
+            {data && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                Registration status:{' '}
+                <span className={cn('font-medium', data.currentNumberRegistered ? 'text-emerald-600' : 'text-amber-600')}>
+                  {phoneNumber
+                    ? data.currentNumberRegistered
+                      ? 'Already registered'
+                      : 'Not found in Knowlarity registrations'
+                    : 'No saved number to check'}
+                </span>
+              </p>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-border/70">
+            <div className="flex items-center justify-between border-b border-border/70 px-4 py-3">
+              <div>
+                <p className="text-sm font-medium">Registered numbers</p>
+                <p className="text-xs text-muted-foreground">
+                  {data ? `${data.total} numbers returned from Knowlarity` : 'Fetching current registrations'}
+                </p>
+              </div>
+            </div>
+
+            <div className="max-h-80 overflow-y-auto">
+              {isLoading ? (
+                <div className="px-4 py-6 text-sm text-muted-foreground">Loading registrations...</div>
+              ) : error ? (
+                <div className="px-4 py-6 text-sm text-red-500">
+                  {error instanceof Error ? error.message : 'Failed to load registrations'}
+                </div>
+              ) : !data || data.registrations.length === 0 ? (
+                <div className="px-4 py-6 text-sm text-muted-foreground">No registrations were returned by Knowlarity.</div>
+              ) : (
+                <div className="divide-y divide-border/60">
+                  {data.registrations.map((registration) => {
+                    const isMatch =
+                      data.normalizedCurrentNumber &&
+                      registration.replace(/[^\d+]/g, '') === data.normalizedCurrentNumber.replace(/[^\d+]/g, '')
+                    return (
+                      <div key={registration} className="flex items-center justify-between gap-3 px-4 py-3">
+                        <span className="text-sm font-medium">{registration}</span>
+                        {isMatch ? (
+                          <Badge variant="default">Matches employee</Badge>
+                        ) : null}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Close
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 export interface EmployeeDetailDrawerProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -327,6 +575,11 @@ export function EmployeeDetailDrawer({
   onSuccess,
 }: EmployeeDetailDrawerProps) {
   const [actionDialog, setActionDialog] = useState<{ action: EmployeeActionType } | null>(null)
+  const [knowlarityDialogOpen, setKnowlarityDialogOpen] = useState(false)
+  const [knowlarityRegistrationsOpen, setKnowlarityRegistrationsOpen] = useState(false)
+  const queryClient = useQueryClient()
+  const { user: currentUser } = useAuth()
+  const canManageKnowlarity = currentUser?.role === 'EXECUTIVE_ASSISTANT'
 
   const { data: employee, isLoading } = useQuery({
     queryKey: ['employee', employeeId],
@@ -348,6 +601,19 @@ export function EmployeeDetailDrawer({
   const handleActionSuccess = () => {
     onSuccess?.()
     setActionDialog(null)
+  }
+
+  const handleKnowlaritySuccess = (settings: EmployeeKnowlaritySettings) => {
+    if (!employeeId) return
+    queryClient.setQueryData<EmployeeData | undefined>(['employee', employeeId], (current) =>
+      current
+        ? {
+            ...current,
+            ...settings,
+          }
+        : current
+    )
+    onSuccess?.()
   }
 
   return (
@@ -485,6 +751,28 @@ export function EmployeeDetailDrawer({
                       </div>
                     </Section>
 
+                    {canManageKnowlarity && (
+                      <Section title="Knowlarity">
+                        <div className="space-y-2">
+                          <div>
+                            <p className="text-xs text-muted-foreground">Dedicated number</p>
+                            <p className="text-sm font-medium">{employee.knowlarityPhoneNumber || 'Not set'}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Caller ID</p>
+                            <p className="text-sm font-medium">{employee.knowlarityCallerId || 'Not set'}</p>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm">
+                            <Bell className="h-3.5 w-3.5 text-muted-foreground" />
+                            <span className="text-muted-foreground">Notifications</span>
+                            <Badge variant={employee.knowlarityNotificationsEnabled ? 'default' : 'secondary'}>
+                              {employee.knowlarityNotificationsEnabled ? 'Enabled' : 'Disabled'}
+                            </Badge>
+                          </div>
+                        </div>
+                      </Section>
+                    )}
+
                     {employee.leaveBalances && employee.leaveBalances.length > 0 && (
                       <Section title="Leave balances">
                         <div className="space-y-2">
@@ -595,6 +883,28 @@ export function EmployeeDetailDrawer({
                             <Edit className="h-3.5 w-3.5" />
                             Edit
                           </Button>
+                          {canManageKnowlarity && (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5"
+                                onClick={() => setKnowlarityDialogOpen(true)}
+                              >
+                                <PhoneCall className="h-3.5 w-3.5" />
+                                Setup Knowlarity
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5"
+                                onClick={() => setKnowlarityRegistrationsOpen(true)}
+                              >
+                                <ListChecks className="h-3.5 w-3.5" />
+                                View registrations
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
                     )}
@@ -615,6 +925,28 @@ export function EmployeeDetailDrawer({
           action={actionDialog.action}
           onSuccess={handleActionSuccess}
         />
+      )}
+
+      {employeeId && employee && canManageKnowlarity && (
+        <>
+          <EmployeeKnowlarityDialog
+            employeeId={employeeId}
+            employeeName={employee.user.name ?? 'Employee'}
+            open={knowlarityDialogOpen}
+            onOpenChange={setKnowlarityDialogOpen}
+            initialSettings={{
+              knowlarityPhoneNumber: employee.knowlarityPhoneNumber,
+              knowlarityCallerId: employee.knowlarityCallerId,
+              knowlarityNotificationsEnabled: employee.knowlarityNotificationsEnabled,
+            }}
+            onSuccess={handleKnowlaritySuccess}
+          />
+          <EmployeeKnowlarityRegistrationsDialog
+            open={knowlarityRegistrationsOpen}
+            onOpenChange={setKnowlarityRegistrationsOpen}
+            phoneNumber={employee.knowlarityPhoneNumber}
+          />
+        </>
       )}
     </>
   )

@@ -16,7 +16,7 @@ import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -573,6 +573,7 @@ export default function PatientDetailsPage() {
     queryFn: () => apiGet<any[]>(`/api/leads/${leadId}/stage-history`),
     enabled: !!leadId,
   })
+  const [makeCallLoading, setMakeCallLoading] = useState(false)
 
   const { data: initiateFormData } = useQuery<any>({
     queryKey: ['insurance-initiate-form', leadId],
@@ -593,6 +594,18 @@ export default function PatientDetailsPage() {
   const [showResetStepperDialog, setShowResetStepperDialog] = useState(false)
   const [handledQuickAction, setHandledQuickAction] = useState<string | null>(null)
   const quickAction = searchParams.get('action')
+
+  const handleBackendMakeCall = async () => {
+    try {
+      setMakeCallLoading(true)
+      await apiPost(`/api/leads/${leadId}/make-call`, {})
+      toast.success('Call initiated')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to initiate call')
+    } finally {
+      setMakeCallLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (!lead || !quickAction || quickAction === handledQuickAction) return
@@ -1065,6 +1078,20 @@ export default function PatientDetailsPage() {
                 </div>
               </div>
               <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-2"
+                  onClick={handleBackendMakeCall}
+                  disabled={makeCallLoading}
+                >
+                  {makeCallLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <PhoneCall className="h-4 w-4" />
+                  )}
+                  Make Call
+                </Button>
                 <LeadQrPopover
                   leadId={leadId}
                   phoneNumber={lead.phoneNumber ?? ''}

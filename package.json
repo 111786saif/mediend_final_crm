@@ -104,6 +104,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "driver.js": "^1.7.0",
+    "eventsource": "^4.1.1",
     "framer-motion": "^12.35.2",
     "idb": "^8.0.3",
     "ioredis": "^5.8.2",

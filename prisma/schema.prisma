@@ -1297,6 +1297,9 @@ model Employee {
   employeeCode          String          @unique
   bdNumber              Int?            @unique
   circle                String?
+  knowlarityPhoneNumber String?
+  knowlarityCallerId    String?
+  knowlarityNotificationsEnabled Boolean @default(false)
   joinDate              DateTime?
   salary                Float?
   departmentId          String?
