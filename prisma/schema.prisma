@@ -629,6 +629,7 @@ model User {
   campaignCplsCreated       CampaignCPL[]        @relation("CampaignCPLCreator")
   dailyCampaignSpends       DailyCampaignSpend[] @relation("DailyCampaignSpendCreator")
   campaignTeamLeadAssignments CrmCampaignTeamLeadAssignment[] @relation("CampaignTeamLeadUser")
+  campaignBdDailyLimits       CrmCampaignBdDailyLimit[]       @relation("CampaignBdLimitBdUser")
   pnlCategoriesCreated      PnLCategory[]        @relation("PnLCategoryCreator")
   pnlEntriesCreated         PnLEntry[]           @relation("PnLEntryCreator")
   targetPnlEntriesCreated   TargetPnLEntry[]     @relation("TargetPnLEntryCreator")
@@ -1378,6 +1379,8 @@ model Employee {
   itProjectResources                      ITProjectResource[]
   crmAssignmentRuleMemberships            CrmAssignmentRuleMember[]
   campaignTeamLeadAssignments             CrmCampaignTeamLeadAssignment[] @relation("CampaignTeamLeadEmployee")
+  campaignBdDailyLimitsAsTeamLead         CrmCampaignBdDailyLimit[]       @relation("CampaignBdLimitTeamLeadEmployee")
+  campaignBdDailyLimitsAsBd               CrmCampaignBdDailyLimit[]       @relation("CampaignBdLimitBdEmployee")
   salesTeamCostEntries                    SalesTeamCostEntry[]
   monthlyIncentives                       EmployeeMonthlyIncentive[]
   masterSeatingCost                       EmployeeMasterSeatingCost?
@@ -2824,6 +2827,7 @@ model CrmCampaign {
   createdAt          DateTime                     @default(now())
   updatedAt          DateTime                     @updatedAt
   assignments        CrmCampaignTeamLeadAssignment[]
+  bdDailyLimits      CrmCampaignBdDailyLimit[]
 
   @@index([category])
   @@index([departmentId])
@@ -2854,6 +2858,26 @@ model CrmCampaignTeamLeadAssignment {
   @@index([campaignId, month, year, isActive, priority])
   @@index([teamLeadEmployeeId, month, year])
   @@index([teamLeadUserId, month, year])
+}
+
+model CrmCampaignBdDailyLimit {
+  id                 String      @id @default(cuid())
+  campaignId         String
+  campaign           CrmCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  teamLeadEmployeeId String
+  teamLeadEmployee   Employee    @relation("CampaignBdLimitTeamLeadEmployee", fields: [teamLeadEmployeeId], references: [id], onDelete: Cascade)
+  bdEmployeeId       String
+  bdEmployee         Employee    @relation("CampaignBdLimitBdEmployee", fields: [bdEmployeeId], references: [id], onDelete: Cascade)
+  bdUserId           String
+  bdUser             User        @relation("CampaignBdLimitBdUser", fields: [bdUserId], references: [id], onDelete: Cascade)
+  maxLeadsPerDay     Int
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@unique([campaignId, teamLeadEmployeeId, bdEmployeeId])
+  @@index([campaignId, teamLeadEmployeeId])
+  @@index([bdEmployeeId])
+  @@index([bdUserId])
 }
 
 model CrmActivityLog {

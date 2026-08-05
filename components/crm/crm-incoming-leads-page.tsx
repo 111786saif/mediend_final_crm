@@ -592,7 +592,7 @@ export function CrmIncomingLeadsPage() {
         category: mappedCampaign?.category ?? '—',
         department: mappedCampaign?.department?.name ?? '—',
         circle: incomingLead.summary.circle ?? mappedCampaign?.circle.name ?? '—',
-        city: incomingLead.summary.city ?? mappedCampaign?.city?.name ?? '—',
+        city: incomingLead.summary.city ?? '—',
         patientName: incomingLead.summary.patientName ?? '—',
         email: incomingLead.summary.email ?? '—',
         normalizedPhone: incomingLead.normalizedPhone ?? '—',

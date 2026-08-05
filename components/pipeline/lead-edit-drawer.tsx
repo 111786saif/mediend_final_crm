@@ -48,6 +48,20 @@ function formatDisplayValue(value: unknown, fallback = '—') {
   return trimmed.length > 0 ? trimmed : fallback
 }
 
+function formatMaskedPhone(value: unknown, fallback = '—') {
+  if (typeof value !== 'string') return fallback
+  const trimmed = value.trim()
+  if (!trimmed) return fallback
+
+  const visiblePrefixLength = trimmed.length > 6 ? 2 : 0
+  const visibleSuffixLength = Math.min(4, trimmed.length)
+  const prefix = visiblePrefixLength > 0 ? trimmed.slice(0, visiblePrefixLength) : ''
+  const suffix = trimmed.slice(-visibleSuffixLength)
+  const maskLength = Math.max(trimmed.length - prefix.length - suffix.length, 0)
+  const masked = `${prefix}${'*'.repeat(maskLength)}${suffix}`
+  return masked || fallback
+}
+
 function toDateInputValue(value: string | null | undefined) {
   if (!value) return ''
   const parsed = new Date(value)
@@ -60,6 +74,7 @@ type LeadEditLead = {
   patientName: string
   phoneNumber?: string | null
   alternateNumber?: string | null
+  city?: string | null
   whatsapp?: string | null
   age?: number | null
   sex?: string | null
@@ -599,7 +614,7 @@ export function LeadEditDrawer({
                     </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-3">
                     <div className="space-y-2">
                       <Label htmlFor="drawer-age">
                         Age
@@ -643,10 +658,12 @@ export function LeadEditDrawer({
                         </SelectContent>
                       </Select>
                     </div>
+
+                    <ReadonlyField label="City" value={formatDisplayValue(lead.city)} />
                   </div>
 
                   <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                    <ReadonlyField label="Phone" value={formatDisplayValue(lead.phoneNumber)} />
+                    <ReadonlyField label="Phone" value={formatMaskedPhone(lead.phoneNumber)} />
                     <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
                     <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
                     <ReadonlyField label="Current Owner" value={currentAssigneeName} />

@@ -6,6 +6,7 @@ import {
   UserRole,
 } from '@/generated/prisma/client'
 import { employeeHasAnyCircle, employeeHasCircle } from '@/lib/employee-circles'
+import { getBusinessDayRange } from '@/lib/crm-campaigns'
 import { prisma } from '@/lib/prisma'
 import { getManagementChain } from '@/lib/hierarchy'
 
@@ -127,13 +128,14 @@ function ruleMatches(rule: LoadedRule, input: { city: string | null; category: s
 
 async function getRulePoolLeaveSet(employeeIds: string[], assignmentDate: Date): Promise<Set<string>> {
   if (employeeIds.length === 0) return new Set()
+  const { start, end } = getBusinessDayRange(assignmentDate)
 
   const rows = await prisma.leaveRequest.findMany({
     where: {
       employeeId: { in: employeeIds },
       status: LeaveRequestStatus.APPROVED,
-      startDate: { lte: assignmentDate },
-      endDate: { gte: assignmentDate },
+      startDate: { lte: end },
+      endDate: { gte: start },
     },
     select: { employeeId: true },
   })

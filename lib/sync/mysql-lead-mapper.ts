@@ -1,4 +1,5 @@
 import { PipelineStage, UserRole } from '@/generated/prisma/client'
+import { mapCircleCode } from '@/lib/mysql-code-mappings'
 import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/auth'
 import type { LookupMaps } from './mysql-lookup-cache'
@@ -408,7 +409,9 @@ function buildLeadData(
     resolveLookupValue(mysqlRow.Treatment, lookups.treatment) ??
     null
 
-  const circleName = resolveLookupValue(mysqlRow.Circle, lookups.circle)
+  const circleName =
+    resolveLookupValue(mysqlRow.Circle, lookups.circle) ??
+    mapCircleCode(mysqlRow.Circle)
 
   const categoryName = resolveLookupValue(mysqlRow.Category, lookups.category)
 

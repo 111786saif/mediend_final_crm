@@ -15,7 +15,6 @@ const campaignSchema = z.object({
   sourceId: z.string().min(1),
   leadSourceId: z.string().min(1),
   circleIds: z.array(z.string().trim().min(1)).min(1),
-  cityId: z.string().trim().optional().nullable(),
   isActive: z.boolean().default(true),
 })
 
@@ -52,7 +51,6 @@ export async function PATCH(
       sourceId: data.sourceId,
       leadSourceId: data.leadSourceId,
       circleIds: data.circleIds,
-      cityId: data.cityId ?? null,
       departmentId: data.departmentId ?? null,
     })
 
@@ -72,7 +70,7 @@ export async function PATCH(
           deleteMany: {},
           create: normalizedCircleIds.map((circleId) => ({ circleId })),
         },
-        cityId: data.cityId ?? null,
+        cityId: null,
         isActive: data.isActive,
       },
       include: {
@@ -119,8 +117,6 @@ export async function PATCH(
         circleNames: updated.circleSelections.map((selection) => selection.circle.name),
         primaryCircleId: updated.circleId,
         primaryCircleName: updated.circle.name,
-        cityId: updated.cityId,
-        cityName: updated.city?.name ?? null,
         isActive: updated.isActive,
       },
     })

@@ -3,7 +3,19 @@
  * Returns '—' instead of showing any digits
  */
 export function maskPhoneNumber(phone?: string | null): string {
-  return '—'
+  // return '—'
+  const fallback = '-'
+  if (typeof phone !== 'string') return fallback
+  const trimmed = phone.trim()
+  if (!trimmed) return fallback
+
+  const visiblePrefixLength = trimmed.length > 6 ? 2 : 0
+  const visibleSuffixLength = Math.min(2, trimmed.length)
+  const prefix = visiblePrefixLength > 0 ? trimmed.slice(0, visiblePrefixLength) : ''
+  const suffix = trimmed.slice(-visibleSuffixLength)
+  const maskLength = Math.max(trimmed.length - prefix.length - suffix.length, 0)
+  const masked = `${prefix}${'*'.repeat(maskLength)}${suffix}`
+  return masked || fallback
 }
 
 /**
