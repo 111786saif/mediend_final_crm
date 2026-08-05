@@ -33,6 +33,7 @@ import {
 } from '@/lib/lead-ownership'
 import { buildEffectiveOpdEntries, getEffectiveOpdCounts } from '@/lib/lead-opd-appointments'
 import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
+import { resolveLeadCity } from '@/lib/lead-display'
 
 function parseFollowUpDateInput(value: unknown) {
   if (value === undefined) return { provided: false, value: undefined as Date | null | undefined }
@@ -423,6 +424,7 @@ export async function GET(
       ...fullLead,
       status: mapStatusCode(fullLead.status),
       source: fullLead.source ? mapSourceCode(fullLead.source) : fullLead.source,
+      city: resolveLeadCity(fullLead),
       phoneNumber: canViewPhone ? fullLead.phoneNumber : (fullLead.phoneNumber ? maskPhoneNumber(fullLead.phoneNumber) : null),
       caseStage: fullLead.caseStage,
       hospitalShare,
@@ -459,6 +461,11 @@ export async function PATCH(
       where: { id },
       include: {
         bd: { select: prismaBdEmployeeTeamSelect },
+        kypSubmission: {
+          select: {
+            location: true,
+          },
+        },
         admissionRecord: {
           select: {
             id: true,
@@ -507,11 +514,15 @@ export async function PATCH(
       updatedBy: { connect: { id: user.id } },
       updatedDate: new Date(),
     }
+    const currentLeadCity =
+      typeof lead.kypSubmission?.location === 'string' ? lead.kypSubmission.location.trim() || null : null
     const statusChanged = requestedStatus !== undefined && requestedStatus !== lead.status
     const assigneeChanged = body.bdId !== undefined && body.bdId !== lead.bdId
     const leadProfileChanged =
       (body.patientName !== undefined && body.patientName !== lead.patientName) ||
       (body.whatsapp !== undefined && body.whatsapp !== lead.whatsapp) ||
+      (body.city !== undefined &&
+        (typeof body.city === 'string' ? body.city.trim() || null : body.city ?? null) !== currentLeadCity) ||
       (body.surgeryDate !== undefined &&
         body.surgeryDate !== (lead.surgeryDate ? lead.surgeryDate.toISOString().slice(0, 10) : null))
     const remarksChanged = requestedRemarks !== undefined && requestedRemarks !== currentRemarks
@@ -538,7 +549,7 @@ export async function PATCH(
 
     if (leadProfileChanged && !(await canUserEditLeadProfile(user, lead.bdId))) {
       return errorResponse(
-        'You do not have permission to edit patient name, WhatsApp, or surgery date for this lead',
+        'You do not have permission to edit patient profile details for this lead',
         403
       )
     }
@@ -863,6 +874,33 @@ export async function PATCH(
         },
       })
 
+      if (body.city !== undefined) {
+        const nextCity =
+          typeof body.city === 'string' ? body.city.trim() || null : body.city === null ? null : null
+
+        const existingKypSubmission = await (tx as any).kYPSubmission.findUnique({
+          where: { leadId: id },
+          select: { id: true },
+        })
+
+        if (existingKypSubmission) {
+          await (tx as any).kYPSubmission.update({
+            where: { leadId: id },
+            data: {
+              location: nextCity,
+            },
+          })
+        } else if (nextCity) {
+          await (tx as any).kYPSubmission.create({
+            data: {
+              leadId: id,
+              location: nextCity,
+              submittedById: user.id,
+            },
+          })
+        }
+      }
+
       if (body.surgeryDate !== undefined && lead.admissionRecord?.id) {
         const nextSurgeryDate = body.surgeryDate ? new Date(String(body.surgeryDate)) : null
         await (tx as any).admissionRecord.update({
@@ -1160,10 +1198,21 @@ export async function PATCH(
     })
 
     const payload = leadWithPl || updatedLead
-    const mapped =
+    const mappedBase =
       payload && payload.bd
         ? { ...payload, bd: toLegacyBdShape(payload.bd) }
         : payload
+    const mapped = mappedBase
+      ? {
+          ...mappedBase,
+          city:
+            body.city !== undefined
+              ? typeof body.city === 'string'
+                ? body.city.trim() || null
+                : null
+              : resolveLeadCity({ ...lead, kypSubmission }),
+        }
+      : mappedBase
     const responsePayload = churnAutomationResult
       ? {
           ...mapped,

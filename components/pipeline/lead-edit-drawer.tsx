@@ -232,6 +232,7 @@ export function LeadEditDrawer({
   const [assigneeIdDraft, setAssigneeIdDraft] = useState<string | null>(null)
   const [ageDraft, setAgeDraft] = useState<string | null>(null)
   const [sexDraft, setSexDraft] = useState<string | null>(null)
+  const [cityDraft, setCityDraft] = useState<string | null>(null)
   const [leadStatusDraft, setLeadStatusDraft] = useState<string | null>(null)
   const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
   const [modeOfPaymentDraft, setModeOfPaymentDraft] = useState<string | null>(null)
@@ -274,6 +275,7 @@ export function LeadEditDrawer({
   const effectiveAge = ageDraft ?? (lead?.age == null ? '' : String(lead.age))
   const currentNormalizedSex = normalizeLeadSexValue(lead?.sex)
   const effectiveSex = sexDraft ?? currentNormalizedSex
+  const effectiveCity = cityDraft ?? (lead?.city ?? '')
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
   const effectiveFollowUpDate = followUpDateDraft ?? toDateInputValue(lead?.followUpDate)
   const effectiveModeOfPayment = modeOfPaymentDraft ?? (lead?.modeOfPayment ?? '')
@@ -309,13 +311,15 @@ export function LeadEditDrawer({
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
   const ageChanged = effectiveAge !== (lead?.age == null ? '' : String(lead.age))
   const sexChanged = effectiveSex !== currentNormalizedSex
+  const cityChanged = effectiveCity !== (lead?.city ?? '')
 
   const profileDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
     effectiveWhatsapp !== (lead?.whatsapp ?? '') ||
     effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate) ||
     ageChanged ||
-    sexChanged
+    sexChanged ||
+    cityChanged
   const assigneeDirty = effectiveAssigneeId !== currentAssigneeId
 
   const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged
@@ -395,6 +399,7 @@ export function LeadEditDrawer({
     const trimmedWhatsapp = effectiveWhatsapp.trim()
     const trimmedAge = effectiveAge.trim()
     const trimmedSex = effectiveSex.trim()
+    const trimmedCity = effectiveCity.trim()
     const trimmedModeOfPayment = effectiveModeOfPayment.trim()
 
     if (trimmedPatientName.length === 0) {
@@ -470,6 +475,10 @@ export function LeadEditDrawer({
       payload.sex = trimmedSex || null
     }
 
+    if (cityChanged) {
+      payload.city = trimmedCity || null
+    }
+
     if (assigneeDirty) {
       payload.bdId = effectiveAssigneeId
     }
@@ -542,7 +551,7 @@ export function LeadEditDrawer({
                     <div>
                       <CardTitle className="text-base">Lead Details</CardTitle>
                       <CardDescription>
-                        Editing is limited to name, WhatsApp, surgery date, and assignment.
+                        Editing is limited to lead profile details, surgery date, and assignment.
                       </CardDescription>
                     </div>
                     <LeadQrPopover
@@ -659,7 +668,16 @@ export function LeadEditDrawer({
                       </Select>
                     </div>
 
-                    <ReadonlyField label="City" value={formatDisplayValue(lead.city)} />
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-city">City</Label>
+                      <Input
+                        id="drawer-city"
+                        value={effectiveCity}
+                        onChange={(e) => setCityDraft(e.target.value)}
+                        disabled={!canEditLeadProfile || saving}
+                        placeholder="Enter city"
+                      />
+                    </div>
                   </div>
 
                   <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
