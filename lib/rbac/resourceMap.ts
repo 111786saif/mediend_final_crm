@@ -8,7 +8,7 @@ export const RESOURCE_MAP = {
   "hrm": { label: "Human Resource Management", component: "HrmGroup" },
   "myhrms": { label: "My HRMS Portal", component: "MyHrmsGroup" },
   "sales": { label: "Sales & Marketing", component: "SalesGroup" },
-  "insurance_pl": { label: "Insurance & P/L", component: "InsurancePlGroup" },
+  "insurance_pl": { label: "Outstanding & P/L", component: "InsurancePlGroup" },
   "finance": { label: "Finance & Accounts", component: "FinanceGroup" },
   "actions": { label: "System Actions", component: "SystemActionsGroup" },
   "crm": { label: "CRM", component: "CrmGroup" },
@@ -159,7 +159,12 @@ export const RESOURCE_MAP = {
   // ============================================
 
   // --- MODULE 1: MAIN NAVIGATION ---
-  
+
+  // Home Page (main.home) — Standard 3-section homepage layout
+  "main.home.top_profile": { label: "Home: Top Profile & Banner Section", component: "HomeTopProfileSection" },
+  "main.home.quick_navigation": { label: "Home: Quick Navigation Section", component: "HomeQuickNavigationSection" },
+  "main.home.data_section": { label: "Home: At-a-Glance KPI & Data Section", component: "HomeDataSection" },
+
   // Tasks (main.tasks)
   "main.tasks.overview": { label: "Tasks: Overview Tab", component: "TasksOverviewTab" },
   "main.tasks.my_tasks": { label: "Tasks: My Tasks Tab", component: "MyTasksTab" },

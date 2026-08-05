@@ -198,9 +198,8 @@ export function AppSidebar() {
                     <div className="flex items-center gap-3 px-3 py-2.5 rounded-md">
                       <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
                       <Skeleton
-                        className={`h-4 bg-sidebar-foreground/15 ${
-                          i % 3 === 0 ? 'w-24' : i % 3 === 1 ? 'w-32' : 'w-28'
-                        }`}
+                        className={`h-4 bg-sidebar-foreground/15 ${i % 3 === 0 ? 'w-24' : i % 3 === 1 ? 'w-32' : 'w-28'
+                          }`}
                       />
                     </div>
                   </SidebarMenuItem>
@@ -217,9 +216,8 @@ export function AppSidebar() {
                     <div className="flex items-center gap-3 px-3 py-2.5 rounded-md">
                       <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
                       <Skeleton
-                        className={`h-4 bg-sidebar-foreground/15 ${
-                          i % 2 === 0 ? 'w-20' : 'w-24'
-                        }`}
+                        className={`h-4 bg-sidebar-foreground/15 ${i % 2 === 0 ? 'w-20' : 'w-24'
+                          }`}
                       />
                     </div>
                   </SidebarMenuItem>
@@ -385,9 +383,9 @@ export function AppSidebar() {
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
-        (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
-        0
-      )
+      (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
+      0
+    )
     : 0
   const myHrmsSectionBadge = myHrmsItems.reduce(
     (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
@@ -401,7 +399,7 @@ export function AppSidebar() {
     const badgeCount =
       item.title === 'Meets'
         ? (badgeCounts as { upcomingMeetsToday?: number } | undefined)?.upcomingMeetsToday ??
-          meetNotificationBadge
+        meetNotificationBadge
         : getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
     return (
       <SidebarMenuItem key={item.title}>
@@ -443,15 +441,13 @@ export function AppSidebar() {
           )}
         </div>
         <ChevronDown
-          className={`h-4 w-4 transition-transform duration-200 ${
-            openSections[key] ? 'rotate-180' : ''
-          }`}
+          className={`h-4 w-4 transition-transform duration-200 ${openSections[key] ? 'rotate-180' : ''
+            }`}
         />
       </button>
       <div
-        className={`overflow-hidden transition-all duration-200 ease-in-out ${
-          openSections[key] ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
+        className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections[key] ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+          }`}
       >
         {openSections[key] && (
           <SidebarGroupContent>
@@ -542,7 +538,7 @@ export function AppSidebar() {
         {showInsurancePlSection &&
           renderCollapsible(
             'insurancePl',
-            'Insurance & P/L',
+            'Outstanding & P/L',
             <Shield className="h-4 w-4" />,
             insurancePlItems
           )}
