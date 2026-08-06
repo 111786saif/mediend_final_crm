@@ -2819,6 +2819,9 @@ model CrmCampaign {
   externalCampaignId String                        @unique
   displayName        String
   category           String?
+  treatment          String?
+  treatmentMasterId  String?
+  treatmentMaster    TreatmentMaster?              @relation(fields: [treatmentMasterId], references: [id], onDelete: SetNull)
   departmentId       String?
   department         Department?                   @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   sourceId           String
@@ -2837,6 +2840,8 @@ model CrmCampaign {
   bdDailyLimits      CrmCampaignBdDailyLimit[]
 
   @@index([category])
+  @@index([treatment])
+  @@index([treatmentMasterId])
   @@index([departmentId])
   @@index([sourceId])
   @@index([leadSourceId])
@@ -4411,6 +4416,7 @@ model TreatmentMaster {
   updatedAt    DateTime @updatedAt
 
   leads Lead[]
+  crmCampaigns CrmCampaign[]
 
   @@index([name])
   @@index([category])

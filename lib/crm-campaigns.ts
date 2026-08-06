@@ -29,6 +29,8 @@ type CampaignReferenceValidationInput = {
   sourceId: string
   leadSourceId: string
   circleIds: string[]
+  category?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
 }
 
@@ -51,6 +53,7 @@ type CampaignWithRelations = Prisma.CrmCampaignGetPayload<{
       }
     }
     circle: true
+    treatmentMaster: true
     circleSelections: {
       include: {
         circle: true
@@ -196,12 +199,15 @@ export async function validateCampaignReferences(input: CampaignReferenceValidat
   const normalizedCircleIds = Array.from(
     new Set(input.circleIds.map((circleId) => circleId.trim()).filter(Boolean))
   )
+  const normalizedCategory = input.category?.trim() || null
+  const normalizedTreatmentMasterId = input.treatmentMasterId?.trim() || null
 
   if (normalizedCircleIds.length === 0) {
     throw new Error('At least one circle must be selected.')
   }
 
-  const [source, leadSource, circles, department] = await Promise.all([
+  const [source, leadSource, circles, treatmentCategory, treatmentMaster, department] =
+    await Promise.all([
     prisma.crmCampaignSource.findUnique({
       where: { id: input.sourceId },
     }),
@@ -215,12 +221,22 @@ export async function validateCampaignReferences(input: CampaignReferenceValidat
         },
       },
     }),
+    normalizedCategory
+      ? prisma.treatmentCategoryMaster.findUnique({
+          where: { name: normalizedCategory },
+        })
+      : Promise.resolve(null),
+    normalizedTreatmentMasterId
+      ? prisma.treatmentMaster.findUnique({
+          where: { id: normalizedTreatmentMasterId },
+        })
+      : Promise.resolve(null),
     input.departmentId
       ? prisma.department.findUnique({
           where: { id: input.departmentId },
         })
       : Promise.resolve(null),
-  ])
+    ])
 
   if (!source) {
     throw new Error('Selected source was not found.')
@@ -231,14 +247,23 @@ export async function validateCampaignReferences(input: CampaignReferenceValidat
   if (circles.length !== normalizedCircleIds.length) {
     throw new Error('One or more selected circles were not found.')
   }
+  if (normalizedCategory && !treatmentCategory) {
+    throw new Error('Selected treatment category was not found.')
+  }
+  if (normalizedTreatmentMasterId && !treatmentMaster) {
+    throw new Error('Selected treatment was not found.')
+  }
   if (input.departmentId && !department) {
     throw new Error('Selected department was not found.')
   }
   if (leadSource.sourceId !== source.id) {
     throw new Error('Lead source must belong to the selected source.')
   }
+  if (treatmentMaster && normalizedCategory && treatmentMaster.category !== normalizedCategory) {
+    throw new Error('Selected treatment does not belong to the selected treatment category.')
+  }
 
-  return { source, leadSource, circles, department }
+  return { source, leadSource, circles, treatmentCategory, treatmentMaster, department }
 }
 
 function getCampaignCircles(campaign: Pick<CampaignWithRelations, 'circle' | 'circleSelections'>) {
@@ -345,6 +370,7 @@ export async function getCampaignManagementPageData(month?: number, year?: numbe
           },
         },
         circle: true,
+        treatmentMaster: true,
         circleSelections: {
           include: {
             circle: true,
@@ -549,6 +575,7 @@ export async function getCampaignForWebhook(externalCampaignId: string) {
         },
       },
       circle: true,
+      treatmentMaster: true,
       circleSelections: {
         include: {
           circle: true,
@@ -1322,9 +1349,9 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
         externalCampaignId: campaign.externalCampaignId,
         normalizedPhone,
         processedLeadId: duplicateLead.id,
-        selectedTeamLeadUserId: selectedAssignment.teamLeadUserId,
-        selectedTeamLeadEmployeeId: selectedAssignment.teamLeadEmployeeId,
-        selectedBdUserId: assignedToTeamLeadFallback ? null : selectedBd.userId,
+        selectedTeamLeadUserId: null,
+        selectedTeamLeadEmployeeId: null,
+        selectedBdUserId: null,
         processedAt: receivedAt,
         errorMessage: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
       },
@@ -1378,6 +1405,8 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       campaignName: campaign.leadSource.name || campaign.displayName,
       campaignId: campaign.externalCampaignId,
       category: campaign.category ?? null,
+      treatment: campaign.treatment ?? null,
+      treatmentMasterId: campaign.treatmentMasterId ?? null,
       subStatus: resolvedSubStatus,
       circle: preferredCircles[0] ?? campaign.circle.name,
       bdeName: selectedBd.user.name,

@@ -62,6 +62,11 @@ function normalizeImportedLeadString(value: string | null | undefined) {
   return normalized
 }
 
+function normalizeImportedLeadId(value: string | null | undefined) {
+  const normalized = value?.trim()
+  return normalized || null
+}
+
 function getCampaignDefaultCircleName(
   campaign: Awaited<ReturnType<typeof getCampaignForWebhook>>
 ) {
@@ -149,6 +154,16 @@ export async function createImportedLeadWithCrmAssignment(
     normalizeImportedLeadString(input.assignmentContext.category) ??
     campaign?.category ??
     (typeof leadDataWithoutOwner.category === 'string' ? leadDataWithoutOwner.category : null)
+  const campaignTreatment =
+    campaign?.treatment ??
+    (typeof leadDataWithoutOwner.treatment === 'string'
+      ? normalizeImportedLeadString(leadDataWithoutOwner.treatment)
+      : null)
+  const campaignTreatmentMasterId =
+    campaign?.treatmentMasterId ??
+    (typeof leadDataWithoutOwner.treatmentMasterId === 'string'
+      ? normalizeImportedLeadId(leadDataWithoutOwner.treatmentMasterId)
+      : null)
   const campaignSource =
     campaign?.source?.name ??
     (typeof leadDataWithoutOwner.source === 'string' ? leadDataWithoutOwner.source : null)
@@ -170,6 +185,8 @@ export async function createImportedLeadWithCrmAssignment(
       ...leadDataWithoutOwner,
       circle: fallbackCircle ?? 'Unknown',
       category: campaignCategory,
+      treatment: campaignTreatment,
+      treatmentMasterId: campaignTreatmentMasterId,
       source: campaignSource,
       campaignName,
       campaignId: persistedCampaignId,

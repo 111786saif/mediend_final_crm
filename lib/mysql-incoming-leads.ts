@@ -277,9 +277,9 @@ export async function processMySQLIncomingLead(
           status: 'DUPLICATE',
           processedLeadId: error.leadId,
           externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
-          selectedTeamLeadUserId: assignmentPreview.assignment?.teamLead?.userId ?? null,
-          selectedTeamLeadEmployeeId: assignmentPreview.assignment?.teamLead?.employeeId ?? null,
-          selectedBdUserId: assignmentPreview.assignment?.bd.userId ?? null,
+          selectedTeamLeadUserId: null,
+          selectedTeamLeadEmployeeId: null,
+          selectedBdUserId: null,
           normalizedPhone: error.normalizedPhone,
           processedAt: new Date(),
           errorMessage: `Duplicate phone number. Existing lead: ${error.leadRef}. Duplicate count: ${error.duplicateCount}`,
@@ -290,7 +290,7 @@ export async function processMySQLIncomingLead(
         status: 'duplicate' as const,
         leadId: error.leadId,
         leadRef: error.leadRef,
-        assignedBdName: assignmentPreview.assignment?.bd.name ?? null,
+        assignedBdName: null,
       }
     }
     throw error
