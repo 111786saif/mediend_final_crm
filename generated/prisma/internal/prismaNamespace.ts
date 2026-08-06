@@ -464,6 +464,7 @@ export const ModelName = {
   CrmSubStatusMaster: 'CrmSubStatusMaster',
   CrmCampaign: 'CrmCampaign',
   CrmCampaignTeamLeadAssignment: 'CrmCampaignTeamLeadAssignment',
+  CrmCampaignBdDailyLimit: 'CrmCampaignBdDailyLimit',
   CrmActivityLog: 'CrmActivityLog',
   BulkLeadReassignmentRun: 'BulkLeadReassignmentRun',
   Resource: 'Resource',
@@ -564,7 +565,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadQrPublicLink" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCircleSelection" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "leadOpdAppointment" | "leadOpdAppointmentPrescriptionImage" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
+    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadQrPublicLink" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCircleSelection" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmCampaignBdDailyLimit" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "leadOpdAppointment" | "leadOpdAppointmentPrescriptionImage" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6485,6 +6486,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CrmCampaignTeamLeadAssignmentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CrmCampaignTeamLeadAssignmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmCampaignBdDailyLimit: {
+      payload: Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>
+      fields: Prisma.CrmCampaignBdDailyLimitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmCampaignBdDailyLimitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmCampaignBdDailyLimitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>
+        }
+        findFirst: {
+          args: Prisma.CrmCampaignBdDailyLimitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmCampaignBdDailyLimitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>
+        }
+        findMany: {
+          args: Prisma.CrmCampaignBdDailyLimitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>[]
+        }
+        create: {
+          args: Prisma.CrmCampaignBdDailyLimitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>
+        }
+        createMany: {
+          args: Prisma.CrmCampaignBdDailyLimitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmCampaignBdDailyLimitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>[]
+        }
+        delete: {
+          args: Prisma.CrmCampaignBdDailyLimitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>
+        }
+        update: {
+          args: Prisma.CrmCampaignBdDailyLimitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmCampaignBdDailyLimitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmCampaignBdDailyLimitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmCampaignBdDailyLimitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmCampaignBdDailyLimitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignBdDailyLimitPayload>
+        }
+        aggregate: {
+          args: Prisma.CrmCampaignBdDailyLimitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmCampaignBdDailyLimit>
+        }
+        groupBy: {
+          args: Prisma.CrmCampaignBdDailyLimitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignBdDailyLimitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmCampaignBdDailyLimitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignBdDailyLimitCountAggregateOutputType> | number
         }
       }
     }
@@ -13301,6 +13376,9 @@ export const EmployeeScalarFieldEnum = {
   employeeCode: 'employeeCode',
   bdNumber: 'bdNumber',
   circle: 'circle',
+  knowlarityPhoneNumber: 'knowlarityPhoneNumber',
+  knowlarityCallerId: 'knowlarityCallerId',
+  knowlarityNotificationsEnabled: 'knowlarityNotificationsEnabled',
   joinDate: 'joinDate',
   salary: 'salary',
   departmentId: 'departmentId',
@@ -14381,6 +14459,20 @@ export const CrmCampaignTeamLeadAssignmentScalarFieldEnum = {
 export type CrmCampaignTeamLeadAssignmentScalarFieldEnum = (typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum)[keyof typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum]
 
 
+export const CrmCampaignBdDailyLimitScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  teamLeadEmployeeId: 'teamLeadEmployeeId',
+  bdEmployeeId: 'bdEmployeeId',
+  bdUserId: 'bdUserId',
+  maxLeadsPerDay: 'maxLeadsPerDay',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignBdDailyLimitScalarFieldEnum = (typeof CrmCampaignBdDailyLimitScalarFieldEnum)[keyof typeof CrmCampaignBdDailyLimitScalarFieldEnum]
+
+
 export const CrmActivityLogScalarFieldEnum = {
   id: 'id',
   action: 'action',
@@ -14858,6 +14950,7 @@ export type OutstandingCaseScalarFieldEnum = (typeof OutstandingCaseScalarFieldE
 export const PaymentInstallmentScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
+  hospitalName: 'hospitalName',
   recipient: 'recipient',
   amount: 'amount',
   paidOn: 'paidOn',
@@ -17223,6 +17316,7 @@ export type GlobalOmitConfig = {
   crmSubStatusMaster?: Prisma.CrmSubStatusMasterOmit
   crmCampaign?: Prisma.CrmCampaignOmit
   crmCampaignTeamLeadAssignment?: Prisma.CrmCampaignTeamLeadAssignmentOmit
+  crmCampaignBdDailyLimit?: Prisma.CrmCampaignBdDailyLimitOmit
   crmActivityLog?: Prisma.CrmActivityLogOmit
   bulkLeadReassignmentRun?: Prisma.BulkLeadReassignmentRunOmit
   resource?: Prisma.ResourceOmit

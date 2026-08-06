@@ -23,10 +23,6 @@ import { getFilteredNavItemsWithUrls, type NavItem } from '@/lib/sidebar-nav'
 import { usePermissions } from '@/hooks/use-permissions'
 import { resolveNavResourceKey } from '@/lib/nav-resource-map'
 import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
-import {
-  getRoleSidebarLayout,
-  resolveLayoutTitle,
-} from '@/lib/role-sidebar-layout'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   ChevronDown,
@@ -112,19 +108,6 @@ function displayLabel(title: string): string {
   return title
 }
 
-function orderByTitles(
-  items: NavItemWithUrl[],
-  titles: string[]
-): NavItemWithUrl[] {
-  const byTitle = new Map(items.map((item) => [item.title, item]))
-  const ordered: NavItemWithUrl[] = []
-  for (const layoutTitle of titles) {
-    const resolved = resolveLayoutTitle(layoutTitle)
-    const item = byTitle.get(resolved)
-    if (item) ordered.push(item)
-  }
-  return ordered
-}
 
 export function AppSidebar() {
   const { user, logout, isTester, setActiveRole } = useAuth()
@@ -231,7 +214,6 @@ export function AppSidebar() {
   }
 
   const role = user.role
-  const layout = getRoleSidebarLayout(role)
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
 
   const filterByPermission = (item: NavItemWithUrl) => {
@@ -277,101 +259,35 @@ export function AppSidebar() {
 
   const permitted = itemsWithUrls.filter(filterByPermission)
 
-  const pickSection = (titles: string[] | undefined) => {
-    if (!titles?.length) return [] as NavItemWithUrl[]
-    return orderByTitles(permitted, titles)
-  }
+  const primaryMainItems: NavItemWithUrl[] = []
+  const hrItems: NavItemWithUrl[] = []
+  const myHrmsItems: NavItemWithUrl[] = []
+  const salesItems: NavItemWithUrl[] = []
+  const insurancePlItems: NavItemWithUrl[] = []
+  const financeItems: NavItemWithUrl[] = []
+  const crmItems: NavItemWithUrl[] = []
 
-  let primaryMainItems: NavItemWithUrl[]
-  let hrItems: NavItemWithUrl[] = []
-  let myHrmsItems: NavItemWithUrl[] = []
-  let salesItems: NavItemWithUrl[] = []
-  let insurancePlItems: NavItemWithUrl[] = []
-  let financeItems: NavItemWithUrl[] = []
-  let crmItems: NavItemWithUrl[] = []
+  for (const item of permitted) {
+    if (item.title === 'mediend AI') continue // footer only
 
-  if (layout) {
-    // mediend AI is footer-only — never place it in main even if listed in a layout
-    primaryMainItems = pickSection(layout.main).filter((item) => item.title !== 'mediend AI')
-    hrItems = pickSection(layout.hrm)
-    myHrmsItems = pickSection(layout.myhrms)
-    salesItems = pickSection(layout.sales)
-    insurancePlItems = pickSection(layout.insurancePl)
-    financeItems = pickSection(layout.finance)
-    crmItems = pickSection(layout.crm)
-  } else {
-    // Fallback for MD / ADMIN / other roles without a fixed layout:
-    // permission-filtered catalog with conventional section grouping.
-    const HRM_TITLES = [
-      'Attendance & Normalizations',
-      'People & Org',
-      'Compensation & Docs',
-      'Engagement',
-      'Recruitment',
-      'HR Dashboard',
-      'Onboarding',
-    ]
-    const SALES_TITLES = [
-      'Sales Dashboard',
-      'DM Dashboard',
-      'Campaign CPL',
-      'CRM',
-      'Case Tracker',
-      'Pending Surgery',
-      'Targets',
-      'Sales P&L',
-      'Incentive',
-      'Blue Print Dashboard',
-      'OPD Monitoring',
-    ]
-    const INSURANCE_PL_TITLES = [
-      'Insurance',
-      'Cash Cases',
-      'P/L Ledger',
-      'P/L Surgery',
-      'P/L Outstanding',
-      'Doctor List',
-      'Hospital List',
-    ]
-    const CRM_TITLES = [
-      'CRM Campaigns',
-      'CRM Incoming Leads',
-      'CRM KPIs',
-      'CRM Activity',
-      'CRM Masters',
-      'CRM Access Matrix',
-      'CRM Churn Rules',
-    ]
-    const FINANCE_TITLES = permitted
-      .filter((item) => item.title.startsWith('Fin '))
-      .map((item) => item.title)
+    const resourceKey = resolveNavResourceKey(item.title, role)
+    const prefix = resourceKey ? resourceKey.split('.')[0] : 'main'
 
-    const sectionTitleSet = new Set([
-      ...HRM_TITLES,
-      ...SALES_TITLES,
-      ...INSURANCE_PL_TITLES,
-      ...CRM_TITLES,
-      ...FINANCE_TITLES,
-    ])
-
-    myHrmsItems = permitted.filter(
-      (item) => item.title.startsWith('My ') || item.title === 'Ask MD Approval'
-    )
-    const myHrmsTitles = new Set(myHrmsItems.map((i) => i.title))
-
-    primaryMainItems = permitted.filter(
-      (item) =>
-        item.title !== 'mediend AI' &&
-        !sectionTitleSet.has(item.title) &&
-        !myHrmsTitles.has(item.title)
-    )
-    hrItems = permitted.filter((item) => HRM_TITLES.includes(item.title))
-    salesItems = permitted.filter((item) => SALES_TITLES.includes(item.title))
-    insurancePlItems = permitted.filter((item) =>
-      INSURANCE_PL_TITLES.includes(item.title)
-    )
-    financeItems = permitted.filter((item) => item.title.startsWith('Fin '))
-    crmItems = permitted.filter((item) => CRM_TITLES.includes(item.title))
+    if (prefix === 'hrm') {
+      hrItems.push(item)
+    } else if (prefix === 'myhrms') {
+      myHrmsItems.push(item)
+    } else if (prefix === 'sales') {
+      salesItems.push(item)
+    } else if (prefix === 'insurance_pl') {
+      insurancePlItems.push(item)
+    } else if (prefix === 'finance') {
+      financeItems.push(item)
+    } else if (prefix === 'crm') {
+      crmItems.push(item)
+    } else {
+      primaryMainItems.push(item)
+    }
   }
 
   const showHrSection = hrItems.length > 0
@@ -521,7 +437,7 @@ export function AppSidebar() {
         {showMyHrmsSection &&
           renderCollapsible(
             'myHrms',
-            'MyHrms',
+            'My HRMS',
             <UserCircle className="h-4 w-4" />,
             myHrmsItems,
             myHrmsSectionBadge

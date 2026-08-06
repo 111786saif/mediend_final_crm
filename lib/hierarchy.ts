@@ -166,6 +166,40 @@ export async function getEmployeeByUserId(userId: string) {
 }
 
 /**
+ * Resolve the Team Lead (or ACM) for a lead owner via the employee manager chain.
+ * If the owner is already TL/ACM, returns that owner. Returns null when no TL is found.
+ */
+export async function resolveTeamLeadForLeadOwner(leadOwnerUserId: string): Promise<{
+  userId: string
+  name: string
+  role: UserRole
+} | null> {
+  const ownerEmployee = await getEmployeeByUserId(leadOwnerUserId)
+  if (!ownerEmployee?.user) return null
+
+  const isTeamUnit = TEAM_UNIT_ROLES.includes(ownerEmployee.user.role as UserRole)
+  if (isTeamUnit) {
+    return {
+      userId: ownerEmployee.user.id,
+      name: ownerEmployee.user.name,
+      role: ownerEmployee.user.role,
+    }
+  }
+
+  const chain = await getManagementChain(ownerEmployee.id)
+  const teamLead = chain.find((employee) =>
+    TEAM_UNIT_ROLES.includes(employee.user.role as UserRole),
+  )
+  if (!teamLead?.user) return null
+
+  return {
+    userId: teamLead.user.id,
+    name: teamLead.user.name,
+    role: teamLead.user.role,
+  }
+}
+
+/**
  * Get user IDs of all subordinates that report to this user (recursively).
  * Returns empty array if user has no employee record or no subordinates.
  */

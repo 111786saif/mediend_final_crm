@@ -3577,8 +3577,11 @@ enum InstallmentVerificationStatus {
 
 model PaymentInstallment {
   id           String               @id @default(cuid())
-  leadId       String
-  lead         Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  /// Optional — hospital-level MediEND receipts may have no case attached
+  leadId       String?
+  lead         Lead?                @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  /// Set when payment is recorded against a hospital without selecting cases
+  hospitalName String?
   recipient    InstallmentRecipient
   amount       Float
   paidOn       DateTime
@@ -3597,6 +3600,7 @@ model PaymentInstallment {
   updatedAt    DateTime             @updatedAt
 
   @@index([leadId])
+  @@index([hospitalName])
   @@index([recipient])
   @@index([paidOn])
   @@index([verificationStatus])

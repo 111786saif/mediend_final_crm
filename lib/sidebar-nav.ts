@@ -64,7 +64,7 @@ export const navItems: NavItem[] = [
     title: 'MD Home',
     url: '/md/home',
     icon: LayoutDashboard,
-    roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
+    roles: ['MD', 'ADMIN'],
   },
   {
     title: 'Tasks',
@@ -776,9 +776,9 @@ export function getFilteredNavItemsWithUrls(user: SessionUser | null): (NavItem 
  * Use for post-login and root redirect so users never hit 404.
  */
 export function getFirstNavUrl(user: SessionUser | null): string {
-  // MD/ADMIN land on the MD Command Center; everyone else on the generic home page
+  // MD/ADMIN land on the MD Command Center; Project Head and others on /home
   if (user) {
-    if (user.role === 'MD' || user.role === 'ADMIN' || user.role === 'EXECUTIVE_ASSISTANT') return '/md/home'
+    if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
     if (String(user.role) === 'SUPER_ADMIN') return '/crm/campaigns'
     if (String(user.role) === 'CRM_ADMIN') return '/crm/access-matrix'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
