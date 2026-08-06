@@ -10,6 +10,7 @@ export interface SessionUser {
   name: string
   role: UserRole
   onboardingStatus?: OnboardingStatus | null
+  managerName?: string | null
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -74,7 +75,12 @@ export async function getUserById(id: string): Promise<SessionUser | null> {
       name: true,
       role: true,
       employee: {
-        select: { onboardingStatus: true },
+        select: {
+          onboardingStatus: true,
+          manager: {
+            select: { user: { select: { name: true } } },
+          },
+        },
       },
     },
   })
@@ -87,5 +93,6 @@ export async function getUserById(id: string): Promise<SessionUser | null> {
     name: user.name,
     role: user.role,
     onboardingStatus: user.employee?.onboardingStatus ?? null,
+    managerName: user.employee?.manager?.user?.name ?? null,
   }
 }
