@@ -204,9 +204,11 @@ export function PaymentVerificationView() {
               <TableBody>
                 {rows.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell className="font-medium">{row.lead.leadRef ?? '—'}</TableCell>
-                    <TableCell>{row.lead.patientName ?? '—'}</TableCell>
-                    <TableCell>{row.lead.hospitalName ?? '—'}</TableCell>
+                    <TableCell className="font-medium">
+                      {row.lead?.leadRef ?? (row.leadId ? '—' : 'Hospital-level')}
+                    </TableCell>
+                    <TableCell>{row.lead?.patientName ?? '—'}</TableCell>
+                    <TableCell>{row.hospitalName ?? row.lead?.hospitalName ?? '—'}</TableCell>
                     <TableCell className="tabular-nums font-medium">
                       {formatCurrency(row.amount)}
                     </TableCell>
@@ -250,7 +252,9 @@ export function PaymentVerificationView() {
                 : 'Payment details'}
             </DialogTitle>
             <DialogDescription>
-              {active?.lead.leadRef} · {active?.lead.patientName}
+              {active?.lead
+                ? `${active.lead.leadRef ?? '—'} · ${active.lead.patientName ?? '—'}`
+                : 'Hospital-level payment (no case attached)'}
             </DialogDescription>
           </DialogHeader>
 
@@ -259,7 +263,9 @@ export function PaymentVerificationView() {
               <div className="grid gap-2 sm:grid-cols-2">
                 <div>
                   <p className="text-xs text-muted-foreground">Hospital</p>
-                  <p className="font-medium">{active.lead.hospitalName ?? '—'}</p>
+                  <p className="font-medium">
+                    {active.hospitalName ?? active.lead?.hospitalName ?? '—'}
+                  </p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Amount</p>
@@ -305,9 +311,11 @@ export function PaymentVerificationView() {
                   />
                 </div>
               )}
-              <Button variant="link" className="h-auto p-0" asChild>
-                <Link href={`/pl/outstanding/${active.leadId}`}>Open P/L Outstanding case</Link>
-              </Button>
+              {active.leadId ? (
+                <Button variant="link" className="h-auto p-0" asChild>
+                  <Link href={`/pl/outstanding/${active.leadId}`}>Open P/L Outstanding case</Link>
+                </Button>
+              ) : null}
             </div>
           )}
 

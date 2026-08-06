@@ -485,10 +485,15 @@ export function buildWorkflowResetTimelineNote(args: {
   toLabel: string
   resetByName: string
   reason: string
+  reassignedToName?: string | null
 }): string {
-  return [
+  const lines = [
     'Workflow Reset',
     `Reset from ${args.fromLabel} to ${args.toLabel} by Executive Assistant (${args.resetByName}).`,
     `Reason: ${args.reason}`,
-  ].join('\n')
+  ]
+  if (args.reassignedToName) {
+    lines.push(`Lead reassigned to Team Lead (${args.reassignedToName}).`)
+  }
+  return lines.join('\n')
 }

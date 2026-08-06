@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
         { lead: { leadRef: { contains: search, mode: 'insensitive' } } },
         { lead: { patientName: { contains: search, mode: 'insensitive' } } },
         { lead: { hospitalName: { contains: search, mode: 'insensitive' } } },
+        { hospitalName: { contains: search, mode: 'insensitive' } },
         { reference: { contains: search, mode: 'insensitive' } },
       ]
     }
@@ -68,6 +69,7 @@ export async function GET(request: NextRequest) {
       installments: rows.map((r) => ({
         id: r.id,
         leadId: r.leadId,
+        hospitalName: r.hospitalName,
         recipient: r.recipient,
         amount: r.amount,
         paidOn: r.paidOn.toISOString(),
