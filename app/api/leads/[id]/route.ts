@@ -10,7 +10,7 @@ import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
-import { isOpdDoneStatus, OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
+import { OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
 import {
   assertDoctorAvailableOnDate,
   DoctorAvailabilityError,
@@ -426,6 +426,7 @@ export async function GET(
       source: fullLead.source ? mapSourceCode(fullLead.source) : fullLead.source,
       city: resolveLeadCity(fullLead),
       phoneNumber: canViewPhone ? fullLead.phoneNumber : (fullLead.phoneNumber ? maskPhoneNumber(fullLead.phoneNumber) : null),
+      alternateNumber: canViewPhone ? fullLead.alternateNumber : (fullLead.alternateNumber ? maskPhoneNumber(fullLead.alternateNumber) : null),
       caseStage: fullLead.caseStage,
       hospitalShare,
     }
@@ -722,6 +723,7 @@ export async function PATCH(
       'patientName',
       'age',
       'sex',
+      'profession',
       'phoneNumber',
       'alternateNumber',
       'whatsapp',
@@ -795,6 +797,7 @@ export async function PATCH(
           nextValue = normalizeLeadSexValue(body[field]) || body[field]
         } else if (
           (field === 'patientName' ||
+            field === 'profession' ||
             field === 'opdHospital' ||
             field === 'opdDrName' ||
             field === 'opdContactNo' ||
@@ -1210,7 +1213,7 @@ export async function PATCH(
               ? typeof body.city === 'string'
                 ? body.city.trim() || null
                 : null
-              : resolveLeadCity({ ...lead, kypSubmission }),
+              : resolveLeadCity(lead),
         }
       : mappedBase
     const responsePayload = churnAutomationResult

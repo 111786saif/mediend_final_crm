@@ -91,19 +91,11 @@ type TreatmentOption = {
   isActive: boolean
 }
 
-type SubStatusOption = {
-  id: string
-  key: number
-  value: string
-  isActive: boolean
-}
-
 type CampaignMasters = {
   sources: SourceMaster[]
   leadSources: LeadSourceMaster[]
   circles: CircleMaster[]
   cities: CityMaster[]
-  subStatuses: SubStatusOption[]
   departments: DepartmentOption[]
   treatmentCategories: TreatmentCategoryOption[]
   treatments: TreatmentOption[]
@@ -206,11 +198,12 @@ type IncomingLeadManualAssignResult = {
 
 type IncomingLeadRetryResult = {
   processedCount: number
+  duplicateCount: number
   failedCount: number
   skippedCount: number
   results: Array<{
     incomingLeadId: string
-    status: 'processed' | 'already_processed' | 'failed' | 'skipped'
+    status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'skipped'
     leadId?: string
     leadRef?: string
     assignedBdName?: string | null

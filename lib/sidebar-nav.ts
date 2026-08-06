@@ -265,7 +265,7 @@ export const navItems: NavItem[] = [
     permission: 'hrms:recruitment:read',
   },
   {
-    title: 'Pipeline',
+    title: 'CRM',
     url: '/pipeline',
     icon: ClipboardList,
     roles: [
@@ -739,7 +739,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
         return { ...item, url: '/team-lead/dashboard' }
       }
     }
-    if (item.title === 'Pipeline') {
+    if (item.title === 'Pipeline' || item.title === 'CRM') {
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }
       if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
         return { ...item, url: '/team-lead/pipeline' }

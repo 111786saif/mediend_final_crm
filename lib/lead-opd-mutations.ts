@@ -3,6 +3,7 @@ import {
   LeadOpdPhase,
   LeadOpdStatus,
   Prisma,
+  UserRole,
 } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import {
@@ -94,6 +95,7 @@ export type MutateLeadOpdInput = {
   leadId: string
   actorUserId?: string | null
   actorName: string
+  actorRole?: UserRole | null
   appointmentId?: string | null
   phase?: LeadOpdPhase
   hospitalName?: string | null
@@ -151,6 +153,12 @@ function parseOptionalDate(value: string | Date | null | undefined, fieldName: s
     throw new LeadOpdMutationError(`${fieldName} must be a valid date`, 400)
   }
   return parsed
+}
+
+function getDateTime(value: string | Date | null | undefined) {
+  if (!value) return null
+  const time = new Date(value).getTime()
+  return Number.isNaN(time) ? null : time
 }
 
 function assertPostOpdAllowed(lead: LeadOpdMutationLead) {
@@ -308,13 +316,6 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
         targetMode === 'record' &&
         (targetRecord?.phase ?? requestedPhase) === LeadOpdPhase.PRE)
 
-    const shouldMarkDone = input.markDone === true
-    const shouldCancel = input.cancel === true
-
-    if (shouldMarkDone && targetMode === 'legacy' && hasLeadOpdDone(lead)) {
-      throw new LeadOpdMutationError('OPD is already marked done', 400)
-    }
-
     const surgeryRemarkCode = await resolveMasterCode(tx, 'surgeryRemark', input.surgeryRemarkCode)
     const reasonNoSurgeryCode = await resolveMasterCode(tx, 'reasonNoSurgery', input.reasonNoSurgeryCode)
     const followUpReasonCode = await resolveMasterCode(tx, 'followUpReason', input.followUpReasonCode)
@@ -326,6 +327,27 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
       input.remarks !== undefined
         ? normalizeText(input.remarks)
         : undefined
+
+    const shouldMarkDone = input.markDone === true
+    const shouldCancel = input.cancel === true
+    const currentScheduleDate =
+      targetMode === 'legacy'
+        ? lead.opdScheduleDate
+        : targetRecord?.scheduleDate
+    const isPostponing =
+      !shouldCancel &&
+      input.scheduleDate !== undefined &&
+      getDateTime(currentScheduleDate) !== null &&
+      getDateTime(nextScheduleDate) !== null &&
+      getDateTime(currentScheduleDate) !== getDateTime(nextScheduleDate)
+
+    if ((shouldCancel || isPostponing) && input.actorRole !== UserRole.BD) {
+      throw new LeadOpdMutationError('Only BDs can mark an OPD as postponed or cancelled', 403)
+    }
+
+    if (shouldMarkDone && targetMode === 'legacy' && hasLeadOpdDone(lead)) {
+      throw new LeadOpdMutationError('OPD is already marked done', 400)
+    }
 
     if (targetMode === 'legacy') {
       const leadUpdateData: Prisma.LeadUpdateInput = {
@@ -356,7 +378,7 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
         leadUpdateData.opdScheduleDate = null
       }
 
-      if (shouldMarkDone || (shouldTagDoctorFollowUp && isFirstEffectivePreTarget)) {
+      if (!shouldCancel && !isPostponing && (shouldMarkDone || (shouldTagDoctorFollowUp && isFirstEffectivePreTarget))) {
         leadUpdateData.status = OPD_DONE_STATUS
         const nextStage = getNextStageAfterOpdDone(lead)
         if (nextStage) {
@@ -373,7 +395,7 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
             },
           })
         }
-      } else if (!isOpdDoneStatus(lead.status) && nextScheduleDate) {
+      } else if (!shouldCancel && !isPostponing && !isOpdDoneStatus(lead.status) && nextScheduleDate) {
         const nextStage = getNextStageAfterOpdSchedule(lead)
         if (nextStage) {
           leadUpdateData.status = OPD_SCHEDULED_STATUS
@@ -465,7 +487,7 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
         })
       }
 
-      if ((shouldMarkDone || shouldTagDoctorFollowUp) && isFirstEffectivePreTarget) {
+      if (!shouldCancel && !isPostponing && (shouldMarkDone || shouldTagDoctorFollowUp) && isFirstEffectivePreTarget) {
         const nextStage = getNextStageAfterOpdDone(lead)
         await tx.lead.update({
           where: { id: input.leadId },
@@ -490,6 +512,8 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
           })
         }
       } else if (
+        !shouldCancel &&
+        !isPostponing &&
         targetRecord.phase === LeadOpdPhase.PRE &&
         !isOpdDoneStatus(lead.status) &&
         nextScheduleDate

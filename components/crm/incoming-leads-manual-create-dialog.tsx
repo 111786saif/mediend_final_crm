@@ -37,6 +37,7 @@ import { Textarea } from '@/components/ui/textarea'
 
 type ManualCreateResult = {
   processedCount: number
+  duplicateCount: number
   failedCount: number
   skippedCount: number
   results: Array<{
@@ -45,7 +46,7 @@ type ManualCreateResult = {
     leadId?: string
     leadRef?: string
     assignedBdName?: string | null
-    status: 'processed' | 'already_processed' | 'failed' | 'skipped'
+    status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'skipped'
     error?: string
   }>
 }
@@ -67,12 +68,6 @@ type ManualCreateMasters = {
       name: string
       isActive: boolean
     }
-  }>
-  subStatuses: Array<{
-    id: string
-    key: number
-    value: string
-    isActive: boolean
   }>
   treatmentCategories: Array<{
     id: string
@@ -191,11 +186,6 @@ export function IncomingLeadsManualCreateDialog({
     if (!selectedCategory) return base
     return base.filter((item) => item.category === selectedCategory)
   }, [formValues.Category, masters?.treatments])
-
-  const subStatusOptions = useMemo(
-    () => (masters?.subStatuses ?? []).filter((item) => item.isActive !== false),
-    [masters?.subStatuses]
-  )
 
   const sourceOptions = useMemo(
     () => (masters?.sources ?? []).filter((item) => item.isActive !== false),
@@ -430,24 +420,14 @@ export function IncomingLeadsManualCreateDialog({
                               </SelectContent>
                             </Select>
                           ) : field.key === 'SubStatus' ? (
-                            <Select
-                              value={formValues[field.key] || '__empty__'}
-                              onValueChange={(value) =>
-                                handleFieldChange(field.key, value === '__empty__' ? '' : value)
+                            <Input
+                              value={formValues[field.key] || ''}
+                              onChange={(event) =>
+                                handleFieldChange(field.key, event.target.value.slice(0, 25))
                               }
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select sub status" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="__empty__">Blank</SelectItem>
-                                {subStatusOptions.map((option) => (
-                                  <SelectItem key={option.id} value={String(option.key)}>
-                                    {option.key} - {option.value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                              placeholder="Enter sub status"
+                              maxLength={25}
+                            />
                           ) : field.key === 'MOP' ? (
                             <Select
                               value={formValues[field.key] || '__empty__'}

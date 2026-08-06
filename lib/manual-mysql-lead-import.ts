@@ -38,7 +38,7 @@ export const MANUAL_MYSQL_LEAD_FIELDS: ManualMySQLLeadField[] = [
   { key: 'Treatment', label: 'Treatment', type: 'string', section: 'Medical', helperText: 'Supports treatment name or id.', sample: 'Lipoma' },
   { key: 'DiseaseDetails', label: 'DiseaseDetails', type: 'string', section: 'Medical', multiline: true, sample: 'Soft tissue swelling' },
   { key: 'Status', label: 'Status', type: 'string', section: 'Medical', sample: 'New Lead' },
-  { key: 'SubStatus', label: 'SubStatus', type: 'number', section: 'Medical', sample: '1' },
+  { key: 'SubStatus', label: 'SubStatus', type: 'string', section: 'Medical', sample: 'Warm lead' },
   { key: 'MOP', label: 'MOP', type: 'string', section: 'Medical', sample: 'Insurance' },
 
   { key: 'Source', label: 'Source', type: 'string', section: 'Ownership', helperText: 'Supports source name or id.', sample: 'Meta' },

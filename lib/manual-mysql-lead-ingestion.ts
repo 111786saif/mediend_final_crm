@@ -21,12 +21,13 @@ export type ManualMySQLLeadIngestionItem = {
   leadId?: string
   leadRef?: string
   assignedBdName?: string | null
-  status: 'processed' | 'already_processed' | 'failed' | 'skipped'
+  status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'skipped'
   error?: string
 }
 
 export type ManualMySQLLeadIngestionResult = {
   processedCount: number
+  duplicateCount: number
   failedCount: number
   skippedCount: number
   results: ManualMySQLLeadIngestionItem[]
@@ -56,6 +57,12 @@ function parseNumberish(value: unknown) {
   if (!normalized) return null
   const parsed = Number.parseInt(normalized, 10)
   return Number.isNaN(parsed) ? null : parsed
+}
+
+function parseOptionalSubStatusText(value: unknown) {
+  const normalized = normalizeString(value)
+  if (!normalized) return null
+  return normalized.slice(0, 25)
 }
 
 function parseNumberishOrText(value: unknown) {
@@ -198,7 +205,7 @@ function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQL
     LastRemarks: normalizeString(record.LastRemarks) || null,
     Follow_up_Date: parseManualDateInput(record.Follow_up_Date),
     Status: parseNumberishOrText(record.Status),
-    SubStatus: parseNumberish(record.SubStatus),
+    SubStatus: parseOptionalSubStatusText(record.SubStatus),
     Surgery_Date: parseManualDateInput(record.Surgery_Date),
     OPD_Hospital: normalizeString(record.OPD_Hospital) || null,
     OPD_DrName: normalizeString(record.OPD_DrName) || null,
@@ -287,6 +294,7 @@ export async function ingestManualMySQLLeadRecords(
   ])
 
   let processedCount = 0
+  let duplicateCount = 0
   let failedCount = 0
   let skippedCount = 0
   const results: ManualMySQLLeadIngestionItem[] = []
@@ -327,7 +335,11 @@ export async function ingestManualMySQLLeadRecords(
         continue
       }
 
-      processedCount += 1
+      if (processResult.status === 'duplicate') {
+        duplicateCount += 1
+      } else {
+        processedCount += 1
+      }
       results.push({
         rowNumber,
         incomingLeadId: queued.id,
@@ -348,6 +360,7 @@ export async function ingestManualMySQLLeadRecords(
 
   return {
     processedCount,
+    duplicateCount,
     failedCount,
     skippedCount,
     results,

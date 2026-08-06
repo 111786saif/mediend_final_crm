@@ -54,7 +54,11 @@ export async function POST(request: NextRequest) {
         )
       : []
 
-    const result = await manuallyAssignIncomingLeads(incomingLeadIds, bdUserIds)
+    const result = await manuallyAssignIncomingLeads(incomingLeadIds, bdUserIds, {
+      id: currentUser.id,
+      name: currentUser.name,
+      role: currentUser.role,
+    })
 
     return successResponse(
       result,

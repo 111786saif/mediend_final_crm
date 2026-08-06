@@ -9,6 +9,7 @@ import {
   getVisibleLeadRemarksFallbackContent,
 } from '@/lib/lead-remark-visibility'
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
+import { maskPhoneNumber } from '@/lib/phone-utils'
 import {
   buildPipelineFiltersWhere,
   buildPipelineRoleWhere,
@@ -98,12 +99,19 @@ export async function GET(request: NextRequest) {
       .sort((a, b) => a.name.localeCompare(b.name))
 
     const mappedLeads = leads.map((lead) => {
-      const latestRemark = getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries) ?? null
+      const latestRemark = getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries, user.role) ?? null
+      const canViewPhone = user.role === 'ADMIN'
       const base = {
         ...lead,
         latestRemark,
-        remarks: getVisibleLeadRemarksFallbackContent(lead, lead.remarks),
+        remarks: getVisibleLeadRemarksFallbackContent(lead, lead.remarks, user.role),
         status: mapStatusCode(lead.status),
+        phoneNumber: canViewPhone
+          ? lead.phoneNumber
+          : (lead.phoneNumber ? maskPhoneNumber(lead.phoneNumber) : null),
+        alternateNumber: canViewPhone
+          ? lead.alternateNumber
+          : (lead.alternateNumber ? maskPhoneNumber(lead.alternateNumber) : null),
       }
       delete (base as Record<string, unknown>).leadRemarkEntries
       return base

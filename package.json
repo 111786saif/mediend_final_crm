@@ -38,6 +38,7 @@
     "seed:employees:csv": "bun scripts/seed-employees-from-csv.ts",
     "seed:leads": "tsx prisma/seed-leads.ts",
     "db:seed:masters": "tsx prisma/seed-masters.ts",
+    "db:seed:crm-opd-masters": "tsx prisma/seed-crm-opd-masters.ts",
     "db:seed:insurance-tpa": "tsx scripts/seed-insurance-tpa.ts",
     "db:seed:document-templates": "bun prisma/seed-document-templates.ts"
   },

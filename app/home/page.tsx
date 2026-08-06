@@ -497,7 +497,7 @@ function NavCards() {
       if (hasAccess(resourceKey, 'READ')) return true
 
       // Pipeline / Targets may be granted under alternate role-specific keys
-      if (item.title === 'Pipeline') {
+      if (item.title === 'Pipeline' || item.title === 'CRM') {
         return (
           hasAccess('sales.sales_pipeline', 'READ') ||
           hasAccess('sales.team_lead_pipeline', 'READ') ||

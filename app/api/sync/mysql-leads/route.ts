@@ -22,6 +22,7 @@ import {
   queueMySQLIncomingLead,
 } from '@/lib/mysql-incoming-leads'
 import { stripImportedLeadOwnership } from '@/lib/imported-lead-ingestion'
+import { resolveInboundSubStatus } from '@/lib/sub-status'
 
 interface MySQLRemarkRow {
   id: number
@@ -151,6 +152,11 @@ export async function POST(request: NextRequest) {
           mapMySQLLeadToPrisma(mysqlLead, systemUser.id, lookups, bdMap) ??
           (await mapMySQLLeadToPrismaAsyncFallback(mysqlLead, systemUser.id, lookups, false)) ??
           mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUser.id, lookups)
+        const resolvedSubStatus = await resolveInboundSubStatus(mysqlLead.SubStatus)
+
+        if (resolvedSubStatus !== null || leadData.subStatus != null) {
+          leadData.subStatus = resolvedSubStatus
+        }
 
         const existingLead = await prisma.lead.findUnique({
           where: { leadRef },

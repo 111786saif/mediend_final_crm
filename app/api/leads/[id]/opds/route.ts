@@ -123,6 +123,7 @@ export async function POST(
       leadId: id,
       actorUserId: user.id,
       actorName: user.name,
+      actorRole: user.role,
       phase,
       hospitalName: typeof body.opdHospital === 'string' ? body.opdHospital : body.hospitalName,
       doctorName: typeof body.opdDrName === 'string' ? body.opdDrName : body.doctorName,
@@ -155,4 +156,3 @@ export async function POST(
     return errorResponse('Failed to save OPD', 500)
   }
 }
-

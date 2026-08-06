@@ -62,12 +62,18 @@ function extractSaveMyLeadsFields(payload: unknown) {
   const name = record.name ?? record.patientName ?? record.patient_name ?? null
   const phone = record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber ?? null
   const email = record.email ?? null
+  const subStatus =
+    record.subStatus ??
+    record.SubStatus ??
+    record['sub status'] ??
+    null
 
   return {
     campaignId: campaignId == null ? null : String(campaignId).trim(),
     name: name == null ? null : String(name).trim(),
     phone: phone == null ? null : String(phone).trim(),
     email: email == null ? null : String(email).trim(),
+    subStatus: subStatus == null ? null : String(subStatus).trim(),
   }
 }
 
@@ -140,6 +146,7 @@ export async function POST(request: Request) {
       patientName: extracted.name,
       phone: extracted.phone,
       email: extracted.email,
+      subStatus: extracted.subStatus,
       receivedAt,
     })
     const responseData = {

@@ -10,8 +10,13 @@ import type { CrmAssignmentDryRunResult } from '@/lib/crm-assignment'
 import { employeeHasAnyCircle, employeeHasCircle, parseEmployeeCircleList } from '@/lib/employee-circles'
 import { getManagementChain } from '@/lib/hierarchy'
 import { prisma } from '@/lib/prisma'
+import { resolveInboundSubStatus } from '@/lib/sub-status'
+import {
+  normalizeLeadPhoneToLast10,
+  recordDuplicateLeadHitByPrimaryPhone,
+} from '@/lib/lead-duplicates'
 
-export const CAMPAIGN_MASTER_TYPES = ['source', 'leadSource', 'circle', 'city', 'subStatus'] as const
+export const CAMPAIGN_MASTER_TYPES = ['source', 'leadSource', 'circle', 'city'] as const
 
 export type CampaignMasterType = (typeof CAMPAIGN_MASTER_TYPES)[number]
 
@@ -33,6 +38,7 @@ type ProcessSaveMyLeadsInput = {
   patientName: string
   phone: string
   email?: string | null
+  subStatus?: string | null
   receivedAt?: Date
 }
 
@@ -300,7 +306,7 @@ function coalesceCampaignAssignments<
 }
 
 export async function getCampaignManagementPageData(month?: number, year?: number) {
-  const [sources, leadSources, circles, cities, subStatuses, departments, treatmentCategories, treatments, campaigns, teamLeads, bdEmployees] = await Promise.all([
+  const [sources, leadSources, circles, cities, departments, treatmentCategories, treatments, campaigns, teamLeads, bdEmployees] = await Promise.all([
     prisma.crmCampaignSource.findMany({
       orderBy: { name: 'asc' },
     }),
@@ -318,9 +324,6 @@ export async function getCampaignManagementPageData(month?: number, year?: numbe
         circle: true,
       },
       orderBy: [{ circle: { name: 'asc' } }, { name: 'asc' }],
-    }),
-    prisma.crmSubStatusMaster.findMany({
-      orderBy: [{ key: 'asc' }, { value: 'asc' }],
     }),
     prisma.department.findMany({
       orderBy: { name: 'asc' },
@@ -503,7 +506,6 @@ export async function getCampaignManagementPageData(month?: number, year?: numbe
       leadSources,
       circles,
       cities,
-      subStatuses,
       departments,
       treatmentCategories,
       treatments,
@@ -1243,38 +1245,10 @@ async function chooseBdForTeamLead(
   return ranked[0]
 }
 
-async function findDuplicateLead(externalCampaignId: string, normalizedPhone: string, receivedAt: Date) {
-  const { start, end } = getBusinessDayRange(receivedAt)
-
-  return prisma.lead.findFirst({
-    where: {
-      campaignId: externalCampaignId,
-      createdDate: {
-        gte: start,
-        lte: end,
-      },
-      OR: [
-        { phoneNumber: { contains: normalizedPhone } },
-        { alternateNumber: { contains: normalizedPhone } },
-      ],
-    },
-    select: {
-      id: true,
-      leadRef: true,
-      bdId: true,
-      patientName: true,
-      createdDate: true,
-    },
-    orderBy: {
-      createdDate: 'desc',
-    },
-  })
-}
-
 export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsInput) {
   const receivedAt = input.receivedAt ?? new Date()
   const routingDate = new Date()
-  const normalizedPhone = normalizePhoneToLast10(input.phone)
+  const normalizedPhone = normalizeLeadPhoneToLast10(input.phone)
 
   if (!normalizedPhone) {
     await prisma.incomingLead.update({
@@ -1339,7 +1313,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
     }
   }
 
-  const duplicateLead = await findDuplicateLead(campaign.externalCampaignId, normalizedPhone, receivedAt)
+  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
   if (duplicateLead) {
     await prisma.incomingLead.update({
       where: { id: input.incomingLeadId },
@@ -1352,7 +1326,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
         selectedTeamLeadEmployeeId: selectedAssignment.teamLeadEmployeeId,
         selectedBdUserId: assignedToTeamLeadFallback ? null : selectedBd.userId,
         processedAt: receivedAt,
-        errorMessage: null,
+        errorMessage: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
       },
     })
 
@@ -1382,6 +1356,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
 
   const systemUserId = await getDefaultSystemUserId()
   const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
+  const resolvedSubStatus = await resolveInboundSubStatus(input.subStatus)
 
   const lead = await prisma.lead.create({
     data: {
@@ -1403,9 +1378,11 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       campaignName: campaign.leadSource.name || campaign.displayName,
       campaignId: campaign.externalCampaignId,
       category: campaign.category ?? null,
+      subStatus: resolvedSubStatus,
       circle: preferredCircles[0] ?? campaign.circle.name,
       bdeName: selectedBd.user.name,
       bdId: selectedBd.userId,
+      duplCount: 0,
     },
     select: {
       id: true,

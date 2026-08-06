@@ -1,6 +1,7 @@
 import { UserRole } from '@/generated/prisma/client'
 import {
   createImportedLeadWithCrmAssignment,
+  ImportedLeadCreateInput,
   previewImportedLeadAssignment,
 } from '@/lib/imported-lead-ingestion'
 import { prisma } from '@/lib/prisma'
@@ -12,6 +13,8 @@ import {
   type MySQLLeadRow,
 } from '@/lib/sync/mysql-lead-mapper'
 import type { LookupMaps } from '@/lib/sync/mysql-lookup-cache'
+import { resolveInboundSubStatus } from '@/lib/sub-status'
+import { DuplicateLeadPhoneError } from '@/lib/lead-duplicates'
 
 export const MYSQL_INCOMING_SOURCE = 'mysql'
 export const MANUAL_MYSQL_INCOMING_SOURCE = 'manual_mysql'
@@ -218,6 +221,10 @@ export async function processMySQLIncomingLead(
     mapMySQLLeadToPrisma(mysqlLead, deps.systemUserId, deps.lookups, deps.bdMap) ??
     (await mapMySQLLeadToPrismaAsyncFallback(mysqlLead, deps.systemUserId, deps.lookups, false)) ??
     mapMySQLLeadToPrismaWithoutOwner(mysqlLead, deps.systemUserId, deps.lookups)
+  const resolvedSubStatus = await resolveInboundSubStatus(mysqlLead.SubStatus)
+  if (resolvedSubStatus !== null || leadData.subStatus != null) {
+    leadData.subStatus = resolvedSubStatus
+  }
   const assignmentCity = normalizeAssignmentCity(leadData.circle)
 
   const assignmentPreview = await previewImportedLeadAssignment({
@@ -244,7 +251,7 @@ export async function processMySQLIncomingLead(
   }
 
   const { updatedDate, ...leadDataForCreate } = leadData
-  const result = await createImportedLeadWithCrmAssignment({
+  const createInput: ImportedLeadCreateInput = {
     source: sourceLabel,
     sourceReference: leadRef,
     assignmentContext: {
@@ -257,7 +264,37 @@ export async function processMySQLIncomingLead(
       ...leadDataForCreate,
       ...(updatedDate !== null && { updatedDate }),
     },
-  })
+  }
+
+  let result
+  try {
+    result = await createImportedLeadWithCrmAssignment(createInput)
+  } catch (error) {
+    if (error instanceof DuplicateLeadPhoneError) {
+      await prisma.incomingLead.update({
+        where: { id: incomingLead.id },
+        data: {
+          status: 'DUPLICATE',
+          processedLeadId: error.leadId,
+          externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
+          selectedTeamLeadUserId: assignmentPreview.assignment?.teamLead?.userId ?? null,
+          selectedTeamLeadEmployeeId: assignmentPreview.assignment?.teamLead?.employeeId ?? null,
+          selectedBdUserId: assignmentPreview.assignment?.bd.userId ?? null,
+          normalizedPhone: error.normalizedPhone,
+          processedAt: new Date(),
+          errorMessage: `Duplicate phone number. Existing lead: ${error.leadRef}. Duplicate count: ${error.duplicateCount}`,
+        },
+      })
+
+      return {
+        status: 'duplicate' as const,
+        leadId: error.leadId,
+        leadRef: error.leadRef,
+        assignedBdName: assignmentPreview.assignment?.bd.name ?? null,
+      }
+    }
+    throw error
+  }
 
   await prisma.incomingLead.update({
     where: { id: incomingLead.id },
