@@ -198,9 +198,18 @@ export async function POST(request: NextRequest) {
     const newTargetValue = data.targetValue
     const existingRowValue = existingTarget?.targetValue ?? 0
 
+    let isTargetForCategoryManager = false
+    if (data.targetType === 'BD') {
+      const targetUser = await prisma.user.findUnique({
+        where: { id: data.targetForId },
+        select: { role: true },
+      })
+      isTargetForCategoryManager = targetUser?.role === 'CATEGORY_MANAGER'
+    }
+
     // Enforce delegation capacity limits
     // 1. BD Target Capacity Validation (within TEAM target budget)
-    if (data.targetType === 'BD') {
+    if (data.targetType === 'BD' && !isTargetForCategoryManager) {
       let teamLeadEmployee = await prisma.employee.findFirst({
         where: { userId: data.targetForId, user: { role: { in: [UserRole.TEAM_LEAD, UserRole.ASSISTANT_CATEGORY_MANAGER] } } },
       })
@@ -260,7 +269,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. TEAM or Category Manager self BD target Capacity Validation (within CATEGORY target budget)
-    if (data.targetType === 'TEAM' || (data.targetType === 'BD' && user.role === 'CATEGORY_MANAGER')) {
+    if (data.targetType === 'TEAM' || (data.targetType === 'BD' && isTargetForCategoryManager)) {
       const cmEmployee = await prisma.employee.findFirst({
         where: {
           OR: [
