@@ -535,6 +535,7 @@ export function CrmIncomingLeadsPage() {
   const [cityFilter, setCityFilter] = useState(ALL_FILTER_VALUE)
   const [teamLeadFilter, setTeamLeadFilter] = useState(ALL_FILTER_VALUE)
   const [bdFilter, setBdFilter] = useState(ALL_FILTER_VALUE)
+  const [headerColumnFilters, setHeaderColumnFilters] = useState<Record<number, string[]>>({})
 
   const hasAccess = Boolean(user?.role && INCOMING_LEAD_VIEW_ROLES.has(user.role))
   const canManuallyAssignFailedLeads = user?.role === 'SUPER_ADMIN'
@@ -606,11 +607,43 @@ export function CrmIncomingLeadsPage() {
     })
   }, [data?.campaigns, data?.incomingLeads])
 
+  const visibleColumnDefinitions = useMemo(
+    () => INCOMING_LEAD_COLUMNS.filter((column) => visibleColumns[column.id]),
+    [visibleColumns]
+  )
+
+  const allColumnOptions = useMemo(() => {
+    const optionsMap: Record<number, string[]> = {}
+    visibleColumnDefinitions.forEach((col, idx) => {
+      const colIndex = idx + (canManuallyAssignFailedLeads ? 1 : 0)
+      optionsMap[colIndex] = getUniqueRowValues(rows, col.id)
+    })
+    return optionsMap
+  }, [visibleColumnDefinitions, rows, canManuallyAssignFailedLeads])
+
   const filteredRows = useMemo(() => {
     const normalizedSearch = searchValue.trim().toLowerCase()
     const selectedSearchColumn = INCOMING_LEAD_COLUMNS.find((column) => column.id === searchColumn)
 
     return rows.filter((row) => {
+      for (const [colIndexStr, filterValues] of Object.entries(headerColumnFilters)) {
+        if (!filterValues || filterValues.length === 0) continue
+        const colIndex = Number(colIndexStr)
+        const colDefIdx = colIndex - (canManuallyAssignFailedLeads ? 1 : 0)
+        const colDef = visibleColumnDefinitions[colDefIdx]
+        if (!colDef) continue
+
+        const rawValue = String(row[colDef.id] ?? '').trim()
+        if (colDef.type === 'date' && filterValues.length === 2) {
+          const [startStr, endStr] = filterValues
+          if (!isWithinDateRange(rawValue, getDateOnlyValue(startStr), getDateOnlyValue(endStr))) {
+            return false
+          }
+        } else if (!filterValues.includes(rawValue)) {
+          return false
+        }
+      }
+
       if (assignDateFrom || assignDateTo) {
         if (!isWithinDateRange(row.assignedDate, assignDateFrom, assignDateTo)) return false
       }
@@ -673,6 +706,9 @@ export function CrmIncomingLeadsPage() {
     followUpDateTo,
     surgeryDateFrom,
     surgeryDateTo,
+    headerColumnFilters,
+    visibleColumnDefinitions,
+    canManuallyAssignFailedLeads,
   ])
 
   const sortedRows = useMemo(() => {
@@ -812,10 +848,7 @@ export function CrmIncomingLeadsPage() {
     })
   }, [paginatedRows])
 
-  const visibleColumnDefinitions = useMemo(
-    () => INCOMING_LEAD_COLUMNS.filter((column) => visibleColumns[column.id]),
-    [visibleColumns]
-  )
+
 
   const selectedSearchColumnDefinition = useMemo(
     () => INCOMING_LEAD_COLUMNS.find((column) => column.id === searchColumn) ?? null,
@@ -872,6 +905,7 @@ export function CrmIncomingLeadsPage() {
         cityFilter !== ALL_FILTER_VALUE,
         teamLeadFilter !== ALL_FILTER_VALUE,
         bdFilter !== ALL_FILTER_VALUE,
+        Object.keys(headerColumnFilters).length > 0,
       ].filter(Boolean).length,
     [
       assignDateFrom,
@@ -884,6 +918,7 @@ export function CrmIncomingLeadsPage() {
       departmentFilter,
       followUpDateFrom,
       followUpDateTo,
+      headerColumnFilters,
       leadDateFrom,
       leadDateTo,
       leadSourceFilter,
@@ -897,6 +932,7 @@ export function CrmIncomingLeadsPage() {
   )
 
   const clearFilters = () => {
+    setHeaderColumnFilters({})
     setSearchValue('')
     setAssignDateFrom('')
     setAssignDateTo('')
@@ -919,9 +955,23 @@ export function CrmIncomingLeadsPage() {
   }
 
   const clearColumnFilters = () => {
+    setHeaderColumnFilters({})
     setTableFilterVersion((current) => current + 1)
     setCurrentPage(1)
   }
+
+  const handleColumnFilterChange = useCallback((colIndex: number, selected: string[]) => {
+    setHeaderColumnFilters((prev) => {
+      const next = { ...prev }
+      if (selected.length === 0) {
+        delete next[colIndex]
+      } else {
+        next[colIndex] = selected
+      }
+      return next
+    })
+    setCurrentPage(1)
+  }, [])
 
   function toggleManualAssignLead(leadId: string, checked: boolean) {
     if (checked) {
@@ -1557,6 +1607,9 @@ export function CrmIncomingLeadsPage() {
                         filterableHeaders={[...INCOMING_LEAD_HEADER_FILTERS]}
                         rowIds={paginatedRows.map((row) => row.id)}
                         onVisibleRowIdsChange={handleVisibleRowIdsChange}
+                        externalColumnOptions={allColumnOptions}
+                        externalActiveFilters={headerColumnFilters}
+                        onFilterChange={handleColumnFilterChange}
                       >
                         <TableHeader>
                           <TableRow>

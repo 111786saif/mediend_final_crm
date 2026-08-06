@@ -227,14 +227,14 @@ export async function createBulkLeadReassignmentRun(
 
   if (leadStatus && isStatusRequiringFollowUpDate(leadStatus) && !followUpDate) {
     throw new BulkLeadReassignError(
-      'Follow-up date is required for follow-up and DNP statuses',
+      `Follow-up date is required for status "${leadStatus}"`,
       400
     )
   }
 
   if (leadStatus && isStatusRequiringModeOfPayment(leadStatus) && !modeOfPayment) {
     throw new BulkLeadReassignError(
-      'Mode of payment is required for follow-up statuses',
+      `Mode of payment is required for status "${leadStatus}"`,
       400
     )
   }

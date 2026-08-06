@@ -19,6 +19,7 @@ import {
 } from '@/lib/doctor-availability'
 import {
   isStatusRequiringAgeSex,
+  isStatusRequiringCity,
   isStatusRequiringFollowUpDate,
   isStatusRequiringModeOfPayment,
 } from '@/lib/lead-status-rules'
@@ -611,7 +612,7 @@ export async function PATCH(
       isStatusRequiringFollowUpDate(requestedStatus) &&
       !nextFollowUpDate
     ) {
-      return errorResponse('Follow-up date is required for follow-up and DNP statuses', 400)
+      return errorResponse('Follow-up date is required for this status', 400)
     }
 
     if (crmEditFollowUpValidation && statusChanged && isStatusRequiringAgeSex(requestedStatus)) {
@@ -629,11 +630,24 @@ export async function PATCH(
           : normalizeLeadSexValue(lead.sex)
 
       if (!Number.isFinite(nextAge) || Number(nextAge) <= 0) {
-        return errorResponse('Age is required for Follow-up and Follow-up 1-5 statuses', 400)
+        return errorResponse('Age is required for this status', 400)
       }
 
       if (typeof nextSex !== 'string' || nextSex.trim().length === 0) {
-        return errorResponse('Sex is required for Follow-up and Follow-up 1-5 statuses', 400)
+        return errorResponse('Sex is required for this status', 400)
+      }
+    }
+
+    if (crmEditFollowUpValidation && statusChanged && isStatusRequiringCity(requestedStatus)) {
+      const nextCity =
+        body.city !== undefined
+          ? typeof body.city === 'string'
+            ? body.city.trim() || null
+            : body.city
+          : currentLeadCity || lead.city
+
+      if (typeof nextCity !== 'string' || nextCity.trim().length === 0) {
+        return errorResponse('City is required for this status', 400)
       }
     }
 
@@ -650,7 +664,7 @@ export async function PATCH(
           : lead.modeOfPayment
 
       if (typeof nextModeOfPayment !== 'string' || nextModeOfPayment.trim().length === 0) {
-        return errorResponse('Mode of payment is required for Follow-up and Follow-up 1-5 statuses', 400)
+        return errorResponse('Mode of payment is required for this status', 400)
       }
     }
 
