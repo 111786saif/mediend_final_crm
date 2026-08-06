@@ -5,6 +5,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { initializeLeaveBalances } from '@/lib/hrms/leave-balance-utils'
 import { parseEmployeeCircleList, serializeEmployeeCircleList } from '@/lib/employee-circles'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import { z } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 
@@ -170,12 +171,18 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')?.trim()
     const status = searchParams.get('status')
 
+    // Default: active roster only (ACTIVE / ON_PIP / ON_NOTICE).
+    // Use status=all for HR admin views that need terminated/absconded.
     const where: Prisma.EmployeeWhereInput = {}
     if (departmentId) {
       where.departmentId = departmentId
     }
-    if (status && ['ACTIVE', 'ON_PIP', 'ON_NOTICE', 'TERMINATED', 'ABSCONDED'].includes(status)) {
+    if (status === 'all') {
+      // no status filter
+    } else if (status && ['ACTIVE', 'ON_PIP', 'ON_NOTICE', 'TERMINATED', 'ABSCONDED'].includes(status)) {
       where.status = status as 'ACTIVE' | 'ON_PIP' | 'ON_NOTICE' | 'TERMINATED' | 'ABSCONDED'
+    } else {
+      Object.assign(where, headcountEmployeeWhere)
     }
     if (search) {
       where.OR = [

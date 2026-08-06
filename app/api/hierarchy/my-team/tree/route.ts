@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getEmployeeByUserId, getSubordinates, isManagerOf } from '@/lib/hierarchy'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
     }
 
     const directReports = await prisma.employee.findMany({
-      where: { managerId: rootId },
+      where: { managerId: rootId, ...headcountEmployeeWhere },
       select: {
         id: true,
         userId: true,

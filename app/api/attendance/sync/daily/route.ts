@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { errorResponse, successResponse } from '@/lib/api-utils'
 import { fetchAttendanceLogs } from '@/lib/hrms/biometric-api-client'
 import { normalizePunchDirection } from '@/lib/hrms/attendance-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import { PunchDirection } from '@/generated/prisma/client'
 import { format, subDays } from 'date-fns'
 
@@ -56,8 +57,9 @@ export async function POST(request: NextRequest) {
 
     console.log(`🔄 Daily sync: Fetching attendance from ${fromDate} to ${toDate}`)
 
-    // Get all employees with their codes - build multi-key map for flexible matching
+    // Active roster only — skip terminated/absconded biometric codes
     const employees = await prisma.employee.findMany({
+      where: headcountEmployeeWhere,
       select: {
         id: true,
         employeeCode: true,

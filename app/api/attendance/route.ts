@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { groupAttendanceByDate } from '@/lib/hrms/attendance-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import { Prisma } from '@/generated/prisma/client'
 
 export async function GET(request: NextRequest) {
@@ -23,10 +24,12 @@ export async function GET(request: NextRequest) {
     const departmentId = searchParams.get('departmentId')
     const employeeId = searchParams.get('employeeId')
     const search = searchParams.get('search')
+    const includeInactive = searchParams.get('includeInactive') === 'true'
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '50')
 
     const where: Prisma.AttendanceLogWhereInput = {}
+    const activeEmployeeFilter = includeInactive ? {} : headcountEmployeeWhere
 
     if (fromDate || toDate) {
       where.logDate = {}
@@ -46,6 +49,7 @@ export async function GET(request: NextRequest) {
     if (search) {
       const matchingEmployees = await prisma.employee.findMany({
         where: {
+          ...activeEmployeeFilter,
           OR: [
             { employeeCode: { contains: search, mode: 'insensitive' } },
             { user: { name: { contains: search, mode: 'insensitive' } } },
@@ -60,15 +64,27 @@ export async function GET(request: NextRequest) {
         where.employeeId = { in: [] }
       }
     } else if (employeeId) {
-      where.employeeId = employeeId
+      // Explicit employee lookup (heatmap / detail) — still block inactive unless opted in
+      if (!includeInactive) {
+        const emp = await prisma.employee.findFirst({
+          where: { id: employeeId, ...headcountEmployeeWhere },
+          select: { id: true },
+        })
+        where.employeeId = emp ? employeeId : { in: [] }
+      } else {
+        where.employeeId = employeeId
+      }
     } else if (departmentId) {
       const employees = await prisma.employee.findMany({
-        where: { departmentId },
+        where: { departmentId, ...activeEmployeeFilter },
         select: { id: true },
       })
       where.employeeId = {
         in: employees.map((e) => e.id),
       }
+    } else if (!includeInactive) {
+      // Default org-wide attendance: active roster only
+      where.employee = headcountEmployeeWhere
     }
 
     // IMPORTANT: Fetch ALL logs first (without pagination) to ensure we have

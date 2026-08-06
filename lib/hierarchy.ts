@@ -1,6 +1,7 @@
 import { Prisma, UserRole } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { MEET_MD_INVITE_EMPLOYEE_CODE } from '@/lib/meets'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import {
   CATEGORY_MANAGER_ROLES,
   TEAM_UNIT_ROLES,
@@ -40,7 +41,7 @@ export async function getSubordinates(
 ) {
   if (!recursive) {
     return prisma.employee.findMany({
-      where: { managerId: employeeId },
+      where: { managerId: employeeId, ...headcountEmployeeWhere },
       select: employeeSelect,
       orderBy: { user: { name: 'asc' } },
     })
@@ -51,7 +52,7 @@ export async function getSubordinates(
     select: typeof employeeSelect
   }>>> = []
   let currentLevel = await prisma.employee.findMany({
-    where: { managerId: employeeId },
+    where: { managerId: employeeId, ...headcountEmployeeWhere },
     select: employeeSelect,
   })
 
@@ -59,7 +60,7 @@ export async function getSubordinates(
     result.push(...currentLevel)
     const ids = currentLevel.map((e) => e.id)
     currentLevel = await prisma.employee.findMany({
-      where: { managerId: { in: ids } },
+      where: { managerId: { in: ids }, ...headcountEmployeeWhere },
       select: employeeSelect,
     })
   }

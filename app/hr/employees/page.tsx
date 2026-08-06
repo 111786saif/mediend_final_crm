@@ -176,7 +176,8 @@ export default function HREmployeesPage() {
     queryFn: () => {
       const params = new URLSearchParams()
       if (departmentFilter && departmentFilter !== 'all') params.set('departmentId', departmentFilter)
-      if (statusFilter && statusFilter !== 'all') params.set('status', statusFilter)
+      // Always send status so "all" is explicit (API defaults to active headcount)
+      params.set('status', statusFilter || 'all')
       return apiGet<Employee[]>(`/api/employees?${params.toString()}`)
     },
   })
