@@ -2,6 +2,10 @@
  * Ordered sidebar structure per role.
  * Titles must match navItems titles in lib/sidebar-nav.ts (or aliases resolved in the sidebar).
  * Layout defines structure; RBAC (nav-resource-map + /api/me/permissions) gates visibility.
+ *
+ * Note: mediend AI is intentionally omitted from layouts — it always lives in the sidebar footer.
+ * DEPRECATED: Sidebar layouts are now 100% dynamically determined from database permissions.
+ * This file is no longer used by components/app-sidebar.tsx, but is preserved for reference.
  */
 
 export type RoleSidebarLayout = {
@@ -49,6 +53,7 @@ const FINANCE_SECTION = [
 export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
   INSURANCE_HEAD: {
     main: ['Home', 'Tasks', 'Calendar', 'Meets', 'Insurance', 'Cash Cases', 'Chat'],
+    myhrms: [...MYHRMS_STANDARD],
   },
 
   COMPLIANCE_HEAD: {
@@ -61,6 +66,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Compliance',
       'Cumulative Report',
     ],
+    myhrms: [...MYHRMS_STANDARD],
   },
 
   HR_HEAD: {
@@ -75,6 +81,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Ask MD Approval',
     ],
     hrm: [...HRM_CORE],
+    myhrms: [...MYHRMS_STANDARD],
   },
 
   FINANCE_HEAD: {
@@ -85,7 +92,6 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Meets',
       'Dashboard',
       'Finance Dashboard',
-      'mediend AI',
       'P/L Ledger',
       'P/L Outstanding',
       'Doctor List',
@@ -108,7 +114,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
     finance: [...FINANCE_SECTION],
   },
 
-  /** Project Head */
+  /** Project Head — Sales / Insurance & P/L as collapsibles; OPD Monitoring under Sales */
   EXECUTIVE_ASSISTANT: {
     main: [
       'Home',
@@ -135,6 +141,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Campaign CPL',
       'Pipeline',
       'Case Tracker',
+      'OPD Monitoring',
       'Pending Surgery',
       'Targets',
       'Sales P&L',
@@ -158,13 +165,14 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'IPD Calendar',
       'Pipeline',
       'Case Tracker',
+      'OPD Monitoring',
       'Chat',
-      'mediend AI',
       'Ask MD Approval',
     ],
     myhrms: [...MYHRMS_STANDARD],
   },
 
+  /** Flat main — no Sales collapsible */
   TEAM_LEAD: {
     main: [
       'Home',
@@ -175,17 +183,16 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Sales Dashboard',
       'Pipeline',
       'Case Tracker',
+      'OPD Monitoring',
       'Pending Surgery',
       'Targets',
       'Chat',
-      'mediend AI',
       'Fin Team Approvals',
       'Ask MD Approval',
     ],
     myhrms: [...MYHRMS_STANDARD],
   },
 
-  // ACM mirrors TEAM_LEAD
   ASSISTANT_CATEGORY_MANAGER: {
     main: [
       'Home',
@@ -196,11 +203,55 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Sales Dashboard',
       'Pipeline',
       'Case Tracker',
+      'OPD Monitoring',
       'Pending Surgery',
       'Targets',
       'Chat',
-      'mediend AI',
       'Fin Team Approvals',
+      'Ask MD Approval',
+    ],
+    myhrms: [...MYHRMS_STANDARD],
+  },
+
+  /** Flat main — no Sales collapsible (same idea as TL) */
+  CATEGORY_MANAGER: {
+    main: [
+      'Home',
+      'Tasks',
+      'Calendar',
+      'IPD Calendar',
+      'Meets',
+      'Sales Dashboard',
+      'Pipeline',
+      'Case Tracker',
+      'OPD Monitoring',
+      'Pending Surgery',
+      'Targets',
+      'Chat',
+      'Ask MD Approval',
+    ],
+    myhrms: [...MYHRMS_STANDARD],
+  },
+
+  /** Flat main — no Sales collapsible */
+  SALES_HEAD: {
+    main: [
+      'Home',
+      'Tasks',
+      'Calendar',
+      'IPD Calendar',
+      'Meets',
+      'Sales Dashboard',
+      'Incentive',
+      'Campaign CPL',
+      'Pipeline',
+      'Case Tracker',
+      'OPD Monitoring',
+      'Pending Surgery',
+      'Targets',
+      'Blue Print Dashboard',
+      'Sales P&L',
+      'Chat',
       'Ask MD Approval',
     ],
     myhrms: [...MYHRMS_STANDARD],

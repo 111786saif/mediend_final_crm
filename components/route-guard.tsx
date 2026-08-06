@@ -2,12 +2,15 @@
 
 import { usePathname } from 'next/navigation'
 import { usePermissions } from '@/hooks/use-permissions'
+import { useAuth } from '@/hooks/use-auth'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 import { PermissionsGuard } from '@/components/permissions-guard'
 import * as React from 'react'
 
 export function RouteGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const { user } = useAuth()
   const { hasAccess, isLoading } = usePermissions()
 
   // Find if the current path matches any resource path defined in RESOURCE_MAP
@@ -29,7 +32,12 @@ export function RouteGuard({ children }: { children: React.ReactNode }) {
     return pathname === path || pathname.startsWith(path + '/')
   })
 
-  const isAllowed = matchedKey ? hasAccess(matchedKey, 'READ') : true
+  let isAllowed = matchedKey ? hasAccess(matchedKey, 'READ') : true
+
+  // OPD Monitoring: allow sales hierarchy even when RBAC grant is missing (matches sidebar + API).
+  if (!isAllowed && matchedKey === 'sales.opd_monitoring') {
+    isAllowed = canAccessSalesOpdMonitoring(user?.role)
+  }
 
   return (
     <PermissionsGuard

@@ -16,7 +16,7 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'hrm', label: 'Human Resource Management', type: 'MODULE', parentKey: null, sortOrder: 2 },
   { key: 'myhrms', label: 'My HRMS Portal', type: 'MODULE', parentKey: null, sortOrder: 3 },
   { key: 'sales', label: 'Sales & Marketing', type: 'MODULE', parentKey: null, sortOrder: 4 },
-  { key: 'insurance_pl', label: 'Insurance & P/L', type: 'MODULE', parentKey: null, sortOrder: 5 },
+  { key: 'insurance_pl', label: 'Outstanding & P/L', type: 'MODULE', parentKey: null, sortOrder: 5 },
   { key: 'finance', label: 'Finance & Accounts', type: 'MODULE', parentKey: null, sortOrder: 6 },
   { key: 'actions', label: 'System Actions', type: 'MODULE', parentKey: null, sortOrder: 7 },
   { key: 'crm', label: 'CRM', type: 'MODULE', parentKey: null, sortOrder: 8 },
@@ -158,7 +158,12 @@ const resourcesToSeed: ResourceSeedItem[] = [
   // ============================================
 
   // --- MODULE 1: MAIN NAVIGATION ---
-  
+
+  // Home Page (main.home) — Standard 3-section homepage layout
+  { key: 'main.home.top_profile', label: 'Home: Top Profile & Banner Section', type: 'SECTION', parentKey: 'main.home', sortOrder: 1 },
+  { key: 'main.home.quick_navigation', label: 'Home: Quick Navigation Section', type: 'SECTION', parentKey: 'main.home', sortOrder: 2 },
+  { key: 'main.home.data_section', label: 'Home: At-a-Glance KPI & Data Section', type: 'SECTION', parentKey: 'main.home', sortOrder: 3 },
+
   // Tasks (main.tasks)
   { key: 'main.tasks.overview', label: 'Overview Tab', type: 'SECTION', parentKey: 'main.tasks', sortOrder: 1 },
   { key: 'main.tasks.my_tasks', label: 'My Tasks Tab', type: 'SECTION', parentKey: 'main.tasks', sortOrder: 2 },

@@ -19,6 +19,9 @@ type ActivityLogItem = {
   summary: string
   actorRole: string | null
   createdAt: Date
+  ipAddress?: string | null
+  userAgent?: string | null
+  metadata?: unknown
   actorUser: ActivityActor | null
 }
 
@@ -134,6 +137,9 @@ export async function GET(
       summary: log.summary,
       actorRole: log.actorRole,
       createdAt: log.createdAt,
+      ipAddress: log.ipAddress,
+      userAgent: log.userAgent,
+      metadata: log.metadata,
       actorUser: log.actorUser,
     }))
 
@@ -147,6 +153,9 @@ export async function GET(
         summary: 'Lead created',
         actorRole: lead.createdBy.role,
         createdAt: lead.createdDate,
+        ipAddress: null,
+        userAgent: null,
+        metadata: null,
         actorUser: {
           id: lead.createdBy.id,
           name: lead.createdBy.name,
@@ -162,6 +171,9 @@ export async function GET(
         summary: `Lead assigned to ${lead.bd.name}`,
         actorRole: null,
         createdAt: lead.assignedDate,
+        ipAddress: null,
+        userAgent: null,
+        metadata: null,
         actorUser: null,
       })
     }
@@ -173,6 +185,9 @@ export async function GET(
         summary: 'Logged call with patient',
         actorRole: note.createdBy.role,
         createdAt: note.createdAt,
+        ipAddress: null,
+        userAgent: null,
+        metadata: null,
         actorUser: {
           id: note.createdBy.id,
           name: note.createdBy.name,

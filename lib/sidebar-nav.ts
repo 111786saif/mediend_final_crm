@@ -367,6 +367,7 @@ export const navItems: NavItem[] = [
       'TEAM_LEAD',
       'ASSISTANT_CATEGORY_MANAGER',
       'CATEGORY_MANAGER',
+      'SALES_HEAD',
       'INSURANCE',
       'INSURANCE_HEAD',
       'PL_HEAD',

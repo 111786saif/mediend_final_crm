@@ -16,7 +16,7 @@ import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -573,6 +573,7 @@ export default function PatientDetailsPage() {
     queryFn: () => apiGet<any[]>(`/api/leads/${leadId}/stage-history`),
     enabled: !!leadId,
   })
+  const [makeCallLoading, setMakeCallLoading] = useState(false)
 
   const { data: initiateFormData } = useQuery<any>({
     queryKey: ['insurance-initiate-form', leadId],
@@ -593,6 +594,18 @@ export default function PatientDetailsPage() {
   const [showResetStepperDialog, setShowResetStepperDialog] = useState(false)
   const [handledQuickAction, setHandledQuickAction] = useState<string | null>(null)
   const quickAction = searchParams.get('action')
+
+  const handleBackendMakeCall = async () => {
+    try {
+      setMakeCallLoading(true)
+      await apiPost(`/api/leads/${leadId}/make-call`, {})
+      toast.success('Call initiated')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to initiate call')
+    } finally {
+      setMakeCallLoading(false)
+    }
+  }
 
   useEffect(() => {
     if (!lead || !quickAction || quickAction === handledQuickAction) return
@@ -1065,6 +1078,20 @@ export default function PatientDetailsPage() {
                 </div>
               </div>
               <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-2"
+                  onClick={handleBackendMakeCall}
+                  disabled={makeCallLoading}
+                >
+                  {makeCallLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <PhoneCall className="h-4 w-4" />
+                  )}
+                  Make Call
+                </Button>
                 <LeadQrPopover
                   leadId={leadId}
                   phoneNumber={lead.phoneNumber ?? ''}
@@ -1642,13 +1669,13 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
-                {/* BD / TL Actions (Insurance Flow) — show when at Card Details step */}
-                {lead.flowType !== FlowType.CASH && hasDoneOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && ([CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage) && (
+                {/* BD / TL Actions (Insurance Flow) — OPD is optional, so card details can start directly from early stages */}
+                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && ([CaseStage.NEW_LEAD, CaseStage.OPD_SCHEDULED, CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage) && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/kyp/basic`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/kyp/basic`)}>
                       <Plus className="h-4 w-4" />
                       Fill Card Details
                     </Link>

@@ -76,7 +76,8 @@ const roleAllowedSections: Record<string, string[]> = {
     'hrm.recruitment',
     ...MYHRMS, 'myhrms.ask_md_approval',
     'main.incentive', 'sales.dm_dashboard', 'sales.campaign_cpl', 'sales.ea_pipeline',
-    'sales.case_tracker', 'sales.pending_surgery', 'sales.sales_head_targets', 'sales.sales_pnl',
+    'sales.case_tracker', 'sales.opd_monitoring', 'sales.pending_surgery',
+    'sales.sales_head_targets', 'sales.sales_pnl',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger',
     'insurance_pl.pl_surgery', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
   ],
@@ -90,7 +91,8 @@ const roleAllowedSections: Record<string, string[]> = {
 
   HR_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets',
-    'main.dept_targets', 'hrm.hr_dashboard', 'hrm.recruitment', 'myhrms.ask_md_approval',
+    'main.dept_targets', 'hrm.hr_dashboard', 'hrm.recruitment',
+    ...MYHRMS, 'myhrms.ask_md_approval',
     ...HRM_CORE,
   ],
 
@@ -108,7 +110,7 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
 
   SALES_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.ipd_calendar',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.ipd_calendar', 'main.chat',
     'sales.sales_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets',
     'sales.sales_head_targets', 'sales.sales_pnl', 'sales.campaign_cpl', 'sales.sales_pipeline',
     'sales.team_lead_pipeline', 'sales.blueprint_dashboard', 'sales.opd_monitoring',
@@ -121,6 +123,7 @@ const roleAllowedSections: Record<string, string[]> = {
   INSURANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'main.chat',
+    ...MYHRMS, 'myhrms.ask_md_approval',
   ],
 
   PL_HEAD: [
@@ -158,23 +161,23 @@ const roleAllowedSections: Record<string, string[]> = {
 
   ASSISTANT_CATEGORY_MANAGER: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.ipd_calendar',
-    'sales.sales_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets',
-    'sales.team_lead_targets', 'sales.team_lead_pipeline', 'main.chat',
+    'sales.sales_dashboard', 'sales.case_tracker', 'sales.opd_monitoring', 'sales.pending_surgery',
+    'sales.targets', 'sales.team_lead_targets', 'sales.team_lead_pipeline', 'main.chat',
     'finance.fin_team_approvals', 'myhrms.ask_md_approval',
     ...MYHRMS,
   ],
 
   TEAM_LEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.ipd_calendar',
-    'sales.sales_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets',
-    'sales.team_lead_targets', 'sales.team_lead_pipeline', 'main.chat',
+    'sales.sales_dashboard', 'sales.case_tracker', 'sales.opd_monitoring', 'sales.pending_surgery',
+    'sales.targets', 'sales.team_lead_targets', 'sales.team_lead_pipeline', 'main.chat',
     'finance.fin_team_approvals', 'myhrms.ask_md_approval',
     ...MYHRMS,
   ],
 
   BD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.ipd_calendar',
-    'sales.sales_pipeline', 'sales.case_tracker', 'main.chat',
+    'sales.sales_pipeline', 'sales.case_tracker', 'sales.opd_monitoring', 'main.chat',
     'myhrms.ask_md_approval',
     ...MYHRMS,
   ],
@@ -182,6 +185,7 @@ const roleAllowedSections: Record<string, string[]> = {
   COMPLIANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets',
     'main.chat', 'main.compliance', 'main.cumulative_report',
+    ...MYHRMS, 'myhrms.ask_md_approval',
   ],
 
   LOAN_DEMAT_HEAD: [

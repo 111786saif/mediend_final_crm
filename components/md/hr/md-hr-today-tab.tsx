@@ -209,9 +209,14 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
 
   const merged = useMemo(() => {
     if (!analytics) return null
-    const today = todayAttendance?.data ?? []
-    const monthData = monthAttendance?.data ?? []
     const allEmployees = (employees ?? []).filter((e) => isActiveHeadcountEmployee(e.status))
+    const activeIds = new Set(allEmployees.map((e) => e.id))
+    const todayRaw = todayAttendance?.data ?? []
+    const monthRaw = monthAttendance?.data ?? []
+    const today =
+      activeIds.size > 0 ? todayRaw.filter((r) => activeIds.has(r.employee.id)) : todayRaw
+    const monthData =
+      activeIds.size > 0 ? monthRaw.filter((r) => activeIds.has(r.employee.id)) : monthRaw
     const deptFilter = filters.departments.length > 0 ? new Set(filters.departments) : null
 
     // Exclude MD (code 1000)
@@ -228,7 +233,12 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
     })
 
     const todayStrength = filteredToday.length
-    const totalHeadcount = Math.max(filteredEmployees.length, deptFilter ? filteredEmployees.length : analytics.kpis.totalHeadcount)
+    const totalHeadcount =
+      filteredEmployees.length > 0
+        ? filteredEmployees.length
+        : deptFilter
+          ? 0
+          : analytics.kpis.totalHeadcount
 
     const lateToday = filteredToday.filter((r) => r.isLate)
     const presentIds = new Set(filteredToday.map((r) => r.employee.id))

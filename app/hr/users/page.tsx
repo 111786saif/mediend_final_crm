@@ -76,7 +76,6 @@ interface CreateUserData {
   employeeCode: string
   managerId: string | null
   bdNumber: number | null
-  circle: string | null
 }
 
 export default function HRUsersPage() {
@@ -85,7 +84,7 @@ export default function HRUsersPage() {
 
   const { data: users, isLoading } = useQuery<User[]>({
     queryKey: ['users'],
-    queryFn: () => apiGet<User[]>('/api/users'),
+    queryFn: () => apiGet<User[]>('/api/users?includeInactive=true'),
   })
 
   const { data: departments } = useQuery<Array<{ id: string; name: string }>>({
@@ -313,7 +312,6 @@ function CreateUserForm({
     employeeCode: '',
     managerId: '',
     bdNumber: '',
-    circle: '',
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -335,7 +333,6 @@ function CreateUserForm({
       employeeCode: formData.employeeCode.trim(),
       managerId: formData.managerId || null,
       bdNumber: bdNum,
-      circle: formData.role === 'BD' ? formData.circle.trim() || null : null,
     })
     // Reset form
     setFormData({
@@ -347,7 +344,6 @@ function CreateUserForm({
       employeeCode: '',
       managerId: '',
       bdNumber: '',
-      circle: '',
     })
   }
 
@@ -480,8 +476,8 @@ function CreateUserForm({
         </Select>
       </div>
 
-      {formData.role === 'BD' && (
-        <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4">
+        {formData.role === 'BD' && (
           <div>
             <Label>CRM Number (optional)</Label>
             <Input
@@ -496,19 +492,8 @@ function CreateUserForm({
               If set, leads with this CRM number will be assigned to this employee when synced.
             </p>
           </div>
-          <div>
-            <Label>Circle</Label>
-            <Input
-              value={formData.circle}
-              onChange={(e) => setFormData({ ...formData, circle: e.target.value })}
-              placeholder="e.g. Mumbai"
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              CRM assignment uses the employee circle to match lead city.
-            </p>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="flex justify-end gap-2">
         <Button type="submit" disabled={isLoading}>
@@ -663,7 +648,6 @@ function EditEmployeeDialog({
   const [formData, setFormData] = useState({
     employeeCode: user.employee?.employeeCode || '',
     bdNumber: user.employee?.bdNumber != null ? String(user.employee.bdNumber) : '',
-    circle: user.employee?.circle || '',
     joinDate: user.employee?.joinDate ? format(new Date(user.employee.joinDate), 'yyyy-MM-dd') : '',
     salary: user.employee?.salary?.toString() || '',
     departmentId: user.employee?.departmentId || 'none',
@@ -679,7 +663,6 @@ function EditEmployeeDialog({
       userId: string
       employeeCode: string
       bdNumber?: number | null
-      circle?: string | null
       joinDate?: string | null
       salary?: number | null
       departmentId?: string | null
@@ -703,7 +686,6 @@ function EditEmployeeDialog({
     mutationFn: async (data: {
       employeeCode?: string
       bdNumber?: number | null
-      circle?: string | null
       joinDate?: string | null
       salary?: number | null
       departmentId?: string | null
@@ -743,7 +725,6 @@ function EditEmployeeDialog({
       updateEmployeeMutation.mutate({
         employeeCode: formData.employeeCode || undefined,
         bdNumber: bdNum,
-        circle: user.role === 'BD' ? formData.circle.trim() || null : null,
         joinDate: formData.joinDate || null,
         salary: formData.salary ? parseFloat(formData.salary) : null,
         departmentId: formData.departmentId === 'none' ? null : formData.departmentId || null,
@@ -763,7 +744,6 @@ function EditEmployeeDialog({
         userId: user.id,
         employeeCode: formData.employeeCode,
         bdNumber: bdNum,
-        circle: user.role === 'BD' ? formData.circle.trim() || null : null,
         joinDate: formData.joinDate || null,
         salary: formData.salary ? parseFloat(formData.salary) : null,
         departmentId: formData.departmentId === 'none' ? null : formData.departmentId || null,
@@ -830,16 +810,6 @@ function EditEmployeeDialog({
                   value={formData.bdNumber}
                   onChange={(e) => setFormData({ ...formData, bdNumber: e.target.value })}
                   placeholder="For lead sync"
-                />
-              </div>
-            )}
-            {user.role === 'BD' && (
-              <div>
-                <Label>Circle</Label>
-                <Input
-                  value={formData.circle}
-                  onChange={(e) => setFormData({ ...formData, circle: e.target.value })}
-                  placeholder="e.g., Mumbai"
                 />
               </div>
             )}

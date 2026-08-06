@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Phone, QrCode } from "lucide-react"
 import { QRCodeSVG } from "qrcode.react"
 import { Button } from "@/components/ui/button"
@@ -52,18 +52,20 @@ export function LeadQrPopover({
 }: LeadQrPopoverProps) {
   const { user } = useAuth()
   const [open, setOpen] = useState(false)
+  const [qrUrl, setQrUrl] = useState<string | null>(null)
+  const [isPreparingQr, setIsPreparingQr] = useState(false)
   const normalized = normalizePhone(phoneNumber ?? "")
   const canInitiateCall = Boolean(normalized) || allowServerSidePhoneLookup
-  const baseUrl =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : (process.env.NEXT_PUBLIC_APP_URL ?? "").replace(/\/$/, "")
-  const qrRoute = `/api/leads/${leadId}/qr-call?source=qr`
   const buttonRoute = `/api/leads/${leadId}/qr-call?source=button`
-  const qrUrl = useMemo(
-    () => (baseUrl ? `${baseUrl}${qrRoute}` : qrRoute),
-    [baseUrl, qrRoute]
+  const qrLabel = useMemo(
+    () => patientName ? patientName.split(" ")[0] : "lead",
+    [patientName]
   )
+
+  useEffect(() => {
+    setQrUrl(null)
+    setIsPreparingQr(false)
+  }, [leadId])
 
   if (!canUseLeadQr(user?.role)) {
     return null
@@ -86,6 +88,31 @@ export function LeadQrPopover({
     }
   }
 
+  async function preparePublicQrLink() {
+    if (qrUrl || isPreparingQr || !canInitiateCall) {
+      return
+    }
+
+    try {
+      setIsPreparingQr(true)
+      const response = await fetch(`/api/leads/${leadId}/qr-call/public-link`, {
+        method: "POST",
+      })
+      const payload = await response.json().catch(() => null)
+      const nextUrl =
+        payload?.data?.landingUrl && typeof payload.data.landingUrl === "string"
+          ? payload.data.landingUrl
+          : null
+      if (response.ok && nextUrl) {
+        setQrUrl(nextUrl)
+      }
+    } catch {
+      // Leave the QR empty if public-link generation fails.
+    } finally {
+      setIsPreparingQr(false)
+    }
+  }
+
   return (
     <Popover
       open={open}
@@ -93,6 +120,7 @@ export function LeadQrPopover({
         setOpen(nextOpen)
         if (nextOpen) {
           void logQrViewed()
+          void preparePublicQrLink()
         }
       }}
     >
@@ -127,12 +155,18 @@ export function LeadQrPopover({
       >
         <div className="flex flex-col items-center gap-3">
           <p className="text-center text-xs font-medium text-muted-foreground">
-            Scan to call {patientName ? patientName.split(" ")[0] : "lead"}
+            Scan to call {qrLabel}
           </p>
           {canInitiateCall ? (
-            <div className="rounded-lg bg-white p-2">
-              <QRCodeSVG value={qrUrl} size={168} />
-            </div>
+            qrUrl ? (
+              <div className="rounded-lg bg-white p-2">
+                <QRCodeSVG value={qrUrl} size={168} />
+              </div>
+            ) : (
+              <div className="flex h-[184px] w-[184px] items-center justify-center rounded-lg border border-dashed border-border bg-muted/20 p-4 text-center text-sm text-muted-foreground">
+                {isPreparingQr ? "Preparing QR..." : "QR unavailable"}
+              </div>
+            )
           ) : (
             <p className="text-sm text-destructive">No phone number</p>
           )}

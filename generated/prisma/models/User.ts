@@ -338,6 +338,7 @@ export type UserWhereInput = {
   onboardingApprovals?: Prisma.EmployeeListRelationFilter
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryListRelationFilter
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkListRelationFilter
   leadCallNotes?: Prisma.CallNoteListRelationFilter
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentListRelationFilter
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentListRelationFilter
@@ -348,6 +349,7 @@ export type UserWhereInput = {
   campaignCplsCreated?: Prisma.CampaignCPLListRelationFilter
   dailyCampaignSpends?: Prisma.DailyCampaignSpendListRelationFilter
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentListRelationFilter
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitListRelationFilter
   pnlCategoriesCreated?: Prisma.PnLCategoryListRelationFilter
   pnlEntriesCreated?: Prisma.PnLEntryListRelationFilter
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryListRelationFilter
@@ -480,6 +482,7 @@ export type UserOrderByWithRelationInput = {
   onboardingApprovals?: Prisma.EmployeeOrderByRelationAggregateInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryOrderByRelationAggregateInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogOrderByRelationAggregateInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkOrderByRelationAggregateInput
   leadCallNotes?: Prisma.CallNoteOrderByRelationAggregateInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentOrderByRelationAggregateInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentOrderByRelationAggregateInput
@@ -490,6 +493,7 @@ export type UserOrderByWithRelationInput = {
   campaignCplsCreated?: Prisma.CampaignCPLOrderByRelationAggregateInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendOrderByRelationAggregateInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentOrderByRelationAggregateInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitOrderByRelationAggregateInput
   pnlCategoriesCreated?: Prisma.PnLCategoryOrderByRelationAggregateInput
   pnlEntriesCreated?: Prisma.PnLEntryOrderByRelationAggregateInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryOrderByRelationAggregateInput
@@ -625,6 +629,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   onboardingApprovals?: Prisma.EmployeeListRelationFilter
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryListRelationFilter
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkListRelationFilter
   leadCallNotes?: Prisma.CallNoteListRelationFilter
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentListRelationFilter
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentListRelationFilter
@@ -635,6 +640,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   campaignCplsCreated?: Prisma.CampaignCPLListRelationFilter
   dailyCampaignSpends?: Prisma.DailyCampaignSpendListRelationFilter
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentListRelationFilter
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitListRelationFilter
   pnlCategoriesCreated?: Prisma.PnLCategoryListRelationFilter
   pnlEntriesCreated?: Prisma.PnLEntryListRelationFilter
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryListRelationFilter
@@ -809,6 +815,7 @@ export type UserCreateInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -819,6 +826,7 @@ export type UserCreateInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -951,6 +959,7 @@ export type UserUncheckedCreateInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -961,6 +970,7 @@ export type UserUncheckedCreateInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1093,6 +1103,7 @@ export type UserUpdateInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -1103,6 +1114,7 @@ export type UserUpdateInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -1235,6 +1247,7 @@ export type UserUncheckedUpdateInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -1245,6 +1258,7 @@ export type UserUncheckedUpdateInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1503,6 +1517,20 @@ export type UserUpdateOneRequiredWithoutLeadQrCallAuditLogsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutLeadQrCallAuditLogsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLeadQrCallAuditLogsInput, Prisma.UserUpdateWithoutLeadQrCallAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutLeadQrCallAuditLogsInput>
+}
+
+export type UserCreateNestedOneWithoutLeadQrPublicLinksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLeadQrPublicLinksInput, Prisma.UserUncheckedCreateWithoutLeadQrPublicLinksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLeadQrPublicLinksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLeadQrPublicLinksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLeadQrPublicLinksInput, Prisma.UserUncheckedCreateWithoutLeadQrPublicLinksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLeadQrPublicLinksInput
+  upsert?: Prisma.UserUpsertWithoutLeadQrPublicLinksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLeadQrPublicLinksInput, Prisma.UserUpdateWithoutLeadQrPublicLinksInput>, Prisma.UserUncheckedUpdateWithoutLeadQrPublicLinksInput>
 }
 
 export type UserCreateNestedOneWithoutLeadStageEventsInput = {
@@ -2247,6 +2275,20 @@ export type UserUpdateOneRequiredWithoutCampaignTeamLeadAssignmentsNestedInput =
   upsert?: Prisma.UserUpsertWithoutCampaignTeamLeadAssignmentsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCampaignTeamLeadAssignmentsInput, Prisma.UserUpdateWithoutCampaignTeamLeadAssignmentsInput>, Prisma.UserUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput>
+}
+
+export type UserCreateNestedOneWithoutCampaignBdDailyLimitsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignBdDailyLimitsInput, Prisma.UserUncheckedCreateWithoutCampaignBdDailyLimitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignBdDailyLimitsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCampaignBdDailyLimitsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignBdDailyLimitsInput, Prisma.UserUncheckedCreateWithoutCampaignBdDailyLimitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignBdDailyLimitsInput
+  upsert?: Prisma.UserUpsertWithoutCampaignBdDailyLimitsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCampaignBdDailyLimitsInput, Prisma.UserUpdateWithoutCampaignBdDailyLimitsInput>, Prisma.UserUncheckedUpdateWithoutCampaignBdDailyLimitsInput>
 }
 
 export type UserCreateNestedOneWithoutCrmActivityLogsInput = {
@@ -3329,6 +3371,7 @@ export type UserCreateWithoutStatusesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -3339,6 +3382,7 @@ export type UserCreateWithoutStatusesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -3470,6 +3514,7 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -3480,6 +3525,7 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3627,6 +3673,7 @@ export type UserUpdateWithoutStatusesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -3637,6 +3684,7 @@ export type UserUpdateWithoutStatusesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -3768,6 +3816,7 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -3778,6 +3827,7 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3908,6 +3958,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -3918,6 +3969,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -4049,6 +4101,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -4059,6 +4112,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4195,6 +4249,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -4205,6 +4260,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -4336,6 +4392,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -4346,6 +4403,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4482,6 +4540,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -4492,6 +4551,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -4623,6 +4683,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -4633,6 +4694,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4780,6 +4842,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -4790,6 +4853,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -4921,6 +4985,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -4931,6 +4996,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5073,6 +5139,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -5083,6 +5150,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -5214,6 +5282,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -5224,6 +5293,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5366,6 +5436,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -5376,6 +5447,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -5507,6 +5579,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -5517,6 +5590,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5649,6 +5723,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
@@ -5658,6 +5733,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -5790,6 +5866,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5799,6 +5876,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5947,6 +6025,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
@@ -5956,6 +6035,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -6088,6 +6168,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6097,6 +6178,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6228,6 +6310,7 @@ export type UserCreateWithoutLeadRemarkEntriesAuthoredInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -6238,6 +6321,7 @@ export type UserCreateWithoutLeadRemarkEntriesAuthoredInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -6369,6 +6453,7 @@ export type UserUncheckedCreateWithoutLeadRemarkEntriesAuthoredInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -6379,6 +6464,7 @@ export type UserUncheckedCreateWithoutLeadRemarkEntriesAuthoredInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6526,6 +6612,7 @@ export type UserUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -6536,6 +6623,7 @@ export type UserUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -6667,6 +6755,7 @@ export type UserUncheckedUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -6677,6 +6766,7 @@ export type UserUncheckedUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6808,6 +6898,7 @@ export type UserCreateWithoutLeadQrCallAuditLogsInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -6818,6 +6909,7 @@ export type UserCreateWithoutLeadQrCallAuditLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -6949,6 +7041,7 @@ export type UserUncheckedCreateWithoutLeadQrCallAuditLogsInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -6959,6 +7052,7 @@ export type UserUncheckedCreateWithoutLeadQrCallAuditLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7106,6 +7200,7 @@ export type UserUpdateWithoutLeadQrCallAuditLogsInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -7116,6 +7211,7 @@ export type UserUpdateWithoutLeadQrCallAuditLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -7247,6 +7343,7 @@ export type UserUncheckedUpdateWithoutLeadQrCallAuditLogsInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -7257,6 +7354,595 @@ export type UserUncheckedUpdateWithoutLeadQrCallAuditLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUncheckedUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLeadQrPublicLinksInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLeadQrPublicLinksInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageUncheckedCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLeadQrPublicLinksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLeadQrPublicLinksInput, Prisma.UserUncheckedCreateWithoutLeadQrPublicLinksInput>
+}
+
+export type UserUpsertWithoutLeadQrPublicLinksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLeadQrPublicLinksInput, Prisma.UserUncheckedUpdateWithoutLeadQrPublicLinksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLeadQrPublicLinksInput, Prisma.UserUncheckedCreateWithoutLeadQrPublicLinksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLeadQrPublicLinksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLeadQrPublicLinksInput, Prisma.UserUncheckedUpdateWithoutLeadQrPublicLinksInput>
+}
+
+export type UserUpdateWithoutLeadQrPublicLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLeadQrPublicLinksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -7388,6 +8074,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -7398,6 +8085,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -7529,6 +8217,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -7539,6 +8228,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7686,6 +8376,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -7696,6 +8387,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -7827,6 +8519,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -7837,6 +8530,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -7968,6 +8662,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -7978,6 +8673,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -8109,6 +8805,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -8119,6 +8816,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8266,6 +8964,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -8276,6 +8975,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -8407,6 +9107,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -8417,6 +9118,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8548,6 +9250,7 @@ export type UserCreateWithoutCreatedTierDefinitionsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -8558,6 +9261,7 @@ export type UserCreateWithoutCreatedTierDefinitionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -8689,6 +9393,7 @@ export type UserUncheckedCreateWithoutCreatedTierDefinitionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -8699,6 +9404,7 @@ export type UserUncheckedCreateWithoutCreatedTierDefinitionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8846,6 +9552,7 @@ export type UserUpdateWithoutCreatedTierDefinitionsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -8856,6 +9563,7 @@ export type UserUpdateWithoutCreatedTierDefinitionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -8987,6 +9695,7 @@ export type UserUncheckedUpdateWithoutCreatedTierDefinitionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -8997,6 +9706,7 @@ export type UserUncheckedUpdateWithoutCreatedTierDefinitionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -9128,6 +9838,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -9138,6 +9849,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -9269,6 +9981,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -9279,6 +9992,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9426,6 +10140,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -9436,6 +10151,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -9567,6 +10283,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -9577,6 +10294,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -9708,6 +10426,7 @@ export type UserCreateWithoutPlRecordsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -9718,6 +10437,7 @@ export type UserCreateWithoutPlRecordsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -9849,6 +10569,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -9859,6 +10580,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10006,6 +10728,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -10016,6 +10739,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -10147,6 +10871,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -10157,6 +10882,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10289,6 +11015,7 @@ export type UserCreateWithoutInvoiceRequestsSubmittedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -10299,6 +11026,7 @@ export type UserCreateWithoutInvoiceRequestsSubmittedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -10430,6 +11158,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsSubmittedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -10440,6 +11169,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsSubmittedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10576,6 +11306,7 @@ export type UserCreateWithoutInvoiceRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -10586,6 +11317,7 @@ export type UserCreateWithoutInvoiceRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -10717,6 +11449,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -10727,6 +11460,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10874,6 +11608,7 @@ export type UserUpdateWithoutInvoiceRequestsSubmittedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -10884,6 +11619,7 @@ export type UserUpdateWithoutInvoiceRequestsSubmittedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -11015,6 +11751,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsSubmittedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -11025,6 +11762,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsSubmittedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11167,6 +11905,7 @@ export type UserUpdateWithoutInvoiceRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -11177,6 +11916,7 @@ export type UserUpdateWithoutInvoiceRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -11308,6 +12048,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -11318,6 +12059,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11449,6 +12191,7 @@ export type UserCreateWithoutInvoiceRequestActivitiesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -11459,6 +12202,7 @@ export type UserCreateWithoutInvoiceRequestActivitiesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -11590,6 +12334,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestActivitiesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -11600,6 +12345,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestActivitiesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11747,6 +12493,7 @@ export type UserUpdateWithoutInvoiceRequestActivitiesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -11757,6 +12504,7 @@ export type UserUpdateWithoutInvoiceRequestActivitiesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -11888,6 +12636,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestActivitiesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -11898,6 +12647,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestActivitiesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12029,6 +12779,7 @@ export type UserCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -12039,6 +12790,7 @@ export type UserCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -12170,6 +12922,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -12180,6 +12933,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12316,6 +13070,7 @@ export type UserCreateWithoutDoctorPayoffRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -12326,6 +13081,7 @@ export type UserCreateWithoutDoctorPayoffRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -12457,6 +13213,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -12467,6 +13224,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12614,6 +13372,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -12624,6 +13383,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -12755,6 +13515,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -12765,6 +13526,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12907,6 +13669,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -12917,6 +13680,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -13048,6 +13812,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -13058,6 +13823,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13189,6 +13955,7 @@ export type UserCreateWithoutDoctorPayoffRequestActivitiesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -13199,6 +13966,7 @@ export type UserCreateWithoutDoctorPayoffRequestActivitiesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -13330,6 +14098,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestActivitiesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -13340,6 +14109,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestActivitiesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13487,6 +14257,7 @@ export type UserUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -13497,6 +14268,7 @@ export type UserUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -13628,6 +14400,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -13638,6 +14411,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13768,6 +14542,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -13778,6 +14553,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -13909,6 +14685,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -13919,6 +14696,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14066,6 +14844,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -14076,6 +14855,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -14207,6 +14987,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -14217,6 +14998,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14348,6 +15130,7 @@ export type UserCreateWithoutEmployeeInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -14358,6 +15141,7 @@ export type UserCreateWithoutEmployeeInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -14489,6 +15273,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -14499,6 +15284,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14635,6 +15421,7 @@ export type UserCreateWithoutOnboardingApprovalsInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -14645,6 +15432,7 @@ export type UserCreateWithoutOnboardingApprovalsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -14776,6 +15564,7 @@ export type UserUncheckedCreateWithoutOnboardingApprovalsInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -14786,6 +15575,7 @@ export type UserUncheckedCreateWithoutOnboardingApprovalsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14922,6 +15712,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -14932,6 +15723,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -15063,6 +15855,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -15073,6 +15866,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -15220,6 +16014,7 @@ export type UserUpdateWithoutEmployeeInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -15230,6 +16025,7 @@ export type UserUpdateWithoutEmployeeInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -15361,6 +16157,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -15371,6 +16168,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15513,6 +16311,7 @@ export type UserUpdateWithoutOnboardingApprovalsInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -15523,6 +16322,7 @@ export type UserUpdateWithoutOnboardingApprovalsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -15654,6 +16454,7 @@ export type UserUncheckedUpdateWithoutOnboardingApprovalsInput = {
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -15664,6 +16465,7 @@ export type UserUncheckedUpdateWithoutOnboardingApprovalsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15806,6 +16608,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -15816,6 +16619,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -15947,6 +16751,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -15957,6 +16762,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -16088,6 +16894,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -16098,6 +16905,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -16229,6 +17037,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -16239,6 +17048,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16386,6 +17196,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -16396,6 +17207,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -16527,6 +17339,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -16537,6 +17350,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -16668,6 +17482,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -16678,6 +17493,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -16809,6 +17625,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -16819,6 +17636,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16955,6 +17773,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -16965,6 +17784,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -17096,6 +17916,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -17106,6 +17927,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17253,6 +18075,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -17263,6 +18086,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -17394,6 +18218,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -17404,6 +18229,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17546,6 +18372,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -17556,6 +18383,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -17687,6 +18515,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -17697,6 +18526,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17829,6 +18659,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -17839,6 +18670,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -17970,6 +18802,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -17980,6 +18813,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18127,6 +18961,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -18137,6 +18972,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -18268,6 +19104,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -18278,6 +19115,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18409,6 +19247,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -18419,6 +19258,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -18550,6 +19390,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -18560,6 +19401,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18707,6 +19549,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -18717,6 +19560,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -18848,6 +19692,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -18858,6 +19703,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18988,6 +19834,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -18998,6 +19845,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -19129,6 +19977,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -19139,6 +19988,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19275,6 +20125,7 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -19285,6 +20136,7 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -19416,6 +20268,7 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -19426,6 +20279,7 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19562,6 +20416,7 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -19572,6 +20427,7 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -19703,6 +20559,7 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -19713,6 +20570,7 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19849,6 +20707,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -19859,6 +20718,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -19990,6 +20850,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -20000,6 +20861,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20136,6 +20998,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -20146,6 +21009,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -20277,6 +21141,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -20287,6 +21152,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20423,6 +21289,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -20433,6 +21300,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -20564,6 +21432,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -20574,6 +21443,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20710,6 +21580,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -20720,6 +21591,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -20851,6 +21723,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -20861,6 +21734,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -21008,6 +21882,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -21018,6 +21893,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -21149,6 +22025,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -21159,6 +22036,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21301,6 +22179,7 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -21311,6 +22190,7 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -21442,6 +22322,7 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -21452,6 +22333,7 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21594,6 +22476,7 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -21604,6 +22487,7 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -21735,6 +22619,7 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -21745,6 +22630,7 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21887,6 +22773,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -21897,6 +22784,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -22028,6 +22916,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -22038,6 +22927,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22180,6 +23070,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -22190,6 +23081,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -22321,6 +23213,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -22331,6 +23224,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22473,6 +23367,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -22483,6 +23378,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -22614,6 +23510,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -22624,6 +23521,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22766,6 +23664,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -22776,6 +23675,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -22907,6 +23807,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -22917,6 +23818,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23048,6 +23950,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -23058,6 +23961,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -23189,6 +24093,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -23199,6 +24104,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23346,6 +24252,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -23356,6 +24263,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -23487,6 +24395,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -23497,6 +24406,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23628,6 +24538,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -23638,6 +24549,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -23769,6 +24681,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -23779,6 +24692,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23926,6 +24840,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -23936,6 +24851,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -24067,6 +24983,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -24077,6 +24994,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24208,6 +25126,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -24218,6 +25137,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -24349,6 +25269,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -24359,6 +25280,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24506,6 +25428,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -24516,6 +25439,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -24647,6 +25571,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -24657,6 +25582,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24788,6 +25714,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -24798,6 +25725,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -24929,6 +25857,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -24939,6 +25868,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25086,6 +26016,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -25096,6 +26027,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -25227,6 +26159,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -25237,6 +26170,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -25368,6 +26302,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -25378,6 +26313,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -25509,6 +26445,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -25519,6 +26456,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25655,6 +26593,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -25665,6 +26604,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -25796,6 +26736,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -25806,6 +26747,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25953,6 +26895,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -25963,6 +26906,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -26094,6 +27038,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -26104,6 +27049,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -26246,6 +27192,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -26256,6 +27203,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -26387,6 +27335,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -26397,6 +27346,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -26528,6 +27478,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -26538,6 +27489,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -26669,6 +27621,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -26679,6 +27632,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -26826,6 +27780,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -26836,6 +27791,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -26967,6 +27923,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -26977,6 +27934,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -27108,6 +28066,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -27118,6 +28077,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -27249,6 +28209,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -27259,6 +28220,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27395,6 +28357,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -27405,6 +28368,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -27536,6 +28500,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -27546,6 +28511,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27682,6 +28648,7 @@ export type UserCreateWithoutPreAuthHeldInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -27692,6 +28659,7 @@ export type UserCreateWithoutPreAuthHeldInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -27823,6 +28791,7 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -27833,6 +28802,7 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27980,6 +28950,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -27990,6 +28961,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -28121,6 +29093,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -28131,6 +29104,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28273,6 +29247,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -28283,6 +29258,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -28414,6 +29390,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -28424,6 +29401,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28566,6 +29544,7 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -28576,6 +29555,7 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -28707,6 +29687,7 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -28717,6 +29698,7 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28848,6 +29830,7 @@ export type UserCreateWithoutNotificationsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -28858,6 +29841,7 @@ export type UserCreateWithoutNotificationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -28989,6 +29973,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -28999,6 +29984,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29146,6 +30132,7 @@ export type UserUpdateWithoutNotificationsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -29156,6 +30143,7 @@ export type UserUpdateWithoutNotificationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -29287,6 +30275,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -29297,6 +30286,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -29428,6 +30418,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -29438,6 +30429,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -29569,6 +30561,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -29579,6 +30572,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29726,6 +30720,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -29736,6 +30731,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -29867,6 +30863,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -29877,6 +30874,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30008,6 +31006,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -30018,6 +31017,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -30149,6 +31149,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -30159,6 +31160,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30306,6 +31308,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -30316,6 +31319,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -30447,6 +31451,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -30457,6 +31462,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30588,6 +31594,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -30598,6 +31605,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -30729,6 +31737,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -30739,6 +31748,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30875,6 +31885,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -30885,6 +31896,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -31016,6 +32028,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -31026,6 +32039,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -31162,6 +32176,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -31172,6 +32187,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -31303,6 +32319,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -31313,6 +32330,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -31460,6 +32478,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -31470,6 +32489,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -31601,6 +32621,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -31611,6 +32632,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -31753,6 +32775,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -31763,6 +32786,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -31894,6 +32918,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -31904,6 +32929,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32046,6 +33072,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -32056,6 +33083,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -32187,6 +33215,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -32197,6 +33226,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32328,6 +33358,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -32338,6 +33369,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -32469,6 +33501,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -32479,6 +33512,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -32615,6 +33649,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -32625,6 +33660,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -32756,6 +33792,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -32766,6 +33803,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -32913,6 +33951,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -32923,6 +33962,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -33054,6 +34094,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -33064,6 +34105,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -33206,6 +34248,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -33216,6 +34259,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -33347,6 +34391,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -33357,6 +34402,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -33488,6 +34534,7 @@ export type UserCreateWithoutCrmPermissionsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -33498,6 +34545,7 @@ export type UserCreateWithoutCrmPermissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -33629,6 +34677,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -33639,6 +34688,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -33775,6 +34825,7 @@ export type UserCreateWithoutCrmPermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -33785,6 +34836,7 @@ export type UserCreateWithoutCrmPermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -33916,6 +34968,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -33926,6 +34979,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -34073,6 +35127,7 @@ export type UserUpdateWithoutCrmPermissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -34083,6 +35138,7 @@ export type UserUpdateWithoutCrmPermissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -34214,6 +35270,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -34224,6 +35281,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -34366,6 +35424,7 @@ export type UserUpdateWithoutCrmPermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -34376,6 +35435,7 @@ export type UserUpdateWithoutCrmPermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -34507,6 +35567,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -34517,6 +35578,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -34648,6 +35710,7 @@ export type UserCreateWithoutCrmAssignmentRulesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -34658,6 +35721,7 @@ export type UserCreateWithoutCrmAssignmentRulesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -34789,6 +35853,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -34799,6 +35864,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -34935,6 +36001,7 @@ export type UserCreateWithoutCrmAssignmentRulesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -34945,6 +36012,7 @@ export type UserCreateWithoutCrmAssignmentRulesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -35076,6 +36144,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -35086,6 +36155,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -35233,6 +36303,7 @@ export type UserUpdateWithoutCrmAssignmentRulesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -35243,6 +36314,7 @@ export type UserUpdateWithoutCrmAssignmentRulesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -35374,6 +36446,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -35384,6 +36457,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -35526,6 +36600,7 @@ export type UserUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -35536,6 +36611,7 @@ export type UserUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -35667,6 +36743,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -35677,6 +36754,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -35809,6 +36887,7 @@ export type UserCreateWithoutCampaignTeamLeadAssignmentsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -35818,6 +36897,7 @@ export type UserCreateWithoutCampaignTeamLeadAssignmentsInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -35950,6 +37030,7 @@ export type UserUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -35959,6 +37040,7 @@ export type UserUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -36107,6 +37189,7 @@ export type UserUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -36116,6 +37199,7 @@ export type UserUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -36248,6 +37332,7 @@ export type UserUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -36257,6 +37342,595 @@ export type UserUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUncheckedUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCampaignBdDailyLimitsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCampaignBdDailyLimitsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageUncheckedCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCampaignBdDailyLimitsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCampaignBdDailyLimitsInput, Prisma.UserUncheckedCreateWithoutCampaignBdDailyLimitsInput>
+}
+
+export type UserUpsertWithoutCampaignBdDailyLimitsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCampaignBdDailyLimitsInput, Prisma.UserUncheckedUpdateWithoutCampaignBdDailyLimitsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCampaignBdDailyLimitsInput, Prisma.UserUncheckedCreateWithoutCampaignBdDailyLimitsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCampaignBdDailyLimitsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCampaignBdDailyLimitsInput, Prisma.UserUncheckedUpdateWithoutCampaignBdDailyLimitsInput>
+}
+
+export type UserUpdateWithoutCampaignBdDailyLimitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCampaignBdDailyLimitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -36388,6 +38062,7 @@ export type UserCreateWithoutCrmActivityLogsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -36398,6 +38073,7 @@ export type UserCreateWithoutCrmActivityLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -36529,6 +38205,7 @@ export type UserUncheckedCreateWithoutCrmActivityLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -36539,6 +38216,7 @@ export type UserUncheckedCreateWithoutCrmActivityLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -36686,6 +38364,7 @@ export type UserUpdateWithoutCrmActivityLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -36696,6 +38375,7 @@ export type UserUpdateWithoutCrmActivityLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -36827,6 +38507,7 @@ export type UserUncheckedUpdateWithoutCrmActivityLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -36837,6 +38518,7 @@ export type UserUncheckedUpdateWithoutCrmActivityLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -36968,6 +38650,7 @@ export type UserCreateWithoutBulkLeadReassignmentRunsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -36978,6 +38661,7 @@ export type UserCreateWithoutBulkLeadReassignmentRunsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -37109,6 +38793,7 @@ export type UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -37119,6 +38804,7 @@ export type UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -37266,6 +38952,7 @@ export type UserUpdateWithoutBulkLeadReassignmentRunsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -37276,6 +38963,7 @@ export type UserUpdateWithoutBulkLeadReassignmentRunsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -37407,6 +39095,7 @@ export type UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -37417,6 +39106,7 @@ export type UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -37548,6 +39238,7 @@ export type UserCreateWithoutPermissionSubjectsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -37558,6 +39249,7 @@ export type UserCreateWithoutPermissionSubjectsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -37689,6 +39381,7 @@ export type UserUncheckedCreateWithoutPermissionSubjectsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -37699,6 +39392,7 @@ export type UserUncheckedCreateWithoutPermissionSubjectsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -37835,6 +39529,7 @@ export type UserCreateWithoutPermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -37845,6 +39540,7 @@ export type UserCreateWithoutPermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -37976,6 +39672,7 @@ export type UserUncheckedCreateWithoutPermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -37986,6 +39683,7 @@ export type UserUncheckedCreateWithoutPermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -38133,6 +39831,7 @@ export type UserUpdateWithoutPermissionSubjectsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -38143,6 +39842,7 @@ export type UserUpdateWithoutPermissionSubjectsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -38274,6 +39974,7 @@ export type UserUncheckedUpdateWithoutPermissionSubjectsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -38284,6 +39985,7 @@ export type UserUncheckedUpdateWithoutPermissionSubjectsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -38426,6 +40128,7 @@ export type UserUpdateWithoutPermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -38436,6 +40139,7 @@ export type UserUpdateWithoutPermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -38567,6 +40271,7 @@ export type UserUncheckedUpdateWithoutPermissionsGrantedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -38577,6 +40282,7 @@ export type UserUncheckedUpdateWithoutPermissionsGrantedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -38709,6 +40415,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -38718,6 +40425,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -38850,6 +40558,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -38859,6 +40568,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -39007,6 +40717,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -39016,6 +40727,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -39148,6 +40860,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -39157,6 +40870,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -39289,6 +41003,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -39298,6 +41013,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -39430,6 +41146,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -39439,6 +41156,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -39587,6 +41305,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -39596,6 +41315,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -39728,6 +41448,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -39737,6 +41458,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -39868,6 +41590,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -39878,6 +41601,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -40009,6 +41733,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -40019,6 +41744,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -40155,6 +41881,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -40165,6 +41892,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -40296,6 +42024,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -40306,6 +42035,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -40453,6 +42183,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -40463,6 +42194,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -40594,6 +42326,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -40604,6 +42337,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -40746,6 +42480,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -40756,6 +42491,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -40887,6 +42623,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -40897,6 +42634,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -41028,6 +42766,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -41038,6 +42777,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -41169,6 +42909,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -41179,6 +42920,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -41326,6 +43068,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -41336,6 +43079,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -41467,6 +43211,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -41477,6 +43222,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -41608,6 +43354,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -41618,6 +43365,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -41749,6 +43497,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -41759,6 +43508,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -41906,6 +43656,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -41916,6 +43667,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -42047,6 +43799,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -42057,6 +43810,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -42188,6 +43942,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -42198,6 +43953,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -42329,6 +44085,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -42339,6 +44096,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -42486,6 +44244,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -42496,6 +44255,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -42627,6 +44387,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -42637,6 +44398,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -42768,6 +44530,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -42778,6 +44541,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -42909,6 +44673,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -42919,6 +44684,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -43066,6 +44832,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -43076,6 +44843,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -43207,6 +44975,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -43217,6 +44986,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -43348,6 +45118,7 @@ export type UserCreateWithoutWorkflowResetsPerformedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -43358,6 +45129,7 @@ export type UserCreateWithoutWorkflowResetsPerformedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -43489,6 +45261,7 @@ export type UserUncheckedCreateWithoutWorkflowResetsPerformedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -43499,6 +45272,7 @@ export type UserUncheckedCreateWithoutWorkflowResetsPerformedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -43646,6 +45420,7 @@ export type UserUpdateWithoutWorkflowResetsPerformedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -43656,6 +45431,7 @@ export type UserUpdateWithoutWorkflowResetsPerformedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -43787,6 +45563,7 @@ export type UserUncheckedUpdateWithoutWorkflowResetsPerformedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -43797,6 +45574,7 @@ export type UserUncheckedUpdateWithoutWorkflowResetsPerformedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -43928,6 +45706,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -43938,6 +45717,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -44069,6 +45849,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -44079,6 +45860,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -44226,6 +46008,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -44236,6 +46019,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -44367,6 +46151,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -44377,6 +46162,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -44508,6 +46294,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -44518,6 +46305,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -44649,6 +46437,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -44659,6 +46448,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -44806,6 +46596,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -44816,6 +46607,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -44947,6 +46739,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -44957,6 +46750,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -45088,6 +46882,7 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -45098,6 +46893,7 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -45229,6 +47025,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -45239,6 +47036,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -45375,6 +47173,7 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -45385,6 +47184,7 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -45516,6 +47316,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -45526,6 +47327,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -45662,6 +47464,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -45672,6 +47475,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -45803,6 +47607,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -45813,6 +47618,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -45960,6 +47766,7 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -45970,6 +47777,7 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -46101,6 +47909,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -46111,6 +47920,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -46253,6 +48063,7 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -46263,6 +48074,7 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -46394,6 +48206,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -46404,6 +48217,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -46546,6 +48360,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -46556,6 +48371,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -46687,6 +48503,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -46697,6 +48514,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -46828,6 +48646,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -46838,6 +48657,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -46969,6 +48789,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -46979,6 +48800,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47126,6 +48948,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -47136,6 +48959,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -47267,6 +49091,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -47277,6 +49102,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -47409,6 +49235,7 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
@@ -47418,6 +49245,7 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -47550,6 +49378,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47559,6 +49388,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47696,6 +49526,7 @@ export type UserCreateWithoutPaymentInstallmentsVerifiedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
@@ -47705,6 +49536,7 @@ export type UserCreateWithoutPaymentInstallmentsVerifiedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -47837,6 +49669,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsVerifiedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47846,6 +49679,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsVerifiedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -47994,6 +49828,7 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
@@ -48003,6 +49838,7 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -48135,6 +49971,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -48144,6 +49981,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -48287,6 +50125,7 @@ export type UserUpdateWithoutPaymentInstallmentsVerifiedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
@@ -48296,6 +50135,7 @@ export type UserUpdateWithoutPaymentInstallmentsVerifiedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -48428,6 +50268,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsVerifiedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -48437,6 +50278,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsVerifiedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -48568,6 +50410,7 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -48578,6 +50421,7 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -48709,6 +50553,7 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -48719,6 +50564,7 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -48866,6 +50712,7 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -48876,6 +50723,7 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -49007,6 +50855,7 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -49017,6 +50866,7 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -49148,6 +50998,7 @@ export type UserCreateWithoutCumulativeReportManualEntriesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -49158,6 +51009,7 @@ export type UserCreateWithoutCumulativeReportManualEntriesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -49289,6 +51141,7 @@ export type UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput 
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -49299,6 +51152,7 @@ export type UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput 
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -49446,6 +51300,7 @@ export type UserUpdateWithoutCumulativeReportManualEntriesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -49456,6 +51311,7 @@ export type UserUpdateWithoutCumulativeReportManualEntriesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -49587,6 +51443,7 @@ export type UserUncheckedUpdateWithoutCumulativeReportManualEntriesUpdatedInput 
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -49597,6 +51454,7 @@ export type UserUncheckedUpdateWithoutCumulativeReportManualEntriesUpdatedInput 
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -49729,6 +51587,7 @@ export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -49739,6 +51598,7 @@ export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -49870,6 +51730,7 @@ export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -49880,6 +51741,7 @@ export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -50027,6 +51889,7 @@ export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -50037,6 +51900,7 @@ export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -50168,6 +52032,7 @@ export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -50178,6 +52043,7 @@ export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -50309,6 +52175,7 @@ export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -50319,6 +52186,7 @@ export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -50450,6 +52318,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -50460,6 +52329,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -50596,6 +52466,7 @@ export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -50606,6 +52477,7 @@ export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -50737,6 +52609,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -50747,6 +52620,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -50894,6 +52768,7 @@ export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -50904,6 +52779,7 @@ export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -51035,6 +52911,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -51045,6 +52922,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -51187,6 +53065,7 @@ export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -51197,6 +53076,7 @@ export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -51328,6 +53208,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -51338,6 +53219,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -51469,6 +53351,7 @@ export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -51479,6 +53362,7 @@ export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -51610,6 +53494,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -51620,6 +53505,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -51756,6 +53642,7 @@ export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -51766,6 +53653,7 @@ export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -51897,6 +53785,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -51907,6 +53796,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -52054,6 +53944,7 @@ export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -52064,6 +53955,7 @@ export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -52195,6 +54087,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -52205,6 +54098,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -52347,6 +54241,7 @@ export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -52357,6 +54252,7 @@ export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -52488,6 +54384,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -52498,6 +54395,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -52629,6 +54527,7 @@ export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -52639,6 +54538,7 @@ export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -52770,6 +54670,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -52780,6 +54681,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -52916,6 +54818,7 @@ export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -52926,6 +54829,7 @@ export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -53057,6 +54961,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -53067,6 +54972,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -53214,6 +55120,7 @@ export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -53224,6 +55131,7 @@ export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -53355,6 +55263,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -53365,6 +55274,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -53507,6 +55417,7 @@ export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -53517,6 +55428,7 @@ export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -53648,6 +55560,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -53658,6 +55571,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -53789,6 +55703,7 @@ export type UserCreateWithoutSeatingMiscCostHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -53799,6 +55714,7 @@ export type UserCreateWithoutSeatingMiscCostHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -53930,6 +55846,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -53940,6 +55857,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -54087,6 +56005,7 @@ export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -54097,6 +56016,7 @@ export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -54228,6 +56148,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -54238,6 +56159,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -54369,6 +56291,7 @@ export type UserCreateWithoutSalesTeamBulkCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -54379,6 +56302,7 @@ export type UserCreateWithoutSalesTeamBulkCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -54510,6 +56434,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -54520,6 +56445,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -54656,6 +56582,7 @@ export type UserCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -54666,6 +56593,7 @@ export type UserCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -54797,6 +56725,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -54807,6 +56736,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -54954,6 +56884,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -54964,6 +56895,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -55095,6 +57027,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -55105,6 +57038,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -55247,6 +57181,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -55257,6 +57192,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -55388,6 +57324,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -55398,6 +57335,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -55529,6 +57467,7 @@ export type UserCreateWithoutSalesTeamBulkCostHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -55539,6 +57478,7 @@ export type UserCreateWithoutSalesTeamBulkCostHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -55670,6 +57610,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -55680,6 +57621,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -55827,6 +57769,7 @@ export type UserUpdateWithoutSalesTeamBulkCostHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -55837,6 +57780,7 @@ export type UserUpdateWithoutSalesTeamBulkCostHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -55968,6 +57912,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -55978,6 +57923,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -56109,6 +58055,7 @@ export type UserCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -56119,6 +58066,7 @@ export type UserCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -56250,6 +58198,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -56260,6 +58209,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -56407,6 +58357,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -56417,6 +58368,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -56548,6 +58500,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -56558,6 +58511,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -56689,6 +58643,7 @@ export type UserCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -56699,6 +58654,7 @@ export type UserCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -56830,6 +58786,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -56840,6 +58797,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -56987,6 +58945,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -56997,6 +58956,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -57128,6 +59088,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -57138,6 +59099,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -57268,6 +59230,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -57278,6 +59241,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -57409,6 +59373,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -57419,6 +59384,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -57555,6 +59521,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -57565,6 +59532,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -57696,6 +59664,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -57706,6 +59675,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -57842,6 +59812,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -57852,6 +59823,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -57983,6 +59955,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -57993,6 +59966,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -58140,6 +60114,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -58150,6 +60125,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -58281,6 +60257,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -58291,6 +60268,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -58433,6 +60411,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -58443,6 +60422,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -58574,6 +60554,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -58584,6 +60565,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -58726,6 +60708,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -58736,6 +60719,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -58867,6 +60851,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -58877,6 +60862,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -59008,6 +60994,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -59018,6 +61005,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -59149,6 +61137,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -59159,6 +61148,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -59306,6 +61296,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -59316,6 +61307,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -59447,6 +61439,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -59457,6 +61450,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -59588,6 +61582,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -59598,6 +61593,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -59729,6 +61725,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -59739,6 +61736,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -59886,6 +61884,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -59896,6 +61895,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -60027,6 +62027,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -60037,6 +62038,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -60168,6 +62170,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -60178,6 +62181,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -60309,6 +62313,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -60319,6 +62324,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -60455,6 +62461,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -60465,6 +62472,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -60596,6 +62604,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -60606,6 +62615,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -60753,6 +62763,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -60763,6 +62774,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -60894,6 +62906,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -60904,6 +62917,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -61046,6 +63060,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -61056,6 +63071,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -61187,6 +63203,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -61197,6 +63214,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -61328,6 +63346,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -61338,6 +63357,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -61469,6 +63489,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -61479,6 +63500,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -61626,6 +63648,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -61636,6 +63659,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -61767,6 +63791,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -61777,6 +63802,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -61908,6 +63934,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -61918,6 +63945,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -62049,6 +64077,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -62059,6 +64088,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -62206,6 +64236,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -62216,6 +64247,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -62347,6 +64379,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -62357,6 +64390,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -62488,6 +64522,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -62498,6 +64533,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -62629,6 +64665,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -62639,6 +64676,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -62786,6 +64824,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -62796,6 +64835,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -62927,6 +64967,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -62937,6 +64978,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -63068,6 +65110,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -63078,6 +65121,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -63209,6 +65253,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -63219,6 +65264,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63355,6 +65401,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -63365,6 +65412,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -63496,6 +65544,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -63506,6 +65555,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63653,6 +65703,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -63663,6 +65714,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -63794,6 +65846,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -63804,6 +65857,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -63946,6 +66000,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -63956,6 +66011,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -64087,6 +66143,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -64097,6 +66154,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64228,6 +66286,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -64238,6 +66297,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -64369,6 +66429,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -64379,6 +66440,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -64526,6 +66588,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -64536,6 +66599,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -64667,6 +66731,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -64677,6 +66742,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64808,6 +66874,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -64818,6 +66885,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -64949,6 +67017,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -64959,6 +67028,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65106,6 +67176,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -65116,6 +67187,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -65247,6 +67319,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -65257,6 +67330,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -65388,6 +67462,7 @@ export type UserCreateWithoutWorkLogsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -65398,6 +67473,7 @@ export type UserCreateWithoutWorkLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -65529,6 +67605,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -65539,6 +67616,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65686,6 +67764,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -65696,6 +67775,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -65827,6 +67907,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -65837,6 +67918,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -65968,6 +68050,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -65978,6 +68061,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -66109,6 +68193,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -66119,6 +68204,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -66266,6 +68352,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -66276,6 +68363,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -66407,6 +68495,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -66417,6 +68506,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66548,6 +68638,7 @@ export type UserCreateWithoutDoctorLeaveRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -66558,6 +68649,7 @@ export type UserCreateWithoutDoctorLeaveRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -66689,6 +68781,7 @@ export type UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -66699,6 +68792,7 @@ export type UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -66846,6 +68940,7 @@ export type UserUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -66856,6 +68951,7 @@ export type UserUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -66987,6 +69083,7 @@ export type UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -66997,6 +69094,7 @@ export type UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -67128,6 +69226,7 @@ export type UserCreateWithoutDoctorCabRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -67138,6 +69237,7 @@ export type UserCreateWithoutDoctorCabRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -67269,6 +69369,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -67279,6 +69380,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67415,6 +69517,7 @@ export type UserCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -67425,6 +69528,7 @@ export type UserCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -67556,6 +69660,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -67566,6 +69671,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67713,6 +69819,7 @@ export type UserUpdateWithoutDoctorCabRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -67723,6 +69830,7 @@ export type UserUpdateWithoutDoctorCabRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -67854,6 +69962,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -67864,6 +69973,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68006,6 +70116,7 @@ export type UserUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -68016,6 +70127,7 @@ export type UserUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -68147,6 +70259,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -68157,6 +70270,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68289,6 +70403,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -68298,6 +70413,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -68430,6 +70546,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -68439,6 +70556,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -68587,6 +70705,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -68596,6 +70715,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -68728,6 +70848,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -68737,6 +70858,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68869,6 +70991,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -68878,6 +71001,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -69010,6 +71134,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -69019,6 +71144,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69167,6 +71293,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -69176,6 +71303,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -69308,6 +71436,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -69317,6 +71446,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -69449,6 +71579,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -69458,6 +71589,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -69590,6 +71722,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -69599,6 +71732,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69747,6 +71881,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -69756,6 +71891,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -69888,6 +72024,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -69897,6 +72034,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70029,6 +72167,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -70038,6 +72177,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -70170,6 +72310,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -70179,6 +72320,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -70327,6 +72469,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -70336,6 +72479,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -70468,6 +72612,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -70477,6 +72622,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70609,6 +72755,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -70619,6 +72766,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
@@ -70750,6 +72898,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -70760,6 +72909,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
@@ -70907,6 +73057,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -70917,6 +73068,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
@@ -71048,6 +73200,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -71058,6 +73211,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
@@ -71189,6 +73343,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -71199,6 +73354,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
@@ -71330,6 +73486,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -71340,6 +73497,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
@@ -71487,6 +73645,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -71497,6 +73656,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
@@ -71628,6 +73788,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -71638,6 +73799,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
@@ -71769,6 +73931,7 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -71779,6 +73942,7 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
@@ -71910,6 +74074,7 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -71920,6 +74085,7 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
@@ -72067,6 +74233,7 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -72077,6 +74244,7 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
@@ -72208,6 +74376,7 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -72218,6 +74387,7 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
@@ -72349,6 +74519,7 @@ export type UserCreateWithoutKnowledgeDocumentsUploadedInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -72359,6 +74530,7 @@ export type UserCreateWithoutKnowledgeDocumentsUploadedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -72490,6 +74662,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentsUploadedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -72500,6 +74673,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentsUploadedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -72647,6 +74821,7 @@ export type UserUpdateWithoutKnowledgeDocumentsUploadedInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -72657,6 +74832,7 @@ export type UserUpdateWithoutKnowledgeDocumentsUploadedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -72788,6 +74964,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentsUploadedInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -72798,6 +74975,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentsUploadedInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -72929,6 +75107,7 @@ export type UserCreateWithoutKnowledgeDocumentUsersInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -72939,6 +75118,7 @@ export type UserCreateWithoutKnowledgeDocumentUsersInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -73070,6 +75250,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentUsersInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -73080,6 +75261,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentUsersInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -73227,6 +75409,7 @@ export type UserUpdateWithoutKnowledgeDocumentUsersInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -73237,6 +75420,7 @@ export type UserUpdateWithoutKnowledgeDocumentUsersInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -73368,6 +75552,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentUsersInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -73378,6 +75563,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentUsersInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -73509,6 +75695,7 @@ export type UserCreateWithoutAiConversationsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -73519,6 +75706,7 @@ export type UserCreateWithoutAiConversationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -73650,6 +75838,7 @@ export type UserUncheckedCreateWithoutAiConversationsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -73660,6 +75849,7 @@ export type UserUncheckedCreateWithoutAiConversationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -73807,6 +75997,7 @@ export type UserUpdateWithoutAiConversationsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -73817,6 +76008,7 @@ export type UserUpdateWithoutAiConversationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -73948,6 +76140,7 @@ export type UserUncheckedUpdateWithoutAiConversationsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -73958,6 +76151,7 @@ export type UserUncheckedUpdateWithoutAiConversationsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -74089,6 +76283,7 @@ export type UserCreateWithoutAiMessagesInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -74099,6 +76294,7 @@ export type UserCreateWithoutAiMessagesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -74230,6 +76426,7 @@ export type UserUncheckedCreateWithoutAiMessagesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -74240,6 +76437,7 @@ export type UserUncheckedCreateWithoutAiMessagesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -74387,6 +76585,7 @@ export type UserUpdateWithoutAiMessagesInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -74397,6 +76596,7 @@ export type UserUpdateWithoutAiMessagesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -74528,6 +76728,7 @@ export type UserUncheckedUpdateWithoutAiMessagesInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -74538,6 +76739,7 @@ export type UserUncheckedUpdateWithoutAiMessagesInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -74669,6 +76871,7 @@ export type UserCreateWithoutAiToolCallsInput = {
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
@@ -74679,6 +76882,7 @@ export type UserCreateWithoutAiToolCallsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
@@ -74810,6 +77014,7 @@ export type UserUncheckedCreateWithoutAiToolCallsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
   leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -74820,6 +77025,7 @@ export type UserUncheckedCreateWithoutAiToolCallsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
@@ -74967,6 +77173,7 @@ export type UserUpdateWithoutAiToolCallsInput = {
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
@@ -74977,6 +77184,7 @@ export type UserUpdateWithoutAiToolCallsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
@@ -75108,6 +77316,7 @@ export type UserUncheckedUpdateWithoutAiToolCallsInput = {
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
   paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -75118,6 +77327,7 @@ export type UserUncheckedUpdateWithoutAiToolCallsInput = {
   campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -75238,6 +77448,7 @@ export type UserCountOutputType = {
   onboardingApprovals: number
   leadRemarkEntriesAuthored: number
   leadQrCallAuditLogs: number
+  leadQrPublicLinks: number
   leadCallNotes: number
   paymentInstallmentsRecorded: number
   paymentInstallmentsVerified: number
@@ -75248,6 +77459,7 @@ export type UserCountOutputType = {
   campaignCplsCreated: number
   dailyCampaignSpends: number
   campaignTeamLeadAssignments: number
+  campaignBdDailyLimits: number
   pnlCategoriesCreated: number
   pnlEntriesCreated: number
   targetPnlEntriesCreated: number
@@ -75364,6 +77576,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   onboardingApprovals?: boolean | UserCountOutputTypeCountOnboardingApprovalsArgs
   leadRemarkEntriesAuthored?: boolean | UserCountOutputTypeCountLeadRemarkEntriesAuthoredArgs
   leadQrCallAuditLogs?: boolean | UserCountOutputTypeCountLeadQrCallAuditLogsArgs
+  leadQrPublicLinks?: boolean | UserCountOutputTypeCountLeadQrPublicLinksArgs
   leadCallNotes?: boolean | UserCountOutputTypeCountLeadCallNotesArgs
   paymentInstallmentsRecorded?: boolean | UserCountOutputTypeCountPaymentInstallmentsRecordedArgs
   paymentInstallmentsVerified?: boolean | UserCountOutputTypeCountPaymentInstallmentsVerifiedArgs
@@ -75374,6 +77587,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   campaignCplsCreated?: boolean | UserCountOutputTypeCountCampaignCplsCreatedArgs
   dailyCampaignSpends?: boolean | UserCountOutputTypeCountDailyCampaignSpendsArgs
   campaignTeamLeadAssignments?: boolean | UserCountOutputTypeCountCampaignTeamLeadAssignmentsArgs
+  campaignBdDailyLimits?: boolean | UserCountOutputTypeCountCampaignBdDailyLimitsArgs
   pnlCategoriesCreated?: boolean | UserCountOutputTypeCountPnlCategoriesCreatedArgs
   pnlEntriesCreated?: boolean | UserCountOutputTypeCountPnlEntriesCreatedArgs
   targetPnlEntriesCreated?: boolean | UserCountOutputTypeCountTargetPnlEntriesCreatedArgs
@@ -76000,6 +78214,13 @@ export type UserCountOutputTypeCountLeadQrCallAuditLogsArgs<ExtArgs extends runt
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountLeadQrPublicLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadQrPublicLinkWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountLeadCallNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CallNoteWhereInput
 }
@@ -76065,6 +78286,13 @@ export type UserCountOutputTypeCountDailyCampaignSpendsArgs<ExtArgs extends runt
  */
 export type UserCountOutputTypeCountCampaignTeamLeadAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CrmCampaignTeamLeadAssignmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCampaignBdDailyLimitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignBdDailyLimitWhereInput
 }
 
 /**
@@ -76378,6 +78606,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   onboardingApprovals?: boolean | Prisma.User$onboardingApprovalsArgs<ExtArgs>
   leadRemarkEntriesAuthored?: boolean | Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>
   leadQrCallAuditLogs?: boolean | Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>
+  leadQrPublicLinks?: boolean | Prisma.User$leadQrPublicLinksArgs<ExtArgs>
   leadCallNotes?: boolean | Prisma.User$leadCallNotesArgs<ExtArgs>
   paymentInstallmentsRecorded?: boolean | Prisma.User$paymentInstallmentsRecordedArgs<ExtArgs>
   paymentInstallmentsVerified?: boolean | Prisma.User$paymentInstallmentsVerifiedArgs<ExtArgs>
@@ -76388,6 +78617,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   campaignCplsCreated?: boolean | Prisma.User$campaignCplsCreatedArgs<ExtArgs>
   dailyCampaignSpends?: boolean | Prisma.User$dailyCampaignSpendsArgs<ExtArgs>
   campaignTeamLeadAssignments?: boolean | Prisma.User$campaignTeamLeadAssignmentsArgs<ExtArgs>
+  campaignBdDailyLimits?: boolean | Prisma.User$campaignBdDailyLimitsArgs<ExtArgs>
   pnlCategoriesCreated?: boolean | Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>
   pnlEntriesCreated?: boolean | Prisma.User$pnlEntriesCreatedArgs<ExtArgs>
   targetPnlEntriesCreated?: boolean | Prisma.User$targetPnlEntriesCreatedArgs<ExtArgs>
@@ -76561,6 +78791,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   onboardingApprovals?: boolean | Prisma.User$onboardingApprovalsArgs<ExtArgs>
   leadRemarkEntriesAuthored?: boolean | Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>
   leadQrCallAuditLogs?: boolean | Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>
+  leadQrPublicLinks?: boolean | Prisma.User$leadQrPublicLinksArgs<ExtArgs>
   leadCallNotes?: boolean | Prisma.User$leadCallNotesArgs<ExtArgs>
   paymentInstallmentsRecorded?: boolean | Prisma.User$paymentInstallmentsRecordedArgs<ExtArgs>
   paymentInstallmentsVerified?: boolean | Prisma.User$paymentInstallmentsVerifiedArgs<ExtArgs>
@@ -76571,6 +78802,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   campaignCplsCreated?: boolean | Prisma.User$campaignCplsCreatedArgs<ExtArgs>
   dailyCampaignSpends?: boolean | Prisma.User$dailyCampaignSpendsArgs<ExtArgs>
   campaignTeamLeadAssignments?: boolean | Prisma.User$campaignTeamLeadAssignmentsArgs<ExtArgs>
+  campaignBdDailyLimits?: boolean | Prisma.User$campaignBdDailyLimitsArgs<ExtArgs>
   pnlCategoriesCreated?: boolean | Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>
   pnlEntriesCreated?: boolean | Prisma.User$pnlEntriesCreatedArgs<ExtArgs>
   targetPnlEntriesCreated?: boolean | Prisma.User$targetPnlEntriesCreatedArgs<ExtArgs>
@@ -76693,6 +78925,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     onboardingApprovals: Prisma.$EmployeePayload<ExtArgs>[]
     leadRemarkEntriesAuthored: Prisma.$LeadRemarkEntryPayload<ExtArgs>[]
     leadQrCallAuditLogs: Prisma.$LeadQrCallAuditLogPayload<ExtArgs>[]
+    leadQrPublicLinks: Prisma.$LeadQrPublicLinkPayload<ExtArgs>[]
     leadCallNotes: Prisma.$CallNotePayload<ExtArgs>[]
     paymentInstallmentsRecorded: Prisma.$PaymentInstallmentPayload<ExtArgs>[]
     paymentInstallmentsVerified: Prisma.$PaymentInstallmentPayload<ExtArgs>[]
@@ -76703,6 +78936,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     campaignCplsCreated: Prisma.$CampaignCPLPayload<ExtArgs>[]
     dailyCampaignSpends: Prisma.$DailyCampaignSpendPayload<ExtArgs>[]
     campaignTeamLeadAssignments: Prisma.$CrmCampaignTeamLeadAssignmentPayload<ExtArgs>[]
+    campaignBdDailyLimits: Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>[]
     pnlCategoriesCreated: Prisma.$PnLCategoryPayload<ExtArgs>[]
     pnlEntriesCreated: Prisma.$PnLEntryPayload<ExtArgs>[]
     targetPnlEntriesCreated: Prisma.$TargetPnLEntryPayload<ExtArgs>[]
@@ -77228,6 +79462,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   onboardingApprovals<T extends Prisma.User$onboardingApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$onboardingApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadRemarkEntriesAuthored<T extends Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadRemarkEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadQrCallAuditLogs<T extends Prisma.User$leadQrCallAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrCallAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leadQrPublicLinks<T extends Prisma.User$leadQrPublicLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadQrPublicLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrPublicLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadCallNotes<T extends Prisma.User$leadCallNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadCallNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CallNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentInstallmentsRecorded<T extends Prisma.User$paymentInstallmentsRecordedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentInstallmentsRecordedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentInstallmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentInstallmentsVerified<T extends Prisma.User$paymentInstallmentsVerifiedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentInstallmentsVerifiedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentInstallmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -77238,6 +79473,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   campaignCplsCreated<T extends Prisma.User$campaignCplsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$campaignCplsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignCPLPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dailyCampaignSpends<T extends Prisma.User$dailyCampaignSpendsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dailyCampaignSpendsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyCampaignSpendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   campaignTeamLeadAssignments<T extends Prisma.User$campaignTeamLeadAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$campaignTeamLeadAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaignBdDailyLimits<T extends Prisma.User$campaignBdDailyLimitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$campaignBdDailyLimitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pnlCategoriesCreated<T extends Prisma.User$pnlCategoriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PnLCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pnlEntriesCreated<T extends Prisma.User$pnlEntriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pnlEntriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PnLEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   targetPnlEntriesCreated<T extends Prisma.User$targetPnlEntriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$targetPnlEntriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TargetPnLEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -79716,6 +81952,30 @@ export type User$leadQrCallAuditLogsArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * User.leadQrPublicLinks
+ */
+export type User$leadQrPublicLinksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadQrPublicLink
+   */
+  select?: Prisma.LeadQrPublicLinkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeadQrPublicLink
+   */
+  omit?: Prisma.LeadQrPublicLinkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadQrPublicLinkInclude<ExtArgs> | null
+  where?: Prisma.LeadQrPublicLinkWhereInput
+  orderBy?: Prisma.LeadQrPublicLinkOrderByWithRelationInput | Prisma.LeadQrPublicLinkOrderByWithRelationInput[]
+  cursor?: Prisma.LeadQrPublicLinkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadQrPublicLinkScalarFieldEnum | Prisma.LeadQrPublicLinkScalarFieldEnum[]
+}
+
+/**
  * User.leadCallNotes
  */
 export type User$leadCallNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -79953,6 +82213,30 @@ export type User$campaignTeamLeadAssignmentsArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.CrmCampaignTeamLeadAssignmentScalarFieldEnum | Prisma.CrmCampaignTeamLeadAssignmentScalarFieldEnum[]
+}
+
+/**
+ * User.campaignBdDailyLimits
+ */
+export type User$campaignBdDailyLimitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaignBdDailyLimit
+   */
+  select?: Prisma.CrmCampaignBdDailyLimitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaignBdDailyLimit
+   */
+  omit?: Prisma.CrmCampaignBdDailyLimitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignBdDailyLimitInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignBdDailyLimitWhereInput
+  orderBy?: Prisma.CrmCampaignBdDailyLimitOrderByWithRelationInput | Prisma.CrmCampaignBdDailyLimitOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignBdDailyLimitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignBdDailyLimitScalarFieldEnum | Prisma.CrmCampaignBdDailyLimitScalarFieldEnum[]
 }
 
 /**

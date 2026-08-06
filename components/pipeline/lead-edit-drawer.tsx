@@ -48,6 +48,20 @@ function formatDisplayValue(value: unknown, fallback = '—') {
   return trimmed.length > 0 ? trimmed : fallback
 }
 
+function formatMaskedPhone(value: unknown, fallback = '—') {
+  if (typeof value !== 'string') return fallback
+  const trimmed = value.trim()
+  if (!trimmed) return fallback
+
+  const visiblePrefixLength = trimmed.length > 6 ? 2 : 0
+  const visibleSuffixLength = Math.min(4, trimmed.length)
+  const prefix = visiblePrefixLength > 0 ? trimmed.slice(0, visiblePrefixLength) : ''
+  const suffix = trimmed.slice(-visibleSuffixLength)
+  const maskLength = Math.max(trimmed.length - prefix.length - suffix.length, 0)
+  const masked = `${prefix}${'*'.repeat(maskLength)}${suffix}`
+  return masked || fallback
+}
+
 function toDateInputValue(value: string | null | undefined) {
   if (!value) return ''
   const parsed = new Date(value)
@@ -60,6 +74,7 @@ type LeadEditLead = {
   patientName: string
   phoneNumber?: string | null
   alternateNumber?: string | null
+  city?: string | null
   whatsapp?: string | null
   age?: number | null
   sex?: string | null
@@ -121,6 +136,16 @@ type LeadActivityItem = {
   summary: string
   actorRole: string | null
   createdAt: string
+  ipAddress?: string | null
+  userAgent?: string | null
+  metadata?: {
+    deviceInfo?: {
+      browser?: string | null
+      operatingSystem?: string | null
+      deviceType?: string | null
+      label?: string | null
+    } | null
+  } | null
   actorUser: {
     id: string
     name: string | null
@@ -207,6 +232,7 @@ export function LeadEditDrawer({
   const [assigneeIdDraft, setAssigneeIdDraft] = useState<string | null>(null)
   const [ageDraft, setAgeDraft] = useState<string | null>(null)
   const [sexDraft, setSexDraft] = useState<string | null>(null)
+  const [cityDraft, setCityDraft] = useState<string | null>(null)
   const [leadStatusDraft, setLeadStatusDraft] = useState<string | null>(null)
   const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
   const [modeOfPaymentDraft, setModeOfPaymentDraft] = useState<string | null>(null)
@@ -249,6 +275,7 @@ export function LeadEditDrawer({
   const effectiveAge = ageDraft ?? (lead?.age == null ? '' : String(lead.age))
   const currentNormalizedSex = normalizeLeadSexValue(lead?.sex)
   const effectiveSex = sexDraft ?? currentNormalizedSex
+  const effectiveCity = cityDraft ?? (lead?.city ?? '')
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
   const effectiveFollowUpDate = followUpDateDraft ?? toDateInputValue(lead?.followUpDate)
   const effectiveModeOfPayment = modeOfPaymentDraft ?? (lead?.modeOfPayment ?? '')
@@ -282,11 +309,17 @@ export function LeadEditDrawer({
   const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
   const statusRequiresAgeSex = isStatusRequiringAgeSex(effectiveLeadStatus)
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
+  const ageChanged = effectiveAge !== (lead?.age == null ? '' : String(lead.age))
+  const sexChanged = effectiveSex !== currentNormalizedSex
+  const cityChanged = effectiveCity !== (lead?.city ?? '')
 
   const profileDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
     effectiveWhatsapp !== (lead?.whatsapp ?? '') ||
-    effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate)
+    effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate) ||
+    ageChanged ||
+    sexChanged ||
+    cityChanged
   const assigneeDirty = effectiveAssigneeId !== currentAssigneeId
 
   const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged
@@ -366,6 +399,7 @@ export function LeadEditDrawer({
     const trimmedWhatsapp = effectiveWhatsapp.trim()
     const trimmedAge = effectiveAge.trim()
     const trimmedSex = effectiveSex.trim()
+    const trimmedCity = effectiveCity.trim()
     const trimmedModeOfPayment = effectiveModeOfPayment.trim()
 
     if (trimmedPatientName.length === 0) {
@@ -433,16 +467,16 @@ export function LeadEditDrawer({
       payload.surgeryDate = effectiveSurgeryDate || null
     }
 
-    if (
-      requiresAgeSexForStatusChange &&
-      effectiveAge !== (lead.age == null ? '' : String(lead.age)) &&
-      parsedAge !== null
-    ) {
+    if (ageChanged) {
       payload.age = parsedAge
     }
 
-    if (requiresAgeSexForStatusChange && effectiveSex !== currentNormalizedSex && trimmedSex.length > 0) {
-      payload.sex = trimmedSex
+    if (sexChanged) {
+      payload.sex = trimmedSex || null
+    }
+
+    if (cityChanged) {
+      payload.city = trimmedCity || null
     }
 
     if (assigneeDirty) {
@@ -517,7 +551,7 @@ export function LeadEditDrawer({
                     <div>
                       <CardTitle className="text-base">Lead Details</CardTitle>
                       <CardDescription>
-                        Editing is limited to name, WhatsApp, surgery date, and assignment.
+                        Editing is limited to lead profile details, surgery date, and assignment.
                       </CardDescription>
                     </div>
                     <LeadQrPopover
@@ -589,7 +623,7 @@ export function LeadEditDrawer({
                     </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-3">
                     <div className="space-y-2">
                       <Label htmlFor="drawer-age">
                         Age
@@ -633,10 +667,21 @@ export function LeadEditDrawer({
                         </SelectContent>
                       </Select>
                     </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-city">City</Label>
+                      <Input
+                        id="drawer-city"
+                        value={effectiveCity}
+                        onChange={(e) => setCityDraft(e.target.value)}
+                        disabled={!canEditLeadProfile || saving}
+                        placeholder="Enter city"
+                      />
+                    </div>
                   </div>
 
                   <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                    <ReadonlyField label="Phone" value={formatDisplayValue(lead.phoneNumber)} />
+                    <ReadonlyField label="Phone" value={formatMaskedPhone(lead.phoneNumber)} />
                     <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
                     <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
                     <ReadonlyField label="Current Owner" value={currentAssigneeName} />
@@ -863,6 +908,9 @@ export function LeadEditDrawer({
                               activityLog.actorUser?.email ||
                               'System'
                             const actorRole = formatRoleLabel(activityLog.actorRole)
+                            const deviceLabel = activityLog.metadata?.deviceInfo?.label
+                            const browserLabel = activityLog.metadata?.deviceInfo?.browser
+                            const ipAddress = activityLog.ipAddress
 
                             return (
                               <div

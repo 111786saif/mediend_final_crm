@@ -1,7 +1,11 @@
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
-import { isSuperAdmin } from '@/lib/crm-campaigns'
+import {
+  CAMPAIGN_ASSIGNMENT_SENTINEL_MONTH,
+  CAMPAIGN_ASSIGNMENT_SENTINEL_YEAR,
+  isSuperAdmin,
+} from '@/lib/crm-campaigns'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 import { prisma } from '@/lib/prisma'
 import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
@@ -12,11 +16,17 @@ const assignmentMemberSchema = z.object({
   weight: z.number().int().min(1).default(1),
   priority: z.number().int().min(0).default(100),
   isActive: z.boolean().default(true),
+  bdLimits: z
+    .array(
+      z.object({
+        bdEmployeeId: z.string().min(1),
+        maxLeadsPerDay: z.number().int().min(1),
+      })
+    )
+    .default([]),
 })
 
 const assignmentSchema = z.object({
-  month: z.number().int().min(1).max(12),
-  year: z.number().int().min(2000).max(2100),
   assignments: z.array(assignmentMemberSchema),
 })
 
@@ -51,6 +61,11 @@ export async function PUT(
           select: {
             id: true,
             name: true,
+          },
+        },
+        circleSelections: {
+          include: {
+            circle: true,
           },
         },
       },
@@ -108,13 +123,40 @@ export async function PUT(
     }
 
     const employeeMap = new Map(employees.map((employee) => [employee.id, employee]))
+    const bdLimitAssignments = uniqueAssignments.flatMap((assignment) =>
+      assignment.bdLimits.map((bdLimit) => ({
+        teamLeadEmployeeId: assignment.teamLeadEmployeeId,
+        bdEmployeeId: bdLimit.bdEmployeeId,
+        maxLeadsPerDay: bdLimit.maxLeadsPerDay,
+      }))
+    )
+    const bdEmployees = bdLimitAssignments.length
+      ? await prisma.employee.findMany({
+          where: {
+            id: {
+              in: [...new Set(bdLimitAssignments.map((assignment) => assignment.bdEmployeeId))],
+            },
+          },
+          include: {
+            department: true,
+            user: true,
+          },
+        })
+      : []
+    const bdEmployeeMap = new Map(bdEmployees.map((employee) => [employee.id, employee]))
+    const campaignCircleNames = campaign.circleSelections
+      .map((selection) => selection.circle.name.trim().toLowerCase())
+      .filter(Boolean)
 
     await prisma.$transaction(async (tx) => {
       await tx.crmCampaignTeamLeadAssignment.deleteMany({
         where: {
           campaignId: campaign.id,
-          month: parsed.data.month,
-          year: parsed.data.year,
+        },
+      })
+      await tx.crmCampaignBdDailyLimit.deleteMany({
+        where: {
+          campaignId: campaign.id,
         },
       })
 
@@ -126,22 +168,77 @@ export async function PUT(
               campaignId: campaign.id,
               teamLeadEmployeeId: employee.id,
               teamLeadUserId: employee.userId,
-              month: parsed.data.month,
-              year: parsed.data.year,
+              month: CAMPAIGN_ASSIGNMENT_SENTINEL_MONTH,
+              year: CAMPAIGN_ASSIGNMENT_SENTINEL_YEAR,
               weight: assignment.weight,
               priority: assignment.priority,
               isActive: assignment.isActive,
             }
           }),
         })
+
+        const bdLimitRows = bdLimitAssignments.flatMap((assignment) => {
+          const teamLeadEmployee = employeeMap.get(assignment.teamLeadEmployeeId)
+          const bdEmployee = bdEmployeeMap.get(assignment.bdEmployeeId)
+
+          if (!teamLeadEmployee || !bdEmployee) {
+            throw new Error('One or more BDs configured in the daily limit list were not found.')
+          }
+
+          if (bdEmployee.user.role !== 'BD' || bdEmployee.status !== 'ACTIVE') {
+            throw new Error('Only active BDs can be configured with daily lead limits.')
+          }
+
+          if (bdEmployee.managerId !== teamLeadEmployee.id) {
+            throw new Error(
+              `BD "${bdEmployee.user.name}" does not report to Team Lead "${teamLeadEmployee.user.name}".`
+            )
+          }
+
+          if (campaign.departmentId && bdEmployee.departmentId !== campaign.departmentId) {
+            throw new Error(
+              campaign.department?.name
+                ? `BD "${bdEmployee.user.name}" does not belong to the "${campaign.department.name}" department.`
+                : `BD "${bdEmployee.user.name}" does not belong to the campaign department.`
+            )
+          }
+
+          const bdCircleNames = (bdEmployee.circle ?? '')
+            .split(',')
+            .map((circle) => circle.trim().toLowerCase())
+            .filter(Boolean)
+
+          if (
+            campaignCircleNames.length > 0 &&
+            !bdCircleNames.some((circle) => campaignCircleNames.includes(circle))
+          ) {
+            throw new Error(
+              `BD "${bdEmployee.user.name}" does not match the selected campaign circles.`
+            )
+          }
+
+          return [
+            {
+              campaignId: campaign.id,
+              teamLeadEmployeeId: teamLeadEmployee.id,
+              bdEmployeeId: bdEmployee.id,
+              bdUserId: bdEmployee.userId,
+              maxLeadsPerDay: assignment.maxLeadsPerDay,
+            },
+          ]
+        })
+
+        if (bdLimitRows.length > 0) {
+          await tx.crmCampaignBdDailyLimit.createMany({
+            data: bdLimitRows,
+          })
+        }
       }
     })
 
     const updatedAssignments = await prisma.crmCampaignTeamLeadAssignment.findMany({
       where: {
         campaignId: campaign.id,
-        month: parsed.data.month,
-        year: parsed.data.year,
       },
       include: {
         teamLeadEmployee: {
@@ -154,23 +251,44 @@ export async function PUT(
       },
       orderBy: [{ priority: 'asc' }, { createdAt: 'asc' }],
     })
+    const updatedBdDailyLimits = await prisma.crmCampaignBdDailyLimit.findMany({
+      where: {
+        campaignId: campaign.id,
+      },
+      include: {
+        bdEmployee: {
+          include: {
+            department: true,
+            user: true,
+          },
+        },
+      },
+      orderBy: [
+        {
+          bdEmployee: {
+            user: {
+              name: 'asc',
+            },
+          },
+        },
+      ],
+    })
 
     await logCrmActivity({
       action: 'CRM_CAMPAIGN_ASSIGNMENTS_REPLACED',
       entityType: 'CRM_CAMPAIGN_ASSIGNMENT',
-      entityId: `${campaign.id}:${parsed.data.month}:${parsed.data.year}`,
-      entityLabel: `${campaign.externalCampaignId} · ${parsed.data.month}/${parsed.data.year}`,
+      entityId: campaign.id,
+      entityLabel: `${campaign.externalCampaignId} · Active assignment pool`,
       actorUserId: currentUser.id,
       actorRole: currentUser.role,
       request,
-      summary: `Replaced Team Lead assignments for campaign ${campaign.externalCampaignId} (${parsed.data.month}/${parsed.data.year})`,
+      summary: `Replaced Team Lead assignments for campaign ${campaign.externalCampaignId}`,
       metadata: {
         campaignId: campaign.id,
         externalCampaignId: campaign.externalCampaignId,
         displayName: campaign.displayName,
-        month: parsed.data.month,
-        year: parsed.data.year,
         assignmentCount: updatedAssignments.length,
+        bdDailyLimitCount: updatedBdDailyLimits.length,
         assignments: updatedAssignments.map((assignment) => ({
           id: assignment.id,
           teamLeadEmployeeId: assignment.teamLeadEmployeeId,
@@ -181,15 +299,23 @@ export async function PUT(
           priority: assignment.priority,
           isActive: assignment.isActive,
         })),
+        bdDailyLimits: updatedBdDailyLimits.map((limit) => ({
+          id: limit.id,
+          teamLeadEmployeeId: limit.teamLeadEmployeeId,
+          bdEmployeeId: limit.bdEmployeeId,
+          bdUserId: limit.bdUserId,
+          bdName: limit.bdEmployee.user.name,
+          departmentName: limit.bdEmployee.department?.name ?? null,
+          maxLeadsPerDay: limit.maxLeadsPerDay,
+        })),
       },
     })
 
     return successResponse(
       {
         campaign,
-        month: parsed.data.month,
-        year: parsed.data.year,
         assignments: updatedAssignments,
+        bdDailyLimits: updatedBdDailyLimits,
       },
       'Campaign assignments updated successfully'
     )

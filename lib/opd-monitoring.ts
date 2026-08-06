@@ -3,20 +3,8 @@ import type { SessionUser } from '@/lib/auth'
 import { buildEffectiveOpdEntries, type EffectiveOpdEntry } from '@/lib/lead-opd-appointments'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 import { prisma } from '@/lib/prisma'
-
-const SALES_OPD_MONITORING_ROLES = new Set<string>([
-  'SUPER_ADMIN',
-  'ADMIN',
-  'MD',
-  'EXECUTIVE_ASSISTANT',
-  'TESTER',
-  'BD',
-  'TEAM_LEAD',
-  'ASSISTANT_CATEGORY_MANAGER',
-  'CATEGORY_MANAGER',
-  'SALES_HEAD',
-] as const)
 
 const opdMonitoringLeadSelect = {
   id: true,
@@ -262,7 +250,7 @@ function matchesDoctorName(item: MonitoringAppointment, doctorName?: string) {
 }
 
 async function fetchScopedMonitoringAppointments(user: SessionUser) {
-  if (!SALES_OPD_MONITORING_ROLES.has(user.role)) {
+  if (!canAccessSalesOpdMonitoring(user.role)) {
     throw new SalesOpdMonitoringError('Forbidden', 403)
   }
 

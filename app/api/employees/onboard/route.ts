@@ -7,6 +7,7 @@ import { hasPermission, canCreateRole } from '@/lib/rbac'
 import { hashPassword } from '@/lib/auth'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { sendOnboardingInviteEmail } from '@/lib/resend'
+import { parseEmployeeCircleList, serializeEmployeeCircleList } from '@/lib/employee-circles'
 import { z } from 'zod'
 
 const employeeSchema = z.object({
@@ -20,6 +21,7 @@ const employeeSchema = z.object({
   experienceType: z.nativeEnum(ExperienceType),
   bdNumber: z.number().int().positive().optional().nullable(),
   circle: z.string().trim().max(100).optional().nullable(),
+  circles: z.array(z.string().trim().min(1).max(100)).optional(),
   departmentId: z.string().optional().nullable(),
   managerId: z.string().nullable().optional(),
   joinDate: z.string().optional().nullable(),
@@ -60,6 +62,12 @@ export async function POST(request: NextRequest) {
     for (let i = 0; i < employeesData.length; i++) {
       const data = employeesData[i]
       try {
+        const normalizedCircles =
+          data.circles !== undefined
+            ? parseEmployeeCircleList(data.circles)
+            : data.circle !== undefined
+              ? parseEmployeeCircleList(data.circle)
+              : []
         if (data.role === 'MD' as any) {
           errors.push({ index: i, name: data.name, error: 'MD role cannot be created' })
           continue
@@ -100,13 +108,28 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        if (data.circle) {
-          const circle = await prisma.crmCampaignCircle.findFirst({
-            where: { name: data.circle.trim() },
-            select: { id: true },
+        if (normalizedCircles.length > 0) {
+          const circles = await prisma.crmCampaignCircle.findMany({
+            where: {
+              name: {
+                in: normalizedCircles,
+              },
+            },
+            select: { name: true },
           })
-          if (!circle) {
-            errors.push({ index: i, name: data.name, error: 'Selected circle was not found in CRM masters' })
+          const foundNames = new Set(circles.map((circle) => circle.name.trim().toLowerCase()))
+          const missingCircles = normalizedCircles.filter(
+            (circle) => !foundNames.has(circle.trim().toLowerCase())
+          )
+          if (missingCircles.length > 0) {
+            errors.push({
+              index: i,
+              name: data.name,
+              error:
+                missingCircles.length === 1
+                  ? `Selected circle "${missingCircles[0]}" was not found in CRM masters`
+                  : `Selected circles were not found in CRM masters: ${missingCircles.join(', ')}`,
+            })
             continue
           }
         }
@@ -130,7 +153,7 @@ export async function POST(request: NextRequest) {
               departmentId: data.departmentId || null,
               managerId: data.managerId ?? null,
               bdNumber: data.bdNumber ?? null,
-              circle: data.circle?.trim() || null,
+              circle: serializeEmployeeCircleList(normalizedCircles),
               joinDate: data.joinDate ? new Date(data.joinDate) : null,
               dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
               experienceType: data.experienceType,

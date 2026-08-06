@@ -14,8 +14,7 @@ const campaignSchema = z.object({
   departmentId: z.string().trim().optional().nullable(),
   sourceId: z.string().min(1),
   leadSourceId: z.string().min(1),
-  circleId: z.string().min(1),
-  cityId: z.string().trim().optional().nullable(),
+  circleIds: z.array(z.string().trim().min(1)).min(1),
   isActive: z.boolean().default(true),
 })
 
@@ -51,10 +50,11 @@ export async function PATCH(
     await validateCampaignReferences({
       sourceId: data.sourceId,
       leadSourceId: data.leadSourceId,
-      circleId: data.circleId,
-      cityId: data.cityId ?? null,
+      circleIds: data.circleIds,
       departmentId: data.departmentId ?? null,
     })
+
+    const normalizedCircleIds = Array.from(new Set(data.circleIds.map((circleId) => circleId.trim())))
 
     const updated = await prisma.crmCampaign.update({
       where: { id },
@@ -65,8 +65,12 @@ export async function PATCH(
         departmentId: data.departmentId ?? null,
         sourceId: data.sourceId,
         leadSourceId: data.leadSourceId,
-        circleId: data.circleId,
-        cityId: data.cityId ?? null,
+        circleId: normalizedCircleIds[0],
+        circleSelections: {
+          deleteMany: {},
+          create: normalizedCircleIds.map((circleId) => ({ circleId })),
+        },
+        cityId: null,
         isActive: data.isActive,
       },
       include: {
@@ -77,6 +81,11 @@ export async function PATCH(
           },
         },
         circle: true,
+        circleSelections: {
+          include: {
+            circle: true,
+          },
+        },
         city: true,
         department: true,
         assignments: true,
@@ -104,10 +113,10 @@ export async function PATCH(
         sourceName: updated.source.name,
         leadSourceId: updated.leadSourceId,
         leadSourceName: updated.leadSource.name,
-        circleId: updated.circleId,
-        circleName: updated.circle.name,
-        cityId: updated.cityId,
-        cityName: updated.city?.name ?? null,
+        circleIds: updated.circleSelections.map((selection) => selection.circleId),
+        circleNames: updated.circleSelections.map((selection) => selection.circle.name),
+        primaryCircleId: updated.circleId,
+        primaryCircleName: updated.circle.name,
         isActive: updated.isActive,
       },
     })

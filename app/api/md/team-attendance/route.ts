@@ -7,6 +7,7 @@ import {
   getDepartmentTiming,
   groupAttendanceByDate,
 } from "@/lib/hrms/attendance-utils"
+import { headcountEmployeeWhere } from "@/lib/hrms/headcount"
 
 type LeaveDayRow = { date: string; isUnpaid: boolean; isHalfDay?: boolean }
 
@@ -54,7 +55,21 @@ export async function GET(request: NextRequest) {
   const employeeIdSet = new Set<string>()
   for (const team of taskTeams) for (const m of team.members) employeeIdSet.add(m.employeeId)
   for (const w of watchlistEntries) employeeIdSet.add(w.employeeId)
-  const employeeIds = Array.from(employeeIdSet)
+  const candidateIds = Array.from(employeeIdSet)
+
+  if (candidateIds.length === 0) {
+    return successResponse({ entries: [], holidayDays: [], fromDate: fromDate ?? null, toDate: toDate ?? null })
+  }
+
+  // Resolve to active roster only so terminated/absconded never appear
+  const employees = await prisma.employee.findMany({
+    where: { id: { in: candidateIds }, ...headcountEmployeeWhere },
+    include: {
+      department: true,
+      user: { select: { id: true, name: true, email: true, role: true } },
+    },
+  })
+  const employeeIds = employees.map((e) => e.id)
 
   if (employeeIds.length === 0) {
     return successResponse({ entries: [], holidayDays: [], fromDate: fromDate ?? null, toDate: toDate ?? null })
@@ -66,17 +81,10 @@ export async function GET(request: NextRequest) {
   if (rangeStart) logWhere.logDate = { ...logWhere.logDate, gte: rangeStart }
   if (rangeEnd) logWhere.logDate = { ...logWhere.logDate, lte: rangeEnd }
 
-  const [logs, employees, normalizations, approvedLeaves, holidaysInRange] = await Promise.all([
+  const [logs, normalizations, approvedLeaves, holidaysInRange] = await Promise.all([
     prisma.attendanceLog.findMany({
       where: logWhere,
       orderBy: { logDate: "desc" },
-    }),
-    prisma.employee.findMany({
-      where: { id: { in: employeeIds } },
-      include: {
-        department: true,
-        user: { select: { id: true, name: true, email: true, role: true } },
-      },
     }),
     prisma.attendanceNormalization.findMany({
       where: {

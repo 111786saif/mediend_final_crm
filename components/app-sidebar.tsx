@@ -22,10 +22,7 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { getFilteredNavItemsWithUrls, type NavItem } from '@/lib/sidebar-nav'
 import { usePermissions } from '@/hooks/use-permissions'
 import { resolveNavResourceKey } from '@/lib/nav-resource-map'
-import {
-  getRoleSidebarLayout,
-  resolveLayoutTitle,
-} from '@/lib/role-sidebar-layout'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   ChevronDown,
@@ -111,19 +108,6 @@ function displayLabel(title: string): string {
   return title
 }
 
-function orderByTitles(
-  items: NavItemWithUrl[],
-  titles: string[]
-): NavItemWithUrl[] {
-  const byTitle = new Map(items.map((item) => [item.title, item]))
-  const ordered: NavItemWithUrl[] = []
-  for (const layoutTitle of titles) {
-    const resolved = resolveLayoutTitle(layoutTitle)
-    const item = byTitle.get(resolved)
-    if (item) ordered.push(item)
-  }
-  return ordered
-}
 
 export function AppSidebar() {
   const { user, logout, isTester, setActiveRole } = useAuth()
@@ -197,9 +181,8 @@ export function AppSidebar() {
                     <div className="flex items-center gap-3 px-3 py-2.5 rounded-md">
                       <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
                       <Skeleton
-                        className={`h-4 bg-sidebar-foreground/15 ${
-                          i % 3 === 0 ? 'w-24' : i % 3 === 1 ? 'w-32' : 'w-28'
-                        }`}
+                        className={`h-4 bg-sidebar-foreground/15 ${i % 3 === 0 ? 'w-24' : i % 3 === 1 ? 'w-32' : 'w-28'
+                          }`}
                       />
                     </div>
                   </SidebarMenuItem>
@@ -216,9 +199,8 @@ export function AppSidebar() {
                     <div className="flex items-center gap-3 px-3 py-2.5 rounded-md">
                       <Skeleton className="h-4 w-4 shrink-0 bg-sidebar-foreground/15" />
                       <Skeleton
-                        className={`h-4 bg-sidebar-foreground/15 ${
-                          i % 2 === 0 ? 'w-20' : 'w-24'
-                        }`}
+                        className={`h-4 bg-sidebar-foreground/15 ${i % 2 === 0 ? 'w-20' : 'w-24'
+                          }`}
                       />
                     </div>
                   </SidebarMenuItem>
@@ -232,7 +214,6 @@ export function AppSidebar() {
   }
 
   const role = user.role
-  const layout = getRoleSidebarLayout(role)
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
 
   const filterByPermission = (item: NavItemWithUrl) => {
@@ -263,6 +244,9 @@ export function AppSidebar() {
         hasAccess('sales.md_sales_dashboard', 'READ')
       )
     }
+    if (item.title === 'OPD Monitoring') {
+      return canAccessSalesOpdMonitoring(role)
+    }
 
     // Full-access roles: allow if parent module is granted
     if (role === 'ADMIN' || role === 'TESTER' || role === 'MD') {
@@ -275,97 +259,35 @@ export function AppSidebar() {
 
   const permitted = itemsWithUrls.filter(filterByPermission)
 
-  const pickSection = (titles: string[] | undefined) => {
-    if (!titles?.length) return [] as NavItemWithUrl[]
-    return orderByTitles(permitted, titles)
-  }
+  const primaryMainItems: NavItemWithUrl[] = []
+  const hrItems: NavItemWithUrl[] = []
+  const myHrmsItems: NavItemWithUrl[] = []
+  const salesItems: NavItemWithUrl[] = []
+  const insurancePlItems: NavItemWithUrl[] = []
+  const financeItems: NavItemWithUrl[] = []
+  const crmItems: NavItemWithUrl[] = []
 
-  let primaryMainItems: NavItemWithUrl[]
-  let hrItems: NavItemWithUrl[] = []
-  let myHrmsItems: NavItemWithUrl[] = []
-  let salesItems: NavItemWithUrl[] = []
-  let insurancePlItems: NavItemWithUrl[] = []
-  let financeItems: NavItemWithUrl[] = []
-  let crmItems: NavItemWithUrl[] = []
+  for (const item of permitted) {
+    if (item.title === 'mediend AI') continue // footer only
 
-  if (layout) {
-    primaryMainItems = pickSection(layout.main)
-    hrItems = pickSection(layout.hrm)
-    myHrmsItems = pickSection(layout.myhrms)
-    salesItems = pickSection(layout.sales)
-    insurancePlItems = pickSection(layout.insurancePl)
-    financeItems = pickSection(layout.finance)
-    crmItems = pickSection(layout.crm)
-  } else {
-    // Fallback for MD / ADMIN / other roles without a fixed layout:
-    // permission-filtered catalog with conventional section grouping.
-    const HRM_TITLES = [
-      'Attendance & Normalizations',
-      'People & Org',
-      'Compensation & Docs',
-      'Engagement',
-      'Recruitment',
-      'HR Dashboard',
-      'Onboarding',
-    ]
-    const SALES_TITLES = [
-      'Sales Dashboard',
-      'DM Dashboard',
-      'Campaign CPL',
-      'Pipeline',
-      'Case Tracker',
-      'Pending Surgery',
-      'Targets',
-      'Sales P&L',
-      'Incentive',
-      'Blue Print Dashboard',
-      'OPD Monitoring',
-    ]
-    const INSURANCE_PL_TITLES = [
-      'Insurance',
-      'Cash Cases',
-      'P/L Ledger',
-      'P/L Surgery',
-      'P/L Outstanding',
-      'Doctor List',
-      'Hospital List',
-    ]
-    const CRM_TITLES = [
-      'CRM Campaigns',
-      'CRM Incoming Leads',
-      'CRM KPIs',
-      'CRM Activity',
-      'CRM Masters',
-      'CRM Access Matrix',
-      'CRM Churn Rules',
-    ]
-    const FINANCE_TITLES = permitted
-      .filter((item) => item.title.startsWith('Fin '))
-      .map((item) => item.title)
+    const resourceKey = resolveNavResourceKey(item.title, role)
+    const prefix = resourceKey ? resourceKey.split('.')[0] : 'main'
 
-    const sectionTitleSet = new Set([
-      ...HRM_TITLES,
-      ...SALES_TITLES,
-      ...INSURANCE_PL_TITLES,
-      ...CRM_TITLES,
-      ...FINANCE_TITLES,
-    ])
-
-    myHrmsItems = permitted.filter(
-      (item) => item.title.startsWith('My ') || item.title === 'Ask MD Approval'
-    )
-    const myHrmsTitles = new Set(myHrmsItems.map((i) => i.title))
-
-    primaryMainItems = permitted.filter(
-      (item) => !sectionTitleSet.has(item.title) && !myHrmsTitles.has(item.title)
-    )
-    hrItems = permitted.filter((item) => HRM_TITLES.includes(item.title))
-    salesItems = permitted.filter((item) => SALES_TITLES.includes(item.title))
-    insurancePlItems = permitted.filter((item) =>
-      INSURANCE_PL_TITLES.includes(item.title)
-    )
-    financeItems = permitted.filter((item) => item.title.startsWith('Fin '))
-    crmItems = permitted.filter((item) => CRM_TITLES.includes(item.title))
+    if (prefix === 'hrm') {
+      hrItems.push(item)
+    } else if (prefix === 'myhrms') {
+      myHrmsItems.push(item)
+    } else if (prefix === 'sales') {
+      salesItems.push(item)
+    } else if (prefix === 'insurance_pl') {
+      insurancePlItems.push(item)
+    } else if (prefix === 'finance') {
+      financeItems.push(item)
+    } else if (prefix === 'crm') {
+      crmItems.push(item)
+    } else {
+      primaryMainItems.push(item)
+    }
   }
 
   const showHrSection = hrItems.length > 0
@@ -375,14 +297,11 @@ export function AppSidebar() {
   const showFinanceSection = financeItems.length > 0
   const showCrmSection = crmItems.length > 0
 
-  // Hide footer mediend AI when it already appears in main nav
-  const mediendAiInMain = primaryMainItems.some((item) => item.title === 'mediend AI')
-
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
-        (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
-        0
-      )
+      (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
+      0
+    )
     : 0
   const myHrmsSectionBadge = myHrmsItems.reduce(
     (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
@@ -396,7 +315,7 @@ export function AppSidebar() {
     const badgeCount =
       item.title === 'Meets'
         ? (badgeCounts as { upcomingMeetsToday?: number } | undefined)?.upcomingMeetsToday ??
-          meetNotificationBadge
+        meetNotificationBadge
         : getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
     return (
       <SidebarMenuItem key={item.title}>
@@ -438,15 +357,13 @@ export function AppSidebar() {
           )}
         </div>
         <ChevronDown
-          className={`h-4 w-4 transition-transform duration-200 ${
-            openSections[key] ? 'rotate-180' : ''
-          }`}
+          className={`h-4 w-4 transition-transform duration-200 ${openSections[key] ? 'rotate-180' : ''
+            }`}
         />
       </button>
       <div
-        className={`overflow-hidden transition-all duration-200 ease-in-out ${
-          openSections[key] ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
+        className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections[key] ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+          }`}
       >
         {openSections[key] && (
           <SidebarGroupContent>
@@ -520,7 +437,7 @@ export function AppSidebar() {
         {showMyHrmsSection &&
           renderCollapsible(
             'myHrms',
-            'MyHrms',
+            'My HRMS',
             <UserCircle className="h-4 w-4" />,
             myHrmsItems,
             myHrmsSectionBadge
@@ -537,7 +454,7 @@ export function AppSidebar() {
         {showInsurancePlSection &&
           renderCollapsible(
             'insurancePl',
-            'Insurance & P/L',
+            'Outstanding & P/L',
             <Shield className="h-4 w-4" />,
             insurancePlItems
           )}
@@ -584,16 +501,14 @@ export function AppSidebar() {
               </div>
             </SidebarMenuItem>
           )}
-          {!mediendAiInMain && (
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="mediend AI">
-                <Link href="/training" onClick={closeSidebarOnMobile}>
-                  <Sparkles className="text-purple-400" />
-                  <span>mediend AI</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          )}
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="mediend AI">
+              <Link href="/training" onClick={closeSidebarOnMobile}>
+                <Sparkles className="text-purple-400" />
+                <span>mediend AI</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}

@@ -294,6 +294,7 @@ registerTool({
 
     const employees = await prisma.employee.findMany({
       where: {
+        ...headcountEmployeeWhere,
         OR: [
           { employeeCode: { contains: query, mode: 'insensitive' } },
           { user: { name: { contains: query, mode: 'insensitive' } } },

@@ -28,6 +28,7 @@ import { usePushSubscription } from '@/hooks/use-push-subscription'
 import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
 import { MeetReminderPopup } from '@/components/meets/meet-reminder-popup'
 import { BMICalculator } from '@/components/bmi-calculator'
+import { KnowlarityCallListener } from '@/components/telephony/knowlarity-call-listener'
 
 
 function NavbarThemeToggle() {
@@ -318,16 +319,18 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
   const isAcknowledgePage = pathname?.startsWith('/documents/acknowledge')
   const isDocumentationPage = pathname?.startsWith('/documentation')
   const isOnboardingPage = pathname === '/onboarding' || pathname?.startsWith('/onboarding/')
+  const isLeadContactPage = pathname?.startsWith('/lead-contact/')
 
   const shouldShowSidebar =
-    !isLoading && user && !isLoginPage && !isPayslipPage && !isDocumentViewPage && !isPrintPage && !isAcknowledgePage && !isDocumentationPage && !isOnboardingPage
+    !isLoading && user && !isLoginPage && !isPayslipPage && !isDocumentViewPage && !isPrintPage && !isAcknowledgePage && !isDocumentationPage && !isOnboardingPage && !isLeadContactPage
 
-  if (isLoginPage || isPayslipPage || isDocumentViewPage || isPrintPage || isAcknowledgePage || isDocumentationPage || isOnboardingPage) {
+  if (isLoginPage || isPayslipPage || isDocumentViewPage || isPrintPage || isAcknowledgePage || isDocumentationPage || isOnboardingPage || isLeadContactPage) {
     return <>{children}</>
   }
 
   return (
     <ProtectedRoute>
+      <KnowlarityCallListener />
       <MeetReminderPopup />
       <WorkLogEnforcer />
       {shouldShowSidebar ? (

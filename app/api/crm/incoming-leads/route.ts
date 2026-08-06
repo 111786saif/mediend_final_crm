@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getBusinessMonthRange, getBusinessMonthYear, getCampaignManagementPageData } from '@/lib/crm-campaigns'
+import { mapCircleCode } from '@/lib/mysql-code-mappings'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 import { prisma } from '@/lib/prisma'
@@ -34,11 +35,42 @@ function getIncomingLeadPayloadRecord(payload: unknown) {
 
 function extractIncomingLeadSummary(payload: unknown) {
   const record = getIncomingLeadPayloadRecord(payload)
+  const mysqlLead =
+    record.mysqlLead && typeof record.mysqlLead === 'object' && !Array.isArray(record.mysqlLead)
+      ? (record.mysqlLead as Record<string, unknown>)
+      : null
+
+  if (mysqlLead) {
+    return {
+      campaignId: toNullableString(
+        mysqlLead.campaign_id ?? mysqlLead.campaignId ?? mysqlLead['campaign id']
+      ),
+      circle: mapCircleCode(
+        (mysqlLead.Circle ?? mysqlLead.circle) as string | number | null | undefined
+      ),
+      city: toNullableString(mysqlLead.city_option ?? mysqlLead.city),
+      patientName: toNullableString(
+        mysqlLead.Patient_Name ?? mysqlLead.patientName ?? mysqlLead.patient_name
+      ),
+      phone: toNullableString(
+        mysqlLead.Patient_Number ??
+          mysqlLead.phone ??
+          mysqlLead.phoneNumber ??
+          mysqlLead.mobile ??
+          mysqlLead.mobileNumber
+      ),
+      email: toNullableString(mysqlLead.PatientEmail ?? mysqlLead.email),
+    }
+  }
 
   return {
     campaignId: toNullableString(
       record.campaignId ?? record['campaign id'] ?? record.campaign_id ?? record.campaign
     ),
+    circle: mapCircleCode(
+      (record.Circle ?? record.circle) as string | number | null | undefined
+    ),
+    city: toNullableString(record.city_option ?? record.city),
     patientName: toNullableString(record.name ?? record.patientName ?? record.patient_name),
     phone: toNullableString(
       record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber
@@ -83,19 +115,24 @@ export async function GET(request: NextRequest) {
     }
 
     const fallback = getBusinessMonthYear()
-    const month = parsed.data.month ?? fallback.month
-    const year = parsed.data.year ?? fallback.year
-    const { start, end } = getBusinessMonthRange(year, month)
+    const hasExplicitMonthFilter =
+      parsed.data.month !== undefined && parsed.data.year !== undefined
+    const month = hasExplicitMonthFilter ? parsed.data.month! : fallback.month
+    const year = hasExplicitMonthFilter ? parsed.data.year! : fallback.year
+    const dateRange = hasExplicitMonthFilter ? getBusinessMonthRange(year, month) : null
 
     const [campaignData, incomingLeads] = await Promise.all([
       getCampaignManagementPageData(month, year),
       prisma.incomingLead.findMany({
         where: {
-          source: 'savemyleads',
-          receivedAt: {
-            gte: start,
-            lte: end,
-          },
+          ...(dateRange
+            ? {
+                receivedAt: {
+                  gte: dateRange.start,
+                  lte: dateRange.end,
+                },
+              }
+            : {}),
         },
         orderBy: { receivedAt: 'desc' },
         take: 2000,
@@ -170,8 +207,8 @@ export async function GET(request: NextRequest) {
           })
 
     return successResponse({
-      month,
-      year,
+      month: hasExplicitMonthFilter ? month : null,
+      year: hasExplicitMonthFilter ? year : null,
       masters: campaignData.masters,
       campaigns: campaignData.campaigns,
       incomingLeads: filteredIncomingLeads.map((incomingLead) => {

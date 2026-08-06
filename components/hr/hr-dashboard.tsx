@@ -272,9 +272,15 @@ export function HRDashboard({
 
   const mergedAnalytics = useMemo((): HRAnalytics | null => {
     if (!analytics) return null
-    const today = todayAttendance?.data ?? []
-    const monthData = monthAttendance?.data ?? []
     const allEmployees = (employees ?? []).filter((e) => isActiveHeadcountEmployee(e.status))
+    const activeIds = new Set(allEmployees.map((e) => e.id))
+    // Attendance APIs default to active roster; intersect once roster is loaded
+    const todayRaw = todayAttendance?.data ?? []
+    const monthRaw = monthAttendance?.data ?? []
+    const today =
+      activeIds.size > 0 ? todayRaw.filter((r) => activeIds.has(r.employee.id)) : todayRaw
+    const monthData =
+      activeIds.size > 0 ? monthRaw.filter((r) => activeIds.has(r.employee.id)) : monthRaw
 
     const todayStrength = today.length
     const lateToday = today.filter((r) => r.isLate)
@@ -323,7 +329,9 @@ export function HRDashboard({
       }))
       .sort((a, b) => b.lateCount - a.lateCount)
 
-    const totalHeadcount = Math.max(allEmployees.length, analytics.kpis.totalHeadcount)
+    // Prefer live active roster length; never inflate with unfiltered totals
+    const totalHeadcount =
+      allEmployees.length > 0 ? allEmployees.length : analytics.kpis.totalHeadcount
 
     return {
       ...analytics,

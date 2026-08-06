@@ -10,6 +10,7 @@ import {
   groupAttendanceByDate,
   getDepartmentTiming,
 } from '@/lib/hrms/attendance-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import {
   currentMonthYYYYMM,
   monthToRange,
@@ -35,7 +36,7 @@ registerTool({
 
     const range = parseYmdRange(from, to)
     const members = await prisma.employee.findMany({
-      where: { id: { in: actor.subordinateEmployeeIds } },
+      where: { id: { in: actor.subordinateEmployeeIds }, ...headcountEmployeeWhere },
       include: {
         user: { select: { name: true, email: true } },
         department: true,
@@ -135,7 +136,7 @@ registerTool({
     }
 
     const members = await prisma.employee.findMany({
-      where: { id: { in: actor.subordinateEmployeeIds } },
+      where: { id: { in: actor.subordinateEmployeeIds }, ...headcountEmployeeWhere },
       select: {
         id: true,
         employeeCode: true,

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { HEADCOUNT_EMPLOYEE_STATUSES } from '@/lib/hrms/headcount'
 
 export type DirectoryUser = {
   id: string
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
     const users = await prisma.user.findMany({
       where: {
         employee: {
-          status: 'ACTIVE',
+          status: { in: [...HEADCOUNT_EMPLOYEE_STATUSES] },
         },
       },
       select: {

@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Activity, AlertTriangle, RefreshCw } from 'lucide-react'
 import { ProtectedRoute } from '@/components/protected-route'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -31,11 +30,21 @@ type ActivityLogRow = {
   entityType: string
   entityId: string | null
   entityLabel: string | null
-  status: string
   summary: string
   actorRole: string | null
   route: string | null
   method: string | null
+  ipAddress: string | null
+  userAgent: string | null
+  metadata: {
+    deviceInfo?: {
+      browser?: string | null
+      operatingSystem?: string | null
+      operatingSystemVersion?: string | null
+      deviceType?: string | null
+      label?: string | null
+    } | null
+  } | null
   errorMessage: string | null
   createdAt: string
   actorUser: {
@@ -50,31 +59,34 @@ type ActivityResponse = {
   filters: {
     entityTypes: string[]
     actions: string[]
-    statuses: string[]
   }
 }
 
 function formatDateTime(value: string) {
   const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return 'Unknown'
-  return date.toLocaleString()
+  if (Number.isNaN(date.getTime())) {
+    return { date: 'Unknown', time: '' }
+  }
+
+  return {
+    date: date.toLocaleDateString(),
+    time: date.toLocaleTimeString(),
+  }
 }
 
 export default function CrmActivityPage() {
-  const [status, setStatus] = useState('all')
   const [entityType, setEntityType] = useState('all')
   const [action, setAction] = useState('all')
   const [search, setSearch] = useState('')
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams()
-    if (status !== 'all') params.set('status', status)
     if (entityType !== 'all') params.set('entityType', entityType)
     if (action !== 'all') params.set('action', action)
     if (search.trim()) params.set('search', search.trim())
     params.set('limit', '100')
     return params.toString()
-  }, [action, entityType, search, status])
+  }, [action, entityType, search])
 
   const { data, isLoading, error, refetch, isFetching } = useQuery<ActivityResponse, Error>({
     queryKey: ['crm-activity', queryString],
@@ -94,7 +106,7 @@ export default function CrmActivityPage() {
               Lead Activity Trail
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Chronological lead audit for status changes, reassignments, remark updates, and QR usage.
+              Chronological lead audit for reassignments, remark updates, and QR usage.
             </p>
           </div>
 
@@ -109,25 +121,12 @@ export default function CrmActivityPage() {
             <CardTitle>Filters</CardTitle>
             <CardDescription>Review lead-related actions across the CRM admin surfaces.</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search summary, actor, entity..."
             />
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger>
-                <SelectValue placeholder="All statuses" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All statuses</SelectItem>
-                {(data?.filters.statuses ?? []).map((item) => (
-                  <SelectItem key={item} value={item}>
-                    {item}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
             <Select value={entityType} onValueChange={setEntityType}>
               <SelectTrigger>
                 <SelectValue placeholder="All entity types" />
@@ -177,65 +176,74 @@ export default function CrmActivityPage() {
             </CardHeader>
             <CardContent>
               <div className="rounded-xl border">
-                <Table>
+                <Table className="w-full table-fixed">
+                  <colgroup>
+                    <col className="w-[132px]" />
+                    <col className="w-[44%]" />
+                    <col className="w-[168px]" />
+                    <col className="w-[280px]" />
+                  </colgroup>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>When</TableHead>
+                      <TableHead className="whitespace-nowrap">When</TableHead>
                       <TableHead>Summary</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actor</TableHead>
-                      <TableHead>Entity</TableHead>
-                      <TableHead>Route</TableHead>
+                      <TableHead className="whitespace-nowrap">Actor</TableHead>
+                      <TableHead className="whitespace-nowrap">Entity</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {isLoading ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                        <TableCell colSpan={4} className="py-10 text-center text-muted-foreground">
                           Loading activity...
                         </TableCell>
                       </TableRow>
                     ) : logs.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                        <TableCell colSpan={4} className="py-10 text-center text-muted-foreground">
                           No lead activity found for the selected filters.
                         </TableCell>
                       </TableRow>
                     ) : (
                       logs.map((log) => (
                         <TableRow key={log.id}>
-                          <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                            {formatDateTime(log.createdAt)}
+                          <TableCell className="align-top whitespace-nowrap text-sm text-muted-foreground">
+                            <div className="space-y-0.5">
+                              <p>{formatDateTime(log.createdAt).date}</p>
+                              <p>{formatDateTime(log.createdAt).time}</p>
+                            </div>
                           </TableCell>
-                          <TableCell className="min-w-[320px]">
-                            <div className="space-y-1">
-                              <p className="font-medium">{log.summary}</p>
+                          <TableCell className="align-top">
+                            <div className="space-y-1 overflow-hidden">
+                              <p className="break-all font-medium whitespace-normal">{log.summary}</p>
                               {log.errorMessage ? <p className="text-xs text-destructive">{log.errorMessage}</p> : null}
+                              {log.metadata?.deviceInfo?.label || log.ipAddress ? (
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                                  {log.metadata?.deviceInfo?.label ? (
+                                    <span>Device: {log.metadata.deviceInfo.label}</span>
+                                  ) : null}
+                                  {log.ipAddress ? <span>IP: {log.ipAddress}</span> : null}
+                                </div>
+                              ) : null}
+                              {log.userAgent ? (
+                                <p className="break-all whitespace-normal text-xs text-muted-foreground">
+                                  User-Agent: {log.userAgent}
+                                </p>
+                              ) : null}
                               <p className="text-xs text-muted-foreground">{log.action}</p>
                             </div>
                           </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={log.status === 'SUCCESS' ? 'default' : 'destructive'}
-                              className={log.status === 'SUCCESS' ? 'bg-emerald-600 hover:bg-emerald-600' : ''}
-                            >
-                              {log.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
+                          <TableCell className="align-top">
                             <div className="space-y-1 text-sm">
-                              <p>{log.actorUser?.name ?? 'System / Webhook'}</p>
+                              <p className="break-words">{log.actorUser?.name ?? 'System / Webhook'}</p>
                               <p className="text-xs text-muted-foreground">{log.actorRole ?? 'SYSTEM'}</p>
                             </div>
                           </TableCell>
-                          <TableCell>
-                            <div className="space-y-1 text-sm">
-                              <p>{log.entityLabel ?? '—'}</p>
+                          <TableCell className="align-top">
+                            <div className="space-y-1 overflow-hidden text-sm">
+                              <p className="break-all whitespace-normal">{log.entityLabel ?? '—'}</p>
                               <p className="text-xs text-muted-foreground">{log.entityType}</p>
                             </div>
-                          </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
-                            {(log.method ?? '—') + ' ' + (log.route ?? '—')}
                           </TableCell>
                         </TableRow>
                       ))

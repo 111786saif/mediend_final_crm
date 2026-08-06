@@ -5,6 +5,8 @@ import {
   Prisma,
   UserRole,
 } from '@/generated/prisma/client'
+import { employeeHasAnyCircle, employeeHasCircle } from '@/lib/employee-circles'
+import { getBusinessDayRange } from '@/lib/crm-campaigns'
 import { prisma } from '@/lib/prisma'
 import { getManagementChain } from '@/lib/hierarchy'
 
@@ -126,13 +128,14 @@ function ruleMatches(rule: LoadedRule, input: { city: string | null; category: s
 
 async function getRulePoolLeaveSet(employeeIds: string[], assignmentDate: Date): Promise<Set<string>> {
   if (employeeIds.length === 0) return new Set()
+  const { start, end } = getBusinessDayRange(assignmentDate)
 
   const rows = await prisma.leaveRequest.findMany({
     where: {
       employeeId: { in: employeeIds },
       status: LeaveRequestStatus.APPROVED,
-      startDate: { lte: assignmentDate },
-      endDate: { gte: assignmentDate },
+      startDate: { lte: end },
+      endDate: { gte: start },
     },
     select: { employeeId: true },
   })
@@ -417,14 +420,25 @@ export async function dryRunCrmLeadAssignment(input: AssignmentInput): Promise<C
       continue
     }
 
-    if (normalizedCity && normalize(employee.circle) !== normalizedCity) {
+    if (!employeeHasAnyCircle(employee.circle)) {
+      diagnostics.push({
+        employeeId: employee.id,
+        userId: employee.user.id,
+        employeeName: employee.user.name,
+        eligible: false,
+        reason: 'Employee circles are not configured.',
+      })
+      continue
+    }
+
+    if (normalizedCity && !employeeHasCircle(employee.circle, context.city)) {
       diagnostics.push({
         employeeId: employee.id,
         userId: employee.user.id,
         employeeName: employee.user.name,
         eligible: false,
         reason: employee.circle
-          ? `Employee circle "${employee.circle}" does not match lead city "${context.city}".`
+          ? `Employee circles "${employee.circle}" do not match lead city "${context.city}".`
           : `Employee circle is not configured for lead city "${context.city}".`,
       })
       continue

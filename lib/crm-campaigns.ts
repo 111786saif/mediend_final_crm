@@ -1,10 +1,14 @@
 import {
+  CrmAssignmentStrategy,
   EmployeeStatus,
   FlowType,
   PipelineStage,
   Prisma,
   UserRole,
 } from '@/generated/prisma/client'
+import type { CrmAssignmentDryRunResult } from '@/lib/crm-assignment'
+import { employeeHasAnyCircle, employeeHasCircle, parseEmployeeCircleList } from '@/lib/employee-circles'
+import { getManagementChain } from '@/lib/hierarchy'
 import { prisma } from '@/lib/prisma'
 
 export const CAMPAIGN_MASTER_TYPES = ['source', 'leadSource', 'circle', 'city', 'subStatus'] as const
@@ -13,12 +17,13 @@ export type CampaignMasterType = (typeof CAMPAIGN_MASTER_TYPES)[number]
 
 export const BUSINESS_TIMEZONE = 'Asia/Kolkata'
 const INDIA_OFFSET = '+05:30'
+export const CAMPAIGN_ASSIGNMENT_SENTINEL_MONTH = 1
+export const CAMPAIGN_ASSIGNMENT_SENTINEL_YEAR = 2000
 
 type CampaignReferenceValidationInput = {
   sourceId: string
   leadSourceId: string
-  circleId: string
-  cityId?: string | null
+  circleIds: string[]
   departmentId?: string | null
 }
 
@@ -40,6 +45,11 @@ type CampaignWithRelations = Prisma.CrmCampaignGetPayload<{
       }
     }
     circle: true
+    circleSelections: {
+      include: {
+        circle: true
+      }
+    }
     city: true
     department: true
     assignments: {
@@ -53,8 +63,31 @@ type CampaignWithRelations = Prisma.CrmCampaignGetPayload<{
         teamLeadUser: true
       }
     }
+    bdDailyLimits: {
+      include: {
+        bdEmployee: {
+          include: {
+            department: true
+            user: true
+          }
+        }
+      }
+    }
   }
 }>
+
+type TeamLeadBdOption = {
+  id: string
+  userId: string
+  name: string
+  email: string
+  employeeCode: string
+  circle: string | null
+  department: {
+    id: string
+    name: string
+  } | null
+}
 
 function pad(value: number) {
   return String(value).padStart(2, '0')
@@ -94,6 +127,23 @@ export function getBusinessDayRange(date: Date = new Date()) {
   const start = buildBusinessDate(year, month, day, 0, 0, 0, 0)
   const end = buildBusinessDate(year, month, day, 23, 59, 59, 999)
   return { start, end }
+}
+
+async function getApprovedLeaveSetForDate(employeeIds: string[], date: Date) {
+  if (employeeIds.length === 0) return new Set<string>()
+  const { start, end } = getBusinessDayRange(date)
+
+  const rows = await prisma.leaveRequest.findMany({
+    where: {
+      employeeId: { in: employeeIds },
+      status: 'APPROVED',
+      startDate: { lte: end },
+      endDate: { gte: start },
+    },
+    select: { employeeId: true },
+  })
+
+  return new Set(rows.map((row) => row.employeeId))
 }
 
 export function getBusinessMonthRange(year: number, month: number) {
@@ -137,21 +187,28 @@ export async function getDefaultSystemUserId() {
 }
 
 export async function validateCampaignReferences(input: CampaignReferenceValidationInput) {
-  const [source, leadSource, circle, city, department] = await Promise.all([
+  const normalizedCircleIds = Array.from(
+    new Set(input.circleIds.map((circleId) => circleId.trim()).filter(Boolean))
+  )
+
+  if (normalizedCircleIds.length === 0) {
+    throw new Error('At least one circle must be selected.')
+  }
+
+  const [source, leadSource, circles, department] = await Promise.all([
     prisma.crmCampaignSource.findUnique({
       where: { id: input.sourceId },
     }),
     prisma.crmCampaignLeadSource.findUnique({
       where: { id: input.leadSourceId },
     }),
-    prisma.crmCampaignCircle.findUnique({
-      where: { id: input.circleId },
+    prisma.crmCampaignCircle.findMany({
+      where: {
+        id: {
+          in: normalizedCircleIds,
+        },
+      },
     }),
-    input.cityId
-      ? prisma.crmCampaignCity.findUnique({
-          where: { id: input.cityId },
-        })
-      : Promise.resolve(null),
     input.departmentId
       ? prisma.department.findUnique({
           where: { id: input.departmentId },
@@ -165,11 +222,8 @@ export async function validateCampaignReferences(input: CampaignReferenceValidat
   if (!leadSource) {
     throw new Error('Selected lead source was not found.')
   }
-  if (!circle) {
-    throw new Error('Selected circle was not found.')
-  }
-  if (input.cityId && !city) {
-    throw new Error('Selected city was not found.')
+  if (circles.length !== normalizedCircleIds.length) {
+    throw new Error('One or more selected circles were not found.')
   }
   if (input.departmentId && !department) {
     throw new Error('Selected department was not found.')
@@ -177,15 +231,76 @@ export async function validateCampaignReferences(input: CampaignReferenceValidat
   if (leadSource.sourceId !== source.id) {
     throw new Error('Lead source must belong to the selected source.')
   }
-  if (city && city.circleId !== circle.id) {
-    throw new Error('City must belong to the selected circle.')
-  }
 
-  return { source, leadSource, circle, city, department }
+  return { source, leadSource, circles, department }
 }
 
-export async function getCampaignManagementPageData(month: number, year: number) {
-  const [sources, leadSources, circles, cities, subStatuses, departments, campaigns, teamLeads, bdCounts] = await Promise.all([
+function getCampaignCircles(campaign: Pick<CampaignWithRelations, 'circle' | 'circleSelections'>) {
+  const selections = campaign.circleSelections
+    .map((selection) => selection.circle)
+    .filter(Boolean)
+
+  if (selections.length > 0) {
+    return selections
+  }
+
+  return campaign.circle ? [campaign.circle] : []
+}
+
+function getCampaignCircleNames(campaign: Pick<CampaignWithRelations, 'circle' | 'circleSelections'>) {
+  return Array.from(
+    new Set(
+      getCampaignCircles(campaign)
+        .map((circle) => circle.name?.trim())
+        .filter((circleName): circleName is string => Boolean(circleName))
+    )
+  )
+}
+
+function resolvePreferredCircleSet(
+  campaign: Pick<CampaignWithRelations, 'circle' | 'circleSelections'>,
+  preferredCircle?: string | null
+) {
+  const normalizedPreferred = preferredCircle?.trim()
+  if (normalizedPreferred) {
+    return [normalizedPreferred]
+  }
+
+  return getCampaignCircleNames(campaign)
+}
+
+function coalesceCampaignAssignments<
+  T extends {
+    teamLeadEmployeeId: string
+    priority: number
+    createdAt: Date
+    updatedAt: Date
+  },
+>(assignments: T[]) {
+  const deduped = new Map<string, T>()
+
+  for (const assignment of [...assignments].sort((left, right) => {
+    return (
+      left.priority - right.priority ||
+      right.updatedAt.getTime() - left.updatedAt.getTime() ||
+      right.createdAt.getTime() - left.createdAt.getTime()
+    )
+  })) {
+    if (!deduped.has(assignment.teamLeadEmployeeId)) {
+      deduped.set(assignment.teamLeadEmployeeId, assignment)
+    }
+  }
+
+  return [...deduped.values()].sort((left, right) => {
+    return (
+      left.priority - right.priority ||
+      left.createdAt.getTime() - right.createdAt.getTime()
+    )
+  })
+}
+
+export async function getCampaignManagementPageData(month?: number, year?: number) {
+  const [sources, leadSources, circles, cities, subStatuses, departments, treatmentCategories, treatments, campaigns, teamLeads, bdEmployees] = await Promise.all([
     prisma.crmCampaignSource.findMany({
       orderBy: { name: 'asc' },
     }),
@@ -210,6 +325,14 @@ export async function getCampaignManagementPageData(month: number, year: number)
     prisma.department.findMany({
       orderBy: { name: 'asc' },
     }),
+    prisma.treatmentCategoryMaster.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.treatmentMaster.findMany({
+      where: { isActive: true },
+      orderBy: [{ category: 'asc' }, { name: 'asc' }],
+    }),
     prisma.crmCampaign.findMany({
       include: {
         source: true,
@@ -219,12 +342,21 @@ export async function getCampaignManagementPageData(month: number, year: number)
           },
         },
         circle: true,
+        circleSelections: {
+          include: {
+            circle: true,
+          },
+          orderBy: {
+            circle: {
+              name: 'asc',
+            },
+          },
+        },
         city: true,
         department: true,
         assignments: {
           where: {
-            month,
-            year,
+            isActive: true,
           },
           include: {
             teamLeadEmployee: {
@@ -236,6 +368,25 @@ export async function getCampaignManagementPageData(month: number, year: number)
             teamLeadUser: true,
           },
           orderBy: [{ priority: 'asc' }, { createdAt: 'asc' }],
+        },
+        bdDailyLimits: {
+          include: {
+            bdEmployee: {
+              include: {
+                department: true,
+                user: true,
+              },
+            },
+          },
+          orderBy: [
+            {
+              bdEmployee: {
+                user: {
+                  name: 'asc',
+                },
+              },
+            },
+          ],
         },
       },
       orderBy: [{ isActive: 'desc' }, { displayName: 'asc' }],
@@ -258,8 +409,7 @@ export async function getCampaignManagementPageData(month: number, year: number)
         },
       },
     }),
-    prisma.employee.groupBy({
-      by: ['managerId'],
+    prisma.employee.findMany({
       where: {
         status: EmployeeStatus.ACTIVE,
         managerId: { not: null },
@@ -267,21 +417,87 @@ export async function getCampaignManagementPageData(month: number, year: number)
           role: UserRole.BD,
         },
       },
-      _count: {
-        _all: true,
+      select: {
+        id: true,
+        userId: true,
+        employeeCode: true,
+        managerId: true,
+        circle: true,
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
     }),
   ])
 
-  const bdCountByManagerId = new Map(
-    bdCounts
-      .filter((row) => row.managerId)
-      .map((row) => [row.managerId as string, row._count._all])
-  )
+  const bdStatsByManagerId = new Map<
+    string,
+    {
+      count: number
+      circles: string[]
+      bds: TeamLeadBdOption[]
+    }
+  >()
+
+  for (const bdEmployee of bdEmployees) {
+    if (!bdEmployee.managerId) continue
+    const stats = bdStatsByManagerId.get(bdEmployee.managerId) ?? {
+      count: 0,
+      circles: [],
+      bds: [],
+    }
+    stats.count += 1
+    for (const circle of parseEmployeeCircleList(bdEmployee.circle)) {
+      if (!stats.circles.some((existing) => existing.toLowerCase() === circle.toLowerCase())) {
+        stats.circles.push(circle)
+      }
+    }
+    stats.bds.push({
+      id: bdEmployee.id,
+      userId: bdEmployee.userId,
+      name: bdEmployee.user.name,
+      email: bdEmployee.user.email,
+      employeeCode: bdEmployee.employeeCode,
+      circle: bdEmployee.circle,
+      department: bdEmployee.department
+        ? {
+            id: bdEmployee.department.id,
+            name: bdEmployee.department.name,
+          }
+        : null,
+    })
+    bdStatsByManagerId.set(bdEmployee.managerId, stats)
+  }
+
+  const normalizedCampaigns = campaigns.map((campaign) => {
+    const coalescedAssignments = coalesceCampaignAssignments(campaign.assignments).map(
+      (assignment) => ({
+        ...assignment,
+        bdDailyLimits: campaign.bdDailyLimits.filter(
+          (limit) => limit.teamLeadEmployeeId === assignment.teamLeadEmployeeId
+        ),
+      })
+    )
+
+    return {
+      ...campaign,
+      assignments: coalescedAssignments,
+    }
+  })
 
   return {
-    month,
-    year,
+    month: month ?? getBusinessMonthYear().month,
+    year: year ?? getBusinessMonthYear().year,
     masters: {
       sources,
       leadSources,
@@ -289,6 +505,8 @@ export async function getCampaignManagementPageData(month: number, year: number)
       cities,
       subStatuses,
       departments,
+      treatmentCategories,
+      treatments,
     },
     teamLeads: teamLeads.map((employee) => ({
       id: employee.id,
@@ -303,14 +521,23 @@ export async function getCampaignManagementPageData(month: number, year: number)
           }
         : null,
       circle: employee.circle,
-      activeBdCount: bdCountByManagerId.get(employee.id) ?? 0,
+      activeBdCount: bdStatsByManagerId.get(employee.id)?.count ?? 0,
+      activeBdCircles: bdStatsByManagerId.get(employee.id)?.circles ?? [],
+      activeBds:
+        bdStatsByManagerId.get(employee.id)?.bds.sort((left, right) =>
+          left.name.localeCompare(right.name)
+        ) ?? [],
     })),
-    campaigns,
+    campaigns: normalizedCampaigns.map((campaign) => ({
+      ...campaign,
+      circleIds: getCampaignCircles(campaign).map((circle) => circle.id),
+      circles: getCampaignCircles(campaign),
+    })),
   }
 }
 
-async function getCampaignForWebhook(externalCampaignId: string, month: number, year: number) {
-  return prisma.crmCampaign.findUnique({
+export async function getCampaignForWebhook(externalCampaignId: string) {
+  const campaign = await prisma.crmCampaign.findUnique({
     where: { externalCampaignId },
     include: {
       source: true,
@@ -320,12 +547,20 @@ async function getCampaignForWebhook(externalCampaignId: string, month: number, 
         },
       },
       circle: true,
+      circleSelections: {
+        include: {
+          circle: true,
+        },
+        orderBy: {
+          circle: {
+            name: 'asc',
+          },
+        },
+      },
       city: true,
       department: true,
       assignments: {
         where: {
-          month,
-          year,
           isActive: true,
         },
         include: {
@@ -339,13 +574,326 @@ async function getCampaignForWebhook(externalCampaignId: string, month: number, 
         },
         orderBy: [{ priority: 'asc' }, { createdAt: 'asc' }],
       },
+      bdDailyLimits: {
+        include: {
+          bdEmployee: {
+            include: {
+              department: true,
+              user: true,
+            },
+          },
+        },
+        orderBy: [
+          {
+            bdEmployee: {
+              user: {
+                name: 'asc',
+              },
+            },
+          },
+        ],
+      },
     },
   })
+
+  if (!campaign) {
+    return null
+  }
+
+  return {
+    ...campaign,
+    assignments: coalesceCampaignAssignments(campaign.assignments).map((assignment) => ({
+      ...assignment,
+      bdDailyLimits: campaign.bdDailyLimits.filter(
+        (limit) => limit.teamLeadEmployeeId === assignment.teamLeadEmployeeId
+      ),
+    })),
+  }
 }
 
-async function chooseTeamLeadAssignment(campaign: CampaignWithRelations, receivedAt: Date) {
-  const { month, year } = getBusinessMonthYear(receivedAt)
-  const { start, end } = getBusinessMonthRange(year, month)
+type PreviewCampaignLeadAssignmentInput = {
+  externalCampaignId: string
+  preferredCircle?: string | null
+  category?: string | null
+  assignmentDate?: Date
+}
+
+export async function previewCampaignLeadAssignment(
+  input: PreviewCampaignLeadAssignmentInput
+): Promise<{ campaignFound: boolean; result: CrmAssignmentDryRunResult }> {
+  const assignmentDate = input.assignmentDate ?? new Date()
+  const routingDate = new Date()
+  const campaign = await getCampaignForWebhook(input.externalCampaignId)
+
+  const contextCity = input.preferredCircle?.trim() || null
+  const contextCategory = input.category ?? campaign?.category ?? null
+
+  if (!campaign) {
+    return {
+      campaignFound: false,
+      result: {
+        input: {
+          leadId: null,
+          city: contextCity,
+          category: contextCategory,
+          departmentId: null,
+          assignmentDate: assignmentDate.toISOString(),
+        },
+        matchedRule: null,
+        assignment: null,
+        candidateDiagnostics: [],
+        explanation: `Campaign "${input.externalCampaignId}" is not configured in CRM.`,
+      },
+    }
+  }
+
+  const defaultCampaignCircles = getCampaignCircleNames(campaign)
+  const preferredCircles = resolvePreferredCircleSet(campaign, contextCity)
+  const defaultCampaignCircle = defaultCampaignCircles[0] ?? null
+
+  const matchedRule = {
+    id: campaign.id,
+    name: `Campaign ${campaign.displayName}`,
+    strategy: CrmAssignmentStrategy.ROUND_ROBIN,
+    priority: 0,
+    city: contextCity ?? defaultCampaignCircle,
+    category: contextCategory,
+    departmentId: campaign.departmentId ?? null,
+    departmentName: campaign.department?.name ?? null,
+    specificity: 1,
+  }
+
+  if (!campaign.isActive) {
+    return {
+      campaignFound: true,
+      result: {
+        input: {
+          leadId: null,
+          city: contextCity,
+          category: contextCategory,
+          departmentId: campaign.departmentId ?? null,
+          assignmentDate: assignmentDate.toISOString(),
+        },
+        matchedRule,
+        assignment: null,
+        candidateDiagnostics: [],
+        explanation: `Campaign "${campaign.displayName}" is inactive.`,
+      },
+    }
+  }
+
+  let selectedAssignment: Awaited<ReturnType<typeof chooseTeamLeadAssignment>>
+  try {
+    selectedAssignment = await chooseTeamLeadAssignment(campaign, routingDate, preferredCircles)
+  } catch (error) {
+    return {
+      campaignFound: true,
+      result: {
+        input: {
+          leadId: null,
+          city: contextCity,
+          category: contextCategory,
+          departmentId: campaign.departmentId ?? null,
+          assignmentDate: assignmentDate.toISOString(),
+        },
+        matchedRule,
+        assignment: null,
+        candidateDiagnostics: [],
+        explanation: error instanceof Error ? error.message : 'Campaign Team Lead selection failed.',
+      },
+    }
+  }
+
+  let selectedBd: Awaited<ReturnType<typeof chooseBdForTeamLead>>
+  try {
+    selectedBd = await chooseBdForTeamLead(
+      campaign.externalCampaignId,
+      selectedAssignment.teamLeadEmployeeId,
+      preferredCircles,
+      campaign.departmentId ?? null,
+      campaign.department?.name ?? null,
+      routingDate
+    )
+  } catch (error) {
+    const managementChain = await getManagementChain(selectedAssignment.teamLeadEmployeeId)
+    const approverChain = managementChain
+      .slice(1)
+      .map((employee) => ({
+        employeeId: employee.id,
+        userId: employee.userId,
+        name: employee.user.name,
+        role: employee.user.role,
+      }))
+
+    const categoryManager =
+      approverChain.find((employee) => employee.role === UserRole.CATEGORY_MANAGER) ?? null
+    const salesHead =
+      approverChain.find((employee) => employee.role === UserRole.SALES_HEAD) ?? null
+    const bdSelectionError =
+      error instanceof Error ? error.message : 'Campaign BD selection failed.'
+
+    return {
+      campaignFound: true,
+      result: {
+        input: {
+          leadId: null,
+          city: contextCity,
+          category: contextCategory,
+          departmentId: campaign.departmentId ?? null,
+          assignmentDate: assignmentDate.toISOString(),
+        },
+        matchedRule,
+        assignment: {
+          bd: {
+            employeeId: selectedAssignment.teamLeadEmployeeId,
+            userId: selectedAssignment.teamLeadUserId,
+            name: selectedAssignment.teamLeadUser.name,
+          },
+          teamLead: {
+            employeeId: selectedAssignment.teamLeadEmployeeId,
+            userId: selectedAssignment.teamLeadUserId,
+            name: selectedAssignment.teamLeadUser.name,
+            role: selectedAssignment.teamLeadUser.role,
+          },
+          categoryManager: categoryManager
+            ? {
+                employeeId: categoryManager.employeeId,
+                userId: categoryManager.userId,
+                name: categoryManager.name,
+              }
+            : null,
+          salesHead: salesHead
+            ? {
+                employeeId: salesHead.employeeId,
+                userId: salesHead.userId,
+                name: salesHead.name,
+              }
+            : null,
+          managementChain: approverChain,
+          metrics: {
+            assignedThisMonth: 0,
+            openLeadCount: 0,
+            lastAssignedAt: null,
+          },
+        },
+        candidateDiagnostics: [
+          {
+            employeeId: selectedAssignment.teamLeadEmployeeId,
+            userId: selectedAssignment.teamLeadUserId,
+            employeeName: selectedAssignment.teamLeadUser.name,
+            eligible: true,
+            reason: `No BD was available, so the lead was assigned to Team Lead "${selectedAssignment.teamLeadUser.name}" for manual redistribution.`,
+            metrics: {
+              assignedThisMonth: 0,
+              openLeadCount: 0,
+              lastAssignedAt: null,
+            },
+          },
+        ],
+        explanation: `${bdSelectionError} Lead will be assigned to Team Lead "${selectedAssignment.teamLeadUser.name}" so it remains visible for manual reassignment.`,
+      },
+    }
+  }
+
+  const managementChain = await getManagementChain(selectedBd.id)
+  const approverChain = managementChain
+    .slice(1)
+    .map((employee) => ({
+      employeeId: employee.id,
+      userId: employee.userId,
+      name: employee.user.name,
+      role: employee.user.role,
+    }))
+
+  const teamLead =
+    approverChain.find(
+      (employee) =>
+        employee.role === UserRole.TEAM_LEAD ||
+        employee.role === UserRole.ASSISTANT_CATEGORY_MANAGER
+    ) ?? null
+  const categoryManager =
+    approverChain.find((employee) => employee.role === UserRole.CATEGORY_MANAGER) ?? null
+  const salesHead = approverChain.find((employee) => employee.role === UserRole.SALES_HEAD) ?? null
+
+  return {
+    campaignFound: true,
+    result: {
+      input: {
+        leadId: null,
+        city: contextCity,
+        category: contextCategory,
+        departmentId: campaign.departmentId ?? null,
+        assignmentDate: assignmentDate.toISOString(),
+      },
+      matchedRule,
+      assignment: {
+        bd: {
+          employeeId: selectedBd.id,
+          userId: selectedBd.userId,
+          name: selectedBd.user.name,
+        },
+        teamLead:
+          teamLead ?? {
+            employeeId: selectedAssignment.teamLeadEmployeeId,
+            userId: selectedAssignment.teamLeadUserId,
+            name: selectedAssignment.teamLeadUser.name,
+            role: selectedAssignment.teamLeadUser.role,
+          },
+        categoryManager: categoryManager
+          ? {
+              employeeId: categoryManager.employeeId,
+              userId: categoryManager.userId,
+              name: categoryManager.name,
+            }
+          : null,
+        salesHead: salesHead
+          ? {
+              employeeId: salesHead.employeeId,
+              userId: salesHead.userId,
+              name: salesHead.name,
+            }
+          : null,
+        managementChain: approverChain,
+        metrics: {
+          assignedThisMonth: 0,
+          openLeadCount: 0,
+          lastAssignedAt: null,
+        },
+      },
+      candidateDiagnostics: [
+        {
+          employeeId: selectedBd.id,
+          userId: selectedBd.userId,
+          employeeName: selectedBd.user.name,
+          eligible: true,
+          reason:
+            contextCity && employeeHasCircle(selectedBd.circle, contextCity)
+              ? `Selected from campaign pool with preferred circle "${contextCity}".`
+              : preferredCircles.length > 1
+                ? `Selected from campaign pool within circles: ${preferredCircles.join(', ')}.`
+              : 'Selected from campaign pool.',
+          metrics: {
+            assignedThisMonth: 0,
+            openLeadCount: 0,
+            lastAssignedAt: null,
+          },
+        },
+      ],
+      explanation: contextCity
+        ? `Matched campaign "${campaign.displayName}" and selected ${selectedBd.user.name} from the campaign pool, preferring circle "${contextCity}".`
+        : preferredCircles.length > 1
+          ? `Matched campaign "${campaign.displayName}" and selected ${selectedBd.user.name} from the campaign pool across circles ${preferredCircles.join(', ')}.`
+        : `Matched campaign "${campaign.displayName}" and selected ${selectedBd.user.name} from the campaign pool.`,
+    },
+  }
+}
+
+async function chooseTeamLeadAssignment(
+  campaign: CampaignWithRelations,
+  receivedAt: Date,
+  preferredCircles: string[] = []
+) {
+  const { start, end } = getBusinessDayRange(receivedAt)
   const requiredDepartmentId = campaign.departmentId ?? null
   const requiredDepartmentName = campaign.department?.name ?? null
 
@@ -358,18 +906,93 @@ async function chooseTeamLeadAssignment(campaign: CampaignWithRelations, receive
       (!requiredDepartmentId || assignment.teamLeadEmployee.departmentId === requiredDepartmentId)
   )
 
-  if (assignments.length === 0) {
-    if (requiredDepartmentId) {
-      throw new Error(
-        requiredDepartmentName
-          ? `Campaign has no active Team Lead assignment in the "${requiredDepartmentName}" department for the current month.`
-          : 'Campaign has no active Team Lead assignment in the configured department for the current month.'
-      )
-    }
-    throw new Error('Campaign has no active Team Lead assignment for the current month.')
+  let eligibleAssignments = assignments
+  const normalizedCircles = Array.from(
+    new Set(preferredCircles.map((circle) => circle.trim().toLowerCase()).filter(Boolean))
+  )
+
+  if (normalizedCircles.length > 0 && assignments.length > 0) {
+    const bdPool = await prisma.employee.findMany({
+      where: {
+        status: EmployeeStatus.ACTIVE,
+        managerId: {
+          in: assignments.map((assignment) => assignment.teamLeadEmployeeId),
+        },
+        ...(requiredDepartmentId ? { departmentId: requiredDepartmentId } : {}),
+        user: {
+          role: UserRole.BD,
+        },
+      },
+      select: {
+        managerId: true,
+        circle: true,
+      },
+    })
+
+    const eligibleManagerIds = new Set(
+      bdPool
+        .filter((bd) =>
+          normalizedCircles.length > 0
+            ? normalizedCircles.some((circle) => employeeHasCircle(bd.circle, circle))
+            : employeeHasAnyCircle(bd.circle)
+        )
+        .map((bd) => bd.managerId)
+        .filter((managerId): managerId is string => Boolean(managerId))
+    )
+
+    eligibleAssignments = assignments.filter((assignment) =>
+      eligibleManagerIds.has(assignment.teamLeadEmployeeId)
+    )
+  } else if (assignments.length > 0) {
+    const bdPool = await prisma.employee.findMany({
+      where: {
+        status: EmployeeStatus.ACTIVE,
+        managerId: {
+          in: assignments.map((assignment) => assignment.teamLeadEmployeeId),
+        },
+        ...(requiredDepartmentId ? { departmentId: requiredDepartmentId } : {}),
+        user: {
+          role: UserRole.BD,
+        },
+      },
+      select: {
+        managerId: true,
+        circle: true,
+      },
+    })
+
+    const eligibleManagerIds = new Set(
+      bdPool
+        .filter((bd) => employeeHasAnyCircle(bd.circle))
+        .map((bd) => bd.managerId)
+        .filter((managerId): managerId is string => Boolean(managerId))
+    )
+
+    eligibleAssignments = assignments.filter((assignment) =>
+      eligibleManagerIds.has(assignment.teamLeadEmployeeId)
+    )
   }
 
-  const assignmentIds = assignments.map((assignment) => assignment.teamLeadEmployeeId)
+  if (eligibleAssignments.length === 0) {
+    if (requiredDepartmentId) {
+      throw new Error(
+        normalizedCircles.length > 0
+          ? requiredDepartmentName
+            ? `Campaign has no active Team Lead assignment in the "${requiredDepartmentName}" department covering the selected circles.`
+            : 'Campaign has no active Team Lead assignment in the configured department covering the selected circles.'
+          : requiredDepartmentName
+            ? `Campaign has no active Team Lead assignment in the "${requiredDepartmentName}" department.`
+            : 'Campaign has no active Team Lead assignment in the configured department.'
+      )
+    }
+    throw new Error(
+      normalizedCircles.length > 0
+        ? `Campaign has no active Team Lead assignment covering the selected circles.`
+        : 'Campaign has no active Team Lead assignment.'
+    )
+  }
+
+  const assignmentIds = eligibleAssignments.map((assignment) => assignment.teamLeadEmployeeId)
   const historicalCounts = await prisma.incomingLead.groupBy({
     by: ['selectedTeamLeadEmployeeId'],
     where: {
@@ -403,7 +1026,7 @@ async function chooseTeamLeadAssignment(campaign: CampaignWithRelations, receive
       ])
   )
 
-  const ranked = [...assignments].sort((left, right) => {
+  const ranked = [...eligibleAssignments].sort((left, right) => {
     const leftStats = countByTeamLeadId.get(left.teamLeadEmployeeId) ?? {
       count: 0,
       lastReceivedAt: null,
@@ -431,13 +1054,12 @@ async function chooseTeamLeadAssignment(campaign: CampaignWithRelations, receive
 async function chooseBdForTeamLead(
   externalCampaignId: string,
   teamLeadEmployeeId: string,
-  preferredCircle: string | null,
+  preferredCircles: string[],
   requiredDepartmentId: string | null,
   requiredDepartmentName: string | null,
   receivedAt: Date
 ) {
-  const { month, year } = getBusinessMonthYear(receivedAt)
-  const { start, end } = getBusinessMonthRange(year, month)
+  const { start: dayStart, end: dayEnd } = getBusinessDayRange(receivedAt)
 
   const bdPool = await prisma.employee.findMany({
     where: {
@@ -471,42 +1093,90 @@ async function chooseBdForTeamLead(
       requiredDepartmentName
         ? `Selected Team Lead has no active BDs in the "${requiredDepartmentName}" department.`
         : 'Selected Team Lead has no active BDs in the configured department.'
+      )
+  }
+
+  const configuredCirclePool = departmentMatchedPool.filter((employee) =>
+    employeeHasAnyCircle(employee.circle)
+  )
+
+  if (configuredCirclePool.length === 0) {
+    throw new Error('Selected Team Lead has no active BDs with circles configured.')
+  }
+
+  const normalizedCircles = Array.from(
+    new Set(
+      preferredCircles
+        .map((circle) => circle.trim().toLowerCase())
+        .filter(Boolean)
+    )
+  )
+  const circleMatchedPool =
+    normalizedCircles.length > 0
+      ? configuredCirclePool.filter(
+          (employee) =>
+            normalizedCircles.some((circle) => employeeHasCircle(employee.circle, circle))
+        )
+      : []
+
+  if (normalizedCircles.length > 0 && circleMatchedPool.length === 0) {
+    throw new Error(
+      normalizedCircles.length === 1
+        ? `Selected Team Lead has no active BDs in the "${preferredCircles[0]}" circle.`
+        : `Selected Team Lead has no active BDs in the selected circles: ${preferredCircles.join(', ')}.`
     )
   }
 
-  const normalizedCircle = preferredCircle?.trim().toLowerCase() ?? null
-  const circleMatchedPool =
-    normalizedCircle
-      ? departmentMatchedPool.filter(
-          (employee) => employee.circle?.trim().toLowerCase() === normalizedCircle
-        )
-      : []
-  const candidates = circleMatchedPool.length > 0 ? circleMatchedPool : departmentMatchedPool
-
-  const historicalCounts = await prisma.incomingLead.groupBy({
-    by: ['selectedBdUserId'],
+  const candidates = normalizedCircles.length > 0 ? circleMatchedPool : configuredCirclePool
+  const leaveSet = await getApprovedLeaveSetForDate(
+    candidates.map((candidate) => candidate.id),
+    receivedAt
+  )
+  const bdDailyLimitRows = await prisma.crmCampaignBdDailyLimit.findMany({
     where: {
-      status: 'PROCESSED',
-      externalCampaignId,
-      selectedTeamLeadEmployeeId: teamLeadEmployeeId,
-      receivedAt: {
-        gte: start,
-        lte: end,
+      campaign: {
+        externalCampaignId,
       },
-      selectedBdUserId: {
-        in: candidates.map((candidate) => candidate.userId),
+      teamLeadEmployeeId,
+      bdEmployeeId: {
+        in: candidates.map((candidate) => candidate.id),
       },
     },
-    _count: {
-      _all: true,
-    },
-    _max: {
-      receivedAt: true,
+    select: {
+      bdEmployeeId: true,
+      maxLeadsPerDay: true,
     },
   })
+  const dailyLimitByBdEmployeeId = new Map(
+    bdDailyLimitRows.map((row) => [row.bdEmployeeId, row.maxLeadsPerDay])
+  )
+
+  const [dailyCounts] = await Promise.all([
+    prisma.incomingLead.groupBy({
+      by: ['selectedBdUserId'],
+      where: {
+        status: 'PROCESSED',
+        externalCampaignId,
+        selectedTeamLeadEmployeeId: teamLeadEmployeeId,
+        receivedAt: {
+          gte: dayStart,
+          lte: dayEnd,
+        },
+        selectedBdUserId: {
+          in: candidates.map((candidate) => candidate.userId),
+        },
+      },
+      _count: {
+        _all: true,
+      },
+      _max: {
+        receivedAt: true,
+      },
+    }),
+  ])
 
   const countByUserId = new Map(
-    historicalCounts
+    dailyCounts
       .filter((row) => row.selectedBdUserId)
       .map((row) => [
         row.selectedBdUserId as string,
@@ -516,8 +1186,44 @@ async function chooseBdForTeamLead(
         },
       ])
   )
+  const dailyCountByUserId = new Map(countByUserId.entries().map(([userId, stats]) => [userId, stats.count]))
 
-  const ranked = [...candidates].sort((left, right) => {
+  const eligibleCandidates = candidates.filter((candidate) => {
+    if (leaveSet.has(candidate.id)) {
+      return false
+    }
+
+    const maxLeadsPerDay = dailyLimitByBdEmployeeId.get(candidate.id)
+    if (!maxLeadsPerDay || maxLeadsPerDay <= 0) {
+      return true
+    }
+
+    const assignedToday = dailyCountByUserId.get(candidate.userId) ?? 0
+    return assignedToday < maxLeadsPerDay
+  })
+
+  if (eligibleCandidates.length === 0) {
+    const hasLeaveBlocked = candidates.some((candidate) => leaveSet.has(candidate.id))
+    const hasDailyLimitBlocked = candidates.some((candidate) => {
+      const maxLeadsPerDay = dailyLimitByBdEmployeeId.get(candidate.id)
+      if (!maxLeadsPerDay || maxLeadsPerDay <= 0) return false
+      const assignedToday = dailyCountByUserId.get(candidate.userId) ?? 0
+      return assignedToday >= maxLeadsPerDay
+    })
+
+    if (hasLeaveBlocked && hasDailyLimitBlocked) {
+      throw new Error('Selected Team Lead has no BDs available because they are absent or have reached their daily lead limit.')
+    }
+    if (hasLeaveBlocked) {
+      throw new Error('Selected Team Lead has no BDs available because all matching BDs are absent for the day.')
+    }
+    if (hasDailyLimitBlocked) {
+      throw new Error('Selected Team Lead has no BDs available because all matching BDs have reached their daily lead limit.')
+    }
+    throw new Error('Selected Team Lead has no active BD users available for assignment.')
+  }
+
+  const ranked = [...eligibleCandidates].sort((left, right) => {
     const leftStats = countByUserId.get(left.userId) ?? {
       count: 0,
       lastReceivedAt: null,
@@ -567,6 +1273,7 @@ async function findDuplicateLead(externalCampaignId: string, normalizedPhone: st
 
 export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsInput) {
   const receivedAt = input.receivedAt ?? new Date()
+  const routingDate = new Date()
   const normalizedPhone = normalizePhoneToLast10(input.phone)
 
   if (!normalizedPhone) {
@@ -582,8 +1289,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
     throw new Error('Phone number must contain at least 10 digits.')
   }
 
-  const { month, year } = getBusinessMonthYear(receivedAt)
-  const campaign = await getCampaignForWebhook(input.externalCampaignId, month, year)
+  const campaign = await getCampaignForWebhook(input.externalCampaignId)
 
   if (!campaign || !campaign.isActive) {
     await prisma.incomingLead.update({
@@ -599,15 +1305,39 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
     throw new Error('Campaign is not configured or inactive.')
   }
 
-  const selectedAssignment = await chooseTeamLeadAssignment(campaign, receivedAt)
-  const selectedBd = await chooseBdForTeamLead(
-    campaign.externalCampaignId,
-    selectedAssignment.teamLeadEmployeeId,
-    campaign.circle.name,
-    campaign.departmentId ?? null,
-    campaign.department?.name ?? null,
-    receivedAt
-  )
+  const preferredCircles = getCampaignCircleNames(campaign)
+  const selectedAssignment = await chooseTeamLeadAssignment(campaign, routingDate, preferredCircles)
+  let selectedBd: {
+    id: string
+    userId: string
+    user: {
+      id: string
+      name: string
+      role: UserRole
+    }
+  }
+  let assignedToTeamLeadFallback = false
+  try {
+    selectedBd = await chooseBdForTeamLead(
+      campaign.externalCampaignId,
+      selectedAssignment.teamLeadEmployeeId,
+      preferredCircles,
+      campaign.departmentId ?? null,
+      campaign.department?.name ?? null,
+      routingDate
+    )
+  } catch {
+    assignedToTeamLeadFallback = true
+    selectedBd = {
+      id: selectedAssignment.teamLeadEmployeeId,
+      userId: selectedAssignment.teamLeadUserId,
+      user: {
+        id: selectedAssignment.teamLeadUserId,
+        name: selectedAssignment.teamLeadUser.name,
+        role: selectedAssignment.teamLeadUser.role,
+      },
+    }
+  }
 
   const duplicateLead = await findDuplicateLead(campaign.externalCampaignId, normalizedPhone, receivedAt)
   if (duplicateLead) {
@@ -620,7 +1350,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
         processedLeadId: duplicateLead.id,
         selectedTeamLeadUserId: selectedAssignment.teamLeadUserId,
         selectedTeamLeadEmployeeId: selectedAssignment.teamLeadEmployeeId,
-        selectedBdUserId: selectedBd.userId,
+        selectedBdUserId: assignedToTeamLeadFallback ? null : selectedBd.userId,
         processedAt: receivedAt,
         errorMessage: null,
       },
@@ -646,6 +1376,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
         userId: selectedBd.userId,
         name: selectedBd.user.name,
       },
+      assignedToTeamLeadFallback,
     }
   }
 
@@ -662,7 +1393,6 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       status: 'New Lead',
       pipelineStage: PipelineStage.SALES,
       flowType: FlowType.INSURANCE,
-      circle: campaign.circle.name,
       hospitalName: 'Not Specified',
       createdById: systemUserId,
       updatedById: systemUserId,
@@ -673,6 +1403,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       campaignName: campaign.leadSource.name || campaign.displayName,
       campaignId: campaign.externalCampaignId,
       category: campaign.category ?? null,
+      circle: preferredCircles[0] ?? campaign.circle.name,
       bdeName: selectedBd.user.name,
       bdId: selectedBd.userId,
     },
@@ -691,7 +1422,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       processedLeadId: lead.id,
       selectedTeamLeadUserId: selectedAssignment.teamLeadUserId,
       selectedTeamLeadEmployeeId: selectedAssignment.teamLeadEmployeeId,
-      selectedBdUserId: selectedBd.userId,
+      selectedBdUserId: assignedToTeamLeadFallback ? null : selectedBd.userId,
       processedAt: receivedAt,
       errorMessage: null,
     },
@@ -717,5 +1448,6 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       userId: selectedBd.userId,
       name: selectedBd.user.name,
     },
+    assignedToTeamLeadFallback,
   }
 }
