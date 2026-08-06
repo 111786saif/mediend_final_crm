@@ -105,10 +105,6 @@ type BulkLeadReassignOptionsResponse = {
     email: string
     role: string
   }>
-  subStatusOptions: Array<{
-    key: number
-    value: string
-  }>
 }
 
 function useDebouncedValue<T>(value: T, ms: number): T {
@@ -151,33 +147,6 @@ function normalizedText(value: unknown, fallback: string): string {
   if (typeof value !== 'string') return fallback
   const trimmed = value.trim()
   return (trimmed || fallback).replace(/\s+/g, ' ')
-}
-
-const OPENED_PIPELINE_LEADS_STORAGE_KEY = 'crm-pipeline-opened-leads'
-
-function readOpenedPipelineLeadIds() {
-  if (typeof window === 'undefined') return []
-
-  try {
-    const stored = window.localStorage.getItem(OPENED_PIPELINE_LEADS_STORAGE_KEY)
-    if (!stored) return []
-    const parsed = JSON.parse(stored)
-    return Array.isArray(parsed)
-      ? parsed.filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
-      : []
-  } catch {
-    return []
-  }
-}
-
-function writeOpenedPipelineLeadIds(nextIds: string[]) {
-  if (typeof window === 'undefined') return
-
-  try {
-    window.localStorage.setItem(OPENED_PIPELINE_LEADS_STORAGE_KEY, JSON.stringify(nextIds))
-  } catch {
-    // Ignore storage write failures. The UI highlight is best-effort only.
-  }
 }
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100]
@@ -232,39 +201,35 @@ const PIPELINE_VISIBLE_COLUMNS_STORAGE_KEY_PREFIX = 'crm-pipeline-visible-column
 
 const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'leadRef', label: 'Lead Ref', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'assignDate', label: 'Assign Date', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'leadDate', label: 'Lead Date', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'assignDate', label: 'Assign Date', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'leadDate', label: 'Lead Date', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'patient', label: 'Patient Name', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'month', label: 'Month', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'age', label: 'Age', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'sex', label: 'Sex', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'circle', label: 'Circle', defaultVisible: { bd: false, 'team-lead': true } },
-  { id: 'city', label: 'City', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'month', label: 'Month', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'age', label: 'Age', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'sex', label: 'Sex', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'circle', label: 'Circle', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'city', label: 'City', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'category', label: 'Category', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'treatment', label: 'Treatment', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'planningTreatment', label: 'Planning Treatment', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'profession', label: 'Profession', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'tl', label: 'TL', defaultVisible: { bd: false, 'team-lead': false } },
-  // { id: 'bdm', label: 'BDM (Assign)', defaultVisible: { bd: false, 'team-lead': true } },
-  { id: 'hospital', label: 'Hospital', defaultVisible: { bd: false, 'team-lead': true } },
-  { id: 'doctor', label: 'Doctor', defaultVisible: { bd: false, 'team-lead': true } },
-  { id: 'status', label: 'Status', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'planningTreatment', label: 'Planning Treatment', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'profession', label: 'Profession', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'tl', label: 'Team Lead', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'status', label: 'Lead Status', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'mop', label: 'MOP', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'lastRemarks', label: 'Last Remarks', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'followUpDate', label: 'Follow Up Date', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'subStatus', label: 'Sub Status', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'surgeryDate', label: 'Surgery Date', defaultVisible: { bd: false, 'team-lead': true } },
-  { id: 'healthInsurance', label: 'Health Insurance', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'preferredLocation', label: 'Preferred Location', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'source', label: 'Source', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'leadSource', label: 'Lead Source', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'createDate', label: 'Create Date', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'modifyBy', label: 'Modify By', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'modifyDate', label: 'Modify Date', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'dupCount', label: 'Dupl Count', defaultVisible: { bd: false, 'team-lead': false } },
-  { id: 'recency', label: 'Recency', defaultVisible: { bd: false, 'team-lead': true } },
-  { id: 'bd', label: 'BD', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'mop', label: 'MOP', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'lastRemarks', label: 'Last Remark', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'followUpDate', label: 'Follow Up Date', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'subStatus', label: 'Sub Status', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'surgeryDate', label: 'Surgery Date', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'healthInsurance', label: 'Health Insurance', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'preferredLocation', label: 'Preferred Location', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'source', label: 'Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'leadSource', label: 'Lead Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'createDate', label: 'Create Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'modifyBy', label: 'Modify By', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'modifyDate', label: 'Modified Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'dupCount', label: 'Duplicate Count', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'bd', label: 'BDM', defaultVisible: { bd: true, 'team-lead': true } },
 ]
 
 const PIPELINE_DATE_FILTER_COLUMNS = new Set<PipelineColumnId>([
@@ -419,9 +384,9 @@ function getLeadLastRemarksText(lead: Lead) {
 }
 
 function getLeadPlanningTreatmentText(lead: Lead) {
-  return typeof lead.diseaseDetails === 'string' && lead.diseaseDetails.trim().length > 0
-    ? lead.diseaseDetails.trim()
-    : '—'
+  if (!lead.ipdPotentialDate) return '—'
+  const parsed = new Date(String(lead.ipdPotentialDate))
+  return Number.isNaN(parsed.getTime()) ? String(lead.ipdPotentialDate) : format(parsed, 'dd MMM yyyy')
 }
 
 function getLeadTeamLeadText(lead: Lead) {
@@ -525,7 +490,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
 }
 
 function PipelinePageFallback({ variant }: { variant: 'bd' | 'team-lead' }) {
-  const title = variant === 'bd' ? 'Pipeline' : 'Team pipeline'
+  const title = variant === 'bd' ? 'CRM' : 'Team CRM'
   return (
     <AuthenticatedLayout>
       <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-[#F2F2F7] dark:bg-background">
@@ -553,7 +518,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const [bulkReassignOpen, setBulkReassignOpen] = useState(false)
   const [activeBulkReassignJobId, setActiveBulkReassignJobId] = useState<string | null>(null)
   const [handledBulkReassignTerminalKey, setHandledBulkReassignTerminalKey] = useState<string | null>(null)
-  const [openedLeadIds, setOpenedLeadIds] = useState<string[]>(() => readOpenedPipelineLeadIds())
+  const [optimisticallyOpenedLeadIds, setOptimisticallyOpenedLeadIds] = useState<string[]>([])
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([])
   const [visibleColumns, setVisibleColumns] = useState<Record<PipelineColumnId, boolean>>(() =>
     readPipelineVisibleColumns(variant)
@@ -594,6 +559,10 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const isColumnVisible = useCallback(
     (columnId: PipelineColumnId) => visibleColumns[columnId] === true,
     [visibleColumns]
+  )
+  const areAllColumnsVisible = useMemo(
+    () => availableColumns.every((column) => visibleColumns[column.id] === true),
+    [availableColumns, visibleColumns]
   )
 
   // Column header filters (dropdown-in-header). Date filters are sent to the
@@ -806,18 +775,47 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     placeholderData: (prev) => prev,
   })
 
-  const markLeadOpened = useCallback((id: string) => {
-    setOpenedLeadIds((current) => {
-      if (current.includes(id)) return current
-      const next = [id, ...current].slice(0, 500)
-      writeOpenedPipelineLeadIds(next)
-      return next
-    })
-  }, [])
+  const markLeadOpenedMutation = useMutation({
+    mutationFn: async (id: string) =>
+      apiPost<{ marked: boolean; openedInCrmAt: string }>(`/api/leads/${id}/opened`, {}),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+      queryClient.invalidateQueries({ queryKey: ['lead', id] })
+    },
+  })
+
+  const markLeadOpened = useCallback(
+    (id: string, alreadyOpened = false) => {
+      if (alreadyOpened) return
+
+      let shouldRequest = false
+
+      setOptimisticallyOpenedLeadIds((current) => {
+        if (current.includes(id)) return current
+        shouldRequest = true
+        return [id, ...current].slice(0, 500)
+      })
+
+      if (!shouldRequest) return
+
+      markLeadOpenedMutation.mutate(id, {
+        onError: () => {
+          setOptimisticallyOpenedLeadIds((current) => current.filter((leadId) => leadId !== id))
+        },
+      })
+    },
+    [markLeadOpenedMutation]
+  )
+
+  const isLeadOpened = useCallback(
+    (lead: Lead) =>
+      Boolean(lead.openedInCrmAt) || optimisticallyOpenedLeadIds.includes(lead.id),
+    [optimisticallyOpenedLeadIds]
+  )
 
   const handleRowClick = useCallback(
-    (id: string) => {
-      markLeadOpened(id)
+    (id: string, alreadyOpened: boolean) => {
+      markLeadOpened(id, alreadyOpened)
       // router.push(`/patient/${id}`)
       window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
     },
@@ -829,8 +827,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   //   window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
   // }, [])
 
-  const handleEditLead = useCallback((id: string) => {
-    markLeadOpened(id)
+  const handleEditLead = useCallback((id: string, alreadyOpened: boolean) => {
+    markLeadOpened(id, alreadyOpened)
     setEditingLeadId(id)
   }, [markLeadOpened])
 
@@ -877,7 +875,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       leadStatus?: string
       followUpDate?: string
       modeOfPayment?: string
-      subStatus?: number
+      subStatus?: string
       pauseSeconds?: number
     }) =>
       apiPost<BulkLeadReassignmentRunResponse>('/api/leads/bulk-reassign', {
@@ -925,7 +923,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     }
   }, [activeBulkReassignRun, handledBulkReassignTerminalKey, queryClient])
 
-  const title = variant === 'bd' ? 'Pipeline' : 'Team pipeline'
+  const title = variant === 'bd' ? 'CRM' : 'Team CRM'
   const subtitle =
     variant === 'bd' ? 'Campaigns, status breakdown, and all your leads' : 'Your team\u2019s leads by campaign and status'
 
@@ -1211,6 +1209,24 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       <DropdownMenuContent align="end" className="max-h-[380px] w-64 overflow-y-auto">
                         <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
                         <DropdownMenuSeparator />
+                        <DropdownMenuCheckboxItem
+                          checked={areAllColumnsVisible}
+                          onSelect={(event) => event.preventDefault()}
+                          onCheckedChange={(checked) =>
+                            setVisibleColumns(
+                              availableColumns.reduce<Record<PipelineColumnId, boolean>>(
+                                (next, column) => {
+                                  next[column.id] = checked === true
+                                  return next
+                                },
+                                {} as Record<PipelineColumnId, boolean>
+                              )
+                            )
+                          }
+                        >
+                          Select all
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuSeparator />
                         {availableColumns.map((column) => (
                           <DropdownMenuCheckboxItem
                             key={column.id}
@@ -1251,8 +1267,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                         ))}
                       </tbody>
                     </table>
-                  ) : tableRows.length === 0 ? (
-                    <p className="p-8 text-center text-sm text-muted-foreground">No leads match filters</p>
                   ) : (
                     <table className="w-full caption-bottom text-sm">
                       <thead className="sticky top-0 z-10 bg-background [&_tr]:border-b">
@@ -1385,22 +1399,33 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {tableRows.map((lead) => (
-                          <PipelineRow
-                            key={lead.id}
-                            lead={lead}
-                            returnTo={pipelineReturnTo}
-                            noteCount={noteCounts[lead.id]}
-                            onClick={handleRowClick}
-                            onEdit={handleEditLead}
-                            onMarkOpened={markLeadOpened}
-                            isOpened={openedLeadIds.includes(lead.id)}
-                            selectionEnabled={showBulkReassign}
-                            isSelected={selectedLeadIds.includes(lead.id)}
-                            onToggleSelected={toggleLeadSelection}
-                            visibleColumns={visibleColumns}
-                          />
-                        ))}
+                        {tableRows.length === 0 ? (
+                          <tr>
+                            <td
+                              colSpan={visibleColumnCount}
+                              className="p-8 text-center text-sm text-muted-foreground"
+                            >
+                              No leads match filters
+                            </td>
+                          </tr>
+                        ) : (
+                          tableRows.map((lead) => (
+                            <PipelineRow
+                              key={lead.id}
+                              lead={lead}
+                              returnTo={pipelineReturnTo}
+                              noteCount={noteCounts[lead.id]}
+                              onClick={handleRowClick}
+                              onEdit={handleEditLead}
+                              onMarkOpened={markLeadOpened}
+                              isOpened={isLeadOpened(lead)}
+                              selectionEnabled={showBulkReassign}
+                              isSelected={selectedLeadIds.includes(lead.id)}
+                              onToggleSelected={toggleLeadSelection}
+                              visibleColumns={visibleColumns}
+                            />
+                          ))
+                        )}
                       </tbody>
                     </table>
                   )}
@@ -1471,7 +1496,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           onSelectedLeadIdsChange={setSelectedLeadIds}
           selectedLeads={selectedLeads}
           assignableUsers={bulkReassignOptions?.assignableUsers ?? []}
-          subStatusOptions={bulkReassignOptions?.subStatusOptions ?? []}
           isPending={bulkReassignMutation.isPending}
           onSubmit={(payload) => bulkReassignMutation.mutateAsync(payload)}
         />
@@ -1714,9 +1738,9 @@ const PipelineRow = memo(function PipelineRow({
   lead: Lead
   returnTo: string
   noteCount?: number
-  onClick: (id: string) => void
-  onEdit: (id: string) => void
-  onMarkOpened: (id: string) => void
+  onClick: (id: string, alreadyOpened: boolean) => void
+  onEdit: (id: string, alreadyOpened: boolean) => void
+  onMarkOpened: (id: string, alreadyOpened: boolean) => void
   isOpened: boolean
   selectionEnabled: boolean
   isSelected: boolean
@@ -1726,9 +1750,6 @@ const PipelineRow = memo(function PipelineRow({
   const stage = getLeadStageBadge(lead)
   const st = normalizeLeadStatus(lead.status)
   const sc = getStatusColor(st)
-  const statusClass = isOpened
-    ? 'bg-[#DCE8FF] text-[#17337A] ring-1 ring-[#AFC4FF] dark:bg-[#31456F] dark:text-[#F5F8FF] dark:ring-[#5D7CC7]'
-    : `${sc.bg} ${sc.text}`
   const latestRemarkPreview = getLatestRemarkPreview(lead)
   const patientName = typeof lead.patientName === 'string' ? lead.patientName : '—'
   const receipt = getLeadReceiptDate(lead)
@@ -1758,7 +1779,7 @@ const PipelineRow = memo(function PipelineRow({
           ? 'bg-[#E4EEFF] hover:bg-[#D9E7FF] shadow-[inset_0_1px_0_0_rgba(175,196,255,0.9),inset_0_-1px_0_0_rgba(175,196,255,0.9)] dark:bg-[#2A3B60] dark:hover:bg-[#334874] dark:shadow-[inset_0_1px_0_0_rgba(93,124,199,0.95),inset_0_-1px_0_0_rgba(93,124,199,0.95)]'
           : 'hover:bg-muted/50'
       )}
-      onClick={() => onClick(lead.id)}
+      onClick={() => onClick(lead.id, isOpened)}
     >
       {selectionEnabled ? (
         <td className="px-2 py-2 text-center" onClick={(e) => e.stopPropagation()}>
@@ -1793,7 +1814,7 @@ const PipelineRow = memo(function PipelineRow({
                     href={action.href}
                     onClick={(event) => {
                       event.stopPropagation()
-                      onMarkOpened(lead.id)
+                      onMarkOpened(lead.id, isOpened)
                     }}
                   >
                     {action.label}
@@ -1876,7 +1897,15 @@ const PipelineRow = memo(function PipelineRow({
       {show('doctor') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>}
       {show('status') && (
         <td className="px-3 py-2">
-          <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${statusClass}`}>{st}</span>
+          <span
+            className="rounded-md px-2 py-0.5 text-xs font-medium"
+            style={{
+              backgroundColor: sc.backgroundColor,
+              color: sc.textColor,
+            }}
+          >
+            {st}
+          </span>
         </td>
       )}
       {show('stage') && (
@@ -1948,7 +1977,7 @@ const PipelineRow = memo(function PipelineRow({
             variant="ghost"
             size="sm"
             className="h-8 gap-1 px-2"
-            onClick={() => onEdit(lead.id)}
+            onClick={() => onEdit(lead.id, isOpened)}
           >
             <Pencil className="h-4 w-4" />
             Edit
@@ -1959,7 +1988,7 @@ const PipelineRow = memo(function PipelineRow({
               aria-label="Open lead"
               onClick={(event) => {
                 event.stopPropagation()
-                onMarkOpened(lead.id)
+                onMarkOpened(lead.id, isOpened)
               }}
             >
               <ExternalLink className="h-4 w-4" />

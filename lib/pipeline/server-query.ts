@@ -362,6 +362,34 @@ export function buildPipelineFiltersWhere(
   return and.length === 1 ? and[0]! : { AND: and }
 }
 
+function parseDateOnlyBoundary(value: string, endOfDay: boolean): Date | null {
+  const trimmed = value.trim()
+  const dateOnlyMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed)
+
+  if (dateOnlyMatch) {
+    const year = Number(dateOnlyMatch[1])
+    const month = Number(dateOnlyMatch[2]) - 1
+    const day = Number(dateOnlyMatch[3])
+
+    return endOfDay
+      ? new Date(year, month, day, 23, 59, 59, 999)
+      : new Date(year, month, day, 0, 0, 0, 0)
+  }
+
+  const parsed = new Date(trimmed)
+  if (Number.isNaN(parsed.getTime())) {
+    return null
+  }
+
+  if (endOfDay) {
+    parsed.setHours(23, 59, 59, 999)
+  } else {
+    parsed.setHours(0, 0, 0, 0)
+  }
+
+  return parsed
+}
+
 function buildPipelineColumnFiltersWhere(
   filters: PipelineServerColumnFilter[],
 ): Prisma.LeadWhereInput | undefined {
@@ -370,12 +398,10 @@ function buildPipelineColumnFiltersWhere(
   const and: Prisma.LeadWhereInput[] = []
 
   for (const filter of filters) {
-    const from = new Date(filter.value[0])
-    const to = new Date(filter.value[1] || filter.value[0])
-    from.setHours(0, 0, 0, 0)
-    to.setHours(23, 59, 59, 999)
+    const from = parseDateOnlyBoundary(filter.value[0], false)
+    const to = parseDateOnlyBoundary(filter.value[1] || filter.value[0], true)
 
-    if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
+    if (!from || !to) {
       continue
     }
 
@@ -457,6 +483,7 @@ export function bucketsFromStatusGroups(
 export const pipelineTableSelect = {
   id: true,
   leadRef: true,
+  openedInCrmAt: true,
   patientName: true,
   age: true,
   sex: true,

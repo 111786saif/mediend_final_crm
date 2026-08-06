@@ -14,67 +14,64 @@ import {
 import { useLeads, LeadFilters, Lead } from '@/hooks/use-leads'
 import { KanbanColumn } from './kanban-column'
 import { LeadCard } from './lead-card'
-
-/**
- * Normalize status to match expected status values
- * This handles variations like "New Lead" -> "New"
- */
-function normalizeStatus(status: string | null | undefined): string {
-  if (!status) return 'New'
-  
-  const normalized = status.trim()
-  
-  // Map common variations to expected status names
-  const statusMap: Record<string, string> = {
-    'new lead': 'New',
-    'new': 'New',
-    'hot lead': 'Hot Lead',
-    'hot': 'Hot Lead',
-    'interested': 'Interested',
-    'follow-up (1-3)': 'Follow-up (1-3)',
-    'follow up (1-3)': 'Follow-up (1-3)',
-    'call back (sd)': 'Call Back (SD)',
-    'call back (t)': 'Call Back (T)',
-    'call back next week': 'Call Back Next Week',
-    'call back next month': 'Call Back Next Month',
-    'ipd schedule': 'IPD Schedule',
-    'ipd done': 'IPD Done',
-    'closed': 'Closed',
-    'call done': 'Call Done',
-    'c/w done': 'C/W Done',
-    'lost': 'Lost',
-    'dnp': 'DNP',
-    'dnp (1-5, exhausted)': 'DNP (1-5, Exhausted)',
-    'junk': 'Junk',
-    'invalid number': 'Invalid Number',
-    'fund issues': 'Fund Issues',
-  }
-  
-  const lowerStatus = normalized.toLowerCase()
-  return statusMap[lowerStatus] || normalized // Return mapped status or original if no mapping
-}
+import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
 
 // All available statuses
 export const ALL_LEAD_STATUSES = [
-  'New',
+  'New Lead',
   'Hot Lead',
-  'Interested',
-  'Follow-up (1-3)',
+  'Follow-up 1',
+  'Follow-up 2',
+  'Follow-up 3',
   'Call Back (SD)',
   'Call Back (T)',
-  'Call Back Next Week',
-  'Call Back Next Month',
+  'OPD Done',
+  'OPD Schedule',
   'IPD Schedule',
   'IPD Done',
+  'IPD Lost',
+  'Fund Issues',
+  'DNP-1',
+  'DNP-2',
+  'DNP-3',
+  'DNP-4',
+  'DNP-5',
+  'DNP Exhausted',
+  'Call Done',
   'Closed',
+  'Out of Station',
+  'Out of Station follow-up',
+  'Supply Gap',
+  'SX Not Suggested',
+  'Language Barrier',
+  'Junk',
+  'Duplicate lead',
+  'Not Interested',
+  'Nurture',
+  'Nuture 1',
+  'Nuture 2',
+  'Nuture 3',
+  'Nuture 4',
+  'Nuture 5',
+  'Interested',
+  'Follow-up 4',
+  'Follow-up 5',
+  'Follow-up',
+  'Call Back Next Week',
+  'Call Back Next Month',
+  'Converted',
   'Lost',
   'DNP',
   'DNP (1-5, Exhausted)',
-  'Junk',
+  'Churned',
   'Invalid Number',
-  'Fund Issues',
-  'Call Done',
   'C/W Done',
+  'WA Done',
+  'Scan Done',
+  'Order Booked',
+  'Policy Booked',
+  'Policy Issued',
+  'Already Insured',
 ] as const
 
 // Status buckets for kanban view (grouped visually)
@@ -82,31 +79,62 @@ export const STATUS_BUCKETS = [
   {
     id: 'new-hot',
     name: 'New & Hot',
-    statuses: ['New', 'Hot Lead', 'Interested'],
+    statuses: ['New Lead', 'Hot Lead', 'Interested', 'Nurture', 'Nuture 1', 'Nuture 2', 'Nuture 3', 'Nuture 4', 'Nuture 5'],
     color: 'bg-red-50 border-red-200',
   },
   {
     id: 'follow-ups',
     name: 'Follow-ups',
-    statuses: ['Follow-up (1-3)', 'Call Back (SD)', 'Call Back (T)', 'Call Back Next Week', 'Call Back Next Month'],
+    statuses: [
+      'Follow-up 1',
+      'Follow-up 2',
+      'Follow-up 3',
+      'Follow-up 4',
+      'Follow-up 5',
+      'Follow-up',
+      'Call Back (SD)',
+      'Call Back (T)',
+      'Call Back Next Week',
+      'Call Back Next Month',
+      'Out of Station',
+      'Out of Station follow-up',
+      'Supply Gap',
+      'OPD Schedule',
+      'OPD Done',
+      'IPD Schedule',
+    ],
     color: 'bg-blue-50 border-blue-200',
-  },
-  {
-    id: 'scheduled',
-    name: 'Scheduled',
-    statuses: ['IPD Schedule'],
-    color: 'bg-yellow-50 border-yellow-200',
   },
   {
     id: 'completed',
     name: 'Completed',
-    statuses: ['IPD Done', 'Closed', 'Call Done', 'C/W Done'],
+    statuses: ['IPD Done', 'Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'Converted', 'Order Booked', 'Policy Booked', 'Policy Issued'],
     color: 'bg-green-50 border-green-200',
   },
   {
     id: 'lost-inactive',
     name: 'Lost/Inactive',
-    statuses: ['Lost', 'DNP', 'DNP (1-5, Exhausted)', 'Junk', 'Invalid Number', 'Fund Issues'],
+    statuses: [
+      'Lost',
+      'IPD Lost',
+      'Fund Issues',
+      'DNP',
+      'DNP-1',
+      'DNP-2',
+      'DNP-3',
+      'DNP-4',
+      'DNP-5',
+      'DNP Exhausted',
+      'DNP (1-5, Exhausted)',
+      'SX Not Suggested',
+      'Language Barrier',
+      'Junk',
+      'Duplicate lead',
+      'Not Interested',
+      'Churned',
+      'Invalid Number',
+      'Already Insured',
+    ],
     color: 'bg-gray-50 border-gray-200',
   },
 ] as const
@@ -142,7 +170,7 @@ export function KanbanBoard({ filters = {}, showBDColumn = false, onLeadClick }:
 
     leads.forEach((lead) => {
       // Normalize status to handle variations like "New Lead" -> "New"
-      const normalizedStatus = normalizeStatus(lead.status)
+      const normalizedStatus = normalizeLeadStatus(lead.status)
       let found = false
       
       // Find which bucket this status belongs to
@@ -227,8 +255,7 @@ export function KanbanBoard({ filters = {}, showBDColumn = false, onLeadClick }:
       <div className="flex gap-4 overflow-x-auto pb-4">
         {STATUS_BUCKETS.map((bucket) => {
           const bucketLeads = leadsByBucket[bucket.id] || []
-          const totalCount = bucketLeads.length
-          
+
           // Count by status within bucket
           const statusCounts: Record<string, number> = {}
           bucket.statuses.forEach((status) => {

@@ -739,6 +739,8 @@ model Lead {
   arrivalDate         DateTime?
   arrivalTime         String?
   surgeryDate         DateTime?
+  ipdPotentialDate    DateTime?
+  ipdPotentialMarkedAt DateTime?
   operationTime       String?
   implantType         String?
   implantAmount       Float            @default(0)
@@ -775,7 +777,7 @@ model Lead {
   docUpload          String?
   diseaseDetails     String?
   followUpDate       DateTime?
-  subStatus          Int?
+  subStatus          String?          @db.VarChar(25)
   opdHospital        String?
   opdDrName          String?
   opdContactNo       String?
@@ -818,6 +820,7 @@ model Lead {
   formId             String?
   teamLeadId         Int?
   remarksId          String?
+  openedInCrmAt      DateTime?
 
   // Relations
   // Mark Lost (when pipelineStage = LOST)
@@ -866,6 +869,7 @@ model Lead {
   @@index([leadEntryDate])
   @@index([assignedDate])
   @@index([followUpDate])
+  @@index([openedInCrmAt])
   @@index([opdSurgeryRemarkCode])
   @@index([opdReasonNoSurgeryCode])
   @@index([opdFollowUpReasonCode])
@@ -2815,6 +2819,9 @@ model CrmCampaign {
   externalCampaignId String                        @unique
   displayName        String
   category           String?
+  treatment          String?
+  treatmentMasterId  String?
+  treatmentMaster    TreatmentMaster?              @relation(fields: [treatmentMasterId], references: [id], onDelete: SetNull)
   departmentId       String?
   department         Department?                   @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   sourceId           String
@@ -2833,6 +2840,8 @@ model CrmCampaign {
   bdDailyLimits      CrmCampaignBdDailyLimit[]
 
   @@index([category])
+  @@index([treatment])
+  @@index([treatmentMasterId])
   @@index([departmentId])
   @@index([sourceId])
   @@index([leadSourceId])
@@ -2916,7 +2925,7 @@ model BulkLeadReassignmentRun {
   leadIds               Json
   bdUserIds             Json
   pauseSeconds          Int
-  subStatus             Int?
+  subStatus             String?  @db.VarChar(25)
   removePreviousRemarks Boolean  @default(false)
   status                String   @default("queued")
   processedCount        Int      @default(0)
@@ -4407,6 +4416,7 @@ model TreatmentMaster {
   updatedAt    DateTime @updatedAt
 
   leads Lead[]
+  crmCampaigns CrmCampaign[]
 
   @@index([name])
   @@index([category])

@@ -33,6 +33,7 @@ export async function PATCH(
       leadId: id,
       actorUserId: user.id,
       actorName: user.name,
+      actorRole: user.role,
       appointmentId: opdId,
       hospitalName: typeof body.opdHospital === 'string' ? body.opdHospital : body.hospitalName,
       doctorName: typeof body.opdDrName === 'string' ? body.opdDrName : body.doctorName,

@@ -44,7 +44,7 @@ type RunForResponse = {
   currentBdIndex: number
   currentCycleNumber: number
   removePreviousRemarks: boolean
-  subStatus: number | null
+  subStatus: string | null
   nextRunAt: Date | null
   startedAt: Date | null
   completedAt: Date | null
@@ -189,7 +189,7 @@ export async function createBulkLeadReassignmentRun(
   const leadIds = normalizeOrderedIds(input.leadIds)
   const bdUserIds = normalizeOrderedIds(input.bdUserIds)
   const pauseSeconds = Number(input.pauseSeconds)
-  const subStatus = input.subStatus
+  const subStatus = input.subStatus?.trim() || undefined
   const leadStatus = input.leadStatus?.trim()
   const followUpDate = input.followUpDate?.trim()
   const modeOfPayment = input.modeOfPayment?.trim()
@@ -206,22 +206,8 @@ export async function createBulkLeadReassignmentRun(
     throw new BulkLeadReassignError('Pause duration must be zero or greater', 400)
   }
 
-  if (subStatus !== undefined && (!Number.isInteger(subStatus) || subStatus < 0)) {
-    throw new BulkLeadReassignError('Sub status must be zero or greater', 400)
-  }
-
-  if (subStatus !== undefined) {
-    const subStatusMaster = await prisma.crmSubStatusMaster.findUnique({
-      where: { key: subStatus },
-      select: {
-        key: true,
-        isActive: true,
-      },
-    })
-
-    if (!subStatusMaster || !subStatusMaster.isActive) {
-      throw new BulkLeadReassignError('Please select a valid active sub status', 400)
-    }
+  if (subStatus !== undefined && subStatus.length > 25) {
+    throw new BulkLeadReassignError('Sub status must be 25 characters or less', 400)
   }
 
   if (
@@ -573,6 +559,7 @@ export async function processBulkLeadReassignCycle(
           leadRef: true,
           patientName: true,
           bdId: true,
+          assignedDate: true,
           bd: {
             select: {
               id: true,
@@ -651,12 +638,15 @@ export async function processBulkLeadReassignCycle(
           previousBdName: lead.bd?.name ?? null,
           nextBdId: nextOwner.id,
           nextBdName: nextOwner.name,
+          previousAssignedDate: lead.assignedDate?.toISOString() ?? null,
+          nextAssignedDate: assignedAt.toISOString(),
           leadStatus: workflowMetadata.leadStatus ?? null,
           followUpDate: workflowFollowUpDate?.toISOString() ?? null,
           modeOfPayment: workflowMetadata.modeOfPayment ?? null,
           subStatus: run.subStatus ?? null,
           runId,
           cycleNumber,
+          automatic: false,
         },
       })
 

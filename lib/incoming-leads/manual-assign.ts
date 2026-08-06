@@ -1,5 +1,10 @@
 import { EmployeeStatus, FlowType, PipelineStage, UserRole } from '@/generated/prisma/client'
-import { getBusinessDayRange, getBusinessMonthYear, getDefaultSystemUserId, normalizePhoneToLast10 } from '@/lib/crm-campaigns'
+import { logCrmActivity } from '@/lib/crm-activity'
+import { getBusinessMonthYear, getDefaultSystemUserId } from '@/lib/crm-campaigns'
+import {
+  normalizeLeadPhoneToLast10,
+  recordDuplicateLeadHitByPrimaryPhone,
+} from '@/lib/lead-duplicates'
 import { prisma } from '@/lib/prisma'
 import { loadLookupMaps, type LookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { mapMySQLLeadToPrismaWithoutOwner, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
@@ -36,6 +41,12 @@ export type ManualAssignIncomingLeadsResult = {
   duplicateCount: number
   failedCount: number
   results: ManualAssignResultItem[]
+}
+
+type ManualAssignActor = {
+  id: string
+  name: string
+  role: string
 }
 
 function getPayloadRecord(payload: unknown) {
@@ -83,35 +94,6 @@ function extractSaveMyLeadsFields(payload: unknown) {
     phone: phone == null ? null : String(phone).trim(),
     email: email == null ? null : String(email).trim(),
   }
-}
-
-async function findDuplicateSaveMyLeadsLead(
-  externalCampaignId: string,
-  normalizedPhone: string,
-  receivedAt: Date
-) {
-  const { start, end } = getBusinessDayRange(receivedAt)
-
-  return prisma.lead.findFirst({
-    where: {
-      campaignId: externalCampaignId,
-      createdDate: {
-        gte: start,
-        lte: end,
-      },
-      OR: [
-        { phoneNumber: { contains: normalizedPhone } },
-        { alternateNumber: { contains: normalizedPhone } },
-      ],
-    },
-    select: {
-      id: true,
-      leadRef: true,
-    },
-    orderBy: {
-      createdDate: 'desc',
-    },
-  })
 }
 
 async function getAssignableBdContexts(userIds: string[]) {
@@ -190,7 +172,8 @@ function getCampaignCircleNames(campaign: {
 
 async function reassignExistingLead(
   incomingLead: IncomingLeadForManualAssign,
-  bd: AssignableBdContext
+  bd: AssignableBdContext,
+  actor: ManualAssignActor
 ): Promise<ManualAssignResultItem> {
   if (!incomingLead.processedLeadId) {
     throw new Error('Incoming lead is not linked to a created lead yet')
@@ -201,6 +184,15 @@ async function reassignExistingLead(
     select: {
       id: true,
       leadRef: true,
+      patientName: true,
+      bdId: true,
+      assignedDate: true,
+      bd: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   })
 
@@ -208,11 +200,14 @@ async function reassignExistingLead(
     throw new Error('Linked lead could not be found for reassignment')
   }
 
+  const assignedAt = new Date()
+
   await prisma.lead.update({
     where: { id: existingLead.id },
     data: {
       bdId: bd.userId,
       bdeName: bd.userName,
+      assignedDate: assignedAt,
     },
   })
 
@@ -224,6 +219,31 @@ async function reassignExistingLead(
       selectedBdUserId: bd.userId,
       processedAt: new Date(),
       errorMessage: null,
+    },
+  })
+
+  await logCrmActivity({
+    action: 'CRM_LEAD_REASSIGNED',
+    entityType: 'CRM_LEAD',
+    entityId: existingLead.id,
+    entityLabel: `${existingLead.leadRef} · ${existingLead.patientName}`,
+    actorUserId: actor.id,
+    actorRole: actor.role,
+    route: '/api/crm/incoming-leads/manual-assign',
+    method: 'POST',
+    summary: `Reassigned lead ${existingLead.leadRef} · ${existingLead.patientName} from ${existingLead.bd?.name ?? 'Unassigned'} to ${bd.userName}`,
+    metadata: {
+      leadId: existingLead.id,
+      leadRef: existingLead.leadRef,
+      patientName: existingLead.patientName,
+      previousBdId: existingLead.bdId,
+      previousBdName: existingLead.bd?.name ?? null,
+      nextBdId: bd.userId,
+      nextBdName: bd.userName,
+      previousAssignedDate: existingLead.assignedDate?.toISOString() ?? null,
+      nextAssignedDate: assignedAt.toISOString(),
+      incomingLeadId: incomingLead.id,
+      automatic: false,
     },
   })
 
@@ -285,7 +305,7 @@ async function processManualAssignedMySQLLead(
   }
 
   const leadData = mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUserId, lookups)
-  const { bdId: _bdId, bdeName: _bdeName, updatedDate, ...leadDataWithoutOwner } = leadData
+  const { updatedDate, ...leadDataWithoutOwner } = leadData
 
   const createdLead = await prisma.lead.create({
     data: {
@@ -368,7 +388,7 @@ async function processManualAssignedSaveMyLeadsLead(
     return { incomingLeadId: incomingLead.id, status: 'failed', error }
   }
 
-  const normalizedPhone = normalizePhoneToLast10(extracted.phone)
+  const normalizedPhone = normalizeLeadPhoneToLast10(extracted.phone)
   if (!normalizedPhone) {
     const error = 'Phone number must contain at least 10 digits.'
     await prisma.incomingLead.update({
@@ -396,11 +416,7 @@ async function processManualAssignedSaveMyLeadsLead(
     return { incomingLeadId: incomingLead.id, status: 'failed', error }
   }
 
-  const duplicateLead = await findDuplicateSaveMyLeadsLead(
-    campaign.externalCampaignId,
-    normalizedPhone,
-    incomingLead.receivedAt
-  )
+  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
 
   if (duplicateLead) {
     await prisma.incomingLead.update({
@@ -414,7 +430,7 @@ async function processManualAssignedSaveMyLeadsLead(
         selectedTeamLeadEmployeeId: bd.managerEmployeeId,
         selectedBdUserId: bd.userId,
         processedAt: new Date(),
-        errorMessage: null,
+        errorMessage: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
       },
     })
     return {
@@ -455,6 +471,7 @@ async function processManualAssignedSaveMyLeadsLead(
       bdId: bd.userId,
       patientEmail: extracted.email || null,
       month: `${month}`,
+      duplCount: 0,
     },
     select: {
       id: true,
@@ -488,7 +505,8 @@ async function processManualAssignedSaveMyLeadsLead(
 
 export async function manuallyAssignIncomingLeads(
   incomingLeadIds: string[],
-  bdUserIds: string[]
+  bdUserIds: string[],
+  actor: ManualAssignActor
 ): Promise<ManualAssignIncomingLeadsResult> {
   if (incomingLeadIds.length === 0) {
     throw new Error('Please select at least one incoming lead')
@@ -544,7 +562,7 @@ export async function manuallyAssignIncomingLeads(
     const bd = orderedBdContexts[index % orderedBdContexts.length]
 
     if (incomingLead.processedLeadId) {
-      const result = await reassignExistingLead(incomingLead, bd)
+      const result = await reassignExistingLead(incomingLead, bd, actor)
       if (result.status === 'duplicate') {
         duplicateCount += 1
       } else {

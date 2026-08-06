@@ -70,6 +70,19 @@ type CircleMaster = {
   isActive: boolean
 }
 
+type TreatmentCategoryMaster = {
+  id: string
+  name: string
+  isActive: boolean
+}
+
+type TreatmentMaster = {
+  id: string
+  name: string
+  category: string
+  isActive: boolean
+}
+
 type DepartmentOption = {
   id: string
   name: string
@@ -136,6 +149,8 @@ type CampaignRecord = {
   externalCampaignId: string
   displayName: string
   category: string | null
+  treatment: string | null
+  treatmentMasterId: string | null
   departmentId: string | null
   isActive: boolean
   sourceId: string
@@ -156,6 +171,8 @@ type CampaignPageData = {
     leadSources: LeadSourceMaster[]
     circles: CircleMaster[]
     departments: DepartmentOption[]
+    treatmentCategories: TreatmentCategoryMaster[]
+    treatments: TreatmentMaster[]
   }
   teamLeads: TeamLeadOption[]
   campaigns: CampaignRecord[]
@@ -178,6 +195,7 @@ type CampaignFormState = {
   externalCampaignId: string
   displayName: string
   category: string
+  treatmentMasterId: string
   departmentId: string
   sourceId: string
   leadSourceId: string
@@ -199,6 +217,7 @@ function createEmptyCampaignForm(): CampaignFormState {
     externalCampaignId: '',
     displayName: '',
     category: '',
+    treatmentMasterId: '',
     departmentId: 'none',
     sourceId: '',
     leadSourceId: '',
@@ -217,6 +236,7 @@ function buildCampaignForm(drawer: DrawerState): CampaignFormState {
     externalCampaignId: item?.externalCampaignId ?? '',
     displayName: item?.displayName ?? '',
     category: item?.category ?? '',
+    treatmentMasterId: item?.treatmentMasterId ?? '',
     departmentId: item?.departmentId ?? 'none',
     sourceId: item?.sourceId ?? '',
     leadSourceId: item?.leadSourceId ?? '',
@@ -261,6 +281,11 @@ function statusBadge(isActive: boolean) {
 function filterLeadSources(leadSources: LeadSourceMaster[], sourceId: string) {
   if (!sourceId) return leadSources
   return leadSources.filter((leadSource) => leadSource.sourceId === sourceId)
+}
+
+function filterTreatments(treatments: TreatmentMaster[], category: string) {
+  if (!category) return treatments
+  return treatments.filter((treatment) => treatment.category === category)
 }
 
 function filterTeamLeadsForCampaign(teamLeads: TeamLeadOption[], campaign: CampaignRecord) {
@@ -374,6 +399,10 @@ export default function CrmCampaignsPage() {
     () => filterLeadSources(data?.masters.leadSources ?? [], campaignForm.sourceId),
     [data?.masters.leadSources, campaignForm.sourceId]
   )
+  const availableTreatments = useMemo(
+    () => filterTreatments(data?.masters.treatments ?? [], campaignForm.category),
+    [data?.masters.treatments, campaignForm.category]
+  )
 
   const drawerTitle =
     drawer?.type === 'campaign'
@@ -414,6 +443,7 @@ export default function CrmCampaignsPage() {
       externalCampaignId: campaignForm.externalCampaignId.trim(),
       displayName: campaignForm.displayName.trim(),
       category: campaignForm.category.trim() || null,
+      treatmentMasterId: campaignForm.treatmentMasterId.trim() || null,
       departmentId: campaignForm.departmentId === 'none' ? null : campaignForm.departmentId,
       sourceId: campaignForm.sourceId,
       leadSourceId: campaignForm.leadSourceId,
@@ -578,22 +608,6 @@ export default function CrmCampaignsPage() {
                 className="w-full justify-between"
               />
             </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Category</Label>
-              <Input
-                value={campaignForm.category}
-                onChange={(event) =>
-                  setCampaignForm((current) => ({
-                    ...current,
-                    category: event.target.value,
-                  }))
-                }
-                placeholder="Optional category"
-              />
-            </div>
             <div className="space-y-2">
               <Label>Department</Label>
               <Select
@@ -613,6 +627,82 @@ export default function CrmCampaignsPage() {
                   {(data?.masters.departments ?? []).map((department) => (
                     <SelectItem key={department.id} value={department.id}>
                       {department.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <Select
+                value={campaignForm.category || 'none'}
+                onValueChange={(value) =>
+                  setCampaignForm((current) => ({
+                    ...current,
+                    category: value === 'none' ? '' : value,
+                    treatmentMasterId:
+                      value === 'none'
+                        ? ''
+                        : current.treatmentMasterId &&
+                            (data?.masters.treatments ?? []).some(
+                              (treatment) =>
+                                treatment.id === current.treatmentMasterId &&
+                                treatment.category === value
+                            )
+                          ? current.treatmentMasterId
+                          : '',
+                  }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No category</SelectItem>
+                  {(data?.masters.treatmentCategories ?? []).map((category) => (
+                    <SelectItem key={category.id} value={category.name}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Treatment</Label>
+              <Select
+                value={campaignForm.treatmentMasterId || 'none'}
+                onValueChange={(value) =>
+                  setCampaignForm((current) => {
+                    if (value === 'none') {
+                      return {
+                        ...current,
+                        treatmentMasterId: '',
+                      }
+                    }
+
+                    const selectedTreatment = (data?.masters.treatments ?? []).find(
+                      (treatment) => treatment.id === value
+                    )
+
+                    return {
+                      ...current,
+                      treatmentMasterId: value,
+                      category: selectedTreatment?.category ?? current.category,
+                    }
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select treatment" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No treatment</SelectItem>
+                  {availableTreatments.map((treatment) => (
+                    <SelectItem key={treatment.id} value={treatment.id}>
+                      {treatment.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -926,6 +1016,7 @@ export default function CrmCampaignsPage() {
                         <TableHead>Source</TableHead>
                         <TableHead>Lead Source</TableHead>
                         <TableHead>Category</TableHead>
+                        <TableHead>Treatment</TableHead>
                         <TableHead>Department</TableHead>
                         <TableHead>Circles</TableHead>
                         <TableHead>Status</TableHead>
@@ -935,19 +1026,19 @@ export default function CrmCampaignsPage() {
                     <TableBody>
                       {isLoading ? (
                         <TableRow>
-                          <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
                             Loading campaigns...
                           </TableCell>
                         </TableRow>
                       ) : error ? (
                         <TableRow>
-                          <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
                             Campaign data could not be loaded.
                           </TableCell>
                         </TableRow>
                       ) : (data?.campaigns.length ?? 0) === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
                             No campaigns created yet.
                           </TableCell>
                         </TableRow>
@@ -959,6 +1050,7 @@ export default function CrmCampaignsPage() {
                             <TableCell>{campaign.source.name}</TableCell>
                             <TableCell>{campaign.leadSource.name}</TableCell>
                             <TableCell>{campaign.category ?? '—'}</TableCell>
+                            <TableCell>{campaign.treatment ?? '—'}</TableCell>
                             <TableCell>{campaign.department?.name ?? '—'}</TableCell>
                             <TableCell>{formatCircleNames(campaign.circles)}</TableCell>
                             <TableCell>{statusBadge(campaign.isActive)}</TableCell>

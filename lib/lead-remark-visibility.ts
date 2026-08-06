@@ -1,3 +1,6 @@
+import type { UserRole } from '@/generated/prisma/client'
+import { canRoleViewLeadExecutiveHistory } from '@/lib/lead-ownership'
+
 type LeadRemarkVisibilityLead = {
   removeRemarks?: boolean | null
   assignedDate?: Date | string | null
@@ -31,8 +34,13 @@ export function getLeadRemarkVisibilityCutoff(lead: LeadRemarkVisibilityLead) {
 
 export function isLeadRemarkVisible(
   lead: LeadRemarkVisibilityLead,
-  remarkDate: Date | string | null | undefined
+  remarkDate: Date | string | null | undefined,
+  viewerRole?: UserRole | string | null
 ) {
+  if (canRoleViewLeadExecutiveHistory(viewerRole)) {
+    return true
+  }
+
   const cutoff = getLeadRemarkVisibilityCutoff(lead)
   if (!cutoff) return true
 
@@ -44,10 +52,11 @@ export function isLeadRemarkVisible(
 
 export function getVisibleLatestLeadRemark<T extends LeadRemarkLike>(
   lead: LeadRemarkVisibilityLead,
-  remarks: readonly T[] | null | undefined
+  remarks: readonly T[] | null | undefined,
+  viewerRole?: UserRole | string | null
 ) {
   for (const remark of remarks ?? []) {
-    if (isLeadRemarkVisible(lead, remark.createdAt)) {
+    if (isLeadRemarkVisible(lead, remark.createdAt, viewerRole)) {
       return remark
     }
   }
@@ -57,11 +66,12 @@ export function getVisibleLatestLeadRemark<T extends LeadRemarkLike>(
 
 export function getVisibleLeadRemarksFallbackContent(
   lead: LeadRemarkVisibilityLead,
-  remarks: string | null | undefined
+  remarks: string | null | undefined,
+  viewerRole?: UserRole | string | null
 ) {
   const normalized = normalizeLeadRemarkContent(remarks)
   if (!normalized) return null
 
   const fallbackDate = parseDateValue(lead.updatedDate) ?? parseDateValue(lead.createdDate)
-  return isLeadRemarkVisible(lead, fallbackDate) ? normalized : null
+  return isLeadRemarkVisible(lead, fallbackDate, viewerRole) ? normalized : null
 }

@@ -55,7 +55,6 @@ export function BulkLeadReassignDialog({
   onSelectedLeadIdsChange,
   selectedLeads,
   assignableUsers,
-  subStatusOptions,
   isPending,
   onSubmit,
 }: {
@@ -66,10 +65,6 @@ export function BulkLeadReassignDialog({
   onSelectedLeadIdsChange: (leadIds: string[]) => void
   selectedLeads: SelectedLead[]
   assignableUsers: AssignableUser[]
-  subStatusOptions: Array<{
-    key: number
-    value: string
-  }>
   isPending: boolean
   onSubmit: (payload: {
     bdUserIds: string[]
@@ -77,7 +72,7 @@ export function BulkLeadReassignDialog({
     leadStatus?: string
     followUpDate?: string
     modeOfPayment?: string
-    subStatus?: number
+    subStatus?: string
     pauseSeconds?: number
   }) => Promise<unknown> | void
 }) {
@@ -194,7 +189,7 @@ export function BulkLeadReassignDialog({
       ...(statusRequiresModeOfPayment && modeOfPayment.trim().length > 0
         ? { modeOfPayment }
         : {}),
-      ...(subStatus.trim().length > 0 ? { subStatus: Number(subStatus) } : {}),
+      ...(subStatus.trim().length > 0 ? { subStatus: subStatus.trim() } : {}),
       ...(pauseSeconds.trim().length > 0 ? { pauseSeconds: Number(pauseSeconds) } : {}),
     })
     handleOpenChange(false)
@@ -482,24 +477,14 @@ export function BulkLeadReassignDialog({
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="bulk-reassign-sub-status">Sub status</Label>
-              <Select
-                value={subStatus || '__none__'}
-                onValueChange={(value) =>
-                  setSubStatus(value === '__none__' ? '' : value)
-                }
-              >
-                <SelectTrigger id="bulk-reassign-sub-status">
-                  <SelectValue placeholder="Optional" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__none__">Leave unchanged</SelectItem>
-                  {subStatusOptions.map((option) => (
-                    <SelectItem key={option.key} value={String(option.key)}>
-                      {option.key} - {option.value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input
+                id="bulk-reassign-sub-status"
+                value={subStatus}
+                onChange={(event) => setSubStatus(event.target.value.slice(0, 25))}
+                placeholder="Leave unchanged"
+                maxLength={25}
+              />
+              <p className="text-xs text-muted-foreground">{subStatus.length}/25 characters</p>
             </div>
 
             <div className="space-y-2">

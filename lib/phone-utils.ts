@@ -22,9 +22,9 @@ export function maskPhoneNumber(phone?: string | null): string {
  * Returns the appropriate phone display based on user permissions
  * @param phone - The phone number to display
  * @param canView - Whether the user has permission to view the full phone number
- * @returns The phone number (if allowed) or '—' (if not allowed)
+ * @returns The phone number (if allowed) or a masked value (if not allowed)
  */
 export function getPhoneDisplay(phone: string | undefined | null, canView: boolean): string {
   if (canView) return phone || '—'
-  return '—'
+  return maskPhoneNumber(phone)
 }

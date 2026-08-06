@@ -34,7 +34,7 @@ export interface MySQLLeadRow {
   LastRemarks?: string | null
   Follow_up_Date?: Date | string | null
   Status?: number | string | null
-  SubStatus?: number | null
+  SubStatus?: number | string | null
   Surgery_Date?: Date | string | null
   OPD_Hospital?: string | null
   OPD_DrName?: string | null
@@ -459,7 +459,7 @@ function buildLeadData(
     docUpload: toString(mysqlRow.doc_upload),
     diseaseDetails: toString(mysqlRow.DiseaseDetails),
     followUpDate: parseDate(mysqlRow.Follow_up_Date),
-    subStatus: toInt(mysqlRow.SubStatus),
+    subStatus: toString(mysqlRow.SubStatus)?.slice(0, 25) ?? null,
     opdHospital: toString(mysqlRow.OPD_Hospital),
     opdDrName: toString(mysqlRow.OPD_DrName),
     opdContactNo: toString(mysqlRow.OPD_ContactNo),

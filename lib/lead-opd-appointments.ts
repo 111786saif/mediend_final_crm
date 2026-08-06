@@ -1,5 +1,5 @@
 import { CaseStage, FlowType, LeadOpdPhase, LeadOpdStatus } from '@/generated/prisma/enums'
-import { hasLeadOpdDone, isOpdDoneStatus, isOpdScheduledStatus } from '@/lib/lead-opd-workflow'
+import { hasLeadOpdDone, isOpdDoneStatus } from '@/lib/lead-opd-workflow'
 
 export const LEGACY_LEAD_OPD_ID_PREFIX = 'legacy-opd:'
 
@@ -242,6 +242,10 @@ function opdEntrySort(left: EffectiveOpdEntry, right: EffectiveOpdEntry) {
   return leftTime - rightTime
 }
 
+function isPrimaryPreOpdEntry(entry: EffectiveOpdEntry) {
+  return entry.phase === LeadOpdPhase.PRE && entry.status !== LeadOpdStatus.CANCELLED
+}
+
 export function buildEffectiveOpdEntries(
   lead: LegacyLeadOpdSource,
   opdAppointments: RealLeadOpdSource[]
@@ -254,7 +258,7 @@ export function buildEffectiveOpdEntries(
   }
 
   const sorted = entries.sort(opdEntrySort)
-  const firstPreIndex = sorted.findIndex((entry) => entry.phase === LeadOpdPhase.PRE)
+  const firstPreIndex = sorted.findIndex(isPrimaryPreOpdEntry)
 
   if (firstPreIndex >= 0) {
     sorted[firstPreIndex] = {
@@ -282,7 +286,7 @@ export function getEffectiveOpdCounts(entries: EffectiveOpdEntry[]) {
 }
 
 export function getFirstEffectivePreOpd(entries: EffectiveOpdEntry[]) {
-  return entries.find((entry) => entry.phase === LeadOpdPhase.PRE) ?? null
+  return entries.find(isPrimaryPreOpdEntry) ?? null
 }
 
 export function getOpdEntriesByPhase(

@@ -14,7 +14,8 @@ import { getSessionWithFreshUser } from '@/lib/session'
 const campaignSchema = z.object({
   externalCampaignId: z.string().trim().min(1).max(150),
   displayName: z.string().trim().min(1).max(255),
-  category: z.string().trim().max(255).optional().nullable(),
+  category: z.string().trim().max(200).optional().nullable(),
+  treatmentMasterId: z.string().trim().optional().nullable(),
   departmentId: z.string().trim().optional().nullable(),
   sourceId: z.string().min(1),
   leadSourceId: z.string().min(1),
@@ -22,7 +23,7 @@ const campaignSchema = z.object({
   isActive: z.boolean().default(true),
 })
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const currentUser = await getSessionWithFreshUser()
     if (!currentUser) return unauthorizedResponse()
@@ -57,12 +58,16 @@ export async function POST(request: Request) {
     }
 
     const data = parsed.data
-    await validateCampaignReferences({
+    const references = await validateCampaignReferences({
       sourceId: data.sourceId,
       leadSourceId: data.leadSourceId,
       circleIds: data.circleIds,
+      category: data.category ?? null,
+      treatmentMasterId: data.treatmentMasterId ?? null,
       departmentId: data.departmentId ?? null,
     })
+    const normalizedCategory =
+      data.category?.trim() || references.treatmentMaster?.category || null
 
     const normalizedCircleIds = Array.from(new Set(data.circleIds.map((circleId) => circleId.trim())))
 
@@ -70,7 +75,9 @@ export async function POST(request: Request) {
       data: {
         externalCampaignId: data.externalCampaignId.trim(),
         displayName: data.displayName.trim(),
-        category: data.category?.trim() || null,
+        category: normalizedCategory,
+        treatment: references.treatmentMaster?.name ?? null,
+        treatmentMasterId: references.treatmentMaster?.id ?? null,
         departmentId: data.departmentId ?? null,
         sourceId: data.sourceId,
         leadSourceId: data.leadSourceId,
@@ -89,6 +96,7 @@ export async function POST(request: Request) {
           },
         },
         circle: true,
+        treatmentMaster: true,
         circleSelections: {
           include: {
             circle: true,
@@ -113,6 +121,8 @@ export async function POST(request: Request) {
         externalCampaignId: created.externalCampaignId,
         displayName: created.displayName,
         category: created.category,
+        treatment: created.treatment,
+        treatmentMasterId: created.treatmentMasterId,
         departmentId: created.departmentId,
         departmentName: created.department?.name ?? null,
         sourceId: created.sourceId,
