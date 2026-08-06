@@ -14685,6 +14685,7 @@ export type OutstandingCaseScalarFieldEnum = (typeof OutstandingCaseScalarFieldE
 export const PaymentInstallmentScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
+  hospitalName: 'hospitalName',
   recipient: 'recipient',
   amount: 'amount',
   paidOn: 'paidOn',

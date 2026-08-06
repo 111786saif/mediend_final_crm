@@ -290,44 +290,58 @@ export default function HospitalDetailPage() {
     }
   }, [filterConfig])
 
-  /** Cases still owed to MediEND (share − already received). */
-  const pendingMediendCases = useMemo(() => {
-    return (data?.cases ?? []).filter((c) => {
-      const due = Math.max((c.mediendShareAmount ?? 0) - (c.mediendReceived ?? 0), 0)
-      return due > 0.0001
-    })
-  }, [data?.cases])
-
   // ── Payment Collection Mutation (Reconciliation) ──────────────────────────
   const recordPaymentMutation = useMutation({
     mutationFn: async (payload: {
-      allocations: Array<{ leadId: string; amount: number }>
+      amount: number
       mode: 'NEFT' | 'CHEQUE' | 'UPI' | 'OTHER'
       reference: string | null
+      /** Empty = hospital-level receipt (no case). Otherwise equal-split across selected cases. */
+      leadIds: string[]
       attachments?: Array<{ name: string; url: string; type: string }>
     }) => {
-      const promises = payload.allocations.map(({ leadId, amount }) =>
-        apiPost('/api/installments', {
-          leadId,
+      const notes = `Recorded via Hospital Detail Page for ${name}. Attachments:\n${
+        payload.attachments && payload.attachments.length > 0
+          ? payload.attachments.map((a) => `- [${a.name}](${a.url})`).join('\n')
+          : 'None'
+      }`
+
+      if (payload.leadIds.length === 0) {
+        return apiPost('/api/installments', {
+          hospitalName: name,
           recipient: 'MEDIEND',
-          amount,
+          amount: payload.amount,
           paidOn: new Date().toISOString(),
           mode: payload.mode,
           reference: payload.reference || null,
-          notes: `Recorded via Hospital Detail Page for ${name}. Attachments:\n${payload.attachments && payload.attachments.length > 0
-              ? payload.attachments.map((a) => `- [${a.name}](${a.url})`).join('\n')
-              : 'None'
-            }`,
+          notes,
         })
+      }
+
+      const allocations = buildPaymentAllocations(payload.leadIds, payload.amount)
+      return Promise.all(
+        allocations.map(({ leadId, amount }) =>
+          apiPost('/api/installments', {
+            leadId,
+            hospitalName: name,
+            recipient: 'MEDIEND',
+            amount,
+            paidOn: new Date().toISOString(),
+            mode: payload.mode,
+            reference: payload.reference || null,
+            notes,
+          }),
+        ),
       )
-      return Promise.all(promises)
     },
     onSuccess: (_data, variables) => {
-      const n = variables.allocations.length
+      const n = variables.leadIds.length
       toast.success(
-        n === 1
-          ? 'Hospital payment recorded successfully!'
-          : `Hospital payment recorded across ${n} cases (pending Finance verification).`,
+        n === 0
+          ? 'Hospital payment sent to Finance for verification (no case attached).'
+          : n === 1
+            ? 'Hospital payment recorded successfully!'
+            : `Hospital payment recorded across ${n} cases (pending Finance verification).`,
       )
       setSelectedLeads([])
       queryClient.invalidateQueries({ queryKey: ['hospitals', name] })
@@ -338,51 +352,21 @@ export default function HospitalDetailPage() {
     },
   })
 
+  /** Equal-split the payment across the explicitly selected cases only. */
   function buildPaymentAllocations(
     leadIds: string[],
     amount: number,
   ): Array<{ leadId: string; amount: number }> {
     if (leadIds.length === 0 || amount <= 0) return []
-
-    // Explicit selection → equal split (existing behaviour)
-    if (selectedLeads.length > 0) {
-      const split = amount / leadIds.length
-      return leadIds.map((leadId) => ({ leadId, amount: split }))
+    const split = Math.round((amount / leadIds.length) * 100) / 100
+    const allocations = leadIds.map((leadId) => ({ leadId, amount: split }))
+    // Absorb rounding remainder on the last case so totals match the entered amount
+    const allocated = allocations.reduce((sum, a) => sum + a.amount, 0)
+    const remainder = Math.round((amount - allocated) * 100) / 100
+    if (Math.abs(remainder) > 0.0001 && allocations.length > 0) {
+      allocations[allocations.length - 1].amount =
+        Math.round((allocations[allocations.length - 1].amount + remainder) * 100) / 100
     }
-
-    // No selection → FIFO fill against pending MediEND dues
-    const byId = new Map((data?.cases ?? []).map((c) => [c.leadId, c]))
-    const ordered = leadIds
-      .map((id) => byId.get(id))
-      .filter((c): c is HospitalCase => !!c)
-      .sort((a, b) => {
-        const ta = a.surgeryDate ? new Date(a.surgeryDate).getTime() : 0
-        const tb = b.surgeryDate ? new Date(b.surgeryDate).getTime() : 0
-        return ta - tb
-      })
-
-    let remaining = amount
-    const allocations: Array<{ leadId: string; amount: number }> = []
-    for (const c of ordered) {
-      if (remaining <= 0.0001) break
-      const due = Math.max((c.mediendShareAmount ?? 0) - (c.mediendReceived ?? 0), 0)
-      const pay = due > 0 ? Math.min(due, remaining) : 0
-      if (pay > 0.0001) {
-        allocations.push({ leadId: c.leadId, amount: Math.round(pay * 100) / 100 })
-        remaining = Math.round((remaining - pay) * 100) / 100
-      }
-    }
-
-    // Leftover (overpayment / no dues tracked) → attach to last allocated or first case
-    if (remaining > 0.0001) {
-      if (allocations.length > 0) {
-        allocations[allocations.length - 1].amount =
-          Math.round((allocations[allocations.length - 1].amount + remaining) * 100) / 100
-      } else if (ordered[0]) {
-        allocations.push({ leadId: ordered[0].leadId, amount: Math.round(remaining * 100) / 100 })
-      }
-    }
-
     return allocations
   }
 
@@ -671,9 +655,7 @@ export default function HospitalDetailPage() {
               subtitle={
                 selectedLeads.length > 0
                   ? `Will split across ${selectedLeads.length} selected case(s)`
-                  : pendingMediendCases.length > 0
-                    ? `No case selected — applies to ${pendingMediendCases.length} pending case(s) automatically`
-                    : 'No case selected — applies to available hospital cases'
+                  : 'No case selected — amount goes to Finance for verification (hospital-level)'
               }
               amountLabel="Amount Paid"
               onSubmit={async (amount, mode, txnId) => {
@@ -683,31 +665,14 @@ export default function HospitalDetailPage() {
                   return
                 }
 
-                const leadIds =
-                  selectedLeads.length > 0
-                    ? selectedLeads
-                    : pendingMediendCases.length > 0
-                      ? pendingMediendCases.map((c) => c.leadId)
-                      : (data?.cases ?? []).map((c) => c.leadId)
-
-                if (leadIds.length === 0) {
-                  toast.error('No cases available to record payment for this hospital')
-                  return
-                }
-
-                const allocations = buildPaymentAllocations(leadIds, amt)
-                if (allocations.length === 0) {
-                  toast.error('Could not allocate payment to any case')
-                  return
-                }
-
                 const mappedMode =
                   mode === 'Bank Transfer' ? 'NEFT' :
                     mode === 'Cheque' ? 'CHEQUE' :
                       mode === 'UPI' ? 'UPI' : 'OTHER'
 
                 recordPaymentMutation.mutate({
-                  allocations,
+                  amount: amt,
+                  leadIds: selectedLeads,
                   mode: mappedMode,
                   reference: txnId || null,
                 })
