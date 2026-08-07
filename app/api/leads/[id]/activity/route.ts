@@ -7,6 +7,7 @@ import {
   isLeadAssignmentActivityAction,
 } from '@/lib/lead-assignment-history'
 import {
+  canRoleViewLeadActivityLogs,
   canRoleViewLeadExecutiveHistory,
   canUserViewLeadOwner,
 } from '@/lib/lead-ownership'
@@ -99,6 +100,21 @@ export async function GET(
 
     if (!(await canUserViewLeadOwner(user, lead.bdId))) {
       return errorResponse('Forbidden', 403)
+    }
+
+    const canViewActivityLogs = canRoleViewLeadActivityLogs(user.role)
+    if (!canViewActivityLogs) {
+      return successResponse({
+        lead: {
+          id: lead.id,
+          leadRef: lead.leadRef,
+          patientName: lead.patientName,
+        },
+        canViewAssignmentHistory: false,
+        canViewActivityLogs: false,
+        assignmentHistory: [],
+        logs: [],
+      })
     }
 
     const [crmLogs, callNotes] = await Promise.all([
@@ -237,6 +253,7 @@ export async function GET(
         patientName: lead.patientName,
       },
       canViewAssignmentHistory,
+      canViewActivityLogs: true,
       assignmentHistory,
       logs: timeline,
     })

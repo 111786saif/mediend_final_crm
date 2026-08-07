@@ -24,27 +24,63 @@ function getTextContent(children: React.ReactNode): string {
 }
 
 function isDateColumn(label: string, values: string[]): boolean {
-  const normalizedLabel = label.toLowerCase()
-  if (
+  const normalizedLabel = label.trim().toLowerCase()
+
+  const nonDateKeywords = [
+    "id",
+    "ref",
+    "phone",
+    "email",
+    "name",
+    "source",
+    "status",
+    "category",
+    "department",
+    "circle",
+    "city",
+    "code",
+    "number",
+    "role",
+    "user",
+    "assignee",
+    "owner",
+    "summary",
+    "payload",
+    "action",
+  ]
+
+  const hasNonDateKeyword = nonDateKeywords.some((kw) => normalizedLabel.includes(kw))
+  const hasExplicitDateKeyword =
     normalizedLabel.includes("date") ||
     normalizedLabel.includes("time") ||
+    normalizedLabel.includes("timestamp")
+
+  if (hasNonDateKeyword && !hasExplicitDateKeyword) {
+    return false
+  }
+
+  if (
+    hasExplicitDateKeyword ||
     normalizedLabel.includes("created") ||
     normalizedLabel.includes("updated") ||
     normalizedLabel.includes("admission") ||
     normalizedLabel.includes("surgery") ||
     normalizedLabel.includes("discharge") ||
     normalizedLabel.includes("received") ||
-    normalizedLabel.includes("processed")
+    normalizedLabel.includes("processed") ||
+    normalizedLabel.includes("dob")
   ) {
     return true
   }
 
-  const parseableDateCount = values.filter((value) => {
-    const parsed = new Date(value)
-    return !Number.isNaN(parsed.getTime())
-  }).length
+  const strictDateRegex =
+    /^\d{4}-\d{2}-\d{2}|^\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}|^\d{1,2}\/\d{1,2}\/\d{4}/
 
-  return values.length > 0 && parseableDateCount / values.length > 0.7
+  const validValues = values.filter((val) => val && val !== "—")
+  if (validValues.length === 0) return false
+
+  const strictMatchCount = validValues.filter((val) => strictDateRegex.test(val.trim())).length
+  return strictMatchCount / validValues.length > 0.7
 }
 
 function normalizeHeaderLabel(value: string) {
@@ -145,14 +181,23 @@ function Table({
   filterableHeaders,
   rowIds,
   onVisibleRowIdsChange,
+  externalColumnOptions,
+  externalActiveFilters,
+  onFilterChange,
   ...props
 }: React.ComponentProps<"table"> & {
   filterableHeaders?: string[]
   rowIds?: string[]
   onVisibleRowIdsChange?: (rowIds: string[]) => void
+  externalColumnOptions?: Record<number, string[]>
+  externalActiveFilters?: Record<number, string[]>
+  onFilterChange?: (colIndex: number, selected: string[]) => void
 }) {
   const [columnOptions, setColumnOptions] = React.useState<Record<number, string[]>>({})
   const [activeFilters, setActiveFilters] = React.useState<Record<number, string[]>>({})
+
+  const effectiveColumnOptions = externalColumnOptions ?? columnOptions
+  const effectiveActiveFilters = externalActiveFilters ?? activeFilters
 
   const headersRef = React.useRef<Record<number, string>>({})
   const cellsRef = React.useRef<Record<number, Record<number, string>>>({})
@@ -232,12 +277,19 @@ function Table({
     }
   })
 
-  const setFilter = React.useCallback((colIndex: number, selected: string[]) => {
-    setActiveFilters((prev) => ({
-      ...prev,
-      [colIndex]: selected,
-    }))
-  }, [])
+  const setFilter = React.useCallback(
+    (colIndex: number, selected: string[]) => {
+      if (onFilterChange) {
+        onFilterChange(colIndex, selected)
+      } else {
+        setActiveFilters((prev) => ({
+          ...prev,
+          [colIndex]: selected,
+        }))
+      }
+    },
+    [onFilterChange]
+  )
 
   const isRowFiltered = React.useCallback((rowIndex: number) => {
     const rowCells = cellsRef.current[rowIndex]
@@ -292,12 +344,12 @@ function Table({
     registerHeader,
     registerCell,
     unregisterRow,
-    columnOptions,
-    activeFilters,
+    columnOptions: effectiveColumnOptions,
+    activeFilters: effectiveActiveFilters,
     setFilter,
     isRowFiltered,
     filterableHeaders: filterableHeaderSet,
-  }), [registerHeader, registerCell, unregisterRow, columnOptions, activeFilters, setFilter, isRowFiltered, filterableHeaderSet])
+  }), [registerHeader, registerCell, unregisterRow, effectiveColumnOptions, effectiveActiveFilters, setFilter, isRowFiltered, filterableHeaderSet])
 
   return (
     <TableFilterContext.Provider value={contextValue}>
@@ -481,9 +533,8 @@ function TableHead({
     if (hasColumnFilter(props.children)) return null
 
     const options = context.columnOptions[colIndex] || []
-    if (options.length <= 1) return null
-
     const dateColumn = isDateColumn(headerText, options)
+
     if (dateColumn) {
       return (
         <CrmDateColumnFilter
@@ -492,6 +543,11 @@ function TableHead({
         />
       )
     }
+
+    const isExplicitlyFilterable =
+      context.filterableHeaders && context.filterableHeaders.has(normalizeHeaderLabel(headerText))
+
+    if (options.length <= 1 && !isExplicitlyFilterable) return null
 
     return (
       <ColumnFilter

@@ -86,6 +86,12 @@ export function canRoleViewLeadExecutiveHistory(role: UserRole | string | null |
   return EXECUTIVE_LEAD_HISTORY_ROLES.has(role as UserRole)
 }
 
+export function canRoleViewLeadActivityLogs(role: UserRole | string | null | undefined) {
+  if (!role) return false
+  const normalized = String(role).trim().toUpperCase()
+  return normalized !== 'BD'
+}
+
 export function buildLeadOwnershipTransferUpdate(nextOwnerUserId: string, assignedAt: Date = new Date()) {
   return {
     bd: {

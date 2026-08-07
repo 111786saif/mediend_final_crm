@@ -19,6 +19,7 @@ import {
 import { toast } from 'sonner'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
+import { KnowlarityCallRecordingsCard } from '@/components/telephony/knowlarity-call-recordings-card'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import {
   CRM_LEAD_STATUS_OPTIONS,
@@ -26,6 +27,7 @@ import {
 } from '@/lib/lead-status-options'
 import {
   isStatusRequiringAgeSex,
+  isStatusRequiringCity,
   isStatusRequiringFollowUpDate,
   isStatusRequiringModeOfPayment,
 } from '@/lib/lead-status-rules'
@@ -188,6 +190,7 @@ type LeadAssignmentHistoryItem = {
 
 type LeadActivityResponse = {
   canViewAssignmentHistory?: boolean
+  canViewActivityLogs?: boolean
   assignmentHistory?: LeadAssignmentHistoryItem[]
   logs: LeadActivityItem[]
 }
@@ -357,6 +360,7 @@ export function LeadEditDrawer({
     : remarkHistory
   const activityLogs = activityData?.logs ?? []
   const canViewAssignmentHistory = activityData?.canViewAssignmentHistory === true
+  const canViewActivityLogs = activityData?.canViewActivityLogs ?? true
   const assignmentHistory = activityData?.assignmentHistory ?? []
   const hasLiveRemarkDraft =
     statusChangeRemarkDraftState.leadId === leadId &&
@@ -376,6 +380,7 @@ export function LeadEditDrawer({
   const modeOfPaymentChanged = effectiveModeOfPayment !== currentModeOfPayment
   const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
   const statusRequiresAgeSex = isStatusRequiringAgeSex(effectiveLeadStatus)
+  const statusRequiresCity = isStatusRequiringCity(effectiveLeadStatus)
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
   const ageChanged = effectiveAge !== (lead?.age == null ? '' : String(lead.age))
   const sexChanged = effectiveSex !== currentNormalizedSex
@@ -492,10 +497,13 @@ export function LeadEditDrawer({
       return
     }
 
-    const requiresAgeSexForStatusChange = statusChanged && statusRequiresAgeSex
+    if (statusRequiresCity && trimmedCity.length === 0) {
+      toast.error(`City is required for status "${effectiveLeadStatus}"`)
+      return
+    }
 
-    if (requiresAgeSexForStatusChange && trimmedAge.length === 0) {
-      toast.error('Age is required')
+    if (statusRequiresAgeSex && trimmedAge.length === 0) {
+      toast.error(`Age is required for status "${effectiveLeadStatus}"`)
       return
     }
 
@@ -508,13 +516,13 @@ export function LeadEditDrawer({
       }
     }
 
-    if (requiresAgeSexForStatusChange && (!Number.isFinite(parsedAge) || Number(parsedAge) <= 0)) {
-      toast.error('Age must be a valid positive number')
+    if (statusRequiresAgeSex && (!Number.isFinite(parsedAge) || Number(parsedAge) <= 0)) {
+      toast.error(`Age must be a valid positive number for status "${effectiveLeadStatus}"`)
       return
     }
 
-    if (requiresAgeSexForStatusChange && trimmedSex.length === 0) {
-      toast.error('Sex is required')
+    if (statusRequiresAgeSex && trimmedSex.length === 0) {
+      toast.error(`Sex is required for status "${effectiveLeadStatus}"`)
       return
     }
 
@@ -528,13 +536,13 @@ export function LeadEditDrawer({
       return
     }
 
-    if (statusChanged && statusRequiresFollowUpDate && !effectiveFollowUpDate) {
-      toast.error('Follow-up date is required for follow-up and DNP statuses')
+    if (statusRequiresFollowUpDate && !effectiveFollowUpDate) {
+      toast.error(`Follow-up date is required for status "${effectiveLeadStatus}"`)
       return
     }
 
-    if (statusChanged && statusRequiresModeOfPayment && trimmedModeOfPayment.length === 0) {
-      toast.error('Mode of payment is required for Follow-up and Follow-up 1-5 statuses')
+    if (statusRequiresModeOfPayment && trimmedModeOfPayment.length === 0) {
+      toast.error(`Mode of payment is required for status "${effectiveLeadStatus}"`)
       return
     }
 
@@ -716,7 +724,7 @@ export function LeadEditDrawer({
                     <div className="space-y-2">
                       <Label htmlFor="drawer-age">
                         Age
-                        {statusChanged && statusRequiresAgeSex ? (
+                        {statusRequiresAgeSex ? (
                           <span className="text-destructive"> *</span>
                         ) : null}
                       </Label>
@@ -734,7 +742,7 @@ export function LeadEditDrawer({
                     <div className="space-y-2">
                       <Label htmlFor="drawer-sex">
                         Sex
-                        {statusChanged && statusRequiresAgeSex ? (
+                        {statusRequiresAgeSex ? (
                           <span className="text-destructive"> *</span>
                         ) : null}
                       </Label>
@@ -758,7 +766,12 @@ export function LeadEditDrawer({
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="drawer-city">City</Label>
+                      <Label htmlFor="drawer-city">
+                        City
+                        {statusRequiresCity ? (
+                          <span className="text-destructive"> *</span>
+                        ) : null}
+                      </Label>
                       <Input
                         id="drawer-city"
                         value={effectiveCity}
@@ -895,7 +908,7 @@ export function LeadEditDrawer({
                     <div className="space-y-2">
                       <Label htmlFor="drawer-follow-up-date">
                         Follow-up date
-                        {statusChanged && statusRequiresFollowUpDate ? (
+                        {statusRequiresFollowUpDate ? (
                           <span className="text-destructive"> *</span>
                         ) : null}
                       </Label>
@@ -913,7 +926,7 @@ export function LeadEditDrawer({
                     <div className="space-y-2">
                       <Label htmlFor="drawer-mode-of-payment">
                         Mode of Payment
-                        {statusChanged && statusRequiresModeOfPayment ? (
+                        {statusRequiresModeOfPayment ? (
                           <span className="text-destructive"> *</span>
                         ) : null}
                       </Label>
@@ -1064,120 +1077,127 @@ export function LeadEditDrawer({
                     )}
                   </div>
 
-                  <Separator />
+                  {canViewAssignmentHistory || canViewActivityLogs ? <Separator /> : null}
 
-                  <div className="space-y-3">
-                    {canViewAssignmentHistory ? (
-                      <div className="space-y-3">
-                        <div>
-                          <h3 className="text-sm font-semibold">Reassignment History</h3>
-                          <p className="text-xs text-muted-foreground">
-                            Executive-only owner timeline showing the lead assignment chain.
-                          </p>
-                        </div>
-
-                        <div className="rounded-xl border bg-muted/20">
-                          {isLoadingActivity ? (
-                            <div className="px-4 py-6 text-sm text-muted-foreground">
-                              Loading reassignment history...
-                            </div>
-                          ) : assignmentHistory.length === 0 ? (
-                            <div className="px-4 py-6 text-sm text-muted-foreground">
-                              No reassignment history available yet.
-                            </div>
-                          ) : (
-                            <div className="divide-y">
-                              {assignmentHistory.map((entry, index) => (
-                                <div
-                                  key={entry.id}
-                                  className="flex items-start gap-3 px-4 py-3"
-                                >
-                                  <div className="mt-0.5 shrink-0 rounded-full border border-border/70 bg-background/60 p-2">
-                                    <UserRoundPlus className="h-4 w-4 text-violet-400" />
-                                  </div>
-                                  <div className="min-w-0 flex-1 space-y-1">
-                                    <p className="text-sm leading-6 text-foreground">
-                                      {index + 1}. {entry.assignedTo.name ?? 'Unknown user'}
-                                    </p>
-                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                                      <span>Assigned on {format(new Date(entry.assignedAt), 'd MMM yyyy, h:mm a')}</span>
-                                      {entry.previousAssignedTo?.name ? (
-                                        <span>
-                                          From {entry.previousAssignedTo.name}
-                                        </span>
-                                      ) : null}
-                                      {entry.changedBy?.name ? (
-                                        <span>
-                                          By {entry.changedBy.name}
-                                          {entry.changedBy.role ? ` · ${formatRoleLabel(entry.changedBy.role)}` : ''}
-                                        </span>
-                                      ) : null}
-                                      {entry.automatic ? <span>Automatic</span> : null}
-                                    </div>
-                                    <p className="text-xs text-muted-foreground">
-                                      {entry.summary}
-                                    </p>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ) : null}
-
+                  {canViewAssignmentHistory || canViewActivityLogs ? (
                     <div className="space-y-3">
-                      <div>
-                        <h3 className="text-sm font-semibold">Activity Logs</h3>
-                        <p className="text-xs text-muted-foreground">
-                          Recent lead status, remark, call, and assignment activity.
-                        </p>
-                      </div>
-
-                      <div className="rounded-xl border bg-muted/20">
-                        {isLoadingActivity ? (
-                          <div className="px-4 py-6 text-sm text-muted-foreground">
-                            Loading activity logs...
+                      {canViewAssignmentHistory ? (
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="text-sm font-semibold">Reassignment History</h3>
+                            <p className="text-xs text-muted-foreground">
+                              Executive-only owner timeline showing the lead assignment chain.
+                            </p>
                           </div>
-                        ) : activityLogs.length === 0 ? (
-                          <div className="px-4 py-6 text-sm text-muted-foreground">
-                            No activity logs available yet.
-                          </div>
-                        ) : (
-                          <div className="divide-y">
-                            {activityLogs.map((activityLog) => {
-                              const actorName =
-                                activityLog.actorUser?.name ||
-                                activityLog.actorUser?.email ||
-                                'System'
-                              const actorRole = formatRoleLabel(activityLog.actorRole)
 
-                              return (
-                                <div
-                                  key={activityLog.id}
-                                  className="flex items-start gap-3 px-4 py-3"
-                                >
-                                  <div className="mt-0.5 shrink-0 rounded-full border border-border/70 bg-background/60 p-2">
-                                    <ActivityIcon action={activityLog.action} />
-                                  </div>
-                                  <div className="min-w-0 flex-1 space-y-1">
-                                    <p className="text-sm leading-6 text-foreground">
-                                      {activityLog.summary}
-                                    </p>
-                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                                      <span className="font-medium text-foreground">{actorName}</span>
-                                      {actorRole ? <span>{actorRole}</span> : null}
-                                      <span>{format(new Date(activityLog.createdAt), 'd MMM yyyy, h:mm a')}</span>
+                          <div className="rounded-xl border bg-muted/20">
+                            {isLoadingActivity ? (
+                              <div className="px-4 py-6 text-sm text-muted-foreground">
+                                Loading reassignment history...
+                              </div>
+                            ) : assignmentHistory.length === 0 ? (
+                              <div className="px-4 py-6 text-sm text-muted-foreground">
+                                No reassignment history available yet.
+                              </div>
+                            ) : (
+                              <div className="divide-y">
+                                {assignmentHistory.map((entry, index) => (
+                                  <div
+                                    key={entry.id}
+                                    className="flex items-start gap-3 px-4 py-3"
+                                  >
+                                    <div className="mt-0.5 shrink-0 rounded-full border border-border/70 bg-background/60 p-2">
+                                      <UserRoundPlus className="h-4 w-4 text-violet-400" />
+                                    </div>
+                                    <div className="min-w-0 flex-1 space-y-1">
+                                      <p className="text-sm leading-6 text-foreground">
+                                        {index + 1}. {entry.assignedTo.name ?? 'Unknown user'}
+                                      </p>
+                                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                                        <span>Assigned on {format(new Date(entry.assignedAt), 'd MMM yyyy, h:mm a')}</span>
+                                        {entry.previousAssignedTo?.name ? (
+                                          <span>
+                                            From {entry.previousAssignedTo.name}
+                                          </span>
+                                        ) : null}
+                                        {entry.changedBy?.name ? (
+                                          <span>
+                                            By {entry.changedBy.name}
+                                            {entry.changedBy.role ? ` · ${formatRoleLabel(entry.changedBy.role)}` : ''}
+                                          </span>
+                                        ) : null}
+                                        {entry.automatic ? <span>Automatic</span> : null}
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">
+                                        {entry.summary}
+                                      </p>
                                     </div>
                                   </div>
-                                </div>
-                              )
-                            })}
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      ) : null}
+
+                      {canViewActivityLogs ? (
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="text-sm font-semibold">Activity Logs</h3>
+                            <p className="text-xs text-muted-foreground">
+                              Recent lead status, remark, call, and assignment activity.
+                            </p>
+                          </div>
+
+                          <div className="rounded-xl border bg-muted/20">
+                            {isLoadingActivity ? (
+                              <div className="px-4 py-6 text-sm text-muted-foreground">
+                                Loading activity logs...
+                              </div>
+                            ) : activityLogs.length === 0 ? (
+                              <div className="px-4 py-6 text-sm text-muted-foreground">
+                                No activity logs available yet.
+                              </div>
+                            ) : (
+                              <div className="divide-y">
+                                {activityLogs.map((activityLog) => {
+                                  const actorName =
+                                    activityLog.actorUser?.name ||
+                                    activityLog.actorUser?.email ||
+                                    'System'
+                                  const actorRole = formatRoleLabel(activityLog.actorRole)
+
+                                  return (
+                                    <div
+                                      key={activityLog.id}
+                                      className="flex items-start gap-3 px-4 py-3"
+                                    >
+                                      <div className="mt-0.5 shrink-0 rounded-full border border-border/70 bg-background/60 p-2">
+                                        <ActivityIcon action={activityLog.action} />
+                                      </div>
+                                      <div className="min-w-0 flex-1 space-y-1">
+                                        <p className="text-sm leading-6 text-foreground">
+                                          {activityLog.summary}
+                                        </p>
+                                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                                          <span className="font-medium text-foreground">{actorName}</span>
+                                          {actorRole ? <span>{actorRole}</span> : null}
+                                          <span>{format(new Date(activityLog.createdAt), 'd MMM yyyy, h:mm a')}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ) : null}
+                      {lead?.id ? (
+                        <KnowlarityCallRecordingsCard leadId={lead.id} className="mt-4" />
+                      ) : null}
                     </div>
-                  </div>
+                  ) : null}
                 </CardContent>
               </Card>
             </div>
