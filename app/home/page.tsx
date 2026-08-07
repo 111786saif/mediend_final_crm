@@ -58,6 +58,7 @@ import { NewJoinerCelebrationCard } from '@/components/new-joiner-celebration-ca
 import { BirthdayPopup } from '@/components/birthday-popup'
 import { RankUpPopup } from '@/components/notifications/rank-up-popup'
 import { TeamTargetWidget } from '@/components/targets/team-target-widget'
+import { SelfTargetWidget } from '@/components/targets/self-target-widget'
 import { TLTeamAchievements } from '@/components/targets/tl-team-achievements'   
 import { useMyTargetProgress, TargetRingInline, TargetRingInlineEmpty } from '../../app/bd/dashboard/BDDashboard'
 import { TargetTrendCard } from '@/components/targets/target-trend-card'
@@ -124,11 +125,13 @@ function BannerSection({
   greeting,
   firstName,
   role,
+  managerName,
   targetSlot,
 }: {
   greeting: string
   firstName: string
   role?: string
+  managerName?: string | null
   targetSlot?: React.ReactNode
 }) {
   const today = format(new Date(), 'EEEE, d MMMM')
@@ -152,6 +155,9 @@ function BannerSection({
             </h1>
             {role && (
               <p className="text-white/70 text-sm font-medium mt-0.5">{role.replace(/_/g, ' ')}</p>
+            )}
+            {managerName && (
+              <p className="text-white/50 text-xs font-medium mt-0.5">Reports to {managerName}</p>
             )}
           </div>
         </div>
@@ -680,18 +686,17 @@ export default function HomePage() {
       <NoticeBlockerModal />
       <NewHireWelcomePopup />
       {/* Banner + Greeting */}
-      {showTopProfile && (
-        <BannerSection
-          greeting={greeting}
-          firstName={firstName}
-          role={user?.role}
-          targetSlot={
-            isTargetRole
-              ? (monthlyTarget ? <TargetRingInline t={monthlyTarget} /> : <TargetRingInlineEmpty />)
-              : undefined
-          }
-        />
-      )}
+       <BannerSection
+        greeting={greeting}
+        firstName={firstName}
+        role={user?.role}
+        managerName={user?.managerName}
+        targetSlot={
+          isTargetRole
+            ? (monthlyTarget ? <TargetRingInline t={monthlyTarget} /> : <TargetRingInlineEmpty />)
+            : undefined
+        }
+      />
 
       {/* Thought of the Day */}
       <ThoughtOfTheDay thought={thought} />
@@ -739,6 +744,9 @@ export default function HomePage() {
 
       {/* Target progress widget (compact — TL and Sales Head team overview) */}
       {showDataSection && <TeamTargetWidget />}
+
+      {/* CM / ACM / TL only: their own individual target, separate from the team one above */}
+      <SelfTargetWidget />
 
       {/* TL only: each team member's achievement vs their individual target */}
       {showDataSection && <TLTeamAchievements />}

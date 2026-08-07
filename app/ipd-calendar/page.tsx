@@ -21,6 +21,7 @@ import {
 
 import { IpdStatStrip } from '@/components/calendar/ipd-stat-strip'
 import { PersonSwitcher } from '@/components/calendar/person-switcher'
+import { BdFilter } from '@/components/calendar/bd-filter'
 import { ViewSwitcher } from '@/components/calendar/view-switcher'
 import { TeamCalendar, type CalendarView } from '@/components/calendar/team-calendar'
 import { DayAgendaDrawer } from '@/components/calendar/day-agenda-drawer'
@@ -32,7 +33,16 @@ import {
 } from '@/components/meets/meet-details-drawer'
 
 const IPD_STAGES = 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED'
-const ALLOWED_ROLES = ['BD', 'TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER']
+const ALLOWED_ROLES = [
+  'BD',
+  'TEAM_LEAD',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'CATEGORY_MANAGER',
+  'SALES_HEAD',
+]
+// Roles that manage a team of BDs and get the multi-BD filter instead of
+// (or in addition to) the single-person calendar switcher.
+const TEAM_SCOPE_ROLES = ['TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER', 'SALES_HEAD']
 
 function rangeForView(view: CalendarView, focus: Date): { start: Date; end: Date } {
   if (view === 'month') {
@@ -60,6 +70,10 @@ export default function IpdCalendarPage() {
   const effectiveTarget = targetUserId ?? user?.id ?? ''
   const isViewingSelf = !targetUserId || targetUserId === user?.id
 
+  const isTeamScopeRole = !!user && TEAM_SCOPE_ROLES.includes(user.role)
+  // Empty = show the whole team's IPDs (default). Non-empty = narrowed to picked BDs.
+  const [selectedBdIds, setSelectedBdIds] = useState<string[]>([])
+
   const [view, setView] = useState<CalendarView>('month')
   const [focusedDate, setFocusedDate] = useState<Date>(() => new Date())
 
@@ -83,17 +97,25 @@ export default function IpdCalendarPage() {
     enabled: !!effectiveTarget,
   })
 
+  // Team-scope roles (TL/ACM/CM/Sales Head) see their whole team's IPDs by
+  // default — omitting bdId lets the API fall back to the full org-chart
+  // scope (self + all recursive subordinates). Picking specific BDs in the
+  // filter narrows it down. BD role keeps the existing single-target behavior.
+  const ipdBdIdParam = isTeamScopeRole
+    ? (selectedBdIds.length > 0 ? selectedBdIds.join(',') : undefined)
+    : effectiveTarget
+
   // IPDs in the currently visible range — plotted on the calendar
   const { leads: ipdLeads, isLoading: ipdLoading } = useLeads(
     {
       view: 'pipeline',
-      bdId: effectiveTarget,
+      bdId: ipdBdIdParam,
       caseStage: IPD_STAGES,
       dateField: 'surgery',
       startDate: format(range.start, 'yyyy-MM-dd'),
       endDate: format(range.end, 'yyyy-MM-dd'),
     },
-    { enabled: !!effectiveTarget }
+    { enabled: isTeamScopeRole || !!effectiveTarget }
   )
 
   // IPDs for the actual current calendar month — independent of whatever
@@ -101,13 +123,13 @@ export default function IpdCalendarPage() {
   const { leads: ipdThisMonthLeads, isLoading: thisMonthLoading } = useLeads(
     {
       view: 'pipeline',
-      bdId: effectiveTarget,
+      bdId: ipdBdIdParam,
       caseStage: IPD_STAGES,
       dateField: 'surgery',
       startDate: format(thisMonthRange.start, 'yyyy-MM-dd'),
       endDate: format(thisMonthRange.end, 'yyyy-MM-dd'),
     },
-    { enabled: !!effectiveTarget }
+    { enabled: isTeamScopeRole || !!effectiveTarget }
   )
 
   const meets = data?.meets ?? []
@@ -158,6 +180,10 @@ export default function IpdCalendarPage() {
             targetUserId={effectiveTarget}
             onChange={(id) => setTargetUserId(id === user.id ? undefined : id)}
           />
+        )}
+
+        {isTeamScopeRole && (
+          <BdFilter selectedIds={selectedBdIds} onChange={setSelectedBdIds} />
         )}
 
         <ViewSwitcher

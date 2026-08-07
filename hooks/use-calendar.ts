@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiDelete, apiGet, apiPost } from '@/lib/api-client'
 import type { DirectoryUser } from '@/app/api/users/directory/route'
+import type { TeamBdOption } from '@/app/api/calendar/team-bds/route'
 
 export type CalendarAttendanceDay = {
   date: string
@@ -82,6 +83,31 @@ export function useUserDirectory() {
   return useQuery<DirectoryUser[]>({
     queryKey: ['user-directory'],
     queryFn: () => apiGet<DirectoryUser[]>('/api/users/directory'),
+    staleTime: 5 * 60_000,
+  })
+}
+
+/**
+ * BDs under the current user (TL / ACM / CM / Sales Head) — for the IPD
+ * calendar team filter.
+ *
+ * Mirrors the role-simulation pattern from `usePermissions()`: TESTER/ADMIN/MD
+ * accounts can "view as" another role client-side (see `useAuth()`), but the
+ * backend only knows their real DB role. Without forwarding the simulated
+ * role as `?role=`, this always resolved against the real role and returned
+ * an empty team for any simulated account — which is why the filter would
+ * flash in (frontend gate passes) then disappear (backend returns []).
+ */
+export function useTeamBds() {
+  const activeRole =
+    typeof window !== 'undefined' ? localStorage.getItem('mediend_tester_active_role') : null
+
+  return useQuery<TeamBdOption[]>({
+    queryKey: ['team-bds', activeRole],
+    queryFn: () => {
+      const url = activeRole ? `/api/calendar/team-bds?role=${activeRole}` : '/api/calendar/team-bds'
+      return apiGet<TeamBdOption[]>(url)
+    },
     staleTime: 5 * 60_000,
   })
 }
