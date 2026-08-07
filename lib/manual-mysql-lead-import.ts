@@ -48,8 +48,7 @@ export const MANUAL_MYSQL_LEAD_FIELDS: ManualMySQLLeadField[] = [
     label: 'campaign_id',
     type: 'string',
     section: 'Ownership',
-    required: true,
-    helperText: 'Required for campaign-based CRM auto-assignment.',
+    helperText: 'Optional. Used for campaign-based CRM auto-assignment.',
     sample: 'Lipoma-Mumbai-WR-20Jan-2026-Lipo-M1',
   },
 ]

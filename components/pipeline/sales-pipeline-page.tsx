@@ -34,7 +34,7 @@ import { usePipelinePage, usePipelineUrlState } from '@/hooks/use-pipeline'
 import type { Lead } from '@/hooks/use-leads'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
-import { resolveLeadCity, resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { resolveLeadCity, resolveLeadHospitalDoctor, resolveLeadSourceDisplay } from '@/lib/lead-display'
 import {
   BulkLeadReassignmentRunResponse,
   isActiveBulkLeadReassignStatus,
@@ -1945,7 +1945,7 @@ const PipelineRow = memo(function PipelineRow({
       {show('source') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.source, '—')}</td>}
       {show('leadSource') && (
         <td className="whitespace-nowrap px-3 py-2 text-sm">
-          {lead.leadSource != null && String(lead.leadSource).trim().length > 0 ? String(lead.leadSource) : '—'}
+          {resolveLeadSourceDisplay(lead)}
         </td>
       )}
       {show('createDate') && (

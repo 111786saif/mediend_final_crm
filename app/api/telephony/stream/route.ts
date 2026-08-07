@@ -437,18 +437,46 @@ export async function GET(request: NextRequest) {
                 const leadRef = patientInfo?.leadRef
                 const patientName = patientInfo?.patientName
 
+                const rawAgentPhone =
+                  (typeof (payload as Record<string, unknown>)?.agent_number === 'string' && (payload as Record<string, unknown>).agent_number) ||
+                  (typeof (payload as Record<string, unknown>)?.agent_phone === 'string' && (payload as Record<string, unknown>).agent_phone) ||
+                  currentUser.normalizedPhone
+
+                const agentDigits = normalizePhone(rawAgentPhone)
+                let agentUserId = currentUser.id
+                let agentName: string | null = null
+
+                if (agentDigits) {
+                  const agentUser = await prisma.user.findFirst({
+                    where: {
+                      OR: [
+                        { phoneNumber: { contains: agentDigits } },
+                        { employee: { knowlarityPhoneNumber: { contains: agentDigits } } },
+                        { employee: { knowlarityCallerId: { contains: agentDigits } } },
+                      ],
+                    },
+                    select: { id: true, name: true },
+                  })
+
+                  if (agentUser) {
+                    agentUserId = agentUser.id
+                    agentName = agentUser.name
+                  }
+                }
+
                 await prisma.crmActivityLog.create({
                   data: {
                     action: 'KNOWLARITY_CALL_RECORDING',
                     entityType: 'CRM_LEAD',
                     entityId: leadId || 'call_recording',
                     entityLabel: leadRef && patientName ? `${leadRef} · ${patientName}` : 'Call Recording',
-                    actorUserId: currentUser.id,
+                    actorUserId: agentUserId,
                     actorRole: currentUser.role,
                     summary: `Knowlarity call recording saved for ${patientName || 'Call'}`,
                     metadata: {
                       callRecordingUrl: recordingUrl,
-                      agentPhone: currentUser.normalizedPhone,
+                      agentPhone: agentDigits || currentUser.normalizedPhone,
+                      agentName,
                       eventType: rawEventType,
                       receivedAt: new Date().toISOString(),
                     },

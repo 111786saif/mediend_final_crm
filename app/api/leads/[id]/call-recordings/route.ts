@@ -14,6 +14,13 @@ type CallRecordingItem = {
   summary?: string | null
 }
 
+function extractLast10Digits(raw: string | null | undefined): string {
+  if (!raw) return ''
+  const digits = String(raw).replace(/\D+/g, '')
+  if (digits.length >= 10) return digits.slice(-10)
+  return digits
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -74,11 +81,41 @@ export async function GET(
       take: 100,
     })
 
+    // Fetch all Users & Employees to accurately resolve agent names by phone
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        phoneNumber: true,
+        employee: {
+          select: {
+            knowlarityPhoneNumber: true,
+            knowlarityCallerId: true,
+          },
+        },
+      },
+    })
+
+    const phoneToAgentMap = new Map<string, string>()
+    for (const u of users) {
+      if (u.name) {
+        const p1 = extractLast10Digits(u.phoneNumber)
+        const p2 = extractLast10Digits(u.employee?.knowlarityPhoneNumber)
+        const p3 = extractLast10Digits(u.employee?.knowlarityCallerId)
+
+        if (p1) phoneToAgentMap.set(p1, u.name)
+        if (p2) phoneToAgentMap.set(p2, u.name)
+        if (p3) phoneToAgentMap.set(p3, u.name)
+      }
+    }
+
     const recordings: CallRecordingItem[] = []
     const seenUrls = new Set<string>()
 
     for (const log of logs) {
       const meta = (log.metadata ?? {}) as Record<string, unknown>
+      const payload = (meta.payload ?? {}) as Record<string, unknown>
+
       const url =
         typeof meta.callRecordingUrl === 'string' && meta.callRecordingUrl.startsWith('http')
           ? meta.callRecordingUrl
@@ -86,16 +123,36 @@ export async function GET(
           ? meta.recordingUrl
           : typeof meta.call_recording === 'string' && meta.call_recording.startsWith('http')
           ? meta.call_recording
+          : typeof payload.call_recording === 'string' && payload.call_recording.startsWith('http')
+          ? payload.call_recording
           : null
 
       if (!url || seenUrls.has(url)) continue
       seenUrls.add(url)
 
+      // Resolve actual agent name from metadata agentPhone or payload agent_number
+      const rawAgentPhone =
+        (typeof meta.agentPhone === 'string' && meta.agentPhone) ||
+        (typeof payload.agent_number === 'string' && payload.agent_number) ||
+        (typeof payload.agent_phone === 'string' && payload.agent_phone) ||
+        null
+
+      const agentPhoneDigits = extractLast10Digits(rawAgentPhone)
+      let resolvedAgentName = typeof meta.agentName === 'string' ? meta.agentName : null
+
+      if (!resolvedAgentName && agentPhoneDigits) {
+        resolvedAgentName = phoneToAgentMap.get(agentPhoneDigits) ?? null
+      }
+
+      if (!resolvedAgentName) {
+        resolvedAgentName = log.actorUser?.name ?? null
+      }
+
       recordings.push({
         id: log.id,
         recordingUrl: url,
         createdAt: log.createdAt.toISOString(),
-        agentName: log.actorUser?.name ?? null,
+        agentName: resolvedAgentName,
         agentRole: log.actorRole ?? null,
         summary: log.summary,
       })
