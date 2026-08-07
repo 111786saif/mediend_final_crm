@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
+import { format } from 'date-fns'
 import { ChevronDown } from 'lucide-react'
 import {
   DropdownMenu,
@@ -165,8 +166,8 @@ export function ColumnFilter({
     if (resolvedType === 'dateRange') {
       setSelectedRange(tempRange)
       if (tempRange?.from) {
-        const fromStr = tempRange.from.toISOString()
-        const toStr = tempRange.to ? tempRange.to.toISOString() : fromStr
+        const fromStr = format(tempRange.from, 'yyyy-MM-dd')
+        const toStr = tempRange.to ? format(tempRange.to, 'yyyy-MM-dd') : fromStr
         onChange([fromStr, toStr])
       } else {
         onChange([])

@@ -12,6 +12,10 @@ import { FlowType, Prisma, PipelineStage, CaseStage } from '@/generated/prisma/c
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { last10DigitsFromStored } from '@/lib/phone-search'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
+import {
+  normalizeLeadPhoneToLast10,
+  recordDuplicateLeadHitByPrimaryPhone,
+} from '@/lib/lead-duplicates'
 
 export async function GET(request: NextRequest) {
   try {
@@ -713,12 +717,12 @@ export async function GET(request: NextRequest) {
     const canViewPhone = user.role === 'ADMIN'
     const mappedLeads = accessibleLeads.map((lead) => {
       const latestRemark = isPipelineView
-        ? getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries) ?? null
+        ? getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries, user.role) ?? null
         : undefined
       const base = {
         ...lead,
         latestRemark,
-        remarks: isPipelineView ? getVisibleLeadRemarksFallbackContent(lead, lead.remarks) : lead.remarks,
+        remarks: isPipelineView ? getVisibleLeadRemarksFallbackContent(lead, lead.remarks, user.role) : lead.remarks,
         status: mapStatusCode(lead.status),
         source: lead.source ? mapSourceCode(lead.source) : lead.source,
       }
@@ -732,6 +736,7 @@ export async function GET(request: NextRequest) {
       return {
         ...base,
         phoneNumber: canViewPhone ? lead.phoneNumber : (lead.phoneNumber ? maskPhoneNumber(lead.phoneNumber) : null),
+        alternateNumber: canViewPhone ? lead.alternateNumber : (lead.alternateNumber ? maskPhoneNumber(lead.alternateNumber) : null),
       }
     })
 
@@ -778,6 +783,19 @@ export async function POST(request: NextRequest) {
       return errorResponse('You can only assign leads to yourself', 403)
     }
 
+    const normalizedPhone = normalizeLeadPhoneToLast10(phoneNumber)
+    if (!normalizedPhone) {
+      return errorResponse('Phone number must contain at least 10 digits', 400)
+    }
+
+    const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
+    if (duplicateLead) {
+      return errorResponse(
+        `Duplicate lead detected for this phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
+        409
+      )
+    }
+
     const lead = await prisma.lead.create({
       data: {
         leadRef: leadRef || `LEAD-${Date.now()}`,
@@ -797,6 +815,7 @@ export async function POST(request: NextRequest) {
         source,
         campaignName,
         remarks,
+        duplCount: 0,
         createdById: user.id,
         updatedById: user.id,
       },

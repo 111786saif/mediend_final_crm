@@ -189,7 +189,7 @@ export async function PATCH(
     // Verify target user exists
     const targetUser = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true },
+      select: { id: true, role: true },
     })
     if (!targetUser) {
       return errorResponse('Target user not found', 404)
@@ -232,16 +232,30 @@ export async function PATCH(
       existingAssignments.map((a) => [a.resourceId, a])
     )
 
+    // Fetch target user's role-level assignments for default fallback comparison
+    const roleAssignments = await prisma.permissionAssignment.findMany({
+      where: {
+        subjectType: SubjectType.ROLE,
+        role: targetUser.role,
+      },
+      select: { resourceId: true, permissionLevel: true },
+    })
+    const roleMap = new Map(
+      roleAssignments.map((ra) => [ra.resourceId, ra.permissionLevel])
+    )
+
     const toCreate: any[] = []
     const toUpdate: { id: string; permissionLevel: PermissionLevel; canGrant: boolean }[] = []
     const auditLogs: any[] = []
 
     for (const item of assignments) {
       const existing = existingMap.get(item.resourceId)
+      const roleLevel = roleMap.get(item.resourceId) ?? 'NONE'
 
       if (!existing) {
-        // Only create if level is not NONE or if canGrant is enabled
-        if (item.permissionLevel !== 'NONE' || item.canGrant) {
+        // Create if the level is not NONE, or if canGrant is enabled,
+        // or if the role allows this permission (meaning we are explicitly saving a user override to NONE to turn it off!)
+        if (item.permissionLevel !== 'NONE' || item.canGrant || roleLevel !== 'NONE') {
           toCreate.push({
             subjectType: SubjectType.USER,
             userId,

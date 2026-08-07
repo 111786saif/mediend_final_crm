@@ -26,7 +26,6 @@ import { MONTHS, formatCurrency } from '@/lib/finance/payroll-types'
 import { formatIncentiveMonthYear } from '@/lib/incentives/types'
 import {
   useBulkCostEmployees,
-  useBulkCostEntries,
   useSaveBulkCosts,
   type BulkCostType,
 } from '@/hooks/use-sales-team-bulk-costs'
@@ -46,7 +45,6 @@ interface BulkCostDialogProps {
 
 type DraftRow = {
   key: string
-  id?: string
   amount: string
   remark: string
   employeeId: string | null
@@ -76,56 +74,23 @@ export function BulkCostDialog({
   const [month, setMonth] = useState(String(defaultMonth))
   const [year, setYear] = useState(String(defaultYear))
   const [rows, setRows] = useState<DraftRow[]>([newRow()])
-  const [deletedIds, setDeletedIds] = useState<string[]>([])
   const [activityOpen, setActivityOpen] = useState(false)
-  const hydratedKeyRef = useRef('')
 
   const periodMonth = Number(month)
   const periodYear = Number(year)
 
   const { data: empData, isLoading: loadingEmployees } = useBulkCostEmployees(open)
-  const { data: entriesData, isLoading: loadingEntries } = useBulkCostEntries(
-    open,
-    costType,
-    periodMonth,
-    periodYear,
-  )
   const saveCosts = useSaveBulkCosts()
   const employees = empData?.employees ?? []
 
+  // Always start blank — previous entries are edited only from the Activity drawer.
   useEffect(() => {
     if (!open) return
     setMonth(String(defaultMonth))
     setYear(String(defaultYear))
-    setDeletedIds([])
     setActivityOpen(false)
-    hydratedKeyRef.current = ''
     setRows([newRow()])
   }, [open, defaultMonth, defaultYear, costType])
-
-  useEffect(() => {
-    if (!open || loadingEntries) return
-    const key = `${costType}-${periodMonth}-${periodYear}`
-    if (hydratedKeyRef.current === key) return
-    hydratedKeyRef.current = key
-
-    const existing = entriesData?.entries ?? []
-    if (existing.length === 0) {
-      setRows([newRow()])
-      return
-    }
-
-    setRows(
-      existing.map((e) => ({
-        key: e.id,
-        id: e.id,
-        amount: String(e.amount),
-        remark: e.remark,
-        employeeId: e.employeeId,
-      })),
-    )
-    setDeletedIds([])
-  }, [open, loadingEntries, entriesData, costType, periodMonth, periodYear])
 
   const runningTotal = useMemo(() => {
     return rows.reduce((sum, row) => {
@@ -145,10 +110,6 @@ export function BulkCostDialog({
 
   const removeRow = (key: string) => {
     setRows((prev) => {
-      const target = prev.find((r) => r.key === key)
-      if (target?.id) {
-        setDeletedIds((ids) => (ids.includes(target.id!) ? ids : [...ids, target.id!]))
-      }
       const next = prev.filter((r) => r.key !== key)
       return next.length === 0 ? [newRow()] : next
     })
@@ -158,18 +119,14 @@ export function BulkCostDialog({
     e?.preventDefault()
     e?.stopPropagation()
 
-    const prepared: { id?: string; amount: number; remark: string; employeeId: string | null }[] =
-      []
+    const prepared: { amount: number; remark: string; employeeId: string | null }[] = []
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i]
       const remark = row.remark.trim()
       const amount = Number(row.amount)
       const isEmpty =
-        !remark &&
-        (row.amount === '' || row.amount === '0') &&
-        !row.employeeId &&
-        !row.id
+        !remark && (row.amount === '' || row.amount === '0') && !row.employeeId
 
       if (isEmpty) continue
 
@@ -177,35 +134,32 @@ export function BulkCostDialog({
         toast.error(`Remark is required for entry ${i + 1}`)
         return
       }
-      if (!Number.isFinite(amount) || amount < 0) {
+      if (!Number.isFinite(amount) || amount <= 0) {
         toast.error(`Enter a valid amount for entry ${i + 1}`)
         return
       }
       prepared.push({
-        id: row.id,
         amount,
         remark,
         employeeId: row.employeeId,
       })
     }
 
-    if (prepared.length === 0 && deletedIds.length === 0) {
+    if (prepared.length === 0) {
       toast.error('Add at least one entry with amount and remark')
       return
     }
 
     try {
+      // Create-only: never send ids / deletedIds so previous entries are preserved.
       await saveCosts.mutateAsync({
         costType,
         month: periodMonth,
         year: periodYear,
         entries: prepared,
-        deletedIds,
       })
       toast.success(
-        prepared.length === 0
-          ? `Removed ${costLabel.toLowerCase()} entries · ${formatIncentiveMonthYear(periodMonth, periodYear)}`
-          : `Saved ${costLabel.toLowerCase()} · ${prepared.length} entr${prepared.length === 1 ? 'y' : 'ies'} · ${formatIncentiveMonthYear(periodMonth, periodYear)}`,
+        `Added ${prepared.length} ${costLabel.toLowerCase()} entr${prepared.length === 1 ? 'y' : 'ies'} · ${formatIncentiveMonthYear(periodMonth, periodYear)}`,
       )
       skipBackOnCloseRef.current = true
       onSaved?.({ month: periodMonth, year: periodYear })
@@ -229,8 +183,8 @@ export function BulkCostDialog({
                 <div>
                   <DialogTitle>Add {costLabel}</DialogTitle>
                   <DialogDescription className="text-xs">
-                    Add one or more amounts with a mandatory remark. Employee is optional — amounts
-                    without an employee are still included in the total cost.
+                    Add new amounts only (previous entries stay as-is). To edit existing entries, open
+                    Activity from the cost card.
                   </DialogDescription>
                 </div>
                 <Button
@@ -249,13 +203,7 @@ export function BulkCostDialog({
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label className="text-xs">Month</Label>
-                <Select
-                  value={month}
-                  onValueChange={(v) => {
-                    hydratedKeyRef.current = ''
-                    setMonth(v)
-                  }}
-                >
+                <Select value={month} onValueChange={setMonth}>
                   <SelectTrigger>
                     <SelectValue placeholder="Month" />
                   </SelectTrigger>
@@ -270,13 +218,7 @@ export function BulkCostDialog({
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">Year</Label>
-                <Select
-                  value={year}
-                  onValueChange={(v) => {
-                    hydratedKeyRef.current = ''
-                    setYear(v)
-                  }}
-                >
+                <Select value={year} onValueChange={setYear}>
                   <SelectTrigger>
                     <SelectValue placeholder="Year" />
                   </SelectTrigger>
@@ -292,92 +234,85 @@ export function BulkCostDialog({
             </div>
 
             <div className="flex items-center justify-between rounded-md border bg-muted/40 px-3 py-2">
-              <span className="text-xs font-medium text-muted-foreground">Running total</span>
+              <span className="text-xs font-medium text-muted-foreground">Running total (new)</span>
               <span className="text-sm font-semibold">{formatCurrency(runningTotal)}</span>
             </div>
 
-            {loadingEntries ? (
-              <div className="flex h-24 items-center justify-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading entries…
-              </div>
-            ) : (
-              <div className="max-h-[360px] space-y-3 overflow-y-auto pr-1">
-                {rows.map((row, index) => (
-                  <div key={row.key} className="space-y-2 rounded-md border p-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-xs font-medium text-muted-foreground">Entry {index + 1}</p>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 gap-1 px-2 text-xs text-destructive hover:text-destructive"
-                        onClick={() => removeRow(row.key)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                        Remove
-                      </Button>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="space-y-1.5">
-                        <Label className="text-xs">Amount</Label>
-                        <Input
-                          type="number"
-                          min={0}
-                          step="0.01"
-                          placeholder="0"
-                          value={row.amount}
-                          onChange={(e) => updateRow(row.key, { amount: e.target.value })}
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label className="text-xs">
-                          Employee <span className="text-muted-foreground">(optional)</span>
-                        </Label>
-                        {loadingEmployees ? (
-                          <div className="flex h-9 items-center gap-2 text-xs text-muted-foreground">
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            Loading…
-                          </div>
-                        ) : (
-                          <Select
-                            value={row.employeeId ?? NONE_EMPLOYEE}
-                            onValueChange={(v) =>
-                              updateRow(row.key, {
-                                employeeId: v === NONE_EMPLOYEE ? null : v,
-                              })
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="No employee" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={NONE_EMPLOYEE}>No employee</SelectItem>
-                              {employees.map((emp) => (
-                                <SelectItem key={emp.id} value={emp.id}>
-                                  {emp.name} ({emp.employeeCode})
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      </div>
+            <div className="max-h-[360px] space-y-3 overflow-y-auto pr-1">
+              {rows.map((row, index) => (
+                <div key={row.key} className="space-y-2 rounded-md border p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs font-medium text-muted-foreground">Entry {index + 1}</p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 gap-1 px-2 text-xs text-destructive hover:text-destructive"
+                      onClick={() => removeRow(row.key)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Remove
+                    </Button>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">Amount</Label>
+                      <Input
+                        type="number"
+                        min={0}
+                        step="0.01"
+                        placeholder="0"
+                        value={row.amount}
+                        onChange={(e) => updateRow(row.key, { amount: e.target.value })}
+                      />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-xs">
-                        Remark <span className="text-destructive">*</span>
+                        Employee <span className="text-muted-foreground">(optional)</span>
                       </Label>
-                      <Textarea
-                        rows={2}
-                        placeholder="Enter remark"
-                        value={row.remark}
-                        onChange={(e) => updateRow(row.key, { remark: e.target.value })}
-                      />
+                      {loadingEmployees ? (
+                        <div className="flex h-9 items-center gap-2 text-xs text-muted-foreground">
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          Loading…
+                        </div>
+                      ) : (
+                        <Select
+                          value={row.employeeId ?? NONE_EMPLOYEE}
+                          onValueChange={(v) =>
+                            updateRow(row.key, {
+                              employeeId: v === NONE_EMPLOYEE ? null : v,
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="No employee" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={NONE_EMPLOYEE}>No employee</SelectItem>
+                            {employees.map((emp) => (
+                              <SelectItem key={emp.id} value={emp.id}>
+                                {emp.name} ({emp.employeeCode})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">
+                      Remark <span className="text-destructive">*</span>
+                    </Label>
+                    <Textarea
+                      rows={2}
+                      placeholder="Enter remark"
+                      value={row.remark}
+                      onChange={(e) => updateRow(row.key, { remark: e.target.value })}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <Button
               type="button"
@@ -392,24 +327,21 @@ export function BulkCostDialog({
           </div>
 
           <DialogFooter className="gap-2 border-t px-4 py-3 sm:justify-between">
-            <p className="mr-auto text-xs text-muted-foreground self-center">
-              Total: <span className="font-semibold text-foreground">{formatCurrency(runningTotal)}</span>
+            <p className="mr-auto self-center text-xs text-muted-foreground">
+              New total:{' '}
+              <span className="font-semibold text-foreground">{formatCurrency(runningTotal)}</span>
             </p>
             <Button type="button" variant="outline" onClick={closeWithoutNavigatingBack}>
               Cancel
             </Button>
-            <Button
-              type="button"
-              onClick={handleSave}
-              disabled={saveCosts.isPending || loadingEntries}
-            >
+            <Button type="button" onClick={handleSave} disabled={saveCosts.isPending}>
               {saveCosts.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Saving…
                 </>
               ) : (
-                `Save ${costLabel}`
+                `Add ${costLabel}`
               )}
             </Button>
           </DialogFooter>
@@ -422,7 +354,6 @@ export function BulkCostDialog({
         costType={costType}
         month={periodMonth}
         year={periodYear}
-        dashboardTotal={runningTotal}
       />
     </>
   )

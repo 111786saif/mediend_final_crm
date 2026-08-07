@@ -84,8 +84,31 @@ export async function GET(
       }),
     ])
 
+    const knowlarityRows = await prisma.$queryRaw<
+      Array<{
+        knowlarityPhoneNumber: string | null
+        knowlarityCallerId: string | null
+        knowlarityNotificationsEnabled: boolean
+      }>
+    >(Prisma.sql`
+      SELECT
+        "knowlarityPhoneNumber",
+        "knowlarityCallerId",
+        "knowlarityNotificationsEnabled"
+      FROM "Employee"
+      WHERE "id" = ${employee.id}
+      LIMIT 1
+    `)
+
+    const knowlarity = knowlarityRows[0] ?? {
+      knowlarityPhoneNumber: null,
+      knowlarityCallerId: null,
+      knowlarityNotificationsEnabled: false,
+    }
+
     return successResponse({
       ...employee,
+      ...knowlarity,
       leaveBalances: leaveBalances.map((b) => ({
         leaveTypeId: b.leaveTypeId,
         leaveTypeName: b.leaveTypeName,

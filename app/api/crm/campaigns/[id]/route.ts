@@ -10,12 +10,12 @@ import { getSessionWithFreshUser } from '@/lib/session'
 const campaignSchema = z.object({
   externalCampaignId: z.string().trim().min(1).max(150),
   displayName: z.string().trim().min(1).max(255),
-  category: z.string().trim().max(255).optional().nullable(),
+  category: z.string().trim().max(200).optional().nullable(),
+  treatmentMasterId: z.string().trim().optional().nullable(),
   departmentId: z.string().trim().optional().nullable(),
   sourceId: z.string().min(1),
   leadSourceId: z.string().min(1),
   circleIds: z.array(z.string().trim().min(1)).min(1),
-  cityId: z.string().trim().optional().nullable(),
   isActive: z.boolean().default(true),
 })
 
@@ -48,13 +48,16 @@ export async function PATCH(
     }
 
     const data = parsed.data
-    await validateCampaignReferences({
+    const references = await validateCampaignReferences({
       sourceId: data.sourceId,
       leadSourceId: data.leadSourceId,
       circleIds: data.circleIds,
-      cityId: data.cityId ?? null,
+      category: data.category ?? null,
+      treatmentMasterId: data.treatmentMasterId ?? null,
       departmentId: data.departmentId ?? null,
     })
+    const normalizedCategory =
+      data.category?.trim() || references.treatmentMaster?.category || null
 
     const normalizedCircleIds = Array.from(new Set(data.circleIds.map((circleId) => circleId.trim())))
 
@@ -63,7 +66,9 @@ export async function PATCH(
       data: {
         externalCampaignId: data.externalCampaignId.trim(),
         displayName: data.displayName.trim(),
-        category: data.category?.trim() || null,
+        category: normalizedCategory,
+        treatment: references.treatmentMaster?.name ?? null,
+        treatmentMasterId: references.treatmentMaster?.id ?? null,
         departmentId: data.departmentId ?? null,
         sourceId: data.sourceId,
         leadSourceId: data.leadSourceId,
@@ -72,7 +77,7 @@ export async function PATCH(
           deleteMany: {},
           create: normalizedCircleIds.map((circleId) => ({ circleId })),
         },
-        cityId: data.cityId ?? null,
+        cityId: null,
         isActive: data.isActive,
       },
       include: {
@@ -83,6 +88,7 @@ export async function PATCH(
           },
         },
         circle: true,
+        treatmentMaster: true,
         circleSelections: {
           include: {
             circle: true,
@@ -109,6 +115,8 @@ export async function PATCH(
         externalCampaignId: updated.externalCampaignId,
         displayName: updated.displayName,
         category: updated.category,
+        treatment: updated.treatment,
+        treatmentMasterId: updated.treatmentMasterId,
         departmentId: updated.departmentId,
         departmentName: updated.department?.name ?? null,
         sourceId: updated.sourceId,
@@ -119,8 +127,6 @@ export async function PATCH(
         circleNames: updated.circleSelections.map((selection) => selection.circle.name),
         primaryCircleId: updated.circleId,
         primaryCircleName: updated.circle.name,
-        cityId: updated.cityId,
-        cityName: updated.city?.name ?? null,
         isActive: updated.isActive,
       },
     })

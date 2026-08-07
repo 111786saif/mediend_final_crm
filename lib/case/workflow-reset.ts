@@ -78,21 +78,21 @@ function insuranceStepDone(step: number, stageIndex: number, extras: WorkflowSte
     case 2:
       return stageIndex >= 2 || extras.hasOpdDone
     case 3:
-      return extras.hasOpdDone && stageIndex >= 3
+      return stageIndex >= 3
     case 4:
-      return extras.hasOpdDone && stageIndex >= 4
+      return stageIndex >= 4
     case 5:
-      return extras.hasOpdDone && stageIndex >= 5
+      return stageIndex >= 5
     case 6:
-      return extras.hasOpdDone && stageIndex >= 6 && extras.hasInitiateForm
+      return stageIndex >= 6
     case 7:
-      return extras.hasOpdDone && stageIndex >= 7
+      return stageIndex >= 7 || (stageIndex >= 6 && extras.hasInitiateForm)
     case 8:
-      return extras.hasOpdDone && stageIndex >= 7 && extras.hasIpdMark
+      return stageIndex >= 7
     case 9:
-      return extras.hasOpdDone && stageIndex >= 8
+      return stageIndex >= 8 || (stageIndex >= 7 && extras.hasIpdMark)
     case 10:
-      return extras.hasOpdDone && stageIndex >= 9
+      return stageIndex >= 9
     default:
       return false
   }
@@ -485,10 +485,15 @@ export function buildWorkflowResetTimelineNote(args: {
   toLabel: string
   resetByName: string
   reason: string
+  reassignedToName?: string | null
 }): string {
-  return [
+  const lines = [
     'Workflow Reset',
     `Reset from ${args.fromLabel} to ${args.toLabel} by Executive Assistant (${args.resetByName}).`,
     `Reason: ${args.reason}`,
-  ].join('\n')
+  ]
+  if (args.reassignedToName) {
+    lines.push(`Lead reassigned to Team Lead (${args.reassignedToName}).`)
+  }
+  return lines.join('\n')
 }

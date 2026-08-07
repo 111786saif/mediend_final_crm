@@ -4,6 +4,8 @@
  * Layout defines structure; RBAC (nav-resource-map + /api/me/permissions) gates visibility.
  *
  * Note: mediend AI is intentionally omitted from layouts — it always lives in the sidebar footer.
+ * DEPRECATED: Sidebar layouts are now 100% dynamically determined from database permissions.
+ * This file is no longer used by components/app-sidebar.tsx, but is preserved for reference.
  */
 
 export type RoleSidebarLayout = {
@@ -51,6 +53,7 @@ const FINANCE_SECTION = [
 export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
   INSURANCE_HEAD: {
     main: ['Home', 'Tasks', 'Calendar', 'Meets', 'Insurance', 'Cash Cases', 'Chat'],
+    myhrms: [...MYHRMS_STANDARD],
   },
 
   COMPLIANCE_HEAD: {
@@ -63,6 +66,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Compliance',
       'Cumulative Report',
     ],
+    myhrms: [...MYHRMS_STANDARD],
   },
 
   HR_HEAD: {
@@ -77,6 +81,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Ask MD Approval',
     ],
     hrm: [...HRM_CORE],
+    myhrms: [...MYHRMS_STANDARD],
   },
 
   FINANCE_HEAD: {
@@ -134,7 +139,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Incentive',
       'DM Dashboard',
       'Campaign CPL',
-      'Pipeline',
+      'CRM',
       'Case Tracker',
       'OPD Monitoring',
       'Pending Surgery',
@@ -158,7 +163,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Tasks',
       'Calendar',
       'IPD Calendar',
-      'Pipeline',
+      'CRM',
       'Case Tracker',
       'OPD Monitoring',
       'Chat',
@@ -176,7 +181,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'IPD Calendar',
       'Meets',
       'Sales Dashboard',
-      'Pipeline',
+      'CRM',
       'Case Tracker',
       'OPD Monitoring',
       'Pending Surgery',
@@ -196,7 +201,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'IPD Calendar',
       'Meets',
       'Sales Dashboard',
-      'Pipeline',
+      'CRM',
       'Case Tracker',
       'OPD Monitoring',
       'Pending Surgery',
@@ -217,7 +222,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'IPD Calendar',
       'Meets',
       'Sales Dashboard',
-      'Pipeline',
+      'CRM',
       'Case Tracker',
       'OPD Monitoring',
       'Pending Surgery',
@@ -239,7 +244,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Sales Dashboard',
       'Incentive',
       'Campaign CPL',
-      'Pipeline',
+      'CRM',
       'Case Tracker',
       'OPD Monitoring',
       'Pending Surgery',

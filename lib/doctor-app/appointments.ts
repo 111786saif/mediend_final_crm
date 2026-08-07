@@ -1318,6 +1318,7 @@ export async function updateDoctorOpdAppointment(
   await mutateLeadOpd({
     leadId: lead.id,
     actorName: user.name,
+    actorRole: user.role,
     appointmentId: appointment.id,
     hospitalName: input.opdHospital,
     charges: input.opdCharges,
@@ -1350,6 +1351,7 @@ export async function cancelDoctorOpdAppointment(
   await mutateLeadOpd({
     leadId: lead.id,
     actorName: user.name,
+    actorRole: user.role,
     appointmentId: appointment.id,
     followUpDate: input.followUpDate,
     remarks: input.remarks !== undefined ? normalizeText(input.remarks) : undefined,

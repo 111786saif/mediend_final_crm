@@ -6,7 +6,6 @@ import {
 } from '@/lib/lead-bulk-reassign/server'
 import type { CreateBulkLeadReassignmentRunInput } from '@/lib/lead-bulk-reassign/shared'
 import { getBulkReassignableBdUsersForActor } from '@/lib/lead-ownership'
-import { prisma } from '@/lib/prisma'
 import { hasPermission } from '@/lib/rbac'
 import { getSessionFromRequest } from '@/lib/session'
 
@@ -14,11 +13,6 @@ export const runtime = 'nodejs'
 
 function canAccessBulkReassign(role: string) {
   return role !== 'BD' && role !== 'USER'
-}
-
-type SubStatusOption = {
-  key: number
-  value: string
 }
 
 type BulkReassignBody = {
@@ -54,6 +48,22 @@ function parseOptionalInteger(value: unknown) {
   return parsed
 }
 
+function parseOptionalSubStatus(value: unknown) {
+  if (value === undefined || value === null) return undefined
+
+  if (typeof value !== 'string') {
+    throw new Error('Please enter a valid sub status')
+  }
+
+  const trimmed = value.trim()
+  if (trimmed.length === 0) return undefined
+  if (trimmed.length > 25) {
+    throw new Error('Sub status must be 25 characters or less')
+  }
+
+  return trimmed
+}
+
 export async function GET(request: NextRequest) {
   const user = getSessionFromRequest(request)
   if (!user) {
@@ -69,21 +79,9 @@ export async function GET(request: NextRequest) {
   }
 
   const assignableUsers = await getBulkReassignableBdUsersForActor(user)
-  const subStatusOptions = await prisma.crmSubStatusMaster.findMany({
-    where: {
-      isActive: true,
-    },
-    select: {
-      key: true,
-      value: true,
-    },
-    orderBy: [{ key: 'asc' }, { value: 'asc' }],
-  })
-
   return successResponse({
     canBulkReassign: assignableUsers.length > 0,
     assignableUsers,
-    subStatusOptions: subStatusOptions as SubStatusOption[],
   })
 }
 
@@ -103,7 +101,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = (await request.json()) as BulkReassignBody
-    const subStatus = parseOptionalInteger(body.subStatus)
+    const subStatus = parseOptionalSubStatus(body.subStatus)
     const leadStatus = parseOptionalText(body.leadStatus)
     const followUpDate = parseOptionalText(body.followUpDate)
     const modeOfPayment = parseOptionalText(body.modeOfPayment)

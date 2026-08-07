@@ -1,12 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { getAvatarColor } from '@/lib/avatar-colors'
-import { CheckCircle2, CircleDot, Loader2, MessageSquareQuote, PhoneCall, UserRoundPlus } from 'lucide-react'
+import {
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  CircleDot,
+  Loader2,
+  MessageSquareQuote,
+  PhoneCall,
+  UserRoundPlus,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
@@ -31,6 +40,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -48,6 +58,20 @@ function formatDisplayValue(value: unknown, fallback = '—') {
   return trimmed.length > 0 ? trimmed : fallback
 }
 
+function formatMaskedPhone(value: unknown, fallback = '—') {
+  if (typeof value !== 'string') return fallback
+  const trimmed = value.trim()
+  if (!trimmed) return fallback
+
+  const visiblePrefixLength = trimmed.length > 6 ? 2 : 0
+  const visibleSuffixLength = Math.min(4, trimmed.length)
+  const prefix = visiblePrefixLength > 0 ? trimmed.slice(0, visiblePrefixLength) : ''
+  const suffix = trimmed.slice(-visibleSuffixLength)
+  const maskLength = Math.max(trimmed.length - prefix.length - suffix.length, 0)
+  const masked = `${prefix}${'*'.repeat(maskLength)}${suffix}`
+  return masked || fallback
+}
+
 function toDateInputValue(value: string | null | undefined) {
   if (!value) return ''
   const parsed = new Date(value)
@@ -60,9 +84,11 @@ type LeadEditLead = {
   patientName: string
   phoneNumber?: string | null
   alternateNumber?: string | null
+  city?: string | null
   whatsapp?: string | null
   age?: number | null
   sex?: string | null
+  profession?: string | null
   treatment?: string | null
   diseaseDetails?: string | null
   status?: string | null
@@ -138,7 +164,31 @@ type LeadActivityItem = {
   } | null
 }
 
+type LeadAssignmentHistoryItem = {
+  id: string
+  source: 'initial' | 'reassigned' | 'current'
+  assignedAt: string
+  changedAt: string
+  assignedTo: {
+    id: string | null
+    name: string | null
+  }
+  changedBy: {
+    id: string | null
+    name: string | null
+    role: string | null
+  } | null
+  previousAssignedTo: {
+    id: string | null
+    name: string | null
+  } | null
+  automatic: boolean
+  summary: string
+}
+
 type LeadActivityResponse = {
+  canViewAssignmentHistory?: boolean
+  assignmentHistory?: LeadAssignmentHistoryItem[]
   logs: LeadActivityItem[]
 }
 
@@ -217,12 +267,25 @@ export function LeadEditDrawer({
   const [assigneeIdDraft, setAssigneeIdDraft] = useState<string | null>(null)
   const [ageDraft, setAgeDraft] = useState<string | null>(null)
   const [sexDraft, setSexDraft] = useState<string | null>(null)
+  const [cityDraft, setCityDraft] = useState<string | null>(null)
+  const [professionDraft, setProfessionDraft] = useState<string | null>(null)
   const [leadStatusDraft, setLeadStatusDraft] = useState<string | null>(null)
+  const [leadStatusSearch, setLeadStatusSearch] = useState('')
+  const [leadStatusOpen, setLeadStatusOpen] = useState(false)
   const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
   const [modeOfPaymentDraft, setModeOfPaymentDraft] = useState<string | null>(null)
-  const [statusChangeRemarkDraft, setStatusChangeRemarkDraft] = useState('')
+  const [statusChangeRemarkDraftState, setStatusChangeRemarkDraftState] = useState<{
+    leadId: string | null
+    baseValue: string
+    value: string | null
+  }>({
+    leadId: null,
+    baseValue: '',
+    value: null,
+  })
   const [expandedRemarksLeadId, setExpandedRemarksLeadId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const leadStatusSearchInputRef = useRef<HTMLInputElement | null>(null)
 
   const { data: lead, isLoading, error } = useQuery<LeadEditLead, Error>({
     queryKey: ['lead-edit-drawer', leadId],
@@ -259,6 +322,8 @@ export function LeadEditDrawer({
   const effectiveAge = ageDraft ?? (lead?.age == null ? '' : String(lead.age))
   const currentNormalizedSex = normalizeLeadSexValue(lead?.sex)
   const effectiveSex = sexDraft ?? currentNormalizedSex
+  const effectiveCity = cityDraft ?? (lead?.city ?? '')
+  const effectiveProfession = professionDraft ?? (lead?.profession ?? '')
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
   const effectiveFollowUpDate = followUpDateDraft ?? toDateInputValue(lead?.followUpDate)
   const effectiveModeOfPayment = modeOfPaymentDraft ?? (lead?.modeOfPayment ?? '')
@@ -276,14 +341,34 @@ export function LeadEditDrawer({
   const currentStatus = lead?.status ?? 'New'
   const currentFollowUpDate = toDateInputValue(lead?.followUpDate)
   const currentModeOfPayment = lead?.modeOfPayment ?? ''
-  const trimmedStatusChangeRemark = statusChangeRemarkDraft.trim()
   const remarkHistory = remarksData?.remarks ?? []
   const previousRemark = remarksData?.latestRemark ?? null
+  const mergedRemarkHistory = [...remarkHistory]
+    .sort((leftRemark, rightRemark) => {
+      const leftTime = new Date(leftRemark.createdAt).getTime()
+      const rightTime = new Date(rightRemark.createdAt).getTime()
+      return leftTime - rightTime
+    })
+    .map((remark) => remark.content.trim())
+    .filter((remarkContent) => remarkContent.length > 0)
+    .join('\n')
   const olderRemarks = previousRemark
     ? remarkHistory.filter((remark) => remark.id !== previousRemark.id)
     : remarkHistory
   const activityLogs = activityData?.logs ?? []
-  const remarkDirty = trimmedStatusChangeRemark.length > 0
+  const canViewAssignmentHistory = activityData?.canViewAssignmentHistory === true
+  const assignmentHistory = activityData?.assignmentHistory ?? []
+  const hasLiveRemarkDraft =
+    statusChangeRemarkDraftState.leadId === leadId &&
+    statusChangeRemarkDraftState.baseValue === mergedRemarkHistory
+  const statusChangeRemarkDraft = hasLiveRemarkDraft
+    ? statusChangeRemarkDraftState.value ?? mergedRemarkHistory
+    : mergedRemarkHistory
+  const trimmedStatusChangeRemark = statusChangeRemarkDraft.trim()
+  const remarkDirty =
+    hasLiveRemarkDraft &&
+    statusChangeRemarkDraftState.value !== null &&
+    statusChangeRemarkDraftState.value !== mergedRemarkHistory
   const showAllRemarks = Boolean(leadId) && expandedRemarksLeadId === leadId
 
   const statusChanged = effectiveLeadStatus !== currentStatus
@@ -294,13 +379,17 @@ export function LeadEditDrawer({
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
   const ageChanged = effectiveAge !== (lead?.age == null ? '' : String(lead.age))
   const sexChanged = effectiveSex !== currentNormalizedSex
+  const cityChanged = effectiveCity !== (lead?.city ?? '')
+  const professionChanged = effectiveProfession !== (lead?.profession ?? '')
 
   const profileDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
     effectiveWhatsapp !== (lead?.whatsapp ?? '') ||
     effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate) ||
     ageChanged ||
-    sexChanged
+    sexChanged ||
+    cityChanged ||
+    professionChanged
   const assigneeDirty = effectiveAssigneeId !== currentAssigneeId
 
   const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged
@@ -331,6 +420,9 @@ export function LeadEditDrawer({
         : CRM_MODE_OF_PAYMENT_OPTIONS
     )
   )
+  const filteredStatusOptions = statusOptions.filter((statusOption) =>
+    statusOption.toLowerCase().includes(leadStatusSearch.trim().toLowerCase())
+  )
   const assigneeOptions = Array.from(
     new Map(
       [
@@ -348,6 +440,17 @@ export function LeadEditDrawer({
       ].map((assignableUser) => [assignableUser.id, assignableUser])
     ).values()
   )
+
+  useEffect(() => {
+    if (!leadStatusOpen) return
+
+    const timer = window.requestAnimationFrame(() => {
+      leadStatusSearchInputRef.current?.focus()
+      leadStatusSearchInputRef.current?.select()
+    })
+
+    return () => window.cancelAnimationFrame(timer)
+  }, [leadStatusOpen])
 
   async function handleSave() {
     if (!leadId || !lead) return
@@ -380,6 +483,8 @@ export function LeadEditDrawer({
     const trimmedWhatsapp = effectiveWhatsapp.trim()
     const trimmedAge = effectiveAge.trim()
     const trimmedSex = effectiveSex.trim()
+    const trimmedCity = effectiveCity.trim()
+    const trimmedProfession = effectiveProfession.trim()
     const trimmedModeOfPayment = effectiveModeOfPayment.trim()
 
     if (trimmedPatientName.length === 0) {
@@ -455,6 +560,14 @@ export function LeadEditDrawer({
       payload.sex = trimmedSex || null
     }
 
+    if (cityChanged) {
+      payload.city = trimmedCity || null
+    }
+
+    if (professionChanged) {
+      payload.profession = trimmedProfession || null
+    }
+
     if (assigneeDirty) {
       payload.bdId = effectiveAssigneeId
     }
@@ -465,7 +578,7 @@ export function LeadEditDrawer({
       payload.requireStatusChangeRemark = 'true'
     }
 
-    if (trimmedStatusChangeRemark.length > 0) {
+    if (remarkDirty) {
       payload.statusChangeRemark = trimmedStatusChangeRemark
     }
 
@@ -527,7 +640,7 @@ export function LeadEditDrawer({
                     <div>
                       <CardTitle className="text-base">Lead Details</CardTitle>
                       <CardDescription>
-                        Editing is limited to name, WhatsApp, surgery date, and assignment.
+                        Editing is limited to lead profile details, surgery date, and assignment.
                       </CardDescription>
                     </div>
                     <LeadQrPopover
@@ -599,7 +712,7 @@ export function LeadEditDrawer({
                     </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                     <div className="space-y-2">
                       <Label htmlFor="drawer-age">
                         Age
@@ -643,10 +756,32 @@ export function LeadEditDrawer({
                         </SelectContent>
                       </Select>
                     </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-city">City</Label>
+                      <Input
+                        id="drawer-city"
+                        value={effectiveCity}
+                        onChange={(e) => setCityDraft(e.target.value)}
+                        disabled={!canEditLeadProfile || saving}
+                        placeholder="Enter city"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-profession">Profession</Label>
+                      <Input
+                        id="drawer-profession"
+                        value={effectiveProfession}
+                        onChange={(e) => setProfessionDraft(e.target.value)}
+                        disabled={!canEditLeadProfile || saving}
+                        placeholder="Enter profession"
+                      />
+                    </div>
                   </div>
 
                   <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                    <ReadonlyField label="Phone" value={formatDisplayValue(lead.phoneNumber)} />
+                    <ReadonlyField label="Phone" value={formatMaskedPhone(lead.phoneNumber)} />
                     <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
                     <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
                     <ReadonlyField label="Current Owner" value={currentAssigneeName} />
@@ -662,22 +797,99 @@ export function LeadEditDrawer({
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                     <div className="space-y-2">
                       <Label htmlFor="drawer-lead-status">Lead status</Label>
-                      <Select
-                        value={effectiveLeadStatus}
-                        onValueChange={setLeadStatusDraft}
-                        disabled={!canUpdateLeadStatus || saving}
+                      <Popover
+                        open={leadStatusOpen}
+                        onOpenChange={(open) => {
+                          setLeadStatusOpen(open)
+                          if (!open) {
+                            setLeadStatusSearch('')
+                          }
+                        }}
                       >
-                        <SelectTrigger id="drawer-lead-status">
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {statusOptions.map((statusOption) => (
-                            <SelectItem key={statusOption} value={statusOption}>
-                              {statusOption}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            id="drawer-lead-status"
+                            disabled={!canUpdateLeadStatus || saving}
+                            className="w-full justify-between font-normal"
+                            onClick={() => {
+                              if (!leadStatusOpen) {
+                                setLeadStatusSearch('')
+                              }
+                            }}
+                          >
+                            <span className="truncate text-left">
+                              {effectiveLeadStatus || 'Search status'}
+                            </span>
+                            <span className="ml-2 shrink-0">
+                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                            </span>
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          portalled={false}
+                          align="start"
+                          sideOffset={6}
+                          onOpenAutoFocus={(event) => event.preventDefault()}
+                          className="w-[var(--radix-popover-trigger-width)] p-0"
+                        >
+                          <div className="border-b p-2">
+                            <Input
+                              ref={leadStatusSearchInputRef}
+                              value={leadStatusSearch}
+                              onChange={(event) => setLeadStatusSearch(event.target.value)}
+                              placeholder="Search status"
+                              onKeyDown={(event) => {
+                                if (event.key === 'Escape') {
+                                  event.preventDefault()
+                                  setLeadStatusOpen(false)
+                                }
+                              }}
+                            />
+                          </div>
+                          <div
+                            className="max-h-60 overflow-y-auto overscroll-contain p-1"
+                            onWheelCapture={(event) => {
+                              event.stopPropagation()
+                            }}
+                            onTouchMoveCapture={(event) => {
+                              event.stopPropagation()
+                            }}
+                          >
+                            {filteredStatusOptions.length > 0 ? (
+                              filteredStatusOptions.map((statusOption) => {
+                                const isSelected = statusOption === effectiveLeadStatus
+
+                                return (
+                                  <button
+                                    key={statusOption}
+                                    type="button"
+                                    className={`flex w-full items-center justify-between rounded-sm px-3 py-2 text-left text-sm ${
+                                      isSelected
+                                        ? 'bg-blue-600 text-white'
+                                        : 'hover:bg-accent'
+                                    }`}
+                                    onMouseDown={(event) => {
+                                      event.preventDefault()
+                                      setLeadStatusDraft(statusOption)
+                                      setLeadStatusSearch('')
+                                      setLeadStatusOpen(false)
+                                    }}
+                                  >
+                                    <span>{statusOption}</span>
+                                    {isSelected ? <Check className="h-4 w-4" /> : null}
+                                  </button>
+                                )
+                              })
+                            ) : (
+                              <div className="px-3 py-3 text-sm text-muted-foreground">
+                                No statuses found.
+                              </div>
+                            )}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
 
                     <div className="space-y-2">
@@ -736,7 +948,13 @@ export function LeadEditDrawer({
                     <Textarea
                       id="drawer-status-change-remark"
                       value={statusChangeRemarkDraft}
-                      onChange={(e) => setStatusChangeRemarkDraft(e.target.value)}
+                      onChange={(e) =>
+                        setStatusChangeRemarkDraftState({
+                          leadId,
+                          baseValue: mergedRemarkHistory,
+                          value: e.target.value,
+                        })
+                      }
                       disabled={!canEditRemarks || saving}
                       placeholder={
                         statusChanged
@@ -849,57 +1067,115 @@ export function LeadEditDrawer({
                   <Separator />
 
                   <div className="space-y-3">
-                    <div>
-                      <h3 className="text-sm font-semibold">Activity Logs</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Recent lead status, remark, call, and assignment activity.
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl border bg-muted/20">
-                      {isLoadingActivity ? (
-                        <div className="px-4 py-6 text-sm text-muted-foreground">
-                          Loading activity logs...
+                    {canViewAssignmentHistory ? (
+                      <div className="space-y-3">
+                        <div>
+                          <h3 className="text-sm font-semibold">Reassignment History</h3>
+                          <p className="text-xs text-muted-foreground">
+                            Executive-only owner timeline showing the lead assignment chain.
+                          </p>
                         </div>
-                      ) : activityLogs.length === 0 ? (
-                        <div className="px-4 py-6 text-sm text-muted-foreground">
-                          No activity logs available yet.
-                        </div>
-                      ) : (
-                        <div className="divide-y">
-                          {activityLogs.map((activityLog) => {
-                            const actorName =
-                              activityLog.actorUser?.name ||
-                              activityLog.actorUser?.email ||
-                              'System'
-                            const actorRole = formatRoleLabel(activityLog.actorRole)
-                            const deviceLabel = activityLog.metadata?.deviceInfo?.label
-                            const browserLabel = activityLog.metadata?.deviceInfo?.browser
-                            const ipAddress = activityLog.ipAddress
 
-                            return (
-                              <div
-                                key={activityLog.id}
-                                className="flex items-start gap-3 px-4 py-3"
-                              >
-                                <div className="mt-0.5 shrink-0 rounded-full border border-border/70 bg-background/60 p-2">
-                                  <ActivityIcon action={activityLog.action} />
-                                </div>
-                                <div className="min-w-0 flex-1 space-y-1">
-                                  <p className="text-sm leading-6 text-foreground">
-                                    {activityLog.summary}
-                                  </p>
-                                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                                    <span className="font-medium text-foreground">{actorName}</span>
-                                    {actorRole ? <span>{actorRole}</span> : null}
-                                    <span>{format(new Date(activityLog.createdAt), 'd MMM yyyy, h:mm a')}</span>
+                        <div className="rounded-xl border bg-muted/20">
+                          {isLoadingActivity ? (
+                            <div className="px-4 py-6 text-sm text-muted-foreground">
+                              Loading reassignment history...
+                            </div>
+                          ) : assignmentHistory.length === 0 ? (
+                            <div className="px-4 py-6 text-sm text-muted-foreground">
+                              No reassignment history available yet.
+                            </div>
+                          ) : (
+                            <div className="divide-y">
+                              {assignmentHistory.map((entry, index) => (
+                                <div
+                                  key={entry.id}
+                                  className="flex items-start gap-3 px-4 py-3"
+                                >
+                                  <div className="mt-0.5 shrink-0 rounded-full border border-border/70 bg-background/60 p-2">
+                                    <UserRoundPlus className="h-4 w-4 text-violet-400" />
+                                  </div>
+                                  <div className="min-w-0 flex-1 space-y-1">
+                                    <p className="text-sm leading-6 text-foreground">
+                                      {index + 1}. {entry.assignedTo.name ?? 'Unknown user'}
+                                    </p>
+                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                                      <span>Assigned on {format(new Date(entry.assignedAt), 'd MMM yyyy, h:mm a')}</span>
+                                      {entry.previousAssignedTo?.name ? (
+                                        <span>
+                                          From {entry.previousAssignedTo.name}
+                                        </span>
+                                      ) : null}
+                                      {entry.changedBy?.name ? (
+                                        <span>
+                                          By {entry.changedBy.name}
+                                          {entry.changedBy.role ? ` · ${formatRoleLabel(entry.changedBy.role)}` : ''}
+                                        </span>
+                                      ) : null}
+                                      {entry.automatic ? <span>Automatic</span> : null}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">
+                                      {entry.summary}
+                                    </p>
                                   </div>
                                 </div>
-                              </div>
-                            )
-                          })}
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      )}
+                      </div>
+                    ) : null}
+
+                    <div className="space-y-3">
+                      <div>
+                        <h3 className="text-sm font-semibold">Activity Logs</h3>
+                        <p className="text-xs text-muted-foreground">
+                          Recent lead status, remark, call, and assignment activity.
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border bg-muted/20">
+                        {isLoadingActivity ? (
+                          <div className="px-4 py-6 text-sm text-muted-foreground">
+                            Loading activity logs...
+                          </div>
+                        ) : activityLogs.length === 0 ? (
+                          <div className="px-4 py-6 text-sm text-muted-foreground">
+                            No activity logs available yet.
+                          </div>
+                        ) : (
+                          <div className="divide-y">
+                            {activityLogs.map((activityLog) => {
+                              const actorName =
+                                activityLog.actorUser?.name ||
+                                activityLog.actorUser?.email ||
+                                'System'
+                              const actorRole = formatRoleLabel(activityLog.actorRole)
+
+                              return (
+                                <div
+                                  key={activityLog.id}
+                                  className="flex items-start gap-3 px-4 py-3"
+                                >
+                                  <div className="mt-0.5 shrink-0 rounded-full border border-border/70 bg-background/60 p-2">
+                                    <ActivityIcon action={activityLog.action} />
+                                  </div>
+                                  <div className="min-w-0 flex-1 space-y-1">
+                                    <p className="text-sm leading-6 text-foreground">
+                                      {activityLog.summary}
+                                    </p>
+                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                                      <span className="font-medium text-foreground">{actorName}</span>
+                                      {actorRole ? <span>{actorRole}</span> : null}
+                                      <span>{format(new Date(activityLog.createdAt), 'd MMM yyyy, h:mm a')}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </CardContent>

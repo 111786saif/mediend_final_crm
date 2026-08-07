@@ -16,7 +16,7 @@ type RetryIncomingLeadsBody = {
 
 type RetryIncomingLeadResultItem = {
   incomingLeadId: string
-  status: 'processed' | 'already_processed' | 'failed' | 'skipped'
+  status: 'processed' | 'already_processed' | 'duplicate' | 'failed' | 'skipped'
   leadId?: string
   leadRef?: string
   assignedBdName?: string | null
@@ -120,6 +120,7 @@ export async function POST(request: NextRequest) {
         : null
 
     let processedCount = 0
+    let duplicateCount = 0
     let failedCount = 0
     let skippedCount = 0
     const results: RetryIncomingLeadResultItem[] = []
@@ -162,7 +163,11 @@ export async function POST(request: NextRequest) {
             continue
           }
 
-          processedCount += 1
+          if (result.status === 'duplicate') {
+            duplicateCount += 1
+          } else {
+            processedCount += 1
+          }
           results.push({
             incomingLeadId: incomingLead.id,
             status: result.status,
@@ -195,10 +200,14 @@ export async function POST(request: NextRequest) {
             receivedAt: incomingLead.receivedAt,
           })
 
-          processedCount += 1
+          if (result.deduplicated) {
+            duplicateCount += 1
+          } else {
+            processedCount += 1
+          }
           results.push({
             incomingLeadId: incomingLead.id,
-            status: 'processed',
+            status: result.deduplicated ? 'duplicate' : 'processed',
             leadId: result.leadId,
             leadRef: result.leadRef,
             assignedBdName: result.bd.name,
@@ -237,6 +246,7 @@ export async function POST(request: NextRequest) {
     return successResponse(
       {
         processedCount,
+        duplicateCount,
         failedCount,
         skippedCount,
         results,

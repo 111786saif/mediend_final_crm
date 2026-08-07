@@ -11,12 +11,13 @@ import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -57,7 +58,7 @@ import {
   getNextAvailableOpdSlot,
   type EffectiveOpdEntry,
 } from '@/lib/lead-opd-appointments'
-import { getNextStageAfterOpdDone, hasLeadOpdDone, hasLeadOpdScheduled, OPD_DONE_STATUS } from '@/lib/lead-opd-workflow'
+import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
 import { isSalesLeadWorkerRole } from '@/lib/sales-hierarchy-roles'
 import { format, formatDistanceToNow } from 'date-fns'
@@ -109,6 +110,13 @@ function kypMultiDocList(
   return []
 }
 
+function toDateTimeLocalInputValue(value: string | Date | null | undefined) {
+  if (!value) return ''
+  const parsed = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(parsed.getTime())) return ''
+  return format(parsed, "yyyy-MM-dd'T'HH:mm")
+}
+
 interface Lead {
   id: string
   leadRef: string
@@ -150,6 +158,8 @@ interface Lead {
   assignedDate?: string | null
   createdDate?: string | null
   surgeryDate?: string | null
+  ipdPotentialDate?: string | null
+  ipdPotentialMarkedAt?: string | null
   month?: string | null
   profession?: string | null
   teamLeadId?: number | null
@@ -573,6 +583,7 @@ export default function PatientDetailsPage() {
     queryFn: () => apiGet<any[]>(`/api/leads/${leadId}/stage-history`),
     enabled: !!leadId,
   })
+  const [makeCallLoading, setMakeCallLoading] = useState(false)
 
   const { data: initiateFormData } = useQuery<any>({
     queryKey: ['insurance-initiate-form', leadId],
@@ -585,14 +596,40 @@ export default function PatientDetailsPage() {
   const [showIPDCashModal, setShowIPDCashModal] = useState(false)
   const [showIPDMarkModal, setShowIPDMarkModal] = useState(false)
   const [showMarkLostDialog, setShowMarkLostDialog] = useState(false)
+  const [showIpdPotentialDialog, setShowIpdPotentialDialog] = useState(false)
+  const [ipdPotentialDateInput, setIpdPotentialDateInput] = useState('')
+  const [ipdPotentialSubmitting, setIpdPotentialSubmitting] = useState(false)
   const [markLostReason, setMarkLostReason] = useState<string>('')
   const [markLostDetail, setMarkLostDetail] = useState('')
   const [markLostSubmitting, setMarkLostSubmitting] = useState(false)
   const [switchingMode, setSwitchingMode] = useState(false)
   const [markingOpdId, setMarkingOpdId] = useState<string | null>(null)
+  const [postponeTargetOpd, setPostponeTargetOpd] = useState<EffectiveOpdEntry | null>(null)
+  const [postponeDateInput, setPostponeDateInput] = useState('')
+  const [postponeSubmitting, setPostponeSubmitting] = useState(false)
+  const [cancelTargetOpd, setCancelTargetOpd] = useState<EffectiveOpdEntry | null>(null)
+  const [cancelSubmitting, setCancelSubmitting] = useState(false)
   const [showResetStepperDialog, setShowResetStepperDialog] = useState(false)
   const [handledQuickAction, setHandledQuickAction] = useState<string | null>(null)
   const quickAction = searchParams.get('action')
+
+  const handleBackendMakeCall = async () => {
+    try {
+      setMakeCallLoading(true)
+      await apiPost(`/api/leads/${leadId}/make-call`, {})
+      toast.success('Call initiated')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to initiate call')
+    } finally {
+      setMakeCallLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!leadId) return
+
+    void apiPost(`/api/leads/${leadId}/opened`, {})
+  }, [leadId])
 
   useEffect(() => {
     if (!lead || !quickAction || quickAction === handledQuickAction) return
@@ -876,6 +913,7 @@ export default function PatientDetailsPage() {
     (isSalesLeadWorkerRole(user.role) || user.role === 'ADMIN')
   const canFillIPDCash = !readOnly && !!user && canFillIPDCashForm(user as any, lead)
   const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
+  const canMarkIpdPotential = !readOnly && user?.role === 'BD' && !lead.ipdPotentialDate
   const displayStatus = normalizeLeadStatus(lead.status)
   const effectiveOpdAppointments = (lead.effectiveOpdAppointments ?? []) as EffectiveOpdEntry[]
   const opdCounts = lead.opdCounts ?? getEffectiveOpdCounts(effectiveOpdAppointments)
@@ -923,12 +961,26 @@ export default function PatientDetailsPage() {
     canMarkOpdAction &&
     entry.status !== LeadOpdStatus.DONE &&
     entry.status !== LeadOpdStatus.CANCELLED
+  const canPostponeOpdEntry = (entry: EffectiveOpdEntry) =>
+    user?.role === 'BD' &&
+    canManageOpd &&
+    Boolean(entry.scheduleDate) &&
+    entry.status !== LeadOpdStatus.DONE &&
+    entry.status !== LeadOpdStatus.CANCELLED
+  const canCancelOpdEntry = (entry: EffectiveOpdEntry) =>
+    user?.role === 'BD' &&
+    canManageOpd &&
+    entry.status !== LeadOpdStatus.DONE &&
+    entry.status !== LeadOpdStatus.CANCELLED
+
+  function getOpdTargetId(entry: EffectiveOpdEntry) {
+    return entry.source === 'legacy' ? 'legacy' : entry.id
+  }
 
   async function handleMarkOpdDone(entry: EffectiveOpdEntry) {
     try {
       setMarkingOpdId(entry.id)
-      const targetId = entry.source === 'legacy' ? 'legacy' : entry.id
-      await apiPatch(`/api/leads/${leadId}/opds/${targetId}`, {
+      await apiPatch(`/api/leads/${leadId}/opds/${getOpdTargetId(entry)}`, {
         markDone: true,
       })
       toast.success('OPD marked done')
@@ -939,6 +991,62 @@ export default function PatientDetailsPage() {
       toast.error('Failed to mark OPD done')
     } finally {
       setMarkingOpdId(null)
+    }
+  }
+
+  function openPostponeDialog(entry: EffectiveOpdEntry) {
+    setPostponeTargetOpd(entry)
+    setPostponeDateInput(toDateTimeLocalInputValue(entry.scheduleDate))
+  }
+
+  async function handlePostponeOpd() {
+    if (!postponeTargetOpd) return
+    if (!postponeDateInput) {
+      toast.error('Please select a new OPD date and time')
+      return
+    }
+
+    const currentDateInput = toDateTimeLocalInputValue(postponeTargetOpd.scheduleDate)
+    if (currentDateInput === postponeDateInput) {
+      toast.error('Please choose a different date or time to postpone this OPD')
+      return
+    }
+
+    try {
+      setPostponeSubmitting(true)
+      await apiPatch(`/api/leads/${leadId}/opds/${getOpdTargetId(postponeTargetOpd)}`, {
+        scheduleDate: postponeDateInput,
+      })
+      toast.success('OPD postponed')
+      setPostponeTargetOpd(null)
+      setPostponeDateInput('')
+      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to postpone OPD')
+    } finally {
+      setPostponeSubmitting(false)
+    }
+  }
+
+  async function handleCancelOpd() {
+    if (!cancelTargetOpd) return
+
+    try {
+      setCancelSubmitting(true)
+      await apiPatch(`/api/leads/${leadId}/opds/${getOpdTargetId(cancelTargetOpd)}`, {
+        cancel: true,
+      })
+      toast.success('OPD cancelled')
+      setCancelTargetOpd(null)
+      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to cancel OPD')
+    } finally {
+      setCancelSubmitting(false)
     }
   }
 
@@ -1065,6 +1173,20 @@ export default function PatientDetailsPage() {
                 </div>
               </div>
               <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-2"
+                  onClick={handleBackendMakeCall}
+                  disabled={makeCallLoading}
+                >
+                  {makeCallLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <PhoneCall className="h-4 w-4" />
+                  )}
+                  Make Call
+                </Button>
                 <LeadQrPopover
                   leadId={leadId}
                   phoneNumber={lead.phoneNumber ?? ''}
@@ -1642,13 +1764,28 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
-                {/* BD / TL Actions (Insurance Flow) — show when at Card Details step */}
-                {lead.flowType !== FlowType.CASH && hasDoneOpd && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && ([CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage) && (
+                {canMarkIpdPotential && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex items-center gap-2 border-violet-300 text-violet-700 hover:bg-violet-50 dark:border-violet-700 dark:text-violet-300 dark:hover:bg-violet-950/30"
+                    onClick={() => {
+                      setIpdPotentialDateInput('')
+                      setShowIpdPotentialDialog(true)
+                    }}
+                  >
+                    <CalendarIcon className="h-4 w-4" />
+                    Mark IPD Possibility
+                  </Button>
+                )}
+
+                {/* BD / TL Actions (Insurance Flow) — OPD is optional, so card details can start directly from early stages */}
+                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ASSISTANT_CATEGORY_MANAGER' || user.role === 'CATEGORY_MANAGER' || user.role === 'ADMIN') && ([CaseStage.NEW_LEAD, CaseStage.OPD_SCHEDULED, CaseStage.OPD_DONE, CaseStage.KYP_BASIC_PENDING] as CaseStage[]).includes(lead.caseStage as CaseStage) && (
                   <Button
                     asChild
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
                   >
-                    <Link href={`/patient/${leadId}/kyp/basic`}>
+                    <Link href={withReturnTo(`/patient/${leadId}/kyp/basic`)}>
                       <Plus className="h-4 w-4" />
                       Fill Card Details
                     </Link>
@@ -1829,6 +1966,20 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
               </div>
+
+              {lead.ipdPotentialDate ? (
+                <div className="mt-4 rounded-lg border border-violet-200 bg-violet-50/70 px-4 py-3 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950/20 dark:text-violet-200">
+                  <div className="font-medium">Potential IPD marked</div>
+                  <div className="mt-1">
+                    Expected IPD by {format(new Date(lead.ipdPotentialDate), 'dd MMM yyyy')}
+                  </div>
+                  {lead.ipdPotentialMarkedAt ? (
+                    <div className="mt-1 text-xs text-violet-700 dark:text-violet-300">
+                      Locked on {format(new Date(lead.ipdPotentialMarkedAt), 'dd MMM yyyy, h:mm a')}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
             </CardContent>
           </Card>
         )}
@@ -1923,6 +2074,29 @@ export default function PatientDetailsPage() {
                                       <CheckCircle2 className="mr-2 h-3.5 w-3.5" />
                                     )}
                                     Mark OPD Done
+                                  </Button>
+                                ) : null}
+                                {canPostponeOpdEntry(entry) ? (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    disabled={postponeSubmitting || cancelSubmitting}
+                                    onClick={() => openPostponeDialog(entry)}
+                                  >
+                                    <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                                    Postpone
+                                  </Button>
+                                ) : null}
+                                {canCancelOpdEntry(entry) ? (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900 dark:text-rose-300 dark:hover:bg-rose-950/40"
+                                    disabled={postponeSubmitting || cancelSubmitting}
+                                    onClick={() => setCancelTargetOpd(entry)}
+                                  >
+                                    <XCircle className="mr-2 h-3.5 w-3.5" />
+                                    Cancel
                                   </Button>
                                 ) : null}
                                 {canEditOpdEntry(entry) ? (
@@ -2453,6 +2627,117 @@ export default function PatientDetailsPage() {
           />
         )}
 
+        <Dialog
+          open={Boolean(postponeTargetOpd)}
+          onOpenChange={(open) => {
+            if (!open && !postponeSubmitting) {
+              setPostponeTargetOpd(null)
+              setPostponeDateInput('')
+            }
+          }}
+        >
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Postpone OPD</DialogTitle>
+              <DialogDescription>
+                Update the OPD schedule date. This will keep the case stage unchanged.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="rounded-lg border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+                {postponeTargetOpd?.scheduleDate ? (
+                  <>Current schedule: {format(new Date(postponeTargetOpd.scheduleDate), 'dd MMM yyyy')}</>
+                ) : (
+                  'No current schedule date available.'
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="postpone-opd-date">New OPD date and time</Label>
+                <Input
+                  id="postpone-opd-date"
+                  type="datetime-local"
+                  value={postponeDateInput}
+                  min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                  onChange={(e) => setPostponeDateInput(e.target.value)}
+                  disabled={postponeSubmitting}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setPostponeTargetOpd(null)
+                    setPostponeDateInput('')
+                  }}
+                  disabled={postponeSubmitting}
+                >
+                  Close
+                </Button>
+                <Button onClick={handlePostponeOpd} disabled={postponeSubmitting}>
+                  {postponeSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    'Postpone OPD'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={Boolean(cancelTargetOpd)}
+          onOpenChange={(open) => {
+            if (!open && !cancelSubmitting) {
+              setCancelTargetOpd(null)
+            }
+          }}
+        >
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Cancel OPD</DialogTitle>
+              <DialogDescription>
+                Cancel this OPD appointment. This updates only the OPD status and keeps the case stage unchanged.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="rounded-lg border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+                {cancelTargetOpd?.scheduleDate ? (
+                  <>Scheduled for {format(new Date(cancelTargetOpd.scheduleDate), 'dd MMM yyyy · hh:mm a')}</>
+                ) : (
+                  'This OPD does not have a scheduled date saved.'
+                )}
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setCancelTargetOpd(null)}
+                  disabled={cancelSubmitting}
+                >
+                  Keep OPD
+                </Button>
+                <Button
+                  onClick={handleCancelOpd}
+                  disabled={cancelSubmitting}
+                  className="bg-rose-600 text-white hover:bg-rose-700"
+                >
+                  {cancelSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Cancelling...
+                    </>
+                  ) : (
+                    'Cancel OPD'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         {/* Mark Admitted Modal — Full IPD Details Form */}
         <Dialog open={showAdmitModal} onOpenChange={setShowAdmitModal}>
           <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -2661,6 +2946,66 @@ export default function PatientDetailsPage() {
                   }}
                 >
                   {markLostSubmitting ? 'Saving...' : 'Mark Lost'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showIpdPotentialDialog} onOpenChange={setShowIpdPotentialDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Mark IPD Possibility</DialogTitle>
+              <DialogDescription>
+                Set the date by which this patient is likely to convert to IPD. Once saved, BD users cannot edit or delete it.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="ipdPotentialDate">Expected IPD date</Label>
+                <Input
+                  id="ipdPotentialDate"
+                  type="date"
+                  min={format(new Date(), 'yyyy-MM-dd')}
+                  value={ipdPotentialDateInput}
+                  onChange={(event) => setIpdPotentialDateInput(event.target.value)}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={ipdPotentialSubmitting}
+                  onClick={() => {
+                    setShowIpdPotentialDialog(false)
+                    setIpdPotentialDateInput('')
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  disabled={!ipdPotentialDateInput || ipdPotentialSubmitting}
+                  onClick={async () => {
+                    try {
+                      setIpdPotentialSubmitting(true)
+                      await apiPost(`/api/leads/${leadId}/ipd-potential`, {
+                        potentialDate: ipdPotentialDateInput,
+                      })
+                      toast.success('IPD possibility marked')
+                      setShowIpdPotentialDialog(false)
+                      setIpdPotentialDateInput('')
+                      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+                      queryClient.invalidateQueries({ queryKey: ['leads'] })
+                      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+                    } catch (error) {
+                      toast.error(error instanceof Error ? error.message : 'Failed to mark IPD possibility')
+                    } finally {
+                      setIpdPotentialSubmitting(false)
+                    }
+                  }}
+                >
+                  {ipdPotentialSubmitting ? 'Saving...' : 'Save'}
                 </Button>
               </div>
             </div>

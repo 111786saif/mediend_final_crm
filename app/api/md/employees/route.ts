@@ -2,10 +2,11 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 
 /**
  * GET /api/md/employees?q=searchTerm
- * Search all employees in the org. MD/ADMIN only.
+ * Search active employees in the org. MD/ADMIN only.
  */
 export async function GET(request: NextRequest) {
   const user = getSessionFromRequest(request)
@@ -23,6 +24,7 @@ export async function GET(request: NextRequest) {
 
   const employees = await prisma.employee.findMany({
     where: {
+      ...headcountEmployeeWhere,
       OR: [
         { user: { name: { contains: q, mode: 'insensitive' } } },
         { user: { email: { contains: q, mode: 'insensitive' } } },

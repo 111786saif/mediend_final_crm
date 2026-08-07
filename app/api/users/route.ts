@@ -6,6 +6,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission, canCreateRole } from '@/lib/rbac'
 import { hashPassword } from '@/lib/auth'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { HEADCOUNT_EMPLOYEE_STATUSES } from '@/lib/hrms/headcount'
 import { z } from 'zod'
 
 const createUserSchema = z.object({
@@ -32,10 +33,18 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const role = searchParams.get('role')
+    const includeInactive = searchParams.get('includeInactive') === 'true'
 
     const where: Prisma.UserWhereInput = {}
     if (role && role in UserRole) {
       where.role = role as UserRole
+    }
+    // Workspace lists hide terminated/absconded; HR admin can pass includeInactive=true
+    if (!includeInactive) {
+      where.OR = [
+        { employee: null },
+        { employee: { status: { in: [...HEADCOUNT_EMPLOYEE_STATUSES] } } },
+      ]
     }
 
     const users = await prisma.user.findMany({
@@ -45,6 +54,7 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             employeeCode: true,
+            status: true,
             bdNumber: true,
             circle: true,
             joinDate: true,

@@ -41,6 +41,7 @@ export interface Lead {
   pipelineStage?: string
   caseStage?: CaseStage
   leadRef?: string
+  openedInCrmAt?: string | Date | null
   insuranceName?: string
   modeOfPayment?: string | null
   tpa?: string
@@ -60,7 +61,7 @@ export interface Lead {
   campaignName?: string | null
   month?: string | Date | null
   profession?: string | null
-  subStatus?: number | null
+  subStatus?: string | null
   teamLeadId?: number | null
   duplCount?: number | null
   latestRemark?: {

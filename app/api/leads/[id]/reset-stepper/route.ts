@@ -16,6 +16,8 @@ import {
   notificationLinkForStep,
   type WorkflowStepExtras,
 } from '@/lib/case/workflow-reset'
+import { resolveTeamLeadForLeadOwner } from '@/lib/hierarchy'
+import { buildLeadOwnershipTransferUpdate } from '@/lib/lead-ownership'
 
 const resetStepperSchema = z.object({
   targetStep: z.number().int().min(1).max(10),
@@ -185,11 +187,20 @@ export async function POST(
       null
     const userAgent = request.headers.get('user-agent') || null
 
+    // On reset, hand ownership to the Team Lead (ACM counts as TL).
+    const previousBdId = lead.bdId
+    const teamLead = previousBdId
+      ? await resolveTeamLeadForLeadOwner(previousBdId)
+      : null
+    const nextOwnerUserId =
+      teamLead && teamLead.userId !== previousBdId ? teamLead.userId : null
+
     const timelineNote = buildWorkflowResetTimelineNote({
       fromLabel: previousStep.label,
       toLabel: targetStep.label,
       resetByName: user.name,
       reason,
+      reassignedToName: nextOwnerUserId ? teamLead?.name ?? null : null,
     })
 
     await prisma.$transaction(async (tx) => {
@@ -322,6 +333,9 @@ export async function POST(
         // Reinstate cases that were marked lost when EA resets the workflow.
         lostReason: null,
         lostAt: null,
+        ...(nextOwnerUserId
+          ? buildLeadOwnershipTransferUpdate(nextOwnerUserId)
+          : {}),
       }
       if (config.clearOpdSchedule) {
         leadUpdate.status = config.resetLeadStatus
@@ -390,13 +404,15 @@ export async function POST(
     try {
       await notifyResetRecipients({
         leadId,
-        bdId: lead.bdId,
+        bdId: nextOwnerUserId ?? previousBdId,
+        previousBdId: nextOwnerUserId ? previousBdId : null,
         patientName: lead.patientName,
         leadRef: lead.leadRef,
         actorId: user.id,
         actorName: user.name,
         targetStep,
         reason,
+        reassignedToTl: !!nextOwnerUserId,
       })
     } catch (sideEffectError) {
       console.error('reset-stepper: failed to notify reset recipients', sideEffectError)
@@ -408,8 +424,11 @@ export async function POST(
         pipelineStage: config.pipelineStage,
         resetToStep: targetStep.number,
         stepsReverted,
+        reassignedToUserId: nextOwnerUserId,
       },
-      'Workflow step reset successfully',
+      nextOwnerUserId
+        ? 'Workflow step reset and lead assigned to Team Lead'
+        : 'Workflow step reset successfully',
     )
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -447,15 +466,18 @@ async function clearDischargeDownstream(
 async function notifyResetRecipients(args: {
   leadId: string
   bdId: string | null
+  previousBdId?: string | null
   patientName: string
   leadRef: string
   actorId: string
   actorName: string
   targetStep: { number: number; label: string; owner: 'BD' | 'INSURANCE' }
   reason: string
+  reassignedToTl?: boolean
 }) {
   const recipients = new Set<string>()
   if (args.bdId) recipients.add(args.bdId)
+  if (args.previousBdId) recipients.add(args.previousBdId)
 
   if (args.targetStep.owner === 'INSURANCE') {
     const insuranceUsers = await prisma.user.findMany({
@@ -463,20 +485,21 @@ async function notifyResetRecipients(args: {
       select: { id: true },
     })
     insuranceUsers.forEach((u) => recipients.add(u.id))
-  } else if (args.bdId) {
-    // BD-owned step — also alert TL hierarchy is optional; BD is enough.
   }
 
   recipients.delete(args.actorId)
   if (recipients.size === 0) return
 
   const link = notificationLinkForStep(args.leadId, args.targetStep as any)
+  const reassignNote = args.reassignedToTl
+    ? ' Lead was reassigned to the Team Lead.'
+    : ''
   await prisma.notification.createMany({
     data: Array.from(recipients).map((userId) => ({
       userId,
       type: 'WORKFLOW_RESET' as const,
       title: 'Case workflow reset',
-      message: `${args.actorName} reset ${args.patientName} (${args.leadRef}) to step "${args.targetStep.label}". Reason: ${args.reason}`,
+      message: `${args.actorName} reset ${args.patientName} (${args.leadRef}) to step "${args.targetStep.label}". Reason: ${args.reason}.${reassignNote}`,
       link,
       relatedId: args.leadId,
     })),

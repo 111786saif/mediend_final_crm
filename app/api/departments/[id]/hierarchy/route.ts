@@ -74,15 +74,14 @@ export async function GET(
       },
     })
 
-    // Active employees in this department (for headcount stats)
+    // Active employees in this department (headcount + hierarchy display)
     const activeEmployees = await prisma.employee.findMany({
       where: { departmentId: id, ...headcountEmployeeWhere },
       select: { id: true, teamId: true },
     })
 
-    // All employees in this department (for hierarchy display)
     const employees = await prisma.employee.findMany({
-      where: { departmentId: id },
+      where: { departmentId: id, ...headcountEmployeeWhere },
       include: {
         user: {
           select: {

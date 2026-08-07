@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { getSessionFromRequest } from "@/lib/session"
 import { getEmployeeByUserId, getSubordinates } from "@/lib/hierarchy"
 import { errorResponse, successResponse, unauthorizedResponse } from "@/lib/api-utils"
+import { isActiveHeadcountEmployee } from "@/lib/hrms/headcount"
 import { startOfDay, endOfDay } from "date-fns"
 
 export type TeamMemberSource = "team" | "watchlist" | "subordinate"
@@ -99,6 +100,7 @@ export async function GET(request: NextRequest) {
     type EmployeeRow = {
       id: string
       userId?: string
+      status?: string
       user: { id: string; name: string | null; email: string | null; role: string }
       department: { id: string; name: string } | null
       designation?: string | null
@@ -106,22 +108,26 @@ export async function GET(request: NextRequest) {
 
     // Merge and deduplicate by employee id; track source (subordinate > team > watchlist)
     // MD: only team + watchlist. Other managers: subordinates + team + watchlist
+    // Skip terminated/absconded — they must not appear in workspace team surfaces
     const byEmployeeId = new Map<string, { employee: EmployeeRow; source: TeamMemberSource }>()
     if (!isMD) {
       for (const emp of subordinateEmployees) {
+        if (!isActiveHeadcountEmployee(emp.status)) continue
         byEmployeeId.set(emp.id, { employee: emp as EmployeeRow, source: "subordinate" })
       }
     }
     for (const team of taskTeams) {
       for (const m of team.members) {
-        const e = m.employee as EmployeeRow
+        const e = m.employee as EmployeeRow & { status: string }
+        if (!isActiveHeadcountEmployee(e.status)) continue
         if (!byEmployeeId.has(e.id)) {
           byEmployeeId.set(e.id, { employee: e, source: "team" })
         }
       }
     }
     for (const entry of watchlistEntries) {
-      const e = entry.employee as EmployeeRow
+      const e = entry.employee as EmployeeRow & { status: string }
+      if (!isActiveHeadcountEmployee(e.status)) continue
       if (!byEmployeeId.has(e.id)) {
         byEmployeeId.set(e.id, { employee: e, source: "watchlist" })
       }

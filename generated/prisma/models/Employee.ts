@@ -42,6 +42,9 @@ export type EmployeeMinAggregateOutputType = {
   employeeCode: string | null
   bdNumber: number | null
   circle: string | null
+  knowlarityPhoneNumber: string | null
+  knowlarityCallerId: string | null
+  knowlarityNotificationsEnabled: boolean | null
   joinDate: Date | null
   salary: number | null
   departmentId: string | null
@@ -99,6 +102,9 @@ export type EmployeeMaxAggregateOutputType = {
   employeeCode: string | null
   bdNumber: number | null
   circle: string | null
+  knowlarityPhoneNumber: string | null
+  knowlarityCallerId: string | null
+  knowlarityNotificationsEnabled: boolean | null
   joinDate: Date | null
   salary: number | null
   departmentId: string | null
@@ -156,6 +162,9 @@ export type EmployeeCountAggregateOutputType = {
   employeeCode: number
   bdNumber: number
   circle: number
+  knowlarityPhoneNumber: number
+  knowlarityCallerId: number
+  knowlarityNotificationsEnabled: number
   joinDate: number
   salary: number
   departmentId: number
@@ -226,6 +235,9 @@ export type EmployeeMinAggregateInputType = {
   employeeCode?: true
   bdNumber?: true
   circle?: true
+  knowlarityPhoneNumber?: true
+  knowlarityCallerId?: true
+  knowlarityNotificationsEnabled?: true
   joinDate?: true
   salary?: true
   departmentId?: true
@@ -283,6 +295,9 @@ export type EmployeeMaxAggregateInputType = {
   employeeCode?: true
   bdNumber?: true
   circle?: true
+  knowlarityPhoneNumber?: true
+  knowlarityCallerId?: true
+  knowlarityNotificationsEnabled?: true
   joinDate?: true
   salary?: true
   departmentId?: true
@@ -340,6 +355,9 @@ export type EmployeeCountAggregateInputType = {
   employeeCode?: true
   bdNumber?: true
   circle?: true
+  knowlarityPhoneNumber?: true
+  knowlarityCallerId?: true
+  knowlarityNotificationsEnabled?: true
   joinDate?: true
   salary?: true
   departmentId?: true
@@ -485,6 +503,9 @@ export type EmployeeGroupByOutputType = {
   employeeCode: string
   bdNumber: number | null
   circle: string | null
+  knowlarityPhoneNumber: string | null
+  knowlarityCallerId: string | null
+  knowlarityNotificationsEnabled: boolean
   joinDate: Date | null
   salary: number | null
   departmentId: string | null
@@ -566,6 +587,9 @@ export type EmployeeWhereInput = {
   employeeCode?: Prisma.StringFilter<"Employee"> | string
   bdNumber?: Prisma.IntNullableFilter<"Employee"> | number | null
   circle?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityPhoneNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityCallerId?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFilter<"Employee"> | boolean
   joinDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   salary?: Prisma.FloatNullableFilter<"Employee"> | number | null
   departmentId?: Prisma.StringNullableFilter<"Employee"> | string | null
@@ -648,6 +672,8 @@ export type EmployeeWhereInput = {
   itProjectResources?: Prisma.ITProjectResourceListRelationFilter
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberListRelationFilter
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentListRelationFilter
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitListRelationFilter
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitListRelationFilter
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryListRelationFilter
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveListRelationFilter
   masterSeatingCost?: Prisma.XOR<Prisma.EmployeeMasterSeatingCostNullableScalarRelationFilter, Prisma.EmployeeMasterSeatingCostWhereInput> | null
@@ -663,6 +689,9 @@ export type EmployeeOrderByWithRelationInput = {
   employeeCode?: Prisma.SortOrder
   bdNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   circle?: Prisma.SortOrderInput | Prisma.SortOrder
+  knowlarityPhoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  knowlarityCallerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  knowlarityNotificationsEnabled?: Prisma.SortOrder
   joinDate?: Prisma.SortOrderInput | Prisma.SortOrder
   salary?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -745,6 +774,8 @@ export type EmployeeOrderByWithRelationInput = {
   itProjectResources?: Prisma.ITProjectResourceOrderByRelationAggregateInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberOrderByRelationAggregateInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentOrderByRelationAggregateInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitOrderByRelationAggregateInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitOrderByRelationAggregateInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryOrderByRelationAggregateInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveOrderByRelationAggregateInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostOrderByWithRelationInput
@@ -763,6 +794,9 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.EmployeeWhereInput[]
   NOT?: Prisma.EmployeeWhereInput | Prisma.EmployeeWhereInput[]
   circle?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityPhoneNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityCallerId?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFilter<"Employee"> | boolean
   joinDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   salary?: Prisma.FloatNullableFilter<"Employee"> | number | null
   departmentId?: Prisma.StringNullableFilter<"Employee"> | string | null
@@ -845,6 +879,8 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   itProjectResources?: Prisma.ITProjectResourceListRelationFilter
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberListRelationFilter
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentListRelationFilter
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitListRelationFilter
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitListRelationFilter
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryListRelationFilter
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveListRelationFilter
   masterSeatingCost?: Prisma.XOR<Prisma.EmployeeMasterSeatingCostNullableScalarRelationFilter, Prisma.EmployeeMasterSeatingCostWhereInput> | null
@@ -860,6 +896,9 @@ export type EmployeeOrderByWithAggregationInput = {
   employeeCode?: Prisma.SortOrder
   bdNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   circle?: Prisma.SortOrderInput | Prisma.SortOrder
+  knowlarityPhoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  knowlarityCallerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  knowlarityNotificationsEnabled?: Prisma.SortOrder
   joinDate?: Prisma.SortOrderInput | Prisma.SortOrder
   salary?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -926,6 +965,9 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   employeeCode?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   bdNumber?: Prisma.IntNullableWithAggregatesFilter<"Employee"> | number | null
   circle?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  knowlarityPhoneNumber?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  knowlarityCallerId?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean
   joinDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
   salary?: Prisma.FloatNullableWithAggregatesFilter<"Employee"> | number | null
   departmentId?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
@@ -983,6 +1025,9 @@ export type EmployeeCreateInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -1060,6 +1105,8 @@ export type EmployeeCreateInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -1075,6 +1122,9 @@ export type EmployeeUncheckedCreateInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -1151,6 +1201,8 @@ export type EmployeeUncheckedCreateInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -1165,6 +1217,9 @@ export type EmployeeUpdateInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1242,6 +1297,8 @@ export type EmployeeUpdateInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -1257,6 +1314,9 @@ export type EmployeeUncheckedUpdateInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1333,6 +1393,8 @@ export type EmployeeUncheckedUpdateInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -1348,6 +1410,9 @@ export type EmployeeCreateManyInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -1405,6 +1470,9 @@ export type EmployeeUpdateManyMutationInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1458,6 +1526,9 @@ export type EmployeeUncheckedUpdateManyInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1531,6 +1602,9 @@ export type EmployeeCountOrderByAggregateInput = {
   employeeCode?: Prisma.SortOrder
   bdNumber?: Prisma.SortOrder
   circle?: Prisma.SortOrder
+  knowlarityPhoneNumber?: Prisma.SortOrder
+  knowlarityCallerId?: Prisma.SortOrder
+  knowlarityNotificationsEnabled?: Prisma.SortOrder
   joinDate?: Prisma.SortOrder
   salary?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
@@ -1594,6 +1668,9 @@ export type EmployeeMaxOrderByAggregateInput = {
   employeeCode?: Prisma.SortOrder
   bdNumber?: Prisma.SortOrder
   circle?: Prisma.SortOrder
+  knowlarityPhoneNumber?: Prisma.SortOrder
+  knowlarityCallerId?: Prisma.SortOrder
+  knowlarityNotificationsEnabled?: Prisma.SortOrder
   joinDate?: Prisma.SortOrder
   salary?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
@@ -1651,6 +1728,9 @@ export type EmployeeMinOrderByAggregateInput = {
   employeeCode?: Prisma.SortOrder
   bdNumber?: Prisma.SortOrder
   circle?: Prisma.SortOrder
+  knowlarityPhoneNumber?: Prisma.SortOrder
+  knowlarityCallerId?: Prisma.SortOrder
+  knowlarityNotificationsEnabled?: Prisma.SortOrder
   joinDate?: Prisma.SortOrder
   salary?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
@@ -2300,6 +2380,34 @@ export type EmployeeUpdateOneRequiredWithoutCampaignTeamLeadAssignmentsNestedInp
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutCampaignTeamLeadAssignmentsInput, Prisma.EmployeeUpdateWithoutCampaignTeamLeadAssignmentsInput>, Prisma.EmployeeUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput>
 }
 
+export type EmployeeCreateNestedOneWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput, Prisma.EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutCampaignBdDailyLimitsAsTeamLeadInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeCreateNestedOneWithoutCampaignBdDailyLimitsAsBdInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutCampaignBdDailyLimitsAsBdInput, Prisma.EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsBdInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutCampaignBdDailyLimitsAsBdInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutCampaignBdDailyLimitsAsTeamLeadNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput, Prisma.EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutCampaignBdDailyLimitsAsTeamLeadInput
+  upsert?: Prisma.EmployeeUpsertWithoutCampaignBdDailyLimitsAsTeamLeadInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutCampaignBdDailyLimitsAsTeamLeadInput, Prisma.EmployeeUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput>, Prisma.EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput>
+}
+
+export type EmployeeUpdateOneRequiredWithoutCampaignBdDailyLimitsAsBdNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutCampaignBdDailyLimitsAsBdInput, Prisma.EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsBdInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutCampaignBdDailyLimitsAsBdInput
+  upsert?: Prisma.EmployeeUpsertWithoutCampaignBdDailyLimitsAsBdInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutCampaignBdDailyLimitsAsBdInput, Prisma.EmployeeUpdateWithoutCampaignBdDailyLimitsAsBdInput>, Prisma.EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsBdInput>
+}
+
 export type EmployeeCreateNestedOneWithoutSalesTeamCostEntriesInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutSalesTeamCostEntriesInput, Prisma.EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutSalesTeamCostEntriesInput
@@ -2449,6 +2557,9 @@ export type EmployeeCreateWithoutUserInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -2525,6 +2636,8 @@ export type EmployeeCreateWithoutUserInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -2539,6 +2652,9 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -2615,6 +2731,8 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -2634,6 +2752,9 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -2710,6 +2831,8 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -2725,6 +2848,9 @@ export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -2800,6 +2926,8 @@ export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -2824,6 +2952,9 @@ export type EmployeeCreateWithoutOnboardingApprovedByInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -2900,6 +3031,8 @@ export type EmployeeCreateWithoutOnboardingApprovedByInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -2915,6 +3048,9 @@ export type EmployeeUncheckedCreateWithoutOnboardingApprovedByInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -2990,6 +3126,8 @@ export type EmployeeUncheckedCreateWithoutOnboardingApprovedByInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -3025,6 +3163,9 @@ export type EmployeeUpdateWithoutUserInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3101,6 +3242,8 @@ export type EmployeeUpdateWithoutUserInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -3115,6 +3258,9 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3191,6 +3337,8 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -3225,6 +3373,9 @@ export type EmployeeScalarWhereInput = {
   employeeCode?: Prisma.StringFilter<"Employee"> | string
   bdNumber?: Prisma.IntNullableFilter<"Employee"> | number | null
   circle?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityPhoneNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityCallerId?: Prisma.StringNullableFilter<"Employee"> | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFilter<"Employee"> | boolean
   joinDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   salary?: Prisma.FloatNullableFilter<"Employee"> | number | null
   departmentId?: Prisma.StringNullableFilter<"Employee"> | string | null
@@ -3298,6 +3449,9 @@ export type EmployeeCreateWithoutDepartmentInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -3374,6 +3528,8 @@ export type EmployeeCreateWithoutDepartmentInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -3389,6 +3545,9 @@ export type EmployeeUncheckedCreateWithoutDepartmentInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   teamId?: string | null
@@ -3464,6 +3623,8 @@ export type EmployeeUncheckedCreateWithoutDepartmentInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -3504,6 +3665,9 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -3580,6 +3744,8 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -3595,6 +3761,9 @@ export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -3670,6 +3839,8 @@ export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -3689,6 +3860,9 @@ export type EmployeeCreateWithoutTeamInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -3765,6 +3939,8 @@ export type EmployeeCreateWithoutTeamInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -3780,6 +3956,9 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -3855,6 +4034,8 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -3890,6 +4071,9 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3966,6 +4150,8 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -3981,6 +4167,9 @@ export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4056,6 +4245,8 @@ export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -4086,6 +4277,9 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -4162,6 +4356,8 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -4177,6 +4373,9 @@ export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -4252,6 +4451,8 @@ export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -4271,6 +4472,9 @@ export type EmployeeCreateWithoutManagerInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -4347,6 +4551,8 @@ export type EmployeeCreateWithoutManagerInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -4362,6 +4568,9 @@ export type EmployeeUncheckedCreateWithoutManagerInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -4437,6 +4646,8 @@ export type EmployeeUncheckedCreateWithoutManagerInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -4472,6 +4683,9 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4548,6 +4762,8 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -4563,6 +4779,9 @@ export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4638,6 +4857,8 @@ export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -4668,6 +4889,9 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -4744,6 +4968,8 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -4759,6 +4985,9 @@ export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -4834,6 +5063,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -4864,6 +5095,9 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4940,6 +5174,8 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -4955,6 +5191,9 @@ export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5030,6 +5269,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -5044,6 +5285,9 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -5120,6 +5364,8 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -5135,6 +5381,9 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -5210,6 +5459,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -5229,6 +5480,9 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -5305,6 +5559,8 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -5320,6 +5576,9 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -5395,6 +5654,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -5414,6 +5675,9 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -5490,6 +5754,8 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -5505,6 +5771,9 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput 
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -5580,6 +5849,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput 
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -5599,6 +5870,9 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -5675,6 +5949,8 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -5690,6 +5966,9 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprove
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -5765,6 +6044,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprove
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -5795,6 +6076,9 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5871,6 +6155,8 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -5886,6 +6172,9 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5961,6 +6250,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -5986,6 +6277,9 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6062,6 +6356,8 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -6077,6 +6373,9 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6152,6 +6451,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -6177,6 +6478,9 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6253,6 +6557,8 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -6268,6 +6574,9 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput 
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6343,6 +6652,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput 
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -6368,6 +6679,9 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6444,6 +6758,8 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -6459,6 +6775,9 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprove
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6534,6 +6853,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprove
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -6548,6 +6869,9 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -6624,6 +6948,8 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -6639,6 +6965,9 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -6714,6 +7043,8 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -6733,6 +7064,9 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -6809,6 +7143,8 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -6824,6 +7160,9 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -6899,6 +7238,8 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -6929,6 +7270,9 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7005,6 +7349,8 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -7020,6 +7366,9 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7095,6 +7444,8 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -7120,6 +7471,9 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7196,6 +7550,8 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -7211,6 +7567,9 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7286,6 +7645,8 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -7300,6 +7661,9 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -7376,6 +7740,8 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -7391,6 +7757,9 @@ export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -7466,6 +7835,8 @@ export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -7496,6 +7867,9 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7572,6 +7946,8 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -7587,6 +7963,9 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7662,6 +8041,8 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -7676,6 +8057,9 @@ export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -7752,6 +8136,8 @@ export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -7767,6 +8153,9 @@ export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -7842,6 +8231,8 @@ export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -7872,6 +8263,9 @@ export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7948,6 +8342,8 @@ export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -7963,6 +8359,9 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8038,6 +8437,8 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -8052,6 +8453,9 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -8128,6 +8532,8 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -8143,6 +8549,9 @@ export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -8218,6 +8627,8 @@ export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -8248,6 +8659,9 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8324,6 +8738,8 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -8339,6 +8755,9 @@ export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8414,6 +8833,8 @@ export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -8428,6 +8849,9 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -8504,6 +8928,8 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -8519,6 +8945,9 @@ export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -8594,6 +9023,8 @@ export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -8624,6 +9055,9 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8700,6 +9134,8 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -8715,6 +9151,9 @@ export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8790,6 +9229,8 @@ export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -8804,6 +9245,9 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -8880,6 +9324,8 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -8895,6 +9341,9 @@ export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -8970,6 +9419,8 @@ export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -9000,6 +9451,9 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9076,6 +9530,8 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -9091,6 +9547,9 @@ export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9166,6 +9625,8 @@ export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -9180,6 +9641,9 @@ export type EmployeeCreateWithoutDocumentsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -9256,6 +9720,8 @@ export type EmployeeCreateWithoutDocumentsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -9271,6 +9737,9 @@ export type EmployeeUncheckedCreateWithoutDocumentsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -9346,6 +9815,8 @@ export type EmployeeUncheckedCreateWithoutDocumentsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -9376,6 +9847,9 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9452,6 +9926,8 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -9467,6 +9943,9 @@ export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9542,6 +10021,8 @@ export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -9556,6 +10037,9 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -9632,6 +10116,8 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -9647,6 +10133,9 @@ export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -9722,6 +10211,8 @@ export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -9752,6 +10243,9 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9828,6 +10322,8 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -9843,6 +10339,9 @@ export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9918,6 +10417,8 @@ export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -9932,6 +10433,9 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -10008,6 +10512,8 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -10023,6 +10529,9 @@ export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -10098,6 +10607,8 @@ export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -10128,6 +10639,9 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10204,6 +10718,8 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -10219,6 +10735,9 @@ export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10294,6 +10813,8 @@ export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -10308,6 +10829,9 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -10384,6 +10908,8 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -10399,6 +10925,9 @@ export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -10474,6 +11003,8 @@ export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -10504,6 +11035,9 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10580,6 +11114,8 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -10595,6 +11131,9 @@ export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10670,6 +11209,8 @@ export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -10684,6 +11225,9 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -10760,6 +11304,8 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -10775,6 +11321,9 @@ export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -10850,6 +11399,8 @@ export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -10880,6 +11431,9 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10956,6 +11510,8 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -10971,6 +11527,9 @@ export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11046,6 +11605,8 @@ export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -11060,6 +11621,9 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -11136,6 +11700,8 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -11151,6 +11717,9 @@ export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -11226,6 +11795,8 @@ export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -11256,6 +11827,9 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11332,6 +11906,8 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -11347,6 +11923,9 @@ export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11422,6 +12001,8 @@ export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -11436,6 +12017,9 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -11512,6 +12096,8 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -11527,6 +12113,9 @@ export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -11602,6 +12191,8 @@ export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -11632,6 +12223,9 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11708,6 +12302,8 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -11723,6 +12319,9 @@ export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11798,6 +12397,8 @@ export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -11812,6 +12413,9 @@ export type EmployeeCreateWithoutCrmAssignmentRuleMembershipsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -11888,6 +12492,8 @@ export type EmployeeCreateWithoutCrmAssignmentRuleMembershipsInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -11903,6 +12509,9 @@ export type EmployeeUncheckedCreateWithoutCrmAssignmentRuleMembershipsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -11978,6 +12587,8 @@ export type EmployeeUncheckedCreateWithoutCrmAssignmentRuleMembershipsInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -12008,6 +12619,9 @@ export type EmployeeUpdateWithoutCrmAssignmentRuleMembershipsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12084,6 +12698,8 @@ export type EmployeeUpdateWithoutCrmAssignmentRuleMembershipsInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -12099,6 +12715,9 @@ export type EmployeeUncheckedUpdateWithoutCrmAssignmentRuleMembershipsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12174,6 +12793,8 @@ export type EmployeeUncheckedUpdateWithoutCrmAssignmentRuleMembershipsInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -12188,6 +12809,9 @@ export type EmployeeCreateWithoutCampaignTeamLeadAssignmentsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -12264,6 +12888,8 @@ export type EmployeeCreateWithoutCampaignTeamLeadAssignmentsInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -12279,6 +12905,9 @@ export type EmployeeUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -12354,6 +12983,8 @@ export type EmployeeUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -12384,6 +13015,9 @@ export type EmployeeUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12460,6 +13094,8 @@ export type EmployeeUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -12475,6 +13111,9 @@ export type EmployeeUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12550,6 +13189,8 @@ export type EmployeeUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -12559,11 +13200,14 @@ export type EmployeeUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
-export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
+export type EmployeeCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
   id?: string
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -12641,6 +13285,8 @@ export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
@@ -12649,12 +13295,15 @@ export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
 }
 
-export type EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput = {
+export type EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
   id?: string
   userId: string
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -12731,6 +13380,800 @@ export type EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput, Prisma.EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput>
+}
+
+export type EmployeeCreateWithoutCampaignBdDailyLimitsAsBdInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsBdInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutCampaignBdDailyLimitsAsBdInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutCampaignBdDailyLimitsAsBdInput, Prisma.EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsBdInput>
+}
+
+export type EmployeeUpsertWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput, Prisma.EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput, Prisma.EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput, Prisma.EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput>
+}
+
+export type EmployeeUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUpsertWithoutCampaignBdDailyLimitsAsBdInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutCampaignBdDailyLimitsAsBdInput, Prisma.EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsBdInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutCampaignBdDailyLimitsAsBdInput, Prisma.EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsBdInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutCampaignBdDailyLimitsAsBdInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutCampaignBdDailyLimitsAsBdInput, Prisma.EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsBdInput>
+}
+
+export type EmployeeUpdateWithoutCampaignBdDailyLimitsAsBdInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsBdInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
@@ -12760,6 +14203,9 @@ export type EmployeeUpdateWithoutSalesTeamCostEntriesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12837,6 +14283,8 @@ export type EmployeeUpdateWithoutSalesTeamCostEntriesInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
@@ -12851,6 +14299,9 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12927,6 +14378,8 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -12940,6 +14393,9 @@ export type EmployeeCreateWithoutMonthlyIncentivesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -13017,6 +14473,8 @@ export type EmployeeCreateWithoutMonthlyIncentivesInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
@@ -13031,6 +14489,9 @@ export type EmployeeUncheckedCreateWithoutMonthlyIncentivesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -13107,6 +14568,8 @@ export type EmployeeUncheckedCreateWithoutMonthlyIncentivesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
@@ -13136,6 +14599,9 @@ export type EmployeeUpdateWithoutMonthlyIncentivesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13213,6 +14679,8 @@ export type EmployeeUpdateWithoutMonthlyIncentivesInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
@@ -13227,6 +14695,9 @@ export type EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -13303,6 +14774,8 @@ export type EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -13316,6 +14789,9 @@ export type EmployeeCreateWithoutMasterSeatingCostInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -13393,6 +14869,8 @@ export type EmployeeCreateWithoutMasterSeatingCostInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
@@ -13407,6 +14885,9 @@ export type EmployeeUncheckedCreateWithoutMasterSeatingCostInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -13483,6 +14964,8 @@ export type EmployeeUncheckedCreateWithoutMasterSeatingCostInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
@@ -13512,6 +14995,9 @@ export type EmployeeUpdateWithoutMasterSeatingCostInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13589,6 +15075,8 @@ export type EmployeeUpdateWithoutMasterSeatingCostInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
@@ -13603,6 +15091,9 @@ export type EmployeeUncheckedUpdateWithoutMasterSeatingCostInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -13679,6 +15170,8 @@ export type EmployeeUncheckedUpdateWithoutMasterSeatingCostInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -13692,6 +15185,9 @@ export type EmployeeCreateWithoutMonthlySeatingMiscCostsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -13769,6 +15265,8 @@ export type EmployeeCreateWithoutMonthlySeatingMiscCostsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -13783,6 +15281,9 @@ export type EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -13859,6 +15360,8 @@ export type EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -13888,6 +15391,9 @@ export type EmployeeUpdateWithoutMonthlySeatingMiscCostsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13965,6 +15471,8 @@ export type EmployeeUpdateWithoutMonthlySeatingMiscCostsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -13979,6 +15487,9 @@ export type EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14055,6 +15566,8 @@ export type EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -14068,6 +15581,9 @@ export type EmployeeCreateWithoutSalesTeamBulkCostEntriesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -14145,6 +15661,8 @@ export type EmployeeCreateWithoutSalesTeamBulkCostEntriesInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -14159,6 +15677,9 @@ export type EmployeeUncheckedCreateWithoutSalesTeamBulkCostEntriesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -14235,6 +15756,8 @@ export type EmployeeUncheckedCreateWithoutSalesTeamBulkCostEntriesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -14264,6 +15787,9 @@ export type EmployeeUpdateWithoutSalesTeamBulkCostEntriesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14341,6 +15867,8 @@ export type EmployeeUpdateWithoutSalesTeamBulkCostEntriesInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -14355,6 +15883,9 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamBulkCostEntriesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14431,6 +15962,8 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamBulkCostEntriesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -14444,6 +15977,9 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverridesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -14521,6 +16057,8 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverridesInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -14535,6 +16073,9 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverridesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -14611,6 +16152,8 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverridesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -14640,6 +16183,9 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverridesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14717,6 +16263,8 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverridesInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -14731,6 +16279,9 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverridesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14807,6 +16358,8 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverridesInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -14820,6 +16373,9 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -14897,6 +16453,8 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -14911,6 +16469,9 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = 
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -14987,6 +16548,8 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = 
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -15016,6 +16579,9 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15093,6 +16659,8 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -15107,6 +16675,9 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = 
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15183,6 +16754,8 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = 
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -15196,6 +16769,9 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -15272,6 +16848,8 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -15287,6 +16865,9 @@ export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -15362,6 +16943,8 @@ export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -15392,6 +16975,9 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15468,6 +17054,8 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -15483,6 +17071,9 @@ export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15558,6 +17149,8 @@ export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -15572,6 +17165,9 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -15648,6 +17244,8 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -15663,6 +17261,9 @@ export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -15738,6 +17339,8 @@ export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -15768,6 +17371,9 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15844,6 +17450,8 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -15859,6 +17467,9 @@ export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15934,6 +17545,8 @@ export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -15948,6 +17561,9 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   dateOfBirth?: Date | string | null
@@ -16024,6 +17640,8 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
@@ -16039,6 +17657,9 @@ export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -16114,6 +17735,8 @@ export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
@@ -16144,6 +17767,9 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16220,6 +17846,8 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -16235,6 +17863,9 @@ export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16310,6 +17941,8 @@ export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -16325,6 +17958,9 @@ export type EmployeeCreateManyFnfCompletedByInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -16382,6 +18018,9 @@ export type EmployeeCreateManyOnboardingApprovedByInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -16438,6 +18077,9 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16514,6 +18156,8 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -16529,6 +18173,9 @@ export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16604,6 +18251,8 @@ export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -16619,6 +18268,9 @@ export type EmployeeUncheckedUpdateManyWithoutFnfCompletedByInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16675,6 +18327,9 @@ export type EmployeeUpdateWithoutOnboardingApprovedByInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16751,6 +18406,8 @@ export type EmployeeUpdateWithoutOnboardingApprovedByInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -16766,6 +18423,9 @@ export type EmployeeUncheckedUpdateWithoutOnboardingApprovedByInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16841,6 +18501,8 @@ export type EmployeeUncheckedUpdateWithoutOnboardingApprovedByInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -16856,6 +18518,9 @@ export type EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16913,6 +18578,9 @@ export type EmployeeCreateManyDepartmentInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   teamId?: string | null
@@ -16969,6 +18637,9 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17045,6 +18716,8 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -17060,6 +18733,9 @@ export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17135,6 +18811,8 @@ export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -17150,6 +18828,9 @@ export type EmployeeUncheckedUpdateManyWithoutDepartmentInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17207,6 +18888,9 @@ export type EmployeeCreateManyTeamInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -17263,6 +18947,9 @@ export type EmployeeUpdateWithoutTeamInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17339,6 +19026,8 @@ export type EmployeeUpdateWithoutTeamInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -17354,6 +19043,9 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17429,6 +19121,8 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -17444,6 +19138,9 @@ export type EmployeeUncheckedUpdateManyWithoutTeamInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17501,6 +19198,9 @@ export type EmployeeCreateManyManagerInput = {
   employeeCode: string
   bdNumber?: number | null
   circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: Date | string | null
   salary?: number | null
   departmentId?: string | null
@@ -17557,6 +19257,9 @@ export type EmployeeUpdateWithoutManagerInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17633,6 +19336,8 @@ export type EmployeeUpdateWithoutManagerInput = {
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
@@ -17648,6 +19353,9 @@ export type EmployeeUncheckedUpdateWithoutManagerInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17723,6 +19431,8 @@ export type EmployeeUncheckedUpdateWithoutManagerInput = {
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
   crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
   salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
   masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -17738,6 +19448,9 @@ export type EmployeeUncheckedUpdateManyWithoutManagerInput = {
   employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
   bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17820,6 +19533,8 @@ export type EmployeeCountOutputType = {
   itProjectResources: number
   crmAssignmentRuleMemberships: number
   campaignTeamLeadAssignments: number
+  campaignBdDailyLimitsAsTeamLead: number
+  campaignBdDailyLimitsAsBd: number
   salesTeamCostEntries: number
   monthlyIncentives: number
   monthlySeatingMiscCosts: number
@@ -17854,6 +19569,8 @@ export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   itProjectResources?: boolean | EmployeeCountOutputTypeCountItProjectResourcesArgs
   crmAssignmentRuleMemberships?: boolean | EmployeeCountOutputTypeCountCrmAssignmentRuleMembershipsArgs
   campaignTeamLeadAssignments?: boolean | EmployeeCountOutputTypeCountCampaignTeamLeadAssignmentsArgs
+  campaignBdDailyLimitsAsTeamLead?: boolean | EmployeeCountOutputTypeCountCampaignBdDailyLimitsAsTeamLeadArgs
+  campaignBdDailyLimitsAsBd?: boolean | EmployeeCountOutputTypeCountCampaignBdDailyLimitsAsBdArgs
   salesTeamCostEntries?: boolean | EmployeeCountOutputTypeCountSalesTeamCostEntriesArgs
   monthlyIncentives?: boolean | EmployeeCountOutputTypeCountMonthlyIncentivesArgs
   monthlySeatingMiscCosts?: boolean | EmployeeCountOutputTypeCountMonthlySeatingMiscCostsArgs
@@ -18050,6 +19767,20 @@ export type EmployeeCountOutputTypeCountCampaignTeamLeadAssignmentsArgs<ExtArgs 
 /**
  * EmployeeCountOutputType without action
  */
+export type EmployeeCountOutputTypeCountCampaignBdDailyLimitsAsTeamLeadArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignBdDailyLimitWhereInput
+}
+
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountCampaignBdDailyLimitsAsBdArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignBdDailyLimitWhereInput
+}
+
+/**
+ * EmployeeCountOutputType without action
+ */
 export type EmployeeCountOutputTypeCountSalesTeamCostEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SalesTeamCostEntryWhereInput
 }
@@ -18096,6 +19827,9 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   employeeCode?: boolean
   bdNumber?: boolean
   circle?: boolean
+  knowlarityPhoneNumber?: boolean
+  knowlarityCallerId?: boolean
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: boolean
   salary?: boolean
   departmentId?: boolean
@@ -18178,6 +19912,8 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   itProjectResources?: boolean | Prisma.Employee$itProjectResourcesArgs<ExtArgs>
   crmAssignmentRuleMemberships?: boolean | Prisma.Employee$crmAssignmentRuleMembershipsArgs<ExtArgs>
   campaignTeamLeadAssignments?: boolean | Prisma.Employee$campaignTeamLeadAssignmentsArgs<ExtArgs>
+  campaignBdDailyLimitsAsTeamLead?: boolean | Prisma.Employee$campaignBdDailyLimitsAsTeamLeadArgs<ExtArgs>
+  campaignBdDailyLimitsAsBd?: boolean | Prisma.Employee$campaignBdDailyLimitsAsBdArgs<ExtArgs>
   salesTeamCostEntries?: boolean | Prisma.Employee$salesTeamCostEntriesArgs<ExtArgs>
   monthlyIncentives?: boolean | Prisma.Employee$monthlyIncentivesArgs<ExtArgs>
   masterSeatingCost?: boolean | Prisma.Employee$masterSeatingCostArgs<ExtArgs>
@@ -18194,6 +19930,9 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   employeeCode?: boolean
   bdNumber?: boolean
   circle?: boolean
+  knowlarityPhoneNumber?: boolean
+  knowlarityCallerId?: boolean
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: boolean
   salary?: boolean
   departmentId?: boolean
@@ -18258,6 +19997,9 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   employeeCode?: boolean
   bdNumber?: boolean
   circle?: boolean
+  knowlarityPhoneNumber?: boolean
+  knowlarityCallerId?: boolean
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: boolean
   salary?: boolean
   departmentId?: boolean
@@ -18322,6 +20064,9 @@ export type EmployeeSelectScalar = {
   employeeCode?: boolean
   bdNumber?: boolean
   circle?: boolean
+  knowlarityPhoneNumber?: boolean
+  knowlarityCallerId?: boolean
+  knowlarityNotificationsEnabled?: boolean
   joinDate?: boolean
   salary?: boolean
   departmentId?: boolean
@@ -18374,7 +20119,7 @@ export type EmployeeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeCode" | "bdNumber" | "circle" | "joinDate" | "salary" | "departmentId" | "teamId" | "managerId" | "dateOfBirth" | "aadharNumber" | "panNumber" | "aadharDocUrl" | "panDocUrl" | "designation" | "bankAccountName" | "bankAccountNumber" | "ifscCode" | "bankName" | "bankBranch" | "upiId" | "bloodGroup" | "employmentType" | "workLocation" | "passportDocUrl" | "drivingLicenseDocUrl" | "resumeDocUrl" | "educationalCertDocUrl" | "experienceCertDocUrl" | "appointmentLetterDocUrl" | "salarySlipDocUrl" | "bankStatementDocUrl" | "otherDocuments" | "uanNumber" | "experienceType" | "personalEmail" | "status" | "onboardingStatus" | "onboardingSubmittedAt" | "onboardingApprovedAt" | "onboardingApprovedById" | "pipStartDate" | "pipEndDate" | "noticePeriodStartDate" | "noticePeriodEndDate" | "finalWorkingDay" | "terminationReason" | "statusNote" | "fnfDeadline" | "fnfCompleted" | "fnfCompletedAt" | "fnfCompletedById" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeCode" | "bdNumber" | "circle" | "knowlarityPhoneNumber" | "knowlarityCallerId" | "knowlarityNotificationsEnabled" | "joinDate" | "salary" | "departmentId" | "teamId" | "managerId" | "dateOfBirth" | "aadharNumber" | "panNumber" | "aadharDocUrl" | "panDocUrl" | "designation" | "bankAccountName" | "bankAccountNumber" | "ifscCode" | "bankName" | "bankBranch" | "upiId" | "bloodGroup" | "employmentType" | "workLocation" | "passportDocUrl" | "drivingLicenseDocUrl" | "resumeDocUrl" | "educationalCertDocUrl" | "experienceCertDocUrl" | "appointmentLetterDocUrl" | "salarySlipDocUrl" | "bankStatementDocUrl" | "otherDocuments" | "uanNumber" | "experienceType" | "personalEmail" | "status" | "onboardingStatus" | "onboardingSubmittedAt" | "onboardingApprovedAt" | "onboardingApprovedById" | "pipStartDate" | "pipEndDate" | "noticePeriodStartDate" | "noticePeriodEndDate" | "finalWorkingDay" | "terminationReason" | "statusNote" | "fnfDeadline" | "fnfCompleted" | "fnfCompletedAt" | "fnfCompletedById" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.Employee$departmentArgs<ExtArgs>
@@ -18408,6 +20153,8 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   itProjectResources?: boolean | Prisma.Employee$itProjectResourcesArgs<ExtArgs>
   crmAssignmentRuleMemberships?: boolean | Prisma.Employee$crmAssignmentRuleMembershipsArgs<ExtArgs>
   campaignTeamLeadAssignments?: boolean | Prisma.Employee$campaignTeamLeadAssignmentsArgs<ExtArgs>
+  campaignBdDailyLimitsAsTeamLead?: boolean | Prisma.Employee$campaignBdDailyLimitsAsTeamLeadArgs<ExtArgs>
+  campaignBdDailyLimitsAsBd?: boolean | Prisma.Employee$campaignBdDailyLimitsAsBdArgs<ExtArgs>
   salesTeamCostEntries?: boolean | Prisma.Employee$salesTeamCostEntriesArgs<ExtArgs>
   monthlyIncentives?: boolean | Prisma.Employee$monthlyIncentivesArgs<ExtArgs>
   masterSeatingCost?: boolean | Prisma.Employee$masterSeatingCostArgs<ExtArgs>
@@ -18469,6 +20216,8 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     itProjectResources: Prisma.$ITProjectResourcePayload<ExtArgs>[]
     crmAssignmentRuleMemberships: Prisma.$CrmAssignmentRuleMemberPayload<ExtArgs>[]
     campaignTeamLeadAssignments: Prisma.$CrmCampaignTeamLeadAssignmentPayload<ExtArgs>[]
+    campaignBdDailyLimitsAsTeamLead: Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>[]
+    campaignBdDailyLimitsAsBd: Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>[]
     salesTeamCostEntries: Prisma.$SalesTeamCostEntryPayload<ExtArgs>[]
     monthlyIncentives: Prisma.$EmployeeMonthlyIncentivePayload<ExtArgs>[]
     masterSeatingCost: Prisma.$EmployeeMasterSeatingCostPayload<ExtArgs> | null
@@ -18483,6 +20232,9 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     employeeCode: string
     bdNumber: number | null
     circle: string | null
+    knowlarityPhoneNumber: string | null
+    knowlarityCallerId: string | null
+    knowlarityNotificationsEnabled: boolean
     joinDate: Date | null
     salary: number | null
     departmentId: string | null
@@ -18959,6 +20711,8 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   itProjectResources<T extends Prisma.Employee$itProjectResourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$itProjectResourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ITProjectResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   crmAssignmentRuleMemberships<T extends Prisma.Employee$crmAssignmentRuleMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$crmAssignmentRuleMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmAssignmentRuleMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   campaignTeamLeadAssignments<T extends Prisma.Employee$campaignTeamLeadAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$campaignTeamLeadAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaignBdDailyLimitsAsTeamLead<T extends Prisma.Employee$campaignBdDailyLimitsAsTeamLeadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$campaignBdDailyLimitsAsTeamLeadArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaignBdDailyLimitsAsBd<T extends Prisma.Employee$campaignBdDailyLimitsAsBdArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$campaignBdDailyLimitsAsBdArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   salesTeamCostEntries<T extends Prisma.Employee$salesTeamCostEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$salesTeamCostEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesTeamCostEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   monthlyIncentives<T extends Prisma.Employee$monthlyIncentivesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$monthlyIncentivesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlyIncentivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   masterSeatingCost<T extends Prisma.Employee$masterSeatingCostArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$masterSeatingCostArgs<ExtArgs>>): Prisma.Prisma__EmployeeMasterSeatingCostClient<runtime.Types.Result.GetResult<Prisma.$EmployeeMasterSeatingCostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -19000,6 +20754,9 @@ export interface EmployeeFieldRefs {
   readonly employeeCode: Prisma.FieldRef<"Employee", 'String'>
   readonly bdNumber: Prisma.FieldRef<"Employee", 'Int'>
   readonly circle: Prisma.FieldRef<"Employee", 'String'>
+  readonly knowlarityPhoneNumber: Prisma.FieldRef<"Employee", 'String'>
+  readonly knowlarityCallerId: Prisma.FieldRef<"Employee", 'String'>
+  readonly knowlarityNotificationsEnabled: Prisma.FieldRef<"Employee", 'Boolean'>
   readonly joinDate: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly salary: Prisma.FieldRef<"Employee", 'Float'>
   readonly departmentId: Prisma.FieldRef<"Employee", 'String'>
@@ -20162,6 +21919,54 @@ export type Employee$campaignTeamLeadAssignmentsArgs<ExtArgs extends runtime.Typ
   take?: number
   skip?: number
   distinct?: Prisma.CrmCampaignTeamLeadAssignmentScalarFieldEnum | Prisma.CrmCampaignTeamLeadAssignmentScalarFieldEnum[]
+}
+
+/**
+ * Employee.campaignBdDailyLimitsAsTeamLead
+ */
+export type Employee$campaignBdDailyLimitsAsTeamLeadArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaignBdDailyLimit
+   */
+  select?: Prisma.CrmCampaignBdDailyLimitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaignBdDailyLimit
+   */
+  omit?: Prisma.CrmCampaignBdDailyLimitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignBdDailyLimitInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignBdDailyLimitWhereInput
+  orderBy?: Prisma.CrmCampaignBdDailyLimitOrderByWithRelationInput | Prisma.CrmCampaignBdDailyLimitOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignBdDailyLimitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignBdDailyLimitScalarFieldEnum | Prisma.CrmCampaignBdDailyLimitScalarFieldEnum[]
+}
+
+/**
+ * Employee.campaignBdDailyLimitsAsBd
+ */
+export type Employee$campaignBdDailyLimitsAsBdArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaignBdDailyLimit
+   */
+  select?: Prisma.CrmCampaignBdDailyLimitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaignBdDailyLimit
+   */
+  omit?: Prisma.CrmCampaignBdDailyLimitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignBdDailyLimitInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignBdDailyLimitWhereInput
+  orderBy?: Prisma.CrmCampaignBdDailyLimitOrderByWithRelationInput | Prisma.CrmCampaignBdDailyLimitOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignBdDailyLimitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignBdDailyLimitScalarFieldEnum | Prisma.CrmCampaignBdDailyLimitScalarFieldEnum[]
 }
 
 /**

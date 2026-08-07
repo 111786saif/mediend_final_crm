@@ -68,31 +68,22 @@ type CityMaster = {
   circle: CircleMaster
 }
 
-type SubStatusMaster = {
-  id: string
-  key: number
-  value: string
-  isActive: boolean
-}
-
 type CampaignPageData = {
   masters: {
     sources: SourceMaster[]
     leadSources: LeadSourceMaster[]
     circles: CircleMaster[]
     cities: CityMaster[]
-    subStatuses: SubStatusMaster[]
   }
 }
 
-export type CampaignMasterType = 'source' | 'leadSource' | 'circle' | 'city' | 'subStatus'
+export type CampaignMasterType = 'source' | 'leadSource' | 'circle' | 'city'
 
 type MasterRecord =
   | SourceMaster
   | LeadSourceMaster
   | CircleMaster
   | CityMaster
-  | SubStatusMaster
 
 type MasterFormState = {
   name: string
@@ -100,8 +91,6 @@ type MasterFormState = {
   isActive: boolean
   sourceId: string
   circleId: string
-  key: string
-  value: string
 }
 
 const MASTER_PAGE_CONFIG: Record<
@@ -147,14 +136,6 @@ const MASTER_PAGE_CONFIG: Record<
     loadErrorMessage: 'City masters could not be loaded.',
     icon: MapPinned,
   },
-  subStatus: {
-    title: 'CRM Sub Statuses',
-    description: 'Number-to-label mappings used when applying lead sub status during bulk reassignment.',
-    actionLabel: 'Add sub status',
-    emptyMessage: 'No sub statuses created yet.',
-    loadErrorMessage: 'Sub status masters could not be loaded.',
-    icon: Database,
-  },
 }
 
 const MASTER_TABS: Array<{
@@ -166,7 +147,6 @@ const MASTER_TABS: Array<{
   { type: 'leadSource', label: 'Lead Sources', href: '/crm/masters/lead-sources' },
   { type: 'circle', label: 'Circles', href: '/crm/masters/circles' },
   { type: 'city', label: 'Cities', href: '/crm/masters/cities' },
-  { type: 'subStatus', label: 'Sub Statuses', href: '/crm/masters/sub-statuses' },
 ]
 
 function createEmptyMasterForm(): MasterFormState {
@@ -176,8 +156,6 @@ function createEmptyMasterForm(): MasterFormState {
     isActive: true,
     sourceId: '',
     circleId: '',
-    key: '',
-    value: '',
   }
 }
 
@@ -194,8 +172,6 @@ function buildMasterForm(masterType: CampaignMasterType, item?: MasterRecord): M
       isActive: leadSource.isActive,
       sourceId: leadSource.sourceId,
       circleId: '',
-      key: '',
-      value: '',
     }
   }
 
@@ -207,21 +183,6 @@ function buildMasterForm(masterType: CampaignMasterType, item?: MasterRecord): M
       isActive: city.isActive,
       sourceId: '',
       circleId: city.circleId,
-      key: '',
-      value: '',
-    }
-  }
-
-  if (masterType === 'subStatus') {
-    const subStatus = item as SubStatusMaster
-    return {
-      name: '',
-      cpl: '',
-      isActive: subStatus.isActive,
-      sourceId: '',
-      circleId: '',
-      key: String(subStatus.key),
-      value: subStatus.value,
     }
   }
 
@@ -231,8 +192,6 @@ function buildMasterForm(masterType: CampaignMasterType, item?: MasterRecord): M
     isActive: item.isActive,
     sourceId: '',
     circleId: '',
-    key: '',
-    value: '',
   }
 }
 
@@ -298,9 +257,7 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
         ? (data?.masters.leadSources ?? [])
         : masterType === 'circle'
           ? (data?.masters.circles ?? [])
-          : masterType === 'city'
-            ? (data?.masters.cities ?? [])
-            : (data?.masters.subStatuses ?? [])
+          : (data?.masters.cities ?? [])
 
   const openDrawer = (item?: MasterRecord) => {
     setIsDrawerOpen(true)
@@ -317,31 +274,12 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
   const handleSave = () => {
     const payload: Record<string, unknown> = {
       isActive: form.isActive,
+      name: form.name.trim(),
     }
 
-    if (masterType === 'subStatus') {
-      const trimmedValue = form.value.trim()
-      const parsedKey = Number.parseInt(form.key, 10)
-
-      if (!Number.isInteger(parsedKey) || parsedKey <= 0) {
-        toast.error('Key must be a whole number greater than 0')
-        return
-      }
-
-      if (!trimmedValue) {
-        toast.error('Value is required')
-        return
-      }
-
-      payload.key = parsedKey
-      payload.value = trimmedValue
-    } else {
-      payload.name = form.name.trim()
-
-      if (!payload.name) {
-        toast.error('Name is required')
-        return
-      }
+    if (!payload.name) {
+      toast.error('Name is required')
+      return
     }
 
     if (masterType === 'leadSource') {
@@ -472,9 +410,7 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
             <div>
               <CardTitle>{config.title}</CardTitle>
               <CardDescription>
-                {masterType === 'subStatus'
-                  ? 'Changes here are reflected in bulk reassignment sub-status selection.'
-                  : 'Changes here are reflected in campaign mapping dropdowns and SaveMyLeads routing.'}
+                Changes here are reflected in campaign mapping dropdowns and SaveMyLeads routing.
               </CardDescription>
             </div>
           </CardHeader>
@@ -483,8 +419,7 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
               <Table>
                 <TableHeader>
                   <TableRow>
-                    {masterType === 'subStatus' ? <TableHead>Key</TableHead> : <TableHead>Name</TableHead>}
-                    {masterType === 'subStatus' && <TableHead>Value</TableHead>}
+                    <TableHead>Name</TableHead>
                     {masterType === 'leadSource' && <TableHead>Source</TableHead>}
                     {masterType === 'leadSource' && <TableHead>CPL</TableHead>}
                     {masterType === 'city' && <TableHead>Circle</TableHead>}
@@ -496,7 +431,7 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
                   {isLoading ? (
                     <TableRow>
                       <TableCell
-                        colSpan={masterType === 'leadSource' ? 5 : masterType === 'city' ? 4 : masterType === 'subStatus' ? 4 : 3}
+                        colSpan={masterType === 'leadSource' ? 5 : masterType === 'city' ? 4 : 3}
                         className="py-10 text-center text-muted-foreground"
                       >
                         Loading data...
@@ -505,7 +440,7 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
                   ) : error ? (
                     <TableRow>
                       <TableCell
-                        colSpan={masterType === 'leadSource' ? 5 : masterType === 'city' ? 4 : masterType === 'subStatus' ? 4 : 3}
+                        colSpan={masterType === 'leadSource' ? 5 : masterType === 'city' ? 4 : 3}
                         className="py-10 text-center text-muted-foreground"
                       >
                         {config.loadErrorMessage}
@@ -514,7 +449,7 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
                   ) : items.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={masterType === 'leadSource' ? 5 : masterType === 'city' ? 4 : masterType === 'subStatus' ? 4 : 3}
+                        colSpan={masterType === 'leadSource' ? 5 : masterType === 'city' ? 4 : 3}
                         className="py-10 text-center text-muted-foreground"
                       >
                         {config.emptyMessage}
@@ -523,14 +458,9 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
                   ) : (
                     items.map((item) => (
                       <TableRow key={item.id}>
-                        {masterType === 'subStatus' ? (
-                          <>
-                            <TableCell className="font-medium">{(item as SubStatusMaster).key}</TableCell>
-                            <TableCell>{(item as SubStatusMaster).value}</TableCell>
-                          </>
-                        ) : (
-                          <TableCell className="font-medium">{(item as SourceMaster | LeadSourceMaster | CircleMaster | CityMaster).name}</TableCell>
-                        )}
+                        <TableCell className="font-medium">
+                          {(item as SourceMaster | LeadSourceMaster | CircleMaster | CityMaster).name}
+                        </TableCell>
                         {masterType === 'leadSource' && (
                           <TableCell>{(item as LeadSourceMaster).source.name}</TableCell>
                         )}
@@ -575,52 +505,20 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
                   ? 'source'
                   : masterType === 'circle'
                     ? 'circle'
-                    : masterType === 'city'
-                      ? 'city'
-                      : 'sub status'}
+                    : 'city'}
             </SheetTitle>
             <SheetDescription>Super Admin-only CRM master data management.</SheetDescription>
           </SheetHeader>
 
           <div className="flex-1 space-y-5 overflow-y-auto p-4">
-            {masterType === 'subStatus' ? (
-              <>
-                <div className="space-y-2">
-                  <Label>Key</Label>
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    min="1"
-                    step="1"
-                    value={form.key}
-                    onChange={(event) =>
-                      setForm((current) => ({ ...current, key: event.target.value }))
-                    }
-                    placeholder="Enter key, for example 1"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Value</Label>
-                  <Input
-                    value={form.value}
-                    onChange={(event) =>
-                      setForm((current) => ({ ...current, value: event.target.value }))
-                    }
-                    placeholder="Enter sub status label"
-                  />
-                </div>
-              </>
-            ) : (
-              <div className="space-y-2">
-                <Label>Name</Label>
-                <Input
-                  value={form.name}
-                  onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-                  placeholder="Enter name"
-                />
-              </div>
-            )}
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input
+                value={form.name}
+                onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+                placeholder="Enter name"
+              />
+            </div>
 
             {masterType === 'leadSource' && (
               <>

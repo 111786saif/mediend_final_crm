@@ -2,8 +2,10 @@ import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getBusinessMonthRange, getBusinessMonthYear, getCampaignManagementPageData } from '@/lib/crm-campaigns'
+import { mapCircleCode } from '@/lib/mysql-code-mappings'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
+import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 
@@ -44,7 +46,9 @@ function extractIncomingLeadSummary(payload: unknown) {
       campaignId: toNullableString(
         mysqlLead.campaign_id ?? mysqlLead.campaignId ?? mysqlLead['campaign id']
       ),
-      circle: toNullableString(mysqlLead.Circle ?? mysqlLead.circle),
+      circle: mapCircleCode(
+        (mysqlLead.Circle ?? mysqlLead.circle) as string | number | null | undefined
+      ),
       city: toNullableString(mysqlLead.city_option ?? mysqlLead.city),
       patientName: toNullableString(
         mysqlLead.Patient_Name ?? mysqlLead.patientName ?? mysqlLead.patient_name
@@ -64,7 +68,9 @@ function extractIncomingLeadSummary(payload: unknown) {
     campaignId: toNullableString(
       record.campaignId ?? record['campaign id'] ?? record.campaign_id ?? record.campaign
     ),
-    circle: toNullableString(record.Circle ?? record.circle),
+    circle: mapCircleCode(
+      (record.Circle ?? record.circle) as string | number | null | undefined
+    ),
     city: toNullableString(record.city_option ?? record.city),
     patientName: toNullableString(record.name ?? record.patientName ?? record.patient_name),
     phone: toNullableString(
@@ -182,6 +188,7 @@ export async function GET(request: NextRequest) {
       Array.isArray(hierarchyScopedUserIds) && hierarchyScopedUserIds.length > 0
         ? new Set(hierarchyScopedUserIds)
         : null
+    const canViewPhone = String(currentUser.role) === 'ADMIN'
     const filteredIncomingLeads =
       visibleScopeUserIds === null
         ? incomingLeads
@@ -227,11 +234,16 @@ export async function GET(request: NextRequest) {
           status: incomingLead.status,
           payload: incomingLead.payload,
           externalCampaignId: incomingLead.externalCampaignId,
-          normalizedPhone: incomingLead.normalizedPhone,
+          normalizedPhone: canViewPhone
+            ? incomingLead.normalizedPhone
+            : maskPhoneNumber(incomingLead.normalizedPhone),
           errorMessage: incomingLead.errorMessage,
           processedAt: incomingLead.processedAt,
           receivedAt: incomingLead.receivedAt,
-          summary,
+          summary: {
+            ...summary,
+            phone: canViewPhone ? summary.phone : maskPhoneNumber(summary.phone),
+          },
           campaign: campaign
             ? {
                 id: campaign.id,
@@ -244,7 +256,9 @@ export async function GET(request: NextRequest) {
                 id: processedLead.id,
                 leadRef: processedLead.leadRef,
                 patientName: processedLead.patientName,
-                phoneNumber: processedLead.phoneNumber,
+                phoneNumber: canViewPhone
+                  ? processedLead.phoneNumber
+                  : maskPhoneNumber(processedLead.phoneNumber),
                 assignedDate: processedLead.assignedDate,
                 leadEntryDate: processedLead.leadEntryDate,
                 followUpDate: processedLead.followUpDate,

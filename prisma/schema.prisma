@@ -629,6 +629,7 @@ model User {
   campaignCplsCreated       CampaignCPL[]        @relation("CampaignCPLCreator")
   dailyCampaignSpends       DailyCampaignSpend[] @relation("DailyCampaignSpendCreator")
   campaignTeamLeadAssignments CrmCampaignTeamLeadAssignment[] @relation("CampaignTeamLeadUser")
+  campaignBdDailyLimits       CrmCampaignBdDailyLimit[]       @relation("CampaignBdLimitBdUser")
   pnlCategoriesCreated      PnLCategory[]        @relation("PnLCategoryCreator")
   pnlEntriesCreated         PnLEntry[]           @relation("PnLEntryCreator")
   targetPnlEntriesCreated   TargetPnLEntry[]     @relation("TargetPnLEntryCreator")
@@ -738,6 +739,8 @@ model Lead {
   arrivalDate         DateTime?
   arrivalTime         String?
   surgeryDate         DateTime?
+  ipdPotentialDate    DateTime?
+  ipdPotentialMarkedAt DateTime?
   operationTime       String?
   implantType         String?
   implantAmount       Float            @default(0)
@@ -774,7 +777,7 @@ model Lead {
   docUpload          String?
   diseaseDetails     String?
   followUpDate       DateTime?
-  subStatus          Int?
+  subStatus          String?          @db.VarChar(25)
   opdHospital        String?
   opdDrName          String?
   opdContactNo       String?
@@ -817,6 +820,7 @@ model Lead {
   formId             String?
   teamLeadId         Int?
   remarksId          String?
+  openedInCrmAt      DateTime?
 
   // Relations
   // Mark Lost (when pipelineStage = LOST)
@@ -865,6 +869,7 @@ model Lead {
   @@index([leadEntryDate])
   @@index([assignedDate])
   @@index([followUpDate])
+  @@index([openedInCrmAt])
   @@index([opdSurgeryRemarkCode])
   @@index([opdReasonNoSurgeryCode])
   @@index([opdFollowUpReasonCode])
@@ -1296,6 +1301,9 @@ model Employee {
   employeeCode          String          @unique
   bdNumber              Int?            @unique
   circle                String?
+  knowlarityPhoneNumber String?
+  knowlarityCallerId    String?
+  knowlarityNotificationsEnabled Boolean @default(false)
   joinDate              DateTime?
   salary                Float?
   departmentId          String?
@@ -1378,6 +1386,8 @@ model Employee {
   itProjectResources                      ITProjectResource[]
   crmAssignmentRuleMemberships            CrmAssignmentRuleMember[]
   campaignTeamLeadAssignments             CrmCampaignTeamLeadAssignment[] @relation("CampaignTeamLeadEmployee")
+  campaignBdDailyLimitsAsTeamLead         CrmCampaignBdDailyLimit[]       @relation("CampaignBdLimitTeamLeadEmployee")
+  campaignBdDailyLimitsAsBd               CrmCampaignBdDailyLimit[]       @relation("CampaignBdLimitBdEmployee")
   salesTeamCostEntries                    SalesTeamCostEntry[]
   monthlyIncentives                       EmployeeMonthlyIncentive[]
   masterSeatingCost                       EmployeeMasterSeatingCost?
@@ -2809,6 +2819,9 @@ model CrmCampaign {
   externalCampaignId String                        @unique
   displayName        String
   category           String?
+  treatment          String?
+  treatmentMasterId  String?
+  treatmentMaster    TreatmentMaster?              @relation(fields: [treatmentMasterId], references: [id], onDelete: SetNull)
   departmentId       String?
   department         Department?                   @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   sourceId           String
@@ -2824,8 +2837,11 @@ model CrmCampaign {
   createdAt          DateTime                     @default(now())
   updatedAt          DateTime                     @updatedAt
   assignments        CrmCampaignTeamLeadAssignment[]
+  bdDailyLimits      CrmCampaignBdDailyLimit[]
 
   @@index([category])
+  @@index([treatment])
+  @@index([treatmentMasterId])
   @@index([departmentId])
   @@index([sourceId])
   @@index([leadSourceId])
@@ -2854,6 +2870,26 @@ model CrmCampaignTeamLeadAssignment {
   @@index([campaignId, month, year, isActive, priority])
   @@index([teamLeadEmployeeId, month, year])
   @@index([teamLeadUserId, month, year])
+}
+
+model CrmCampaignBdDailyLimit {
+  id                 String      @id @default(cuid())
+  campaignId         String
+  campaign           CrmCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  teamLeadEmployeeId String
+  teamLeadEmployee   Employee    @relation("CampaignBdLimitTeamLeadEmployee", fields: [teamLeadEmployeeId], references: [id], onDelete: Cascade)
+  bdEmployeeId       String
+  bdEmployee         Employee    @relation("CampaignBdLimitBdEmployee", fields: [bdEmployeeId], references: [id], onDelete: Cascade)
+  bdUserId           String
+  bdUser             User        @relation("CampaignBdLimitBdUser", fields: [bdUserId], references: [id], onDelete: Cascade)
+  maxLeadsPerDay     Int
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@unique([campaignId, teamLeadEmployeeId, bdEmployeeId])
+  @@index([campaignId, teamLeadEmployeeId])
+  @@index([bdEmployeeId])
+  @@index([bdUserId])
 }
 
 model CrmActivityLog {
@@ -2889,7 +2925,7 @@ model BulkLeadReassignmentRun {
   leadIds               Json
   bdUserIds             Json
   pauseSeconds          Int
-  subStatus             Int?
+  subStatus             String?  @db.VarChar(25)
   removePreviousRemarks Boolean  @default(false)
   status                String   @default("queued")
   processedCount        Int      @default(0)
@@ -3546,8 +3582,11 @@ enum InstallmentVerificationStatus {
 
 model PaymentInstallment {
   id           String               @id @default(cuid())
-  leadId       String
-  lead         Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  /// Optional — hospital-level MediEND receipts may have no case attached
+  leadId       String?
+  lead         Lead?                @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  /// Set when payment is recorded against a hospital without selecting cases
+  hospitalName String?
   recipient    InstallmentRecipient
   amount       Float
   paidOn       DateTime
@@ -3566,6 +3605,7 @@ model PaymentInstallment {
   updatedAt    DateTime             @updatedAt
 
   @@index([leadId])
+  @@index([hospitalName])
   @@index([recipient])
   @@index([paidOn])
   @@index([verificationStatus])
@@ -4376,6 +4416,7 @@ model TreatmentMaster {
   updatedAt    DateTime @updatedAt
 
   leads Lead[]
+  crmCampaigns CrmCampaign[]
 
   @@index([name])
   @@index([category])

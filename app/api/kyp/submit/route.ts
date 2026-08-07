@@ -8,6 +8,13 @@ import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { z } from 'zod'
 import { CaseStage, InsuranceType, Prisma } from '@/generated/prisma/client'
 
+const ALLOWED_NEW_CARD_DETAIL_STAGES: CaseStage[] = [
+  CaseStage.NEW_LEAD,
+  CaseStage.OPD_SCHEDULED,
+  CaseStage.OPD_DONE,
+  CaseStage.KYP_BASIC_PENDING,
+]
+
 const submitKYPSchema = z.object({
   leadId: z.string(),
   patientName: z.string().optional(),
@@ -92,6 +99,13 @@ export async function POST(request: NextRequest) {
       where: { leadId: data.leadId },
       include: { lead: { select: { caseStage: true } } },
     })
+
+    if (!existingKYP && !ALLOWED_NEW_CARD_DETAIL_STAGES.includes(lead.caseStage)) {
+      return errorResponse(
+        'Card details can only be submitted while the case is in a new, OPD scheduled, OPD done, or card details pending stage',
+        400
+      )
+    }
 
     const aadharFiles =
       data.aadharFiles && data.aadharFiles.length > 0 ? data.aadharFiles : undefined

@@ -49,7 +49,9 @@ export async function POST(
       },
     })
 
-    await recomputeOutstandingFromInstallments(existing.leadId)
+    if (existing.leadId) {
+      await recomputeOutstandingFromInstallments(existing.leadId)
+    }
 
     return successResponse(
       {

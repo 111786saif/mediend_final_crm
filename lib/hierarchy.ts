@@ -1,6 +1,7 @@
 import { Prisma, UserRole } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { MEET_MD_INVITE_EMPLOYEE_CODE } from '@/lib/meets'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import {
   CATEGORY_MANAGER_ROLES,
   TEAM_UNIT_ROLES,
@@ -40,7 +41,7 @@ export async function getSubordinates(
 ) {
   if (!recursive) {
     return prisma.employee.findMany({
-      where: { managerId: employeeId },
+      where: { managerId: employeeId, ...headcountEmployeeWhere },
       select: employeeSelect,
       orderBy: { user: { name: 'asc' } },
     })
@@ -51,7 +52,7 @@ export async function getSubordinates(
     select: typeof employeeSelect
   }>>> = []
   let currentLevel = await prisma.employee.findMany({
-    where: { managerId: employeeId },
+    where: { managerId: employeeId, ...headcountEmployeeWhere },
     select: employeeSelect,
   })
 
@@ -59,7 +60,7 @@ export async function getSubordinates(
     result.push(...currentLevel)
     const ids = currentLevel.map((e) => e.id)
     currentLevel = await prisma.employee.findMany({
-      where: { managerId: { in: ids } },
+      where: { managerId: { in: ids }, ...headcountEmployeeWhere },
       select: employeeSelect,
     })
   }
@@ -162,6 +163,40 @@ export async function getEmployeeByUserId(userId: string) {
       },
     },
   })
+}
+
+/**
+ * Resolve the Team Lead (or ACM) for a lead owner via the employee manager chain.
+ * If the owner is already TL/ACM, returns that owner. Returns null when no TL is found.
+ */
+export async function resolveTeamLeadForLeadOwner(leadOwnerUserId: string): Promise<{
+  userId: string
+  name: string
+  role: UserRole
+} | null> {
+  const ownerEmployee = await getEmployeeByUserId(leadOwnerUserId)
+  if (!ownerEmployee?.user) return null
+
+  const isTeamUnit = TEAM_UNIT_ROLES.includes(ownerEmployee.user.role as UserRole)
+  if (isTeamUnit) {
+    return {
+      userId: ownerEmployee.user.id,
+      name: ownerEmployee.user.name,
+      role: ownerEmployee.user.role,
+    }
+  }
+
+  const chain = await getManagementChain(ownerEmployee.id)
+  const teamLead = chain.find((employee) =>
+    TEAM_UNIT_ROLES.includes(employee.user.role as UserRole),
+  )
+  if (!teamLead?.user) return null
+
+  return {
+    userId: teamLead.user.id,
+    name: teamLead.user.name,
+    role: teamLead.user.role,
+  }
 }
 
 /**

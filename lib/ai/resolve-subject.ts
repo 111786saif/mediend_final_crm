@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import type { AiActor } from '@/lib/ai/actor'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 
 export type ResolveSubjectResult =
   | {
@@ -56,6 +57,7 @@ export async function resolveSubject(
 
   const candidates = await prisma.employee.findMany({
     where: {
+      ...headcountEmployeeWhere,
       ...(actor.isGlobal ? {} : { id: { in: [...allowedEmployeeIds] } }),
       user: {
         name: { contains: raw, mode: 'insensitive' },
