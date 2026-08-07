@@ -488,7 +488,6 @@ function BdDetailSheet({
 }
 
 
-
 // ─── Month Conversion Panel ───────────────────────────────────────────────────
 
 function monthLabel(key: string): string {
@@ -1039,7 +1038,7 @@ function TeamPerformanceTab({
                       <p className="text-[10px] text-muted-foreground uppercase font-medium">Conv.</p>
                     </div>
                   </div>
-                  
+
                   <div className="mt-4 pt-3 border-t border-border">
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
                       <TrendingUp className="h-3 w-3" /> Conversion Trend

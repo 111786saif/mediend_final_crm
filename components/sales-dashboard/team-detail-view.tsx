@@ -70,44 +70,24 @@ export function TeamDetailView({
     }
   }
 
-  const isDetailLoading = isLoading || (selectedBdId !== 'all' && isBdLoading)
-
-  if (isDetailLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-24 space-y-4">
-        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
-        <p className="text-muted-foreground animate-pulse font-medium">Loading...</p>
-      </div>
-    )
-  }
-
-  if (!data) {
-    return (
-      <div className="text-center py-24 space-y-4">
-        <p className="text-muted-foreground">No data found for this team in the selected period.</p>
-        <Button variant="outline" onClick={onBack}>Go Back</Button>
-      </div>
-    )
-  }
-
   const missingDataFallback = '–'
 
-  const activeMember = data.members.find(m => m.id === selectedBdId)
+  const activeMember = data?.members?.find(m => m.id === selectedBdId)
 
   // Calculate dynamic KPIs based on selected BD
   const kpis = (selectedBdId !== 'all' && bdDetailData) ? {
-    totalLeads: bdDetailData.kpis.totalLeads ?? 0,
-    totalIpd: bdDetailData.kpis.ipdDone ?? bdDetailData.kpis.totalIpd ?? 0,
-    conversionRate: bdDetailData.kpis.conversionRate ?? 0,
-    totalBill: bdDetailData.kpis.billAmount ?? bdDetailData.kpis.totalBill ?? 0,
-    totalProfit: bdDetailData.kpis.netProfit ?? 0,
+    totalLeads: bdDetailData.kpis?.totalLeads ?? 0,
+    totalIpd: bdDetailData.kpis?.ipdDone ?? bdDetailData.kpis?.totalIpd ?? 0,
+    conversionRate: bdDetailData.kpis?.conversionRate ?? 0,
+    totalBill: bdDetailData.kpis?.billAmount ?? bdDetailData.kpis?.totalBill ?? 0,
+    totalProfit: bdDetailData.kpis?.netProfit ?? 0,
   } : (activeMember ? {
     totalLeads: activeMember.leads ?? 0,
     totalIpd: activeMember.ipdDone ?? 0,
     conversionRate: activeMember.conversionRate ?? 0,
     totalBill: activeMember.billAmount ?? 0,
     totalProfit: 0,
-  } : data.kpis)
+  } : (data?.kpis ?? { totalLeads: 0, totalIpd: 0, conversionRate: 0, totalBill: 0, totalProfit: 0 }))
 
   // Pipeline derivations
   const leadsToOpdMockRate = 0.65
@@ -126,39 +106,39 @@ export function TeamDetailView({
   }
 
   // Month-wise derivations
-  const months = data.monthWise.months
+  const months = data?.monthWise?.months ?? []
   const currentMonthIdx = months.length - 1
   const prevMonthIdx = months.length - 2
   const prev2MonthIdx = months.length - 3
 
   const getMemberIpdForMonth = (bdId: string, monthStr: string) => {
     if (!monthStr) return 0
-    const row = data.monthWise.rows.find(r => r.bdId === bdId && r.month === monthStr)
+    const row = data?.monthWise?.rows?.find(r => r.bdId === bdId && r.month === monthStr)
     return row?.ipdCount || 0
   }
 
   const getMemberIpdForMonthRaw = (bdId: string, monthStr: string) => {
     if (!monthStr) return undefined
-    const row = data.monthWise.rows.find(r => r.bdId === bdId && r.month === monthStr)
+    const row = data?.monthWise?.rows?.find(r => r.bdId === bdId && r.month === monthStr)
     return row ? (row.ipdCount ?? 0) : undefined
   }
 
   const getBdIpdForMonth = (monthStr: string) => {
     if (!bdDetailData || !monthStr) return 0
-    const match = bdDetailData.monthWise.find((m: any) => m.month === monthStr)
+    const match = bdDetailData.monthWise?.find((m: any) => m.month === monthStr)
     return match ? match.ipdCount : 0
   }
 
   const getMemberOlderMonthsIpd = (bdId: string) => {
     const activeMonths = [months[currentMonthIdx], months[prevMonthIdx], months[prev2MonthIdx]]
-    return data.monthWise.rows
+    return (data?.monthWise?.rows ?? [])
       .filter(r => r.bdId === bdId && !activeMonths.includes(r.month))
       .reduce((sum, r) => sum + (r.ipdCount || 0), 0)
   }
 
   const getMemberOlderMonthsIpdRaw = (bdId: string) => {
     const activeMonths = [months[currentMonthIdx], months[prevMonthIdx], months[prev2MonthIdx]]
-    const rows = data.monthWise.rows.filter(r => r.bdId === bdId && !activeMonths.includes(r.month))
+    const rows = (data?.monthWise?.rows ?? []).filter(r => r.bdId === bdId && !activeMonths.includes(r.month))
     if (rows.length === 0) return undefined
     return rows.reduce((sum, r) => sum + (r.ipdCount ?? 0), 0)
   }
@@ -167,25 +147,25 @@ export function TeamDetailView({
     if (!bdDetailData) return 0
     const activeMonths = [months[currentMonthIdx], months[prevMonthIdx], months[prev2MonthIdx]]
     return bdDetailData.monthWise
-      .filter((m: any) => !activeMonths.includes(m.month))
-      .reduce((sum: number, m: any) => sum + (m.ipdCount || 0), 0)
+      ?.filter((m: any) => !activeMonths.includes(m.month))
+      .reduce((sum: number, m: any) => sum + (m.ipdCount || 0), 0) ?? 0
   }
 
   // Calculate dynamic total IPD for each period based on selected BD
   const totalCurrent = selectedBdId === 'all'
-    ? data.members.reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[currentMonthIdx]), 0)
+    ? (data?.members ?? []).reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[currentMonthIdx]), 0)
     : getBdIpdForMonth(months[currentMonthIdx])
 
   const totalPrev = selectedBdId === 'all'
-    ? data.members.reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[prevMonthIdx]), 0)
+    ? (data?.members ?? []).reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[prevMonthIdx]), 0)
     : getBdIpdForMonth(months[prevMonthIdx])
 
   const totalPrev2 = selectedBdId === 'all'
-    ? data.members.reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[prev2MonthIdx]), 0)
+    ? (data?.members ?? []).reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[prev2MonthIdx]), 0)
     : getBdIpdForMonth(months[prev2MonthIdx])
 
   const totalOlder = selectedBdId === 'all'
-    ? data.members.reduce((sum, m) => sum + getMemberOlderMonthsIpd(m.id), 0)
+    ? (data?.members ?? []).reduce((sum, m) => sum + getMemberOlderMonthsIpd(m.id), 0)
     : getBdOlderMonthsIpd()
 
   const sumPast3 = totalCurrent + totalPrev + totalPrev2
@@ -269,7 +249,26 @@ export function TeamDetailView({
       meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums font-medium text-amber-600 dark:text-amber-400' },
       cell: ({ row }) => row.original.billAmount ? fmtK(row.original.billAmount) : missingDataFallback
     }
-  ], [data.members, months, incentivesByUserId, incentivesByName, currentMonthIdx, prevMonthIdx, prev2MonthIdx])
+  ], [data?.members, months, incentivesByUserId, incentivesByName, currentMonthIdx, prevMonthIdx, prev2MonthIdx])
+
+  const isDetailLoading = isLoading || (selectedBdId !== 'all' && isBdLoading)
+
+  if (isDetailLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">
+        <Loader2 className="h-8 w-8 animate-spin text-violet-500" />
+        <p className="text-muted-foreground animate-pulse font-medium">Loading...</p>
+      </div>
+    )
+  }
+  if (!data) {
+    return (
+      <div className="text-center py-24 space-y-4">
+        <p className="text-muted-foreground">No data found for this team in the selected period.</p>
+        <Button variant="outline" onClick={onBack}>Go Back</Button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
