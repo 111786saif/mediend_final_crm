@@ -19,6 +19,7 @@ import {
 import { toast } from 'sonner'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
+import { KnowlarityCallRecordingsCard } from '@/components/telephony/knowlarity-call-recordings-card'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import {
   CRM_LEAD_STATUS_OPTIONS,
@@ -1191,6 +1192,9 @@ export function LeadEditDrawer({
                             )}
                           </div>
                         </div>
+                      ) : null}
+                      {lead?.id ? (
+                        <KnowlarityCallRecordingsCard leadId={lead.id} className="mt-4" />
                       ) : null}
                     </div>
                   ) : null}

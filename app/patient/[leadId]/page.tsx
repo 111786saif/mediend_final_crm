@@ -21,6 +21,7 @@ import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2,
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
+import { KnowlarityCallRecordingsCard } from '@/components/telephony/knowlarity-call-recordings-card'
 import { CashStageProgress } from '@/components/case/cash-stage-progress'
 import { ResetStepperDialog } from '@/components/case/reset-stepper-dialog'
 import { StageProgress } from '@/components/case/stage-progress'
@@ -2618,6 +2619,9 @@ export default function PatientDetailsPage() {
 
         {/* Activity Timeline */}
         {stageHistory && <ActivityTimeline history={stageHistory} />}
+
+        {/* Knowlarity Call Recordings */}
+        <KnowlarityCallRecordingsCard leadId={leadId} />
 
         {user && canResetStepper(user as any) && (
           <ResetStepperDialog
