@@ -133,11 +133,25 @@ export interface TeamDetail {
     managerRole?: string
   }
   kpis: { totalLeads: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
-  members: Array<{ id: string; name: string; profilePicture: string | null; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
+  members: Array<{
+    id: string
+    name: string
+    profilePicture: string | null
+    leads: number
+    ipdDone: number
+    conversionRate: number
+    netProfit: number
+    billAmount: number
+    ipdCurrent: number
+    ipdPrev: number
+    ipdPrev2: number
+    ipdPrev3: number
+    ipdOlder: number
+  }>
   nestedTeams?: Array<{ id: string; name: string; role: string; totalLeads: number; totalIpd: number }>
   byCategory?: Array<{ category: string; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
   targets?: Array<{ metric: string; label: string; targetValue: number; achieved: number; percentage: number }>
-  monthWise: { months: string[]; rows: Array<{ month: string; bdId: string; bdName: string; leadCount: number; ipdCount: number }> }
+  monthWiseHeaders: { current: string; prev: string; prev2: string; prev3: string }
 }
 
 interface IpdBreakdown {
@@ -486,7 +500,6 @@ function BdDetailSheet({
     </Sheet>
   )
 }
-
 
 
 // ─── Month Conversion Panel ───────────────────────────────────────────────────
@@ -1039,7 +1052,7 @@ function TeamPerformanceTab({
                       <p className="text-[10px] text-muted-foreground uppercase font-medium">Conv.</p>
                     </div>
                   </div>
-                  
+
                   <div className="mt-4 pt-3 border-t border-border">
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
                       <TrendingUp className="h-3 w-3" /> Conversion Trend

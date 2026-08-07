@@ -100,12 +100,12 @@ export async function GET(request: NextRequest) {
     }
 
     const totalLeads = allLeads.length
-    // ipdDone, netProfit, billAmount come from completedLeads (conversionDate-filtered)
-    // so they reflect IPDs actually done in the selected period, not leads received
+    // ipdDone, netProfit come from completedLeads (conversionDate-filtered)
+    // billAmount is computed as sum of all leads in selected period per user request
     const ipdDone = completedLeads.length
     const conversionRate = totalLeads > 0 ? (ipdDone / totalLeads) * 100 : 0
     const netProfit = completedLeads.reduce((s, l) => s + (l.netProfit ?? 0), 0)
-    const billAmount = completedLeads.reduce((s, l) => s + (l.billAmount ?? 0), 0)
+    const billAmount = allLeads.reduce((s, l) => s + (l.billAmount ?? 0), 0)
     const avgTicketSize = ipdDone > 0 ? billAmount / ipdDone : 0
 
     // Month-wise breakdown (all leads for this BD, all time, no date filter)
@@ -122,7 +122,7 @@ export async function GET(request: NextRequest) {
       `,
       prisma.$queryRaw<{ month: string; count: number }[]>`
         SELECT
-          TO_CHAR(COALESCE(l."surgeryDate", ar."surgeryDate"), 'YYYY-MM') AS month,
+          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
           COUNT(*)::int AS count
         FROM "Lead" l
         LEFT JOIN "AdmissionRecord" ar ON ar."leadId" = l.id
@@ -134,13 +134,40 @@ export async function GET(request: NextRequest) {
       `,
     ])
     const allMonthsSet = new Set([...leadsByMonth.map((r) => r.month), ...ipdByMonth.map((r) => r.month)])
-    const leadMonthMap = new Map(leadsByMonth.map((r) => [r.month, Number(r.count)]))
-    const ipdMonthMap = new Map(ipdByMonth.map((r) => [r.month, Number(r.count)]))
+    const leadMonthMap = new Map<string, number>(leadsByMonth.map((r) => [r.month, Number(r.count)]))
+    const ipdMonthMap = new Map<string, number>(ipdByMonth.map((r) => [r.month, Number(r.count)]))
     const allLeadsAllTime = [...allMonthsSet].sort().map((month) => ({
       month,
       leadCount: leadMonthMap.get(month) ?? 0,
       ipdCount: ipdMonthMap.get(month) ?? 0,
     }))
+
+    const getMonthKey = (date: Date, offsetMonths: number) => {
+      const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() - offsetMonths, 1))
+      const y = d.getUTCFullYear()
+      const m = String(d.getUTCMonth() + 1).padStart(2, '0')
+      return `${y}-${m}`
+    }
+
+    const endDateObj = new Date(end)
+    const currentMonthKey = getMonthKey(endDateObj, 0)
+    const prevMonthKey = getMonthKey(endDateObj, 1)
+    const prev2MonthKey = getMonthKey(endDateObj, 2)
+    const prev3MonthKey = getMonthKey(endDateObj, 3)
+
+    let ipdCurrent = 0
+    let ipdPrev = 0
+    let ipdPrev2 = 0
+    let ipdPrev3 = 0
+    let ipdOlder = 0
+
+    allLeadsAllTime.forEach((r) => {
+      if (r.month === currentMonthKey) ipdCurrent = r.ipdCount
+      else if (r.month === prevMonthKey) ipdPrev = r.ipdCount
+      else if (r.month === prev2MonthKey) ipdPrev2 = r.ipdCount
+      else if (r.month === prev3MonthKey) ipdPrev3 = r.ipdCount
+      else if (r.month < currentMonthKey) ipdOlder += r.ipdCount
+    })
 
     // Treatment breakdown for pie chart
     const treatmentBreakdown: Record<string, number> = {}
@@ -177,11 +204,17 @@ export async function GET(request: NextRequest) {
         avgTicketSize,
       },
       surgeries,
-      monthWise: allLeadsAllTime.map((r) => ({
-        month: r.month,
-        leadCount: Number(r.leadCount),
-        ipdCount: Number(r.ipdCount),
-      })),
+      ipdCurrent,
+      ipdPrev,
+      ipdPrev2,
+      ipdPrev3,
+      ipdOlder,
+      monthWiseHeaders: {
+        current: currentMonthKey,
+        prev: prevMonthKey,
+        prev2: prev2MonthKey,
+        prev3: prev3MonthKey,
+      },
       treatmentBreakdown: Object.entries(treatmentBreakdown)
         .map(([treatment, count]) => ({ treatment, count }))
         .sort((a, b) => b.count - a.count),
