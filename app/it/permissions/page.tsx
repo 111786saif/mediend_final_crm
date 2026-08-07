@@ -102,6 +102,12 @@ export default function ITPermissionsPage() {
     return () => clearTimeout(handler)
   }, [search])
 
+  // Reset currentPage to 1 when roleFilter updates
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [roleFilter])
+
+
   // Invalidate query caches to force fetching fresh trees on tab switches and resource selections
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ['admin-permissions'] })

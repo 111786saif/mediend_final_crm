@@ -101,11 +101,72 @@ export async function GET(request: NextRequest) {
     const leadsMap = new Map(allLeads.map((r) => [r.bdId, r]))
     const ipdMap = new Map(completedLeads.map((r) => [r.bdId, r]))
 
+    const [leadsByMonth, ipdByMonth] = await Promise.all([
+      prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
+        SELECT
+          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
+          u.id AS "bdId",
+          u.name AS "bdName",
+          COUNT(*)::int AS count
+        FROM "Lead" l
+        JOIN "User" u ON u.id = l."bdId"
+        WHERE l."bdId" = ANY(${allUserIds})
+          AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
+        GROUP BY 1, u.id, u.name
+        ORDER BY 1, u.name
+      `,
+      prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
+        SELECT
+          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
+          u.id AS "bdId",
+          u.name AS "bdName",
+          COUNT(*)::int AS count
+        FROM "Lead" l
+        JOIN "User" u ON u.id = l."bdId"
+        LEFT JOIN "AdmissionRecord" ar ON ar."leadId" = l.id
+        WHERE l."bdId" = ANY(${allUserIds})
+          AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
+               OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND COALESCE(l."surgeryDate", ar."surgeryDate") IS NOT NULL))
+          AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
+        GROUP BY 1, u.id, u.name
+        ORDER BY 1, u.name
+      `,
+    ])
+
+    const getMonthKey = (date: Date, offsetMonths: number) => {
+      const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() - offsetMonths, 1))
+      const y = d.getUTCFullYear()
+      const m = String(d.getUTCMonth() + 1).padStart(2, '0')
+      return `${y}-${m}`
+    }
+
+    const endDateObj = new Date(end)
+    const currentMonthKey = getMonthKey(endDateObj, 0)
+    const prevMonthKey = getMonthKey(endDateObj, 1)
+    const prev2MonthKey = getMonthKey(endDateObj, 2)
+    const prev3MonthKey = getMonthKey(endDateObj, 3)
+
+    const memberIpdTrend = new Map<string, { current: number; prev: number; prev2: number; prev3: number; older: number }>()
+
+    for (const r of ipdByMonth) {
+      if (!memberIpdTrend.has(r.bdId)) {
+        memberIpdTrend.set(r.bdId, { current: 0, prev: 0, prev2: 0, prev3: 0, older: 0 })
+      }
+      const trend = memberIpdTrend.get(r.bdId)!
+      const c = Number(r.count)
+      if (r.month === currentMonthKey) trend.current = c
+      else if (r.month === prevMonthKey) trend.prev = c
+      else if (r.month === prev2MonthKey) trend.prev2 = c
+      else if (r.month === prev3MonthKey) trend.prev3 = c
+      else if (r.month < currentMonthKey) trend.older += c
+    }
+
     const members = bdMembers.map((m) => {
       const leads = leadsMap.get(m.userId)?._count.id ?? 0
       const ipd = ipdMap.get(m.userId)?._count.id ?? 0
       const profit = ipdMap.get(m.userId)?._sum.netProfit ?? 0
-      const bill = ipdMap.get(m.userId)?._sum.billAmount ?? 0
+      const bill = leadsMap.get(m.userId)?._sum.billAmount ?? 0
+      const trend = memberIpdTrend.get(m.userId) ?? { current: 0, prev: 0, prev2: 0, prev3: 0, older: 0 }
       return {
         id: m.userId,
         name: m.name,
@@ -115,6 +176,11 @@ export async function GET(request: NextRequest) {
         conversionRate: leads > 0 ? (ipd / leads) * 100 : 0,
         netProfit: profit,
         billAmount: bill,
+        ipdCurrent: trend.current,
+        ipdPrev: trend.prev,
+        ipdPrev2: trend.prev2,
+        ipdPrev3: trend.prev3,
+        ipdOlder: trend.older,
       }
     }).sort((a, b) => b.ipdDone - a.ipdDone)
 
@@ -123,6 +189,7 @@ export async function GET(request: NextRequest) {
     const tlLeads = leadsMap.get(managerUserId)?._count.id ?? 0
     const tlIpd = ipdMap.get(managerUserId)?._count.id ?? 0
     if (tlLeads > 0 || tlIpd > 0) {
+      const trend = memberIpdTrend.get(managerUserId) ?? { current: 0, prev: 0, prev2: 0, prev3: 0, older: 0 }
       members.unshift({
         id: managerUserId,
         name: `${managerName} (${ownerLabel})`,
@@ -131,7 +198,12 @@ export async function GET(request: NextRequest) {
         ipdDone: tlIpd,
         conversionRate: tlLeads > 0 ? (tlIpd / tlLeads) * 100 : 0,
         netProfit: ipdMap.get(managerUserId)?._sum.netProfit ?? 0,
-        billAmount: ipdMap.get(managerUserId)?._sum.billAmount ?? 0,
+        billAmount: leadsMap.get(managerUserId)?._sum.billAmount ?? 0,
+        ipdCurrent: trend.current,
+        ipdPrev: trend.prev,
+        ipdPrev2: trend.prev2,
+        ipdPrev3: trend.prev3,
+        ipdOlder: trend.older,
       })
     }
 
@@ -142,6 +214,7 @@ export async function GET(request: NextRequest) {
       const leads = leadsMap.get(unit.userId)?._count.id ?? 0
       const ipd = ipdMap.get(unit.userId)?._count.id ?? 0
       if (leads === 0 && ipd === 0) continue
+      const trend = memberIpdTrend.get(unit.userId) ?? { current: 0, prev: 0, prev2: 0, prev3: 0, older: 0 }
       members.push({
         id: unit.userId,
         name: `${unit.name} (${unit.role === UserRole.ASSISTANT_CATEGORY_MANAGER ? 'ACM' : unit.role === UserRole.CATEGORY_MANAGER ? 'CM' : 'Lead'})`,
@@ -150,7 +223,12 @@ export async function GET(request: NextRequest) {
         ipdDone: ipd,
         conversionRate: leads > 0 ? (ipd / leads) * 100 : 0,
         netProfit: ipdMap.get(unit.userId)?._sum.netProfit ?? 0,
-        billAmount: ipdMap.get(unit.userId)?._sum.billAmount ?? 0,
+        billAmount: leadsMap.get(unit.userId)?._sum.billAmount ?? 0,
+        ipdCurrent: trend.current,
+        ipdPrev: trend.prev,
+        ipdPrev2: trend.prev2,
+        ipdPrev3: trend.prev3,
+        ipdOlder: trend.older,
       })
       listedIds.add(unit.userId)
     }
@@ -187,57 +265,6 @@ export async function GET(request: NextRequest) {
       }
       nestedTeams.sort((a, b) => b.totalIpd - a.totalIpd)
     }
-
-    const [leadsByMonth, ipdByMonth] = await Promise.all([
-      prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
-        SELECT
-          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
-          u.id AS "bdId",
-          u.name AS "bdName",
-          COUNT(*)::int AS count
-        FROM "Lead" l
-        JOIN "User" u ON u.id = l."bdId"
-        WHERE l."bdId" = ANY(${allUserIds})
-          AND COALESCE(l."leadEntryDate", l."createdDate") >= ${start}
-          AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
-        GROUP BY 1, u.id, u.name
-        ORDER BY 1, u.name
-      `,
-      prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
-        SELECT
-          TO_CHAR(COALESCE(l."surgeryDate", ar."surgeryDate"), 'YYYY-MM') AS month,
-          u.id AS "bdId",
-          u.name AS "bdName",
-          COUNT(*)::int AS count
-        FROM "Lead" l
-        JOIN "User" u ON u.id = l."bdId"
-        LEFT JOIN "AdmissionRecord" ar ON ar."leadId" = l.id
-        WHERE l."bdId" = ANY(${allUserIds})
-          AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
-               OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND COALESCE(l."surgeryDate", ar."surgeryDate") IS NOT NULL))
-          AND COALESCE(l."surgeryDate", ar."surgeryDate") >= ${start}
-          AND COALESCE(l."surgeryDate", ar."surgeryDate") <= ${end}
-        GROUP BY 1, u.id, u.name
-        ORDER BY 1, u.name
-      `,
-    ])
-
-    const allMonths = [...new Set([...leadsByMonth.map((r) => r.month), ...ipdByMonth.map((r) => r.month)])].sort()
-    const monthWiseMap = new Map<string, { month: string; bdId: string; bdName: string; leadCount: number; ipdCount: number }>()
-    for (const r of leadsByMonth) {
-      const key = `${r.month}|${r.bdId}`
-      monthWiseMap.set(key, { month: r.month, bdId: r.bdId, bdName: r.bdName, leadCount: Number(r.count), ipdCount: 0 })
-    }
-    for (const r of ipdByMonth) {
-      const key = `${r.month}|${r.bdId}`
-      const existing = monthWiseMap.get(key)
-      if (existing) {
-        existing.ipdCount = Number(r.count)
-      } else {
-        monthWiseMap.set(key, { month: r.month, bdId: r.bdId, bdName: r.bdName, leadCount: 0, ipdCount: Number(r.count) })
-      }
-    }
-    const monthWise = [...monthWiseMap.values()].sort((a, b) => a.month.localeCompare(b.month) || a.bdName.localeCompare(b.bdName))
 
     // Fetch targets for the manager's team (current month overlap)
     const now = new Date()
@@ -363,15 +390,11 @@ export async function GET(request: NextRequest) {
       nestedTeams,
       byCategory,
       targets: targetsBreakdown,
-      monthWise: {
-        months: allMonths,
-        rows: monthWise.map((r) => ({
-          month: r.month,
-          bdId: r.bdId,
-          bdName: r.bdName,
-          leadCount: Number(r.leadCount),
-          ipdCount: Number(r.ipdCount),
-        })),
+      monthWiseHeaders: {
+        current: currentMonthKey,
+        prev: prevMonthKey,
+        prev2: prev2MonthKey,
+        prev3: prev3MonthKey,
       },
     })
   } catch (error) {
