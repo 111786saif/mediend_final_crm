@@ -61,16 +61,6 @@ function asRecord(v: unknown): Record<string, unknown> | undefined {
 
 /**
  * Single source of truth for the hospital + doctor shown across every table
- * (insurance, case tracker, TL pipeline, compliance, PL). Mirrors the priority
- * chain in `lib/pl/resolve-pl-row.ts`: the hospital chosen during pre-auth is
- * THE hospital for the case, and the doctor is the one attached to that
- * suggestion (also persisted to `lead.ipdDrName` on approval).
- *
- *   hospital: plRecord → dischargeSheet → preAuth.requestedHospitalName → lead.hospitalName
- *   doctor:   plRecord → dischargeSheet → matched suggestion → lead.ipdDrName → lead.surgeonName
- *
- * Accepts any Lead-shaped object (slim pipeline row or full include); fields are
- * read defensively so the differently-typed lead objects across the app all work.
  */
 export function resolveLeadHospitalDoctor(
   lead: object | null | undefined
@@ -87,8 +77,6 @@ export function resolveLeadHospitalDoctor(
   const matched =
     preAuthHospital != null ? suggested.find((s) => s.hospitalName === preAuthHospital) : undefined
   const preAuthDoctor = matched?.suggestedDoctor
-  // Earliest signal — a hospital insurance has *suggested* (before BD raises
-  // pre-auth). Surfacing it stops tables / patient details showing "Not Specified".
   const firstSuggested = suggested[0]
   const suggestionScalars = Array.isArray(preAuth?.hospitalSuggestions)
     ? (preAuth?.hospitalSuggestions as unknown[])
@@ -120,4 +108,40 @@ export function resolveLeadCity(lead: object | null | undefined): string | null 
   const rec = asRecord(lead) ?? {}
   const kyp = asRecord(rec.kypSubmission)
   return firstNonEmpty(kyp?.location, rec.city)
+}
+
+/**
+ * Single source of truth for Lead Source text display.
+ * Prefers human-readable string values from `source` or `campaignName`.
+ * If only numeric ID is present (e.g., 100, 67), falls back gracefully.
+ */
+export function resolveLeadSourceDisplay(lead: {
+  source?: string | null
+  leadSource?: number | string | null
+  campaignName?: string | null
+}): string {
+  if (lead.source && typeof lead.source === 'string' && lead.source.trim().length > 0) {
+    const s = lead.source.trim()
+    if (!/^\d+$/.test(s)) {
+      return s
+    }
+  }
+
+  if (lead.campaignName && typeof lead.campaignName === 'string' && lead.campaignName.trim().length > 0) {
+    const c = lead.campaignName.trim()
+    if (!/^\d+$/.test(c)) {
+      return c
+    }
+  }
+
+  if (lead.source && typeof lead.source === 'string' && lead.source.trim().length > 0) {
+    return lead.source.trim()
+  }
+
+  if (lead.leadSource != null) {
+    const ls = String(lead.leadSource).trim()
+    if (ls.length > 0) return ls
+  }
+
+  return '—'
 }

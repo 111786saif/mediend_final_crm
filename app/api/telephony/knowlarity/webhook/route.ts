@@ -2,76 +2,64 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { errorResponse, successResponse } from '@/lib/api-utils'
 
-function normalizePhone(raw: string | null | undefined): string {
-  const digits = String(raw ?? '').replace(/\D+/g, '')
-  if (digits.length >= 10) return digits.slice(-10)
-  return digits
-}
-
-function extractCallRecordingUrl(payload: Record<string, unknown>): string | null {
-  const url =
-    payload.call_recording ??
-    payload.call_recording_url ??
-    payload.recording_url ??
-    payload.callRecording ??
-    payload.recordingUrl ??
-    (payload.data as Record<string, unknown> | undefined)?.call_recording ??
-    (payload.data as Record<string, unknown> | undefined)?.call_recording_url ??
-    (payload.data as Record<string, unknown> | undefined)?.recording_url
-
-  if (typeof url === 'string' && url.trim().startsWith('http')) {
-    return url.trim()
-  }
-  return null
-}
-
-function extractCustomerPhone(payload: Record<string, unknown>): string | null {
-  const candidates = [
-    payload.customer_number,
-    payload.customer_phone,
-    payload.customerPhone,
-    payload.customer,
-    payload.call_from,
-    payload.caller,
-    payload.destination,
-    payload.phone,
-    payload.mobile,
-  ]
-
-  for (const item of candidates) {
-    if (item && (typeof item === 'string' || typeof item === 'number')) {
-      const digits = normalizePhone(String(item))
-      if (digits.length >= 7) return digits
-    }
-  }
-  return null
-}
-
 export async function POST(request: NextRequest) {
   try {
+    const rawBody = await request.text()
     let payload: Record<string, unknown> = {}
-    const contentType = request.headers.get('content-type') || ''
-
-    if (contentType.includes('application/json')) {
-      payload = (await request.json().catch(() => ({}))) as Record<string, unknown>
-    } else if (contentType.includes('application/x-www-form-urlencoded')) {
-      const formData = await request.formData()
-      const entries: Record<string, unknown> = {}
-      formData.forEach((value, key) => {
-        entries[key] = value
-      })
-      payload = entries
+    try {
+      payload = JSON.parse(rawBody)
+    } catch {
+      const params = new URLSearchParams(rawBody)
+      for (const [key, val] of params.entries()) {
+        payload[key] = val
+      }
     }
 
-    const recordingUrl = extractCallRecordingUrl(payload)
-    const customerPhone = extractCustomerPhone(payload)
+    const recordingUrl =
+      (typeof payload.call_recording === 'string' && payload.call_recording) ||
+      (typeof payload.call_recording_url === 'string' && payload.call_recording_url) ||
+      (typeof payload.recording_url === 'string' && payload.recording_url) ||
+      null
 
-    if (!recordingUrl) {
-      return errorResponse('No call_recording URL found in webhook payload', 400)
+    if (!recordingUrl || !recordingUrl.startsWith('http')) {
+      return errorResponse('Missing or invalid call_recording URL in payload', 400)
+    }
+
+    const customerPhone =
+      (typeof payload.customer_number === 'string' && payload.customer_number) ||
+      (typeof payload.caller === 'string' && payload.caller) ||
+      (typeof payload.customer_phone === 'string' && payload.customer_phone) ||
+      ''
+
+    const rawAgentPhone =
+      (typeof payload.agent_number === 'string' && payload.agent_number) ||
+      (typeof payload.agent_phone === 'string' && payload.agent_phone) ||
+      ''
+
+    const agentDigits = rawAgentPhone ? rawAgentPhone.replace(/\D+/g, '').slice(-10) : ''
+    let agentUserId: string | null = null
+    let agentName: string | null = null
+
+    if (agentDigits) {
+      const agentUser = await prisma.user.findFirst({
+        where: {
+          OR: [
+            { phoneNumber: { contains: agentDigits } },
+            { employee: { knowlarityPhoneNumber: { contains: agentDigits } } },
+            { employee: { knowlarityCallerId: { contains: agentDigits } } },
+          ],
+        },
+        select: { id: true, name: true },
+      })
+
+      if (agentUser) {
+        agentUserId = agentUser.id
+        agentName = agentUser.name
+      }
     }
 
     let leadId: string | null = null
-    let leadLabel: string = customerPhone || 'Unknown'
+    let leadLabel: string = customerPhone ? `Call (${customerPhone})` : 'Call Recording'
 
     if (customerPhone) {
       const lead = await prisma.lead.findFirst({
@@ -97,11 +85,13 @@ export async function POST(request: NextRequest) {
         entityType: 'CRM_LEAD',
         entityId: leadId || customerPhone || 'unknown',
         entityLabel: leadLabel,
+        actorUserId: agentUserId,
         summary: `Call recording received for ${leadLabel}`,
         metadata: {
           callRecordingUrl: recordingUrl,
           customerPhone: customerPhone || null,
-          agentPhone: String(payload.agent_number || payload.agent_phone || ''),
+          agentPhone: agentDigits || null,
+          agentName,
           eventType: String(payload.event_type || payload.type || 'HANGUP'),
           payload,
           receivedAt: new Date().toISOString(),
