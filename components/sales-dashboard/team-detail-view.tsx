@@ -105,73 +105,36 @@ export function TeamDetailView({
     return idx >= 0 && idx < 12 ? `${monthNames[idx]} ${year.slice(2)}` : monthStr
   }
 
-  // Month-wise derivations
-  const months = data?.monthWise?.months ?? []
-  const currentMonthIdx = months.length - 1
-  const prevMonthIdx = months.length - 2
-  const prev2MonthIdx = months.length - 3
-
-  const getMemberIpdForMonth = (bdId: string, monthStr: string) => {
-    if (!monthStr) return 0
-    const row = data?.monthWise?.rows?.find(r => r.bdId === bdId && r.month === monthStr)
-    return row?.ipdCount || 0
-  }
-
-  const getMemberIpdForMonthRaw = (bdId: string, monthStr: string) => {
-    if (!monthStr) return undefined
-    const row = data?.monthWise?.rows?.find(r => r.bdId === bdId && r.month === monthStr)
-    return row ? (row.ipdCount ?? 0) : undefined
-  }
-
-  const getBdIpdForMonth = (monthStr: string) => {
-    if (!bdDetailData || !monthStr) return 0
-    const match = bdDetailData.monthWise?.find((m: any) => m.month === monthStr)
-    return match ? match.ipdCount : 0
-  }
-
-  const getMemberOlderMonthsIpd = (bdId: string) => {
-    const activeMonths = [months[currentMonthIdx], months[prevMonthIdx], months[prev2MonthIdx]]
-    return (data?.monthWise?.rows ?? [])
-      .filter(r => r.bdId === bdId && !activeMonths.includes(r.month))
-      .reduce((sum, r) => sum + (r.ipdCount || 0), 0)
-  }
-
-  const getMemberOlderMonthsIpdRaw = (bdId: string) => {
-    const activeMonths = [months[currentMonthIdx], months[prevMonthIdx], months[prev2MonthIdx]]
-    const rows = (data?.monthWise?.rows ?? []).filter(r => r.bdId === bdId && !activeMonths.includes(r.month))
-    if (rows.length === 0) return undefined
-    return rows.reduce((sum, r) => sum + (r.ipdCount ?? 0), 0)
-  }
-
-  const getBdOlderMonthsIpd = () => {
-    if (!bdDetailData) return 0
-    const activeMonths = [months[currentMonthIdx], months[prevMonthIdx], months[prev2MonthIdx]]
-    return bdDetailData.monthWise
-      ?.filter((m: any) => !activeMonths.includes(m.month))
-      .reduce((sum: number, m: any) => sum + (m.ipdCount || 0), 0) ?? 0
-  }
+  // Month-wise derivations directly from pre-computed backend response
+  const headers = data?.monthWiseHeaders ?? { current: '', prev: '', prev2: '', prev3: '' }
+  const months = [headers.current, headers.prev, headers.prev2, headers.prev3].filter(Boolean)
 
   // Calculate dynamic total IPD for each period based on selected BD
   const totalCurrent = selectedBdId === 'all'
-    ? (data?.members ?? []).reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[currentMonthIdx]), 0)
-    : getBdIpdForMonth(months[currentMonthIdx])
+    ? (data?.members ?? []).reduce((sum, m) => sum + (m.ipdCurrent ?? 0), 0)
+    : (bdDetailData?.ipdCurrent ?? 0)
 
   const totalPrev = selectedBdId === 'all'
-    ? (data?.members ?? []).reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[prevMonthIdx]), 0)
-    : getBdIpdForMonth(months[prevMonthIdx])
+    ? (data?.members ?? []).reduce((sum, m) => sum + (m.ipdPrev ?? 0), 0)
+    : (bdDetailData?.ipdPrev ?? 0)
 
   const totalPrev2 = selectedBdId === 'all'
-    ? (data?.members ?? []).reduce((sum, m) => sum + getMemberIpdForMonth(m.id, months[prev2MonthIdx]), 0)
-    : getBdIpdForMonth(months[prev2MonthIdx])
+    ? (data?.members ?? []).reduce((sum, m) => sum + (m.ipdPrev2 ?? 0), 0)
+    : (bdDetailData?.ipdPrev2 ?? 0)
+
+  const totalPrev3 = selectedBdId === 'all'
+    ? (data?.members ?? []).reduce((sum, m) => sum + (m.ipdPrev3 ?? 0), 0)
+    : (bdDetailData?.ipdPrev3 ?? 0)
 
   const totalOlder = selectedBdId === 'all'
-    ? (data?.members ?? []).reduce((sum, m) => sum + getMemberOlderMonthsIpd(m.id), 0)
-    : getBdOlderMonthsIpd()
+    ? (data?.members ?? []).reduce((sum, m) => sum + (m.ipdOlder ?? 0), 0)
+    : (bdDetailData?.ipdOlder ?? 0)
 
-  const sumPast3 = totalCurrent + totalPrev + totalPrev2
-  const ptCurrent = sumPast3 > 0 ? (totalCurrent / sumPast3) * 100 : 0
-  const ptPrev = sumPast3 > 0 ? (totalPrev / sumPast3) * 100 : 0
-  const ptPrev2 = sumPast3 > 0 ? (totalPrev2 / sumPast3) * 100 : 0
+  const sumPastPeriod = totalCurrent + totalPrev + totalPrev2 + totalPrev3
+  const ptCurrent = sumPastPeriod > 0 ? (totalCurrent / sumPastPeriod) * 100 : 0
+  const ptPrev = sumPastPeriod > 0 ? (totalPrev / sumPastPeriod) * 100 : 0
+  const ptPrev2 = sumPastPeriod > 0 ? (totalPrev2 / sumPastPeriod) * 100 : 0
+  const ptPrev3 = sumPastPeriod > 0 ? (totalPrev3 / sumPastPeriod) * 100 : 0
 
   const columns = useMemo<ColumnDef<TeamDetail['members'][number]>[]>(() => [
     {
@@ -214,28 +177,34 @@ export function TeamDetailView({
       cell: ({ row }) => `${row.original.conversionRate.toFixed(1)}%`
     },
     {
-      id: 'currentMonth',
-      header: formatMonthName(months[currentMonthIdx]),
+      accessorKey: 'ipdCurrent',
+      header: formatMonthName(headers.current),
       meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums' },
-      cell: ({ row }) => getMemberIpdForMonthRaw(row.original.id, months[currentMonthIdx]) ?? missingDataFallback
+      cell: ({ row }) => row.original.ipdCurrent ?? 0
     },
     {
-      id: 'prevMonth',
-      header: formatMonthName(months[prevMonthIdx]),
+      accessorKey: 'ipdPrev',
+      header: formatMonthName(headers.prev),
       meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums' },
-      cell: ({ row }) => getMemberIpdForMonthRaw(row.original.id, months[prevMonthIdx]) ?? missingDataFallback
+      cell: ({ row }) => row.original.ipdPrev ?? 0
     },
     {
-      id: 'prev2Month',
-      header: formatMonthName(months[prev2MonthIdx]),
+      accessorKey: 'ipdPrev2',
+      header: formatMonthName(headers.prev2),
       meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums' },
-      cell: ({ row }) => getMemberIpdForMonthRaw(row.original.id, months[prev2MonthIdx]) ?? missingDataFallback
+      cell: ({ row }) => row.original.ipdPrev2 ?? 0
     },
     {
-      id: 'olderMonths',
+      accessorKey: 'ipdPrev3',
+      header: formatMonthName(headers.prev3),
+      meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums' },
+      cell: ({ row }) => row.original.ipdPrev3 ?? 0
+    },
+    {
+      accessorKey: 'ipdOlder',
       header: 'Older Months',
       meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums' },
-      cell: ({ row }) => getMemberOlderMonthsIpdRaw(row.original.id) ?? missingDataFallback
+      cell: ({ row }) => row.original.ipdOlder ?? 0
     },
     {
       id: 'avgCallTime',
@@ -249,7 +218,7 @@ export function TeamDetailView({
       meta: { headerClassName: 'text-right', cellClassName: 'text-right tabular-nums font-medium text-amber-600 dark:text-amber-400' },
       cell: ({ row }) => row.original.billAmount ? fmtK(row.original.billAmount) : missingDataFallback
     }
-  ], [data?.members, months, incentivesByUserId, incentivesByName, currentMonthIdx, prevMonthIdx, prev2MonthIdx])
+  ], [data?.members, headers, incentivesByUserId, incentivesByName])
 
   const isDetailLoading = isLoading || (selectedBdId !== 'all' && isBdLoading)
 
@@ -434,20 +403,21 @@ export function TeamDetailView({
           <CardContent className="flex-1 p-4 pt-0 flex flex-col items-center justify-between gap-4">
             <div className="w-32 h-32 rounded-full border-[14px] border-muted relative flex items-center justify-center shadow-inner mt-2 shrink-0">
               <div className="text-center">
-                <span className="block text-2xl font-extrabold text-foreground tracking-tight leading-none">{sumPast3}</span>
-                <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5 block">IPD (3M)</span>
+                <span className="block text-2xl font-extrabold text-foreground tracking-tight leading-none">{sumPastPeriod}</span>
+                <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5 block">IPD (4M)</span>
               </div>
             </div>
             <div className="space-y-1.5 w-full bg-muted/35 p-2.5 rounded-xl border border-border/50">
               {[
-                { monthIdx: currentMonthIdx, color: 'bg-violet-500', pt: ptCurrent, tot: totalCurrent },
-                { monthIdx: prevMonthIdx, color: 'bg-blue-500', pt: ptPrev, tot: totalPrev },
-                { monthIdx: prev2MonthIdx, color: 'bg-teal-500', pt: ptPrev2, tot: totalPrev2 },
+                { monthName: headers.current, color: 'bg-violet-500', pt: ptCurrent, tot: totalCurrent },
+                { monthName: headers.prev, color: 'bg-blue-500', pt: ptPrev, tot: totalPrev },
+                { monthName: headers.prev2, color: 'bg-teal-500', pt: ptPrev2, tot: totalPrev2 },
+                { monthName: headers.prev3, color: 'bg-emerald-500', pt: ptPrev3, tot: totalPrev3 },
               ].map((p, i) => (
                 <div key={i} className="flex justify-between items-center text-[10px]">
                   <div className="flex items-center gap-1.5">
                     <div className={`w-2.5 h-2.5 rounded ${p.color}`}></div>
-                    <span className="text-muted-foreground font-semibold uppercase tracking-wider">{formatMonthName(months[p.monthIdx])}</span>
+                    <span className="text-muted-foreground font-semibold uppercase tracking-wider">{formatMonthName(p.monthName)}</span>
                   </div>
                   <span className="text-foreground font-bold">{p.pt.toFixed(0)}% <span className="text-muted-foreground font-medium ml-1">({p.tot})</span></span>
                 </div>
