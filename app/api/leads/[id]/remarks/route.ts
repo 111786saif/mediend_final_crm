@@ -137,7 +137,7 @@ export async function GET(
       ...lead.leadRemarkEntries
         .map((remark) => {
           const content = normalizeLeadRemarkContent(remark.content)
-          if (!content || !isLeadRemarkVisible(lead, remark.createdAt)) return null
+          if (!content || !isLeadRemarkVisible(lead, remark.createdAt, user.role)) return null
 
           return {
             id: remark.id,
@@ -154,7 +154,7 @@ export async function GET(
       ...legacyRemarks
         .map((remark) => {
           const content = normalizeLeadRemarkContent(remark.remarks)
-          if (!content || !isLeadRemarkVisible(lead, remark.updateDate)) return null
+          if (!content || !isLeadRemarkVisible(lead, remark.updateDate, user.role)) return null
 
           const mappedUser = remark.updateBy != null ? legacyUserMap.get(remark.updateBy) : null
 
@@ -175,7 +175,7 @@ export async function GET(
     const normalizedExistingContents = new Set(
       mergedRemarks.map((remark) => normalizeLeadRemarkContent(remark.content))
     )
-    const leadRemarksFallback = getVisibleLeadRemarksFallbackContent(lead, lead.remarks)
+    const leadRemarksFallback = getVisibleLeadRemarksFallbackContent(lead, lead.remarks, user.role)
 
     if (leadRemarksFallback && !normalizedExistingContents.has(leadRemarksFallback)) {
       const fallbackAuthor = lead.updatedBy ?? lead.createdBy

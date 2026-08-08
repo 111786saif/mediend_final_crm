@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 
 export interface OrgChartNode {
   id: string
@@ -61,6 +62,7 @@ export async function GET(request: NextRequest) {
     }
 
     const employees = await prisma.employee.findMany({
+      where: headcountEmployeeWhere,
       select: {
         id: true,
         userId: true,

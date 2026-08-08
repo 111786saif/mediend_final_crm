@@ -38,11 +38,21 @@ export async function POST(request: NextRequest) {
     if (!hasPermission(user, 'pl:write')) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
-    const leadId = String(body.leadId || '').trim()
-    if (!leadId) return errorResponse('leadId is required', 400)
+    const leadId = body.leadId ? String(body.leadId).trim() : ''
+    const hospitalName = body.hospitalName ? String(body.hospitalName).trim() : ''
+
+    // Case-linked OR hospital-level (no case) MediEND receipt
+    if (!leadId && !hospitalName) {
+      return errorResponse('leadId or hospitalName is required', 400)
+    }
 
     const recipient = body.recipient as InstallmentRecipient
     if (!RECIPIENTS.includes(recipient)) return errorResponse('Invalid recipient', 400)
+
+    // Hospital-level payments (no case) are only for MediEND verification
+    if (!leadId && recipient !== 'MEDIEND') {
+      return errorResponse('Hospital-level payments must use recipient MEDIEND', 400)
+    }
 
     const amount = Number(body.amount)
     if (!Number.isFinite(amount) || amount <= 0) return errorResponse('amount must be > 0', 400)
@@ -53,16 +63,21 @@ export async function POST(request: NextRequest) {
     const mode = body.mode ? (body.mode as InstallmentMode) : null
     if (!mode || !MODES.includes(mode)) return errorResponse('Payment mode is required', 400)
 
-    const lead = await prisma.lead.findUnique({ where: { id: leadId }, select: { id: true } })
-    if (!lead) return errorResponse('Lead not found', 404)
+    if (leadId) {
+      const lead = await prisma.lead.findUnique({ where: { id: leadId }, select: { id: true } })
+      if (!lead) return errorResponse('Lead not found', 404)
+    }
 
     // MediEND receipts need Finance verification before they reduce outstanding.
     // Hospital / Doctor payouts apply immediately (auto-verified).
     const needsFinanceVerification = recipient === 'MEDIEND'
 
+    // Omit leadId entirely for hospital-level rows — passing null makes Prisma
+    // treat the create as relation-style and require `lead`.
     const created = await prisma.paymentInstallment.create({
       data: {
-        leadId,
+        ...(leadId ? { leadId } : {}),
+        hospitalName: hospitalName || null,
         recipient,
         amount,
         paidOn,
@@ -77,7 +92,9 @@ export async function POST(request: NextRequest) {
       include: { recordedBy: { select: { id: true, name: true } } },
     })
 
-    await recomputeOutstandingFromInstallments(leadId)
+    if (leadId) {
+      await recomputeOutstandingFromInstallments(leadId)
+    }
 
     return successResponse(created, 'Installment recorded')
   } catch (error) {

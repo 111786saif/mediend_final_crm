@@ -32,7 +32,6 @@ type Row = {
   id: string
   leadRef: string
   patientName: string
-  phoneNumber: string
   caseStage: string
   pipelineStage: string
   hospitalName: string
@@ -107,7 +106,6 @@ function downloadCsv(rows: Row[]) {
   const header = [
     'Lead ID',
     'Patient Name',
-    'Phone',
     'BDM',
     'Team Lead',
     'Upload Date',
@@ -123,7 +121,6 @@ function downloadCsv(rows: Row[]) {
       [
         r.leadRef,
         r.patientName,
-        r.phoneNumber,
         r.bdmName,
         r.teamLeadName ?? '',
         r.uploadDate.slice(0, 10),
@@ -620,7 +617,6 @@ function ReportTable({ rows, onQuickView }: { rows: Row[]; onQuickView: (row: Ro
           <TableHead className="w-9" />
           <TableHead className="font-semibold text-teal-950 dark:text-teal-100">Lead ID</TableHead>
           <TableHead>Patient</TableHead>
-          <TableHead>Phone</TableHead>
           <TableHead>BDM</TableHead>
           <TableHead>Team Lead</TableHead>
           <TableHead>Uploaded</TableHead>
@@ -662,7 +658,6 @@ function ReportTable({ rows, onQuickView }: { rows: Row[]; onQuickView: (row: Ro
               </Link>
             </TableCell>
             <TableCell className="whitespace-nowrap">{r.patientName}</TableCell>
-            <TableCell className="whitespace-nowrap font-mono text-xs">{r.phoneNumber}</TableCell>
             <TableCell className="whitespace-nowrap">{r.bdmName || '—'}</TableCell>
             <TableCell className="whitespace-nowrap">{r.teamLeadName || '—'}</TableCell>
             <TableCell className="whitespace-nowrap">{r.uploadDate.slice(0, 10)}</TableCell>

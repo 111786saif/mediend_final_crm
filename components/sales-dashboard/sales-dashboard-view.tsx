@@ -51,9 +51,10 @@ import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
 import { UntouchedLeadsTable } from '@/components/targets/untouched-leads-table'
 import type { DateRange } from 'react-day-picker'
+import { TeamDetailView } from './team-detail-view'
 
 // FLAG TO CONTROL CAPSULE BEHAVIOR FOR BD MEMBERS WITHOUT INCENTIVE IN API
-const HIDE_MISSING_INCENTIVE_CAPSULE = true
+export const HIDE_MISSING_INCENTIVE_CAPSULE = true
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -124,7 +125,7 @@ interface ManagerGroup {
   totalLeads: number
 }
 
-interface TeamDetail {
+export interface TeamDetail {
   team: {
     id: string
     name: string
@@ -178,11 +179,11 @@ interface TargetSalaryData {
   }>
 }
 
-type DashboardVariant = 'org' | 'team-lead'
+export type DashboardVariant = 'org' | 'team-lead'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const PIE_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316', '#84cc16', '#ec4899', '#6366f1']
+export const PIE_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316', '#84cc16', '#ec4899', '#6366f1']
 
 const TABS = [
   { value: 'overview', label: 'Overview' },
@@ -199,20 +200,20 @@ function fmt(n: number) {
   return `₹${Math.round(n).toLocaleString('en-IN')}`
 }
 
-function fmtK(n: number) {
+export function fmtK(n: number) {
   if (n >= 100000) return `₹${(n / 100000).toFixed(1)}L`
   if (n >= 1000) return `₹${(n / 1000).toFixed(0)}K`
   return `₹${Math.round(n)}`
 }
 
-function RankBadge({ rank }: { rank: number }) {
+export function RankBadge({ rank }: { rank: number }) {
   if (rank === 1) return <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-400 text-amber-950 font-bold"><Trophy className="h-3.5 w-3.5" /></span>
   if (rank === 2) return <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-300 dark:bg-slate-600 text-slate-800 dark:text-slate-100 font-bold"><Medal className="h-3.5 w-3.5" /></span>
   if (rank === 3) return <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-600 text-white font-bold"><Medal className="h-3.5 w-3.5" /></span>
   return <span className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground text-xs font-bold">{rank}</span>
 }
 
-function UserAvatar({ name, picture, size = 'sm' }: { name: string; picture?: string | null; size?: 'sm' | 'md' }) {
+export function UserAvatar({ name, picture, size = 'sm' }: { name: string; picture?: string | null; size?: 'sm' | 'md' }) {
   const colors = getAvatarColor(name)
   const sz = size === 'md' ? 'h-10 w-10' : 'h-8 w-8'
   return (
@@ -225,7 +226,7 @@ function UserAvatar({ name, picture, size = 'sm' }: { name: string; picture?: st
   )
 }
 
-function StatCard({ label, value, sub, color }: { label: string; value: string | number; sub?: string; color?: string }) {
+export function StatCard({ label, value, sub, color }: { label: string; value: string | number; sub?: string; color?: string }) {
   const labelLower = label.toLowerCase()
   const isAccent = labelLower.includes('ipd') || labelLower.includes('profit')
 
@@ -486,270 +487,7 @@ function BdDetailSheet({
   )
 }
 
-// ─── Team Detail Sheet ────────────────────────────────────────────────────────
 
-function TeamDetailSheet({
-  teamId,
-  open,
-  onClose,
-  dateParams,
-  variant,
-  dateRange,
-  onSelectNestedTeam,
-}: {
-  teamId: string | null
-  open: boolean
-  onClose: () => void
-  dateParams: string
-  variant: DashboardVariant
-  dateRange?: DateRange
-  onSelectNestedTeam?: (managerId: string) => void
-}) {
-  const { data, isLoading } = useQuery<TeamDetail>({
-    queryKey: ['sales-dashboard', variant, 'team-detail', teamId, dateParams],
-    queryFn: () => apiGet<TeamDetail>(`/api/analytics/sales-dashboard/team-detail?managerId=${teamId}${dateParams ? '&' + dateParams : ''}`),
-    enabled: !!teamId && open,
-  })
-
-  const dateFrom = dateRange?.from || new Date()
-  const incentiveMonth = dateFrom.getMonth() + 1
-  const incentiveYear = dateFrom.getFullYear()
-
-  const { data: incentivesData } = useQuery<{ records: any[] }>({
-    queryKey: ['incentives-list', incentiveMonth, incentiveYear],
-    queryFn: () => apiGet<{ records: any[] }>(`/api/incentives?month=${incentiveMonth}&year=${incentiveYear}`),
-    enabled: open,
-  })
-
-  const incentivesByUserId = new Map<string, number>()
-  const incentivesByName = new Map<string, number>()
-  if (incentivesData?.records) {
-    for (const rec of incentivesData.records) {
-      if (rec.userId) incentivesByUserId.set(rec.userId, rec.amount)
-      if (rec.employeeName) incentivesByName.set(rec.employeeName.toLowerCase().trim(), rec.amount)
-    }
-  }
-
-  return (
-    <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="right" className="w-full sm:max-w-2xl p-0">
-        <VisuallyHidden>
-          <SheetTitle>Team Details</SheetTitle>
-        </VisuallyHidden>
-        <ScrollArea className="h-full">
-          <div className="p-6 space-y-6">
-            {isLoading && <div className="text-center py-12 text-muted-foreground">Loading…</div>}
-            {data && (
-              <>
-                <SheetHeader className="pb-0">
-                  <div>
-                    <SheetTitle className="text-xl">{data.team.name}</SheetTitle>
-                    <div className="flex items-center gap-2 mt-1">
-                      {data.team.manager && <Badge variant="secondary">Manager: {data.team.manager.name}</Badge>}
-                      {data.team.managerRole === 'CATEGORY_MANAGER' && (
-                        <Badge variant="outline">Category Manager</Badge>
-                      )}
-                      {data.team.managerRole === 'ASSISTANT_CATEGORY_MANAGER' && (
-                        <Badge variant="outline">ACM</Badge>
-                      )}
-                    </div>
-                  </div>
-                </SheetHeader>
-
-                {/* Team KPIs */}
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  <StatCard label="Total Leads" value={data.kpis.totalLeads} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
-                  <StatCard label="IPD Done" value={data.kpis.totalIpd} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
-                  <StatCard label="Conversion" value={`${data.kpis.conversionRate.toFixed(1)}%`} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
-                  <StatCard label="Net Profit" value={fmtK(data.kpis.totalProfit)} color="bg-amber-500/10 text-amber-900 dark:text-amber-100" />
-                  <StatCard label="Bill Amount" value={fmtK(data.kpis.totalBill)} color="bg-slate-500/10" />
-                </div>
-
-                {data.nestedTeams && data.nestedTeams.length > 0 && (
-                  <div>
-                    <p className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <Users className="h-4 w-4" /> Teams under this CM
-                    </p>
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                      {data.nestedTeams.map((nt) => {
-                        const conv = nt.totalLeads > 0 ? ((nt.totalIpd / nt.totalLeads) * 100).toFixed(1) : '0.0'
-                        return (
-                          <button
-                            key={nt.id}
-                            type="button"
-                            onClick={() => onSelectNestedTeam?.(nt.id)}
-                            className="text-left rounded-lg border bg-card p-3 hover:shadow-sm transition-shadow"
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium">{nt.name}</p>
-                                <p className="text-[10px] text-muted-foreground">
-                                  {nt.role === 'ASSISTANT_CATEGORY_MANAGER' ? 'ACM' : nt.role === 'CATEGORY_MANAGER' ? 'CM' : 'Team Lead'}
-                                </p>
-                              </div>
-                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                            </div>
-                            <div className="mt-2 flex gap-4 text-xs">
-                              <span>IPD <strong>{nt.totalIpd}</strong></span>
-                              <span>Leads <strong>{nt.totalLeads}</strong></span>
-                              <span>Conv <strong>{conv}%</strong></span>
-                            </div>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Target vs Achieved */}
-                {data.targets && data.targets.length > 0 && (
-                  <div>
-                    <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Target className="h-4 w-4" />Targets vs Achieved (Current Month)</p>
-                    <div className="space-y-3">
-                      {data.targets.map((t, idx) => (
-                        <div key={`${t.metric}-${t.label}-${idx}`} className="rounded-lg border bg-card p-3">
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-sm font-medium">{t.label}</span>
-                            <span className="text-sm tabular-nums">
-                              <span className="font-bold text-emerald-600">{t.metric === 'NET_PROFIT' || t.metric === 'BILL_AMOUNT' || t.metric === 'REVENUE' ? fmtK(t.achieved) : t.achieved}</span>
-                              <span className="text-muted-foreground"> / {t.metric === 'NET_PROFIT' || t.metric === 'BILL_AMOUNT' || t.metric === 'REVENUE' ? fmtK(t.targetValue) : t.targetValue}</span>
-                            </span>
-                          </div>
-                          <Progress value={Math.min(t.percentage, 100)} className="h-2" />
-                          <p className="text-xs text-muted-foreground mt-1 text-right">{t.percentage.toFixed(1)}% of target</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Category-wise */}
-                {(data.byCategory?.length ?? 0) > 0 && (
-                  <div>
-                    <p className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 className="h-4 w-4" />By Category</p>
-                    <div className="space-y-2">
-                      {data.byCategory!.map((c, i) => (
-                        <div key={c.category} className="flex items-center gap-3 rounded-lg border bg-card p-3">
-                          <span
-                            className="h-2.5 w-2.5 rounded-full shrink-0"
-                            style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm truncate">{c.category}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Progress value={Math.min(c.conversionRate, 100)} className="h-1.5 w-16" />
-                              <span className="text-xs text-muted-foreground">{c.conversionRate.toFixed(0)}%</span>
-                            </div>
-                          </div>
-                          <div className="text-right text-sm">
-                            <p className="font-bold text-emerald-600">{c.ipdDone} IPD</p>
-                            <p className="text-xs text-muted-foreground">{c.leads} leads</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Members */}
-                <div>
-                  <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Users className="h-4 w-4" />Team Members</p>
-                  <div className="space-y-2">
-                    {data.members.map((m, i) => (
-                      <div key={m.id} className="flex items-center gap-3 rounded-lg border bg-card p-3">
-                        <RankBadge rank={i + 1} />
-                        <UserAvatar name={m.name} picture={m.profilePicture} />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{m.name}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Progress value={Math.min(m.conversionRate, 100)} className="h-1.5 w-16" />
-                            <span className="text-xs text-muted-foreground">{m.conversionRate.toFixed(0)}%</span>
-                            {(() => {
-                              const amount = incentivesByUserId.get(m.id) ?? incentivesByName.get(m.name.toLowerCase().trim())
-                              if (amount === undefined && HIDE_MISSING_INCENTIVE_CAPSULE) return null
-                              return (
-                                <span className="inline-flex items-center text-[11px] font-bold text-amber-500 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded-full border border-amber-500/20 shrink-0 ml-1">
-                                  Incentive: {amount !== undefined ? `₹${amount.toLocaleString()}` : '-'}
-                                </span>
-                              )
-                            })()}
-                          </div>
-                        </div>
-                        <div className="text-right text-sm">
-                          <p className="font-bold text-emerald-600">{m.ipdDone} IPD</p>
-                          <p className="text-xs text-muted-foreground">{m.leads} leads</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* IPD share pie */}
-                {data.members.some((m) => m.ipdDone > 0) && (
-                  <div>
-                    <p className="text-sm font-semibold mb-3">IPD Share by BD</p>
-                    <div className="flex items-center gap-4">
-                      <PieChart width={120} height={120}>
-                        <Pie data={data.members.filter((m) => m.ipdDone > 0)} dataKey="ipdDone" nameKey="name" cx="50%" cy="50%" outerRadius={55} innerRadius={30}>
-                          {data.members.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                      <div className="space-y-1 flex-1 min-w-0">
-                        {data.members.filter((m) => m.ipdDone > 0).map((m, i) => (
-                          <div key={m.id} className="flex items-center gap-2 text-xs">
-                            <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
-                            <span className="truncate text-muted-foreground">{m.name}</span>
-                            <span className="ml-auto font-semibold tabular-nums">{m.ipdDone}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Month-wise pivot */}
-                {data.monthWise.months.length > 0 && (
-                  <div>
-                    <p className="text-sm font-semibold mb-3">Month-wise IPD</p>
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className="min-w-[120px]">BD</TableHead>
-                            {data.monthWise.months.slice(-6).map((m) => (
-                              <TableHead key={m} className="text-right min-w-[56px] text-xs">{m.slice(5)}/{m.slice(2, 4)}</TableHead>
-                            ))}
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {data.members.map((member) => {
-                            const memberRows = data.monthWise.rows.filter((r) => r.bdId === member.id)
-                            const ipdByMonth = Object.fromEntries(memberRows.map((r) => [r.month, r.ipdCount]))
-                            return (
-                              <TableRow key={member.id}>
-                                <TableCell className="font-medium text-sm">{member.name}</TableCell>
-                                {data.monthWise.months.slice(-6).map((m) => (
-                                  <TableCell key={m} className="text-right tabular-nums text-sm">
-                                    {ipdByMonth[m] ? <span className={ipdByMonth[m] >= 5 ? 'font-bold text-emerald-600' : ''}>{ipdByMonth[m]}</span> : <span className="text-muted-foreground/30">–</span>}
-                                  </TableCell>
-                                ))}
-                              </TableRow>
-                            )
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </ScrollArea>
-      </SheetContent>
-    </Sheet>
-  )
-}
 
 // ─── Month Conversion Panel ───────────────────────────────────────────────────
 
@@ -1083,6 +821,47 @@ function TeamPerformanceTab({
 
   const teamSalaryMap = new Map((targetSalary?.teamSalaryBreakdown ?? []).map((t) => [t.managerId, t]))
 
+  // Helper to compute trend or fallback to dummy data
+  const getTrendData = (mId: string, isCm: boolean) => {
+    const dummy = { current: 15.4, prev: 12.2, prev2: 9.8 }
+    if (!bdMonthly || !bdMonthly.bds) return dummy
+
+    const d = new Date()
+    const currentM = format(d, 'yyyy-MM')
+    const prevM = format(new Date(d.getFullYear(), d.getMonth() - 1, 1), 'yyyy-MM')
+    const prev2M = format(new Date(d.getFullYear(), d.getMonth() - 2, 1), 'yyyy-MM')
+
+    let cLeads = 0, cIpd = 0
+    let pLeads = 0, pIpd = 0
+    let p2Leads = 0, p2Ipd = 0
+
+    const bds = bdMonthly.bds.filter(bd => {
+      if (isCm) {
+        return bd.cmManagerId === mId || bd.bdEmployeeId === mId
+      }
+      return bd.managerId === mId || bd.bdEmployeeId === mId
+    })
+
+    if (bds.length === 0) return dummy
+
+    bds.forEach(bd => {
+      cLeads += bd.leads[currentM] || 0
+      cIpd += bd.ipd[currentM] || 0
+      pLeads += bd.leads[prevM] || 0
+      pIpd += bd.ipd[prevM] || 0
+      p2Leads += bd.leads[prev2M] || 0
+      p2Ipd += bd.ipd[prev2M] || 0
+    })
+
+    if (cLeads === 0 && pLeads === 0 && p2Leads === 0) return dummy
+
+    return {
+      current: cLeads > 0 ? (cIpd / cLeads) * 100 : (cIpd > 0 ? 100 : dummy.current),
+      prev: pLeads > 0 ? (pIpd / pLeads) * 100 : (pIpd > 0 ? 100 : dummy.prev),
+      prev2: p2Leads > 0 ? (p2Ipd / p2Leads) * 100 : (p2Ipd > 0 ? 100 : dummy.prev2),
+    }
+  }
+
   // Build TL/ACM manager groups from immediate managerId
   const managerGroups = new Map<string, ManagerGroup>()
   // Build CM groups from recursive CM ancestry (cmManagerId)
@@ -1226,9 +1005,10 @@ function TeamPerformanceTab({
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
             <Users className="h-4 w-4" /> By Category Manager
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {cmGroupList.map((group) => {
               const conv = group.totalLeads > 0 ? ((group.totalIpd / group.totalLeads) * 100).toFixed(1) : '0.0'
+              const trend = getTrendData(group.managerId, true)
               return (
                 <button
                   key={`cm-${group.managerId}`}
@@ -1236,9 +1016,12 @@ function TeamPerformanceTab({
                   className="text-left rounded-xl border border-border border-l-4 border-l-teal-500 bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow p-4 w-full"
                 >
                   <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-semibold text-sm text-foreground">{group.managerName}&apos;s Category</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">CM: {group.managerName}</p>
+                    <div className="flex items-center gap-4">
+                      <UserAvatar name={group.managerName} />
+                      <div className="ml-1">
+                        <p className="font-semibold text-sm text-foreground">{group.managerName}&apos;s Category</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">CM: {group.managerName}</p>
+                      </div>
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground mt-1" />
                   </div>
@@ -1256,7 +1039,35 @@ function TeamPerformanceTab({
                       <p className="text-[10px] text-muted-foreground uppercase font-medium">Conv.</p>
                     </div>
                   </div>
-                  <Progress value={Math.min(Number(conv), 100)} className="mt-2 h-1.5" />
+                  
+                  <div className="mt-4 pt-3 border-t border-border">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <TrendingUp className="h-3 w-3" /> Conversion Trend
+                    </p>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <div className="flex justify-between items-end mb-1">
+                          <span className="text-[9px] text-muted-foreground">2nd Prev</span>
+                          <span className="text-[10px] font-medium">{trend.prev2.toFixed(1)}%</span>
+                        </div>
+                        <Progress value={Math.min(trend.prev2, 100)} className="h-1" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-end mb-1">
+                          <span className="text-[9px] text-muted-foreground">Prev</span>
+                          <span className="text-[10px] font-medium">{trend.prev.toFixed(1)}%</span>
+                        </div>
+                        <Progress value={Math.min(trend.prev, 100)} className="h-1" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-end mb-1">
+                          <span className="text-[9px] text-violet-600 dark:text-violet-400 font-medium">Current</span>
+                          <span className="text-[10px] font-bold text-violet-600 dark:text-violet-400">{trend.current.toFixed(1)}%</span>
+                        </div>
+                        <Progress value={Math.min(trend.current, 100)} className="h-1 [&>div]:bg-violet-600 dark:[&>div]:bg-violet-400" />
+                      </div>
+                    </div>
+                  </div>
                 </button>
               )
             })}
@@ -1880,7 +1691,18 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
             <OverviewTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} variant={variant} />
           )}
           {activeTab === 'team' && variant !== 'team-lead' && (
-            <TeamPerformanceTab dateParams={dateParams} onSelectTeam={(id) => setSelectedTeamId(id)} variant={variant} />
+            selectedTeamId ? (
+              <TeamDetailView
+                teamId={selectedTeamId}
+                dateParams={dateParams}
+                variant={variant}
+                dateRange={dateRange}
+                onBack={() => setSelectedTeamId(null)}
+                onSelectNestedTeam={(id) => setSelectedTeamId(id)}
+              />
+            ) : (
+              <TeamPerformanceTab dateParams={dateParams} onSelectTeam={(id) => setSelectedTeamId(id)} variant={variant} />
+            )
           )}
           {activeTab === 'bd' && (
             <BdPerformanceTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} variant={variant} dateRange={dateRange} />
@@ -1905,15 +1727,7 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
         dateParams={dateParams}
         variant={variant}
       />
-      <TeamDetailSheet
-        teamId={selectedTeamId}
-        open={!!selectedTeamId}
-        onClose={() => setSelectedTeamId(null)}
-        dateParams={dateParams}
-        variant={variant}
-        dateRange={dateRange}
-        onSelectNestedTeam={(managerId) => setSelectedTeamId(managerId)}
-      />
+
     </AuthenticatedLayout>
   )
 }

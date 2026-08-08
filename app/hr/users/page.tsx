@@ -84,7 +84,7 @@ export default function HRUsersPage() {
 
   const { data: users, isLoading } = useQuery<User[]>({
     queryKey: ['users'],
-    queryFn: () => apiGet<User[]>('/api/users'),
+    queryFn: () => apiGet<User[]>('/api/users?includeInactive=true'),
   })
 
   const { data: departments } = useQuery<Array<{ id: string; name: string }>>({

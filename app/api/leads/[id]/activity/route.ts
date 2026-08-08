@@ -2,7 +2,14 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
-import { canUserViewLeadOwner } from '@/lib/lead-ownership'
+import {
+  buildLeadAssignmentHistory,
+  isLeadAssignmentActivityAction,
+} from '@/lib/lead-assignment-history'
+import {
+  canRoleViewLeadExecutiveHistory,
+  canUserViewLeadOwner,
+} from '@/lib/lead-ownership'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 const LEAD_ACTIVITY_ENTITY_TYPES = ['CRM_LEAD', 'CRM_LEAD_REMARK', 'CRM_LEAD_QR'] as const
@@ -131,7 +138,16 @@ export async function GET(
       }),
     ])
 
-    const logs: ActivityLogItem[] = crmLogs.map((log) => ({
+    const canViewAssignmentHistory = canRoleViewLeadExecutiveHistory(user.role)
+    const assignmentHistory = canViewAssignmentHistory
+      ? buildLeadAssignmentHistory(lead, crmLogs)
+      : []
+
+    const visibleCrmLogs = canViewAssignmentHistory
+      ? crmLogs
+      : crmLogs.filter((log) => !isLeadAssignmentActivityAction(log.action))
+
+    const logs: ActivityLogItem[] = visibleCrmLogs.map((log) => ({
       id: log.id,
       action: log.action,
       summary: log.summary,
@@ -143,8 +159,10 @@ export async function GET(
       actorUser: log.actorUser,
     }))
 
-    const hasCreatedLog = crmLogs.some((log) => log.action.toUpperCase().includes('CREATED'))
-    const hasAssignmentLog = crmLogs.some((log) => log.action.toUpperCase().includes('ASSIGN'))
+    const hasCreatedLog = visibleCrmLogs.some((log) => log.action.toUpperCase().includes('CREATED'))
+    const hasAssignmentLog = canViewAssignmentHistory
+      ? visibleCrmLogs.some((log) => isLeadAssignmentActivityAction(log.action))
+      : false
 
     if (lead.createdDate && !hasCreatedLog) {
       logs.push({
@@ -164,7 +182,7 @@ export async function GET(
       })
     }
 
-    if (lead.assignedDate && lead.bd && !hasAssignmentLog) {
+    if (canViewAssignmentHistory && lead.assignedDate && lead.bd && !hasAssignmentLog) {
       logs.push({
         id: `lead-assigned-${lead.id}`,
         action: 'CRM_LEAD_ASSIGNED',
@@ -218,6 +236,8 @@ export async function GET(
         leadRef: lead.leadRef,
         patientName: lead.patientName,
       },
+      canViewAssignmentHistory,
+      assignmentHistory,
       logs: timeline,
     })
   } catch (error) {

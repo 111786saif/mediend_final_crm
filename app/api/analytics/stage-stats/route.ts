@@ -4,8 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { mapStatusCode } from '@/lib/mysql-code-mappings'
-
+import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
 import { getSalesDashboardBdIdFilter } from '@/lib/analytics/sales-dashboard-access'
 import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 
@@ -63,57 +62,6 @@ export async function GET(request: NextRequest) {
       select: { status: true },
     })
 
-    // Normalize status function (reused from pipeline logic)
-    const normalizeStatus = (status: string | null | undefined): string => {
-      if (!status) return 'New'
-
-      // First, use the mapping function to convert codes to text
-      const mappedStatus = mapStatusCode(status)
-
-      // Then normalize text variations
-      const normalized = mappedStatus.trim().toLowerCase()
-      const statusMap: Record<string, string> = {
-        'new lead': 'New',
-        'new': 'New',
-        'hot lead': 'Hot Lead',
-        'hot': 'Hot Lead',
-        'interested': 'Interested',
-        'follow-up 1': 'Follow-up (1-3)',
-        'follow-up 2': 'Follow-up (1-3)',
-        'follow-up 3': 'Follow-up (1-3)',
-        'follow-up': 'Follow-up (1-3)',
-        'follow-up (1-3)': 'Follow-up (1-3)',
-        'follow up (1-3)': 'Follow-up (1-3)',
-        'call back (sd)': 'Call Back (SD)',
-        'call back (t)': 'Call Back (T)',
-        'call back next week': 'Call Back Next Week',
-        'call back next month': 'Call Back Next Month',
-        'ipd schedule': 'IPD Schedule',
-        'ipd done': 'IPD Done',
-        'closed': 'Closed',
-        'call done': 'Call Done',
-        'c/w done': 'C/W Done',
-        'wa done': 'C/W Done',
-        'scan done': 'C/W Done',
-        'lost': 'Lost',
-        'ipd lost': 'Lost',
-        'dnp-1': 'DNP',
-        'dnp-2': 'DNP',
-        'dnp-3': 'DNP',
-        'dnp-4': 'DNP',
-        'dnp-5': 'DNP',
-        'dnp': 'DNP',
-        'dnp exhausted': 'DNP (1-5, Exhausted)',
-        'dnp (1-5, exhausted)': 'DNP (1-5, Exhausted)',
-        'junk': 'Junk',
-        'invalid number': 'Invalid Number',
-        'fund issues': 'Fund Issues',
-        'not interested': 'Lost',
-        'duplicate lead': 'Lost',
-      }
-      return statusMap[normalized] || mappedStatus
-    }
-
     const statusStats = {
       new: 0,
       followUps: 0,
@@ -124,32 +72,51 @@ export async function GET(request: NextRequest) {
     }
 
     allLeads.forEach((lead) => {
-      const status = normalizeStatus(lead.status)
+      const status = normalizeLeadStatus(lead.status)
       const statusLower = status.toLowerCase()
 
       // New & Hot
       if (
-        ['New', 'New Lead', 'Hot Lead', 'Interested', 'Nurture'].includes(status) ||
+        [
+          'New',
+          'New Lead',
+          'Hot Lead',
+          'Interested',
+          'Nurture',
+          'Nurture 1',
+          'Nurture 2',
+          'Nurture 3',
+          'Nurture 4',
+          'Nurture 5',
+          'Nuture 1',
+          'Nuture 2',
+          'Nuture 3',
+          'Nuture 4',
+          'Nuture 5',
+        ].includes(status) ||
         statusLower.includes('new') ||
         statusLower.includes('hot') ||
-        statusLower.includes('interested')
+        statusLower.includes('interested') ||
+        statusLower.includes('nurture') ||
+        statusLower.includes('nuture')
       ) {
         statusStats.new++
       }
       // Follow-ups
       else if (
         [
-          'Follow-up (1-3)',
           'Follow-up 1',
           'Follow-up 2',
           'Follow-up 3',
+          'Follow-up 4',
+          'Follow-up 5',
           'Follow-up',
           'Call Back (SD)',
           'Call Back (T)',
           'Call Back Next Week',
           'Call Back Next Month',
           'Out of Station',
-          'Out of station follow-up',
+          'Out of Station follow-up',
           'IPD Schedule',
           'OPD Scheduled',
           'OPD Schedule',

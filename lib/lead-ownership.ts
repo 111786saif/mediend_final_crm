@@ -53,11 +53,37 @@ const SALES_ASSIGNABLE_ROLES = new Set<UserRole>([
   'SALES_HEAD',
 ])
 
+const EXECUTIVE_LEAD_HISTORY_ROLES = new Set<UserRole>([
+  'SUPER_ADMIN',
+  'ADMIN',
+  'MD',
+  'CRM_ADMIN',
+  'EXECUTIVE_ASSISTANT',
+  'SALES_HEAD',
+  'CATEGORY_MANAGER',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'TEAM_LEAD',
+  'INSURANCE_HEAD',
+  'PL_HEAD',
+  'OUTSTANDING_HEAD',
+  'HR_HEAD',
+  'FINANCE_HEAD',
+  'DIGITAL_MARKETING_HEAD',
+  'IT_HEAD',
+  'LOAN_DEMAT_HEAD',
+  'COMPLIANCE_HEAD',
+])
+
 export type AssignableLeadUser = {
   id: string
   name: string
   email: string
   role: UserRole
+}
+
+export function canRoleViewLeadExecutiveHistory(role: UserRole | string | null | undefined) {
+  if (!role) return false
+  return EXECUTIVE_LEAD_HISTORY_ROLES.has(role as UserRole)
 }
 
 export function buildLeadOwnershipTransferUpdate(nextOwnerUserId: string, assignedAt: Date = new Date()) {

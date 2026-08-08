@@ -177,23 +177,68 @@ export async function buildSalesTeamCostHierarchy(
     if (node) roots.push(node)
   }
 
-  // Orphan sales employees (manager gap / role mismatch) — attach as flat roots
-  // (no children) so each person is counted once and costs are not dropped.
-  const emptyByManager = new Map<string, EmployeeRow[]>()
-  for (const orphan of employees) {
-    if (hierarchyEmployeeIds.has(orphan.id)) continue
-    const node = buildRoleNode(
-      orphan,
-      emptyByManager,
-      incentiveTotals,
-      seatingMiscTotals,
-      bulkCostTotals,
-      salaryOverrides,
-      salaries,
-      sharedMarketingCost,
-      hierarchyEmployeeIds,
+  // Orphans = sales employees not reached from Sales Head (null/wrong managerId,
+  // or CHILD_ROLES mismatch). Keep their internal manager links, then nest the
+  // orphan trees under Sales Head so TL/ACM/BD don't appear as sibling roots.
+  const remaining = employees.filter((e) => !hierarchyEmployeeIds.has(e.id))
+  if (remaining.length > 0) {
+    const remainingIds = new Set(remaining.map((e) => e.id))
+    const orphanByManager = new Map<string, EmployeeRow[]>()
+    for (const employee of remaining) {
+      if (!employee.managerId || !remainingIds.has(employee.managerId)) continue
+      const list = orphanByManager.get(employee.managerId) ?? []
+      list.push(employee)
+      orphanByManager.set(employee.managerId, list)
+    }
+
+    const orphanRootEmployees = remaining.filter(
+      (e) => !e.managerId || !remainingIds.has(e.managerId),
     )
-    if (node) roots.push(node)
+
+    const orphanNodes: SalesTeamCostRole[] = []
+    for (const orphan of orphanRootEmployees) {
+      const node = buildRoleNode(
+        orphan,
+        orphanByManager,
+        incentiveTotals,
+        seatingMiscTotals,
+        bulkCostTotals,
+        salaryOverrides,
+        salaries,
+        sharedMarketingCost,
+        hierarchyEmployeeIds,
+      )
+      if (node) orphanNodes.push(node)
+    }
+
+    // Anyone still missed (shouldn't happen) — attach as leaves.
+    for (const leftover of remaining) {
+      if (hierarchyEmployeeIds.has(leftover.id)) continue
+      const node = buildRoleNode(
+        leftover,
+        new Map(),
+        incentiveTotals,
+        seatingMiscTotals,
+        bulkCostTotals,
+        salaryOverrides,
+        salaries,
+        sharedMarketingCost,
+        hierarchyEmployeeIds,
+      )
+      if (node) orphanNodes.push(node)
+    }
+
+    const primarySalesHead =
+      roots.find((r) => r.type === 'salesHead') ??
+      (salesHeads.length > 0 ? roots[0] : null)
+
+    if (primarySalesHead) {
+      primarySalesHead.children.push(...orphanNodes)
+      primarySalesHead.children.sort((a, b) => a.name.localeCompare(b.name))
+    } else {
+      // No Sales Head in tree — keep orphans as top-level roots (legacy fallback).
+      roots.push(...orphanNodes)
+    }
   }
 
   // Bulk assigned outside the sales-role set (e.g. HR employee picker) + null employee.

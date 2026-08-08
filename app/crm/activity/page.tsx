@@ -30,7 +30,6 @@ type ActivityLogRow = {
   entityType: string
   entityId: string | null
   entityLabel: string | null
-  status: string
   summary: string
   actorRole: string | null
   route: string | null
@@ -60,7 +59,6 @@ type ActivityResponse = {
   filters: {
     entityTypes: string[]
     actions: string[]
-    statuses: string[]
   }
 }
 
@@ -108,7 +106,7 @@ export default function CrmActivityPage() {
               Lead Activity Trail
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Chronological lead audit for status changes, reassignments, remark updates, and QR usage.
+              Chronological lead audit for reassignments, remark updates, and QR usage.
             </p>
           </div>
 

@@ -131,6 +131,7 @@ export const ModelName = {
   CrmSubStatusMaster: 'CrmSubStatusMaster',
   CrmCampaign: 'CrmCampaign',
   CrmCampaignTeamLeadAssignment: 'CrmCampaignTeamLeadAssignment',
+  CrmCampaignBdDailyLimit: 'CrmCampaignBdDailyLimit',
   CrmActivityLog: 'CrmActivityLog',
   BulkLeadReassignmentRun: 'BulkLeadReassignmentRun',
   Resource: 'Resource',
@@ -718,6 +719,9 @@ export const EmployeeScalarFieldEnum = {
   employeeCode: 'employeeCode',
   bdNumber: 'bdNumber',
   circle: 'circle',
+  knowlarityPhoneNumber: 'knowlarityPhoneNumber',
+  knowlarityCallerId: 'knowlarityCallerId',
+  knowlarityNotificationsEnabled: 'knowlarityNotificationsEnabled',
   joinDate: 'joinDate',
   salary: 'salary',
   departmentId: 'departmentId',
@@ -1798,6 +1802,20 @@ export const CrmCampaignTeamLeadAssignmentScalarFieldEnum = {
 export type CrmCampaignTeamLeadAssignmentScalarFieldEnum = (typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum)[keyof typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum]
 
 
+export const CrmCampaignBdDailyLimitScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  teamLeadEmployeeId: 'teamLeadEmployeeId',
+  bdEmployeeId: 'bdEmployeeId',
+  bdUserId: 'bdUserId',
+  maxLeadsPerDay: 'maxLeadsPerDay',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignBdDailyLimitScalarFieldEnum = (typeof CrmCampaignBdDailyLimitScalarFieldEnum)[keyof typeof CrmCampaignBdDailyLimitScalarFieldEnum]
+
+
 export const CrmActivityLogScalarFieldEnum = {
   id: 'id',
   action: 'action',
@@ -2275,6 +2293,7 @@ export type OutstandingCaseScalarFieldEnum = (typeof OutstandingCaseScalarFieldE
 export const PaymentInstallmentScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
+  hospitalName: 'hospitalName',
   recipient: 'recipient',
   amount: 'amount',
   paidOn: 'paidOn',

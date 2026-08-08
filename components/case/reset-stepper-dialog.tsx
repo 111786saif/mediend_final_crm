@@ -130,7 +130,7 @@ export function ResetStepperDialog({
           </DialogTitle>
           <DialogDescription>
             Move this case back to a previously completed step. Later step data will be cleared
-            and must be completed again.
+            and must be completed again. The lead will be reassigned to the Team Lead.
           </DialogDescription>
         </DialogHeader>
 

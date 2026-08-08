@@ -1,137 +1,336 @@
-// Color mapping for lead statuses
-export const STATUS_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  // New & Hot
-  'New': {
-    bg: 'bg-green-100 dark:bg-green-950/40',
-    border: 'border-green-200 dark:border-green-800',
-    text: 'text-green-700 dark:text-green-300',
+import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
+
+export type StatusColor = {
+  backgroundColor: string
+  borderColor: string
+  textColor: string
+}
+
+const STATUS_COLORS: Record<string, StatusColor> = {
+  New: {
+    backgroundColor: '#67ffbd',
+    borderColor: '#67ffbd',
+    textColor: '#000000',
   },
   'New Lead': {
-    bg: 'bg-green-100 dark:bg-green-950/40',
-    border: 'border-green-200 dark:border-green-800',
-    text: 'text-green-700 dark:text-green-300',
+    backgroundColor: '#67ffbd',
+    borderColor: '#67ffbd',
+    textColor: '#000000',
   },
   'Hot Lead': {
-    bg: 'bg-red-100 dark:bg-red-950/40',
-    border: 'border-red-200 dark:border-red-800',
-    text: 'text-red-700 dark:text-red-300',
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
   },
-  'Interested': {
-    bg: 'bg-green-100 dark:bg-green-950/40',
-    border: 'border-green-200 dark:border-green-800',
-    text: 'text-green-700 dark:text-green-300',
+  Interested: {
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
   },
-  // Follow-ups
+  'Follow-up': {
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
+  },
+  'Follow-up 1': {
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
+  },
+  'Follow-up 2': {
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
+  },
+  'Follow-up 3': {
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
+  },
+  'Follow-up 4': {
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
+  },
+  'Follow-up 5': {
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
+  },
   'Follow-up (1-3)': {
-    bg: 'bg-yellow-100 dark:bg-yellow-950/40',
-    border: 'border-yellow-200 dark:border-yellow-800',
-    text: 'text-yellow-700 dark:text-yellow-300',
-  },
-  'Call Back (SD)': {
-    bg: 'bg-amber-100 dark:bg-amber-950/40',
-    border: 'border-amber-200 dark:border-amber-800',
-    text: 'text-amber-700 dark:text-amber-300',
-  },
-  'Call Back (T)': {
-    bg: 'bg-orange-100 dark:bg-orange-950/40',
-    border: 'border-orange-200 dark:border-orange-800',
-    text: 'text-orange-700 dark:text-orange-300',
-  },
-  'Call Back Next Week': {
-    bg: 'bg-amber-100 dark:bg-amber-950/40',
-    border: 'border-amber-200 dark:border-amber-800',
-    text: 'text-amber-700 dark:text-amber-300',
-  },
-  'Call Back Next Month': {
-    bg: 'bg-yellow-100 dark:bg-yellow-950/40',
-    border: 'border-yellow-200 dark:border-yellow-800',
-    text: 'text-yellow-700 dark:text-yellow-300',
-  },
-  // Scheduled
-  'IPD Schedule': {
-    bg: 'bg-purple-100 dark:bg-purple-950/40',
-    border: 'border-purple-200 dark:border-purple-800',
-    text: 'text-purple-700 dark:text-purple-300',
-  },
-  'OPD Schedule': {
-    bg: 'bg-sky-100 dark:bg-sky-950/40',
-    border: 'border-sky-200 dark:border-sky-800',
-    text: 'text-sky-700 dark:text-sky-300',
-  },
-  'OPD Scheduled': {
-    bg: 'bg-sky-100 dark:bg-sky-950/40',
-    border: 'border-sky-200 dark:border-sky-800',
-    text: 'text-sky-700 dark:text-sky-300',
+    backgroundColor: '#d4edbc',
+    borderColor: '#d4edbc',
+    textColor: '#11734b',
   },
   'OPD Done': {
-    bg: 'bg-cyan-100 dark:bg-cyan-950/40',
-    border: 'border-cyan-200 dark:border-cyan-800',
-    text: 'text-cyan-700 dark:text-cyan-300',
+    backgroundColor: '#bfe1f6',
+    borderColor: '#bfe1f6',
+    textColor: '#0a53a8',
   },
-  // Completed
+  'OPD Schedule': {
+    backgroundColor: '#ffe5a0',
+    borderColor: '#ffe5a0',
+    textColor: '#473821',
+  },
+  'OPD Scheduled': {
+    backgroundColor: '#ffe5a0',
+    borderColor: '#ffe5a0',
+    textColor: '#473821',
+  },
   'IPD Done': {
-    bg: 'bg-emerald-100 dark:bg-emerald-950/40',
-    border: 'border-emerald-200 dark:border-emerald-800',
-    text: 'text-emerald-700 dark:text-emerald-300',
+    backgroundColor: '#11734b',
+    borderColor: '#11734b',
+    textColor: '#d4edbc',
   },
-  'Closed': {
-    bg: 'bg-green-100 dark:bg-green-950/40',
-    border: 'border-green-200 dark:border-green-800',
-    text: 'text-green-700 dark:text-green-300',
+  'IPD Schedule': {
+    backgroundColor: '#11734b',
+    borderColor: '#11734b',
+    textColor: '#d4edbc',
   },
-  'Call Done': {
-    bg: 'bg-teal-100 dark:bg-teal-950/40',
-    border: 'border-teal-200 dark:border-teal-800',
-    text: 'text-teal-700 dark:text-teal-300',
-  },
-  'C/W Done': {
-    bg: 'bg-teal-100 dark:bg-teal-950/40',
-    border: 'border-teal-200 dark:border-teal-800',
-    text: 'text-teal-700 dark:text-teal-300',
-  },
-  // Lost/Inactive
-  'Lost': {
-    bg: 'bg-gray-100 dark:bg-gray-950/40',
-    border: 'border-gray-200 dark:border-gray-800',
-    text: 'text-gray-700 dark:text-gray-300',
-  },
-  'DNP': {
-    bg: 'bg-slate-100 dark:bg-slate-950/40',
-    border: 'border-slate-200 dark:border-slate-800',
-    text: 'text-slate-700 dark:text-slate-300',
-  },
-  'DNP (1-5, Exhausted)': {
-    bg: 'bg-slate-100 dark:bg-slate-950/40',
-    border: 'border-slate-200 dark:border-slate-800',
-    text: 'text-slate-700 dark:text-slate-300',
-  },
-  'Junk': {
-    bg: 'bg-gray-100 dark:bg-gray-950/40',
-    border: 'border-gray-200 dark:border-gray-800',
-    text: 'text-gray-700 dark:text-gray-300',
-  },
-  'Churned': {
-    bg: 'bg-stone-100 dark:bg-stone-950/40',
-    border: 'border-stone-200 dark:border-stone-800',
-    text: 'text-stone-700 dark:text-stone-300',
-  },
-  'Invalid Number': {
-    bg: 'bg-gray-100 dark:bg-gray-950/40',
-    border: 'border-gray-200 dark:border-gray-800',
-    text: 'text-gray-700 dark:text-gray-300',
+  'IPD Lost': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
   },
   'Fund Issues': {
-    bg: 'bg-rose-100 dark:bg-rose-950/40',
-    border: 'border-rose-200 dark:border-rose-800',
-    text: 'text-rose-700 dark:text-rose-300',
+    backgroundColor: '#e6e6e6',
+    borderColor: '#e6e6e6',
+    textColor: '#3d3d3d',
+  },
+  DNP: {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  'DNP-1': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  'DNP-2': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  'DNP-3': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  'DNP-4': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  'DNP-5': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  'DNP Exhausted': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  'DNP (1-5, Exhausted)': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  'Call Back (SD)': {
+    backgroundColor: '#ffcfc9',
+    borderColor: '#ffcfc9',
+    textColor: '#b10202',
+  },
+  'Call Back (T)': {
+    backgroundColor: '#ffcfc9',
+    borderColor: '#ffcfc9',
+    textColor: '#b10202',
+  },
+  'Call Back Next Week': {
+    backgroundColor: '#ffcfc9',
+    borderColor: '#ffcfc9',
+    textColor: '#b10202',
+  },
+  'Call Back Next Month': {
+    backgroundColor: '#ffcfc9',
+    borderColor: '#ffcfc9',
+    textColor: '#b10202',
+  },
+  'Call Done': {
+    backgroundColor: '#0028b1',
+    borderColor: '#0028b1',
+    textColor: '#ffec03',
+  },
+  'C/W Done': {
+    backgroundColor: '#0028b1',
+    borderColor: '#0028b1',
+    textColor: '#ffec03',
+  },
+  'WA Done': {
+    backgroundColor: '#0028b1',
+    borderColor: '#0028b1',
+    textColor: '#ffec03',
+  },
+  'Scan Done': {
+    backgroundColor: '#0028b1',
+    borderColor: '#0028b1',
+    textColor: '#ffec03',
+  },
+  Closed: {
+    backgroundColor: '#3d3d3d',
+    borderColor: '#3d3d3d',
+    textColor: '#e5e5e5',
+  },
+  Converted: {
+    backgroundColor: '#3d3d3d',
+    borderColor: '#3d3d3d',
+    textColor: '#e5e5e5',
+  },
+  'Order Booked': {
+    backgroundColor: '#3d3d3d',
+    borderColor: '#3d3d3d',
+    textColor: '#e5e5e5',
+  },
+  'Policy Booked': {
+    backgroundColor: '#11734b',
+    borderColor: '#11734b',
+    textColor: '#d4edbc',
+  },
+  'Policy Issued': {
+    backgroundColor: '#11734b',
+    borderColor: '#11734b',
+    textColor: '#d4edbc',
+  },
+  'Out of Station': {
+    backgroundColor: '#ffe5a0',
+    borderColor: '#ffe5a0',
+    textColor: '#11734b',
+  },
+  'Out of Station follow-up': {
+    backgroundColor: '#ffe5a0',
+    borderColor: '#ffe5a0',
+    textColor: '#11734b',
+  },
+  'Out of station follow-up': {
+    backgroundColor: '#ffe5a0',
+    borderColor: '#ffe5a0',
+    textColor: '#11734b',
+  },
+  'Supply Gap': {
+    backgroundColor: '#ffe5a0',
+    borderColor: '#ffe5a0',
+    textColor: '#11734b',
+  },
+  'SX Not Suggested': {
+    backgroundColor: '#e6e6e6',
+    borderColor: '#e6e6e6',
+    textColor: '#3d3d3d',
+  },
+  'Language Barrier': {
+    backgroundColor: '#e6e6e6',
+    borderColor: '#e6e6e6',
+    textColor: '#3d3d3d',
+  },
+  Junk: {
+    backgroundColor: '#e6e6e6',
+    borderColor: '#e6e6e6',
+    textColor: '#3d3d3d',
+  },
+  'Duplicate lead': {
+    backgroundColor: '#e6e6e6',
+    borderColor: '#e6e6e6',
+    textColor: '#3d3d3d',
+  },
+  'Not Interested': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
+  },
+  Nurture: {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nurture 1': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nurture 2': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nurture 3': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nurture 4': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nurture 5': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nuture 1': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nuture 2': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nuture 3': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nuture 4': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  'Nuture 5': {
+    backgroundColor: '#5a3286',
+    borderColor: '#5a3286',
+    textColor: '#e5cff2',
+  },
+  Lost: {
+    backgroundColor: '#e6e6e6',
+    borderColor: '#e6e6e6',
+    textColor: '#3d3d3d',
+  },
+  Churned: {
+    backgroundColor: '#e6e6e6',
+    borderColor: '#e6e6e6',
+    textColor: '#3d3d3d',
+  },
+  'Invalid Number': {
+    backgroundColor: '#e6e6e6',
+    borderColor: '#e6e6e6',
+    textColor: '#3d3d3d',
+  },
+  'Already Insured': {
+    backgroundColor: '#b10202',
+    borderColor: '#b10202',
+    textColor: '#ffcfc9',
   },
 }
 
-export function getStatusColor(status: string | null | undefined) {
-  const normalizedStatus = status || 'New'
-  return STATUS_COLORS[normalizedStatus] || {
-    bg: 'bg-gray-100 dark:bg-gray-950/40',
-    border: 'border-gray-200 dark:border-gray-800',
-    text: 'text-gray-700 dark:text-gray-300',
-  }
+const DEFAULT_STATUS_COLOR: StatusColor = {
+  backgroundColor: '#e6e6e6',
+  borderColor: '#e6e6e6',
+  textColor: '#3d3d3d',
+}
+
+export function getStatusColor(status: string | null | undefined): StatusColor {
+  const normalizedStatus = normalizeLeadStatus(status)
+  return STATUS_COLORS[normalizedStatus] || DEFAULT_STATUS_COLOR
 }

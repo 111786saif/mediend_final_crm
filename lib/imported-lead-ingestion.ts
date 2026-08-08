@@ -8,6 +8,11 @@ import {
   dryRunCrmLeadAssignment,
   type CrmAssignmentDryRunResult,
 } from '@/lib/crm-assignment'
+import {
+  DuplicateLeadPhoneError,
+  normalizeLeadPhoneToLast10,
+  recordDuplicateLeadHitByPrimaryPhone,
+} from '@/lib/lead-duplicates'
 
 export type ImportedLeadSource =
   | 'mysql'
@@ -57,6 +62,11 @@ function normalizeImportedLeadString(value: string | null | undefined) {
   return normalized
 }
 
+function normalizeImportedLeadId(value: string | null | undefined) {
+  const normalized = value?.trim()
+  return normalized || null
+}
+
 function getCampaignDefaultCircleName(
   campaign: Awaited<ReturnType<typeof getCampaignForWebhook>>
 ) {
@@ -99,6 +109,25 @@ export async function previewImportedLeadAssignment(
 export async function createImportedLeadWithCrmAssignment(
   input: ImportedLeadCreateInput
 ): Promise<ImportedLeadIngestionResult> {
+  const rawPhoneNumber =
+    typeof input.leadData.phoneNumber === 'string' ? input.leadData.phoneNumber : null
+  const normalizedPhone = normalizeLeadPhoneToLast10(rawPhoneNumber)
+  if (!normalizedPhone) {
+    throw new Error(
+      `Phone number must contain at least 10 digits for ${input.source} lead ${input.sourceReference}.`
+    )
+  }
+
+  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
+  if (duplicateLead) {
+    throw new DuplicateLeadPhoneError({
+      leadId: duplicateLead.id,
+      leadRef: duplicateLead.leadRef,
+      duplicateCount: duplicateLead.duplCount,
+      normalizedPhone,
+    })
+  }
+
   const assignmentResult = await previewImportedLeadAssignment(input.assignmentContext)
 
   if (!assignmentResult.assignment) {
@@ -108,6 +137,8 @@ export async function createImportedLeadWithCrmAssignment(
   }
 
   const { bdId: _ignoredBdId, bdeName: _ignoredBdeName, ...leadDataWithoutOwner } = input.leadData
+  void _ignoredBdId
+  void _ignoredBdeName
   const externalCampaignId = normalizeImportedLeadString(input.assignmentContext.externalCampaignId)
   const campaign = externalCampaignId ? await getCampaignForWebhook(externalCampaignId) : null
   const preferredCircle =
@@ -123,6 +154,16 @@ export async function createImportedLeadWithCrmAssignment(
     normalizeImportedLeadString(input.assignmentContext.category) ??
     campaign?.category ??
     (typeof leadDataWithoutOwner.category === 'string' ? leadDataWithoutOwner.category : null)
+  const campaignTreatment =
+    campaign?.treatment ??
+    (typeof leadDataWithoutOwner.treatment === 'string'
+      ? normalizeImportedLeadString(leadDataWithoutOwner.treatment)
+      : null)
+  const campaignTreatmentMasterId =
+    campaign?.treatmentMasterId ??
+    (typeof leadDataWithoutOwner.treatmentMasterId === 'string'
+      ? normalizeImportedLeadId(leadDataWithoutOwner.treatmentMasterId)
+      : null)
   const campaignSource =
     campaign?.source?.name ??
     (typeof leadDataWithoutOwner.source === 'string' ? leadDataWithoutOwner.source : null)
@@ -144,9 +185,12 @@ export async function createImportedLeadWithCrmAssignment(
       ...leadDataWithoutOwner,
       circle: fallbackCircle ?? 'Unknown',
       category: campaignCategory,
+      treatment: campaignTreatment,
+      treatmentMasterId: campaignTreatmentMasterId,
       source: campaignSource,
       campaignName,
       campaignId: persistedCampaignId,
+      duplCount: 0,
       bdId: assignmentResult.assignment.bd.userId,
       bdeName: assignmentResult.assignment.bd.name,
     },
@@ -172,5 +216,7 @@ export function stripImportedLeadOwnership<T extends { bdId?: unknown; bdeName?:
   leadData: T
 ): Omit<T, 'bdId' | 'bdeName'> {
   const { bdId: _bdId, bdeName: _bdeName, ...rest } = leadData
+  void _bdId
+  void _bdeName
   return rest
 }

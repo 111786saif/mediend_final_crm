@@ -6,7 +6,7 @@ import { isSuperAdmin } from '@/lib/crm-campaigns'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 
-const masterTypeSchema = z.enum(['source', 'leadSource', 'circle', 'city', 'subStatus'])
+const masterTypeSchema = z.enum(['source', 'leadSource', 'circle', 'city'])
 
 const masterPatchSchema = z.object({
   isActive: z.boolean().default(true),
@@ -14,8 +14,6 @@ const masterPatchSchema = z.object({
   sourceId: z.string().min(1).optional(),
   circleId: z.string().min(1).optional(),
   cpl: z.number().finite().nonnegative().nullable().optional(),
-  key: z.number().int().min(1).optional(),
-  value: z.string().trim().min(1).max(255).optional(),
 })
 
 export async function PATCH(
@@ -137,36 +135,6 @@ export async function PATCH(
         metadata: updated,
       })
       return successResponse(updated, 'Circle updated successfully')
-    }
-
-    if (parsedType.data === 'subStatus') {
-      if (data.key === undefined) {
-        return errorResponse('key is required for a sub status.', 400)
-      }
-      if (!data.value) {
-        return errorResponse('value is required for a sub status.', 400)
-      }
-
-      const updated = await prisma.crmSubStatusMaster.update({
-        where: { id },
-        data: {
-          key: data.key,
-          value: data.value,
-          isActive: data.isActive,
-        },
-      })
-      await logCrmActivity({
-        action: 'CRM_MASTER_UPDATED',
-        entityType: 'CRM_MASTER_SUB_STATUS',
-        entityId: updated.id,
-        entityLabel: `${updated.key} · ${updated.value}`,
-        actorUserId: currentUser.id,
-        actorRole: currentUser.role,
-        request,
-        summary: `Updated CRM sub status "${updated.value}"`,
-        metadata: updated,
-      })
-      return successResponse(updated, 'Sub status updated successfully')
     }
 
     if (!data.name) {

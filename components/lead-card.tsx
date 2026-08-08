@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Building2, User } from 'lucide-react'
 import { getStatusColor } from '@/lib/lead-status-colors'
+import { normalizeLeadStatus } from '@/lib/pipeline-lead-buckets'
 
 interface LeadCardProps {
   lead: Lead
@@ -24,12 +25,14 @@ export function LeadCard({ lead, onClick, showBD = false }: LeadCardProps) {
     isDragging,
   } = useSortable({ id: lead.id })
 
-  const statusColor = getStatusColor(lead.status)
+  const normalizedStatus = normalizeLeadStatus(lead.status)
+  const statusColor = getStatusColor(normalizedStatus)
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    borderLeftColor: statusColor.borderColor,
   }
 
   return (
@@ -39,7 +42,7 @@ export function LeadCard({ lead, onClick, showBD = false }: LeadCardProps) {
       {...attributes}
       {...listeners}
       onClick={onClick}
-      className={`cursor-pointer hover:shadow-md transition-shadow mb-2 ${statusColor.bg} ${statusColor.border} border-l-4`}
+      className="mb-2 cursor-pointer border-l-4 transition-shadow hover:shadow-md"
     >
       <CardContent className="p-4">
         <div className="space-y-2">
@@ -51,8 +54,16 @@ export function LeadCard({ lead, onClick, showBD = false }: LeadCardProps) {
           </div>
 
           <div>
-            <Badge variant="secondary" className="text-xs">
-              {lead.status || 'New'}
+            <Badge
+              variant="secondary"
+              className="border text-xs"
+              style={{
+                backgroundColor: statusColor.backgroundColor,
+                borderColor: statusColor.borderColor,
+                color: statusColor.textColor,
+              }}
+            >
+              {normalizedStatus}
             </Badge>
           </div>
 

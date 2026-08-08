@@ -19,7 +19,9 @@ export async function DELETE(
     if (!row) return errorResponse('Installment not found', 404)
 
     await prisma.paymentInstallment.delete({ where: { id } })
-    await recomputeOutstandingFromInstallments(row.leadId)
+    if (row.leadId) {
+      await recomputeOutstandingFromInstallments(row.leadId)
+    }
 
     return successResponse({ id }, 'Installment deleted')
   } catch (error) {

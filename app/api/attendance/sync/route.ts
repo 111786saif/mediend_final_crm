@@ -5,6 +5,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { fetchAttendanceLogs } from '@/lib/hrms/biometric-api-client'
 import { normalizePunchDirection } from '@/lib/hrms/attendance-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import { PunchDirection } from '@/generated/prisma/client'
 import { z } from 'zod'
 
@@ -30,8 +31,9 @@ export async function POST(request: NextRequest) {
     // Fetch attendance logs from biometric API
     const logs = await fetchAttendanceLogs(fromDate, toDate)
 
-    // Get all employees with their codes
+    // Active roster only — do not sync punches for terminated/absconded
     const employees = await prisma.employee.findMany({
+      where: headcountEmployeeWhere,
       select: {
         id: true,
         employeeCode: true,

@@ -1,12 +1,21 @@
 import { prisma } from '@/lib/prisma'
 import { UserRole, PipelineStage } from '@/generated/prisma/client'
 import { hashPassword } from '@/lib/auth'
+import {
+  normalizeLeadPhoneToLast10,
+  recordDuplicateLeadHitByPrimaryPhone,
+} from '@/lib/lead-duplicates'
 
 interface IncomingLeadPayload {
   id?: string
   '0'?: string // id
   Patient_Name?: string
   '3'?: string // Patient_Name
+  Patient_Number?: string
+  phone?: string
+  phoneNumber?: string
+  mobile?: string
+  mobileNumber?: string
   Category?: string
   '4'?: string // Category
   Treatment?: string
@@ -69,10 +78,7 @@ async function findBDByName(name: string): Promise<{ id: string } | null> {
 /**
  * Creates a new BD user with default settings
  */
-async function createBDUser(
-  name: string,
-  systemUserId: string
-): Promise<{ id: string }> {
+async function createBDUser(name: string): Promise<{ id: string }> {
   const emailBase = name.toLowerCase().replace(/\s+/g, '.')
   let email = `${emailBase}@mediend.local`
   let counter = 1
@@ -127,6 +133,19 @@ function getPayloadValue(
   return String(value)
 }
 
+function getPayloadPhone(payload: IncomingLeadPayload) {
+  const value =
+    payload.Patient_Number ??
+    payload.phone ??
+    payload.phoneNumber ??
+    payload.mobile ??
+    payload.mobileNumber ??
+    null
+
+  if (value === null || value === undefined) return null
+  return String(value).trim()
+}
+
 /**
  * Processes a single incoming lead payload and creates a Lead record
  * @param autoCreateBD - If true, automatically create missing BD users
@@ -153,6 +172,7 @@ export async function processIncomingLead(
     const status = getPayloadValue(leadData, 'Status', '9') || 'New Lead'
     const leadDateStr = getPayloadValue(leadData, 'Lead_Date', '2')
     const remarks = getPayloadValue(leadData, 'LastRemarks', '8') || null
+    const phoneNumber = getPayloadPhone(leadData)
 
     // Validate required fields
     if (!patientName) {
@@ -163,17 +183,25 @@ export async function processIncomingLead(
       return { success: false, error: 'Missing treatment' }
     }
 
+    if (!phoneNumber) {
+      return { success: false, error: 'Missing phone number' }
+    }
+
+    const normalizedPhone = normalizeLeadPhoneToLast10(phoneNumber)
+    if (!normalizedPhone) {
+      return { success: false, error: 'Phone number must contain at least 10 digits' }
+    }
+
     // Find BD user by name
     let bdId: string | null = null
-    let bdCircle: string = ''
+    const bdCircle = ''
     if (bdmName) {
       let bdInfo = await findBDByName(bdmName)
       
       // If not found and auto-create is enabled, create the BD user
       if (!bdInfo && autoCreateBD) {
-        const systemUserId = await getDefaultSystemUser()
         try {
-          bdInfo = await createBDUser(bdmName, systemUserId)
+          bdInfo = await createBDUser(bdmName)
           console.log(`Created new BD user: ${bdmName} (${bdInfo.id})`)
         } catch (createError) {
           return {
@@ -224,6 +252,25 @@ export async function processIncomingLead(
       }
     }
 
+    const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
+    if (duplicateLead) {
+      await prisma.incomingLead.update({
+        where: { id: incomingLeadId },
+        data: {
+          status: 'DUPLICATE',
+          processedLeadId: duplicateLead.id,
+          normalizedPhone,
+          processedAt: new Date(),
+          errorMessage: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
+        },
+      })
+      return {
+        success: true,
+        leadId: duplicateLead.id,
+        error: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}`,
+      }
+    }
+
     // Create the lead with required defaults for missing fields
     const lead = await prisma.lead.create({
       data: {
@@ -231,7 +278,7 @@ export async function processIncomingLead(
         patientName,
         age: 0, // Default age (should be updated later)
         sex: 'Not Specified', // Default sex
-        phoneNumber: '0000000000', // Default phone (should be updated later)
+        phoneNumber,
         bdId,
         status,
         pipelineStage: PipelineStage.SALES,
@@ -241,6 +288,7 @@ export async function processIncomingLead(
         hospitalName: 'Not Specified', // Default hospital (should be updated later)
         remarks: remarks || null,
         source: 'external_api',
+        duplCount: 0,
         createdById: systemUserId,
         updatedById: systemUserId,
         createdDate,
@@ -250,7 +298,13 @@ export async function processIncomingLead(
     // Update incoming lead status to PROCESSED
     await prisma.incomingLead.update({
       where: { id: incomingLeadId },
-      data: { status: 'PROCESSED' },
+      data: {
+        status: 'PROCESSED',
+        processedLeadId: lead.id,
+        normalizedPhone,
+        processedAt: new Date(),
+        errorMessage: null,
+      },
     })
 
     return { success: true, leadId: lead.id }
@@ -316,4 +370,3 @@ export async function processAllPendingLeads(
 
   return { processed, failed, results }
 }
-

@@ -12,6 +12,9 @@ import { useNotifications } from '@/hooks/use-notifications'
 import { useUserBanner, useUpdateUserBanner } from '@/hooks/use-settings'
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { getFilteredNavItemsWithUrls } from '@/lib/sidebar-nav'
+import { usePermissions } from '@/hooks/use-permissions'
+import { resolveNavResourceKey } from '@/lib/nav-resource-map'
+import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
 import { StatCard } from '@/components/ui/stat-card'
 import { Button } from '@/components/ui/button'
 import {
@@ -486,7 +489,53 @@ function NavCards() {
   const { user } = useAuth()
   const { data: badgeCounts } = useBadgeCounts()
   const { data: unreadNotifications = [] } = useNotifications(true)
-  const navItems = useMemo(() => getFilteredNavItemsWithUrls(user ?? null), [user])
+  const { hasAccess, permissionsReady } = usePermissions()
+  const role = user?.role ?? ''
+
+  const itemsWithUrls = useMemo(() => getFilteredNavItemsWithUrls(user ?? null), [user])
+
+  const navItems = useMemo(() => {
+    if (!permissionsReady) return []
+    return itemsWithUrls.filter((item) => {
+      const resourceKey = resolveNavResourceKey(item.title, role)
+      if (!resourceKey) return false
+
+      if (hasAccess(resourceKey, 'READ')) return true
+
+      // Pipeline / Targets may be granted under alternate role-specific keys
+      if (item.title === 'Pipeline' || item.title === 'CRM') {
+        return (
+          hasAccess('sales.sales_pipeline', 'READ') ||
+          hasAccess('sales.team_lead_pipeline', 'READ') ||
+          hasAccess('sales.ea_pipeline', 'READ')
+        )
+      }
+      if (item.title === 'Targets') {
+        return (
+          hasAccess('sales.targets', 'READ') ||
+          hasAccess('sales.team_lead_targets', 'READ') ||
+          hasAccess('sales.sales_head_targets', 'READ')
+        )
+      }
+      if (item.title === 'Sales Dashboard') {
+        return (
+          hasAccess('sales.sales_dashboard', 'READ') ||
+          hasAccess('sales.md_sales_dashboard', 'READ')
+        )
+      }
+      if (item.title === 'OPD Monitoring') {
+        return canAccessSalesOpdMonitoring(role)
+      }
+
+      // Full-access roles: allow if parent module is granted
+      if (role === 'ADMIN' || role === 'TESTER' || role === 'MD') {
+        const moduleKey = resourceKey.split('.')[0]
+        if (moduleKey && hasAccess(moduleKey, 'READ')) return true
+      }
+
+      return false
+    })
+  }, [itemsWithUrls, hasAccess, permissionsReady, role])
 
   const meetUnreadCount = useMemo(
     () =>
@@ -604,8 +653,9 @@ function NoticeActions() {
 export default function HomePage() {
   const router = useRouter()
   const { user } = useAuth()
+  const { hasAccess, permissionsReady } = usePermissions()
   const showFnFCard = user?.role === 'HR_HEAD'
-const { data: workLogCheck } = useWorkLogCheck({
+  const { data: workLogCheck } = useWorkLogCheck({
     tzOffsetMinutes: -new Date().getTimezoneOffset(),
   })
   const subjectToWorkLogs = workLogCheck?.subjectToWorkLogs ?? false
@@ -624,6 +674,10 @@ const { data: workLogCheck } = useWorkLogCheck({
   if (user?.role === 'MD') {
     return null
   }
+
+  const showTopProfile = !permissionsReady || hasAccess('main.home.top_profile')
+  const showQuickNav = !permissionsReady || hasAccess('main.home.quick_navigation')
+  const showDataSection = !permissionsReady || hasAccess('main.home.data_section')
 
   return (
     <div className="flex flex-col gap-5 max-w-5xl mx-auto w-full">
@@ -663,13 +717,15 @@ const { data: workLogCheck } = useWorkLogCheck({
       {/* Push reminder banner */}
       <PushReminderBanner />
 
-       {/* KPIs */}
-      <div>
-        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-          At a Glance
-        </h2>
-        <KPISection />
-      </div>
+      {/* KPIs */}
+      {showDataSection && (
+        <div>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+            At a Glance
+          </h2>
+          <KPISection />
+        </div>
+      )}
 
       {/* FnF reminder for HR */}
       {showFnFCard && <FnFReminderCard />}
@@ -684,22 +740,24 @@ const { data: workLogCheck } = useWorkLogCheck({
 
 
       {/* Monthly rewards summary — Sales/BD hierarchy only */}
-      <MonthlySummaryCard />
+      {showDataSection && <MonthlySummaryCard />}
 
       {/* Target progress widget (compact — TL and Sales Head team overview) */}
-      <TeamTargetWidget />
+      {showDataSection && <TeamTargetWidget />}
 
       {/* CM / ACM / TL only: their own individual target, separate from the team one above */}
       <SelfTargetWidget />
 
       {/* TL only: each team member's achievement vs their individual target */}
-      <TLTeamAchievements />
+      {showDataSection && <TLTeamAchievements />}
 
       {/* Target trend — monthly/weekly chart for all roles with targets (BD, TL, Heads) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <TargetTrendCard />
-        <LeadsTrendCard />
-      </div>
+      {showDataSection && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <TargetTrendCard />
+          <LeadsTrendCard />
+        </div>
+      )}
 
 
      
@@ -716,7 +774,7 @@ const { data: workLogCheck } = useWorkLogCheck({
       <RecentNotifications />
 
       {/* Navigation cards */}
-      <NavCards />
+      {showQuickNav && <NavCards />}
     </div>
   )
 }

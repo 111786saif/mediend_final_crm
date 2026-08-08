@@ -46,6 +46,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost, apiPut } from '@/lib/api-client'
+import { parseEmployeeCircleList } from '@/lib/employee-circles'
 import { toast } from 'sonner'
 
 type SourceMaster = {
@@ -69,12 +70,17 @@ type CircleMaster = {
   isActive: boolean
 }
 
-type CityMaster = {
+type TreatmentCategoryMaster = {
   id: string
   name: string
-  circleId: string
   isActive: boolean
-  circle: CircleMaster
+}
+
+type TreatmentMaster = {
+  id: string
+  name: string
+  category: string
+  isActive: boolean
 }
 
 type DepartmentOption = {
@@ -95,6 +101,18 @@ type TeamLeadOption = {
   } | null
   activeBdCount: number
   activeBdCircles: string[]
+  activeBds: Array<{
+    id: string
+    userId: string
+    name: string
+    email: string
+    employeeCode: string
+    circle: string | null
+    department: {
+      id: string
+      name: string
+    } | null
+  }>
 }
 
 type CampaignAssignment = {
@@ -118,6 +136,12 @@ type CampaignAssignment = {
       role: string
     }
   }
+  bdDailyLimits?: Array<{
+    id: string
+    bdEmployeeId: string
+    bdUserId: string
+    maxLeadsPerDay: number
+  }>
 }
 
 type CampaignRecord = {
@@ -125,18 +149,18 @@ type CampaignRecord = {
   externalCampaignId: string
   displayName: string
   category: string | null
+  treatment: string | null
+  treatmentMasterId: string | null
   departmentId: string | null
   isActive: boolean
   sourceId: string
   leadSourceId: string
   circleId: string
   circleIds: string[]
-  cityId: string | null
   source: SourceMaster
   leadSource: LeadSourceMaster
   circle: CircleMaster
   circles: CircleMaster[]
-  city: CityMaster | null
   department: DepartmentOption | null
   assignments: CampaignAssignment[]
 }
@@ -146,8 +170,9 @@ type CampaignPageData = {
     sources: SourceMaster[]
     leadSources: LeadSourceMaster[]
     circles: CircleMaster[]
-    cities: CityMaster[]
     departments: DepartmentOption[]
+    treatmentCategories: TreatmentCategoryMaster[]
+    treatments: TreatmentMaster[]
   }
   teamLeads: TeamLeadOption[]
   campaigns: CampaignRecord[]
@@ -170,11 +195,11 @@ type CampaignFormState = {
   externalCampaignId: string
   displayName: string
   category: string
+  treatmentMasterId: string
   departmentId: string
   sourceId: string
   leadSourceId: string
   circleIds: string[]
-  cityId: string
   isActive: boolean
 }
 
@@ -184,6 +209,7 @@ type AssignmentDraft = {
   weight: string
   priority: string
   isActive: boolean
+  bdLimits: Record<string, string>
 }
 
 function createEmptyCampaignForm(): CampaignFormState {
@@ -191,11 +217,11 @@ function createEmptyCampaignForm(): CampaignFormState {
     externalCampaignId: '',
     displayName: '',
     category: '',
+    treatmentMasterId: '',
     departmentId: 'none',
     sourceId: '',
     leadSourceId: '',
     circleIds: [],
-    cityId: 'none',
     isActive: true,
   }
 }
@@ -210,11 +236,11 @@ function buildCampaignForm(drawer: DrawerState): CampaignFormState {
     externalCampaignId: item?.externalCampaignId ?? '',
     displayName: item?.displayName ?? '',
     category: item?.category ?? '',
+    treatmentMasterId: item?.treatmentMasterId ?? '',
     departmentId: item?.departmentId ?? 'none',
     sourceId: item?.sourceId ?? '',
     leadSourceId: item?.leadSourceId ?? '',
     circleIds: item?.circleIds ?? (item?.circleId ? [item.circleId] : []),
-    cityId: item?.cityId ?? 'none',
     isActive: item?.isActive ?? true,
   }
 }
@@ -226,12 +252,20 @@ function buildAssignmentDrafts(campaign: CampaignRecord, teamLeads: TeamLeadOpti
 
   return teamLeads.map((teamLead) => {
     const existing = assignmentMap.get(teamLead.id)
+    const eligibleBds = filterBdsForCampaign(teamLead, campaign)
+    const bdLimits = Object.fromEntries(
+      eligibleBds.map((bd) => {
+        const existingLimit = existing?.bdDailyLimits?.find((limit) => limit.bdEmployeeId === bd.id)
+        return [bd.id, existingLimit ? String(existingLimit.maxLeadsPerDay) : '']
+      })
+    )
     return {
       teamLeadEmployeeId: teamLead.id,
       enabled: Boolean(existing),
       weight: String(existing?.weight ?? 1),
       priority: String(existing?.priority ?? 100),
       isActive: existing?.isActive ?? true,
+      bdLimits,
     }
   })
 }
@@ -249,9 +283,9 @@ function filterLeadSources(leadSources: LeadSourceMaster[], sourceId: string) {
   return leadSources.filter((leadSource) => leadSource.sourceId === sourceId)
 }
 
-function filterCities(cities: CityMaster[], circleIds: string[]) {
-  if (circleIds.length === 0) return cities
-  return cities.filter((city) => circleIds.includes(city.circleId))
+function filterTreatments(treatments: TreatmentMaster[], category: string) {
+  if (!category) return treatments
+  return treatments.filter((treatment) => treatment.category === category)
 }
 
 function filterTeamLeadsForCampaign(teamLeads: TeamLeadOption[], campaign: CampaignRecord) {
@@ -267,6 +301,24 @@ function filterTeamLeadsForCampaign(teamLeads: TeamLeadOption[], campaign: Campa
 
   return departmentMatched.filter((teamLead) =>
     teamLead.activeBdCircles.some((circle) =>
+      selectedCircleNames.includes(circle.trim().toLowerCase())
+    )
+  )
+}
+
+function filterBdsForCampaign(teamLead: TeamLeadOption, campaign: CampaignRecord) {
+  const departmentMatched = campaign.departmentId
+    ? teamLead.activeBds.filter((bd) => bd.department?.id === campaign.departmentId)
+    : teamLead.activeBds
+
+  const selectedCircleNames = campaign.circles
+    .map((circle) => circle.name.trim().toLowerCase())
+    .filter(Boolean)
+
+  if (selectedCircleNames.length === 0) return departmentMatched
+
+  return departmentMatched.filter((bd) =>
+    parseEmployeeCircleList(bd.circle).some((circle) =>
       selectedCircleNames.includes(circle.trim().toLowerCase())
     )
   )
@@ -347,10 +399,9 @@ export default function CrmCampaignsPage() {
     () => filterLeadSources(data?.masters.leadSources ?? [], campaignForm.sourceId),
     [data?.masters.leadSources, campaignForm.sourceId]
   )
-
-  const availableCities = useMemo(
-    () => filterCities(data?.masters.cities ?? [], campaignForm.circleIds),
-    [data?.masters.cities, campaignForm.circleIds]
+  const availableTreatments = useMemo(
+    () => filterTreatments(data?.masters.treatments ?? [], campaignForm.category),
+    [data?.masters.treatments, campaignForm.category]
   )
 
   const drawerTitle =
@@ -392,11 +443,11 @@ export default function CrmCampaignsPage() {
       externalCampaignId: campaignForm.externalCampaignId.trim(),
       displayName: campaignForm.displayName.trim(),
       category: campaignForm.category.trim() || null,
+      treatmentMasterId: campaignForm.treatmentMasterId.trim() || null,
       departmentId: campaignForm.departmentId === 'none' ? null : campaignForm.departmentId,
       sourceId: campaignForm.sourceId,
       leadSourceId: campaignForm.leadSourceId,
       circleIds: campaignForm.circleIds,
-      cityId: campaignForm.cityId === 'none' ? null : campaignForm.cityId,
       isActive: campaignForm.isActive,
     }
 
@@ -433,6 +484,12 @@ export default function CrmCampaignsPage() {
           weight: Number.parseInt(assignment.weight, 10) || 1,
           priority: Number.parseInt(assignment.priority, 10) || 0,
           isActive: assignment.isActive,
+          bdLimits: Object.entries(assignment.bdLimits)
+            .map(([bdEmployeeId, maxLeadsPerDay]) => ({
+              bdEmployeeId,
+              maxLeadsPerDay: Number.parseInt(maxLeadsPerDay, 10),
+            }))
+            .filter((bdLimit) => Number.isFinite(bdLimit.maxLeadsPerDay) && bdLimit.maxLeadsPerDay > 0),
         })),
     }
 
@@ -539,66 +596,16 @@ export default function CrmCampaignsPage() {
                 }))}
                 selected={campaignForm.circleIds}
                 onChange={(selectedCircleIds) =>
-                  setCampaignForm((current) => {
-                    const nextCircleIds = [...selectedCircleIds]
-                    const currentCity = (data?.masters.cities ?? []).find(
-                      (city) => city.id === current.cityId
-                    )
-                    return {
-                      ...current,
-                      circleIds: nextCircleIds,
-                      cityId:
-                        currentCity && nextCircleIds.includes(currentCity.circleId)
-                          ? current.cityId
-                          : 'none',
-                    }
-                  })
+                  setCampaignForm((current) => ({
+                    ...current,
+                    circleIds: [...selectedCircleIds],
+                  }))
                 }
                 placeholder="Select circles"
                 searchPlaceholder="Search circles"
                 emptyMeansAll={false}
                 emptyLabel="All circles"
                 className="w-full justify-between"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>City</Label>
-              <Select
-                value={campaignForm.cityId || 'none'}
-                onValueChange={(value) =>
-                  setCampaignForm((current) => ({
-                    ...current,
-                    cityId: value,
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Optional city" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No city</SelectItem>
-                  {availableCities.map((city) => (
-                    <SelectItem key={city.id} value={city.id}>
-                      {city.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Category</Label>
-              <Input
-                value={campaignForm.category}
-                onChange={(event) =>
-                  setCampaignForm((current) => ({
-                    ...current,
-                    category: event.target.value,
-                  }))
-                }
-                placeholder="Optional category"
               />
             </div>
             <div className="space-y-2">
@@ -620,6 +627,82 @@ export default function CrmCampaignsPage() {
                   {(data?.masters.departments ?? []).map((department) => (
                     <SelectItem key={department.id} value={department.id}>
                       {department.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <Select
+                value={campaignForm.category || 'none'}
+                onValueChange={(value) =>
+                  setCampaignForm((current) => ({
+                    ...current,
+                    category: value === 'none' ? '' : value,
+                    treatmentMasterId:
+                      value === 'none'
+                        ? ''
+                        : current.treatmentMasterId &&
+                            (data?.masters.treatments ?? []).some(
+                              (treatment) =>
+                                treatment.id === current.treatmentMasterId &&
+                                treatment.category === value
+                            )
+                          ? current.treatmentMasterId
+                          : '',
+                  }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No category</SelectItem>
+                  {(data?.masters.treatmentCategories ?? []).map((category) => (
+                    <SelectItem key={category.id} value={category.name}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Treatment</Label>
+              <Select
+                value={campaignForm.treatmentMasterId || 'none'}
+                onValueChange={(value) =>
+                  setCampaignForm((current) => {
+                    if (value === 'none') {
+                      return {
+                        ...current,
+                        treatmentMasterId: '',
+                      }
+                    }
+
+                    const selectedTreatment = (data?.masters.treatments ?? []).find(
+                      (treatment) => treatment.id === value
+                    )
+
+                    return {
+                      ...current,
+                      treatmentMasterId: value,
+                      category: selectedTreatment?.category ?? current.category,
+                    }
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select treatment" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No treatment</SelectItem>
+                  {availableTreatments.map((treatment) => (
+                    <SelectItem key={treatment.id} value={treatment.id}>
+                      {treatment.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -672,7 +755,7 @@ export default function CrmCampaignsPage() {
                 <TableHead>Enable</TableHead>
                 <TableHead>Team Lead</TableHead>
                 <TableHead>Department</TableHead>
-                <TableHead>Active BDs</TableHead>
+                <TableHead>BDs / Daily Cap</TableHead>
                 <TableHead>Weight</TableHead>
                 <TableHead>Priority</TableHead>
                 <TableHead>Active</TableHead>
@@ -691,6 +774,7 @@ export default function CrmCampaignsPage() {
                 assignmentDrafts.map((draft) => {
                   const teamLead = teamLeadMap.get(draft.teamLeadEmployeeId)
                   if (!teamLead) return null
+                  const eligibleBds = filterBdsForCampaign(teamLead, campaign)
 
                   return (
                     <TableRow key={draft.teamLeadEmployeeId}>
@@ -713,7 +797,53 @@ export default function CrmCampaignsPage() {
                         <div className="text-xs text-muted-foreground">{teamLead.employeeCode}</div>
                       </TableCell>
                       <TableCell>{teamLead.department?.name ?? '—'}</TableCell>
-                      <TableCell>{teamLead.activeBdCount}</TableCell>
+                      <TableCell className="min-w-[340px]">
+                        {eligibleBds.length === 0 ? (
+                          <div className="text-sm text-muted-foreground">No active BDs under this Team Lead.</div>
+                        ) : (
+                          <div className="space-y-2">
+                            <div className="text-xs text-muted-foreground">
+                              {eligibleBds.length} active BD{eligibleBds.length === 1 ? '' : 's'}
+                            </div>
+                            {eligibleBds.map((bd) => (
+                              <div
+                                key={bd.id}
+                                className="grid gap-2 rounded-lg border border-border/60 bg-muted/10 p-2 md:grid-cols-[minmax(0,1fr)_110px]"
+                              >
+                                <div className="min-w-0">
+                                  <div className="truncate text-sm font-medium">{bd.name}</div>
+                                  <div className="truncate text-xs text-muted-foreground">
+                                    {bd.employeeCode}
+                                    {bd.circle ? ` · ${bd.circle}` : ''}
+                                  </div>
+                                </div>
+                                <Input
+                                  type="number"
+                                  min={1}
+                                  value={draft.bdLimits[bd.id] ?? ''}
+                                  disabled={!draft.enabled}
+                                  onChange={(event) =>
+                                    setAssignmentDrafts((current) =>
+                                      current.map((item) =>
+                                        item.teamLeadEmployeeId === draft.teamLeadEmployeeId
+                                          ? {
+                                              ...item,
+                                              bdLimits: {
+                                                ...item.bdLimits,
+                                                [bd.id]: event.target.value,
+                                              },
+                                            }
+                                          : item
+                                      )
+                                    )
+                                  }
+                                  placeholder="Daily max"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Input
                           type="number"
@@ -886,9 +1016,9 @@ export default function CrmCampaignsPage() {
                         <TableHead>Source</TableHead>
                         <TableHead>Lead Source</TableHead>
                         <TableHead>Category</TableHead>
+                        <TableHead>Treatment</TableHead>
                         <TableHead>Department</TableHead>
                         <TableHead>Circles</TableHead>
-                        <TableHead>City</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="w-[120px] text-right">Action</TableHead>
                       </TableRow>
@@ -920,9 +1050,9 @@ export default function CrmCampaignsPage() {
                             <TableCell>{campaign.source.name}</TableCell>
                             <TableCell>{campaign.leadSource.name}</TableCell>
                             <TableCell>{campaign.category ?? '—'}</TableCell>
+                            <TableCell>{campaign.treatment ?? '—'}</TableCell>
                             <TableCell>{campaign.department?.name ?? '—'}</TableCell>
                             <TableCell>{formatCircleNames(campaign.circles)}</TableCell>
-                            <TableCell>{campaign.city?.name ?? '—'}</TableCell>
                             <TableCell>{statusBadge(campaign.isActive)}</TableCell>
                             <TableCell className="text-right">
                               <Button
@@ -1026,7 +1156,11 @@ export default function CrmCampaignsPage() {
       <Sheet open={Boolean(drawer)} onOpenChange={(open) => !open && closeDrawer()}>
         <SheetContent
           side="right"
-          className="flex h-full w-full max-w-2xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-2xl"
+          className={
+            drawer?.type === 'assignment'
+              ? 'flex h-full w-full max-w-5xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-5xl'
+              : 'flex h-full w-full max-w-2xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-2xl'
+          }
         >
           <SheetHeader className="shrink-0 border-b p-4 text-left">
             <SheetTitle>{drawerTitle}</SheetTitle>

@@ -29,7 +29,6 @@ type RowResponse = {
   id: string
   leadRef: string
   patientName: string
-  phoneNumber: string
   caseStage: string
   pipelineStage: string
   hospitalName: string
@@ -198,7 +197,6 @@ export async function GET(request: NextRequest) {
       id: true,
       leadRef: true,
       patientName: true,
-      phoneNumber: true,
       caseStage: true,
       pipelineStage: true,
       hospitalName: true,
@@ -263,7 +261,6 @@ export async function GET(request: NextRequest) {
       id: l.id,
       leadRef: l.leadRef,
       patientName: l.patientName,
-      phoneNumber: l.phoneNumber,
       caseStage: l.caseStage,
       pipelineStage: l.pipelineStage,
       hospitalName: l.hospitalName,

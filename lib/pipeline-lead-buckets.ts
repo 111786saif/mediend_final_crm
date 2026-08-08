@@ -18,15 +18,17 @@ export type PipelineStatusBucket =
   | 'closed'
 
 const STATUS_NORMALIZE: Record<string, string> = {
-  'new lead': 'New',
+  'new lead': 'New Lead',
   new: 'New',
   'hot lead': 'Hot Lead',
   hot: 'Hot Lead',
   interested: 'Interested',
-  'follow-up 1': 'Follow-up (1-3)',
-  'follow-up 2': 'Follow-up (1-3)',
-  'follow-up 3': 'Follow-up (1-3)',
-  'follow-up': 'Follow-up (1-3)',
+  'follow-up 1': 'Follow-up 1',
+  'follow-up 2': 'Follow-up 2',
+  'follow-up 3': 'Follow-up 3',
+  'follow-up 4': 'Follow-up 4',
+  'follow-up 5': 'Follow-up 5',
+  'follow-up': 'Follow-up',
   'follow-up (1-3)': 'Follow-up (1-3)',
   'follow up (1-3)': 'Follow-up (1-3)',
   'call back (sd)': 'Call Back (SD)',
@@ -45,21 +47,39 @@ const STATUS_NORMALIZE: Record<string, string> = {
   'wa done': 'C/W Done',
   'scan done': 'C/W Done',
   lost: 'Lost',
-  'ipd lost': 'Lost',
-  'dnp-1': 'DNP',
-  'dnp-2': 'DNP',
-  'dnp-3': 'DNP',
-  'dnp-4': 'DNP',
-  'dnp-5': 'DNP',
+  'ipd lost': 'IPD Lost',
+  'dnp-1': 'DNP-1',
+  'dnp-2': 'DNP-2',
+  'dnp-3': 'DNP-3',
+  'dnp-4': 'DNP-4',
+  'dnp-5': 'DNP-5',
   dnp: 'DNP',
-  'dnp exhausted': 'DNP (1-5, Exhausted)',
+  'dnp exhausted': 'DNP Exhausted',
   'dnp (1-5, exhausted)': 'DNP (1-5, Exhausted)',
   junk: 'Junk',
   churned: 'Lost',
   'invalid number': 'Invalid Number',
   'fund issues': 'Fund Issues',
-  'not interested': 'Lost',
-  'duplicate lead': 'Lost',
+  'not interested': 'Not Interested',
+  'duplicate lead': 'Duplicate lead',
+  nurture: 'Nurture',
+  'nurture 1': 'Nurture 1',
+  'nurture 2': 'Nurture 2',
+  'nurture 3': 'Nurture 3',
+  'nurture 4': 'Nurture 4',
+  'nurture 5': 'Nurture 5',
+  'nuture 1': 'Nuture 1',
+  'nuture 2': 'Nuture 2',
+  'nuture 3': 'Nuture 3',
+  'nuture 4': 'Nuture 4',
+  'nuture 5': 'Nuture 5',
+  'out of station': 'Out of Station',
+  'out of station follow-up': 'Out of Station follow-up',
+  'out of station follow up': 'Out of Station follow-up',
+  'out of station followup': 'Out of Station follow-up',
+  'supply gap': 'Supply Gap',
+  'sx not suggested': 'SX Not Suggested',
+  'language barrier': 'Language Barrier',
 }
 
 export function normalizeLeadStatus(status: string | null | undefined): string {
@@ -78,7 +98,30 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   if (s === OPD_DONE_LABEL || lower.includes('opd done')) {
     return 'opd_done'
   }
-  if (['New', 'New Lead', 'Hot Lead', 'Interested', 'Nurture'].includes(s) || lower.includes('new') || lower.includes('hot') || lower.includes('interested')) {
+  if (
+    [
+      'New',
+      'New Lead',
+      'Hot Lead',
+      'Interested',
+      'Nurture',
+      'Nurture 1',
+      'Nurture 2',
+      'Nurture 3',
+      'Nurture 4',
+      'Nurture 5',
+      'Nuture 1',
+      'Nuture 2',
+      'Nuture 3',
+      'Nuture 4',
+      'Nuture 5',
+    ].includes(s) ||
+    lower.includes('new') ||
+    lower.includes('hot') ||
+    lower.includes('interested') ||
+    lower.includes('nurture') ||
+    lower.includes('nuture')
+  ) {
     return 'new_hot'
   }
   if (s === 'Junk' || s === 'Invalid Number' || lower.includes('junk') || lower.includes('invalid number')) {
@@ -90,12 +133,15 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
       'Follow-up 1',
       'Follow-up 2',
       'Follow-up 3',
+      'Follow-up 4',
+      'Follow-up 5',
       'Follow-up',
       'Call Back (SD)',
       'Call Back (T)',
       'Call Back Next Week',
       'Call Back Next Month',
       'Out of Station',
+      'Out of Station follow-up',
       'Out of station follow-up',
       'IPD Schedule',
       OPD_SCHEDULED_LABEL,

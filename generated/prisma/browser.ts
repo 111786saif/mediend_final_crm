@@ -418,6 +418,11 @@ export type CrmCampaign = Prisma.CrmCampaignModel
  */
 export type CrmCampaignTeamLeadAssignment = Prisma.CrmCampaignTeamLeadAssignmentModel
 /**
+ * Model CrmCampaignBdDailyLimit
+ * 
+ */
+export type CrmCampaignBdDailyLimit = Prisma.CrmCampaignBdDailyLimitModel
+/**
  * Model CrmActivityLog
  * 
  */

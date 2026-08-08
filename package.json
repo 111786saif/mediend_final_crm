@@ -38,6 +38,7 @@
     "seed:employees:csv": "bun scripts/seed-employees-from-csv.ts",
     "seed:leads": "tsx prisma/seed-leads.ts",
     "db:seed:masters": "tsx prisma/seed-masters.ts",
+    "db:seed:crm-opd-masters": "tsx prisma/seed-crm-opd-masters.ts",
     "db:seed:insurance-tpa": "tsx scripts/seed-insurance-tpa.ts",
     "db:seed:document-templates": "bun prisma/seed-document-templates.ts"
   },
@@ -104,6 +105,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "driver.js": "^1.7.0",
+    "eventsource": "^4.1.1",
     "framer-motion": "^12.35.2",
     "idb": "^8.0.3",
     "ioredis": "^5.8.2",

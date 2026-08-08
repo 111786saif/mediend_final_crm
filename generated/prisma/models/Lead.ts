@@ -3636,10 +3636,12 @@ export type LeadCreateNestedOneWithoutPaymentInstallmentsInput = {
   connect?: Prisma.LeadWhereUniqueInput
 }
 
-export type LeadUpdateOneRequiredWithoutPaymentInstallmentsNestedInput = {
+export type LeadUpdateOneWithoutPaymentInstallmentsNestedInput = {
   create?: Prisma.XOR<Prisma.LeadCreateWithoutPaymentInstallmentsInput, Prisma.LeadUncheckedCreateWithoutPaymentInstallmentsInput>
   connectOrCreate?: Prisma.LeadCreateOrConnectWithoutPaymentInstallmentsInput
   upsert?: Prisma.LeadUpsertWithoutPaymentInstallmentsInput
+  disconnect?: Prisma.LeadWhereInput | boolean
+  delete?: Prisma.LeadWhereInput | boolean
   connect?: Prisma.LeadWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutPaymentInstallmentsInput, Prisma.LeadUpdateWithoutPaymentInstallmentsInput>, Prisma.LeadUncheckedUpdateWithoutPaymentInstallmentsInput>
 }

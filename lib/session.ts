@@ -81,10 +81,15 @@ export async function getSessionWithFreshUser(): Promise<SessionUser | null> {
       email: true,
       name: true,
       role: true,
-      employee: { select: { onboardingStatus: true } },
+      employee: { select: { onboardingStatus: true, status: true } },
     },
   })
   if (!row) return null
+  // Drop sessions for terminated/absconded employees (HR marked inactive)
+  const empStatus = row.employee?.status
+  if (empStatus === 'TERMINATED' || empStatus === 'ABSCONDED') {
+    return null
+  }
   return {
     id: row.id,
     email: row.email,

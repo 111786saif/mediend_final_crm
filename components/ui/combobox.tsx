@@ -126,18 +126,69 @@ function ComboboxContent({
   )
 }
 
-function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
-  return (
-    <ComboboxPrimitive.List
-      data-slot="combobox-list"
-      className={cn(
-        "max-h-[min(21.75rem,calc(var(--available-height)-2.25rem))] scroll-py-1 overflow-y-auto p-1 data-[empty]:p-0",
-        className
-      )}
-      {...props}
-    />
-  )
-}
+const ComboboxList = React.forwardRef<HTMLDivElement, ComboboxPrimitive.List.Props>(
+  function ComboboxList(
+    { className, onWheelCapture, onTouchMoveCapture, ...props },
+    forwardedRef
+  ) {
+    const localRef = React.useRef<HTMLDivElement | null>(null)
+
+    const setRef = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        localRef.current = node
+
+        if (typeof forwardedRef === "function") {
+          forwardedRef(node)
+        } else if (forwardedRef) {
+          forwardedRef.current = node
+        }
+      },
+      [forwardedRef]
+    )
+
+    const handleWheelCapture = React.useCallback(
+      (event: React.WheelEvent<HTMLDivElement>) => {
+        const node = localRef.current
+
+        if (node && node.scrollHeight > node.clientHeight) {
+          event.preventDefault()
+          event.stopPropagation()
+          node.scrollTop += event.deltaY
+        }
+
+        onWheelCapture?.(event)
+      },
+      [onWheelCapture]
+    )
+
+    const handleTouchMoveCapture = React.useCallback(
+      (event: React.TouchEvent<HTMLDivElement>) => {
+        const node = localRef.current
+
+        if (node && node.scrollHeight > node.clientHeight) {
+          event.stopPropagation()
+        }
+
+        onTouchMoveCapture?.(event)
+      },
+      [onTouchMoveCapture]
+    )
+
+    return (
+      <ComboboxPrimitive.List
+        ref={setRef}
+        data-slot="combobox-list"
+        className={cn(
+          "max-h-[min(21.75rem,calc(var(--available-height)-2.25rem))] scroll-py-1 overflow-y-auto overscroll-contain touch-pan-y p-1 data-[empty]:p-0",
+          className
+        )}
+        onWheelCapture={handleWheelCapture}
+        onTouchMoveCapture={handleTouchMoveCapture}
+        {...props}
+      />
+    )
+  }
+)
 
 function ComboboxItem({
   className,
@@ -274,7 +325,6 @@ function ComboboxChip({
 
 function ComboboxChipsInput({
   className,
-  children,
   ...props
 }: ComboboxPrimitive.Input.Props) {
   return (

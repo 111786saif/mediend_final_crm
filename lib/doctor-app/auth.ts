@@ -20,6 +20,9 @@ const AUTHKEY_WHATSAPP_TEMPLATE_ID =
   process.env.AUTHKEY_WHATSAPP_TEMPLATE_ID || process.env.DOCTOR_APP_WHATSAPP_TEMPLATE_ID || ''
 const AUTHKEY_COUNTRY_CODE = process.env.AUTHKEY_COUNTRY_CODE || '91'
 const DOCTOR_APP_OTP_EXPIRES_IN_MINUTES = Number(process.env.DOCTOR_APP_OTP_EXPIRES_IN_MINUTES || 10)
+const DOCTOR_APP_TEST_OTP_ENABLED = process.env.DOCTOR_APP_TEST_OTP_ENABLED === 'true'
+const DOCTOR_APP_TEST_OTP_PHONE = normalizeIndianPhone(process.env.DOCTOR_APP_TEST_OTP_PHONE || '')
+const DOCTOR_APP_TEST_OTP_CODE = (process.env.DOCTOR_APP_TEST_OTP_CODE || '').trim()
 
 export interface DoctorAppAuthUser {
   accountId: string
@@ -50,6 +53,15 @@ export class DoctorAppWhatsappOtpError extends Error {
     this.name = 'DoctorAppWhatsappOtpError'
     this.status = status
   }
+}
+
+function isDoctorAppTestOtpPhone(phone: string) {
+  return (
+    DOCTOR_APP_TEST_OTP_ENABLED &&
+    DOCTOR_APP_TEST_OTP_PHONE.length === 10 &&
+    DOCTOR_APP_TEST_OTP_CODE.length > 0 &&
+    phone === DOCTOR_APP_TEST_OTP_PHONE
+  )
 }
 
 function parseDurationToMs(input: string, fallbackMs: number) {
@@ -226,7 +238,9 @@ export async function sendDoctorAppWhatsappOtp(phone: string) {
     return null
   }
 
-  const otp = crypto.randomInt(100000, 1000000).toString()
+  const otp = isDoctorAppTestOtpPhone(normalizedPhone)
+    ? DOCTOR_APP_TEST_OTP_CODE
+    : crypto.randomInt(100000, 1000000).toString()
   const expiresAt = new Date(Date.now() + DOCTOR_APP_OTP_EXPIRES_IN_MINUTES * 60 * 1000)
 
   await prisma.doctorAppWhatsappOtp.deleteMany({
@@ -242,16 +256,18 @@ export async function sendDoctorAppWhatsappOtp(phone: string) {
     },
   })
 
-  try {
-    await sendAuthkeyTemplate({
-      mobile: normalizedPhone,
-      wid: AUTHKEY_WHATSAPP_TEMPLATE_ID,
-      countryCode: AUTHKEY_COUNTRY_CODE,
-      param1: otp,
-    })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown provider error'
-    throw new DoctorAppWhatsappOtpError(`Failed to send WhatsApp OTP: ${message}`, 502)
+  if (!isDoctorAppTestOtpPhone(normalizedPhone)) {
+    try {
+      await sendAuthkeyTemplate({
+        mobile: normalizedPhone,
+        wid: AUTHKEY_WHATSAPP_TEMPLATE_ID,
+        countryCode: AUTHKEY_COUNTRY_CODE,
+        param1: otp,
+      })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown provider error'
+      throw new DoctorAppWhatsappOtpError(`Failed to send WhatsApp OTP: ${message}`, 502)
+    }
   }
 
   return {
@@ -262,14 +278,73 @@ export async function sendDoctorAppWhatsappOtp(phone: string) {
 
 export async function verifyDoctorAppWhatsappOtp(phone: string, otp: string): Promise<DoctorAppLoginResult | null> {
   const normalizedPhone = normalizeIndianPhone(phone)
+  const normalizedOtp = otp.trim()
   if (normalizedPhone.length !== 10) {
     return null
+  }
+
+  if (isDoctorAppTestOtpPhone(normalizedPhone) && normalizedOtp === DOCTOR_APP_TEST_OTP_CODE) {
+    const account = await prisma.doctorAppAccount.findFirst({
+      where: {
+        phoneNumber: normalizedPhone,
+        isActive: true,
+        doctor: { isActive: true },
+      },
+      include: {
+        doctor: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+          },
+        },
+      },
+    })
+
+    if (!account) {
+      return null
+    }
+
+    const authUser: DoctorAppAuthUser = {
+      accountId: account.id,
+      doctorId: account.doctor.id,
+      email: account.email,
+      name: account.doctor.name,
+    }
+
+    const accessToken = issueAccessToken(authUser)
+    const { refreshToken, refreshExpiresIn } = await issueRefreshToken(authUser)
+
+    await prisma.doctorAppWhatsappOtp.updateMany({
+      where: {
+        accountId: account.id,
+        verifiedAt: null,
+      },
+      data: { verifiedAt: new Date() },
+    })
+
+    await prisma.doctorAppAccount.update({
+      where: { id: account.id },
+      data: { lastLoginAt: new Date() },
+    })
+
+    return {
+      doctor: {
+        id: account.doctor.id,
+        name: account.doctor.name,
+        email: account.email,
+      },
+      accessToken,
+      expiresIn: DOCTOR_APP_JWT_EXPIRES_IN_TEXT,
+      refreshToken,
+      refreshExpiresIn,
+    }
   }
 
   const record = await prisma.doctorAppWhatsappOtp.findFirst({
     where: {
       phoneNumber: normalizedPhone,
-      otp: otp.trim(),
+      otp: normalizedOtp,
       verifiedAt: null,
     },
     orderBy: { createdAt: 'desc' },
