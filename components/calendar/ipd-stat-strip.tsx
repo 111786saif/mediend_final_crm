@@ -4,10 +4,13 @@ import { Stethoscope, CalendarClock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function IpdStatStrip({
+  label = 'Cases',
   totalIpdInRange,
   ipdThisMonth,
   isLoading,
 }: {
+  /** Short label reflecting the active type filter, e.g. "IPD", "OPD", "IPD/OPD" */
+  label?: string
   totalIpdInRange: number
   ipdThisMonth: number
   isLoading?: boolean
@@ -16,14 +19,14 @@ export function IpdStatStrip({
     <div className="grid grid-cols-2 gap-2 sm:gap-3">
       <StatCard
         icon={<Stethoscope className="h-4 w-4" />}
-        label="IPD in view"
+        label={`${label} in view`}
         value={isLoading ? '—' : totalIpdInRange}
         sub="visible range"
         tone="emerald"
       />
       <StatCard
         icon={<CalendarClock className="h-4 w-4" />}
-        label="IPD this month"
+        label={`${label} this month`}
         value={isLoading ? '—' : ipdThisMonth}
         sub="current calendar month"
         tone="teal"

@@ -50,7 +50,7 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'main.md_outstanding', label: 'MD Outstanding', type: 'SECTION', parentKey: 'main', sortOrder: 24 },
   { key: 'main.incentive', label: 'Incentive', type: 'SECTION', parentKey: 'main', sortOrder: 25 },
   { key: 'main.cumulative_report', label: 'Cumulative Report', type: 'SECTION', parentKey: 'main', sortOrder: 26 },
-  { key: 'main.ipd_calendar', label: 'IPD Calendar', type: 'SECTION', parentKey: 'main', sortOrder: 27 },
+  { key: 'main.ipd_calendar', label: 'IPD/OPD Calendar', type: 'SECTION', parentKey: 'main', sortOrder: 27 },
   { key: 'main.doctor_admin', label: 'Doctor Admin', type: 'SECTION', parentKey: 'main', sortOrder: 28 },
   { key: 'main.training', label: 'Training', type: 'SECTION', parentKey: 'main', sortOrder: 29 },
 

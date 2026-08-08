@@ -10,9 +10,8 @@ import type {
   CalendarAttendanceDay,
   CalendarMeet,
   CalendarStatus,
+  CaseEvent,
 } from '@/hooks/use-calendar'
-import type { Lead } from '@/hooks/use-leads'
-import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { cn } from '@/lib/utils'
 
 export type CalendarView = 'month' | 'week' | 'day'
@@ -33,23 +32,34 @@ const MODULE_CLASS: Record<string, string> = {
   GENERAL: 'cal-ev-general',
 }
 
-interface IpdTooltipData {
+// One CSS class per IPD/OPD × Done/Scheduled/Postponed/Cancelled combination
+const CASE_EVENT_CLASS: Record<string, string> = {
+  'IPD-DONE': 'cal-ev-ipd-done',
+  'IPD-SCHEDULED': 'cal-ev-ipd-scheduled',
+  'IPD-POSTPONED': 'cal-ev-ipd-postponed',
+  'IPD-CANCELLED': 'cal-ev-ipd-cancelled',
+  'OPD-DONE': 'cal-ev-opd-done',
+  'OPD-SCHEDULED': 'cal-ev-opd-scheduled',
+  'OPD-POSTPONED': 'cal-ev-opd-postponed',
+  'OPD-CANCELLED': 'cal-ev-opd-cancelled',
+}
+
+const STATUS_LABEL: Record<string, string> = {
+  DONE: 'Done',
+  SCHEDULED: 'Scheduled',
+  POSTPONED: 'Postponed',
+  CANCELLED: 'Cancelled',
+}
+
+interface CaseTooltipData {
   patientName: string
+  type: string
+  status: string
   treatment: string | null
   hospital: string | null
   doctor: string | null
   circle: string | null
   bdName: string | null
-}
-
-function ipdSurgeryDate(lead: Lead): string | null {
-  const direct = lead.surgeryDate
-  const admission = (lead as { admissionRecord?: { surgeryDate?: string | Date | null } }).admissionRecord?.surgeryDate
-  const pl = (lead as { plRecord?: { surgeryDate?: string | Date | null } }).plRecord?.surgeryDate
-  const raw = direct ?? admission ?? pl
-  if (!raw) return null
-  const d = new Date(raw as string)
-  return Number.isNaN(d.getTime()) ? null : d.toISOString()
 }
 
 function statusLabel(kind: string, fallback: string | null): string {
@@ -65,14 +75,14 @@ export interface TeamCalendarProps {
   meets: CalendarMeet[]
   statuses: CalendarStatus[]
   attendance: CalendarAttendanceDay[]
-  /** IPD-done leads to plot on the calendar (BD / Team Lead portals only) */
-  ipds?: Lead[]
+  /** IPD/OPD case events to plot on the calendar */
+  caseEvents?: CaseEvent[]
   focusedDate: Date
   onEventClick: (event: { type: 'meet' | 'status'; id: string }) => void
   onDateClick: (date: Date) => void
   onDatesSet?: (range: { start: Date; end: Date }) => void
-  /** Called when an IPD marker is clicked — usually to open the patient page */
-  onIpdClick?: (leadId: string) => void
+  /** Called when a case marker is clicked — usually to open the patient page */
+  onCaseClick?: (leadId: string) => void
   className?: string
 }
 
@@ -81,16 +91,16 @@ export function TeamCalendar({
   meets,
   statuses,
   attendance,
-  ipds = [],
+  caseEvents = [],
   focusedDate,
   onEventClick,
   onDateClick,
   onDatesSet,
-  onIpdClick,
+  onCaseClick,
   className,
 }: TeamCalendarProps) {
   const calRef = useRef<FullCalendar | null>(null)
-  const [tooltip, setTooltip] = useState<{ x: number; y: number; data: IpdTooltipData } | null>(null)
+  const [tooltip, setTooltip] = useState<{ x: number; y: number; data: CaseTooltipData } | null>(null)
 
   const attendanceByDate = useMemo(() => {
     const map: Record<string, CalendarAttendanceDay> = {}
@@ -135,31 +145,31 @@ export function TeamCalendar({
       })
     }
 
-    for (const lead of ipds) {
-      const dateIso = ipdSurgeryDate(lead)
-      if (!dateIso) continue
-      const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
+    for (const evt of caseEvents) {
+      const cls = CASE_EVENT_CLASS[`${evt.type}-${evt.status}`] ?? 'cal-ev-ipd-done'
       out.push({
-        id: `ipd:${lead.id}`,
-        title: `IPD · ${lead.patientName ?? 'Patient'}`,
-        start: dateIso.slice(0, 10),
+        id: `case:${evt.id}`,
+        title: `${evt.type} ${STATUS_LABEL[evt.status] ?? evt.status} · ${evt.patientName}`,
+        start: evt.date.slice(0, 10),
         allDay: true,
-        classNames: ['cal-ev', 'cal-ev-ipd'],
+        classNames: ['cal-ev', cls],
         extendedProps: {
-          type: 'ipd',
-          leadId: lead.id,
-          patientName: lead.patientName ?? 'Patient',
-          treatment: lead.treatment ?? null,
-          hospital: hospital ?? null,
-          doctor: doctor ?? null,
-          circle: lead.circle ?? null,
-          bdName: lead.bd?.name ?? null,
+          type: 'case',
+          leadId: evt.leadId,
+          patientName: evt.patientName,
+          caseType: evt.type,
+          caseStatus: evt.status,
+          treatment: evt.treatment,
+          hospital: evt.hospital,
+          doctor: evt.doctor,
+          circle: evt.circle,
+          bdName: evt.bdName,
         },
       })
     }
 
     return out
-  }, [meets, statuses, ipds])
+  }, [meets, statuses, caseEvents])
 
   const handleClick = (arg: EventClickArg) => {
     const [type, id] = (arg.event.id || '').split(':')
@@ -167,8 +177,8 @@ export function TeamCalendar({
       onEventClick({ type, id })
       return
     }
-    if (type === 'ipd') {
-      onIpdClick?.(id)
+    if (type === 'case') {
+      onCaseClick?.(id)
     }
   }
 
@@ -186,11 +196,13 @@ export function TeamCalendar({
     el: HTMLElement
   }) => {
     const props = arg.event.extendedProps
-    if (props.type !== 'ipd') return
+    if (props.type !== 'case') return
     arg.el.style.cursor = 'pointer'
 
-    const data: IpdTooltipData = {
+    const data: CaseTooltipData = {
       patientName: String(props.patientName ?? 'Patient'),
+      type: String(props.caseType ?? ''),
+      status: STATUS_LABEL[String(props.caseStatus)] ?? String(props.caseStatus ?? ''),
       treatment: (props.treatment as string) ?? null,
       hospital: (props.hospital as string) ?? null,
       doctor: (props.doctor as string) ?? null,
@@ -260,6 +272,7 @@ export function TeamCalendar({
         >
           <p className="cal-tooltip-title">{tooltip.data.patientName}</p>
           <div className="cal-tooltip-body">
+            <p>{tooltip.data.type} · {tooltip.data.status}</p>
             {tooltip.data.treatment && <p>Treatment: {tooltip.data.treatment}</p>}
             {tooltip.data.hospital && <p>Hospital: {tooltip.data.hospital}</p>}
             {tooltip.data.doctor && <p>Doctor: {tooltip.data.doctor}</p>}
@@ -362,7 +375,16 @@ export function TeamCalendar({
         .team-calendar .cal-ev-interview { background: #ede9fe; border-left-color: #7c3aed; color: #4c1d95; }
         .team-calendar .cal-ev-md-appt   { background: #fef3c7; border-left-color: #d97706; color: #78350f; }
         .team-calendar .cal-ev-general   { background: #e0e7ff; border-left-color: #4f46e5; color: #312e81; }
-        .team-calendar .cal-ev-ipd       { background: rgb(var(--sidebar)); border-left-color: rgb(var(--sidebar-primary)) ;color: rgb(var(--sidebar-foreground)) ;font-weight: 600;}
+        /* IPD — greens/teal family */
+        .team-calendar .cal-ev-ipd-done       { background: #d1fae5; border-left-color: #059669; color: #065f46; font-weight: 600; }
+        .team-calendar .cal-ev-ipd-scheduled  { background: #dbeafe; border-left-color: #2563eb; color: #1e3a8a; font-weight: 600; }
+        .team-calendar .cal-ev-ipd-postponed  { background: #fef3c7; border-left-color: #d97706; color: #78350f; font-weight: 600; }
+        .team-calendar .cal-ev-ipd-cancelled  { background: #ffe4e6; border-left-color: #e11d48; color: #881337; font-weight: 600; text-decoration: line-through; }
+        /* OPD — same status hues, slightly lighter, no bold — keeps IPD visually "heavier" */
+        .team-calendar .cal-ev-opd-done       { background: #ecfdf5; border-left-color: #34d399; color: #065f46; }
+        .team-calendar .cal-ev-opd-scheduled  { background: #eff6ff; border-left-color: #60a5fa; color: #1e3a8a; }
+        .team-calendar .cal-ev-opd-postponed  { background: #fffbeb; border-left-color: #fbbf24; color: #78350f; }
+        .team-calendar .cal-ev-opd-cancelled  { background: #fff1f2; border-left-color: #fb7185; color: #881337; text-decoration: line-through; }
 
         /* ── Event category colors — dark mode ──────────────────────────
            Translucent backgrounds over the dark card + brighter text keep
@@ -375,7 +397,14 @@ export function TeamCalendar({
         .dark .team-calendar .cal-ev-interview { background: rgb(124 58 237 / 0.2); border-left-color: #a78bfa; color: #d8b4fe; }
         .dark .team-calendar .cal-ev-md-appt   { background: rgb(217 119 6 / 0.2); border-left-color: #fbbf24; color: #fde68a; }
         .dark .team-calendar .cal-ev-general   { background: rgb(79 70 229 / 0.2); border-left-color: #818cf8; color: #c7d2fe; }
-        .dark .team-calendar .cal-ev-ipd       { background: rgb(22 163 74 / 0.2); border-left-color: #4ade80; color: #86efac; }
+        .dark .team-calendar .cal-ev-ipd-done       { background: rgb(5 150 105 / 0.22); border-left-color: #34d399; color: #86efac; }
+        .dark .team-calendar .cal-ev-ipd-scheduled  { background: rgb(37 99 235 / 0.22); border-left-color: #60a5fa; color: #93c5fd; }
+        .dark .team-calendar .cal-ev-ipd-postponed  { background: rgb(217 119 6 / 0.22); border-left-color: #fbbf24; color: #fde68a; }
+        .dark .team-calendar .cal-ev-ipd-cancelled  { background: rgb(225 29 72 / 0.22); border-left-color: #fb7185; color: #fda4af; }
+        .dark .team-calendar .cal-ev-opd-done       { background: rgb(52 211 153 / 0.14); border-left-color: #6ee7b7; color: #a7f3d0; }
+        .dark .team-calendar .cal-ev-opd-scheduled  { background: rgb(96 165 250 / 0.14); border-left-color: #93c5fd; color: #bfdbfe; }
+        .dark .team-calendar .cal-ev-opd-postponed  { background: rgb(251 191 36 / 0.14); border-left-color: #fcd34d; color: #fde68a; }
+        .dark .team-calendar .cal-ev-opd-cancelled  { background: rgb(251 113 133 / 0.14); border-left-color: #fda4af; color: #fecdd3; }
 
         /* ── Attendance pill ─────────────────────────────────────────────── */
         .tc-att-pill {
