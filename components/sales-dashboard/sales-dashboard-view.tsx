@@ -114,7 +114,13 @@ interface BdDetail {
   bd: { id: string; name: string; profilePicture: string | null; managerName: string | null }
   kpis: { totalLeads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number; avgTicketSize: number }
   surgeries: Array<{ id: string; patientName: string; treatment: string; hospitalName: string; surgeonName: string | null; date: string | null; billAmount: number; netProfit: number; circle: string }>
+  ipdCurrent?: number
+  ipdPrev?: number
+  ipdPrev2?: number
+  ipdPrev3?: number
+  ipdOlder?: number
   monthWise: Array<{ month: string; leadCount: number; ipdCount: number }>
+  monthWiseHeaders?: { current: string; prev: string; prev2: string; prev3: string }
   treatmentBreakdown: Array<{ treatment: string; count: number }>
 }
 
@@ -151,6 +157,16 @@ export interface TeamDetail {
   nestedTeams?: Array<{ id: string; name: string; role: string; totalLeads: number; totalIpd: number }>
   byCategory?: Array<{ category: string; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
   targets?: Array<{ metric: string; label: string; targetValue: number; achieved: number; percentage: number }>
+  monthWise?: {
+    months: string[]
+    rows: Array<{
+      month: string
+      bdId: string
+      bdName: string
+      leadCount: number
+      ipdCount: number
+    }>
+  }
   monthWiseHeaders: { current: string; prev: string; prev2: string; prev3: string }
 }
 
@@ -424,18 +440,18 @@ function BdDetailSheet({
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   <StatCard label="Leads" value={data.kpis.totalLeads} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
                   <StatCard label="IPD Done" value={data.kpis.ipdDone} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
-                  <StatCard label="Conversion" value={`${data.kpis.conversionRate.toFixed(1)}%`} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
+                  <StatCard label="Conversion" value={`${(data.kpis?.conversionRate ?? 0).toFixed(1)}%`} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
                   <StatCard label="Net Profit" value={fmtK(data.kpis.netProfit)} color="bg-amber-500/10 text-amber-900 dark:text-amber-100" />
                   <StatCard label="Bill Amount" value={fmtK(data.kpis.billAmount)} color="bg-slate-500/10" />
                   <StatCard label="Avg Ticket" value={fmtK(data.kpis.avgTicketSize)} color="bg-rose-500/10 text-rose-900 dark:text-rose-100" />
                 </div>
 
                 {/* Month-wise chart */}
-                {data.monthWise.length > 0 && (
+                {(data.monthWise?.length ?? 0) > 0 && (
                   <div>
                     <p className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 className="h-4 w-4" />Monthly Performance (All Time)</p>
                     <ResponsiveContainer width="100%" height={160}>
-                      <BarChart data={data.monthWise} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
+                      <BarChart data={data.monthWise ?? []} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
                         <XAxis dataKey="month" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
                         <YAxis tick={{ fontSize: 10 }} />
                         <Tooltip formatter={(v, n) => [v, n === 'ipdCount' ? 'IPD' : 'Leads']} labelFormatter={(l) => `Month: ${l}`} />
@@ -447,7 +463,7 @@ function BdDetailSheet({
                 )}
 
                 {/* Treatment pie */}
-                {data.treatmentBreakdown.length > 0 && (
+                {data.treatmentBreakdown?.length > 0 && (
                   <div>
                     <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Stethoscope className="h-4 w-4" />IPD by Treatment</p>
                     <div className="flex items-center gap-4">
@@ -472,9 +488,9 @@ function BdDetailSheet({
 
                 {/* Surgery list */}
                 <div>
-                  <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Stethoscope className="h-4 w-4" />Surgery History ({data.surgeries.length})</p>
+                  <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Stethoscope className="h-4 w-4" />Surgery History ({(data.surgeries ?? []).length})</p>
                   <div className="space-y-2">
-                    {data.surgeries.slice(0, 50).map((s) => (
+                    {(data.surgeries ?? []).slice(0, 50).map((s) => (
                       <div key={s.id} className="rounded-lg border bg-card p-3 text-sm">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
@@ -489,7 +505,7 @@ function BdDetailSheet({
                         </div>
                       </div>
                     ))}
-                    {data.surgeries.length === 0 && <p className="text-muted-foreground text-sm text-center py-4">No IPD in selected period</p>}
+                    {!data.surgeries?.length && <p className="text-muted-foreground text-sm text-center py-4">No IPD in selected period</p>}
                   </div>
                 </div>
               </>
@@ -858,12 +874,12 @@ function TeamPerformanceTab({
     if (bds.length === 0) return dummy
 
     bds.forEach(bd => {
-      cLeads += bd.leads[currentM] || 0
-      cIpd += bd.ipd[currentM] || 0
-      pLeads += bd.leads[prevM] || 0
-      pIpd += bd.ipd[prevM] || 0
-      p2Leads += bd.leads[prev2M] || 0
-      p2Ipd += bd.ipd[prev2M] || 0
+      cLeads += bd.leads?.[currentM] || 0
+      cIpd += bd.ipd?.[currentM] || 0
+      pLeads += bd.leads?.[prevM] || 0
+      pIpd += bd.ipd?.[prevM] || 0
+      p2Leads += bd.leads?.[prev2M] || 0
+      p2Ipd += bd.ipd?.[prev2M] || 0
     })
 
     if (cLeads === 0 && pLeads === 0 && p2Leads === 0) return dummy
@@ -1249,7 +1265,7 @@ function BdPerformanceTab({
                       </span>
                     )}
                     {(() => {
-                      const amount = incentivesByUserId.get(bd.bdId) ?? (bd.bdEmployeeId ? incentivesByEmployeeId.get(bd.bdEmployeeId) : undefined) ?? incentivesByName.get(bd.bdName.toLowerCase().trim())
+                      const amount = incentivesByUserId.get(bd.bdId) ?? (bd.bdEmployeeId ? incentivesByEmployeeId.get(bd.bdEmployeeId) : undefined) ?? incentivesByName.get((bd.bdName ?? '').toLowerCase().trim())
                       if (amount === undefined && HIDE_MISSING_INCENTIVE_CAPSULE) return null
                       return (
                         <span className="inline-flex items-center text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 shrink-0">
@@ -1262,8 +1278,8 @@ function BdPerformanceTab({
                 {/* Last 4 months mini bars */}
                 <div className="hidden sm:flex items-end gap-1 h-8">
                   {recentMonths.map((m) => {
-                    const v = bd.ipd[m] ?? 0
-                    const maxV = Math.max(1, ...bds.map((b) => b.ipd[m] ?? 0))
+                    const v = bd.ipd?.[m] ?? 0
+                    const maxV = Math.max(1, ...bds.map((b) => b.ipd?.[m] ?? 0))
                     return (
                       <div key={m} className="flex flex-col items-center gap-0.5">
                         <div className="w-5 bg-emerald-500/20 rounded-sm relative" style={{ height: `${Math.max(4, (v / maxV) * 28)}px` }}>

@@ -114,7 +114,7 @@ export function resolveNavResourceKey(title: string, role: string): string | nul
   }
 
   if (title === 'Sales Dashboard') {
-    if (role === 'MD' || role === 'ADMIN' || role === 'EXECUTIVE_ASSISTANT') {
+    if (role === 'MD' || role === 'ADMIN') {
       return 'sales.md_sales_dashboard'
     }
     return 'sales.sales_dashboard'
