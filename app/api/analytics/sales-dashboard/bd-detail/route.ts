@@ -209,6 +209,7 @@ export async function GET(request: NextRequest) {
       ipdPrev2,
       ipdPrev3,
       ipdOlder,
+      monthWise: allLeadsAllTime,
       monthWiseHeaders: {
         current: currentMonthKey,
         prev: prevMonthKey,

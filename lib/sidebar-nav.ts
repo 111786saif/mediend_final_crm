@@ -732,7 +732,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
       return { ...item, url: getDashboardUrl(role) }
     }
     if (item.title === 'Sales Dashboard') {
-      if (role === 'SALES_HEAD' || role === 'CATEGORY_MANAGER') {
+      if (role === 'SALES_HEAD' || role === 'CATEGORY_MANAGER' || role === 'EXECUTIVE_ASSISTANT') {
         return { ...item, url: '/sales/dashboard' }
       }
       if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
