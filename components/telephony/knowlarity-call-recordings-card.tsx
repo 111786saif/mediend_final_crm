@@ -42,7 +42,13 @@ export function KnowlarityCallRecordingsCard({
     queryKey: ['lead-call-recordings', leadId],
     queryFn: () => apiGet<CallRecordingsResponse>(`/api/leads/${leadId}/call-recordings`),
     enabled: Boolean(leadId),
+    retry: false,
   })
+
+  // Do not render call recordings card for roles below/equal to BD (returns 403 Forbidden)
+  if (error) {
+    return null
+  }
 
   const recordings = data?.recordings ?? []
 
@@ -67,10 +73,6 @@ export function KnowlarityCallRecordingsCard({
         {isLoading ? (
           <p className="text-xs text-muted-foreground py-4 text-center">
             Loading call recordings...
-          </p>
-        ) : error ? (
-          <p className="text-xs text-amber-600 py-2 text-center">
-            Unable to load call recordings.
           </p>
         ) : recordings.length === 0 ? (
           <div className="rounded-xl border border-dashed p-4 text-center text-xs text-muted-foreground space-y-1">

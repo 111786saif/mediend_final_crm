@@ -1,24 +1,22 @@
-import type { Prisma } from '@/generated/prisma/client'
+import { Prisma } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import {
+  getCampaignCircleNames,
   getCampaignForWebhook,
   previewCampaignLeadAssignment,
 } from '@/lib/crm-campaigns'
-import { prisma } from '@/lib/prisma'
+import { dryRunCrmLeadAssignment } from '@/lib/crm-assignment'
 import {
-  dryRunCrmLeadAssignment,
-  type CrmAssignmentDryRunResult,
-} from '@/lib/crm-assignment'
-import {
-  DuplicateLeadPhoneError,
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
 
 export type ImportedLeadSource =
-  | 'mysql'
-  | 'manual_mysql'
   | 'savemyleads'
-  | 'incoming_api'
+  | 'csv'
+  | 'api'
+  | 'webhook'
+  | 'manual_mysql'
 
 export type ImportedLeadAssignmentContext = {
   externalCampaignId?: string | null
@@ -28,57 +26,64 @@ export type ImportedLeadAssignmentContext = {
   assignmentDate?: Date
 }
 
-export type ImportedLeadCreateData = Omit<
-  Prisma.LeadUncheckedCreateInput,
-  'bdId' | 'bdeName'
-> & {
-  bdId?: string | null
-  bdeName?: string | null
-}
-
 export type ImportedLeadCreateInput = {
   source: ImportedLeadSource
   sourceReference: string
-  leadData: ImportedLeadCreateData
   assignmentContext: ImportedLeadAssignmentContext
+  leadData: Omit<Prisma.LeadCreateInput, 'bd' | 'bdeName'> & {
+    bdId?: string | null
+    bdeName?: string | null
+    treatmentMasterId?: string | null
+  }
 }
 
 export type ImportedLeadIngestionResult = {
-  created: true
+  created: boolean
   leadId: string
   leadRef: string
   assignmentApplied: boolean
-  matchedRule: CrmAssignmentDryRunResult['matchedRule']
-  assignment: CrmAssignmentDryRunResult['assignment']
-  candidateDiagnostics: CrmAssignmentDryRunResult['candidateDiagnostics']
+  matchedRule: unknown
+  assignment: unknown
+  candidateDiagnostics: unknown
   explanation: string
 }
 
-function normalizeImportedLeadString(value: string | null | undefined) {
-  const normalized = value?.trim()
-  if (!normalized) return null
-  const lowered = normalized.toLowerCase()
-  if (lowered === 'unknown' || lowered === 'not specified') return null
-  return normalized
-}
+export class DuplicateLeadPhoneError extends Error {
+  leadId: string
+  leadRef: string
+  duplicateCount: number
+  normalizedPhone: string
 
-function normalizeImportedLeadId(value: string | null | undefined) {
-  const normalized = value?.trim()
-  return normalized || null
-}
-
-function getCampaignDefaultCircleName(
-  campaign: Awaited<ReturnType<typeof getCampaignForWebhook>>
-) {
-  if (!campaign) return null
-
-  const selectedCircleName = campaign.circleSelections.find((selection) => selection.circle?.name)
-    ?.circle?.name
-  if (selectedCircleName) {
-    return selectedCircleName
+  constructor(params: {
+    leadId: string
+    leadRef: string
+    duplicateCount: number
+    normalizedPhone: string
+  }) {
+    super(`Duplicate lead phone ${params.normalizedPhone}. Existing leadRef: ${params.leadRef}`)
+    this.name = 'DuplicateLeadPhoneError'
+    this.leadId = params.leadId
+    this.leadRef = params.leadRef
+    this.duplicateCount = params.duplicateCount
+    this.normalizedPhone = params.normalizedPhone
   }
+}
 
-  return campaign.circle?.name ?? null
+function normalizeImportedLeadString(value: unknown): string | null {
+  if (value == null) return null
+  const str = String(value).trim()
+  if (!str) return null
+  const lower = str.toLowerCase()
+  if (['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd', 'unknown'].includes(lower)) {
+    return null
+  }
+  return str
+}
+
+function normalizeImportedLeadId(value: unknown): string | null {
+  if (value == null) return null
+  const str = String(value).trim()
+  return str.length > 0 ? str : null
 }
 
 export async function previewImportedLeadAssignment(
@@ -141,53 +146,71 @@ export async function createImportedLeadWithCrmAssignment(
   void _ignoredBdeName
   const externalCampaignId = normalizeImportedLeadString(input.assignmentContext.externalCampaignId)
   const campaign = externalCampaignId ? await getCampaignForWebhook(externalCampaignId) : null
-  const preferredCircle =
-    normalizeImportedLeadString(input.assignmentContext.city) ??
-    normalizeImportedLeadString(
-      typeof leadDataWithoutOwner.circle === 'string' ? leadDataWithoutOwner.circle : null
-    )
-  const fallbackCircle =
-    preferredCircle ??
-    getCampaignDefaultCircleName(campaign) ??
-    (typeof leadDataWithoutOwner.circle === 'string' ? leadDataWithoutOwner.circle : null)
-  const campaignCategory =
+
+  const campaignCircles = getCampaignCircleNames(campaign)
+  const explicitLeadCircle =
+    normalizeImportedLeadString(typeof leadDataWithoutOwner.circle === 'string' ? leadDataWithoutOwner.circle : null) ??
+    normalizeImportedLeadString(input.assignmentContext.city)
+
+  // Multi-circle rule: If campaign has >1 circles and incoming data has no circle, keep it blank/null. If 1 circle selected, use that circle.
+  const leadCircle =
+    explicitLeadCircle ??
+    (campaignCircles.length === 1 ? campaignCircles[0] : '')
+
+  const leadCategory =
+    normalizeImportedLeadString(typeof leadDataWithoutOwner.category === 'string' ? leadDataWithoutOwner.category : null) ??
     normalizeImportedLeadString(input.assignmentContext.category) ??
     campaign?.category ??
-    (typeof leadDataWithoutOwner.category === 'string' ? leadDataWithoutOwner.category : null)
-  const campaignTreatment =
+    null
+
+  const explicitLeadTreatment =
+    normalizeImportedLeadString(
+      typeof leadDataWithoutOwner.treatment === 'string' ? leadDataWithoutOwner.treatment : null
+    ) ?? null
+  const leadTreatment =
+    explicitLeadTreatment ??
     campaign?.treatment ??
-    (typeof leadDataWithoutOwner.treatment === 'string'
-      ? normalizeImportedLeadString(leadDataWithoutOwner.treatment)
+    null
+
+  const explicitLeadTreatmentMasterId =
+    normalizeImportedLeadId(
+      typeof leadDataWithoutOwner.treatmentMasterId === 'string'
+        ? leadDataWithoutOwner.treatmentMasterId
+        : null
+    ) ?? null
+  const leadTreatmentMasterId =
+    explicitLeadTreatmentMasterId ??
+    (leadTreatment && campaign?.treatment && leadTreatment === campaign.treatment
+      ? campaign.treatmentMasterId ?? null
       : null)
-  const campaignTreatmentMasterId =
-    campaign?.treatmentMasterId ??
-    (typeof leadDataWithoutOwner.treatmentMasterId === 'string'
-      ? normalizeImportedLeadId(leadDataWithoutOwner.treatmentMasterId)
-      : null)
-  const campaignSource =
-    campaign?.source?.name ??
-    (typeof leadDataWithoutOwner.source === 'string' ? leadDataWithoutOwner.source : null)
-  const campaignName =
-    campaign?.leadSource?.name ??
-    campaign?.displayName ??
-    (typeof leadDataWithoutOwner.campaignName === 'string'
-      ? leadDataWithoutOwner.campaignName
-      : null)
+
+  const leadSource = campaign
+    ? campaign.source?.name ?? null
+    : normalizeImportedLeadString(
+        typeof leadDataWithoutOwner.source === 'string' ? leadDataWithoutOwner.source : null
+      ) ?? input.source
+
+  const campaignName = campaign
+    ? campaign.leadSource?.name ?? campaign.displayName ?? null
+    : normalizeImportedLeadString(
+        typeof leadDataWithoutOwner.campaignName === 'string'
+          ? leadDataWithoutOwner.campaignName
+          : null
+      ) ?? null
+
   const persistedCampaignId =
+    normalizeImportedLeadString(typeof leadDataWithoutOwner.campaignId === 'string' ? leadDataWithoutOwner.campaignId : null) ??
     campaign?.externalCampaignId ??
-    (typeof leadDataWithoutOwner.campaignId === 'string'
-      ? normalizeImportedLeadString(leadDataWithoutOwner.campaignId)
-      : null) ??
     externalCampaignId
 
   const lead = await prisma.lead.create({
     data: {
       ...leadDataWithoutOwner,
-      circle: fallbackCircle ?? 'Unknown',
-      category: campaignCategory,
-      treatment: campaignTreatment,
-      treatmentMasterId: campaignTreatmentMasterId,
-      source: campaignSource,
+      circle: leadCircle,
+      category: leadCategory,
+      treatment: leadTreatment,
+      treatmentMasterId: leadTreatmentMasterId,
+      source: leadSource,
       campaignName,
       campaignId: persistedCampaignId,
       duplCount: 0,

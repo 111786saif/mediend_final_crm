@@ -42,6 +42,11 @@ type ProcessSaveMyLeadsInput = {
   email?: string | null
   subStatus?: string | null
   receivedAt?: Date
+  circle?: string | null
+  category?: string | null
+  treatment?: string | null
+  source?: string | null
+  campaignName?: string | null
 }
 
 type CampaignWithRelations = Prisma.CrmCampaignGetPayload<{
@@ -278,14 +283,20 @@ function getCampaignCircles(campaign: Pick<CampaignWithRelations, 'circle' | 'ci
   return campaign.circle ? [campaign.circle] : []
 }
 
-function getCampaignCircleNames(campaign: Pick<CampaignWithRelations, 'circle' | 'circleSelections'>) {
+export function getCampaignCircleNames(campaign: Pick<CampaignWithRelations, 'circle' | 'circleSelections'> | null | undefined): string[] {
+  if (!campaign) return []
   return Array.from(
     new Set(
       getCampaignCircles(campaign)
-        .map((circle) => circle.name?.trim())
+        .map((circle) => circle?.name?.trim())
         .filter((circleName): circleName is string => Boolean(circleName))
     )
   )
+}
+
+export function getCampaignDefaultCircleName(campaign: Pick<CampaignWithRelations, 'circle' | 'circleSelections'> | null | undefined): string | null {
+  const circles = getCampaignCircleNames(campaign)
+  return circles.length > 0 ? circles[0] : null
 }
 
 function resolvePreferredCircleSet(
@@ -1385,6 +1396,26 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
   const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
   const resolvedSubStatus = await resolveInboundSubStatus(input.subStatus)
 
+  const cleanStr = (v: unknown): string | null => {
+    if (v == null) return null
+    const s = String(v).trim()
+    if (!s) return null
+    const lower = s.toLowerCase()
+    if (['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd', 'unknown'].includes(lower)) return null
+    return s
+  }
+
+  const campaignCircles = getCampaignCircleNames(campaign)
+  const explicitCircle = cleanStr(input.circle)
+  const finalCircle = explicitCircle ?? (campaignCircles.length === 1 ? campaignCircles[0] : '')
+  const finalCategory = cleanStr(input.category) ?? cleanStr(campaign.category)
+  const finalTreatment = cleanStr(input.treatment) ?? cleanStr(campaign.treatment)
+  const finalSource = cleanStr(campaign.source.name) ?? cleanStr(input.source) ?? 'SaveMyLeads'
+  const finalCampaignName =
+    cleanStr(campaign.leadSource.name) ??
+    cleanStr(campaign.displayName) ??
+    cleanStr(input.campaignName)
+
   const lead = await prisma.lead.create({
     data: {
       leadRef,
@@ -1401,14 +1432,14 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       createdDate: receivedAt,
       leadEntryDate: receivedAt,
       assignedDate: receivedAt,
-      source: campaign.source.name,
-      campaignName: campaign.leadSource.name || campaign.displayName,
+      source: finalSource,
+      campaignName: finalCampaignName,
       campaignId: campaign.externalCampaignId,
-      category: campaign.category ?? null,
-      treatment: campaign.treatment ?? null,
-      treatmentMasterId: campaign.treatmentMasterId ?? null,
+      category: finalCategory,
+      treatment: finalTreatment,
+      treatmentMasterId: finalTreatment === cleanStr(campaign.treatment) ? (campaign.treatmentMasterId ?? null) : null,
       subStatus: resolvedSubStatus,
-      circle: preferredCircles[0] ?? campaign.circle.name,
+      circle: finalCircle,
       bdeName: selectedBd.user.name,
       bdId: selectedBd.userId,
       duplCount: 0,

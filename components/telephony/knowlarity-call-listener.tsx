@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChevronUp,
   Loader2,
   MessageSquarePlus,
@@ -48,6 +50,13 @@ type StreamCallEvent = {
   receivedAt?: string
 }
 
+type CallQueueItem = {
+  key: string
+  event: StreamCallEvent
+  remarkText: string
+  isSavingRemark?: boolean
+}
+
 const stateStyles: Record<CallState, { icon: typeof Phone; badge: string; tone: string }> = {
   receiving_call: {
     icon: PhoneForwarded,
@@ -86,23 +95,16 @@ function formatTimestamp(value?: string) {
 }
 
 export function KnowlarityCallListener() {
-  const [event, setEvent] = useState<StreamCallEvent | null>(null)
+  const [callQueue, setCallQueue] = useState<CallQueueItem[]>([])
+  const [selectedIndex, setSelectedIndex] = useState<number>(0)
   const [connected, setConnected] = useState(false)
-  const [patientInfo, setPatientInfo] = useState<PatientLookup | null>(null)
-  const [remarkText, setRemarkText] = useState('')
-  const [isSavingRemark, setIsSavingRemark] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const hideTimerRef = useRef<number | null>(null)
+  const autoHideTimersRef = useRef<Map<string, number>>(new Map())
+  const sessionStartTimeRef = useRef<number>(Date.now() - 5000)
 
   useEffect(() => {
+    sessionStartTimeRef.current = Date.now() - 5000
     const source = new EventSource('/api/telephony/stream')
-
-    const clearHideTimer = () => {
-      if (hideTimerRef.current != null) {
-        window.clearTimeout(hideTimerRef.current)
-        hideTimerRef.current = null
-      }
-    }
 
     source.addEventListener('open', () => {
       setConnected(true)
@@ -119,20 +121,52 @@ export function KnowlarityCallListener() {
     source.addEventListener('call', (message) => {
       try {
         const payload = JSON.parse((message as MessageEvent<string>).data) as StreamCallEvent
-        clearHideTimer()
-        setEvent(payload)
+        const rawObj = (payload.payload as Record<string, unknown>) ?? {}
+        const callKey =
+          (typeof rawObj.uuid === 'string' && rawObj.uuid) ||
+          (typeof rawObj.unique_id === 'string' && rawObj.unique_id) ||
+          (typeof rawObj.call_id === 'string' && rawObj.call_id) ||
+          `call_${payload.receivedAt || Date.now()}`
 
-        if (payload.patientInfo != null) {
-          setPatientInfo(payload.patientInfo)
+        // Ignore stale events received before the current browser session started
+        const eventTime = payload.receivedAt ? new Date(payload.receivedAt).getTime() : Date.now()
+        if (eventTime < sessionStartTimeRef.current && payload.state === 'call_finished') {
+          return
         }
 
+        // Clear existing auto-hide timer for this specific call if active
+        const existingTimer = autoHideTimersRef.current.get(callKey)
+        if (existingTimer != null) {
+          window.clearTimeout(existingTimer)
+          autoHideTimersRef.current.delete(callKey)
+        }
+
+        setCallQueue((prev) => {
+          const existingIdx = prev.findIndex((item) => item.key === callKey)
+          if (existingIdx >= 0) {
+            const next = [...prev]
+            next[existingIdx] = {
+              ...next[existingIdx],
+              event: payload,
+            }
+            return next
+          }
+
+          // Add active running call to queue (only keep up to 3 active/concurrent calls)
+          const newQueue = [{ key: callKey, event: payload, remarkText: '' }, ...prev].slice(0, 3)
+          return newQueue
+        })
+
+        // Auto-focus the newly arrived call
+        setSelectedIndex(0)
+
+        // Schedule 8s auto-hide timer when a call finishes so completed calls leave the queue automatically
         if (payload.state === 'call_finished') {
-          hideTimerRef.current = window.setTimeout(() => {
-            setEvent((current) =>
-              current?.receivedAt === payload.receivedAt ? null : current
-            )
-            hideTimerRef.current = null
-          }, 12000)
+          const timerId = window.setTimeout(() => {
+            setCallQueue((prev) => prev.filter((item) => item.key !== callKey))
+            autoHideTimersRef.current.delete(callKey)
+          }, 8000)
+          autoHideTimersRef.current.set(callKey, timerId)
         }
       } catch {
         // ignore malformed stream events
@@ -140,44 +174,80 @@ export function KnowlarityCallListener() {
     })
 
     return () => {
-      clearHideTimer()
+      autoHideTimersRef.current.forEach((t) => window.clearTimeout(t))
+      autoHideTimersRef.current.clear()
       source.close()
     }
   }, [])
 
+  // Clamp selectedIndex within bounds
+  const currentItem = useMemo(() => {
+    if (callQueue.length === 0) return null
+    const safeIdx = Math.min(Math.max(0, selectedIndex), callQueue.length - 1)
+    return callQueue[safeIdx]
+  }, [callQueue, selectedIndex])
+
   const display = useMemo(() => {
-    if (!event) return null
-    const style = stateStyles[event.state]
+    if (!currentItem) return null
+    const style = stateStyles[currentItem.event.state]
     const Icon = style.icon
     return {
       ...style,
       Icon,
-      timestamp: formatTimestamp(event.receivedAt),
+      timestamp: formatTimestamp(currentItem.event.receivedAt),
     }
-  }, [event])
+  }, [currentItem])
 
   const handleSaveRemark = async () => {
-    if (!remarkText.trim()) return
-    setIsSavingRemark(true)
+    if (!currentItem || !currentItem.remarkText.trim()) return
+    const currentKey = currentItem.key
+    const patientInfo = currentItem.event.patientInfo
+
+    setCallQueue((prev) =>
+      prev.map((item) =>
+        item.key === currentKey ? { ...item, isSavingRemark: true } : item
+      )
+    )
+
     try {
       await apiPost('/api/telephony/remarks', {
         leadId: patientInfo?.leadId || undefined,
-        content: remarkText.trim(),
+        content: currentItem.remarkText.trim(),
       })
       toast.success(
         patientInfo?.patientName
           ? `Remark saved for ${patientInfo.patientName}`
           : 'Call remark saved successfully'
       )
-      setRemarkText('')
+      setCallQueue((prev) =>
+        prev.map((item) =>
+          item.key === currentKey ? { ...item, remarkText: '', isSavingRemark: false } : item
+        )
+      )
     } catch {
       toast.error('Failed to save call remark')
-    } finally {
-      setIsSavingRemark(false)
+      setCallQueue((prev) =>
+        prev.map((item) =>
+          item.key === currentKey ? { ...item, isSavingRemark: false } : item
+        )
+      )
     }
   }
 
-  if (!display || !connected) return null
+  const handleCloseCall = (key: string) => {
+    const timer = autoHideTimersRef.current.get(key)
+    if (timer != null) {
+      window.clearTimeout(timer)
+      autoHideTimersRef.current.delete(key)
+    }
+    setCallQueue((prev) => prev.filter((item) => item.key !== key))
+  }
+
+  if (!currentItem || !display || !connected) return null
+
+  const patientInfo = currentItem.event.patientInfo
+  const totalCalls = callQueue.length
+  const currentNum = Math.min(Math.max(0, selectedIndex), totalCalls - 1) + 1
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-4 z-[70] flex justify-center px-4">
@@ -196,7 +266,37 @@ export function KnowlarityCallListener() {
             <span className="rounded-full border border-white/20 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider">
               {display.badge}
             </span>
-            {display.timestamp ? (
+
+            {/* Concurrent Active Calls Navigation Badge (only shown if >1 call active simultaneously) */}
+            {totalCalls > 1 ? (
+              <div className="flex items-center gap-1 bg-white/20 rounded-full px-2 py-0.5 text-[11px] font-medium">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-4 w-4 p-0 hover:bg-white/20 text-current"
+                  disabled={selectedIndex <= 0}
+                  onClick={() => setSelectedIndex((i) => Math.max(0, i - 1))}
+                  title="Previous active call"
+                >
+                  <ChevronLeft className="h-3 w-3" />
+                </Button>
+                <span>
+                  Call {currentNum} of {totalCalls}
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-4 w-4 p-0 hover:bg-white/20 text-current"
+                  disabled={selectedIndex >= totalCalls - 1}
+                  onClick={() => setSelectedIndex((i) => Math.min(totalCalls - 1, i + 1))}
+                  title="Next active call"
+                >
+                  <ChevronRight className="h-3 w-3" />
+                </Button>
+              </div>
+            ) : display.timestamp ? (
               <span className="text-xs opacity-75">{display.timestamp}</span>
             ) : null}
           </div>
@@ -217,7 +317,7 @@ export function KnowlarityCallListener() {
               variant="ghost"
               size="icon"
               className="h-7 w-7 text-current hover:bg-white/10"
-              onClick={() => setEvent(null)}
+              onClick={() => handleCloseCall(currentItem.key)}
               title="Close notification"
             >
               <X className="h-4 w-4" />
@@ -280,8 +380,15 @@ export function KnowlarityCallListener() {
               <div className="relative flex-1">
                 <MessageSquarePlus className="absolute left-2.5 top-2.5 h-4 w-4 opacity-60 text-current" />
                 <Input
-                  value={remarkText}
-                  onChange={(e) => setRemarkText(e.target.value)}
+                  value={currentItem.remarkText}
+                  onChange={(e) => {
+                    const text = e.target.value
+                    setCallQueue((prev) =>
+                      prev.map((item) =>
+                        item.key === currentItem.key ? { ...item, remarkText: text } : item
+                      )
+                    )
+                  }}
                   placeholder="Insert call remark / notes..."
                   className="pl-8 text-xs bg-black/20 border-white/20 text-current placeholder:text-current/50 h-9 focus-visible:ring-white/30"
                   onKeyDown={(e) => {
@@ -297,9 +404,9 @@ export function KnowlarityCallListener() {
                 size="sm"
                 className="h-9 px-3 bg-white/20 hover:bg-white/30 text-current font-medium text-xs gap-1.5 shrink-0"
                 onClick={handleSaveRemark}
-                disabled={!remarkText.trim() || isSavingRemark}
+                disabled={!currentItem.remarkText.trim() || currentItem.isSavingRemark}
               >
-                {isSavingRemark ? (
+                {currentItem.isSavingRemark ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
                   <Send className="h-3.5 w-3.5" />

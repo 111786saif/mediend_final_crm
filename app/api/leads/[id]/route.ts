@@ -56,6 +56,11 @@ function parseFollowUpDateInput(value: unknown) {
 }
 import { recomputeOutstandingFromInstallments } from '@/lib/pl/installments'
 
+function getStartOfToday() {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+}
+
 function normalizeStatusLabel(value: string | null | undefined) {
   return String(value ?? '').trim().toLowerCase()
 }
@@ -592,6 +597,14 @@ export async function PATCH(
 
     if (parsedFollowUpDateInput.value === 'invalid') {
       return errorResponse('Follow-up date is invalid', 400)
+    }
+
+    if (
+      parsedFollowUpDateInput.provided &&
+      parsedFollowUpDateInput.value instanceof Date &&
+      parsedFollowUpDateInput.value.getTime() < getStartOfToday().getTime()
+    ) {
+      return errorResponse('Follow-up date cannot be older than today', 400)
     }
 
     if (requireStatusChangeRemark && statusChanged && !effectiveStatusChangeRemark) {

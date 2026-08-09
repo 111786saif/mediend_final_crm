@@ -1,5 +1,5 @@
 import { headers } from 'next/headers'
-import { Phone } from 'lucide-react'
+import { MessageSquare, Phone } from 'lucide-react'
 import {
   loadLeadQrPublicLink,
   markLeadQrPublicLinkOpened,
@@ -82,19 +82,19 @@ export default async function LeadContactPage({
 
   const errorMessage =
     resolvedSearchParams.error === 'no-phone'
-      ? 'This lead does not currently have a valid phone number to call.'
+      ? 'This lead does not currently have a valid phone number available.'
       : null
 
   return (
     <PageShell
       title={lead.patientName || 'Lead Contact'}
-      description={`Record ID ${lead.leadRef || lead.id}. This access is tracked in CRM along with mobile device and browser details.`}
+      description={`Record ID ${lead.leadRef || lead.id}. Actions on this page are tracked in CRM along with device & browser details.`}
     >
       <div className="space-y-4">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm font-medium text-slate-200">Click here to call</p>
+          <p className="text-sm font-medium text-slate-200">Contact Patient / Lead</p>
           <p className="mt-1 text-xs leading-5 text-slate-400">
-            The action will be recorded against the CRM user who opened this QR in the browser.
+            Choose an option below to initiate a phone call or WhatsApp message. Activity is logged in CRM.
           </p>
         </div>
 
@@ -104,13 +104,25 @@ export default async function LeadContactPage({
           </div>
         ) : null}
 
-        <a
-          href={`/api/lead-contact/${encodeURIComponent(token)}/call`}
-          className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-cyan-500 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-cyan-400"
-        >
-          <Phone className="h-5 w-5" />
-          Click here to call
-        </a>
+        <div className="grid gap-3">
+          <a
+            href={`/api/lead-contact/${encodeURIComponent(token)}/call`}
+            className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-cyan-500 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-cyan-400 shadow-lg shadow-cyan-500/20"
+          >
+            <Phone className="h-5 w-5" />
+            Click here to call
+          </a>
+
+          <a
+            href={`/api/lead-contact/${encodeURIComponent(token)}/whatsapp`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-emerald-400 shadow-lg shadow-emerald-500/20"
+          >
+            <MessageSquare className="h-5 w-5" />
+            Chat on WhatsApp
+          </a>
+        </div>
 
         <p className="text-center text-xs leading-5 text-slate-500">
           Please do not share this page link outside the intended patient contact flow.

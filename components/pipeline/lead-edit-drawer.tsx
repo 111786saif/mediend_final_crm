@@ -17,7 +17,7 @@ import {
   UserRoundPlus,
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { apiGet, apiPatch } from '@/lib/api-client'
+import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { KnowlarityCallRecordingsCard } from '@/components/telephony/knowlarity-call-recordings-card'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
@@ -78,6 +78,10 @@ function toDateInputValue(value: string | null | undefined) {
   if (!value) return ''
   const parsed = new Date(value)
   return Number.isNaN(parsed.getTime()) ? '' : format(parsed, 'yyyy-MM-dd')
+}
+
+function getTodayDateInputValue() {
+  return format(new Date(), 'yyyy-MM-dd')
 }
 
 type LeadEditLead = {
@@ -288,6 +292,7 @@ export function LeadEditDrawer({
   })
   const [expandedRemarksLeadId, setExpandedRemarksLeadId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [makeCallLoading, setMakeCallLoading] = useState(false)
   const leadStatusSearchInputRef = useRef<HTMLInputElement | null>(null)
 
   const { data: lead, isLoading, error } = useQuery<LeadEditLead, Error>({
@@ -296,6 +301,21 @@ export function LeadEditDrawer({
     enabled: open && !!leadId,
     retry: false,
   })
+
+  const handleMakeCall = async () => {
+    if (!lead?.id) return
+    const patientName = lead.patientName || 'patient'
+    try {
+      setMakeCallLoading(true)
+      toast.info(`Initiating Knowlarity call for ${patientName}...`)
+      await apiPost(`/api/leads/${lead.id}/make-call`, {})
+      toast.success(`Knowlarity call initiated for ${patientName}`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to initiate call via Knowlarity')
+    } finally {
+      setMakeCallLoading(false)
+    }
+  }
 
   const { data: leadOwnershipMeta, isLoading: isLoadingMeta } = useQuery<LeadOwnershipMeta, Error>({
     queryKey: ['lead-ownership-meta', leadId],
@@ -330,6 +350,7 @@ export function LeadEditDrawer({
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
   const effectiveFollowUpDate = followUpDateDraft ?? toDateInputValue(lead?.followUpDate)
   const effectiveModeOfPayment = modeOfPaymentDraft ?? (lead?.modeOfPayment ?? '')
+  const todayDateInputValue = getTodayDateInputValue()
 
   const canEditLeadProfile = leadOwnershipMeta?.canEditLeadProfile ?? false
   const canEditRemarks = leadOwnershipMeta?.canEditRemarks ?? false
@@ -541,6 +562,11 @@ export function LeadEditDrawer({
       return
     }
 
+    if (effectiveFollowUpDate && effectiveFollowUpDate < todayDateInputValue) {
+      toast.error('Follow-up date cannot be older than today')
+      return
+    }
+
     if (statusRequiresModeOfPayment && trimmedModeOfPayment.length === 0) {
       toast.error(`Mode of payment is required for status "${effectiveLeadStatus}"`)
       return
@@ -651,14 +677,31 @@ export function LeadEditDrawer({
                         Editing is limited to lead profile details, surgery date, and assignment.
                       </CardDescription>
                     </div>
-                    <LeadQrPopover
-                      leadId={lead.id}
-                      phoneNumber={lead.phoneNumber ?? ''}
-                      patientName={lead.patientName}
-                      triggerVariant="button"
-                      buttonLabel="Lead QR"
-                      allowServerSidePhoneLookup
-                    />
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="gap-2 border-emerald-500/30 hover:border-emerald-500/60 hover:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                        onClick={handleMakeCall}
+                        disabled={makeCallLoading}
+                      >
+                        {makeCallLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <PhoneCall className="h-4 w-4 text-emerald-500" />
+                        )}
+                        Make Call
+                      </Button>
+                      <LeadQrPopover
+                        leadId={lead.id}
+                        phoneNumber={lead.phoneNumber ?? ''}
+                        patientName={lead.patientName}
+                        triggerVariant="button"
+                        buttonLabel="Lead QR"
+                        allowServerSidePhoneLookup
+                      />
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -916,6 +959,7 @@ export function LeadEditDrawer({
                         id="drawer-follow-up-date"
                         type="date"
                         value={effectiveFollowUpDate}
+                        min={todayDateInputValue}
                         onChange={(e) => setFollowUpDateDraft(e.target.value)}
                         disabled={!canUpdateLeadStatus || saving}
                       />
