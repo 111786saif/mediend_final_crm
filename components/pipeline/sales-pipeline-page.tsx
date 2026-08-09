@@ -58,8 +58,10 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
+  Loader2,
   Menu,
   Pencil,
+  PhoneCall,
   Search,
   SlidersHorizontal,
 } from 'lucide-react'
@@ -314,6 +316,16 @@ function formatTableDate(value: unknown) {
   if (!value) return '—'
   const parsed = new Date(String(value))
   return Number.isNaN(parsed.getTime()) ? String(value) : format(parsed, 'dd MMM yyyy')
+}
+
+function isPastFollowUpDate(value: unknown) {
+  if (!value) return false
+  const parsed = new Date(String(value))
+  if (Number.isNaN(parsed.getTime())) return false
+
+  const today = new Date()
+  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  return parsed.getTime() < startOfToday.getTime()
 }
 
 function formatMonthCell(value: unknown) {
@@ -1771,6 +1783,22 @@ const PipelineRow = memo(function PipelineRow({
   //     : '—'
   const show = (columnId: PipelineColumnId) => visibleColumns[columnId] === true
 
+  const [callingLeadId, setCallingLeadId] = useState<string | null>(null)
+
+  const handleInitiateCall = async (targetLead: Lead) => {
+    const patientName = targetLead.patientName || 'patient'
+    try {
+      setCallingLeadId(targetLead.id)
+      toast.info(`Initiating Knowlarity call for ${patientName}...`)
+      await apiPost(`/api/leads/${targetLead.id}/make-call`, {})
+      toast.success(`Knowlarity call initiated for ${patientName}`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to initiate call via Knowlarity')
+    } finally {
+      setCallingLeadId(null)
+    }
+  }
+
   return (
     <tr
       className={cn(
@@ -1855,15 +1883,33 @@ const PipelineRow = memo(function PipelineRow({
         </td>
       )}
       {show('patient') && (
-        <td className="max-w-[140px] truncate px-3 py-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="inline-block max-w-[140px] truncate align-bottom">{patientName}</span>
-            </TooltipTrigger>
-            <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
-              {latestRemarkPreview}
-            </TooltipContent>
-          </Tooltip>
+        <td className="max-w-[170px] px-3 py-2">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <button
+              type="button"
+              disabled={callingLeadId === lead.id}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleInitiateCall(lead)
+              }}
+              title={`Call ${patientName} via Knowlarity`}
+              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:bg-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white transition-all duration-200 disabled:opacity-50"
+            >
+              {callingLeadId === lead.id ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <PhoneCall className="h-3.5 w-3.5" />
+              )}
+            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="inline-block max-w-[120px] truncate align-bottom font-medium">{patientName}</span>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+                {latestRemarkPreview}
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </td>
       )}
       {show('month') && <td className="whitespace-nowrap px-3 py-2 text-sm">{formatMonthCell(lead.month)}</td>}
@@ -1928,7 +1974,13 @@ const PipelineRow = memo(function PipelineRow({
         </td>
       )}
       {show('followUpDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.followUpDate)}</td>
+        <td
+          className={`whitespace-nowrap px-3 py-2 text-sm ${
+            isPastFollowUpDate(lead.followUpDate) ? 'font-medium text-red-500' : ''
+          }`}
+        >
+          {formatTableDate(lead.followUpDate)}
+        </td>
       )}
       {show('subStatus') && (
         <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.subStatus != null ? String(lead.subStatus) : '—'}</td>

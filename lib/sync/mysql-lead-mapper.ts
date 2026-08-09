@@ -411,7 +411,11 @@ function buildLeadData(
 
   const circleName =
     resolveLookupValue(mysqlRow.Circle, lookups.circle) ??
-    mapCircleCode(mysqlRow.Circle)
+    resolveLookupValue(mysqlRow.city_option, lookups.circle) ??
+    mapCircleCode(mysqlRow.Circle) ??
+    mapCircleCode(mysqlRow.city_option) ??
+    toString(mysqlRow.Circle) ??
+    toString(mysqlRow.city_option)
 
   const categoryName = resolveLookupValue(mysqlRow.Category, lookups.category)
 

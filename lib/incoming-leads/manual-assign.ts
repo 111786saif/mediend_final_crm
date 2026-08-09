@@ -84,15 +84,35 @@ function extractSaveMyLeadsFields(payload: unknown) {
     record.campaign_id ??
     record.campaign ??
     null
-  const name = record.name ?? record.patientName ?? record.patient_name ?? null
-  const phone = record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber ?? null
-  const email = record.email ?? null
+  const name = record.name ?? record.patientName ?? record.patient_name ?? record.Patient_Name ?? null
+  const phone = record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber ?? record.Patient_Number ?? null
+  const email = record.email ?? record.PatientEmail ?? null
+
+  const circle = record.circle ?? record.Circle ?? record.city ?? record.city_option ?? null
+  const category = record.category ?? record.Category ?? null
+  const treatment = record.treatment ?? record.Treatment ?? null
+  const source = record.source ?? record.Source ?? null
+  const campaignName = record.campaignName ?? record.campaign_name ?? record.Lead_Source ?? null
+
+  const clean = (v: unknown) => {
+    if (v == null) return null
+    const s = String(v).trim()
+    if (!s) return null
+    const lower = s.toLowerCase()
+    if (['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd', 'unknown'].includes(lower)) return null
+    return s
+  }
 
   return {
-    campaignId: campaignId == null ? null : String(campaignId).trim(),
-    patientName: name == null ? null : String(name).trim(),
-    phone: phone == null ? null : String(phone).trim(),
-    email: email == null ? null : String(email).trim(),
+    campaignId: clean(campaignId),
+    patientName: clean(name),
+    phone: clean(phone),
+    email: clean(email),
+    circle: clean(circle),
+    category: clean(category),
+    treatment: clean(treatment),
+    source: clean(source),
+    campaignName: clean(campaignName),
   }
 }
 
@@ -446,13 +466,32 @@ async function processManualAssignedSaveMyLeadsLead(
   const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
   const campaignCircles = getCampaignCircleNames(campaign)
 
+  const cleanStr = (v: unknown): string | null => {
+    if (v == null) return null
+    const s = String(v).trim()
+    if (!s) return null
+    const lower = s.toLowerCase()
+    if (['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd', 'unknown'].includes(lower)) return null
+    return s
+  }
+
+  const explicitCircle = cleanStr(extracted.circle)
+  const finalCircle = explicitCircle ?? (campaignCircles.length === 1 ? campaignCircles[0] : '')
+  const finalCategory = cleanStr(extracted.category) ?? cleanStr(campaign.category)
+  const finalTreatment = cleanStr(extracted.treatment) ?? cleanStr(campaign.treatment)
+  const finalSource = cleanStr(campaign.source.name) ?? cleanStr(extracted.source) ?? 'SaveMyLeads'
+  const finalCampaignName =
+    cleanStr(campaign.leadSource.name) ??
+    cleanStr(campaign.displayName) ??
+    cleanStr(extracted.campaignName)
+
   const lead = await prisma.lead.create({
     data: {
       leadRef,
-      patientName: extracted.patientName,
+      patientName: extracted.patientName || 'Unknown',
       age: 0,
       sex: 'Not Specified',
-      phoneNumber: extracted.phone,
+      phoneNumber: extracted.phone || '0000000000',
       status: 'New Lead',
       pipelineStage: PipelineStage.SALES,
       flowType: FlowType.INSURANCE,
@@ -462,14 +501,16 @@ async function processManualAssignedSaveMyLeadsLead(
       createdDate: incomingLead.receivedAt,
       leadEntryDate: incomingLead.receivedAt,
       assignedDate: incomingLead.receivedAt,
-      source: campaign.source.name,
-      campaignName: campaign.leadSource.name || campaign.displayName,
+      source: finalSource,
+      campaignName: finalCampaignName,
       campaignId: campaign.externalCampaignId,
-      category: campaign.category ?? null,
-      circle: campaignCircles[0] ?? campaign.circle?.name ?? 'Unknown',
+      category: finalCategory,
+      treatment: finalTreatment,
+      treatmentMasterId: finalTreatment === cleanStr(campaign.treatment) ? (campaign.treatmentMasterId ?? null) : null,
       bdeName: bd.userName,
       bdId: bd.userId,
       patientEmail: extracted.email || null,
+      circle: finalCircle,
       month: `${month}`,
       duplCount: 0,
     },

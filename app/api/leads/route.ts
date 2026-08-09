@@ -9,6 +9,7 @@ import {
 } from '@/lib/lead-remark-visibility'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { FlowType, Prisma, PipelineStage, CaseStage } from '@/generated/prisma/client'
+import { getCampaignCircleNames, getCampaignForWebhook } from '@/lib/crm-campaigns'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { last10DigitsFromStored } from '@/lib/phone-search'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
@@ -16,6 +17,21 @@ import {
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
+
+function normalizeOptionalLeadText(value: unknown) {
+  if (value == null) return null
+  const normalized = String(value).trim()
+  if (!normalized) return null
+
+  const lowered = normalized.toLowerCase()
+  if (
+    ['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd', 'unknown'].includes(lowered)
+  ) {
+    return null
+  }
+
+  return normalized
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -772,8 +788,10 @@ export async function POST(request: NextRequest) {
       circle,
       category,
       treatment,
+      treatmentMasterId,
       hospitalName,
       source,
+      campaignId,
       campaignName,
       remarks,
     } = body
@@ -796,6 +814,36 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const normalizedCampaignId = normalizeOptionalLeadText(campaignId)
+    const campaign = normalizedCampaignId
+      ? await getCampaignForWebhook(normalizedCampaignId)
+      : null
+    const campaignCircles = getCampaignCircleNames(campaign)
+
+    const explicitCircle = normalizeOptionalLeadText(circle)
+    const explicitCategory = normalizeOptionalLeadText(category)
+    const explicitTreatment = normalizeOptionalLeadText(treatment)
+    const explicitTreatmentMasterId = normalizeOptionalLeadText(treatmentMasterId)
+
+    const finalCircle =
+      explicitCircle ??
+      (campaign ? (campaignCircles.length === 1 ? campaignCircles[0] : '') : 'Unknown')
+    const finalCategory = explicitCategory ?? campaign?.category ?? null
+    const finalTreatment = explicitTreatment ?? campaign?.treatment ?? null
+    const finalTreatmentMasterId =
+      explicitTreatmentMasterId ??
+      (finalTreatment && campaign?.treatment && finalTreatment === campaign.treatment
+        ? campaign.treatmentMasterId ?? null
+        : null)
+    const finalSource = campaign
+      ? normalizeOptionalLeadText(campaign.source?.name) ?? normalizeOptionalLeadText(source)
+      : normalizeOptionalLeadText(source)
+    const finalCampaignName = campaign
+      ? normalizeOptionalLeadText(campaign.leadSource?.name) ??
+        normalizeOptionalLeadText(campaign.displayName) ??
+        normalizeOptionalLeadText(campaignName)
+      : normalizeOptionalLeadText(campaignName)
+
     const lead = await prisma.lead.create({
       data: {
         leadRef: leadRef || `LEAD-${Date.now()}`,
@@ -808,12 +856,14 @@ export async function POST(request: NextRequest) {
         bdId: bdId || user.id,
         status: status || 'Hot Lead',
         pipelineStage: 'SALES',
-        circle: circle || 'Unknown',
-        category,
-        treatment,
+        circle: finalCircle,
+        category: finalCategory,
+        treatment: finalTreatment,
+        treatmentMasterId: finalTreatmentMasterId,
         hospitalName,
-        source,
-        campaignName,
+        source: finalSource,
+        campaignId: normalizedCampaignId,
+        campaignName: finalCampaignName,
         remarks,
         duplCount: 0,
         createdById: user.id,

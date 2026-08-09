@@ -21,6 +21,12 @@ function extractLast10Digits(raw: string | null | undefined): string {
   return digits
 }
 
+function isRoleAboveBD(role: string | null | undefined): boolean {
+  if (!role) return false
+  const r = role.toUpperCase().trim()
+  return r !== 'BD'
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -29,6 +35,11 @@ export async function GET(
     const user = getSessionFromRequest(request)
     if (!user) {
       return unauthorizedResponse()
+    }
+
+    // Role Hierarchy Enforcement: Only roles strictly above BD are allowed to view call recordings
+    if (!isRoleAboveBD(user.role)) {
+      return errorResponse('Call recordings are restricted to roles above BD in hierarchy', 403)
     }
 
     if (user.role !== 'SUPER_ADMIN' && !hasPermission(user, 'leads:read')) {
@@ -54,18 +65,17 @@ export async function GET(
       return errorResponse('Forbidden', 403)
     }
 
-    const phoneDigits = lead.phoneNumber ? lead.phoneNumber.replace(/\D+/g, '').slice(-10) : ''
+    const leadPhoneDigits = extractLast10Digits(lead.phoneNumber)
+    const altPhoneDigits = extractLast10Digits(lead.alternateNumber)
 
+    // Strict Per-Patient Query: Only recordings linked to lead.id or this patient's phone numbers
     const logs = await prisma.crmActivityLog.findMany({
       where: {
+        action: 'KNOWLARITY_CALL_RECORDING',
         OR: [
-          { entityId: lead.id, action: 'KNOWLARITY_CALL_RECORDING' },
           { entityId: lead.id },
-          phoneDigits
-            ? {
-                action: 'KNOWLARITY_CALL_RECORDING',
-              }
-            : { id: '__none__' },
+          leadPhoneDigits ? { entityId: leadPhoneDigits } : { id: '__none__' },
+          altPhoneDigits ? { entityId: altPhoneDigits } : { id: '__none__' },
         ],
       },
       include: {
@@ -128,6 +138,22 @@ export async function GET(
           : null
 
       if (!url || seenUrls.has(url)) continue
+
+      // Verify that recording customer phone number strictly matches THIS patient
+      const logCustomerPhone =
+        (typeof meta.customerPhone === 'string' && extractLast10Digits(meta.customerPhone)) ||
+        (typeof payload.customer_number === 'string' && extractLast10Digits(payload.customer_number)) ||
+        (typeof payload.caller === 'string' && extractLast10Digits(payload.caller)) ||
+        (typeof log.entityId === 'string' && extractLast10Digits(log.entityId)) ||
+        ''
+
+      if (log.entityId !== lead.id) {
+        if (!logCustomerPhone) continue
+        if (logCustomerPhone !== leadPhoneDigits && logCustomerPhone !== altPhoneDigits) {
+          continue
+        }
+      }
+
       seenUrls.add(url)
 
       // Resolve actual agent name from metadata agentPhone or payload agent_number

@@ -8,17 +8,6 @@ export const dynamic = 'force-dynamic'
 
 type KnowlarityRawPayload = unknown
 
-type StreamCallEvent = {
-  state: 'receiving_call' | 'on_call' | 'call_finished' | 'update'
-  label: string
-  eventType: string
-  agentPhone?: string | null
-  patientInfo?: PatientLookupResult | null
-  recordingUrl?: string | null
-  payload?: unknown
-  receivedAt?: string
-}
-
 type NormalizedCallState = 'receiving_call' | 'on_call' | 'call_finished' | 'update'
 
 function normalizePhone(raw: string | null | undefined): string {
@@ -359,17 +348,42 @@ export async function GET(request: NextRequest) {
     const reader = upstreamResponse.body.getReader()
     const decoder = new TextDecoder()
     let buffer = ''
+    let streamClosed = false
 
     const stream = new ReadableStream({
       start(controller) {
-        controller.enqueue(
-          sseChunk('ready', {
-            message: 'Connected to Knowlarity notifications stream',
-            channel,
-            streamUrl: usedUrl,
-            agentPhone: currentUser.normalizedPhone,
-          })
-        )
+        const safeEnqueue = (event: string, data: unknown) => {
+          if (streamClosed) return
+          try {
+            controller.enqueue(sseChunk(event, data))
+          } catch (error) {
+            streamClosed = true
+            console.warn(
+              '[telephony-stream] enqueue skipped because controller is closed:',
+              error instanceof Error ? error.message : error
+            )
+          }
+        }
+
+        const safeClose = () => {
+          if (streamClosed) return
+          streamClosed = true
+          try {
+            controller.close()
+          } catch (error) {
+            console.warn(
+              '[telephony-stream] close skipped because controller is already closed:',
+              error instanceof Error ? error.message : error
+            )
+          }
+        }
+
+        safeEnqueue('ready', {
+          message: 'Connected to Knowlarity notifications stream',
+          channel,
+          streamUrl: usedUrl,
+          agentPhone: currentUser.normalizedPhone,
+        })
 
         const flushEventBlock = async (block: string) => {
           const lines = block
@@ -487,17 +501,15 @@ export async function GET(request: NextRequest) {
           }
 
           // Do NOT send customerPhone to the frontend browser!
-          controller.enqueue(
-            sseChunk('call', {
-              state: mapped.state,
-              label: mapped.label,
-              eventType: rawEventType,
-              agentPhone: currentUser.normalizedPhone,
-              patientInfo,
-              recordingUrl,
-              receivedAt: new Date().toISOString(),
-            })
-          )
+          safeEnqueue('call', {
+            state: mapped.state,
+            label: mapped.label,
+            eventType: rawEventType,
+            agentPhone: currentUser.normalizedPhone,
+            patientInfo,
+            recordingUrl,
+            receivedAt: new Date().toISOString(),
+          })
         }
 
         const pump = async () => {
@@ -519,22 +531,21 @@ export async function GET(request: NextRequest) {
               await flushEventBlock(buffer)
             }
           } catch (error) {
-            controller.enqueue(
-              sseChunk('error', {
-                message: error instanceof Error ? error.message : 'Stream error',
-              })
-            )
+            safeEnqueue('error', {
+              message: error instanceof Error ? error.message : 'Stream error',
+            })
           } finally {
             try {
               reader.releaseLock()
             } catch {}
-            controller.close()
+            safeClose()
           }
         }
 
         void pump()
       },
       cancel() {
+        streamClosed = true
         void reader.cancel()
       },
     })

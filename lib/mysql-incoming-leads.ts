@@ -94,10 +94,26 @@ export async function queueMySQLIncomingLead(
     mysqlLead,
   }
 
+  const rawCampaignId =
+    normalizeMySQLCampaignId(mysqlLead.campaign_id) ??
+    normalizeMySQLCampaignId(mysqlLead.Lead_Source) ??
+    null
+
+  const campaignIdToStore = rawCampaignId ?? externalRef
+
   const existing = await prisma.incomingLead.findFirst({
     where: {
       source,
-      externalCampaignId: externalRef,
+      OR: [
+        {
+          payload: {
+            path: ['leadRef'],
+            equals: leadRef,
+          },
+        },
+        // Legacy fallback for rows created before leadRef-based intake matching.
+        { externalCampaignId: externalRef },
+      ],
     },
     select: {
       id: true,
@@ -112,6 +128,7 @@ export async function queueMySQLIncomingLead(
       data: {
         payload,
         normalizedPhone,
+        externalCampaignId: campaignIdToStore,
       },
       select: {
         id: true,
@@ -127,7 +144,7 @@ export async function queueMySQLIncomingLead(
       source,
       payload,
       status: 'PENDING',
-      externalCampaignId: externalRef,
+      externalCampaignId: campaignIdToStore,
       normalizedPhone,
     },
     select: {
@@ -184,7 +201,12 @@ export async function processMySQLIncomingLead(
   }
 
   const leadRef = String(mysqlLead.id)
-  const mysqlCampaignId = normalizeMySQLCampaignId(mysqlLead.campaign_id)
+  const mysqlCampaignId =
+    normalizeMySQLCampaignId(mysqlLead.campaign_id) ??
+    normalizeMySQLCampaignId(mysqlLead.Lead_Source) ??
+    (incomingLead.externalCampaignId && !incomingLead.externalCampaignId.includes(':')
+      ? incomingLead.externalCampaignId
+      : null)
   const sourceLabel =
     incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
       ? MANUAL_MYSQL_INCOMING_SOURCE
@@ -225,7 +247,13 @@ export async function processMySQLIncomingLead(
   if (resolvedSubStatus !== null || leadData.subStatus != null) {
     leadData.subStatus = resolvedSubStatus
   }
-  const assignmentCity = normalizeAssignmentCity(leadData.circle)
+  const rawCity =
+    typeof mysqlLead.Circle === 'string' && mysqlLead.Circle.trim()
+      ? mysqlLead.Circle.trim()
+      : typeof mysqlLead.city_option === 'string' && mysqlLead.city_option.trim()
+        ? mysqlLead.city_option.trim()
+        : null
+  const assignmentCity = normalizeAssignmentCity(leadData.circle) ?? normalizeAssignmentCity(rawCity)
 
   const assignmentPreview = await previewImportedLeadAssignment({
     externalCampaignId: mysqlCampaignId,

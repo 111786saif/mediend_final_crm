@@ -68,12 +68,32 @@ function extractSaveMyLeadsFields(payload: unknown) {
     record['sub status'] ??
     null
 
+  const circle = record.circle ?? record.Circle ?? record.city ?? record.city_option ?? null
+  const category = record.category ?? record.Category ?? null
+  const treatment = record.treatment ?? record.Treatment ?? null
+  const source = record.source ?? record.Source ?? null
+  const campaignName = record.campaignName ?? record.campaign_name ?? record.Lead_Source ?? null
+
+  const clean = (v: unknown) => {
+    if (v == null) return null
+    const s = String(v).trim()
+    if (!s) return null
+    const lower = s.toLowerCase()
+    if (['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd', 'unknown'].includes(lower)) return null
+    return s
+  }
+
   return {
-    campaignId: campaignId == null ? null : String(campaignId).trim(),
-    name: name == null ? null : String(name).trim(),
-    phone: phone == null ? null : String(phone).trim(),
-    email: email == null ? null : String(email).trim(),
-    subStatus: subStatus == null ? null : String(subStatus).trim(),
+    campaignId: clean(campaignId),
+    name: clean(name),
+    phone: clean(phone),
+    email: clean(email),
+    subStatus: clean(subStatus),
+    circle: clean(circle),
+    category: clean(category),
+    treatment: clean(treatment),
+    source: clean(source),
+    campaignName: clean(campaignName),
   }
 }
 
@@ -147,6 +167,11 @@ export async function POST(request: Request) {
       phone: extracted.phone,
       email: extracted.email,
       subStatus: extracted.subStatus,
+      circle: extracted.circle,
+      category: extracted.category,
+      treatment: extracted.treatment,
+      source: extracted.source,
+      campaignName: extracted.campaignName,
       receivedAt,
     })
     const responseData = {

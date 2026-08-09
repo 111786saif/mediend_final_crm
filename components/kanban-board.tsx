@@ -37,7 +37,6 @@ export const ALL_LEAD_STATUSES = [
   'DNP-4',
   'DNP-5',
   'DNP Exhausted',
-  'Call Done',
   'Closed',
   'Out of Station',
   'Out of Station follow-up',
@@ -54,24 +53,11 @@ export const ALL_LEAD_STATUSES = [
   'Nuture 4',
   'Nuture 5',
   'Interested',
-  'Follow-up 4',
-  'Follow-up 5',
   'Follow-up',
   'Call Back Next Week',
   'Call Back Next Month',
-  'Converted',
-  'Lost',
-  'DNP',
-  'DNP (1-5, Exhausted)',
-  'Churned',
   'Invalid Number',
-  'C/W Done',
-  'WA Done',
-  'Scan Done',
   'Order Booked',
-  'Policy Booked',
-  'Policy Issued',
-  'Already Insured',
 ] as const
 
 // Status buckets for kanban view (grouped visually)
@@ -89,8 +75,6 @@ export const STATUS_BUCKETS = [
       'Follow-up 1',
       'Follow-up 2',
       'Follow-up 3',
-      'Follow-up 4',
-      'Follow-up 5',
       'Follow-up',
       'Call Back (SD)',
       'Call Back (T)',
@@ -108,32 +92,27 @@ export const STATUS_BUCKETS = [
   {
     id: 'completed',
     name: 'Completed',
-    statuses: ['IPD Done', 'Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'Converted', 'Order Booked', 'Policy Booked', 'Policy Issued'],
+    statuses: ['IPD Done', 'Closed', 'Order Booked'],
     color: 'bg-green-50 border-green-200',
   },
   {
     id: 'lost-inactive',
     name: 'Lost/Inactive',
     statuses: [
-      'Lost',
       'IPD Lost',
       'Fund Issues',
-      'DNP',
       'DNP-1',
       'DNP-2',
       'DNP-3',
       'DNP-4',
       'DNP-5',
       'DNP Exhausted',
-      'DNP (1-5, Exhausted)',
       'SX Not Suggested',
       'Language Barrier',
       'Junk',
       'Duplicate lead',
       'Not Interested',
-      'Churned',
       'Invalid Number',
-      'Already Insured',
     ],
     color: 'bg-gray-50 border-gray-200',
   },
@@ -152,99 +131,65 @@ export function KanbanBoard({ filters = {}, showBDColumn = false, onLeadClick }:
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 8, // 8px drag before activation
       },
     })
   )
 
   // Group leads by bucket
-  const leadsByBucket = useMemo(() => {
-    const grouped: Record<string, Lead[]> = {}
-    
-    STATUS_BUCKETS.forEach((bucket) => {
-      grouped[bucket.id] = []
-    })
-
-    // Also track unknown statuses
-    grouped['other'] = []
+  const bucketedLeads = useMemo(() => {
+    const map = new Map<string, Lead[]>()
+    STATUS_BUCKETS.forEach((b) => map.set(b.id, []))
 
     leads.forEach((lead) => {
-      // Normalize status to handle variations like "New Lead" -> "New"
-      const normalizedStatus = normalizeLeadStatus(lead.status)
-      let found = false
-      
-      // Find which bucket this status belongs to
-      for (const bucket of STATUS_BUCKETS) {
-        if ((bucket.statuses as readonly string[]).includes(normalizedStatus)) {
-          grouped[bucket.id].push(lead)
-          found = true
-          break
-        }
-      }
-      
-      if (!found) {
-        grouped['other'].push(lead)
+      const normalized = normalizeLeadStatus(lead.status)
+      const bucket = STATUS_BUCKETS.find((b) =>
+        b.statuses.some((s) => s.toLowerCase() === normalized.toLowerCase())
+      )
+      if (bucket) {
+        map.get(bucket.id)?.push(lead)
+      } else {
+        // Fallback: put unmapped into first bucket
+        map.get(STATUS_BUCKETS[0].id)?.push(lead)
       }
     })
 
-    return grouped
+    return map
   }, [leads])
 
+  const activeLead = useMemo(() => {
+    if (!activeId) return null
+    return leads.find((l) => l.id === activeId) || null
+  }, [activeId, leads])
+
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string)
+    setActiveId(String(event.active.id))
   }
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event
     setActiveId(null)
 
     if (!over) return
 
-    const leadId = active.id as string
-    const targetBucketId = over.id as string
+    const leadId = String(active.id)
+    const targetBucketId = String(over.id)
 
-    // If dropped on another lead card, find that lead's bucket
-    if (targetBucketId.startsWith('lead-')) {
-      const targetLeadId = targetBucketId.replace('lead-', '')
-      const targetLead = leads.find((l) => l.id === targetLeadId)
-      if (targetLead && targetLead.status) {
-        // Find which bucket this status belongs to
-        for (const bucket of STATUS_BUCKETS) {
-          if ((bucket.statuses as readonly string[]).includes(targetLead.status)) {
-            const currentLead = leads.find((l) => l.id === leadId)
-            if (currentLead && currentLead.status !== targetLead.status) {
-              updateLead({ id: leadId, data: { status: targetLead.status } })
-            }
-            return
-          }
-        }
-      }
-      return
-    }
-
-    // Find the target bucket
     const targetBucket = STATUS_BUCKETS.find((b) => b.id === targetBucketId)
     if (!targetBucket) return
 
-    const currentLead = leads.find((l) => l.id === leadId)
-    if (!currentLead) return
+    // Pick first status in target bucket as the default target status
+    const newStatus = targetBucket.statuses[0]
 
-    // If dropped on a bucket, use the first status of that bucket
-    // Or keep current status if it's already in that bucket
-    const currentStatus = currentLead.status || ''
-    const isAlreadyInBucket = (targetBucket.statuses as readonly string[]).includes(currentStatus)
-    
-    if (!isAlreadyInBucket) {
-      // Move to first status of the target bucket
-      const newStatus = targetBucket.statuses[0]
-      updateLead({ id: leadId, data: { status: newStatus } })
+    const lead = leads.find((l) => l.id === leadId)
+    if (!lead || lead.status === newStatus) return
+
+    try {
+      await updateLead(leadId, { status: newStatus })
+    } catch {
+      // Revert handle handled by react query
     }
   }
-
-  const activeLead = useMemo(() => {
-    if (!activeId) return null
-    return leads.find((lead) => lead.id === activeId)
-  }, [activeId, leads])
 
   return (
     <DndContext
@@ -252,45 +197,33 @@ export function KanbanBoard({ filters = {}, showBDColumn = false, onLeadClick }:
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {STATUS_BUCKETS.map((bucket) => {
-          const bucketLeads = leadsByBucket[bucket.id] || []
-
-          // Count by status within bucket
-          const statusCounts: Record<string, number> = {}
-          bucket.statuses.forEach((status) => {
-            statusCounts[status] = bucketLeads.filter((l) => l.status === status).length
-          })
-
+          const columnLeads = bucketedLeads.get(bucket.id) || []
           return (
             <KanbanColumn
               key={bucket.id}
-              status={bucket.name}
-              bucketId={bucket.id}
-              leads={bucketLeads}
-              onLeadClick={onLeadClick}
-              showBD={showBDColumn}
-              statusCounts={statusCounts}
-              bucketStatuses={[...bucket.statuses]}
-            />
+              id={bucket.id}
+              name={bucket.name}
+              color={bucket.color}
+              count={columnLeads.length}
+            >
+              {columnLeads.map((lead) => (
+                <LeadCard
+                  key={lead.id}
+                  lead={lead}
+                  showBD={showBDColumn}
+                  onClick={() => onLeadClick?.(lead)}
+                />
+              ))}
+            </KanbanColumn>
           )
         })}
-        {leadsByBucket['other'] && leadsByBucket['other'].length > 0 && (
-          <KanbanColumn
-            status="Other"
-            bucketId="other"
-            leads={leadsByBucket['other']}
-            onLeadClick={onLeadClick}
-            showBD={showBDColumn}
-            statusCounts={{}}
-            bucketStatuses={[]}
-          />
-        )}
       </div>
 
       <DragOverlay>
         {activeLead ? (
-          <div className="opacity-90">
+          <div className="rotate-2 opacity-80">
             <LeadCard lead={activeLead} showBD={showBDColumn} />
           </div>
         ) : null}
