@@ -475,7 +475,7 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'source':
       return normalizedText(lead.source, '—')
     case 'leadSource':
-      return lead.leadSource != null && String(lead.leadSource).trim().length > 0 ? String(lead.leadSource) : '—'
+      return resolveLeadSourceDisplay(lead)
     case 'createDate':
       return formatTableDate(lead.createdDate)
     case 'modifyBy':

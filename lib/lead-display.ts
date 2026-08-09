@@ -112,7 +112,8 @@ export function resolveLeadCity(lead: object | null | undefined): string | null 
 
 /**
  * Single source of truth for Lead Source text display.
- * Prefers human-readable string values from `source` or `campaignName`.
+ * Prefers campaign lead-source labels from `campaignName`, then falls back to
+ * human-readable source values from `source`.
  * If only numeric ID is present (e.g., 100, 67), falls back gracefully.
  */
 export function resolveLeadSourceDisplay(lead: {
@@ -120,17 +121,17 @@ export function resolveLeadSourceDisplay(lead: {
   leadSource?: number | string | null
   campaignName?: string | null
 }): string {
-  if (lead.source && typeof lead.source === 'string' && lead.source.trim().length > 0) {
-    const s = lead.source.trim()
-    if (!/^\d+$/.test(s)) {
-      return s
-    }
-  }
-
   if (lead.campaignName && typeof lead.campaignName === 'string' && lead.campaignName.trim().length > 0) {
     const c = lead.campaignName.trim()
     if (!/^\d+$/.test(c)) {
       return c
+    }
+  }
+
+  if (lead.source && typeof lead.source === 'string' && lead.source.trim().length > 0) {
+    const s = lead.source.trim()
+    if (!/^\d+$/.test(s)) {
+      return s
     }
   }
 

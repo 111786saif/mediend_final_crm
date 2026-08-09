@@ -133,10 +133,10 @@ export async function syncLeadsForEmployee(
 
     while (true) {
       const leads = await queryMySQL<MySQLLeadRow>(
-        `SELECT * FROM lead 
-         WHERE BDM = ? 
+        `SELECT * FROM \`lead\`
+         WHERE BDM = ?
          AND (COALESCE(LeadEntryDate, create_date, Lead_Date) > ? OR (COALESCE(LeadEntryDate, create_date, Lead_Date) = ? AND id > ?))
-         ORDER BY COALESCE(LeadEntryDate, create_date, Lead_Date) ASC, id ASC 
+         ORDER BY COALESCE(LeadEntryDate, create_date, Lead_Date) ASC, id ASC
          LIMIT ?`,
         [bdNumber, cursorDate, cursorDate, cursorId, BATCH_SIZE]
       )
