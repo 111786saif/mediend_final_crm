@@ -161,6 +161,24 @@ export async function GET(request: NextRequest) {
       else if (r.month < currentMonthKey) trend.older += c
     }
 
+    // Build backward-compatible monthWise object
+    const allMonths = [...new Set([...leadsByMonth.map((r) => r.month), ...ipdByMonth.map((r) => r.month)])].sort()
+    const monthWiseMap = new Map<string, { month: string; bdId: string; bdName: string; leadCount: number; ipdCount: number }>()
+    for (const r of leadsByMonth) {
+      const key = `${r.month}|${r.bdId}`
+      monthWiseMap.set(key, { month: r.month, bdId: r.bdId, bdName: r.bdName, leadCount: Number(r.count), ipdCount: 0 })
+    }
+    for (const r of ipdByMonth) {
+      const key = `${r.month}|${r.bdId}`
+      const existing = monthWiseMap.get(key)
+      if (existing) {
+        existing.ipdCount = Number(r.count)
+      } else {
+        monthWiseMap.set(key, { month: r.month, bdId: r.bdId, bdName: r.bdName, leadCount: 0, ipdCount: Number(r.count) })
+      }
+    }
+    const monthWiseRows = [...monthWiseMap.values()].sort((a, b) => a.month.localeCompare(b.month) || a.bdName.localeCompare(b.bdName))
+
     const members = bdMembers.map((m) => {
       const leads = leadsMap.get(m.userId)?._count.id ?? 0
       const ipd = ipdMap.get(m.userId)?._count.id ?? 0
@@ -390,6 +408,10 @@ export async function GET(request: NextRequest) {
       nestedTeams,
       byCategory,
       targets: targetsBreakdown,
+      monthWise: {
+        months: allMonths,
+        rows: monthWiseRows,
+      },
       monthWiseHeaders: {
         current: currentMonthKey,
         prev: prevMonthKey,
