@@ -112,6 +112,50 @@ export function useTeamBds() {
   })
 }
 
+/** IPD/OPD combined calendar feed — type/status/bdId filterable */
+export type CaseEventType = 'IPD' | 'OPD'
+export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED'
+export type CaseEvent = {
+  id: string
+  leadId: string
+  patientName: string
+  bdId: string
+  bdName: string
+  type: CaseEventType
+  status: CaseEventStatus
+  date: string
+  hospital: string | null
+  doctor: string | null
+  treatment: string | null
+  circle: string | null
+}
+
+export function useCaseEvents(params: {
+  startDate: string
+  endDate: string
+  types: CaseEventType[]
+  statuses: CaseEventStatus[]
+  bdIds?: string[]
+  enabled?: boolean
+}) {
+  const { startDate, endDate, types, statuses, bdIds, enabled = true } = params
+  return useQuery<CaseEvent[]>({
+    queryKey: ['case-events', startDate, endDate, types.join(','), statuses.join(','), bdIds?.join(',') ?? ''],
+    queryFn: () => {
+      const sp = new URLSearchParams({
+        startDate,
+        endDate,
+        type: types.join(','),
+        status: statuses.join(','),
+      })
+      if (bdIds && bdIds.length > 0) sp.set('bdId', bdIds.join(','))
+      return apiGet<CaseEvent[]>(`/api/calendar/case-events?${sp.toString()}`)
+    },
+    enabled: enabled && !!startDate && !!endDate,
+    staleTime: 30_000,
+  })
+}
+
 export function useMyStatuses() {
   return useQuery<CalendarStatus[]>({
     queryKey: ['my-statuses'],

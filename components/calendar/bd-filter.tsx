@@ -42,8 +42,6 @@ export function BdFilter({
     return bds.filter((b) => b.name.toLowerCase().includes(q))
   }, [bds, query])
 
-  if (!isLoading && bds.length === 0) return null
-
   const allSelected = selectedIds.length === 0
   const label = allSelected
     ? 'All BDs'
@@ -113,7 +111,9 @@ export function BdFilter({
               />
             ))}
             {!isLoading && filtered.length === 0 && (
-              <div className="p-6 text-center text-sm text-muted-foreground">No matches.</div>
+              <div className="p-6 text-center text-sm text-muted-foreground">
+                {bds.length === 0 ? 'No BDs in your team yet.' : 'No matches.'}
+              </div>
             )}
           </div>
           {!allSelected && (

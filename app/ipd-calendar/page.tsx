@@ -10,18 +10,21 @@ import {
 } from 'date-fns'
 import { Plus } from 'lucide-react'
 
+import { useAuth } from '@/hooks/use-auth'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/use-auth'
-import { useLeads } from '@/hooks/use-leads'
 import {
   useCalendarEvents,
+  useCaseEvents,
   type CalendarMeet,
+  type CaseEventType,
+  type CaseEventStatus,
 } from '@/hooks/use-calendar'
 
 import { IpdStatStrip } from '@/components/calendar/ipd-stat-strip'
 import { PersonSwitcher } from '@/components/calendar/person-switcher'
 import { BdFilter } from '@/components/calendar/bd-filter'
+import { CaseTypeStatusFilter } from '@/components/calendar/case-type-status-filter'
 import { ViewSwitcher } from '@/components/calendar/view-switcher'
 import { TeamCalendar, type CalendarView } from '@/components/calendar/team-calendar'
 import { DayAgendaDrawer } from '@/components/calendar/day-agenda-drawer'
@@ -32,7 +35,8 @@ import {
   type MeetDetailsMeet,
 } from '@/components/meets/meet-details-drawer'
 
-const IPD_STAGES = 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED'
+const ALL_TYPES: CaseEventType[] = ['IPD', 'OPD']
+const ALL_STATUSES: CaseEventStatus[] = ['DONE', 'SCHEDULED', 'POSTPONED', 'CANCELLED']
 const ALLOWED_ROLES = [
   'BD',
   'TEAM_LEAD',
@@ -71,8 +75,15 @@ export default function IpdCalendarPage() {
   const isViewingSelf = !targetUserId || targetUserId === user?.id
 
   const isTeamScopeRole = !!user && TEAM_SCOPE_ROLES.includes(user.role)
-  // Empty = show the whole team's IPDs (default). Non-empty = narrowed to picked BDs.
+  // Empty = show the whole team's cases (default). Non-empty = narrowed to picked BDs.
   const [selectedBdIds, setSelectedBdIds] = useState<string[]>([])
+
+  // Major IPD/OPD filter + status sub-filter. Empty = "all" (handled below).
+  const [selectedTypes, setSelectedTypes] = useState<CaseEventType[]>(['IPD'])
+  const [selectedStatuses, setSelectedStatuses] = useState<CaseEventStatus[]>(['DONE'])
+  const effectiveTypes = selectedTypes.length > 0 ? selectedTypes : ALL_TYPES
+  const effectiveStatuses = selectedStatuses.length > 0 ? selectedStatuses : ALL_STATUSES
+  const typeLabel = effectiveTypes.length === 1 ? effectiveTypes[0] : 'IPD/OPD'
 
   const [view, setView] = useState<CalendarView>('month')
   const [focusedDate, setFocusedDate] = useState<Date>(() => new Date())
@@ -97,40 +108,34 @@ export default function IpdCalendarPage() {
     enabled: !!effectiveTarget,
   })
 
-  // Team-scope roles (TL/ACM/CM/Sales Head) see their whole team's IPDs by
+  // Team-scope roles (TL/ACM/CM/Sales Head) see their whole team's cases by
   // default — omitting bdId lets the API fall back to the full org-chart
   // scope (self + all recursive subordinates). Picking specific BDs in the
   // filter narrows it down. BD role keeps the existing single-target behavior.
-  const ipdBdIdParam = isTeamScopeRole
-    ? (selectedBdIds.length > 0 ? selectedBdIds.join(',') : undefined)
-    : effectiveTarget
+  const caseBdIds = isTeamScopeRole
+    ? (selectedBdIds.length > 0 ? selectedBdIds : undefined)
+    : (effectiveTarget ? [effectiveTarget] : undefined)
 
-  // IPDs in the currently visible range — plotted on the calendar
-  const { leads: ipdLeads, isLoading: ipdLoading } = useLeads(
-    {
-      view: 'pipeline',
-      bdId: ipdBdIdParam,
-      caseStage: IPD_STAGES,
-      dateField: 'surgery',
-      startDate: format(range.start, 'yyyy-MM-dd'),
-      endDate: format(range.end, 'yyyy-MM-dd'),
-    },
-    { enabled: isTeamScopeRole || !!effectiveTarget }
-  )
+  // Cases in the currently visible range — plotted on the calendar
+  const { data: caseEventsInRange, isLoading: caseLoading } = useCaseEvents({
+    startDate: format(range.start, 'yyyy-MM-dd'),
+    endDate: format(range.end, 'yyyy-MM-dd'),
+    types: effectiveTypes,
+    statuses: effectiveStatuses,
+    bdIds: caseBdIds,
+    enabled: isTeamScopeRole || !!effectiveTarget,
+  })
 
-  // IPDs for the actual current calendar month — independent of whatever
+  // Cases for the actual current calendar month — independent of whatever
   // month/week/day the user has navigated to, for the "this month" stat
-  const { leads: ipdThisMonthLeads, isLoading: thisMonthLoading } = useLeads(
-    {
-      view: 'pipeline',
-      bdId: ipdBdIdParam,
-      caseStage: IPD_STAGES,
-      dateField: 'surgery',
-      startDate: format(thisMonthRange.start, 'yyyy-MM-dd'),
-      endDate: format(thisMonthRange.end, 'yyyy-MM-dd'),
-    },
-    { enabled: isTeamScopeRole || !!effectiveTarget }
-  )
+  const { data: caseEventsThisMonth, isLoading: thisMonthLoading } = useCaseEvents({
+    startDate: format(thisMonthRange.start, 'yyyy-MM-dd'),
+    endDate: format(thisMonthRange.end, 'yyyy-MM-dd'),
+    types: effectiveTypes,
+    statuses: effectiveStatuses,
+    bdIds: caseBdIds,
+    enabled: isTeamScopeRole || !!effectiveTarget,
+  })
 
   const meets = data?.meets ?? []
   const statuses = data?.statuses ?? []
@@ -159,7 +164,7 @@ export default function IpdCalendarPage() {
     return (
       <AuthenticatedLayout>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-muted-foreground">You don&apos;t have access to the IPD calendar</div>
+          <div className="text-muted-foreground">You don&apos;t have access to the IPD/OPD calendar</div>
         </div>
       </AuthenticatedLayout>
     )
@@ -169,9 +174,10 @@ export default function IpdCalendarPage() {
     <AuthenticatedLayout>
       <div className="space-y-3 w-full min-w-0 relative pb-24">
         <IpdStatStrip
-          totalIpdInRange={ipdLeads?.length ?? 0}
-          ipdThisMonth={ipdThisMonthLeads?.length ?? 0}
-          isLoading={ipdLoading || thisMonthLoading}
+          label={typeLabel}
+          totalIpdInRange={caseEventsInRange?.length ?? 0}
+          ipdThisMonth={caseEventsThisMonth?.length ?? 0}
+          isLoading={caseLoading || thisMonthLoading}
         />
 
         {user && (
@@ -186,6 +192,13 @@ export default function IpdCalendarPage() {
           <BdFilter selectedIds={selectedBdIds} onChange={setSelectedBdIds} />
         )}
 
+        <CaseTypeStatusFilter
+          types={selectedTypes}
+          onTypesChange={setSelectedTypes}
+          statuses={selectedStatuses}
+          onStatusesChange={setSelectedStatuses}
+        />
+
         <ViewSwitcher
           view={view}
           onViewChange={setView}
@@ -199,11 +212,11 @@ export default function IpdCalendarPage() {
             meets={meets}
             statuses={statuses}
             attendance={attendance}
-            ipds={ipdLeads}
+            caseEvents={caseEventsInRange}
             focusedDate={focusedDate}
             onEventClick={handleEventClick}
             onDateClick={handleDateClick}
-            onIpdClick={(leadId) => window.open(`/patient/${leadId}`, '_blank', 'noopener,noreferrer')}
+            onCaseClick={(leadId) => window.open(`/patient/${leadId}`, '_blank', 'noopener,noreferrer')}
           />
         </div>
 

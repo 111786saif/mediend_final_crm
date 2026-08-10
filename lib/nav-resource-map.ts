@@ -8,7 +8,7 @@ export const NAV_TITLE_TO_RESOURCE: Record<string, string> = {
   'MD Home': 'main.md_home',
   Tasks: 'main.tasks',
   Calendar: 'main.calendar',
-  'IPD Calendar': 'main.ipd_calendar',
+  'IPD/OPD Calendar': 'main.ipd_calendar',
   Meets: 'main.meets',
   Dashboard: 'main.dashboard',
   'Sales Dashboard': 'sales.sales_dashboard',
