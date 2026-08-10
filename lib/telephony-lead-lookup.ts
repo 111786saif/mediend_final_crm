@@ -23,6 +23,10 @@ function extractLast10(raw: string | null | undefined): string {
   return digits
 }
 
+function isInvalidLookupPhone(last10: string) {
+  return last10.length !== 10 || /^0+$/.test(last10)
+}
+
 export async function lookupPatientByPhone(rawPhone: string): Promise<PatientLookupResult> {
   const digits = extractDigits(rawPhone)
   const last10 = extractLast10(rawPhone)
@@ -30,7 +34,7 @@ export async function lookupPatientByPhone(rawPhone: string): Promise<PatientLoo
   console.log(`\n=================== [TELEPHONY LOOKUP START] ===================`)
   console.log(`[TELEPHONY LOOKUP] Performing server-side lead lookup for rawPhone: "${rawPhone}"`)
 
-  if (!last10 || last10.length < 5) {
+  if (isInvalidLookupPhone(last10)) {
     console.log(`[TELEPHONY LOOKUP] Invalid phone digits. Returning found: false.`)
     console.log(`=================== [TELEPHONY LOOKUP END] ===================\n`)
     return { found: false }

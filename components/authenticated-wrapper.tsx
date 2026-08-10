@@ -34,7 +34,10 @@ import { KnowlarityCallListener } from '@/components/telephony/knowlarity-call-l
 function NavbarThemeToggle() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setMounted(true), 0)
+    return () => window.clearTimeout(timeoutId)
+  }, [])
   const isDarkMode = !mounted || theme === 'dark'
   return (
     <Button
@@ -330,7 +333,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
 
   return (
     <ProtectedRoute>
-      <KnowlarityCallListener />
+      {user?.role === 'BD' ? <KnowlarityCallListener /> : null}
       <MeetReminderPopup />
       <WorkLogEnforcer />
       {shouldShowSidebar ? (

@@ -10,10 +10,23 @@ type KnowlarityRawPayload = unknown
 
 type NormalizedCallState = 'receiving_call' | 'on_call' | 'call_finished' | 'update'
 
+type TelephonyAgentIdentity = {
+  userId: string
+  role: string
+  name: string | null
+  notificationsEnabled: boolean
+  agentPhones: string[]
+  primaryAgentPhone: string | null
+}
+
 function normalizePhone(raw: string | null | undefined): string {
   const digits = String(raw ?? '').replace(/\D+/g, '')
   if (digits.length >= 10) return digits.slice(-10)
   return digits
+}
+
+function isMeaningfulPhone(phone: string | null | undefined) {
+  return Boolean(phone && phone.length === 10 && !/^0+$/.test(phone))
 }
 
 function titleCase(text: string): string {
@@ -93,13 +106,13 @@ function extractPossiblePhones(value: unknown, into: Set<string>) {
 
   if (typeof value === 'string') {
     const normalized = normalizePhone(value)
-    if (normalized) into.add(normalized)
+    if (isMeaningfulPhone(normalized)) into.add(normalized)
     return
   }
 
   if (typeof value === 'number') {
     const normalized = normalizePhone(String(value))
-    if (normalized) into.add(normalized)
+    if (isMeaningfulPhone(normalized)) into.add(normalized)
     return
   }
 
@@ -117,7 +130,7 @@ function extractPossiblePhones(value: unknown, into: Set<string>) {
   }
 }
 
-function extractCustomerPhone(payload: KnowlarityRawPayload, agentPhone: string): string | null {
+function extractCustomerPhone(payload: KnowlarityRawPayload, agentPhones: Set<string>): string | null {
   if (!payload || typeof payload !== 'object') return null
   const root = payload as Record<string, unknown>
   const dataObj = root.data as Record<string, unknown> | undefined
@@ -149,7 +162,7 @@ function extractCustomerPhone(payload: KnowlarityRawPayload, agentPhone: string)
   for (const candidate of customerCandidates) {
     if (candidate != null && (typeof candidate === 'string' || typeof candidate === 'number')) {
       const norm = normalizePhone(String(candidate))
-      if (norm && norm.length >= 7 && norm !== agentPhone && !knowlarityNumbers.has(norm)) {
+      if (isMeaningfulPhone(norm) && !agentPhones.has(norm) && !knowlarityNumbers.has(norm)) {
         return norm
       }
     }
@@ -159,19 +172,15 @@ function extractCustomerPhone(payload: KnowlarityRawPayload, agentPhone: string)
   const phones = new Set<string>()
   extractPossiblePhones(payload, phones)
 
-  if (agentPhone) phones.delete(agentPhone)
+  for (const agentPhone of agentPhones) {
+    phones.delete(agentPhone)
+  }
   for (const kNum of knowlarityNumbers) {
     phones.delete(kNum)
   }
 
   for (const phone of phones) {
-    if (phone.length === 10 && phone !== agentPhone && !knowlarityNumbers.has(phone)) {
-      return phone
-    }
-  }
-
-  for (const phone of phones) {
-    if (phone.length >= 7 && phone !== agentPhone && !knowlarityNumbers.has(phone)) {
+    if (isMeaningfulPhone(phone) && !agentPhones.has(phone) && !knowlarityNumbers.has(phone)) {
       return phone
     }
   }
@@ -179,12 +188,11 @@ function extractCustomerPhone(payload: KnowlarityRawPayload, agentPhone: string)
   return null
 }
 
-function matchesAgentPhone(payload: KnowlarityRawPayload, agentPhone: string, userRole?: string): boolean {
-  if (userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') return true
-  if (!agentPhone) return true
+function matchesAgentPhone(payload: KnowlarityRawPayload, agentPhones: Set<string>): boolean {
+  if (agentPhones.size === 0) return false
   const phones = new Set<string>()
   extractPossiblePhones(payload, phones)
-  return phones.has(agentPhone)
+  return Array.from(agentPhones).some((agentPhone) => phones.has(agentPhone))
 }
 
 function extractEventType(payload: KnowlarityRawPayload, fallbackEventName: string | null): string {
@@ -281,6 +289,58 @@ function extractCallRecordingUrl(payload: KnowlarityRawPayload): string | null {
   return null
 }
 
+async function resolveTelephonyAgentIdentity(userId: string): Promise<TelephonyAgentIdentity | null> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      role: true,
+      name: true,
+      employee: {
+        select: {
+          knowlarityPhoneNumber: true,
+          knowlarityCallerId: true,
+          knowlarityNotificationsEnabled: true,
+        },
+      },
+    },
+  })
+
+  if (!user) return null
+
+  const phoneCandidates = [
+    normalizePhone(user.employee?.knowlarityPhoneNumber),
+    normalizePhone(user.employee?.knowlarityCallerId),
+  ].filter(isMeaningfulPhone)
+
+  const agentPhones = Array.from(new Set(phoneCandidates))
+
+  return {
+    userId: user.id,
+    role: user.role,
+    name: user.name,
+    notificationsEnabled: user.employee?.knowlarityNotificationsEnabled ?? false,
+    agentPhones,
+    primaryAgentPhone: agentPhones[0] ?? null,
+  }
+}
+
+function buildDisabledTelephonyResponse(reason: string) {
+  const body = sseChunk('ready', {
+    message: reason,
+    telephonyEnabled: false,
+  })
+
+  return new Response(body, {
+    headers: {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-transform',
+      Connection: 'keep-alive',
+      'X-Accel-Buffering': 'no',
+    },
+  })
+}
+
 export async function GET(request: NextRequest) {
   try {
     const currentUser = getSessionFromRequest(request)
@@ -288,8 +348,25 @@ export async function GET(request: NextRequest) {
       return unauthorizedResponse()
     }
 
+    const agentIdentity = await resolveTelephonyAgentIdentity(currentUser.id)
+    if (!agentIdentity) {
+      return buildDisabledTelephonyResponse('Telephony is not available for this user.')
+    }
+
+    if (agentIdentity.role !== 'BD') {
+      return buildDisabledTelephonyResponse('Knowlarity call cards are only enabled for BD users.')
+    }
+
+    if (!agentIdentity.notificationsEnabled || agentIdentity.agentPhones.length === 0) {
+      return buildDisabledTelephonyResponse('Knowlarity is not configured for this BD account.')
+    }
+
+    const agentPhoneSet = new Set(agentIdentity.agentPhones)
+
     console.log(`\n=================== [TELEPHONY STREAM INIT] ===================`)
-    console.log(`[TELEPHONY STREAM INIT] User connected: ID="${currentUser.id}" | Role="${currentUser.role}" | AgentPhone="${currentUser.normalizedPhone}"`)
+    console.log(
+      `[TELEPHONY STREAM INIT] User connected: ID="${currentUser.id}" | Role="${currentUser.role}" | AgentPhones="${agentIdentity.agentPhones.join(',')}" | NotificationsEnabled=${agentIdentity.notificationsEnabled}`
+    )
 
     const authKey = process.env.KNOWLARITY_AUTH_KEY?.trim()
     const apiKey = process.env.KNOWLARITY_X_API_KEY?.trim()
@@ -382,7 +459,8 @@ export async function GET(request: NextRequest) {
           message: 'Connected to Knowlarity notifications stream',
           channel,
           streamUrl: usedUrl,
-          agentPhone: currentUser.normalizedPhone,
+          telephonyEnabled: true,
+          agentPhone: agentIdentity.primaryAgentPhone,
         })
 
         const flushEventBlock = async (block: string) => {
@@ -414,18 +492,22 @@ export async function GET(request: NextRequest) {
           console.log(`[KNOWLARITY SSE RAW DATA]:`, rawData)
 
           const payload = safeParseData(rawData)
-          const agentMatched = matchesAgentPhone(payload, currentUser.normalizedPhone, currentUser.role)
-          console.log(`[KNOWLARITY SSE AGENT CHECK]: CurrentUserAgentPhone="${currentUser.normalizedPhone}" | Role="${currentUser.role}" | AgentMatched=${agentMatched}`)
+          const agentMatched = matchesAgentPhone(payload, agentPhoneSet)
+          console.log(
+            `[KNOWLARITY SSE AGENT CHECK]: CurrentUserAgentPhones="${agentIdentity.agentPhones.join(',')}" | Role="${currentUser.role}" | AgentMatched=${agentMatched}`
+          )
 
           if (!agentMatched) {
-            console.log(`[KNOWLARITY SSE SKIPPED]: Event does not match agent phone "${currentUser.normalizedPhone}".`)
+            console.log(
+              `[KNOWLARITY SSE SKIPPED]: Event does not match configured Knowlarity phones "${agentIdentity.agentPhones.join(',')}".`
+            )
             console.log(`=================== [KNOWLARITY SSE END] ===================\n`)
             return
           }
 
           const rawEventType = extractEventType(payload, eventName)
           const mapped = mapCallState(rawEventType)
-          const customerPhone = extractCustomerPhone(payload, currentUser.normalizedPhone)
+          const customerPhone = extractCustomerPhone(payload, agentPhoneSet)
           const recordingUrl = extractCallRecordingUrl(payload)
 
           console.log(`[KNOWLARITY SSE EXTRACTED]: EventType="${rawEventType}" | RecordingUrl="${recordingUrl}"`)
@@ -454,7 +536,7 @@ export async function GET(request: NextRequest) {
                 const rawAgentPhone =
                   (typeof (payload as Record<string, unknown>)?.agent_number === 'string' && (payload as Record<string, unknown>).agent_number) ||
                   (typeof (payload as Record<string, unknown>)?.agent_phone === 'string' && (payload as Record<string, unknown>).agent_phone) ||
-                  currentUser.normalizedPhone
+                  agentIdentity.primaryAgentPhone
 
                 const agentDigits = normalizePhone(rawAgentPhone)
                 let agentUserId = currentUser.id
@@ -489,7 +571,7 @@ export async function GET(request: NextRequest) {
                     summary: `Knowlarity call recording saved for ${patientName || 'Call'}`,
                     metadata: {
                       callRecordingUrl: recordingUrl,
-                      agentPhone: agentDigits || currentUser.normalizedPhone,
+                      agentPhone: agentDigits || agentIdentity.primaryAgentPhone,
                       agentName,
                       eventType: rawEventType,
                       receivedAt: new Date().toISOString(),
@@ -505,7 +587,7 @@ export async function GET(request: NextRequest) {
             state: mapped.state,
             label: mapped.label,
             eventType: rawEventType,
-            agentPhone: currentUser.normalizedPhone,
+            agentPhone: agentIdentity.primaryAgentPhone,
             patientInfo,
             recordingUrl,
             receivedAt: new Date().toISOString(),

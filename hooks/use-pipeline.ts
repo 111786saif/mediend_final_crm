@@ -72,7 +72,7 @@ const DEFAULTS: PipelineUrlState = {
 function readState(sp: URLSearchParams): PipelineUrlState {
   return {
     page: Math.max(1, Number(sp.get('page') || 1) || 1),
-    pageSize: Math.min(100, Math.max(10, Number(sp.get('pageSize') || 50) || 50)),
+    pageSize: Math.min(500, Math.max(10, Number(sp.get('pageSize') || 50) || 50)),
     q: sp.get('q') || '',
     status: (sp.get('status') as PipelineStatusBucket) || 'all',
     bdId: sp.get('bdId') || 'all',

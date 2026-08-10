@@ -151,7 +151,7 @@ function normalizedText(value: unknown, fallback: string): string {
   return (trimmed || fallback).replace(/\s+/g, ' ')
 }
 
-const PAGE_SIZE_OPTIONS = [20, 50, 100]
+const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500]
 
 type PipelineColumnId =
   | 'leadRef'

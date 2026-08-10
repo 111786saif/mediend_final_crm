@@ -44,6 +44,7 @@ type StreamCallEvent = {
   label: string
   eventType: string
   agentPhone?: string | null
+  telephonyEnabled?: boolean
   patientInfo?: PatientLookup | null
   recordingUrl?: string | null
   payload?: unknown
@@ -100,10 +101,11 @@ export function KnowlarityCallListener() {
   const [connected, setConnected] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
   const autoHideTimersRef = useRef<Map<string, number>>(new Map())
-  const sessionStartTimeRef = useRef<number>(Date.now() - 5000)
+  const sessionStartTimeRef = useRef<number>(0)
 
   useEffect(() => {
     sessionStartTimeRef.current = Date.now() - 5000
+    const timersRef = autoHideTimersRef.current
     const source = new EventSource('/api/telephony/stream')
 
     source.addEventListener('open', () => {
@@ -112,6 +114,21 @@ export function KnowlarityCallListener() {
 
     source.addEventListener('ready', () => {
       setConnected(true)
+    })
+
+    source.addEventListener('ready', (message) => {
+      try {
+        const payload = JSON.parse((message as MessageEvent<string>).data) as StreamCallEvent
+        if (payload.telephonyEnabled === false) {
+          setConnected(false)
+          setCallQueue([])
+          source.close()
+          return
+        }
+        setConnected(true)
+      } catch {
+        setConnected(true)
+      }
     })
 
     source.addEventListener('error', () => {
@@ -174,8 +191,8 @@ export function KnowlarityCallListener() {
     })
 
     return () => {
-      autoHideTimersRef.current.forEach((t) => window.clearTimeout(t))
-      autoHideTimersRef.current.clear()
+      timersRef.forEach((t) => window.clearTimeout(t))
+      timersRef.clear()
       source.close()
     }
   }, [])
