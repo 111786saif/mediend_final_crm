@@ -8,7 +8,7 @@ import {
 } from '@/lib/pipeline-lead-buckets'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
 
-export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd'
+export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd' | 'followUpDate'
 export type PipelineSortDir = 'asc' | 'desc'
 
 export type PipelineServerColumnFilterField =
@@ -68,7 +68,7 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
   const leadAge = allowedAge.includes(ageRaw as LeadAgeFilter) ? (ageRaw as LeadAgeFilter) : 'all'
 
   const sortRaw = searchParams.get('sort') || 'date'
-  const allowedSort: PipelineSortField[] = ['date', 'patient', 'status', 'leadRef', 'bd']
+  const allowedSort: PipelineSortField[] = ['date', 'patient', 'status', 'leadRef', 'bd', 'followUpDate']
   const sortBy = allowedSort.includes(sortRaw as PipelineSortField)
     ? (sortRaw as PipelineSortField)
     : 'date'
@@ -455,6 +455,8 @@ export function pipelineOrderBy(
       return [{ leadRef: dir }, { id: dir }]
     case 'bd':
       return [{ bd: { name: dir } }, { id: dir }]
+    case 'followUpDate':
+      return [{ followUpDate: { sort: dir, nulls: 'last' } }, { id: dir }]
     case 'date':
     default:
       return [{ leadEntryDate: { sort: dir, nulls: 'last' } }, { createdDate: dir }, { id: dir }]

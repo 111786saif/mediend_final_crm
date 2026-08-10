@@ -213,25 +213,25 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'city', label: 'City', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'category', label: 'Category', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'treatment', label: 'Treatment', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'planningTreatment', label: 'Planning Treatment', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'profession', label: 'Profession', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'tl', label: 'Team Lead', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'status', label: 'Lead Status', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'mop', label: 'MOP', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'bd', label: 'BDM', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'lastRemarks', label: 'Last Remark', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'followUpDate', label: 'Follow Up Date', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'subStatus', label: 'Sub Status', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'mop', label: 'MOP', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'surgeryDate', label: 'Surgery Date', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'planningTreatment', label: 'Planning Treatment', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'subStatus', label: 'Sub Status', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'healthInsurance', label: 'Health Insurance', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'preferredLocation', label: 'Preferred Location', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'profession', label: 'Profession', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'source', label: 'Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'leadSource', label: 'Lead Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'createDate', label: 'Create Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyBy', label: 'Modify By', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyDate', label: 'Modified Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'dupCount', label: 'Duplicate Count', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'bd', label: 'BDM', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'status', label: 'Lead Status', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
 ]
 
 const PIPELINE_DATE_FILTER_COLUMNS = new Set<PipelineColumnId>([
@@ -408,6 +408,10 @@ function getLeadTeamLeadText(lead: Lead) {
   )
 }
 
+function getLeadSurgeryDateValue(lead: Lead) {
+  return lead.surgeryDate ?? lead.admissionRecord?.surgeryDate ?? null
+}
+
 // function getLeadBdmText(lead: Lead) {
 //   return typeof lead.plRecord?.bdmName === 'string' && lead.plRecord.bdmName.trim().length > 0
 //     ? lead.plRecord.bdmName.trim()
@@ -467,7 +471,7 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'subStatus':
       return lead.subStatus != null ? String(lead.subStatus) : '—'
     case 'surgeryDate':
-      return formatTableDate(lead.surgeryDate)
+      return formatTableDate(getLeadSurgeryDateValue(lead))
     case 'healthInsurance':
       return normalizedText(lead.insuranceName, '—')
     case 'preferredLocation':
@@ -1345,9 +1349,39 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               {...getHeaderFilterProps('treatment')}
                             />
                           )}
+                          {isColumnVisible('tl') && <HeaderCell label="Team Lead" {...getHeaderFilterProps('tl')} />}
+                          {isColumnVisible('bd') && (
+                            <HeaderCell
+                              label="BDM"
+                              sortField="bd"
+                              state={state}
+                              onSort={handleSort}
+                              {...getHeaderFilterProps('bd')}
+                            />
+                          )}
+                          {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remark" {...getHeaderFilterProps('lastRemarks')} />}
+                          {isColumnVisible('followUpDate') && (
+                            <HeaderCell
+                              label="Follow Up Date"
+                              sortField="followUpDate"
+                              state={state}
+                              onSort={handleSort}
+                              {...getHeaderFilterProps('followUpDate')}
+                            />
+                          )}
+                          {isColumnVisible('mop') && <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />}
+                          {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />}
                           {isColumnVisible('planningTreatment') && <HeaderCell label="Planning Treatment" {...getHeaderFilterProps('planningTreatment')} />}
+                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" {...getHeaderFilterProps('subStatus')} />}
+                          {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" {...getHeaderFilterProps('healthInsurance')} />}
+                          {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" {...getHeaderFilterProps('preferredLocation')} />}
                           {isColumnVisible('profession') && <HeaderCell label="Profession" {...getHeaderFilterProps('profession')} />}
-                          {isColumnVisible('tl') && <HeaderCell label="TL" {...getHeaderFilterProps('tl')} />}
+                          {isColumnVisible('source') && <HeaderCell label="Source" {...getHeaderFilterProps('source')} />}
+                          {isColumnVisible('leadSource') && <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />}
+                          {isColumnVisible('createDate') && <HeaderCell label="Create Date" {...getHeaderFilterProps('createDate')} />}
+                          {isColumnVisible('modifyBy') && <HeaderCell label="Modify By" {...getHeaderFilterProps('modifyBy')} />}
+                          {isColumnVisible('modifyDate') && <HeaderCell label="Modified Date" {...getHeaderFilterProps('modifyDate')} />}
+                          {isColumnVisible('dupCount') && <HeaderCell label="Duplicate Count" {...getHeaderFilterProps('dupCount')} />}
                           {/* {isColumnVisible('bdm') && (
                             <HeaderCell
                               label="BDM (Assign)"
@@ -1381,29 +1415,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               {...getHeaderFilterProps('stage')}
                             />
                           )}
-                          {isColumnVisible('mop') && <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />}
-                          {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remarks" {...getHeaderFilterProps('lastRemarks')} />}
-                          {isColumnVisible('followUpDate') && <HeaderCell label="Follow Up Date" {...getHeaderFilterProps('followUpDate')} />}
-                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" {...getHeaderFilterProps('subStatus')} />}
-                          {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />}
-                          {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" {...getHeaderFilterProps('healthInsurance')} />}
-                          {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" {...getHeaderFilterProps('preferredLocation')} />}
-                          {isColumnVisible('source') && <HeaderCell label="Source" {...getHeaderFilterProps('source')} />}
-                          {isColumnVisible('leadSource') && <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />}
-                          {isColumnVisible('createDate') && <HeaderCell label="Create Date" {...getHeaderFilterProps('createDate')} />}
-                          {isColumnVisible('modifyBy') && <HeaderCell label="Modify By" {...getHeaderFilterProps('modifyBy')} />}
-                          {isColumnVisible('modifyDate') && <HeaderCell label="Modify Date" {...getHeaderFilterProps('modifyDate')} />}
-                          {isColumnVisible('dupCount') && <HeaderCell label="Dupl Count" {...getHeaderFilterProps('dupCount')} />}
                           {isColumnVisible('recency') && <HeaderCell label="Recency" {...getHeaderFilterProps('recency')} />}
-                          {isColumnVisible('bd') && (
-                            <HeaderCell
-                              label="BD"
-                              sortField="bd"
-                              state={state}
-                              onSort={handleSort}
-                              {...getHeaderFilterProps('bd')}
-                            />
-                          )}
                           <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                             Notes
                           </th>
@@ -1925,22 +1937,68 @@ const PipelineRow = memo(function PipelineRow({
       {show('treatment') && (
         <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{normalizedText(lead.treatment, '—')}</td>
       )}
-      {show('planningTreatment') && (
-        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={planningTreatmentText}>
-          {planningTreatmentText}
-        </td>
-      )}
-      {show('profession') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.profession, '—')}</td>
-      )}
       {show('tl') && (
         <td className="max-w-[120px] truncate px-3 py-2 text-sm" title={teamLeadText}>
           {teamLeadText}
         </td>
       )}
+      {show('bd') && <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>}
+      {show('lastRemarks') && (
+        <td className="max-w-[420px] whitespace-normal break-words px-3 py-2 text-sm align-top">
+          {lastRemarksText}
+        </td>
+      )}
+      {show('followUpDate') && (
+        <td
+          className={`whitespace-nowrap px-3 py-2 text-sm ${
+            isPastFollowUpDate(lead.followUpDate) ? 'font-medium text-red-500' : ''
+          }`}
+        >
+          {formatTableDate(lead.followUpDate)}
+        </td>
+      )}
+      {show('mop') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.modeOfPayment, '—')}</td>
+      )}
+      {show('surgeryDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(getLeadSurgeryDateValue(lead))}</td>
+      )}
+      {show('planningTreatment') && (
+        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={planningTreatmentText}>
+          {planningTreatmentText}
+        </td>
+      )}
+      {show('subStatus') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.subStatus != null ? String(lead.subStatus) : '—'}</td>
+      )}
+      {show('healthInsurance') && (
+        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{normalizedText(lead.insuranceName, '—')}</td>
+      )}
+      {show('preferredLocation') && (
+        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{preferredLocation}</td>
+      )}
+      {show('profession') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.profession, '—')}</td>
+      )}
+      {show('source') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.source, '—')}</td>}
+      {show('leadSource') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">
+          {resolveLeadSourceDisplay(lead)}
+        </td>
+      )}
+      {show('createDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.createdDate)}</td>
+      )}
+      {show('modifyBy') && (
+        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{lead.updatedBy?.name ?? '—'}</td>
+      )}
+      {show('modifyDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.updatedDate)}</td>
+      )}
+      {show('dupCount') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.duplCount != null ? String(lead.duplCount) : '0'}</td>
+      )}
       {/* {show('bdm') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{bdmText}</td>} */}
-      {show('hospital') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{hospital || '—'}</td>}
-      {show('doctor') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>}
       {show('status') && (
         <td className="px-3 py-2">
           <span
@@ -1965,59 +2023,13 @@ const PipelineRow = memo(function PipelineRow({
           )}
         </td>
       )}
-      {show('mop') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.modeOfPayment, '—')}</td>
-      )}
-      {show('lastRemarks') && (
-        <td className="max-w-[420px] whitespace-normal break-words px-3 py-2 text-sm align-top">
-          {lastRemarksText}
-        </td>
-      )}
-      {show('followUpDate') && (
-        <td
-          className={`whitespace-nowrap px-3 py-2 text-sm ${
-            isPastFollowUpDate(lead.followUpDate) ? 'font-medium text-red-500' : ''
-          }`}
-        >
-          {formatTableDate(lead.followUpDate)}
-        </td>
-      )}
-      {show('subStatus') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.subStatus != null ? String(lead.subStatus) : '—'}</td>
-      )}
-      {show('surgeryDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.surgeryDate)}</td>
-      )}
-      {show('healthInsurance') && (
-        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{normalizedText(lead.insuranceName, '—')}</td>
-      )}
-      {show('preferredLocation') && (
-        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{preferredLocation}</td>
-      )}
-      {show('source') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.source, '—')}</td>}
-      {show('leadSource') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">
-          {resolveLeadSourceDisplay(lead)}
-        </td>
-      )}
-      {show('createDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.createdDate)}</td>
-      )}
-      {show('modifyBy') && (
-        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{lead.updatedBy?.name ?? '—'}</td>
-      )}
-      {show('modifyDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.updatedDate)}</td>
-      )}
-      {show('dupCount') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.duplCount != null ? String(lead.duplCount) : '0'}</td>
-      )}
+      {show('hospital') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{hospital || '—'}</td>}
+      {show('doctor') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>}
       {show('recency') && (
         <td className="px-3 py-2">
           <LeadAgeBadge lead={lead} />
         </td>
       )}
-      {show('bd') && <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>}
       <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-center">
           <CallNotesPopover leadId={lead.id} onRowClickStop noteCount={noteCount} />
