@@ -46,7 +46,7 @@ export interface PipelineQueryParams {
 
 export function parsePipelineQueryParams(searchParams: URLSearchParams): PipelineQueryParams {
   const page = Math.max(1, Number(searchParams.get('page') || 1) || 1)
-  const pageSize = Math.min(100, Math.max(10, Number(searchParams.get('pageSize') || 50) || 50))
+  const pageSize = Math.min(500, Math.max(10, Number(searchParams.get('pageSize') || 50) || 50))
   const statusRaw = searchParams.get('status') || 'all'
   const allowedStatus: PipelineStatusBucket[] = [
     'all',
