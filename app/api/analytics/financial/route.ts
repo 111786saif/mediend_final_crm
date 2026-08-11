@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
@@ -89,7 +90,7 @@ export async function GET(request: NextRequest) {
         const avgAmount = stat._count.id > 0 ? (stat._sum.billAmount || 0) / stat._count.id : 0
 
         return {
-          modeOfPayment: stat.modeOfPayment!,
+          modeOfPayment: normalizeModeOfPaymentLabel(stat.modeOfPayment) ?? stat.modeOfPayment!,
           count: stat._count.id,
           totalAmount: stat._sum.billAmount || 0,
           avgAmount: Math.round(avgAmount * 100) / 100,

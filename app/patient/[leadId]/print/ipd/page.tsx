@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
+import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { useRouter, useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
@@ -692,7 +693,7 @@ export default function IPDPrintPage() {
           {isCash && (
             <InfoSection title="Payment">
               <div className="grid grid-cols-2 sm:grid-cols-3 print:grid-cols-4 gap-x-6 gap-y-4">
-                <Field label="Mode of Payment" value={display(lead.modeOfPayment)} className="col-span-2" />
+                <Field label="Mode of Payment" value={display(normalizeModeOfPaymentLabel(lead.modeOfPayment))} className="col-span-2" />
                 <Field label="Approved / Cash Package" value={formatMoneyLike(cashApprovedAmount)} />
                 <Field label="Final Bill Amount" value={formatMoneyLike(cashFinalBillAmount)} />
                 <Field label="Cash / Deduction Collected" value={formatMoneyLike(cashCollectedAmount)} />
@@ -701,7 +702,7 @@ export default function IPDPrintPage() {
                 <Field label="Deduction" value={formatMoneyLike(cashDeduction)} />
                 <Field label="Collected by Mediend" value={formatMoneyLike(cashCollectedByMediend)} />
                 <Field label="Collected by Hospital" value={formatMoneyLike(cashCollectedByHospital)} />
-                {lead.modeOfPayment === 'EMI' && (
+                {normalizeModeOfPaymentKey(lead.modeOfPayment) === 'emi' && (
                   <>
                     <div className="col-span-full border-t border-dashed border-slate-200 pt-3 mt-1" />
                     <Field label="EMI Amount" value={display(extractFromRemarks(lead.remarks, 'EMI Amount'))} />

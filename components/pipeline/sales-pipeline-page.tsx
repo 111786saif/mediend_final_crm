@@ -33,7 +33,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { usePipelinePage, usePipelineUrlState } from '@/hooks/use-pipeline'
 import type { Lead } from '@/hooks/use-leads'
 import { apiGet, apiPost } from '@/lib/api-client'
-import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
+import { CASE_STAGE_CONFIG, getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { resolveLeadCity, resolveLeadHospitalDoctor, resolveLeadSourceDisplay } from '@/lib/lead-display'
 import {
   BulkLeadReassignmentRunResponse,
@@ -48,6 +48,7 @@ import {
   type LeadAgeFilter,
 } from '@/lib/pipeline-lead-buckets'
 import type { PipelineSortDir, PipelineSortField } from '@/lib/pipeline/server-query'
+import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import {
@@ -153,6 +154,14 @@ function normalizedText(value: unknown, fallback: string): string {
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500]
 
+const PIPELINE_MOP_FILTER_OPTIONS = ['—', 'Cash', 'Cashless', 'EMI', 'Reimbursement']
+const PIPELINE_RECENCY_FILTER_OPTIONS = ['New', '< 1 month', '1 month', '2 months', '3+ months', 'Unknown']
+const PIPELINE_STAGE_FILTER_OPTIONS = uniqueSorted([
+  'OPD Schedule',
+  'OPD Done',
+  ...Object.values(CASE_STAGE_CONFIG).map((stage) => stage.label),
+])
+
 type PipelineColumnId =
   | 'leadRef'
   | 'assignDate'
@@ -244,12 +253,39 @@ const PIPELINE_DATE_FILTER_COLUMNS = new Set<PipelineColumnId>([
 ])
 
 const PIPELINE_SERVER_FILTER_COLUMNS = new Set<PipelineColumnId>([
+  'leadRef',
   'assignDate',
   'leadDate',
+  'patient',
+  'month',
+  'age',
+  'sex',
+  'circle',
+  'city',
+  'category',
+  'treatment',
+  'planningTreatment',
+  'profession',
+  'tl',
+  'hospital',
+  'doctor',
+  'status',
+  'stage',
+  'mop',
+  'lastRemarks',
   'followUpDate',
+  'subStatus',
   'surgeryDate',
+  'healthInsurance',
+  'preferredLocation',
+  'source',
+  'leadSource',
   'createDate',
+  'modifyBy',
   'modifyDate',
+  'dupCount',
+  'recency',
+  'bd',
 ])
 
 function getPipelineColumnDefinitions(variant: 'bd' | 'team-lead') {
@@ -463,7 +499,7 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'stage':
       return getLeadStageLabel(lead)
     case 'mop':
-      return normalizedText(lead.modeOfPayment, '—')
+      return normalizedText(normalizeModeOfPaymentLabel(lead.modeOfPayment), '—')
     case 'lastRemarks':
       return getLeadLastRemarksText(lead)
     case 'followUpDate':
@@ -581,26 +617,35 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     [availableColumns, visibleColumns]
   )
 
-  // Column header filters (dropdown-in-header). Date filters are sent to the
-  // server so they apply across the full dataset; the remaining filters stay
-  // page-local for now.
+  // Column header filters are sent to the server so they apply across the full
+  // dataset before pagination.
   const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
   const serverColumnFilters = useMemo(() => {
     const filters = (Object.entries(columnFilters) as Array<[PipelineColumnId, string[]]>).flatMap(
       ([columnId, selected]) => {
-        if (
-          !isPipelineServerFilterColumn(columnId) ||
-          selected.length !== 2 ||
-          !selected[0]
-        ) {
+        if (!isPipelineServerFilterColumn(columnId) || selected.length === 0) {
           return []
+        }
+
+        if (isPipelineDateFilterColumn(columnId)) {
+          if (selected.length !== 2 || !selected[0]) {
+            return []
+          }
+
+          return [
+            {
+              field: columnId,
+              operator: 'between' as const,
+              value: [selected[0], selected[1] || selected[0]] as [string, string],
+            },
+          ]
         }
 
         return [
           {
             field: columnId,
-            operator: 'between' as const,
-            value: [selected[0], selected[1] || selected[0]] as [string, string],
+            operator: 'in' as const,
+            value: selected,
           },
         ]
       }
@@ -611,19 +656,10 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const { data, isLoading, isFetching } = usePipelinePage({ filters: serverColumnFilters })
   const handleColumnFilterChange = useCallback((key: PipelineColumnId, selected: string[]) => {
     setColumnFilters((prev) => ({ ...prev, [key]: selected }))
-    if (isPipelineServerFilterColumn(key)) {
-      setState({ page: 1 }, { resetPage: false })
-    }
+    setState({ page: 1 }, { resetPage: false })
   }, [setState])
   const activeColumnFilterCount = useMemo(
     () => Object.values(columnFilters).filter((v) => v && v.length > 0).length,
-    [columnFilters]
-  )
-  const localColumnFilterCount = useMemo(
-    () =>
-      (Object.entries(columnFilters) as Array<[PipelineColumnId, string[]]>).filter(
-        ([columnId, value]) => value.length > 0 && !isPipelineServerFilterColumn(columnId)
-      ).length,
     [columnFilters]
   )
   const clearColumnFilters = useCallback(() => {
@@ -713,7 +749,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     return { target: activeTarget, actual: null, pct: null, showActual: false as const }
   }, [variant, targets, data])
 
-  // Raw rows for the current server page, before client-side column filters.
   const rawPageLeads: Lead[] = useMemo(() => data?.leads ?? [], [data?.leads])
 
   // Column filter dropdown option lists — built from the current page only.
@@ -742,10 +777,22 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     options.hospital = mergeUniqueSortedLists(hospitalMasterOptions, options.hospital)
     options.doctor = mergeUniqueSortedLists(doctorMasterOptions, options.doctor)
     options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
+    options.circle = mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
+    options.category = mergeUniqueSortedLists(data?.facets.categories ?? [], options.category)
+    options.bd = mergeUniqueSortedLists(
+      (data?.facets.bds ?? []).map((item) => item.name),
+      options.bd
+    )
+    options.mop = mergeUniqueSortedLists(PIPELINE_MOP_FILTER_OPTIONS, options.mop)
+    options.recency = mergeUniqueSortedLists(PIPELINE_RECENCY_FILTER_OPTIONS, options.recency)
+    options.stage = mergeUniqueSortedLists(PIPELINE_STAGE_FILTER_OPTIONS, options.stage)
 
     return options
   }, [
     availableColumns,
+    data?.facets.bds,
+    data?.facets.categories,
+    data?.facets.circles,
     rawPageLeads,
     treatmentMasterData,
     hospitalMasterData,
@@ -763,23 +810,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     [columnFilterOptions, columnFilters, handleColumnFilterChange]
   )
 
-  // Apply only page-local column filters on top of the server-filtered rows.
-  const tableRows: Lead[] = useMemo(
-    () =>
-      availableColumns.reduce<Lead[]>((result, column) => {
-        const selected = columnFilters[column.id]
-        if (!selected?.length) {
-          return result
-        }
-
-        if (isPipelineServerFilterColumn(column.id)) {
-          return result
-        }
-
-        return result.filter((lead) => selected.includes(getPipelineColumnFilterValue(lead, column.id)))
-      }, rawPageLeads),
-    [availableColumns, rawPageLeads, columnFilters]
-  )
+  const tableRows: Lead[] = useMemo(() => rawPageLeads, [rawPageLeads])
 
   const noteCountKey = useMemo(() => [...tableRows.map((l) => l.id)].sort().join(','), [tableRows])
 
@@ -949,12 +980,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const totalPages = data?.totalPages ?? 1
   const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1
   const rangeEnd = Math.min(page * pageSize, total)
-  const hasLocalColumnFilters = localColumnFilterCount > 0
-  const effectivePage = hasLocalColumnFilters ? 1 : page
-  const effectiveTotalPages = hasLocalColumnFilters ? 1 : totalPages
-  const effectiveRangeStart = hasLocalColumnFilters ? (tableRows.length > 0 ? 1 : 0) : rangeStart
-  const effectiveRangeEnd = hasLocalColumnFilters ? tableRows.length : rangeEnd
-  const effectiveTotal = hasLocalColumnFilters ? tableRows.length : total
   const isBackgroundRefetching = isFetching && !isLoading
   const pipelineReturnTo = useMemo(() => {
     const query = searchParams.toString()
@@ -1184,11 +1209,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       )}
                     </h3>
                     <p className="text-xs text-muted-foreground">
-                      {data
-                        ? hasLocalColumnFilters
-                          ? `${rangeStart}–${rangeEnd} of ${total} shown · ${tableRows.length} match page-only column filters on this page`
-                          : `${rangeStart}–${rangeEnd} of ${total} shown`
-                        : 'Loading…'}{' '}
+                      {data ? `${rangeStart}–${rangeEnd} of ${total} shown` : 'Loading…'}{' '}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1457,10 +1478,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
                 <div className="flex flex-col gap-2 border-t border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-xs text-muted-foreground">
-                    {effectiveTotal > 0
-                      ? hasLocalColumnFilters
-                        ? `Showing ${effectiveRangeStart}–${effectiveRangeEnd} of ${effectiveTotal} filtered results on this page`
-                        : `Showing ${effectiveRangeStart}–${effectiveRangeEnd} of ${effectiveTotal}`
+                    {total > 0
+                      ? `Showing ${rangeStart}–${rangeEnd} of ${total}`
                       : 'No results'}
                   </p>
                   <div className="flex items-center gap-2">
@@ -1482,19 +1501,19 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={hasLocalColumnFilters || page <= 1}
+                      disabled={page <= 1}
                       onClick={() => setState({ page: page - 1 })}
                     >
                       <ChevronLeft className="h-4 w-4" />
                       Prev
                     </Button>
                     <span className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
-                      Page {effectivePage} of {effectiveTotalPages}
+                      Page {page} of {totalPages}
                     </span>
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={hasLocalColumnFilters || page >= totalPages}
+                      disabled={page >= totalPages}
                       onClick={() => setState({ page: page + 1 })}
                     >
                       Next
@@ -1543,12 +1562,6 @@ type PipelineCaseAction = {
   id: 'opd-schedule' | 'card-upload' | 'pre-auth-raised' | 'ipd-schedule'
   label: string
   href: string
-}
-
-function normalizeModeOfPaymentKey(value: unknown) {
-  if (typeof value !== 'string') return null
-  const normalized = value.trim().toLowerCase()
-  return normalized.length > 0 ? normalized : null
 }
 
 function isInsuranceModeOfPayment(modeOfPayment: unknown) {
@@ -1958,7 +1971,7 @@ const PipelineRow = memo(function PipelineRow({
         </td>
       )}
       {show('mop') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.modeOfPayment, '—')}</td>
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(normalizeModeOfPaymentLabel(lead.modeOfPayment), '—')}</td>
       )}
       {show('surgeryDate') && (
         <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(getLeadSurgeryDateValue(lead))}</td>

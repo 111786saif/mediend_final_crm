@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
+import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
@@ -819,7 +820,7 @@ export default function PatientDetailsPage() {
       const value = extractLatestAmountFromRemarks(lead.remarks, key)
       return value == null ? null : String(value)
     }
-    const emiItems = lead.modeOfPayment === 'EMI' ? [
+    const emiItems = normalizeModeOfPaymentKey(lead.modeOfPayment) === 'emi' ? [
       `EMI Amount: ${extractFromRemarks('EMI Amount') ?? '—'}`,
       `Processing Fee: ${extractFromRemarks('Processing Fee') ?? '—'}`,
       `GST: ${extractFromRemarks('GST') ?? '—'}`,
@@ -868,7 +869,7 @@ export default function PatientDetailsPage() {
       '',
       ...(isCash ? [
         `*Payment*`,
-        `Mode: ${lead.modeOfPayment ?? '—'}`,
+        `Mode: ${normalizeModeOfPaymentLabel(lead.modeOfPayment) ?? '—'}`,
         `Approved / Cash Package: ${fmtMoney(approvedAmount)}`,
         `Final Bill Amount: ${fmtMoney(finalBillAmount)}`,
         totalCollectedAmount ? `Cash / Deduction Collected: ${fmtMoney(totalCollectedAmount)}` : null,
