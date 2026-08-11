@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { Prisma } from '@/generated/prisma/client'
 import { getSession } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
@@ -292,7 +293,7 @@ export async function GET(request: NextRequest) {
     })
 
     const paymentModeAnalysis = paymentModeStats.map((p) => ({
-      mode: p.modeOfPayment || 'Unknown',
+      mode: normalizeModeOfPaymentLabel(p.modeOfPayment) || 'Unknown',
       count: p._count.id,
       revenue: p._sum.billAmount || 0,
       profit: p._sum.netProfit || 0,

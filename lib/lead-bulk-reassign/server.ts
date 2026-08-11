@@ -16,6 +16,7 @@ import type {
   LeadBulkReassignRunStatus,
 } from '@/lib/lead-bulk-reassign/shared'
 import { CRM_LEAD_STATUS_OPTIONS } from '@/lib/lead-status-options'
+import { normalizeModeOfPaymentStorageValue } from '@/lib/mode-of-payment'
 import {
   isStatusRequiringAgeSex,
   isStatusRequiringFollowUpDate,
@@ -590,7 +591,7 @@ export async function processBulkLeadReassignCycle(
               : {}),
             ...(workflowFollowUpDate ? { followUpDate: workflowFollowUpDate } : {}),
             ...(workflowMetadata.modeOfPayment
-              ? { modeOfPayment: workflowMetadata.modeOfPayment }
+              ? { modeOfPayment: normalizeModeOfPaymentStorageValue(workflowMetadata.modeOfPayment) }
               : {}),
             ...(run!.subStatus != null ? { subStatus: run!.subStatus } : {}),
             ...(run!.removePreviousRemarks

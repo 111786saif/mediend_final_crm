@@ -10,10 +10,13 @@ import {
 } from '@/lib/lead-remark-visibility'
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
 import { maskPhoneNumber } from '@/lib/phone-utils'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import {
+  applyPipelineColumnFilters,
   buildPipelineFiltersWhere,
   buildPipelineRoleWhere,
   bucketsFromStatusGroups,
+  hasPostQueryPipelineColumnFilters,
   parsePipelineQueryParams,
   pipelineOrderBy,
   pipelineTableSelect,
@@ -35,9 +38,53 @@ export async function GET(request: NextRequest) {
 
     const skip = (params.page - 1) * params.pageSize
     const orderBy = pipelineOrderBy(params.sortBy, params.sortDir)
+    const needsPostQueryColumnFiltering = hasPostQueryPipelineColumnFilters(params.columnFilters)
 
-    const [total, leads, statusGroups, categoryRows, circleRows, bdRows, campaignAgg] =
-      await Promise.all([
+    const [statusGroups, categoryRows, circleRows, bdRows, campaignAgg] = await Promise.all([
+      prisma.lead.groupBy({
+        by: ['status'],
+        where: facetWhere,
+        _count: { _all: true },
+      }),
+      prisma.lead.findMany({
+        where: facetWhere,
+        select: { category: true },
+        distinct: ['category'],
+        take: 200,
+        orderBy: { category: 'asc' },
+      }),
+      prisma.lead.findMany({
+        where: facetWhere,
+        select: { circle: true },
+        distinct: ['circle'],
+        take: 200,
+        orderBy: { circle: 'asc' },
+      }),
+      // bdId is required on Lead — do not use `{ not: null }` (Prisma rejects it).
+      prisma.lead.findMany({
+        where: facetWhere,
+        select: { bdId: true, bd: { select: { id: true, name: true } } },
+        distinct: ['bdId'],
+        take: 300,
+        orderBy: { bdId: 'asc' },
+      }),
+      loadCampaignTree(facetWhere, params.groupBy),
+    ])
+
+    let total: number
+    let leads: Awaited<ReturnType<typeof prisma.lead.findMany>>
+
+    if (needsPostQueryColumnFiltering) {
+      const allMatchingLeads = await prisma.lead.findMany({
+        where: listWhere,
+        select: pipelineTableSelect,
+        orderBy,
+      })
+      const filteredLeads = applyPipelineColumnFilters(allMatchingLeads, params.columnFilters)
+      total = filteredLeads.length
+      leads = filteredLeads.slice(skip, skip + params.pageSize)
+    } else {
+      ;[total, leads] = await Promise.all([
         prisma.lead.count({ where: listWhere }),
         prisma.lead.findMany({
           where: listWhere,
@@ -46,35 +93,8 @@ export async function GET(request: NextRequest) {
           skip,
           take: params.pageSize,
         }),
-        prisma.lead.groupBy({
-          by: ['status'],
-          where: facetWhere,
-          _count: { _all: true },
-        }),
-        prisma.lead.findMany({
-          where: facetWhere,
-          select: { category: true },
-          distinct: ['category'],
-          take: 200,
-          orderBy: { category: 'asc' },
-        }),
-        prisma.lead.findMany({
-          where: facetWhere,
-          select: { circle: true },
-          distinct: ['circle'],
-          take: 200,
-          orderBy: { circle: 'asc' },
-        }),
-        // bdId is required on Lead — do not use `{ not: null }` (Prisma rejects it).
-        prisma.lead.findMany({
-          where: facetWhere,
-          select: { bdId: true, bd: { select: { id: true, name: true } } },
-          distinct: ['bdId'],
-          take: 300,
-          orderBy: { bdId: 'asc' },
-        }),
-        loadCampaignTree(facetWhere, params.groupBy),
       ])
+    }
 
     const statusCounts = bucketsFromStatusGroups(statusGroups)
     const facetTotal = Object.values(statusCounts).reduce((s, n) => s + n, 0)
@@ -106,6 +126,7 @@ export async function GET(request: NextRequest) {
         latestRemark,
         remarks: getVisibleLeadRemarksFallbackContent(lead, lead.remarks, user.role),
         status: mapStatusCode(lead.status),
+        modeOfPayment: normalizeModeOfPaymentLabel(lead.modeOfPayment),
         phoneNumber: canViewPhone
           ? lead.phoneNumber
           : (lead.phoneNumber ? maskPhoneNumber(lead.phoneNumber) : null),

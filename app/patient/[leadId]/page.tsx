@@ -5,6 +5,7 @@ import { IPDDetailsCard } from '@/components/admission/ipd-details-card'
 import { IPDDetailsForm } from '@/components/admission/ipd-details-form'
 import { IPDMarkComponent } from '@/components/admission/ipd-mark-component'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
+import { LeadEditDrawer } from '@/components/pipeline/lead-edit-drawer'
 import { PatientDischargeInfo } from '@/components/discharge/patient-discharge-info'
 import { InitiateFormCard } from '@/components/insurance/initiate-form-card'
 import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
@@ -15,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
+import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
@@ -585,6 +587,7 @@ export default function PatientDetailsPage() {
     enabled: !!leadId,
   })
   const [makeCallLoading, setMakeCallLoading] = useState(false)
+  const [leadEditDrawerOpen, setLeadEditDrawerOpen] = useState(false)
 
   const { data: initiateFormData } = useQuery<any>({
     queryKey: ['insurance-initiate-form', leadId],
@@ -817,7 +820,7 @@ export default function PatientDetailsPage() {
       const value = extractLatestAmountFromRemarks(lead.remarks, key)
       return value == null ? null : String(value)
     }
-    const emiItems = lead.modeOfPayment === 'EMI' ? [
+    const emiItems = normalizeModeOfPaymentKey(lead.modeOfPayment) === 'emi' ? [
       `EMI Amount: ${extractFromRemarks('EMI Amount') ?? '—'}`,
       `Processing Fee: ${extractFromRemarks('Processing Fee') ?? '—'}`,
       `GST: ${extractFromRemarks('GST') ?? '—'}`,
@@ -866,7 +869,7 @@ export default function PatientDetailsPage() {
       '',
       ...(isCash ? [
         `*Payment*`,
-        `Mode: ${lead.modeOfPayment ?? '—'}`,
+        `Mode: ${normalizeModeOfPaymentLabel(lead.modeOfPayment) ?? '—'}`,
         `Approved / Cash Package: ${fmtMoney(approvedAmount)}`,
         `Final Bill Amount: ${fmtMoney(finalBillAmount)}`,
         totalCollectedAmount ? `Cash / Deduction Collected: ${fmtMoney(totalCollectedAmount)}` : null,
@@ -1145,9 +1148,20 @@ export default function PatientDetailsPage() {
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400">
                     Patient Dossier · {lead.leadRef}
                   </p>
-                  <h1 className="mt-0.5 truncate text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-50 sm:text-3xl">
-                    {lead.patientName}
-                  </h1>
+                  <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                    <h1 className="truncate text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-50 sm:text-3xl">
+                      {lead.patientName}
+                    </h1>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="gap-2"
+                      onClick={() => setLeadEditDrawerOpen(true)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-gray-600 dark:text-gray-400">
                     <span>
                       {lead.age ?? '—'} / {lead.sex ?? '—'}
@@ -3015,6 +3029,12 @@ export default function PatientDetailsPage() {
             </div>
           </DialogContent>
         </Dialog>
+        <LeadEditDrawer
+          key={leadId}
+          leadId={leadId}
+          open={leadEditDrawerOpen}
+          onOpenChange={setLeadEditDrawerOpen}
+        />
       </div>
     </AuthenticatedLayout>
   )

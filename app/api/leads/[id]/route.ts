@@ -24,6 +24,10 @@ import {
   isStatusRequiringModeOfPayment,
 } from '@/lib/lead-status-rules'
 import {
+  normalizeModeOfPaymentLabel,
+  normalizeModeOfPaymentStorageValue,
+} from '@/lib/mode-of-payment'
+import {
   buildLeadOwnershipTransferUpdate,
   canUserAddLeadRemarks,
   canUserEditLeadProfile,
@@ -430,6 +434,7 @@ export async function GET(
       ...fullLead,
       status: mapStatusCode(fullLead.status),
       source: fullLead.source ? mapSourceCode(fullLead.source) : fullLead.source,
+      modeOfPayment: normalizeModeOfPaymentLabel(fullLead.modeOfPayment),
       city: resolveLeadCity(fullLead),
       phoneNumber: canViewPhone ? fullLead.phoneNumber : (fullLead.phoneNumber ? maskPhoneNumber(fullLead.phoneNumber) : null),
       alternateNumber: canViewPhone ? fullLead.alternateNumber : (fullLead.alternateNumber ? maskPhoneNumber(fullLead.alternateNumber) : null),
@@ -671,10 +676,8 @@ export async function PATCH(
     ) {
       const nextModeOfPayment =
         body.modeOfPayment !== undefined
-          ? typeof body.modeOfPayment === 'string'
-            ? body.modeOfPayment.trim() || null
-            : body.modeOfPayment
-          : lead.modeOfPayment
+          ? normalizeModeOfPaymentLabel(body.modeOfPayment)
+          : normalizeModeOfPaymentLabel(lead.modeOfPayment)
 
       if (typeof nextModeOfPayment !== 'string' || nextModeOfPayment.trim().length === 0) {
         return errorResponse('Mode of payment is required for this status', 400)
@@ -822,6 +825,8 @@ export async function PATCH(
           nextValue = body[field] ? new Date(String(body[field])) : null
         } else if (field === 'sex' && typeof body[field] === 'string') {
           nextValue = normalizeLeadSexValue(body[field]) || body[field]
+        } else if (field === 'modeOfPayment') {
+          nextValue = normalizeModeOfPaymentStorageValue(body[field])
         } else if (
           (field === 'patientName' ||
             field === 'profession' ||
@@ -1235,6 +1240,7 @@ export async function PATCH(
     const mapped = mappedBase
       ? {
           ...mappedBase,
+          modeOfPayment: normalizeModeOfPaymentLabel(mappedBase.modeOfPayment),
           city:
             body.city !== undefined
               ? typeof body.city === 'string'

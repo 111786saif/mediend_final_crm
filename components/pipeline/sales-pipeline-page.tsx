@@ -33,7 +33,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { usePipelinePage, usePipelineUrlState } from '@/hooks/use-pipeline'
 import type { Lead } from '@/hooks/use-leads'
 import { apiGet, apiPost } from '@/lib/api-client'
-import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
+import { CASE_STAGE_CONFIG, getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { resolveLeadCity, resolveLeadHospitalDoctor, resolveLeadSourceDisplay } from '@/lib/lead-display'
 import {
   BulkLeadReassignmentRunResponse,
@@ -48,6 +48,7 @@ import {
   type LeadAgeFilter,
 } from '@/lib/pipeline-lead-buckets'
 import type { PipelineSortDir, PipelineSortField } from '@/lib/pipeline/server-query'
+import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import {
@@ -153,6 +154,14 @@ function normalizedText(value: unknown, fallback: string): string {
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500]
 
+const PIPELINE_MOP_FILTER_OPTIONS = ['—', 'Cash', 'Cashless', 'EMI', 'Reimbursement']
+const PIPELINE_RECENCY_FILTER_OPTIONS = ['New', '< 1 month', '1 month', '2 months', '3+ months', 'Unknown']
+const PIPELINE_STAGE_FILTER_OPTIONS = uniqueSorted([
+  'OPD Schedule',
+  'OPD Done',
+  ...Object.values(CASE_STAGE_CONFIG).map((stage) => stage.label),
+])
+
 type PipelineColumnId =
   | 'leadRef'
   | 'assignDate'
@@ -213,25 +222,25 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'city', label: 'City', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'category', label: 'Category', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'treatment', label: 'Treatment', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'planningTreatment', label: 'Planning Treatment', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'profession', label: 'Profession', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'tl', label: 'Team Lead', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'status', label: 'Lead Status', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'mop', label: 'MOP', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'bd', label: 'BDM', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'lastRemarks', label: 'Last Remark', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'followUpDate', label: 'Follow Up Date', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'subStatus', label: 'Sub Status', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'mop', label: 'MOP', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'surgeryDate', label: 'Surgery Date', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'planningTreatment', label: 'Planning Treatment', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'subStatus', label: 'Sub Status', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'healthInsurance', label: 'Health Insurance', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'preferredLocation', label: 'Preferred Location', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'profession', label: 'Profession', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'source', label: 'Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'leadSource', label: 'Lead Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'createDate', label: 'Create Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyBy', label: 'Modify By', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyDate', label: 'Modified Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'dupCount', label: 'Duplicate Count', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'bd', label: 'BDM', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'status', label: 'Lead Status', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
 ]
 
 const PIPELINE_DATE_FILTER_COLUMNS = new Set<PipelineColumnId>([
@@ -244,12 +253,39 @@ const PIPELINE_DATE_FILTER_COLUMNS = new Set<PipelineColumnId>([
 ])
 
 const PIPELINE_SERVER_FILTER_COLUMNS = new Set<PipelineColumnId>([
+  'leadRef',
   'assignDate',
   'leadDate',
+  'patient',
+  'month',
+  'age',
+  'sex',
+  'circle',
+  'city',
+  'category',
+  'treatment',
+  'planningTreatment',
+  'profession',
+  'tl',
+  'hospital',
+  'doctor',
+  'status',
+  'stage',
+  'mop',
+  'lastRemarks',
   'followUpDate',
+  'subStatus',
   'surgeryDate',
+  'healthInsurance',
+  'preferredLocation',
+  'source',
+  'leadSource',
   'createDate',
+  'modifyBy',
   'modifyDate',
+  'dupCount',
+  'recency',
+  'bd',
 ])
 
 function getPipelineColumnDefinitions(variant: 'bd' | 'team-lead') {
@@ -408,6 +444,10 @@ function getLeadTeamLeadText(lead: Lead) {
   )
 }
 
+function getLeadSurgeryDateValue(lead: Lead) {
+  return lead.surgeryDate ?? lead.admissionRecord?.surgeryDate ?? null
+}
+
 // function getLeadBdmText(lead: Lead) {
 //   return typeof lead.plRecord?.bdmName === 'string' && lead.plRecord.bdmName.trim().length > 0
 //     ? lead.plRecord.bdmName.trim()
@@ -459,7 +499,7 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'stage':
       return getLeadStageLabel(lead)
     case 'mop':
-      return normalizedText(lead.modeOfPayment, '—')
+      return normalizedText(normalizeModeOfPaymentLabel(lead.modeOfPayment), '—')
     case 'lastRemarks':
       return getLeadLastRemarksText(lead)
     case 'followUpDate':
@@ -467,7 +507,7 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'subStatus':
       return lead.subStatus != null ? String(lead.subStatus) : '—'
     case 'surgeryDate':
-      return formatTableDate(lead.surgeryDate)
+      return formatTableDate(getLeadSurgeryDateValue(lead))
     case 'healthInsurance':
       return normalizedText(lead.insuranceName, '—')
     case 'preferredLocation':
@@ -577,26 +617,35 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     [availableColumns, visibleColumns]
   )
 
-  // Column header filters (dropdown-in-header). Date filters are sent to the
-  // server so they apply across the full dataset; the remaining filters stay
-  // page-local for now.
+  // Column header filters are sent to the server so they apply across the full
+  // dataset before pagination.
   const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
   const serverColumnFilters = useMemo(() => {
     const filters = (Object.entries(columnFilters) as Array<[PipelineColumnId, string[]]>).flatMap(
       ([columnId, selected]) => {
-        if (
-          !isPipelineServerFilterColumn(columnId) ||
-          selected.length !== 2 ||
-          !selected[0]
-        ) {
+        if (!isPipelineServerFilterColumn(columnId) || selected.length === 0) {
           return []
+        }
+
+        if (isPipelineDateFilterColumn(columnId)) {
+          if (selected.length !== 2 || !selected[0]) {
+            return []
+          }
+
+          return [
+            {
+              field: columnId,
+              operator: 'between' as const,
+              value: [selected[0], selected[1] || selected[0]] as [string, string],
+            },
+          ]
         }
 
         return [
           {
             field: columnId,
-            operator: 'between' as const,
-            value: [selected[0], selected[1] || selected[0]] as [string, string],
+            operator: 'in' as const,
+            value: selected,
           },
         ]
       }
@@ -607,19 +656,10 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const { data, isLoading, isFetching } = usePipelinePage({ filters: serverColumnFilters })
   const handleColumnFilterChange = useCallback((key: PipelineColumnId, selected: string[]) => {
     setColumnFilters((prev) => ({ ...prev, [key]: selected }))
-    if (isPipelineServerFilterColumn(key)) {
-      setState({ page: 1 }, { resetPage: false })
-    }
+    setState({ page: 1 }, { resetPage: false })
   }, [setState])
   const activeColumnFilterCount = useMemo(
     () => Object.values(columnFilters).filter((v) => v && v.length > 0).length,
-    [columnFilters]
-  )
-  const localColumnFilterCount = useMemo(
-    () =>
-      (Object.entries(columnFilters) as Array<[PipelineColumnId, string[]]>).filter(
-        ([columnId, value]) => value.length > 0 && !isPipelineServerFilterColumn(columnId)
-      ).length,
     [columnFilters]
   )
   const clearColumnFilters = useCallback(() => {
@@ -709,7 +749,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     return { target: activeTarget, actual: null, pct: null, showActual: false as const }
   }, [variant, targets, data])
 
-  // Raw rows for the current server page, before client-side column filters.
   const rawPageLeads: Lead[] = useMemo(() => data?.leads ?? [], [data?.leads])
 
   // Column filter dropdown option lists — built from the current page only.
@@ -738,10 +777,22 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     options.hospital = mergeUniqueSortedLists(hospitalMasterOptions, options.hospital)
     options.doctor = mergeUniqueSortedLists(doctorMasterOptions, options.doctor)
     options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
+    options.circle = mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
+    options.category = mergeUniqueSortedLists(data?.facets.categories ?? [], options.category)
+    options.bd = mergeUniqueSortedLists(
+      (data?.facets.bds ?? []).map((item) => item.name),
+      options.bd
+    )
+    options.mop = mergeUniqueSortedLists(PIPELINE_MOP_FILTER_OPTIONS, options.mop)
+    options.recency = mergeUniqueSortedLists(PIPELINE_RECENCY_FILTER_OPTIONS, options.recency)
+    options.stage = mergeUniqueSortedLists(PIPELINE_STAGE_FILTER_OPTIONS, options.stage)
 
     return options
   }, [
     availableColumns,
+    data?.facets.bds,
+    data?.facets.categories,
+    data?.facets.circles,
     rawPageLeads,
     treatmentMasterData,
     hospitalMasterData,
@@ -759,23 +810,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     [columnFilterOptions, columnFilters, handleColumnFilterChange]
   )
 
-  // Apply only page-local column filters on top of the server-filtered rows.
-  const tableRows: Lead[] = useMemo(
-    () =>
-      availableColumns.reduce<Lead[]>((result, column) => {
-        const selected = columnFilters[column.id]
-        if (!selected?.length) {
-          return result
-        }
-
-        if (isPipelineServerFilterColumn(column.id)) {
-          return result
-        }
-
-        return result.filter((lead) => selected.includes(getPipelineColumnFilterValue(lead, column.id)))
-      }, rawPageLeads),
-    [availableColumns, rawPageLeads, columnFilters]
-  )
+  const tableRows: Lead[] = useMemo(() => rawPageLeads, [rawPageLeads])
 
   const noteCountKey = useMemo(() => [...tableRows.map((l) => l.id)].sort().join(','), [tableRows])
 
@@ -945,12 +980,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const totalPages = data?.totalPages ?? 1
   const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1
   const rangeEnd = Math.min(page * pageSize, total)
-  const hasLocalColumnFilters = localColumnFilterCount > 0
-  const effectivePage = hasLocalColumnFilters ? 1 : page
-  const effectiveTotalPages = hasLocalColumnFilters ? 1 : totalPages
-  const effectiveRangeStart = hasLocalColumnFilters ? (tableRows.length > 0 ? 1 : 0) : rangeStart
-  const effectiveRangeEnd = hasLocalColumnFilters ? tableRows.length : rangeEnd
-  const effectiveTotal = hasLocalColumnFilters ? tableRows.length : total
   const isBackgroundRefetching = isFetching && !isLoading
   const pipelineReturnTo = useMemo(() => {
     const query = searchParams.toString()
@@ -1180,11 +1209,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       )}
                     </h3>
                     <p className="text-xs text-muted-foreground">
-                      {data
-                        ? hasLocalColumnFilters
-                          ? `${rangeStart}–${rangeEnd} of ${total} shown · ${tableRows.length} match page-only column filters on this page`
-                          : `${rangeStart}–${rangeEnd} of ${total} shown`
-                        : 'Loading…'}{' '}
+                      {data ? `${rangeStart}–${rangeEnd} of ${total} shown` : 'Loading…'}{' '}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1345,9 +1370,39 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               {...getHeaderFilterProps('treatment')}
                             />
                           )}
+                          {isColumnVisible('tl') && <HeaderCell label="Team Lead" {...getHeaderFilterProps('tl')} />}
+                          {isColumnVisible('bd') && (
+                            <HeaderCell
+                              label="BDM"
+                              sortField="bd"
+                              state={state}
+                              onSort={handleSort}
+                              {...getHeaderFilterProps('bd')}
+                            />
+                          )}
+                          {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remark" {...getHeaderFilterProps('lastRemarks')} />}
+                          {isColumnVisible('followUpDate') && (
+                            <HeaderCell
+                              label="Follow Up Date"
+                              sortField="followUpDate"
+                              state={state}
+                              onSort={handleSort}
+                              {...getHeaderFilterProps('followUpDate')}
+                            />
+                          )}
+                          {isColumnVisible('mop') && <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />}
+                          {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />}
                           {isColumnVisible('planningTreatment') && <HeaderCell label="Planning Treatment" {...getHeaderFilterProps('planningTreatment')} />}
+                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" {...getHeaderFilterProps('subStatus')} />}
+                          {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" {...getHeaderFilterProps('healthInsurance')} />}
+                          {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" {...getHeaderFilterProps('preferredLocation')} />}
                           {isColumnVisible('profession') && <HeaderCell label="Profession" {...getHeaderFilterProps('profession')} />}
-                          {isColumnVisible('tl') && <HeaderCell label="TL" {...getHeaderFilterProps('tl')} />}
+                          {isColumnVisible('source') && <HeaderCell label="Source" {...getHeaderFilterProps('source')} />}
+                          {isColumnVisible('leadSource') && <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />}
+                          {isColumnVisible('createDate') && <HeaderCell label="Create Date" {...getHeaderFilterProps('createDate')} />}
+                          {isColumnVisible('modifyBy') && <HeaderCell label="Modify By" {...getHeaderFilterProps('modifyBy')} />}
+                          {isColumnVisible('modifyDate') && <HeaderCell label="Modified Date" {...getHeaderFilterProps('modifyDate')} />}
+                          {isColumnVisible('dupCount') && <HeaderCell label="Duplicate Count" {...getHeaderFilterProps('dupCount')} />}
                           {/* {isColumnVisible('bdm') && (
                             <HeaderCell
                               label="BDM (Assign)"
@@ -1381,29 +1436,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               {...getHeaderFilterProps('stage')}
                             />
                           )}
-                          {isColumnVisible('mop') && <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />}
-                          {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remarks" {...getHeaderFilterProps('lastRemarks')} />}
-                          {isColumnVisible('followUpDate') && <HeaderCell label="Follow Up Date" {...getHeaderFilterProps('followUpDate')} />}
-                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" {...getHeaderFilterProps('subStatus')} />}
-                          {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />}
-                          {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" {...getHeaderFilterProps('healthInsurance')} />}
-                          {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" {...getHeaderFilterProps('preferredLocation')} />}
-                          {isColumnVisible('source') && <HeaderCell label="Source" {...getHeaderFilterProps('source')} />}
-                          {isColumnVisible('leadSource') && <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />}
-                          {isColumnVisible('createDate') && <HeaderCell label="Create Date" {...getHeaderFilterProps('createDate')} />}
-                          {isColumnVisible('modifyBy') && <HeaderCell label="Modify By" {...getHeaderFilterProps('modifyBy')} />}
-                          {isColumnVisible('modifyDate') && <HeaderCell label="Modify Date" {...getHeaderFilterProps('modifyDate')} />}
-                          {isColumnVisible('dupCount') && <HeaderCell label="Dupl Count" {...getHeaderFilterProps('dupCount')} />}
                           {isColumnVisible('recency') && <HeaderCell label="Recency" {...getHeaderFilterProps('recency')} />}
-                          {isColumnVisible('bd') && (
-                            <HeaderCell
-                              label="BD"
-                              sortField="bd"
-                              state={state}
-                              onSort={handleSort}
-                              {...getHeaderFilterProps('bd')}
-                            />
-                          )}
                           <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                             Notes
                           </th>
@@ -1445,10 +1478,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
                 <div className="flex flex-col gap-2 border-t border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-xs text-muted-foreground">
-                    {effectiveTotal > 0
-                      ? hasLocalColumnFilters
-                        ? `Showing ${effectiveRangeStart}–${effectiveRangeEnd} of ${effectiveTotal} filtered results on this page`
-                        : `Showing ${effectiveRangeStart}–${effectiveRangeEnd} of ${effectiveTotal}`
+                    {total > 0
+                      ? `Showing ${rangeStart}–${rangeEnd} of ${total}`
                       : 'No results'}
                   </p>
                   <div className="flex items-center gap-2">
@@ -1470,19 +1501,19 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={hasLocalColumnFilters || page <= 1}
+                      disabled={page <= 1}
                       onClick={() => setState({ page: page - 1 })}
                     >
                       <ChevronLeft className="h-4 w-4" />
                       Prev
                     </Button>
                     <span className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
-                      Page {effectivePage} of {effectiveTotalPages}
+                      Page {page} of {totalPages}
                     </span>
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={hasLocalColumnFilters || page >= totalPages}
+                      disabled={page >= totalPages}
                       onClick={() => setState({ page: page + 1 })}
                     >
                       Next
@@ -1531,12 +1562,6 @@ type PipelineCaseAction = {
   id: 'opd-schedule' | 'card-upload' | 'pre-auth-raised' | 'ipd-schedule'
   label: string
   href: string
-}
-
-function normalizeModeOfPaymentKey(value: unknown) {
-  if (typeof value !== 'string') return null
-  const normalized = value.trim().toLowerCase()
-  return normalized.length > 0 ? normalized : null
 }
 
 function isInsuranceModeOfPayment(modeOfPayment: unknown) {
@@ -1925,22 +1950,68 @@ const PipelineRow = memo(function PipelineRow({
       {show('treatment') && (
         <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{normalizedText(lead.treatment, '—')}</td>
       )}
-      {show('planningTreatment') && (
-        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={planningTreatmentText}>
-          {planningTreatmentText}
-        </td>
-      )}
-      {show('profession') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.profession, '—')}</td>
-      )}
       {show('tl') && (
         <td className="max-w-[120px] truncate px-3 py-2 text-sm" title={teamLeadText}>
           {teamLeadText}
         </td>
       )}
+      {show('bd') && <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>}
+      {show('lastRemarks') && (
+        <td className="max-w-[420px] whitespace-normal break-words px-3 py-2 text-sm align-top">
+          {lastRemarksText}
+        </td>
+      )}
+      {show('followUpDate') && (
+        <td
+          className={`whitespace-nowrap px-3 py-2 text-sm ${
+            isPastFollowUpDate(lead.followUpDate) ? 'font-medium text-red-500' : ''
+          }`}
+        >
+          {formatTableDate(lead.followUpDate)}
+        </td>
+      )}
+      {show('mop') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(normalizeModeOfPaymentLabel(lead.modeOfPayment), '—')}</td>
+      )}
+      {show('surgeryDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(getLeadSurgeryDateValue(lead))}</td>
+      )}
+      {show('planningTreatment') && (
+        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={planningTreatmentText}>
+          {planningTreatmentText}
+        </td>
+      )}
+      {show('subStatus') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.subStatus != null ? String(lead.subStatus) : '—'}</td>
+      )}
+      {show('healthInsurance') && (
+        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{normalizedText(lead.insuranceName, '—')}</td>
+      )}
+      {show('preferredLocation') && (
+        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{preferredLocation}</td>
+      )}
+      {show('profession') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.profession, '—')}</td>
+      )}
+      {show('source') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.source, '—')}</td>}
+      {show('leadSource') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">
+          {resolveLeadSourceDisplay(lead)}
+        </td>
+      )}
+      {show('createDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.createdDate)}</td>
+      )}
+      {show('modifyBy') && (
+        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{lead.updatedBy?.name ?? '—'}</td>
+      )}
+      {show('modifyDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.updatedDate)}</td>
+      )}
+      {show('dupCount') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.duplCount != null ? String(lead.duplCount) : '0'}</td>
+      )}
       {/* {show('bdm') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{bdmText}</td>} */}
-      {show('hospital') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{hospital || '—'}</td>}
-      {show('doctor') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>}
       {show('status') && (
         <td className="px-3 py-2">
           <span
@@ -1965,59 +2036,13 @@ const PipelineRow = memo(function PipelineRow({
           )}
         </td>
       )}
-      {show('mop') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.modeOfPayment, '—')}</td>
-      )}
-      {show('lastRemarks') && (
-        <td className="max-w-[420px] whitespace-normal break-words px-3 py-2 text-sm align-top">
-          {lastRemarksText}
-        </td>
-      )}
-      {show('followUpDate') && (
-        <td
-          className={`whitespace-nowrap px-3 py-2 text-sm ${
-            isPastFollowUpDate(lead.followUpDate) ? 'font-medium text-red-500' : ''
-          }`}
-        >
-          {formatTableDate(lead.followUpDate)}
-        </td>
-      )}
-      {show('subStatus') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.subStatus != null ? String(lead.subStatus) : '—'}</td>
-      )}
-      {show('surgeryDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.surgeryDate)}</td>
-      )}
-      {show('healthInsurance') && (
-        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{normalizedText(lead.insuranceName, '—')}</td>
-      )}
-      {show('preferredLocation') && (
-        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{preferredLocation}</td>
-      )}
-      {show('source') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.source, '—')}</td>}
-      {show('leadSource') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">
-          {resolveLeadSourceDisplay(lead)}
-        </td>
-      )}
-      {show('createDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.createdDate)}</td>
-      )}
-      {show('modifyBy') && (
-        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{lead.updatedBy?.name ?? '—'}</td>
-      )}
-      {show('modifyDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.updatedDate)}</td>
-      )}
-      {show('dupCount') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.duplCount != null ? String(lead.duplCount) : '0'}</td>
-      )}
+      {show('hospital') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{hospital || '—'}</td>}
+      {show('doctor') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>}
       {show('recency') && (
         <td className="px-3 py-2">
           <LeadAgeBadge lead={lead} />
         </td>
       )}
-      {show('bd') && <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>}
       <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-center">
           <CallNotesPopover leadId={lead.id} onRowClickStop noteCount={noteCount} />
