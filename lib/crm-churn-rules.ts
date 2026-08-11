@@ -610,9 +610,7 @@ function getNextFollowUpDate(days: number): Date {
 export async function planChurnLeadReassignment(leadOwnerUserId: string) {
   const rule = await resolveApplicableChurnRule(leadOwnerUserId)
   if (!rule) {
-    throw new Error(
-      'No active churn reassignment rule matches this lead. Add a global, admin, sales head, or team lead rule first.'
-    )
+    return null
   }
 
   const { teamLead, candidates } = await getSameTeamBdCandidates(leadOwnerUserId)

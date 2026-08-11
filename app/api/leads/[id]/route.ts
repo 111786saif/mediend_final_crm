@@ -684,13 +684,6 @@ export async function PATCH(
       }
     }
 
-    if (churnStatusTriggered && assigneeChanged) {
-      return errorResponse(
-        'Junk and Churned leads are reassigned automatically. Remove the manual assignee before saving.',
-        400
-      )
-    }
-
     if (
       assigneeChanged &&
       !(await canUserReassignLead(user, lead.bdId, String(body.bdId)))
@@ -758,7 +751,6 @@ export async function PATCH(
       'alternateNumber',
       'whatsapp',
       'attendantName',
-      'bdId',
       'circle',
       'category',
       'treatment',
@@ -869,9 +861,9 @@ export async function PATCH(
       | Awaited<ReturnType<typeof planChurnLeadReassignment>>
       | null = null
 
-    if (churnStatusTriggered) {
+    if (churnStatusTriggered && !assigneeChanged) {
       try {
-      churnAutomationResult = await planChurnLeadReassignment(lead.bdId)
+        churnAutomationResult = await planChurnLeadReassignment(lead.bdId)
       } catch (error) {
         const message =
           error instanceof Error
@@ -879,15 +871,17 @@ export async function PATCH(
             : 'This lead could not be auto-reassigned for the selected status.'
         return errorResponse(message, 409)
       }
-      updateData.status = churnAutomationResult.nextStatus
-      updateData.followUpDate = churnAutomationResult.followUpDate
-      Object.assign(
-        updateData,
-        buildLeadOwnershipTransferUpdate(
-          churnAutomationResult.assignee.userId,
-          churnAutomationResult.assignedAt
+      if (churnAutomationResult) {
+        updateData.status = churnAutomationResult.nextStatus
+        updateData.followUpDate = churnAutomationResult.followUpDate
+        Object.assign(
+          updateData,
+          buildLeadOwnershipTransferUpdate(
+            churnAutomationResult.assignee.userId,
+            churnAutomationResult.assignedAt
+          )
         )
-      )
+      }
     }
 
     // Handle BD reassignment
