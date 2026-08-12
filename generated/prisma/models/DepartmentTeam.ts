@@ -395,15 +395,15 @@ export type DepartmentTeamUncheckedUpdateManyWithoutDepartmentNestedInput = {
   deleteMany?: Prisma.DepartmentTeamScalarWhereInput | Prisma.DepartmentTeamScalarWhereInput[]
 }
 
-export type DepartmentTeamCreateNestedOneWithoutMembersInput = {
-  create?: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutMembersInput, Prisma.DepartmentTeamUncheckedCreateWithoutMembersInput>
-  connectOrCreate?: Prisma.DepartmentTeamCreateOrConnectWithoutMembersInput
-  connect?: Prisma.DepartmentTeamWhereUniqueInput
-}
-
 export type DepartmentTeamCreateNestedOneWithoutTeamLeadInput = {
   create?: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutTeamLeadInput, Prisma.DepartmentTeamUncheckedCreateWithoutTeamLeadInput>
   connectOrCreate?: Prisma.DepartmentTeamCreateOrConnectWithoutTeamLeadInput
+  connect?: Prisma.DepartmentTeamWhereUniqueInput
+}
+
+export type DepartmentTeamCreateNestedOneWithoutMembersInput = {
+  create?: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutMembersInput, Prisma.DepartmentTeamUncheckedCreateWithoutMembersInput>
+  connectOrCreate?: Prisma.DepartmentTeamCreateOrConnectWithoutMembersInput
   connect?: Prisma.DepartmentTeamWhereUniqueInput
 }
 
@@ -411,16 +411,6 @@ export type DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput = {
   create?: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutTeamLeadInput, Prisma.DepartmentTeamUncheckedCreateWithoutTeamLeadInput>
   connectOrCreate?: Prisma.DepartmentTeamCreateOrConnectWithoutTeamLeadInput
   connect?: Prisma.DepartmentTeamWhereUniqueInput
-}
-
-export type DepartmentTeamUpdateOneWithoutMembersNestedInput = {
-  create?: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutMembersInput, Prisma.DepartmentTeamUncheckedCreateWithoutMembersInput>
-  connectOrCreate?: Prisma.DepartmentTeamCreateOrConnectWithoutMembersInput
-  upsert?: Prisma.DepartmentTeamUpsertWithoutMembersInput
-  disconnect?: Prisma.DepartmentTeamWhereInput | boolean
-  delete?: Prisma.DepartmentTeamWhereInput | boolean
-  connect?: Prisma.DepartmentTeamWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentTeamUpdateToOneWithWhereWithoutMembersInput, Prisma.DepartmentTeamUpdateWithoutMembersInput>, Prisma.DepartmentTeamUncheckedUpdateWithoutMembersInput>
 }
 
 export type DepartmentTeamUpdateOneWithoutTeamLeadNestedInput = {
@@ -431,6 +421,16 @@ export type DepartmentTeamUpdateOneWithoutTeamLeadNestedInput = {
   delete?: Prisma.DepartmentTeamWhereInput | boolean
   connect?: Prisma.DepartmentTeamWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentTeamUpdateToOneWithWhereWithoutTeamLeadInput, Prisma.DepartmentTeamUpdateWithoutTeamLeadInput>, Prisma.DepartmentTeamUncheckedUpdateWithoutTeamLeadInput>
+}
+
+export type DepartmentTeamUpdateOneWithoutMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutMembersInput, Prisma.DepartmentTeamUncheckedCreateWithoutMembersInput>
+  connectOrCreate?: Prisma.DepartmentTeamCreateOrConnectWithoutMembersInput
+  upsert?: Prisma.DepartmentTeamUpsertWithoutMembersInput
+  disconnect?: Prisma.DepartmentTeamWhereInput | boolean
+  delete?: Prisma.DepartmentTeamWhereInput | boolean
+  connect?: Prisma.DepartmentTeamWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentTeamUpdateToOneWithWhereWithoutMembersInput, Prisma.DepartmentTeamUpdateWithoutMembersInput>, Prisma.DepartmentTeamUncheckedUpdateWithoutMembersInput>
 }
 
 export type DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput = {
@@ -499,29 +499,6 @@ export type DepartmentTeamScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"DepartmentTeam"> | Date | string
 }
 
-export type DepartmentTeamCreateWithoutMembersInput = {
-  id?: string
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  department: Prisma.DepartmentCreateNestedOneWithoutTeamsInput
-  teamLead?: Prisma.EmployeeCreateNestedOneWithoutTeamLeadOfInput
-}
-
-export type DepartmentTeamUncheckedCreateWithoutMembersInput = {
-  id?: string
-  name: string
-  departmentId: string
-  teamLeadId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type DepartmentTeamCreateOrConnectWithoutMembersInput = {
-  where: Prisma.DepartmentTeamWhereUniqueInput
-  create: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutMembersInput, Prisma.DepartmentTeamUncheckedCreateWithoutMembersInput>
-}
-
 export type DepartmentTeamCreateWithoutTeamLeadInput = {
   id?: string
   name: string
@@ -545,33 +522,27 @@ export type DepartmentTeamCreateOrConnectWithoutTeamLeadInput = {
   create: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutTeamLeadInput, Prisma.DepartmentTeamUncheckedCreateWithoutTeamLeadInput>
 }
 
-export type DepartmentTeamUpsertWithoutMembersInput = {
-  update: Prisma.XOR<Prisma.DepartmentTeamUpdateWithoutMembersInput, Prisma.DepartmentTeamUncheckedUpdateWithoutMembersInput>
+export type DepartmentTeamCreateWithoutMembersInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  department: Prisma.DepartmentCreateNestedOneWithoutTeamsInput
+  teamLead?: Prisma.EmployeeCreateNestedOneWithoutTeamLeadOfInput
+}
+
+export type DepartmentTeamUncheckedCreateWithoutMembersInput = {
+  id?: string
+  name: string
+  departmentId: string
+  teamLeadId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DepartmentTeamCreateOrConnectWithoutMembersInput = {
+  where: Prisma.DepartmentTeamWhereUniqueInput
   create: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutMembersInput, Prisma.DepartmentTeamUncheckedCreateWithoutMembersInput>
-  where?: Prisma.DepartmentTeamWhereInput
-}
-
-export type DepartmentTeamUpdateToOneWithWhereWithoutMembersInput = {
-  where?: Prisma.DepartmentTeamWhereInput
-  data: Prisma.XOR<Prisma.DepartmentTeamUpdateWithoutMembersInput, Prisma.DepartmentTeamUncheckedUpdateWithoutMembersInput>
-}
-
-export type DepartmentTeamUpdateWithoutMembersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutTeamsNestedInput
-  teamLead?: Prisma.EmployeeUpdateOneWithoutTeamLeadOfNestedInput
-}
-
-export type DepartmentTeamUncheckedUpdateWithoutMembersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  teamLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type DepartmentTeamUpsertWithoutTeamLeadInput = {
@@ -601,6 +572,35 @@ export type DepartmentTeamUncheckedUpdateWithoutTeamLeadInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.EmployeeUncheckedUpdateManyWithoutTeamNestedInput
+}
+
+export type DepartmentTeamUpsertWithoutMembersInput = {
+  update: Prisma.XOR<Prisma.DepartmentTeamUpdateWithoutMembersInput, Prisma.DepartmentTeamUncheckedUpdateWithoutMembersInput>
+  create: Prisma.XOR<Prisma.DepartmentTeamCreateWithoutMembersInput, Prisma.DepartmentTeamUncheckedCreateWithoutMembersInput>
+  where?: Prisma.DepartmentTeamWhereInput
+}
+
+export type DepartmentTeamUpdateToOneWithWhereWithoutMembersInput = {
+  where?: Prisma.DepartmentTeamWhereInput
+  data: Prisma.XOR<Prisma.DepartmentTeamUpdateWithoutMembersInput, Prisma.DepartmentTeamUncheckedUpdateWithoutMembersInput>
+}
+
+export type DepartmentTeamUpdateWithoutMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutTeamsNestedInput
+  teamLead?: Prisma.EmployeeUpdateOneWithoutTeamLeadOfNestedInput
+}
+
+export type DepartmentTeamUncheckedUpdateWithoutMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  teamLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type DepartmentTeamCreateManyDepartmentInput = {

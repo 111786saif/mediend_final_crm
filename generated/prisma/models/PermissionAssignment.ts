@@ -222,9 +222,9 @@ export type PermissionAssignmentWhereInput = {
   grantedById?: Prisma.StringFilter<"PermissionAssignment"> | string
   createdAt?: Prisma.DateTimeFilter<"PermissionAssignment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PermissionAssignment"> | Date | string
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  resource?: Prisma.XOR<Prisma.ResourceScalarRelationFilter, Prisma.ResourceWhereInput>
   grantedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  resource?: Prisma.XOR<Prisma.ResourceScalarRelationFilter, Prisma.ResourceWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type PermissionAssignmentOrderByWithRelationInput = {
@@ -238,9 +238,9 @@ export type PermissionAssignmentOrderByWithRelationInput = {
   grantedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  resource?: Prisma.ResourceOrderByWithRelationInput
   grantedBy?: Prisma.UserOrderByWithRelationInput
+  resource?: Prisma.ResourceOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PermissionAssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -258,9 +258,9 @@ export type PermissionAssignmentWhereUniqueInput = Prisma.AtLeast<{
   grantedById?: Prisma.StringFilter<"PermissionAssignment"> | string
   createdAt?: Prisma.DateTimeFilter<"PermissionAssignment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PermissionAssignment"> | Date | string
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  resource?: Prisma.XOR<Prisma.ResourceScalarRelationFilter, Prisma.ResourceWhereInput>
   grantedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  resource?: Prisma.XOR<Prisma.ResourceScalarRelationFilter, Prisma.ResourceWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "userId_resourceId">
 
 export type PermissionAssignmentOrderByWithAggregationInput = {
@@ -303,9 +303,9 @@ export type PermissionAssignmentCreateInput = {
   canGrant?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutPermissionSubjectsInput
-  resource: Prisma.ResourceCreateNestedOneWithoutAssignmentsInput
   grantedBy: Prisma.UserCreateNestedOneWithoutPermissionsGrantedInput
+  resource: Prisma.ResourceCreateNestedOneWithoutAssignmentsInput
+  user?: Prisma.UserCreateNestedOneWithoutPermissionSubjectsInput
 }
 
 export type PermissionAssignmentUncheckedCreateInput = {
@@ -329,9 +329,9 @@ export type PermissionAssignmentUpdateInput = {
   canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutPermissionSubjectsNestedInput
-  resource?: Prisma.ResourceUpdateOneRequiredWithoutAssignmentsNestedInput
   grantedBy?: Prisma.UserUpdateOneRequiredWithoutPermissionsGrantedNestedInput
+  resource?: Prisma.ResourceUpdateOneRequiredWithoutAssignmentsNestedInput
+  user?: Prisma.UserUpdateOneWithoutPermissionSubjectsNestedInput
 }
 
 export type PermissionAssignmentUncheckedUpdateInput = {
@@ -437,13 +437,6 @@ export type PermissionAssignmentMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type PermissionAssignmentCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutUserInput, Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput> | Prisma.PermissionAssignmentCreateWithoutUserInput[] | Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput | Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.PermissionAssignmentCreateManyUserInputEnvelope
-  connect?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
-}
-
 export type PermissionAssignmentCreateNestedManyWithoutGrantedByInput = {
   create?: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutGrantedByInput, Prisma.PermissionAssignmentUncheckedCreateWithoutGrantedByInput> | Prisma.PermissionAssignmentCreateWithoutGrantedByInput[] | Prisma.PermissionAssignmentUncheckedCreateWithoutGrantedByInput[]
   connectOrCreate?: Prisma.PermissionAssignmentCreateOrConnectWithoutGrantedByInput | Prisma.PermissionAssignmentCreateOrConnectWithoutGrantedByInput[]
@@ -451,7 +444,7 @@ export type PermissionAssignmentCreateNestedManyWithoutGrantedByInput = {
   connect?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
 }
 
-export type PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput = {
+export type PermissionAssignmentCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutUserInput, Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput> | Prisma.PermissionAssignmentCreateWithoutUserInput[] | Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput | Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput[]
   createMany?: Prisma.PermissionAssignmentCreateManyUserInputEnvelope
@@ -465,18 +458,11 @@ export type PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput =
   connect?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
 }
 
-export type PermissionAssignmentUpdateManyWithoutUserNestedInput = {
+export type PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutUserInput, Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput> | Prisma.PermissionAssignmentCreateWithoutUserInput[] | Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput | Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.PermissionAssignmentUpsertWithWhereUniqueWithoutUserInput | Prisma.PermissionAssignmentUpsertWithWhereUniqueWithoutUserInput[]
   createMany?: Prisma.PermissionAssignmentCreateManyUserInputEnvelope
-  set?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
-  disconnect?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
-  delete?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
   connect?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
-  update?: Prisma.PermissionAssignmentUpdateWithWhereUniqueWithoutUserInput | Prisma.PermissionAssignmentUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.PermissionAssignmentUpdateManyWithWhereWithoutUserInput | Prisma.PermissionAssignmentUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.PermissionAssignmentScalarWhereInput | Prisma.PermissionAssignmentScalarWhereInput[]
 }
 
 export type PermissionAssignmentUpdateManyWithoutGrantedByNestedInput = {
@@ -493,7 +479,7 @@ export type PermissionAssignmentUpdateManyWithoutGrantedByNestedInput = {
   deleteMany?: Prisma.PermissionAssignmentScalarWhereInput | Prisma.PermissionAssignmentScalarWhereInput[]
 }
 
-export type PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput = {
+export type PermissionAssignmentUpdateManyWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutUserInput, Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput> | Prisma.PermissionAssignmentCreateWithoutUserInput[] | Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput | Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput[]
   upsert?: Prisma.PermissionAssignmentUpsertWithWhereUniqueWithoutUserInput | Prisma.PermissionAssignmentUpsertWithWhereUniqueWithoutUserInput[]
@@ -518,6 +504,20 @@ export type PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput =
   connect?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
   update?: Prisma.PermissionAssignmentUpdateWithWhereUniqueWithoutGrantedByInput | Prisma.PermissionAssignmentUpdateWithWhereUniqueWithoutGrantedByInput[]
   updateMany?: Prisma.PermissionAssignmentUpdateManyWithWhereWithoutGrantedByInput | Prisma.PermissionAssignmentUpdateManyWithWhereWithoutGrantedByInput[]
+  deleteMany?: Prisma.PermissionAssignmentScalarWhereInput | Prisma.PermissionAssignmentScalarWhereInput[]
+}
+
+export type PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutUserInput, Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput> | Prisma.PermissionAssignmentCreateWithoutUserInput[] | Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput | Prisma.PermissionAssignmentCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.PermissionAssignmentUpsertWithWhereUniqueWithoutUserInput | Prisma.PermissionAssignmentUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.PermissionAssignmentCreateManyUserInputEnvelope
+  set?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
+  disconnect?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
+  delete?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
+  connect?: Prisma.PermissionAssignmentWhereUniqueInput | Prisma.PermissionAssignmentWhereUniqueInput[]
+  update?: Prisma.PermissionAssignmentUpdateWithWhereUniqueWithoutUserInput | Prisma.PermissionAssignmentUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.PermissionAssignmentUpdateManyWithWhereWithoutUserInput | Prisma.PermissionAssignmentUpdateManyWithWhereWithoutUserInput[]
   deleteMany?: Prisma.PermissionAssignmentScalarWhereInput | Prisma.PermissionAssignmentScalarWhereInput[]
 }
 
@@ -571,40 +571,6 @@ export type EnumPermissionLevelFieldUpdateOperationsInput = {
   set?: $Enums.PermissionLevel
 }
 
-export type PermissionAssignmentCreateWithoutUserInput = {
-  id?: string
-  subjectType?: $Enums.SubjectType
-  role?: string | null
-  permissionLevel?: $Enums.PermissionLevel
-  canGrant?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  resource: Prisma.ResourceCreateNestedOneWithoutAssignmentsInput
-  grantedBy: Prisma.UserCreateNestedOneWithoutPermissionsGrantedInput
-}
-
-export type PermissionAssignmentUncheckedCreateWithoutUserInput = {
-  id?: string
-  subjectType?: $Enums.SubjectType
-  role?: string | null
-  resourceId: string
-  permissionLevel?: $Enums.PermissionLevel
-  canGrant?: boolean
-  grantedById: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type PermissionAssignmentCreateOrConnectWithoutUserInput = {
-  where: Prisma.PermissionAssignmentWhereUniqueInput
-  create: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutUserInput, Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput>
-}
-
-export type PermissionAssignmentCreateManyUserInputEnvelope = {
-  data: Prisma.PermissionAssignmentCreateManyUserInput | Prisma.PermissionAssignmentCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
 export type PermissionAssignmentCreateWithoutGrantedByInput = {
   id?: string
   subjectType?: $Enums.SubjectType
@@ -613,8 +579,8 @@ export type PermissionAssignmentCreateWithoutGrantedByInput = {
   canGrant?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutPermissionSubjectsInput
   resource: Prisma.ResourceCreateNestedOneWithoutAssignmentsInput
+  user?: Prisma.UserCreateNestedOneWithoutPermissionSubjectsInput
 }
 
 export type PermissionAssignmentUncheckedCreateWithoutGrantedByInput = {
@@ -639,36 +605,38 @@ export type PermissionAssignmentCreateManyGrantedByInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type PermissionAssignmentUpsertWithWhereUniqueWithoutUserInput = {
+export type PermissionAssignmentCreateWithoutUserInput = {
+  id?: string
+  subjectType?: $Enums.SubjectType
+  role?: string | null
+  permissionLevel?: $Enums.PermissionLevel
+  canGrant?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  grantedBy: Prisma.UserCreateNestedOneWithoutPermissionsGrantedInput
+  resource: Prisma.ResourceCreateNestedOneWithoutAssignmentsInput
+}
+
+export type PermissionAssignmentUncheckedCreateWithoutUserInput = {
+  id?: string
+  subjectType?: $Enums.SubjectType
+  role?: string | null
+  resourceId: string
+  permissionLevel?: $Enums.PermissionLevel
+  canGrant?: boolean
+  grantedById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PermissionAssignmentCreateOrConnectWithoutUserInput = {
   where: Prisma.PermissionAssignmentWhereUniqueInput
-  update: Prisma.XOR<Prisma.PermissionAssignmentUpdateWithoutUserInput, Prisma.PermissionAssignmentUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutUserInput, Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput>
 }
 
-export type PermissionAssignmentUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.PermissionAssignmentWhereUniqueInput
-  data: Prisma.XOR<Prisma.PermissionAssignmentUpdateWithoutUserInput, Prisma.PermissionAssignmentUncheckedUpdateWithoutUserInput>
-}
-
-export type PermissionAssignmentUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.PermissionAssignmentScalarWhereInput
-  data: Prisma.XOR<Prisma.PermissionAssignmentUpdateManyMutationInput, Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserInput>
-}
-
-export type PermissionAssignmentScalarWhereInput = {
-  AND?: Prisma.PermissionAssignmentScalarWhereInput | Prisma.PermissionAssignmentScalarWhereInput[]
-  OR?: Prisma.PermissionAssignmentScalarWhereInput[]
-  NOT?: Prisma.PermissionAssignmentScalarWhereInput | Prisma.PermissionAssignmentScalarWhereInput[]
-  id?: Prisma.StringFilter<"PermissionAssignment"> | string
-  subjectType?: Prisma.EnumSubjectTypeFilter<"PermissionAssignment"> | $Enums.SubjectType
-  userId?: Prisma.StringNullableFilter<"PermissionAssignment"> | string | null
-  role?: Prisma.StringNullableFilter<"PermissionAssignment"> | string | null
-  resourceId?: Prisma.StringFilter<"PermissionAssignment"> | string
-  permissionLevel?: Prisma.EnumPermissionLevelFilter<"PermissionAssignment"> | $Enums.PermissionLevel
-  canGrant?: Prisma.BoolFilter<"PermissionAssignment"> | boolean
-  grantedById?: Prisma.StringFilter<"PermissionAssignment"> | string
-  createdAt?: Prisma.DateTimeFilter<"PermissionAssignment"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"PermissionAssignment"> | Date | string
+export type PermissionAssignmentCreateManyUserInputEnvelope = {
+  data: Prisma.PermissionAssignmentCreateManyUserInput | Prisma.PermissionAssignmentCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type PermissionAssignmentUpsertWithWhereUniqueWithoutGrantedByInput = {
@@ -687,6 +655,38 @@ export type PermissionAssignmentUpdateManyWithWhereWithoutGrantedByInput = {
   data: Prisma.XOR<Prisma.PermissionAssignmentUpdateManyMutationInput, Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByInput>
 }
 
+export type PermissionAssignmentScalarWhereInput = {
+  AND?: Prisma.PermissionAssignmentScalarWhereInput | Prisma.PermissionAssignmentScalarWhereInput[]
+  OR?: Prisma.PermissionAssignmentScalarWhereInput[]
+  NOT?: Prisma.PermissionAssignmentScalarWhereInput | Prisma.PermissionAssignmentScalarWhereInput[]
+  id?: Prisma.StringFilter<"PermissionAssignment"> | string
+  subjectType?: Prisma.EnumSubjectTypeFilter<"PermissionAssignment"> | $Enums.SubjectType
+  userId?: Prisma.StringNullableFilter<"PermissionAssignment"> | string | null
+  role?: Prisma.StringNullableFilter<"PermissionAssignment"> | string | null
+  resourceId?: Prisma.StringFilter<"PermissionAssignment"> | string
+  permissionLevel?: Prisma.EnumPermissionLevelFilter<"PermissionAssignment"> | $Enums.PermissionLevel
+  canGrant?: Prisma.BoolFilter<"PermissionAssignment"> | boolean
+  grantedById?: Prisma.StringFilter<"PermissionAssignment"> | string
+  createdAt?: Prisma.DateTimeFilter<"PermissionAssignment"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PermissionAssignment"> | Date | string
+}
+
+export type PermissionAssignmentUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.PermissionAssignmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PermissionAssignmentUpdateWithoutUserInput, Prisma.PermissionAssignmentUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.PermissionAssignmentCreateWithoutUserInput, Prisma.PermissionAssignmentUncheckedCreateWithoutUserInput>
+}
+
+export type PermissionAssignmentUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.PermissionAssignmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PermissionAssignmentUpdateWithoutUserInput, Prisma.PermissionAssignmentUncheckedUpdateWithoutUserInput>
+}
+
+export type PermissionAssignmentUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.PermissionAssignmentScalarWhereInput
+  data: Prisma.XOR<Prisma.PermissionAssignmentUpdateManyMutationInput, Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserInput>
+}
+
 export type PermissionAssignmentCreateWithoutResourceInput = {
   id?: string
   subjectType?: $Enums.SubjectType
@@ -695,8 +695,8 @@ export type PermissionAssignmentCreateWithoutResourceInput = {
   canGrant?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutPermissionSubjectsInput
   grantedBy: Prisma.UserCreateNestedOneWithoutPermissionsGrantedInput
+  user?: Prisma.UserCreateNestedOneWithoutPermissionSubjectsInput
 }
 
 export type PermissionAssignmentUncheckedCreateWithoutResourceInput = {
@@ -737,18 +737,6 @@ export type PermissionAssignmentUpdateManyWithWhereWithoutResourceInput = {
   data: Prisma.XOR<Prisma.PermissionAssignmentUpdateManyMutationInput, Prisma.PermissionAssignmentUncheckedUpdateManyWithoutResourceInput>
 }
 
-export type PermissionAssignmentCreateManyUserInput = {
-  id?: string
-  subjectType?: $Enums.SubjectType
-  role?: string | null
-  resourceId: string
-  permissionLevel?: $Enums.PermissionLevel
-  canGrant?: boolean
-  grantedById: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
 export type PermissionAssignmentCreateManyGrantedByInput = {
   id?: string
   subjectType?: $Enums.SubjectType
@@ -761,40 +749,16 @@ export type PermissionAssignmentCreateManyGrantedByInput = {
   updatedAt?: Date | string
 }
 
-export type PermissionAssignmentUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectType?: Prisma.EnumSubjectTypeFieldUpdateOperationsInput | $Enums.SubjectType
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  permissionLevel?: Prisma.EnumPermissionLevelFieldUpdateOperationsInput | $Enums.PermissionLevel
-  canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  resource?: Prisma.ResourceUpdateOneRequiredWithoutAssignmentsNestedInput
-  grantedBy?: Prisma.UserUpdateOneRequiredWithoutPermissionsGrantedNestedInput
-}
-
-export type PermissionAssignmentUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectType?: Prisma.EnumSubjectTypeFieldUpdateOperationsInput | $Enums.SubjectType
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resourceId?: Prisma.StringFieldUpdateOperationsInput | string
-  permissionLevel?: Prisma.EnumPermissionLevelFieldUpdateOperationsInput | $Enums.PermissionLevel
-  canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  grantedById?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type PermissionAssignmentUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectType?: Prisma.EnumSubjectTypeFieldUpdateOperationsInput | $Enums.SubjectType
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  resourceId?: Prisma.StringFieldUpdateOperationsInput | string
-  permissionLevel?: Prisma.EnumPermissionLevelFieldUpdateOperationsInput | $Enums.PermissionLevel
-  canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  grantedById?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type PermissionAssignmentCreateManyUserInput = {
+  id?: string
+  subjectType?: $Enums.SubjectType
+  role?: string | null
+  resourceId: string
+  permissionLevel?: $Enums.PermissionLevel
+  canGrant?: boolean
+  grantedById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PermissionAssignmentUpdateWithoutGrantedByInput = {
@@ -805,8 +769,8 @@ export type PermissionAssignmentUpdateWithoutGrantedByInput = {
   canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutPermissionSubjectsNestedInput
   resource?: Prisma.ResourceUpdateOneRequiredWithoutAssignmentsNestedInput
+  user?: Prisma.UserUpdateOneWithoutPermissionSubjectsNestedInput
 }
 
 export type PermissionAssignmentUncheckedUpdateWithoutGrantedByInput = {
@@ -833,6 +797,42 @@ export type PermissionAssignmentUncheckedUpdateManyWithoutGrantedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type PermissionAssignmentUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectType?: Prisma.EnumSubjectTypeFieldUpdateOperationsInput | $Enums.SubjectType
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissionLevel?: Prisma.EnumPermissionLevelFieldUpdateOperationsInput | $Enums.PermissionLevel
+  canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  grantedBy?: Prisma.UserUpdateOneRequiredWithoutPermissionsGrantedNestedInput
+  resource?: Prisma.ResourceUpdateOneRequiredWithoutAssignmentsNestedInput
+}
+
+export type PermissionAssignmentUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectType?: Prisma.EnumSubjectTypeFieldUpdateOperationsInput | $Enums.SubjectType
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionLevel?: Prisma.EnumPermissionLevelFieldUpdateOperationsInput | $Enums.PermissionLevel
+  canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  grantedById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PermissionAssignmentUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectType?: Prisma.EnumSubjectTypeFieldUpdateOperationsInput | $Enums.SubjectType
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionLevel?: Prisma.EnumPermissionLevelFieldUpdateOperationsInput | $Enums.PermissionLevel
+  canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  grantedById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type PermissionAssignmentCreateManyResourceInput = {
   id?: string
   subjectType?: $Enums.SubjectType
@@ -853,8 +853,8 @@ export type PermissionAssignmentUpdateWithoutResourceInput = {
   canGrant?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutPermissionSubjectsNestedInput
   grantedBy?: Prisma.UserUpdateOneRequiredWithoutPermissionsGrantedNestedInput
+  user?: Prisma.UserUpdateOneWithoutPermissionSubjectsNestedInput
 }
 
 export type PermissionAssignmentUncheckedUpdateWithoutResourceInput = {
@@ -894,9 +894,9 @@ export type PermissionAssignmentSelect<ExtArgs extends runtime.Types.Extensions.
   grantedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
 }, ExtArgs["result"]["permissionAssignment"]>
 
 export type PermissionAssignmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -910,9 +910,9 @@ export type PermissionAssignmentSelectCreateManyAndReturn<ExtArgs extends runtim
   grantedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
 }, ExtArgs["result"]["permissionAssignment"]>
 
 export type PermissionAssignmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -926,9 +926,9 @@ export type PermissionAssignmentSelectUpdateManyAndReturn<ExtArgs extends runtim
   grantedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
 }, ExtArgs["result"]["permissionAssignment"]>
 
 export type PermissionAssignmentSelectScalar = {
@@ -946,27 +946,27 @@ export type PermissionAssignmentSelectScalar = {
 
 export type PermissionAssignmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "subjectType" | "userId" | "role" | "resourceId" | "permissionLevel" | "canGrant" | "grantedById" | "createdAt" | "updatedAt", ExtArgs["result"]["permissionAssignment"]>
 export type PermissionAssignmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
 }
 export type PermissionAssignmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
 }
 export type PermissionAssignmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
-  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  resource?: boolean | Prisma.ResourceDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.PermissionAssignment$userArgs<ExtArgs>
 }
 
 export type $PermissionAssignmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PermissionAssignment"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs> | null
-    resource: Prisma.$ResourcePayload<ExtArgs>
     grantedBy: Prisma.$UserPayload<ExtArgs>
+    resource: Prisma.$ResourcePayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1373,9 +1373,9 @@ readonly fields: PermissionAssignmentFieldRefs;
  */
 export interface Prisma__PermissionAssignmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.PermissionAssignment$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PermissionAssignment$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  resource<T extends Prisma.ResourceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ResourceDefaultArgs<ExtArgs>>): Prisma.Prisma__ResourceClient<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   grantedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  resource<T extends Prisma.ResourceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ResourceDefaultArgs<ExtArgs>>): Prisma.Prisma__ResourceClient<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.PermissionAssignment$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PermissionAssignment$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

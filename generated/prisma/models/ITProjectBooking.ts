@@ -256,8 +256,8 @@ export type ITProjectBookingWhereInput = {
   createdById?: Prisma.StringFilter<"ITProjectBooking"> | string
   createdAt?: Prisma.DateTimeFilter<"ITProjectBooking"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ITProjectBooking"> | Date | string
-  project?: Prisma.XOR<Prisma.ITProjectScalarRelationFilter, Prisma.ITProjectWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  project?: Prisma.XOR<Prisma.ITProjectScalarRelationFilter, Prisma.ITProjectWhereInput>
 }
 
 export type ITProjectBookingOrderByWithRelationInput = {
@@ -270,8 +270,8 @@ export type ITProjectBookingOrderByWithRelationInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  project?: Prisma.ITProjectOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  project?: Prisma.ITProjectOrderByWithRelationInput
 }
 
 export type ITProjectBookingWhereUniqueInput = Prisma.AtLeast<{
@@ -288,8 +288,8 @@ export type ITProjectBookingWhereUniqueInput = Prisma.AtLeast<{
   createdById?: Prisma.StringFilter<"ITProjectBooking"> | string
   createdAt?: Prisma.DateTimeFilter<"ITProjectBooking"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ITProjectBooking"> | Date | string
-  project?: Prisma.XOR<Prisma.ITProjectScalarRelationFilter, Prisma.ITProjectWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  project?: Prisma.XOR<Prisma.ITProjectScalarRelationFilter, Prisma.ITProjectWhereInput>
 }, "id" | "projectId_month_year">
 
 export type ITProjectBookingOrderByWithAggregationInput = {
@@ -332,8 +332,8 @@ export type ITProjectBookingCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  project: Prisma.ITProjectCreateNestedOneWithoutBookingsInput
   createdBy: Prisma.UserCreateNestedOneWithoutItProjectBookingsCreatedInput
+  project: Prisma.ITProjectCreateNestedOneWithoutBookingsInput
 }
 
 export type ITProjectBookingUncheckedCreateInput = {
@@ -356,8 +356,8 @@ export type ITProjectBookingUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  project?: Prisma.ITProjectUpdateOneRequiredWithoutBookingsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutItProjectBookingsCreatedNestedInput
+  project?: Prisma.ITProjectUpdateOneRequiredWithoutBookingsNestedInput
 }
 
 export type ITProjectBookingUncheckedUpdateInput = {
@@ -765,8 +765,8 @@ export type ITProjectBookingSelect<ExtArgs extends runtime.Types.Extensions.Inte
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["iTProjectBooking"]>
 
 export type ITProjectBookingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -779,8 +779,8 @@ export type ITProjectBookingSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["iTProjectBooking"]>
 
 export type ITProjectBookingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -793,8 +793,8 @@ export type ITProjectBookingSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["iTProjectBooking"]>
 
 export type ITProjectBookingSelectScalar = {
@@ -811,23 +811,23 @@ export type ITProjectBookingSelectScalar = {
 
 export type ITProjectBookingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "month" | "year" | "amount" | "notes" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["iTProjectBooking"]>
 export type ITProjectBookingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }
 export type ITProjectBookingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }
 export type ITProjectBookingIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }
 
 export type $ITProjectBookingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ITProjectBooking"
   objects: {
-    project: Prisma.$ITProjectPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs>
+    project: Prisma.$ITProjectPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1233,8 +1233,8 @@ readonly fields: ITProjectBookingFieldRefs;
  */
 export interface Prisma__ITProjectBookingClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  project<T extends Prisma.ITProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ITProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ITProjectClient<runtime.Types.Result.GetResult<Prisma.$ITProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.ITProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ITProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ITProjectClient<runtime.Types.Result.GetResult<Prisma.$ITProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

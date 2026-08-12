@@ -280,8 +280,8 @@ export type PayrollRecordWhereInput = {
   status?: Prisma.StringFilter<"PayrollRecord"> | string
   createdAt?: Prisma.DateTimeFilter<"PayrollRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PayrollRecord"> | Date | string
-  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   components?: Prisma.PayrollComponentListRelationFilter
+  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
 }
 
 export type PayrollRecordOrderByWithRelationInput = {
@@ -296,8 +296,8 @@ export type PayrollRecordOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  employee?: Prisma.EmployeeOrderByWithRelationInput
   components?: Prisma.PayrollComponentOrderByRelationAggregateInput
+  employee?: Prisma.EmployeeOrderByWithRelationInput
 }
 
 export type PayrollRecordWhereUniqueInput = Prisma.AtLeast<{
@@ -316,8 +316,8 @@ export type PayrollRecordWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"PayrollRecord"> | string
   createdAt?: Prisma.DateTimeFilter<"PayrollRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PayrollRecord"> | Date | string
-  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   components?: Prisma.PayrollComponentListRelationFilter
+  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
 }, "id" | "employeeId_month_year">
 
 export type PayrollRecordOrderByWithAggregationInput = {
@@ -367,8 +367,8 @@ export type PayrollRecordCreateInput = {
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  employee: Prisma.EmployeeCreateNestedOneWithoutPayrollRecordsInput
   components?: Prisma.PayrollComponentCreateNestedManyWithoutPayrollRecordInput
+  employee: Prisma.EmployeeCreateNestedOneWithoutPayrollRecordsInput
 }
 
 export type PayrollRecordUncheckedCreateInput = {
@@ -397,8 +397,8 @@ export type PayrollRecordUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneRequiredWithoutPayrollRecordsNestedInput
   components?: Prisma.PayrollComponentUpdateManyWithoutPayrollRecordNestedInput
+  employee?: Prisma.EmployeeUpdateOneRequiredWithoutPayrollRecordsNestedInput
 }
 
 export type PayrollRecordUncheckedUpdateInput = {
@@ -832,8 +832,8 @@ export type PayrollRecordSelect<ExtArgs extends runtime.Types.Extensions.Interna
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   components?: boolean | Prisma.PayrollRecord$componentsArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.PayrollRecordCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payrollRecord"]>
 
@@ -883,8 +883,8 @@ export type PayrollRecordSelectScalar = {
 
 export type PayrollRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "month" | "year" | "disbursedAt" | "basicSalary" | "grossSalary" | "netSalary" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["payrollRecord"]>
 export type PayrollRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   components?: boolean | Prisma.PayrollRecord$componentsArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.PayrollRecordCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PayrollRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -897,8 +897,8 @@ export type PayrollRecordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type $PayrollRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PayrollRecord"
   objects: {
-    employee: Prisma.$EmployeePayload<ExtArgs>
     components: Prisma.$PayrollComponentPayload<ExtArgs>[]
+    employee: Prisma.$EmployeePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1306,8 +1306,8 @@ readonly fields: PayrollRecordFieldRefs;
  */
 export interface Prisma__PayrollRecordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   components<T extends Prisma.PayrollRecord$componentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PayrollRecord$componentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayrollComponentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

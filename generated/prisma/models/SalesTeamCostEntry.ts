@@ -240,8 +240,8 @@ export type SalesTeamCostEntryWhereInput = {
   note?: Prisma.StringNullableFilter<"SalesTeamCostEntry"> | string | null
   addedByUserId?: Prisma.StringFilter<"SalesTeamCostEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"SalesTeamCostEntry"> | Date | string
-  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   addedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
 }
 
 export type SalesTeamCostEntryOrderByWithRelationInput = {
@@ -253,8 +253,8 @@ export type SalesTeamCostEntryOrderByWithRelationInput = {
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   addedByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  employee?: Prisma.EmployeeOrderByWithRelationInput
   addedBy?: Prisma.UserOrderByWithRelationInput
+  employee?: Prisma.EmployeeOrderByWithRelationInput
 }
 
 export type SalesTeamCostEntryWhereUniqueInput = Prisma.AtLeast<{
@@ -269,8 +269,8 @@ export type SalesTeamCostEntryWhereUniqueInput = Prisma.AtLeast<{
   note?: Prisma.StringNullableFilter<"SalesTeamCostEntry"> | string | null
   addedByUserId?: Prisma.StringFilter<"SalesTeamCostEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"SalesTeamCostEntry"> | Date | string
-  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   addedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
 }, "id">
 
 export type SalesTeamCostEntryOrderByWithAggregationInput = {
@@ -310,8 +310,8 @@ export type SalesTeamCostEntryCreateInput = {
   entryDate: Date | string
   note?: string | null
   createdAt?: Date | string
-  employee: Prisma.EmployeeCreateNestedOneWithoutSalesTeamCostEntriesInput
   addedBy: Prisma.UserCreateNestedOneWithoutSalesTeamCostEntriesAddedInput
+  employee: Prisma.EmployeeCreateNestedOneWithoutSalesTeamCostEntriesInput
 }
 
 export type SalesTeamCostEntryUncheckedCreateInput = {
@@ -332,8 +332,8 @@ export type SalesTeamCostEntryUpdateInput = {
   entryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneRequiredWithoutSalesTeamCostEntriesNestedInput
   addedBy?: Prisma.UserUpdateOneRequiredWithoutSalesTeamCostEntriesAddedNestedInput
+  employee?: Prisma.EmployeeUpdateOneRequiredWithoutSalesTeamCostEntriesNestedInput
 }
 
 export type SalesTeamCostEntryUncheckedUpdateInput = {
@@ -714,8 +714,8 @@ export type SalesTeamCostEntrySelect<ExtArgs extends runtime.Types.Extensions.In
   note?: boolean
   addedByUserId?: boolean
   createdAt?: boolean
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   addedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesTeamCostEntry"]>
 
 export type SalesTeamCostEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -727,8 +727,8 @@ export type SalesTeamCostEntrySelectCreateManyAndReturn<ExtArgs extends runtime.
   note?: boolean
   addedByUserId?: boolean
   createdAt?: boolean
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   addedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesTeamCostEntry"]>
 
 export type SalesTeamCostEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -740,8 +740,8 @@ export type SalesTeamCostEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.
   note?: boolean
   addedByUserId?: boolean
   createdAt?: boolean
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   addedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesTeamCostEntry"]>
 
 export type SalesTeamCostEntrySelectScalar = {
@@ -757,23 +757,23 @@ export type SalesTeamCostEntrySelectScalar = {
 
 export type SalesTeamCostEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "entryType" | "amount" | "entryDate" | "note" | "addedByUserId" | "createdAt", ExtArgs["result"]["salesTeamCostEntry"]>
 export type SalesTeamCostEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   addedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }
 export type SalesTeamCostEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   addedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }
 export type SalesTeamCostEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   addedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
 }
 
 export type $SalesTeamCostEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SalesTeamCostEntry"
   objects: {
-    employee: Prisma.$EmployeePayload<ExtArgs>
     addedBy: Prisma.$UserPayload<ExtArgs>
+    employee: Prisma.$EmployeePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1178,8 +1178,8 @@ readonly fields: SalesTeamCostEntryFieldRefs;
  */
 export interface Prisma__SalesTeamCostEntryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   addedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

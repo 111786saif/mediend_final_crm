@@ -238,9 +238,9 @@ export type InsuranceQueryWhereInput = {
   resolvedAt?: Prisma.DateTimeNullableFilter<"InsuranceQuery"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"InsuranceQuery"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InsuranceQuery"> | Date | string
+  answeredBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   preAuthorization?: Prisma.XOR<Prisma.PreAuthorizationScalarRelationFilter, Prisma.PreAuthorizationWhereInput>
   raisedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  answeredBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type InsuranceQueryOrderByWithRelationInput = {
@@ -256,9 +256,9 @@ export type InsuranceQueryOrderByWithRelationInput = {
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  answeredBy?: Prisma.UserOrderByWithRelationInput
   preAuthorization?: Prisma.PreAuthorizationOrderByWithRelationInput
   raisedBy?: Prisma.UserOrderByWithRelationInput
-  answeredBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type InsuranceQueryWhereUniqueInput = Prisma.AtLeast<{
@@ -277,9 +277,9 @@ export type InsuranceQueryWhereUniqueInput = Prisma.AtLeast<{
   resolvedAt?: Prisma.DateTimeNullableFilter<"InsuranceQuery"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"InsuranceQuery"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InsuranceQuery"> | Date | string
+  answeredBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   preAuthorization?: Prisma.XOR<Prisma.PreAuthorizationScalarRelationFilter, Prisma.PreAuthorizationWhereInput>
   raisedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  answeredBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
 
 export type InsuranceQueryOrderByWithAggregationInput = {
@@ -328,9 +328,9 @@ export type InsuranceQueryCreateInput = {
   resolvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  answeredBy?: Prisma.UserCreateNestedOneWithoutQueriesAnsweredInput
   preAuthorization: Prisma.PreAuthorizationCreateNestedOneWithoutQueriesInput
   raisedBy: Prisma.UserCreateNestedOneWithoutQueriesRaisedInput
-  answeredBy?: Prisma.UserCreateNestedOneWithoutQueriesAnsweredInput
 }
 
 export type InsuranceQueryUncheckedCreateInput = {
@@ -358,9 +358,9 @@ export type InsuranceQueryUpdateInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answeredBy?: Prisma.UserUpdateOneWithoutQueriesAnsweredNestedInput
   preAuthorization?: Prisma.PreAuthorizationUpdateOneRequiredWithoutQueriesNestedInput
   raisedBy?: Prisma.UserUpdateOneRequiredWithoutQueriesRaisedNestedInput
-  answeredBy?: Prisma.UserUpdateOneWithoutQueriesAnsweredNestedInput
 }
 
 export type InsuranceQueryUncheckedUpdateInput = {
@@ -475,13 +475,6 @@ export type InsuranceQueryMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type InsuranceQueryCreateNestedManyWithoutRaisedByInput = {
-  create?: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput> | Prisma.InsuranceQueryCreateWithoutRaisedByInput[] | Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput[]
-  connectOrCreate?: Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput | Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput[]
-  createMany?: Prisma.InsuranceQueryCreateManyRaisedByInputEnvelope
-  connect?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
-}
-
 export type InsuranceQueryCreateNestedManyWithoutAnsweredByInput = {
   create?: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutAnsweredByInput, Prisma.InsuranceQueryUncheckedCreateWithoutAnsweredByInput> | Prisma.InsuranceQueryCreateWithoutAnsweredByInput[] | Prisma.InsuranceQueryUncheckedCreateWithoutAnsweredByInput[]
   connectOrCreate?: Prisma.InsuranceQueryCreateOrConnectWithoutAnsweredByInput | Prisma.InsuranceQueryCreateOrConnectWithoutAnsweredByInput[]
@@ -489,7 +482,7 @@ export type InsuranceQueryCreateNestedManyWithoutAnsweredByInput = {
   connect?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
 }
 
-export type InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput = {
+export type InsuranceQueryCreateNestedManyWithoutRaisedByInput = {
   create?: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput> | Prisma.InsuranceQueryCreateWithoutRaisedByInput[] | Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput[]
   connectOrCreate?: Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput | Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput[]
   createMany?: Prisma.InsuranceQueryCreateManyRaisedByInputEnvelope
@@ -503,18 +496,11 @@ export type InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput = {
   connect?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
 }
 
-export type InsuranceQueryUpdateManyWithoutRaisedByNestedInput = {
+export type InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput = {
   create?: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput> | Prisma.InsuranceQueryCreateWithoutRaisedByInput[] | Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput[]
   connectOrCreate?: Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput | Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput[]
-  upsert?: Prisma.InsuranceQueryUpsertWithWhereUniqueWithoutRaisedByInput | Prisma.InsuranceQueryUpsertWithWhereUniqueWithoutRaisedByInput[]
   createMany?: Prisma.InsuranceQueryCreateManyRaisedByInputEnvelope
-  set?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
-  disconnect?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
-  delete?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
   connect?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
-  update?: Prisma.InsuranceQueryUpdateWithWhereUniqueWithoutRaisedByInput | Prisma.InsuranceQueryUpdateWithWhereUniqueWithoutRaisedByInput[]
-  updateMany?: Prisma.InsuranceQueryUpdateManyWithWhereWithoutRaisedByInput | Prisma.InsuranceQueryUpdateManyWithWhereWithoutRaisedByInput[]
-  deleteMany?: Prisma.InsuranceQueryScalarWhereInput | Prisma.InsuranceQueryScalarWhereInput[]
 }
 
 export type InsuranceQueryUpdateManyWithoutAnsweredByNestedInput = {
@@ -531,7 +517,7 @@ export type InsuranceQueryUpdateManyWithoutAnsweredByNestedInput = {
   deleteMany?: Prisma.InsuranceQueryScalarWhereInput | Prisma.InsuranceQueryScalarWhereInput[]
 }
 
-export type InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput = {
+export type InsuranceQueryUpdateManyWithoutRaisedByNestedInput = {
   create?: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput> | Prisma.InsuranceQueryCreateWithoutRaisedByInput[] | Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput[]
   connectOrCreate?: Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput | Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput[]
   upsert?: Prisma.InsuranceQueryUpsertWithWhereUniqueWithoutRaisedByInput | Prisma.InsuranceQueryUpsertWithWhereUniqueWithoutRaisedByInput[]
@@ -556,6 +542,20 @@ export type InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput = {
   connect?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
   update?: Prisma.InsuranceQueryUpdateWithWhereUniqueWithoutAnsweredByInput | Prisma.InsuranceQueryUpdateWithWhereUniqueWithoutAnsweredByInput[]
   updateMany?: Prisma.InsuranceQueryUpdateManyWithWhereWithoutAnsweredByInput | Prisma.InsuranceQueryUpdateManyWithWhereWithoutAnsweredByInput[]
+  deleteMany?: Prisma.InsuranceQueryScalarWhereInput | Prisma.InsuranceQueryScalarWhereInput[]
+}
+
+export type InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput = {
+  create?: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput> | Prisma.InsuranceQueryCreateWithoutRaisedByInput[] | Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput[]
+  connectOrCreate?: Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput | Prisma.InsuranceQueryCreateOrConnectWithoutRaisedByInput[]
+  upsert?: Prisma.InsuranceQueryUpsertWithWhereUniqueWithoutRaisedByInput | Prisma.InsuranceQueryUpsertWithWhereUniqueWithoutRaisedByInput[]
+  createMany?: Prisma.InsuranceQueryCreateManyRaisedByInputEnvelope
+  set?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
+  disconnect?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
+  delete?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
+  connect?: Prisma.InsuranceQueryWhereUniqueInput | Prisma.InsuranceQueryWhereUniqueInput[]
+  update?: Prisma.InsuranceQueryUpdateWithWhereUniqueWithoutRaisedByInput | Prisma.InsuranceQueryUpdateWithWhereUniqueWithoutRaisedByInput[]
+  updateMany?: Prisma.InsuranceQueryUpdateManyWithWhereWithoutRaisedByInput | Prisma.InsuranceQueryUpdateManyWithWhereWithoutRaisedByInput[]
   deleteMany?: Prisma.InsuranceQueryScalarWhereInput | Prisma.InsuranceQueryScalarWhereInput[]
 }
 
@@ -605,44 +605,6 @@ export type EnumQueryStatusFieldUpdateOperationsInput = {
   set?: $Enums.QueryStatus
 }
 
-export type InsuranceQueryCreateWithoutRaisedByInput = {
-  id?: string
-  question: string
-  answer?: string | null
-  status?: $Enums.QueryStatus
-  raisedAt?: Date | string
-  answeredAt?: Date | string | null
-  resolvedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  preAuthorization: Prisma.PreAuthorizationCreateNestedOneWithoutQueriesInput
-  answeredBy?: Prisma.UserCreateNestedOneWithoutQueriesAnsweredInput
-}
-
-export type InsuranceQueryUncheckedCreateWithoutRaisedByInput = {
-  id?: string
-  preAuthorizationId: string
-  question: string
-  answer?: string | null
-  status?: $Enums.QueryStatus
-  answeredById?: string | null
-  raisedAt?: Date | string
-  answeredAt?: Date | string | null
-  resolvedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type InsuranceQueryCreateOrConnectWithoutRaisedByInput = {
-  where: Prisma.InsuranceQueryWhereUniqueInput
-  create: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput>
-}
-
-export type InsuranceQueryCreateManyRaisedByInputEnvelope = {
-  data: Prisma.InsuranceQueryCreateManyRaisedByInput | Prisma.InsuranceQueryCreateManyRaisedByInput[]
-  skipDuplicates?: boolean
-}
-
 export type InsuranceQueryCreateWithoutAnsweredByInput = {
   id?: string
   question: string
@@ -681,20 +643,58 @@ export type InsuranceQueryCreateManyAnsweredByInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type InsuranceQueryUpsertWithWhereUniqueWithoutRaisedByInput = {
+export type InsuranceQueryCreateWithoutRaisedByInput = {
+  id?: string
+  question: string
+  answer?: string | null
+  status?: $Enums.QueryStatus
+  raisedAt?: Date | string
+  answeredAt?: Date | string | null
+  resolvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  answeredBy?: Prisma.UserCreateNestedOneWithoutQueriesAnsweredInput
+  preAuthorization: Prisma.PreAuthorizationCreateNestedOneWithoutQueriesInput
+}
+
+export type InsuranceQueryUncheckedCreateWithoutRaisedByInput = {
+  id?: string
+  preAuthorizationId: string
+  question: string
+  answer?: string | null
+  status?: $Enums.QueryStatus
+  answeredById?: string | null
+  raisedAt?: Date | string
+  answeredAt?: Date | string | null
+  resolvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type InsuranceQueryCreateOrConnectWithoutRaisedByInput = {
   where: Prisma.InsuranceQueryWhereUniqueInput
-  update: Prisma.XOR<Prisma.InsuranceQueryUpdateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedUpdateWithoutRaisedByInput>
   create: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput>
 }
 
-export type InsuranceQueryUpdateWithWhereUniqueWithoutRaisedByInput = {
-  where: Prisma.InsuranceQueryWhereUniqueInput
-  data: Prisma.XOR<Prisma.InsuranceQueryUpdateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedUpdateWithoutRaisedByInput>
+export type InsuranceQueryCreateManyRaisedByInputEnvelope = {
+  data: Prisma.InsuranceQueryCreateManyRaisedByInput | Prisma.InsuranceQueryCreateManyRaisedByInput[]
+  skipDuplicates?: boolean
 }
 
-export type InsuranceQueryUpdateManyWithWhereWithoutRaisedByInput = {
+export type InsuranceQueryUpsertWithWhereUniqueWithoutAnsweredByInput = {
+  where: Prisma.InsuranceQueryWhereUniqueInput
+  update: Prisma.XOR<Prisma.InsuranceQueryUpdateWithoutAnsweredByInput, Prisma.InsuranceQueryUncheckedUpdateWithoutAnsweredByInput>
+  create: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutAnsweredByInput, Prisma.InsuranceQueryUncheckedCreateWithoutAnsweredByInput>
+}
+
+export type InsuranceQueryUpdateWithWhereUniqueWithoutAnsweredByInput = {
+  where: Prisma.InsuranceQueryWhereUniqueInput
+  data: Prisma.XOR<Prisma.InsuranceQueryUpdateWithoutAnsweredByInput, Prisma.InsuranceQueryUncheckedUpdateWithoutAnsweredByInput>
+}
+
+export type InsuranceQueryUpdateManyWithWhereWithoutAnsweredByInput = {
   where: Prisma.InsuranceQueryScalarWhereInput
-  data: Prisma.XOR<Prisma.InsuranceQueryUpdateManyMutationInput, Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByInput>
+  data: Prisma.XOR<Prisma.InsuranceQueryUpdateManyMutationInput, Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByInput>
 }
 
 export type InsuranceQueryScalarWhereInput = {
@@ -715,20 +715,20 @@ export type InsuranceQueryScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"InsuranceQuery"> | Date | string
 }
 
-export type InsuranceQueryUpsertWithWhereUniqueWithoutAnsweredByInput = {
+export type InsuranceQueryUpsertWithWhereUniqueWithoutRaisedByInput = {
   where: Prisma.InsuranceQueryWhereUniqueInput
-  update: Prisma.XOR<Prisma.InsuranceQueryUpdateWithoutAnsweredByInput, Prisma.InsuranceQueryUncheckedUpdateWithoutAnsweredByInput>
-  create: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutAnsweredByInput, Prisma.InsuranceQueryUncheckedCreateWithoutAnsweredByInput>
+  update: Prisma.XOR<Prisma.InsuranceQueryUpdateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedUpdateWithoutRaisedByInput>
+  create: Prisma.XOR<Prisma.InsuranceQueryCreateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedCreateWithoutRaisedByInput>
 }
 
-export type InsuranceQueryUpdateWithWhereUniqueWithoutAnsweredByInput = {
+export type InsuranceQueryUpdateWithWhereUniqueWithoutRaisedByInput = {
   where: Prisma.InsuranceQueryWhereUniqueInput
-  data: Prisma.XOR<Prisma.InsuranceQueryUpdateWithoutAnsweredByInput, Prisma.InsuranceQueryUncheckedUpdateWithoutAnsweredByInput>
+  data: Prisma.XOR<Prisma.InsuranceQueryUpdateWithoutRaisedByInput, Prisma.InsuranceQueryUncheckedUpdateWithoutRaisedByInput>
 }
 
-export type InsuranceQueryUpdateManyWithWhereWithoutAnsweredByInput = {
+export type InsuranceQueryUpdateManyWithWhereWithoutRaisedByInput = {
   where: Prisma.InsuranceQueryScalarWhereInput
-  data: Prisma.XOR<Prisma.InsuranceQueryUpdateManyMutationInput, Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByInput>
+  data: Prisma.XOR<Prisma.InsuranceQueryUpdateManyMutationInput, Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByInput>
 }
 
 export type InsuranceQueryCreateWithoutPreAuthorizationInput = {
@@ -741,8 +741,8 @@ export type InsuranceQueryCreateWithoutPreAuthorizationInput = {
   resolvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  raisedBy: Prisma.UserCreateNestedOneWithoutQueriesRaisedInput
   answeredBy?: Prisma.UserCreateNestedOneWithoutQueriesAnsweredInput
+  raisedBy: Prisma.UserCreateNestedOneWithoutQueriesRaisedInput
 }
 
 export type InsuranceQueryUncheckedCreateWithoutPreAuthorizationInput = {
@@ -785,20 +785,6 @@ export type InsuranceQueryUpdateManyWithWhereWithoutPreAuthorizationInput = {
   data: Prisma.XOR<Prisma.InsuranceQueryUpdateManyMutationInput, Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationInput>
 }
 
-export type InsuranceQueryCreateManyRaisedByInput = {
-  id?: string
-  preAuthorizationId: string
-  question: string
-  answer?: string | null
-  status?: $Enums.QueryStatus
-  answeredById?: string | null
-  raisedAt?: Date | string
-  answeredAt?: Date | string | null
-  resolvedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
 export type InsuranceQueryCreateManyAnsweredByInput = {
   id?: string
   preAuthorizationId: string
@@ -813,46 +799,18 @@ export type InsuranceQueryCreateManyAnsweredByInput = {
   updatedAt?: Date | string
 }
 
-export type InsuranceQueryUpdateWithoutRaisedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  question?: Prisma.StringFieldUpdateOperationsInput | string
-  answer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumQueryStatusFieldUpdateOperationsInput | $Enums.QueryStatus
-  raisedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  preAuthorization?: Prisma.PreAuthorizationUpdateOneRequiredWithoutQueriesNestedInput
-  answeredBy?: Prisma.UserUpdateOneWithoutQueriesAnsweredNestedInput
-}
-
-export type InsuranceQueryUncheckedUpdateWithoutRaisedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  preAuthorizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  question?: Prisma.StringFieldUpdateOperationsInput | string
-  answer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumQueryStatusFieldUpdateOperationsInput | $Enums.QueryStatus
-  answeredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  raisedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type InsuranceQueryUncheckedUpdateManyWithoutRaisedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  preAuthorizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  question?: Prisma.StringFieldUpdateOperationsInput | string
-  answer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumQueryStatusFieldUpdateOperationsInput | $Enums.QueryStatus
-  answeredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  raisedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type InsuranceQueryCreateManyRaisedByInput = {
+  id?: string
+  preAuthorizationId: string
+  question: string
+  answer?: string | null
+  status?: $Enums.QueryStatus
+  answeredById?: string | null
+  raisedAt?: Date | string
+  answeredAt?: Date | string | null
+  resolvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InsuranceQueryUpdateWithoutAnsweredByInput = {
@@ -897,6 +855,48 @@ export type InsuranceQueryUncheckedUpdateManyWithoutAnsweredByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type InsuranceQueryUpdateWithoutRaisedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  question?: Prisma.StringFieldUpdateOperationsInput | string
+  answer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumQueryStatusFieldUpdateOperationsInput | $Enums.QueryStatus
+  raisedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answeredBy?: Prisma.UserUpdateOneWithoutQueriesAnsweredNestedInput
+  preAuthorization?: Prisma.PreAuthorizationUpdateOneRequiredWithoutQueriesNestedInput
+}
+
+export type InsuranceQueryUncheckedUpdateWithoutRaisedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  preAuthorizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  question?: Prisma.StringFieldUpdateOperationsInput | string
+  answer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumQueryStatusFieldUpdateOperationsInput | $Enums.QueryStatus
+  answeredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  raisedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type InsuranceQueryUncheckedUpdateManyWithoutRaisedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  preAuthorizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  question?: Prisma.StringFieldUpdateOperationsInput | string
+  answer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumQueryStatusFieldUpdateOperationsInput | $Enums.QueryStatus
+  answeredById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  raisedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  answeredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type InsuranceQueryCreateManyPreAuthorizationInput = {
   id?: string
   question: string
@@ -921,8 +921,8 @@ export type InsuranceQueryUpdateWithoutPreAuthorizationInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  raisedBy?: Prisma.UserUpdateOneRequiredWithoutQueriesRaisedNestedInput
   answeredBy?: Prisma.UserUpdateOneWithoutQueriesAnsweredNestedInput
+  raisedBy?: Prisma.UserUpdateOneRequiredWithoutQueriesRaisedNestedInput
 }
 
 export type InsuranceQueryUncheckedUpdateWithoutPreAuthorizationInput = {
@@ -968,9 +968,9 @@ export type InsuranceQuerySelect<ExtArgs extends runtime.Types.Extensions.Intern
   resolvedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
   preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   raisedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceQuery"]>
 
 export type InsuranceQuerySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -986,9 +986,9 @@ export type InsuranceQuerySelectCreateManyAndReturn<ExtArgs extends runtime.Type
   resolvedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
   preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   raisedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceQuery"]>
 
 export type InsuranceQuerySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1004,9 +1004,9 @@ export type InsuranceQuerySelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   resolvedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
   preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   raisedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceQuery"]>
 
 export type InsuranceQuerySelectScalar = {
@@ -1026,27 +1026,27 @@ export type InsuranceQuerySelectScalar = {
 
 export type InsuranceQueryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "preAuthorizationId" | "question" | "answer" | "status" | "raisedById" | "answeredById" | "raisedAt" | "answeredAt" | "resolvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["insuranceQuery"]>
 export type InsuranceQueryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
   preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   raisedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
 }
 export type InsuranceQueryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
   preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   raisedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
 }
 export type InsuranceQueryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
   preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   raisedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  answeredBy?: boolean | Prisma.InsuranceQuery$answeredByArgs<ExtArgs>
 }
 
 export type $InsuranceQueryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InsuranceQuery"
   objects: {
+    answeredBy: Prisma.$UserPayload<ExtArgs> | null
     preAuthorization: Prisma.$PreAuthorizationPayload<ExtArgs>
     raisedBy: Prisma.$UserPayload<ExtArgs>
-    answeredBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1455,9 +1455,9 @@ readonly fields: InsuranceQueryFieldRefs;
  */
 export interface Prisma__InsuranceQueryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  answeredBy<T extends Prisma.InsuranceQuery$answeredByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InsuranceQuery$answeredByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   preAuthorization<T extends Prisma.PreAuthorizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorizationDefaultArgs<ExtArgs>>): Prisma.Prisma__PreAuthorizationClient<runtime.Types.Result.GetResult<Prisma.$PreAuthorizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   raisedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  answeredBy<T extends Prisma.InsuranceQuery$answeredByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InsuranceQuery$answeredByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

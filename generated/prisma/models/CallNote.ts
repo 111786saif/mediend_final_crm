@@ -182,8 +182,8 @@ export type CallNoteWhereInput = {
   content?: Prisma.StringFilter<"CallNote"> | string
   createdById?: Prisma.StringFilter<"CallNote"> | string
   createdAt?: Prisma.DateTimeFilter<"CallNote"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
 }
 
 export type CallNoteOrderByWithRelationInput = {
@@ -192,8 +192,8 @@ export type CallNoteOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  lead?: Prisma.LeadOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  lead?: Prisma.LeadOrderByWithRelationInput
 }
 
 export type CallNoteWhereUniqueInput = Prisma.AtLeast<{
@@ -205,8 +205,8 @@ export type CallNoteWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringFilter<"CallNote"> | string
   createdById?: Prisma.StringFilter<"CallNote"> | string
   createdAt?: Prisma.DateTimeFilter<"CallNote"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
 }, "id">
 
 export type CallNoteOrderByWithAggregationInput = {
@@ -235,8 +235,8 @@ export type CallNoteCreateInput = {
   id?: string
   content: string
   createdAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutCallNotesInput
   createdBy: Prisma.UserCreateNestedOneWithoutLeadCallNotesInput
+  lead: Prisma.LeadCreateNestedOneWithoutCallNotesInput
 }
 
 export type CallNoteUncheckedCreateInput = {
@@ -251,8 +251,8 @@ export type CallNoteUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutCallNotesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutLeadCallNotesNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutCallNotesNestedInput
 }
 
 export type CallNoteUncheckedUpdateInput = {
@@ -558,8 +558,8 @@ export type CallNoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   content?: boolean
   createdById?: boolean
   createdAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["callNote"]>
 
 export type CallNoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -568,8 +568,8 @@ export type CallNoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   content?: boolean
   createdById?: boolean
   createdAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["callNote"]>
 
 export type CallNoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -578,8 +578,8 @@ export type CallNoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   content?: boolean
   createdById?: boolean
   createdAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["callNote"]>
 
 export type CallNoteSelectScalar = {
@@ -592,23 +592,23 @@ export type CallNoteSelectScalar = {
 
 export type CallNoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "content" | "createdById" | "createdAt", ExtArgs["result"]["callNote"]>
 export type CallNoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type CallNoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type CallNoteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 
 export type $CallNotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CallNote"
   objects: {
-    lead: Prisma.$LeadPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs>
+    lead: Prisma.$LeadPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1010,8 +1010,8 @@ readonly fields: CallNoteFieldRefs;
  */
 export interface Prisma__CallNoteClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

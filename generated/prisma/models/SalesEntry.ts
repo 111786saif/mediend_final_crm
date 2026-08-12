@@ -272,8 +272,8 @@ export type SalesEntryWhereInput = {
   createdById?: Prisma.StringFilter<"SalesEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"SalesEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SalesEntry"> | Date | string
-  project?: Prisma.XOR<Prisma.ProjectMasterScalarRelationFilter, Prisma.ProjectMasterWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  project?: Prisma.XOR<Prisma.ProjectMasterScalarRelationFilter, Prisma.ProjectMasterWhereInput>
 }
 
 export type SalesEntryOrderByWithRelationInput = {
@@ -289,8 +289,8 @@ export type SalesEntryOrderByWithRelationInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  project?: Prisma.ProjectMasterOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  project?: Prisma.ProjectMasterOrderByWithRelationInput
 }
 
 export type SalesEntryWhereUniqueInput = Prisma.AtLeast<{
@@ -309,8 +309,8 @@ export type SalesEntryWhereUniqueInput = Prisma.AtLeast<{
   createdById?: Prisma.StringFilter<"SalesEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"SalesEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SalesEntry"> | Date | string
-  project?: Prisma.XOR<Prisma.ProjectMasterScalarRelationFilter, Prisma.ProjectMasterWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  project?: Prisma.XOR<Prisma.ProjectMasterScalarRelationFilter, Prisma.ProjectMasterWhereInput>
 }, "id" | "serialNumber">
 
 export type SalesEntryOrderByWithAggregationInput = {
@@ -362,8 +362,8 @@ export type SalesEntryCreateInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  project: Prisma.ProjectMasterCreateNestedOneWithoutSalesEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedSalesEntriesInput
+  project: Prisma.ProjectMasterCreateNestedOneWithoutSalesEntriesInput
 }
 
 export type SalesEntryUncheckedCreateInput = {
@@ -392,8 +392,8 @@ export type SalesEntryUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  project?: Prisma.ProjectMasterUpdateOneRequiredWithoutSalesEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedSalesEntriesNestedInput
+  project?: Prisma.ProjectMasterUpdateOneRequiredWithoutSalesEntriesNestedInput
 }
 
 export type SalesEntryUncheckedUpdateInput = {
@@ -854,8 +854,8 @@ export type SalesEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesEntry"]>
 
 export type SalesEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -871,8 +871,8 @@ export type SalesEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesEntry"]>
 
 export type SalesEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -888,8 +888,8 @@ export type SalesEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesEntry"]>
 
 export type SalesEntrySelectScalar = {
@@ -909,23 +909,23 @@ export type SalesEntrySelectScalar = {
 
 export type SalesEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serialNumber" | "transactionDate" | "projectId" | "description" | "amount" | "notes" | "isDeleted" | "deletedAt" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["salesEntry"]>
 export type SalesEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
 }
 export type SalesEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
 }
 export type SalesEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectMasterDefaultArgs<ExtArgs>
 }
 
 export type $SalesEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SalesEntry"
   objects: {
-    project: Prisma.$ProjectMasterPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs>
+    project: Prisma.$ProjectMasterPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1334,8 +1334,8 @@ readonly fields: SalesEntryFieldRefs;
  */
 export interface Prisma__SalesEntryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  project<T extends Prisma.ProjectMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectMasterClient<runtime.Types.Result.GetResult<Prisma.$ProjectMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.ProjectMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectMasterClient<runtime.Types.Result.GetResult<Prisma.$ProjectMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

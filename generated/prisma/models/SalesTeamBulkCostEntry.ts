@@ -272,8 +272,8 @@ export type SalesTeamBulkCostEntryWhereInput = {
   updatedByUserId?: Prisma.StringNullableFilter<"SalesTeamBulkCostEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SalesTeamBulkCostEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SalesTeamBulkCostEntry"> | Date | string
-  employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   history?: Prisma.SalesTeamBulkCostEntryHistoryListRelationFilter
 }
@@ -290,8 +290,8 @@ export type SalesTeamBulkCostEntryOrderByWithRelationInput = {
   updatedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  employee?: Prisma.EmployeeOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  employee?: Prisma.EmployeeOrderByWithRelationInput
   updatedBy?: Prisma.UserOrderByWithRelationInput
   history?: Prisma.SalesTeamBulkCostEntryHistoryOrderByRelationAggregateInput
 }
@@ -311,8 +311,8 @@ export type SalesTeamBulkCostEntryWhereUniqueInput = Prisma.AtLeast<{
   updatedByUserId?: Prisma.StringNullableFilter<"SalesTeamBulkCostEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SalesTeamBulkCostEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SalesTeamBulkCostEntry"> | Date | string
-  employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   history?: Prisma.SalesTeamBulkCostEntryHistoryListRelationFilter
 }, "id">
@@ -362,8 +362,8 @@ export type SalesTeamBulkCostEntryCreateInput = {
   remark: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  employee?: Prisma.EmployeeCreateNestedOneWithoutSalesTeamBulkCostEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutSalesTeamBulkCostsCreatedInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutSalesTeamBulkCostEntriesInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutSalesTeamBulkCostsUpdatedInput
   history?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutEntryInput
 }
@@ -392,8 +392,8 @@ export type SalesTeamBulkCostEntryUpdateInput = {
   remark?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneWithoutSalesTeamBulkCostEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutSalesTeamBulkCostsCreatedNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutSalesTeamBulkCostEntriesNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutSalesTeamBulkCostsUpdatedNestedInput
   history?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutEntryNestedInput
 }
@@ -714,8 +714,8 @@ export type SalesTeamBulkCostEntryCreateWithoutUpdatedByInput = {
   remark: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  employee?: Prisma.EmployeeCreateNestedOneWithoutSalesTeamBulkCostEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutSalesTeamBulkCostsCreatedInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutSalesTeamBulkCostEntriesInput
   history?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutEntryInput
 }
 
@@ -855,8 +855,8 @@ export type SalesTeamBulkCostEntryCreateWithoutHistoryInput = {
   remark: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  employee?: Prisma.EmployeeCreateNestedOneWithoutSalesTeamBulkCostEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutSalesTeamBulkCostsCreatedInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutSalesTeamBulkCostEntriesInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutSalesTeamBulkCostsUpdatedInput
 }
 
@@ -899,8 +899,8 @@ export type SalesTeamBulkCostEntryUpdateWithoutHistoryInput = {
   remark?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneWithoutSalesTeamBulkCostEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutSalesTeamBulkCostsCreatedNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutSalesTeamBulkCostEntriesNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutSalesTeamBulkCostsUpdatedNestedInput
 }
 
@@ -994,8 +994,8 @@ export type SalesTeamBulkCostEntryUpdateWithoutUpdatedByInput = {
   remark?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneWithoutSalesTeamBulkCostEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutSalesTeamBulkCostsCreatedNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutSalesTeamBulkCostEntriesNestedInput
   history?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutEntryNestedInput
 }
 
@@ -1123,8 +1123,8 @@ export type SalesTeamBulkCostEntrySelect<ExtArgs extends runtime.Types.Extension
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   updatedBy?: boolean | Prisma.SalesTeamBulkCostEntry$updatedByArgs<ExtArgs>
   history?: boolean | Prisma.SalesTeamBulkCostEntry$historyArgs<ExtArgs>
   _count?: boolean | Prisma.SalesTeamBulkCostEntryCountOutputTypeDefaultArgs<ExtArgs>
@@ -1142,8 +1142,8 @@ export type SalesTeamBulkCostEntrySelectCreateManyAndReturn<ExtArgs extends runt
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   updatedBy?: boolean | Prisma.SalesTeamBulkCostEntry$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["salesTeamBulkCostEntry"]>
 
@@ -1159,8 +1159,8 @@ export type SalesTeamBulkCostEntrySelectUpdateManyAndReturn<ExtArgs extends runt
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   updatedBy?: boolean | Prisma.SalesTeamBulkCostEntry$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["salesTeamBulkCostEntry"]>
 
@@ -1180,28 +1180,28 @@ export type SalesTeamBulkCostEntrySelectScalar = {
 
 export type SalesTeamBulkCostEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "costType" | "month" | "year" | "amount" | "remark" | "employeeId" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["salesTeamBulkCostEntry"]>
 export type SalesTeamBulkCostEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   updatedBy?: boolean | Prisma.SalesTeamBulkCostEntry$updatedByArgs<ExtArgs>
   history?: boolean | Prisma.SalesTeamBulkCostEntry$historyArgs<ExtArgs>
   _count?: boolean | Prisma.SalesTeamBulkCostEntryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SalesTeamBulkCostEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   updatedBy?: boolean | Prisma.SalesTeamBulkCostEntry$updatedByArgs<ExtArgs>
 }
 export type SalesTeamBulkCostEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>
   updatedBy?: boolean | Prisma.SalesTeamBulkCostEntry$updatedByArgs<ExtArgs>
 }
 
 export type $SalesTeamBulkCostEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SalesTeamBulkCostEntry"
   objects: {
-    employee: Prisma.$EmployeePayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
+    employee: Prisma.$EmployeePayload<ExtArgs> | null
     updatedBy: Prisma.$UserPayload<ExtArgs> | null
     history: Prisma.$SalesTeamBulkCostEntryHistoryPayload<ExtArgs>[]
   }
@@ -1611,8 +1611,8 @@ readonly fields: SalesTeamBulkCostEntryFieldRefs;
  */
 export interface Prisma__SalesTeamBulkCostEntryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  employee<T extends Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  employee<T extends Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SalesTeamBulkCostEntry$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   updatedBy<T extends Prisma.SalesTeamBulkCostEntry$updatedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SalesTeamBulkCostEntry$updatedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   history<T extends Prisma.SalesTeamBulkCostEntry$historyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SalesTeamBulkCostEntry$historyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**

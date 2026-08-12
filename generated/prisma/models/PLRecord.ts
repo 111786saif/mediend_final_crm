@@ -34,10 +34,6 @@ export type PLRecordAvgAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
-  instrumentsCost: number | null
-  actualImplantCost: number | null
-  actualInstrumentCost: number | null
-  hospitalRecoverAmount: number | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -46,9 +42,13 @@ export type PLRecordAvgAggregateOutputType = {
   mediendShareAmount: number | null
   mediendNetProfit: number | null
   finalProfit: number | null
-  mediendProfit: number | null
   hospitalAmountPending: number | null
   doctorAmountPending: number | null
+  instrumentsCost: number | null
+  actualImplantCost: number | null
+  actualInstrumentCost: number | null
+  hospitalRecoverAmount: number | null
+  mediendProfit: number | null
 }
 
 export type PLRecordSumAggregateOutputType = {
@@ -59,10 +59,6 @@ export type PLRecordSumAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
-  instrumentsCost: number | null
-  actualImplantCost: number | null
-  actualInstrumentCost: number | null
-  hospitalRecoverAmount: number | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -71,17 +67,19 @@ export type PLRecordSumAggregateOutputType = {
   mediendShareAmount: number | null
   mediendNetProfit: number | null
   finalProfit: number | null
-  mediendProfit: number | null
   hospitalAmountPending: number | null
   doctorAmountPending: number | null
+  instrumentsCost: number | null
+  actualImplantCost: number | null
+  actualInstrumentCost: number | null
+  hospitalRecoverAmount: number | null
+  mediendProfit: number | null
 }
 
 export type PLRecordMinAggregateOutputType = {
   id: string | null
   leadId: string | null
-  outstandingStatus: $Enums.PLOutstandingStatus | null
   month: Date | null
-  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -105,12 +103,6 @@ export type PLRecordMinAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
-  instrumentsCost: number | null
-  implantPaidBy: $Enums.PaidByParty | null
-  instrumentsPaidBy: $Enums.PaidByParty | null
-  actualImplantCost: number | null
-  actualInstrumentCost: number | null
-  hospitalRecoverAmount: number | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -119,27 +111,33 @@ export type PLRecordMinAggregateOutputType = {
   mediendShareAmount: number | null
   mediendNetProfit: number | null
   finalProfit: number | null
-  mediendProfit: number | null
   hospitalPayoutStatus: string | null
   doctorPayoutStatus: string | null
   mediendInvoiceStatus: string | null
   hospitalAmountPending: number | null
   doctorAmountPending: number | null
-  doctorRemarks: string | null
-  costBreakdownRemarks: string | null
   remarks: string | null
   closedAt: Date | null
   handledById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  admissionDate: Date | null
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsCost: number | null
+  instrumentsPaidBy: $Enums.PaidByParty | null
+  costBreakdownRemarks: string | null
+  doctorRemarks: string | null
+  outstandingStatus: $Enums.PLOutstandingStatus | null
+  actualImplantCost: number | null
+  actualInstrumentCost: number | null
+  hospitalRecoverAmount: number | null
+  mediendProfit: number | null
 }
 
 export type PLRecordMaxAggregateOutputType = {
   id: string | null
   leadId: string | null
-  outstandingStatus: $Enums.PLOutstandingStatus | null
   month: Date | null
-  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -163,12 +161,6 @@ export type PLRecordMaxAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
-  instrumentsCost: number | null
-  implantPaidBy: $Enums.PaidByParty | null
-  instrumentsPaidBy: $Enums.PaidByParty | null
-  actualImplantCost: number | null
-  actualInstrumentCost: number | null
-  hospitalRecoverAmount: number | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -177,27 +169,33 @@ export type PLRecordMaxAggregateOutputType = {
   mediendShareAmount: number | null
   mediendNetProfit: number | null
   finalProfit: number | null
-  mediendProfit: number | null
   hospitalPayoutStatus: string | null
   doctorPayoutStatus: string | null
   mediendInvoiceStatus: string | null
   hospitalAmountPending: number | null
   doctorAmountPending: number | null
-  doctorRemarks: string | null
-  costBreakdownRemarks: string | null
   remarks: string | null
   closedAt: Date | null
   handledById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  admissionDate: Date | null
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsCost: number | null
+  instrumentsPaidBy: $Enums.PaidByParty | null
+  costBreakdownRemarks: string | null
+  doctorRemarks: string | null
+  outstandingStatus: $Enums.PLOutstandingStatus | null
+  actualImplantCost: number | null
+  actualInstrumentCost: number | null
+  hospitalRecoverAmount: number | null
+  mediendProfit: number | null
 }
 
 export type PLRecordCountAggregateOutputType = {
   id: number
   leadId: number
-  outstandingStatus: number
   month: number
-  admissionDate: number
   surgeryDate: number
   status: number
   paymentType: number
@@ -221,12 +219,6 @@ export type PLRecordCountAggregateOutputType = {
   referralAmount: number
   cabCharges: number
   implantCost: number
-  instrumentsCost: number
-  implantPaidBy: number
-  instrumentsPaidBy: number
-  actualImplantCost: number
-  actualInstrumentCost: number
-  hospitalRecoverAmount: number
   dcCharges: number
   doctorCharges: number
   hospitalSharePct: number
@@ -235,19 +227,27 @@ export type PLRecordCountAggregateOutputType = {
   mediendShareAmount: number
   mediendNetProfit: number
   finalProfit: number
-  mediendProfit: number
   hospitalPayoutStatus: number
   doctorPayoutStatus: number
   mediendInvoiceStatus: number
   hospitalAmountPending: number
   doctorAmountPending: number
-  doctorRemarks: number
-  costBreakdownRemarks: number
   remarks: number
   closedAt: number
   handledById: number
   createdAt: number
   updatedAt: number
+  admissionDate: number
+  implantPaidBy: number
+  instrumentsCost: number
+  instrumentsPaidBy: number
+  costBreakdownRemarks: number
+  doctorRemarks: number
+  outstandingStatus: number
+  actualImplantCost: number
+  actualInstrumentCost: number
+  hospitalRecoverAmount: number
+  mediendProfit: number
   _all: number
 }
 
@@ -260,10 +260,6 @@ export type PLRecordAvgAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
-  actualImplantCost?: true
-  actualInstrumentCost?: true
-  hospitalRecoverAmount?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -272,9 +268,13 @@ export type PLRecordAvgAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
-  mediendProfit?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
+  instrumentsCost?: true
+  actualImplantCost?: true
+  actualInstrumentCost?: true
+  hospitalRecoverAmount?: true
+  mediendProfit?: true
 }
 
 export type PLRecordSumAggregateInputType = {
@@ -285,10 +285,6 @@ export type PLRecordSumAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
-  actualImplantCost?: true
-  actualInstrumentCost?: true
-  hospitalRecoverAmount?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -297,17 +293,19 @@ export type PLRecordSumAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
-  mediendProfit?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
+  instrumentsCost?: true
+  actualImplantCost?: true
+  actualInstrumentCost?: true
+  hospitalRecoverAmount?: true
+  mediendProfit?: true
 }
 
 export type PLRecordMinAggregateInputType = {
   id?: true
   leadId?: true
-  outstandingStatus?: true
   month?: true
-  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -331,12 +329,6 @@ export type PLRecordMinAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
-  implantPaidBy?: true
-  instrumentsPaidBy?: true
-  actualImplantCost?: true
-  actualInstrumentCost?: true
-  hospitalRecoverAmount?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -345,27 +337,33 @@ export type PLRecordMinAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
-  mediendProfit?: true
   hospitalPayoutStatus?: true
   doctorPayoutStatus?: true
   mediendInvoiceStatus?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
-  doctorRemarks?: true
-  costBreakdownRemarks?: true
   remarks?: true
   closedAt?: true
   handledById?: true
   createdAt?: true
   updatedAt?: true
+  admissionDate?: true
+  implantPaidBy?: true
+  instrumentsCost?: true
+  instrumentsPaidBy?: true
+  costBreakdownRemarks?: true
+  doctorRemarks?: true
+  outstandingStatus?: true
+  actualImplantCost?: true
+  actualInstrumentCost?: true
+  hospitalRecoverAmount?: true
+  mediendProfit?: true
 }
 
 export type PLRecordMaxAggregateInputType = {
   id?: true
   leadId?: true
-  outstandingStatus?: true
   month?: true
-  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -389,12 +387,6 @@ export type PLRecordMaxAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
-  implantPaidBy?: true
-  instrumentsPaidBy?: true
-  actualImplantCost?: true
-  actualInstrumentCost?: true
-  hospitalRecoverAmount?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -403,27 +395,33 @@ export type PLRecordMaxAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
-  mediendProfit?: true
   hospitalPayoutStatus?: true
   doctorPayoutStatus?: true
   mediendInvoiceStatus?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
-  doctorRemarks?: true
-  costBreakdownRemarks?: true
   remarks?: true
   closedAt?: true
   handledById?: true
   createdAt?: true
   updatedAt?: true
+  admissionDate?: true
+  implantPaidBy?: true
+  instrumentsCost?: true
+  instrumentsPaidBy?: true
+  costBreakdownRemarks?: true
+  doctorRemarks?: true
+  outstandingStatus?: true
+  actualImplantCost?: true
+  actualInstrumentCost?: true
+  hospitalRecoverAmount?: true
+  mediendProfit?: true
 }
 
 export type PLRecordCountAggregateInputType = {
   id?: true
   leadId?: true
-  outstandingStatus?: true
   month?: true
-  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -447,12 +445,6 @@ export type PLRecordCountAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
-  implantPaidBy?: true
-  instrumentsPaidBy?: true
-  actualImplantCost?: true
-  actualInstrumentCost?: true
-  hospitalRecoverAmount?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -461,19 +453,27 @@ export type PLRecordCountAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
-  mediendProfit?: true
   hospitalPayoutStatus?: true
   doctorPayoutStatus?: true
   mediendInvoiceStatus?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
-  doctorRemarks?: true
-  costBreakdownRemarks?: true
   remarks?: true
   closedAt?: true
   handledById?: true
   createdAt?: true
   updatedAt?: true
+  admissionDate?: true
+  implantPaidBy?: true
+  instrumentsCost?: true
+  instrumentsPaidBy?: true
+  costBreakdownRemarks?: true
+  doctorRemarks?: true
+  outstandingStatus?: true
+  actualImplantCost?: true
+  actualInstrumentCost?: true
+  hospitalRecoverAmount?: true
+  mediendProfit?: true
   _all?: true
 }
 
@@ -566,9 +566,7 @@ export type PLRecordGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type PLRecordGroupByOutputType = {
   id: string
   leadId: string
-  outstandingStatus: $Enums.PLOutstandingStatus
   month: Date | null
-  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -592,12 +590,6 @@ export type PLRecordGroupByOutputType = {
   referralAmount: number
   cabCharges: number
   implantCost: number
-  instrumentsCost: number
-  implantPaidBy: $Enums.PaidByParty | null
-  instrumentsPaidBy: $Enums.PaidByParty | null
-  actualImplantCost: number
-  actualInstrumentCost: number
-  hospitalRecoverAmount: number
   dcCharges: number
   doctorCharges: number
   hospitalSharePct: number | null
@@ -606,19 +598,27 @@ export type PLRecordGroupByOutputType = {
   mediendShareAmount: number
   mediendNetProfit: number
   finalProfit: number
-  mediendProfit: number
   hospitalPayoutStatus: string | null
   doctorPayoutStatus: string | null
   mediendInvoiceStatus: string | null
   hospitalAmountPending: number
   doctorAmountPending: number
-  doctorRemarks: string | null
-  costBreakdownRemarks: string | null
   remarks: string | null
   closedAt: Date | null
   handledById: string | null
   createdAt: Date
   updatedAt: Date
+  admissionDate: Date | null
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsCost: number
+  instrumentsPaidBy: $Enums.PaidByParty | null
+  costBreakdownRemarks: string | null
+  doctorRemarks: string | null
+  outstandingStatus: $Enums.PLOutstandingStatus
+  actualImplantCost: number
+  actualInstrumentCost: number
+  hospitalRecoverAmount: number
+  mediendProfit: number
   _count: PLRecordCountAggregateOutputType | null
   _avg: PLRecordAvgAggregateOutputType | null
   _sum: PLRecordSumAggregateOutputType | null
@@ -647,9 +647,7 @@ export type PLRecordWhereInput = {
   NOT?: Prisma.PLRecordWhereInput | Prisma.PLRecordWhereInput[]
   id?: Prisma.StringFilter<"PLRecord"> | string
   leadId?: Prisma.StringFilter<"PLRecord"> | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
   month?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
-  admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   status?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   paymentType?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -673,12 +671,6 @@ export type PLRecordWhereInput = {
   referralAmount?: Prisma.FloatFilter<"PLRecord"> | number
   cabCharges?: Prisma.FloatFilter<"PLRecord"> | number
   implantCost?: Prisma.FloatFilter<"PLRecord"> | number
-  instrumentsCost?: Prisma.FloatFilter<"PLRecord"> | number
-  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFilter<"PLRecord"> | number
-  actualInstrumentCost?: Prisma.FloatFilter<"PLRecord"> | number
-  hospitalRecoverAmount?: Prisma.FloatFilter<"PLRecord"> | number
   dcCharges?: Prisma.FloatFilter<"PLRecord"> | number
   doctorCharges?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"PLRecord"> | number | null
@@ -687,30 +679,36 @@ export type PLRecordWhereInput = {
   mediendShareAmount?: Prisma.FloatFilter<"PLRecord"> | number
   mediendNetProfit?: Prisma.FloatFilter<"PLRecord"> | number
   finalProfit?: Prisma.FloatFilter<"PLRecord"> | number
-  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   doctorPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   hospitalAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
   doctorAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
-  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
-  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   remarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   handledById?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PLRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PLRecord"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
-  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFilter<"PLRecord"> | number
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFilter<"PLRecord"> | number
+  actualInstrumentCost?: Prisma.FloatFilter<"PLRecord"> | number
+  hospitalRecoverAmount?: Prisma.FloatFilter<"PLRecord"> | number
+  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
   dischargeSheet?: Prisma.XOR<Prisma.DischargeSheetNullableScalarRelationFilter, Prisma.DischargeSheetWhereInput> | null
+  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
 }
 
 export type PLRecordOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
-  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
-  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   surgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -734,12 +732,6 @@ export type PLRecordOrderByWithRelationInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  actualImplantCost?: Prisma.SortOrder
-  actualInstrumentCost?: Prisma.SortOrder
-  hospitalRecoverAmount?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -748,22 +740,30 @@ export type PLRecordOrderByWithRelationInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
-  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   handledById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  lead?: Prisma.LeadOrderByWithRelationInput
-  handledBy?: Prisma.UserOrderByWithRelationInput
+  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
+  actualImplantCost?: Prisma.SortOrder
+  actualInstrumentCost?: Prisma.SortOrder
+  hospitalRecoverAmount?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   dischargeSheet?: Prisma.DischargeSheetOrderByWithRelationInput
+  handledBy?: Prisma.UserOrderByWithRelationInput
+  lead?: Prisma.LeadOrderByWithRelationInput
 }
 
 export type PLRecordWhereUniqueInput = Prisma.AtLeast<{
@@ -772,9 +772,7 @@ export type PLRecordWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PLRecordWhereInput | Prisma.PLRecordWhereInput[]
   OR?: Prisma.PLRecordWhereInput[]
   NOT?: Prisma.PLRecordWhereInput | Prisma.PLRecordWhereInput[]
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
   month?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
-  admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   status?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   paymentType?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -798,12 +796,6 @@ export type PLRecordWhereUniqueInput = Prisma.AtLeast<{
   referralAmount?: Prisma.FloatFilter<"PLRecord"> | number
   cabCharges?: Prisma.FloatFilter<"PLRecord"> | number
   implantCost?: Prisma.FloatFilter<"PLRecord"> | number
-  instrumentsCost?: Prisma.FloatFilter<"PLRecord"> | number
-  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFilter<"PLRecord"> | number
-  actualInstrumentCost?: Prisma.FloatFilter<"PLRecord"> | number
-  hospitalRecoverAmount?: Prisma.FloatFilter<"PLRecord"> | number
   dcCharges?: Prisma.FloatFilter<"PLRecord"> | number
   doctorCharges?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"PLRecord"> | number | null
@@ -812,30 +804,36 @@ export type PLRecordWhereUniqueInput = Prisma.AtLeast<{
   mediendShareAmount?: Prisma.FloatFilter<"PLRecord"> | number
   mediendNetProfit?: Prisma.FloatFilter<"PLRecord"> | number
   finalProfit?: Prisma.FloatFilter<"PLRecord"> | number
-  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   doctorPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   hospitalAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
   doctorAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
-  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
-  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   remarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   handledById?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PLRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PLRecord"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
-  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFilter<"PLRecord"> | number
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFilter<"PLRecord"> | number
+  actualInstrumentCost?: Prisma.FloatFilter<"PLRecord"> | number
+  hospitalRecoverAmount?: Prisma.FloatFilter<"PLRecord"> | number
+  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
   dischargeSheet?: Prisma.XOR<Prisma.DischargeSheetNullableScalarRelationFilter, Prisma.DischargeSheetWhereInput> | null
+  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
 }, "id" | "leadId">
 
 export type PLRecordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
-  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
-  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   surgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -859,12 +857,6 @@ export type PLRecordOrderByWithAggregationInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  actualImplantCost?: Prisma.SortOrder
-  actualInstrumentCost?: Prisma.SortOrder
-  hospitalRecoverAmount?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -873,19 +865,27 @@ export type PLRecordOrderByWithAggregationInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
-  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   handledById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
+  actualImplantCost?: Prisma.SortOrder
+  actualInstrumentCost?: Prisma.SortOrder
+  hospitalRecoverAmount?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   _count?: Prisma.PLRecordCountOrderByAggregateInput
   _avg?: Prisma.PLRecordAvgOrderByAggregateInput
   _max?: Prisma.PLRecordMaxOrderByAggregateInput
@@ -899,9 +899,7 @@ export type PLRecordScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PLRecordScalarWhereWithAggregatesInput | Prisma.PLRecordScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PLRecord"> | string
   leadId?: Prisma.StringWithAggregatesFilter<"PLRecord"> | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusWithAggregatesFilter<"PLRecord"> | $Enums.PLOutstandingStatus
   month?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
-  admissionDate?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
   status?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   paymentType?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
@@ -925,12 +923,6 @@ export type PLRecordScalarWhereWithAggregatesInput = {
   referralAmount?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   cabCharges?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   implantCost?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
-  instrumentsCost?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
-  implantPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"PLRecord"> | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"PLRecord"> | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
-  actualInstrumentCost?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
-  hospitalRecoverAmount?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   dcCharges?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   doctorCharges?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   hospitalSharePct?: Prisma.FloatNullableWithAggregatesFilter<"PLRecord"> | number | null
@@ -939,26 +931,32 @@ export type PLRecordScalarWhereWithAggregatesInput = {
   mediendShareAmount?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   mediendNetProfit?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   finalProfit?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
-  mediendProfit?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   hospitalPayoutStatus?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   doctorPayoutStatus?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   mediendInvoiceStatus?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   hospitalAmountPending?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   doctorAmountPending?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
-  doctorRemarks?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
-  costBreakdownRemarks?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   remarks?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
   handledById?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PLRecord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PLRecord"> | Date | string
+  admissionDate?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"PLRecord"> | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"PLRecord"> | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
+  doctorRemarks?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusWithAggregatesFilter<"PLRecord"> | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
+  actualInstrumentCost?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
+  hospitalRecoverAmount?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
+  mediendProfit?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
 }
 
 export type PLRecordCreateInput = {
   id?: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -982,12 +980,6 @@ export type PLRecordCreateInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -996,29 +988,35 @@ export type PLRecordCreateInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutPlRecordInput
-  handledBy?: Prisma.UserCreateNestedOneWithoutPlRecordsInput
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutPlRecordInput
+  handledBy?: Prisma.UserCreateNestedOneWithoutPlRecordsInput
+  lead: Prisma.LeadCreateNestedOneWithoutPlRecordInput
 }
 
 export type PLRecordUncheckedCreateInput = {
   id?: string
   leadId: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1042,12 +1040,6 @@ export type PLRecordUncheckedCreateInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1056,27 +1048,33 @@ export type PLRecordUncheckedCreateInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   handledById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutPlRecordInput
 }
 
 export type PLRecordUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1100,12 +1098,6 @@ export type PLRecordUpdateInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1114,29 +1106,35 @@ export type PLRecordUpdateInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutPlRecordNestedInput
-  handledBy?: Prisma.UserUpdateOneWithoutPlRecordsNestedInput
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutPlRecordNestedInput
+  handledBy?: Prisma.UserUpdateOneWithoutPlRecordsNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutPlRecordNestedInput
 }
 
 export type PLRecordUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1160,12 +1158,6 @@ export type PLRecordUncheckedUpdateInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1174,28 +1166,34 @@ export type PLRecordUncheckedUpdateInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   handledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutPlRecordNestedInput
 }
 
 export type PLRecordCreateManyInput = {
   id?: string
   leadId: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1219,12 +1217,6 @@ export type PLRecordCreateManyInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1233,26 +1225,32 @@ export type PLRecordCreateManyInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   handledById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
 }
 
 export type PLRecordUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1276,12 +1274,6 @@ export type PLRecordUpdateManyMutationInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1290,26 +1282,32 @@ export type PLRecordUpdateManyMutationInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type PLRecordUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1333,12 +1331,6 @@ export type PLRecordUncheckedUpdateManyInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1347,19 +1339,27 @@ export type PLRecordUncheckedUpdateManyInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   handledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type PLRecordListRelationFilter = {
@@ -1380,9 +1380,7 @@ export type PLRecordNullableScalarRelationFilter = {
 export type PLRecordCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
-  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrder
-  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -1406,12 +1404,6 @@ export type PLRecordCountOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrder
-  actualImplantCost?: Prisma.SortOrder
-  actualInstrumentCost?: Prisma.SortOrder
-  hospitalRecoverAmount?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1420,19 +1412,27 @@ export type PLRecordCountOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
-  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   handledById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
+  actualImplantCost?: Prisma.SortOrder
+  actualInstrumentCost?: Prisma.SortOrder
+  hospitalRecoverAmount?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
 }
 
 export type PLRecordAvgOrderByAggregateInput = {
@@ -1443,10 +1443,6 @@ export type PLRecordAvgOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  actualImplantCost?: Prisma.SortOrder
-  actualInstrumentCost?: Prisma.SortOrder
-  hospitalRecoverAmount?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1455,17 +1451,19 @@ export type PLRecordAvgOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
-  mediendProfit?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  actualImplantCost?: Prisma.SortOrder
+  actualInstrumentCost?: Prisma.SortOrder
+  hospitalRecoverAmount?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
 }
 
 export type PLRecordMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
-  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrder
-  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -1489,12 +1487,6 @@ export type PLRecordMaxOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrder
-  actualImplantCost?: Prisma.SortOrder
-  actualInstrumentCost?: Prisma.SortOrder
-  hospitalRecoverAmount?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1503,27 +1495,33 @@ export type PLRecordMaxOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
-  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   handledById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
+  actualImplantCost?: Prisma.SortOrder
+  actualInstrumentCost?: Prisma.SortOrder
+  hospitalRecoverAmount?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
 }
 
 export type PLRecordMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
-  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrder
-  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -1547,12 +1545,6 @@ export type PLRecordMinOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrder
-  actualImplantCost?: Prisma.SortOrder
-  actualInstrumentCost?: Prisma.SortOrder
-  hospitalRecoverAmount?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1561,19 +1553,27 @@ export type PLRecordMinOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
-  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   handledById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
+  actualImplantCost?: Prisma.SortOrder
+  actualInstrumentCost?: Prisma.SortOrder
+  hospitalRecoverAmount?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
 }
 
 export type PLRecordSumOrderByAggregateInput = {
@@ -1584,10 +1584,6 @@ export type PLRecordSumOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  actualImplantCost?: Prisma.SortOrder
-  actualInstrumentCost?: Prisma.SortOrder
-  hospitalRecoverAmount?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1596,9 +1592,13 @@ export type PLRecordSumOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
-  mediendProfit?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  actualImplantCost?: Prisma.SortOrder
+  actualInstrumentCost?: Prisma.SortOrder
+  hospitalRecoverAmount?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
 }
 
 export type PLRecordCreateNestedManyWithoutHandledByInput = {
@@ -1675,12 +1675,12 @@ export type PLRecordUncheckedUpdateOneWithoutLeadNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PLRecordUpdateToOneWithWhereWithoutLeadInput, Prisma.PLRecordUpdateWithoutLeadInput>, Prisma.PLRecordUncheckedUpdateWithoutLeadInput>
 }
 
-export type EnumPLOutstandingStatusFieldUpdateOperationsInput = {
-  set?: $Enums.PLOutstandingStatus
-}
-
 export type NullableEnumPaidByPartyFieldUpdateOperationsInput = {
   set?: $Enums.PaidByParty | null
+}
+
+export type EnumPLOutstandingStatusFieldUpdateOperationsInput = {
+  set?: $Enums.PLOutstandingStatus
 }
 
 export type PLRecordCreateNestedOneWithoutDischargeSheetInput = {
@@ -1701,9 +1701,7 @@ export type PLRecordUpdateOneWithoutDischargeSheetNestedInput = {
 
 export type PLRecordCreateWithoutHandledByInput = {
   id?: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1727,12 +1725,6 @@ export type PLRecordCreateWithoutHandledByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1741,28 +1733,34 @@ export type PLRecordCreateWithoutHandledByInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutPlRecordInput
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutPlRecordInput
+  lead: Prisma.LeadCreateNestedOneWithoutPlRecordInput
 }
 
 export type PLRecordUncheckedCreateWithoutHandledByInput = {
   id?: string
   leadId: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1786,12 +1784,6 @@ export type PLRecordUncheckedCreateWithoutHandledByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1800,18 +1792,26 @@ export type PLRecordUncheckedCreateWithoutHandledByInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutPlRecordInput
 }
 
@@ -1847,9 +1847,7 @@ export type PLRecordScalarWhereInput = {
   NOT?: Prisma.PLRecordScalarWhereInput | Prisma.PLRecordScalarWhereInput[]
   id?: Prisma.StringFilter<"PLRecord"> | string
   leadId?: Prisma.StringFilter<"PLRecord"> | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
   month?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
-  admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   status?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   paymentType?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -1873,12 +1871,6 @@ export type PLRecordScalarWhereInput = {
   referralAmount?: Prisma.FloatFilter<"PLRecord"> | number
   cabCharges?: Prisma.FloatFilter<"PLRecord"> | number
   implantCost?: Prisma.FloatFilter<"PLRecord"> | number
-  instrumentsCost?: Prisma.FloatFilter<"PLRecord"> | number
-  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFilter<"PLRecord"> | number
-  actualInstrumentCost?: Prisma.FloatFilter<"PLRecord"> | number
-  hospitalRecoverAmount?: Prisma.FloatFilter<"PLRecord"> | number
   dcCharges?: Prisma.FloatFilter<"PLRecord"> | number
   doctorCharges?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"PLRecord"> | number | null
@@ -1887,26 +1879,32 @@ export type PLRecordScalarWhereInput = {
   mediendShareAmount?: Prisma.FloatFilter<"PLRecord"> | number
   mediendNetProfit?: Prisma.FloatFilter<"PLRecord"> | number
   finalProfit?: Prisma.FloatFilter<"PLRecord"> | number
-  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   doctorPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   hospitalAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
   doctorAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
-  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
-  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   remarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   handledById?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PLRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PLRecord"> | Date | string
+  admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFilter<"PLRecord"> | number
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"PLRecord"> | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFilter<"PLRecord"> | number
+  actualInstrumentCost?: Prisma.FloatFilter<"PLRecord"> | number
+  hospitalRecoverAmount?: Prisma.FloatFilter<"PLRecord"> | number
+  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
 }
 
 export type PLRecordCreateWithoutLeadInput = {
   id?: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1930,12 +1928,6 @@ export type PLRecordCreateWithoutLeadInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1944,27 +1936,33 @@ export type PLRecordCreateWithoutLeadInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  handledBy?: Prisma.UserCreateNestedOneWithoutPlRecordsInput
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutPlRecordInput
+  handledBy?: Prisma.UserCreateNestedOneWithoutPlRecordsInput
 }
 
 export type PLRecordUncheckedCreateWithoutLeadInput = {
   id?: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1988,12 +1986,6 @@ export type PLRecordUncheckedCreateWithoutLeadInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2002,19 +1994,27 @@ export type PLRecordUncheckedCreateWithoutLeadInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   handledById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutPlRecordInput
 }
 
@@ -2036,9 +2036,7 @@ export type PLRecordUpdateToOneWithWhereWithoutLeadInput = {
 
 export type PLRecordUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2062,12 +2060,6 @@ export type PLRecordUpdateWithoutLeadInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2076,27 +2068,33 @@ export type PLRecordUpdateWithoutLeadInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  handledBy?: Prisma.UserUpdateOneWithoutPlRecordsNestedInput
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutPlRecordNestedInput
+  handledBy?: Prisma.UserUpdateOneWithoutPlRecordsNestedInput
 }
 
 export type PLRecordUncheckedUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2120,12 +2118,6 @@ export type PLRecordUncheckedUpdateWithoutLeadInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2134,27 +2126,33 @@ export type PLRecordUncheckedUpdateWithoutLeadInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   handledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutPlRecordNestedInput
 }
 
 export type PLRecordCreateWithoutDischargeSheetInput = {
   id?: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2178,12 +2176,6 @@ export type PLRecordCreateWithoutDischargeSheetInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2192,28 +2184,34 @@ export type PLRecordCreateWithoutDischargeSheetInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutPlRecordInput
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
   handledBy?: Prisma.UserCreateNestedOneWithoutPlRecordsInput
+  lead: Prisma.LeadCreateNestedOneWithoutPlRecordInput
 }
 
 export type PLRecordUncheckedCreateWithoutDischargeSheetInput = {
   id?: string
   leadId: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2237,12 +2235,6 @@ export type PLRecordUncheckedCreateWithoutDischargeSheetInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2251,19 +2243,27 @@ export type PLRecordUncheckedCreateWithoutDischargeSheetInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   handledById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
 }
 
 export type PLRecordCreateOrConnectWithoutDischargeSheetInput = {
@@ -2284,9 +2284,7 @@ export type PLRecordUpdateToOneWithWhereWithoutDischargeSheetInput = {
 
 export type PLRecordUpdateWithoutDischargeSheetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2310,12 +2308,6 @@ export type PLRecordUpdateWithoutDischargeSheetInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2324,28 +2316,34 @@ export type PLRecordUpdateWithoutDischargeSheetInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutPlRecordNestedInput
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   handledBy?: Prisma.UserUpdateOneWithoutPlRecordsNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutPlRecordNestedInput
 }
 
 export type PLRecordUncheckedUpdateWithoutDischargeSheetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2369,12 +2367,6 @@ export type PLRecordUncheckedUpdateWithoutDischargeSheetInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2383,27 +2375,33 @@ export type PLRecordUncheckedUpdateWithoutDischargeSheetInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   handledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type PLRecordCreateManyHandledByInput = {
   id?: string
   leadId: string
-  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2427,12 +2425,6 @@ export type PLRecordCreateManyHandledByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  actualImplantCost?: number
-  actualInstrumentCost?: number
-  hospitalRecoverAmount?: number
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2441,25 +2433,31 @@ export type PLRecordCreateManyHandledByInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
-  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  outstandingStatus?: $Enums.PLOutstandingStatus
+  actualImplantCost?: number
+  actualInstrumentCost?: number
+  hospitalRecoverAmount?: number
+  mediendProfit?: number
 }
 
 export type PLRecordUpdateWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2483,12 +2481,6 @@ export type PLRecordUpdateWithoutHandledByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2497,28 +2489,34 @@ export type PLRecordUpdateWithoutHandledByInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutPlRecordNestedInput
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutPlRecordNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutPlRecordNestedInput
 }
 
 export type PLRecordUncheckedUpdateWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2542,12 +2540,6 @@ export type PLRecordUncheckedUpdateWithoutHandledByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2556,27 +2548,33 @@ export type PLRecordUncheckedUpdateWithoutHandledByInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutPlRecordNestedInput
 }
 
 export type PLRecordUncheckedUpdateManyWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
-  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2600,12 +2598,6 @@ export type PLRecordUncheckedUpdateManyWithoutHandledByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2614,18 +2606,26 @@ export type PLRecordUncheckedUpdateManyWithoutHandledByInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
+  actualImplantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualInstrumentCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalRecoverAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -2633,9 +2633,7 @@ export type PLRecordUncheckedUpdateManyWithoutHandledByInput = {
 export type PLRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
-  outstandingStatus?: boolean
   month?: boolean
-  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -2659,12 +2657,6 @@ export type PLRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
-  instrumentsCost?: boolean
-  implantPaidBy?: boolean
-  instrumentsPaidBy?: boolean
-  actualImplantCost?: boolean
-  actualInstrumentCost?: boolean
-  hospitalRecoverAmount?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -2673,30 +2665,36 @@ export type PLRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
   finalProfit?: boolean
-  mediendProfit?: boolean
   hospitalPayoutStatus?: boolean
   doctorPayoutStatus?: boolean
   mediendInvoiceStatus?: boolean
   hospitalAmountPending?: boolean
   doctorAmountPending?: boolean
-  doctorRemarks?: boolean
-  costBreakdownRemarks?: boolean
   remarks?: boolean
   closedAt?: boolean
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
+  admissionDate?: boolean
+  implantPaidBy?: boolean
+  instrumentsCost?: boolean
+  instrumentsPaidBy?: boolean
+  costBreakdownRemarks?: boolean
+  doctorRemarks?: boolean
+  outstandingStatus?: boolean
+  actualImplantCost?: boolean
+  actualInstrumentCost?: boolean
+  hospitalRecoverAmount?: boolean
+  mediendProfit?: boolean
   dischargeSheet?: boolean | Prisma.PLRecord$dischargeSheetArgs<ExtArgs>
+  handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pLRecord"]>
 
 export type PLRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
-  outstandingStatus?: boolean
   month?: boolean
-  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -2720,12 +2718,6 @@ export type PLRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
-  instrumentsCost?: boolean
-  implantPaidBy?: boolean
-  instrumentsPaidBy?: boolean
-  actualImplantCost?: boolean
-  actualInstrumentCost?: boolean
-  hospitalRecoverAmount?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -2734,29 +2726,35 @@ export type PLRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
   finalProfit?: boolean
-  mediendProfit?: boolean
   hospitalPayoutStatus?: boolean
   doctorPayoutStatus?: boolean
   mediendInvoiceStatus?: boolean
   hospitalAmountPending?: boolean
   doctorAmountPending?: boolean
-  doctorRemarks?: boolean
-  costBreakdownRemarks?: boolean
   remarks?: boolean
   closedAt?: boolean
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  admissionDate?: boolean
+  implantPaidBy?: boolean
+  instrumentsCost?: boolean
+  instrumentsPaidBy?: boolean
+  costBreakdownRemarks?: boolean
+  doctorRemarks?: boolean
+  outstandingStatus?: boolean
+  actualImplantCost?: boolean
+  actualInstrumentCost?: boolean
+  hospitalRecoverAmount?: boolean
+  mediendProfit?: boolean
   handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pLRecord"]>
 
 export type PLRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
-  outstandingStatus?: boolean
   month?: boolean
-  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -2780,12 +2778,6 @@ export type PLRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
-  instrumentsCost?: boolean
-  implantPaidBy?: boolean
-  instrumentsPaidBy?: boolean
-  actualImplantCost?: boolean
-  actualInstrumentCost?: boolean
-  hospitalRecoverAmount?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -2794,29 +2786,35 @@ export type PLRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
   finalProfit?: boolean
-  mediendProfit?: boolean
   hospitalPayoutStatus?: boolean
   doctorPayoutStatus?: boolean
   mediendInvoiceStatus?: boolean
   hospitalAmountPending?: boolean
   doctorAmountPending?: boolean
-  doctorRemarks?: boolean
-  costBreakdownRemarks?: boolean
   remarks?: boolean
   closedAt?: boolean
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  admissionDate?: boolean
+  implantPaidBy?: boolean
+  instrumentsCost?: boolean
+  instrumentsPaidBy?: boolean
+  costBreakdownRemarks?: boolean
+  doctorRemarks?: boolean
+  outstandingStatus?: boolean
+  actualImplantCost?: boolean
+  actualInstrumentCost?: boolean
+  hospitalRecoverAmount?: boolean
+  mediendProfit?: boolean
   handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pLRecord"]>
 
 export type PLRecordSelectScalar = {
   id?: boolean
   leadId?: boolean
-  outstandingStatus?: boolean
   month?: boolean
-  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -2840,12 +2838,6 @@ export type PLRecordSelectScalar = {
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
-  instrumentsCost?: boolean
-  implantPaidBy?: boolean
-  instrumentsPaidBy?: boolean
-  actualImplantCost?: boolean
-  actualInstrumentCost?: boolean
-  hospitalRecoverAmount?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -2854,49 +2846,55 @@ export type PLRecordSelectScalar = {
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
   finalProfit?: boolean
-  mediendProfit?: boolean
   hospitalPayoutStatus?: boolean
   doctorPayoutStatus?: boolean
   mediendInvoiceStatus?: boolean
   hospitalAmountPending?: boolean
   doctorAmountPending?: boolean
-  doctorRemarks?: boolean
-  costBreakdownRemarks?: boolean
   remarks?: boolean
   closedAt?: boolean
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  admissionDate?: boolean
+  implantPaidBy?: boolean
+  instrumentsCost?: boolean
+  instrumentsPaidBy?: boolean
+  costBreakdownRemarks?: boolean
+  doctorRemarks?: boolean
+  outstandingStatus?: boolean
+  actualImplantCost?: boolean
+  actualInstrumentCost?: boolean
+  hospitalRecoverAmount?: boolean
+  mediendProfit?: boolean
 }
 
-export type PLRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "outstandingStatus" | "month" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "actualImplantCost" | "actualInstrumentCost" | "hospitalRecoverAmount" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "finalProfit" | "mediendProfit" | "hospitalPayoutStatus" | "doctorPayoutStatus" | "mediendInvoiceStatus" | "hospitalAmountPending" | "doctorAmountPending" | "doctorRemarks" | "costBreakdownRemarks" | "remarks" | "closedAt" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["pLRecord"]>
+export type PLRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "month" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "finalProfit" | "hospitalPayoutStatus" | "doctorPayoutStatus" | "mediendInvoiceStatus" | "hospitalAmountPending" | "doctorAmountPending" | "remarks" | "closedAt" | "handledById" | "createdAt" | "updatedAt" | "admissionDate" | "implantPaidBy" | "instrumentsCost" | "instrumentsPaidBy" | "costBreakdownRemarks" | "doctorRemarks" | "outstandingStatus" | "actualImplantCost" | "actualInstrumentCost" | "hospitalRecoverAmount" | "mediendProfit", ExtArgs["result"]["pLRecord"]>
 export type PLRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
   dischargeSheet?: boolean | Prisma.PLRecord$dischargeSheetArgs<ExtArgs>
+  handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type PLRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type PLRecordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 
 export type $PLRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PLRecord"
   objects: {
-    lead: Prisma.$LeadPayload<ExtArgs>
-    handledBy: Prisma.$UserPayload<ExtArgs> | null
     dischargeSheet: Prisma.$DischargeSheetPayload<ExtArgs> | null
+    handledBy: Prisma.$UserPayload<ExtArgs> | null
+    lead: Prisma.$LeadPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     leadId: string
-    outstandingStatus: $Enums.PLOutstandingStatus
     month: Date | null
-    admissionDate: Date | null
     surgeryDate: Date | null
     status: string | null
     paymentType: string | null
@@ -2920,12 +2918,6 @@ export type $PLRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     referralAmount: number
     cabCharges: number
     implantCost: number
-    instrumentsCost: number
-    implantPaidBy: $Enums.PaidByParty | null
-    instrumentsPaidBy: $Enums.PaidByParty | null
-    actualImplantCost: number
-    actualInstrumentCost: number
-    hospitalRecoverAmount: number
     dcCharges: number
     doctorCharges: number
     hospitalSharePct: number | null
@@ -2934,19 +2926,27 @@ export type $PLRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     mediendShareAmount: number
     mediendNetProfit: number
     finalProfit: number
-    mediendProfit: number
     hospitalPayoutStatus: string | null
     doctorPayoutStatus: string | null
     mediendInvoiceStatus: string | null
     hospitalAmountPending: number
     doctorAmountPending: number
-    doctorRemarks: string | null
-    costBreakdownRemarks: string | null
     remarks: string | null
     closedAt: Date | null
     handledById: string | null
     createdAt: Date
     updatedAt: Date
+    admissionDate: Date | null
+    implantPaidBy: $Enums.PaidByParty | null
+    instrumentsCost: number
+    instrumentsPaidBy: $Enums.PaidByParty | null
+    costBreakdownRemarks: string | null
+    doctorRemarks: string | null
+    outstandingStatus: $Enums.PLOutstandingStatus
+    actualImplantCost: number
+    actualInstrumentCost: number
+    hospitalRecoverAmount: number
+    mediendProfit: number
   }, ExtArgs["result"]["pLRecord"]>
   composites: {}
 }
@@ -3341,9 +3341,9 @@ readonly fields: PLRecordFieldRefs;
  */
 export interface Prisma__PLRecordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  handledBy<T extends Prisma.PLRecord$handledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PLRecord$handledByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   dischargeSheet<T extends Prisma.PLRecord$dischargeSheetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PLRecord$dischargeSheetArgs<ExtArgs>>): Prisma.Prisma__DischargeSheetClient<runtime.Types.Result.GetResult<Prisma.$DischargeSheetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  handledBy<T extends Prisma.PLRecord$handledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PLRecord$handledByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3375,9 +3375,7 @@ export interface Prisma__PLRecordClient<T, Null = never, ExtArgs extends runtime
 export interface PLRecordFieldRefs {
   readonly id: Prisma.FieldRef<"PLRecord", 'String'>
   readonly leadId: Prisma.FieldRef<"PLRecord", 'String'>
-  readonly outstandingStatus: Prisma.FieldRef<"PLRecord", 'PLOutstandingStatus'>
   readonly month: Prisma.FieldRef<"PLRecord", 'DateTime'>
-  readonly admissionDate: Prisma.FieldRef<"PLRecord", 'DateTime'>
   readonly surgeryDate: Prisma.FieldRef<"PLRecord", 'DateTime'>
   readonly status: Prisma.FieldRef<"PLRecord", 'String'>
   readonly paymentType: Prisma.FieldRef<"PLRecord", 'String'>
@@ -3401,12 +3399,6 @@ export interface PLRecordFieldRefs {
   readonly referralAmount: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly cabCharges: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly implantCost: Prisma.FieldRef<"PLRecord", 'Float'>
-  readonly instrumentsCost: Prisma.FieldRef<"PLRecord", 'Float'>
-  readonly implantPaidBy: Prisma.FieldRef<"PLRecord", 'PaidByParty'>
-  readonly instrumentsPaidBy: Prisma.FieldRef<"PLRecord", 'PaidByParty'>
-  readonly actualImplantCost: Prisma.FieldRef<"PLRecord", 'Float'>
-  readonly actualInstrumentCost: Prisma.FieldRef<"PLRecord", 'Float'>
-  readonly hospitalRecoverAmount: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly dcCharges: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly doctorCharges: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly hospitalSharePct: Prisma.FieldRef<"PLRecord", 'Float'>
@@ -3415,19 +3407,27 @@ export interface PLRecordFieldRefs {
   readonly mediendShareAmount: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly mediendNetProfit: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly finalProfit: Prisma.FieldRef<"PLRecord", 'Float'>
-  readonly mediendProfit: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly hospitalPayoutStatus: Prisma.FieldRef<"PLRecord", 'String'>
   readonly doctorPayoutStatus: Prisma.FieldRef<"PLRecord", 'String'>
   readonly mediendInvoiceStatus: Prisma.FieldRef<"PLRecord", 'String'>
   readonly hospitalAmountPending: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly doctorAmountPending: Prisma.FieldRef<"PLRecord", 'Float'>
-  readonly doctorRemarks: Prisma.FieldRef<"PLRecord", 'String'>
-  readonly costBreakdownRemarks: Prisma.FieldRef<"PLRecord", 'String'>
   readonly remarks: Prisma.FieldRef<"PLRecord", 'String'>
   readonly closedAt: Prisma.FieldRef<"PLRecord", 'DateTime'>
   readonly handledById: Prisma.FieldRef<"PLRecord", 'String'>
   readonly createdAt: Prisma.FieldRef<"PLRecord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PLRecord", 'DateTime'>
+  readonly admissionDate: Prisma.FieldRef<"PLRecord", 'DateTime'>
+  readonly implantPaidBy: Prisma.FieldRef<"PLRecord", 'PaidByParty'>
+  readonly instrumentsCost: Prisma.FieldRef<"PLRecord", 'Float'>
+  readonly instrumentsPaidBy: Prisma.FieldRef<"PLRecord", 'PaidByParty'>
+  readonly costBreakdownRemarks: Prisma.FieldRef<"PLRecord", 'String'>
+  readonly doctorRemarks: Prisma.FieldRef<"PLRecord", 'String'>
+  readonly outstandingStatus: Prisma.FieldRef<"PLRecord", 'PLOutstandingStatus'>
+  readonly actualImplantCost: Prisma.FieldRef<"PLRecord", 'Float'>
+  readonly actualInstrumentCost: Prisma.FieldRef<"PLRecord", 'Float'>
+  readonly hospitalRecoverAmount: Prisma.FieldRef<"PLRecord", 'Float'>
+  readonly mediendProfit: Prisma.FieldRef<"PLRecord", 'Float'>
 }
     
 
@@ -3829,25 +3829,6 @@ export type PLRecordDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * PLRecord.handledBy
- */
-export type PLRecord$handledByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the User
-   */
-  select?: Prisma.UserSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the User
-   */
-  omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
-}
-
-/**
  * PLRecord.dischargeSheet
  */
 export type PLRecord$dischargeSheetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3864,6 +3845,25 @@ export type PLRecord$dischargeSheetArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.DischargeSheetInclude<ExtArgs> | null
   where?: Prisma.DischargeSheetWhereInput
+}
+
+/**
+ * PLRecord.handledBy
+ */
+export type PLRecord$handledByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

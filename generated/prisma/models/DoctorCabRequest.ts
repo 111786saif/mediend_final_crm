@@ -340,9 +340,9 @@ export type DoctorCabRequestWhereInput = {
   assignedVendorAt?: Prisma.DateTimeNullableFilter<"DoctorCabRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DoctorCabRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorCabRequest"> | Date | string
+  assignedVendorBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   doctor?: Prisma.XOR<Prisma.DoctorMasterScalarRelationFilter, Prisma.DoctorMasterWhereInput>
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  assignedVendorBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type DoctorCabRequestOrderByWithRelationInput = {
@@ -365,9 +365,9 @@ export type DoctorCabRequestOrderByWithRelationInput = {
   assignedVendorAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  assignedVendorBy?: Prisma.UserOrderByWithRelationInput
   doctor?: Prisma.DoctorMasterOrderByWithRelationInput
   reviewedBy?: Prisma.UserOrderByWithRelationInput
-  assignedVendorBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type DoctorCabRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -393,9 +393,9 @@ export type DoctorCabRequestWhereUniqueInput = Prisma.AtLeast<{
   assignedVendorAt?: Prisma.DateTimeNullableFilter<"DoctorCabRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DoctorCabRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorCabRequest"> | Date | string
+  assignedVendorBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   doctor?: Prisma.XOR<Prisma.DoctorMasterScalarRelationFilter, Prisma.DoctorMasterWhereInput>
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  assignedVendorBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
 
 export type DoctorCabRequestOrderByWithAggregationInput = {
@@ -467,9 +467,9 @@ export type DoctorCabRequestCreateInput = {
   assignedVendorAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  assignedVendorBy?: Prisma.UserCreateNestedOneWithoutDoctorCabRequestsVendorAssignedInput
   doctor: Prisma.DoctorMasterCreateNestedOneWithoutCabRequestsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDoctorCabRequestsReviewedInput
-  assignedVendorBy?: Prisma.UserCreateNestedOneWithoutDoctorCabRequestsVendorAssignedInput
 }
 
 export type DoctorCabRequestUncheckedCreateInput = {
@@ -511,9 +511,9 @@ export type DoctorCabRequestUpdateInput = {
   assignedVendorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedVendorBy?: Prisma.UserUpdateOneWithoutDoctorCabRequestsVendorAssignedNestedInput
   doctor?: Prisma.DoctorMasterUpdateOneRequiredWithoutCabRequestsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutDoctorCabRequestsReviewedNestedInput
-  assignedVendorBy?: Prisma.UserUpdateOneWithoutDoctorCabRequestsVendorAssignedNestedInput
 }
 
 export type DoctorCabRequestUncheckedUpdateInput = {
@@ -691,13 +691,6 @@ export type DoctorCabRequestSumOrderByAggregateInput = {
   dropLng?: Prisma.SortOrder
 }
 
-export type DoctorCabRequestCreateNestedManyWithoutReviewedByInput = {
-  create?: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput> | Prisma.DoctorCabRequestCreateWithoutReviewedByInput[] | Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput[]
-  connectOrCreate?: Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput | Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput[]
-  createMany?: Prisma.DoctorCabRequestCreateManyReviewedByInputEnvelope
-  connect?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
-}
-
 export type DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput = {
   create?: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutAssignedVendorByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutAssignedVendorByInput> | Prisma.DoctorCabRequestCreateWithoutAssignedVendorByInput[] | Prisma.DoctorCabRequestUncheckedCreateWithoutAssignedVendorByInput[]
   connectOrCreate?: Prisma.DoctorCabRequestCreateOrConnectWithoutAssignedVendorByInput | Prisma.DoctorCabRequestCreateOrConnectWithoutAssignedVendorByInput[]
@@ -705,7 +698,7 @@ export type DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput = {
   connect?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
 }
 
-export type DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput = {
+export type DoctorCabRequestCreateNestedManyWithoutReviewedByInput = {
   create?: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput> | Prisma.DoctorCabRequestCreateWithoutReviewedByInput[] | Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput[]
   connectOrCreate?: Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput | Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput[]
   createMany?: Prisma.DoctorCabRequestCreateManyReviewedByInputEnvelope
@@ -719,18 +712,11 @@ export type DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInpu
   connect?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
 }
 
-export type DoctorCabRequestUpdateManyWithoutReviewedByNestedInput = {
+export type DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput = {
   create?: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput> | Prisma.DoctorCabRequestCreateWithoutReviewedByInput[] | Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput[]
   connectOrCreate?: Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput | Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput[]
-  upsert?: Prisma.DoctorCabRequestUpsertWithWhereUniqueWithoutReviewedByInput | Prisma.DoctorCabRequestUpsertWithWhereUniqueWithoutReviewedByInput[]
   createMany?: Prisma.DoctorCabRequestCreateManyReviewedByInputEnvelope
-  set?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
-  disconnect?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
-  delete?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
   connect?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
-  update?: Prisma.DoctorCabRequestUpdateWithWhereUniqueWithoutReviewedByInput | Prisma.DoctorCabRequestUpdateWithWhereUniqueWithoutReviewedByInput[]
-  updateMany?: Prisma.DoctorCabRequestUpdateManyWithWhereWithoutReviewedByInput | Prisma.DoctorCabRequestUpdateManyWithWhereWithoutReviewedByInput[]
-  deleteMany?: Prisma.DoctorCabRequestScalarWhereInput | Prisma.DoctorCabRequestScalarWhereInput[]
 }
 
 export type DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput = {
@@ -747,7 +733,7 @@ export type DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput = {
   deleteMany?: Prisma.DoctorCabRequestScalarWhereInput | Prisma.DoctorCabRequestScalarWhereInput[]
 }
 
-export type DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput = {
+export type DoctorCabRequestUpdateManyWithoutReviewedByNestedInput = {
   create?: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput> | Prisma.DoctorCabRequestCreateWithoutReviewedByInput[] | Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput[]
   connectOrCreate?: Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput | Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput[]
   upsert?: Prisma.DoctorCabRequestUpsertWithWhereUniqueWithoutReviewedByInput | Prisma.DoctorCabRequestUpsertWithWhereUniqueWithoutReviewedByInput[]
@@ -772,6 +758,20 @@ export type DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInpu
   connect?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
   update?: Prisma.DoctorCabRequestUpdateWithWhereUniqueWithoutAssignedVendorByInput | Prisma.DoctorCabRequestUpdateWithWhereUniqueWithoutAssignedVendorByInput[]
   updateMany?: Prisma.DoctorCabRequestUpdateManyWithWhereWithoutAssignedVendorByInput | Prisma.DoctorCabRequestUpdateManyWithWhereWithoutAssignedVendorByInput[]
+  deleteMany?: Prisma.DoctorCabRequestScalarWhereInput | Prisma.DoctorCabRequestScalarWhereInput[]
+}
+
+export type DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput = {
+  create?: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput> | Prisma.DoctorCabRequestCreateWithoutReviewedByInput[] | Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput[]
+  connectOrCreate?: Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput | Prisma.DoctorCabRequestCreateOrConnectWithoutReviewedByInput[]
+  upsert?: Prisma.DoctorCabRequestUpsertWithWhereUniqueWithoutReviewedByInput | Prisma.DoctorCabRequestUpsertWithWhereUniqueWithoutReviewedByInput[]
+  createMany?: Prisma.DoctorCabRequestCreateManyReviewedByInputEnvelope
+  set?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
+  disconnect?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
+  delete?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
+  connect?: Prisma.DoctorCabRequestWhereUniqueInput | Prisma.DoctorCabRequestWhereUniqueInput[]
+  update?: Prisma.DoctorCabRequestUpdateWithWhereUniqueWithoutReviewedByInput | Prisma.DoctorCabRequestUpdateWithWhereUniqueWithoutReviewedByInput[]
+  updateMany?: Prisma.DoctorCabRequestUpdateManyWithWhereWithoutReviewedByInput | Prisma.DoctorCabRequestUpdateManyWithWhereWithoutReviewedByInput[]
   deleteMany?: Prisma.DoctorCabRequestScalarWhereInput | Prisma.DoctorCabRequestScalarWhereInput[]
 }
 
@@ -815,58 +815,6 @@ export type DoctorCabRequestUncheckedUpdateManyWithoutDoctorNestedInput = {
   update?: Prisma.DoctorCabRequestUpdateWithWhereUniqueWithoutDoctorInput | Prisma.DoctorCabRequestUpdateWithWhereUniqueWithoutDoctorInput[]
   updateMany?: Prisma.DoctorCabRequestUpdateManyWithWhereWithoutDoctorInput | Prisma.DoctorCabRequestUpdateManyWithWhereWithoutDoctorInput[]
   deleteMany?: Prisma.DoctorCabRequestScalarWhereInput | Prisma.DoctorCabRequestScalarWhereInput[]
-}
-
-export type DoctorCabRequestCreateWithoutReviewedByInput = {
-  id?: string
-  pickup: string
-  drop: string
-  pickupLat?: number | null
-  pickupLng?: number | null
-  dropLat?: number | null
-  dropLng?: number | null
-  scheduledFor: Date | string
-  status?: $Enums.AppointmentStatus
-  reviewNotes?: string | null
-  reviewedAt?: Date | string | null
-  vendorName?: string | null
-  vendorPhone?: string | null
-  assignedVendorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  doctor: Prisma.DoctorMasterCreateNestedOneWithoutCabRequestsInput
-  assignedVendorBy?: Prisma.UserCreateNestedOneWithoutDoctorCabRequestsVendorAssignedInput
-}
-
-export type DoctorCabRequestUncheckedCreateWithoutReviewedByInput = {
-  id?: string
-  doctorId: string
-  pickup: string
-  drop: string
-  pickupLat?: number | null
-  pickupLng?: number | null
-  dropLat?: number | null
-  dropLng?: number | null
-  scheduledFor: Date | string
-  status?: $Enums.AppointmentStatus
-  reviewNotes?: string | null
-  reviewedAt?: Date | string | null
-  vendorName?: string | null
-  vendorPhone?: string | null
-  assignedVendorById?: string | null
-  assignedVendorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type DoctorCabRequestCreateOrConnectWithoutReviewedByInput = {
-  where: Prisma.DoctorCabRequestWhereUniqueInput
-  create: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput>
-}
-
-export type DoctorCabRequestCreateManyReviewedByInputEnvelope = {
-  data: Prisma.DoctorCabRequestCreateManyReviewedByInput | Prisma.DoctorCabRequestCreateManyReviewedByInput[]
-  skipDuplicates?: boolean
 }
 
 export type DoctorCabRequestCreateWithoutAssignedVendorByInput = {
@@ -921,20 +869,72 @@ export type DoctorCabRequestCreateManyAssignedVendorByInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type DoctorCabRequestUpsertWithWhereUniqueWithoutReviewedByInput = {
+export type DoctorCabRequestCreateWithoutReviewedByInput = {
+  id?: string
+  pickup: string
+  drop: string
+  pickupLat?: number | null
+  pickupLng?: number | null
+  dropLat?: number | null
+  dropLng?: number | null
+  scheduledFor: Date | string
+  status?: $Enums.AppointmentStatus
+  reviewNotes?: string | null
+  reviewedAt?: Date | string | null
+  vendorName?: string | null
+  vendorPhone?: string | null
+  assignedVendorAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedVendorBy?: Prisma.UserCreateNestedOneWithoutDoctorCabRequestsVendorAssignedInput
+  doctor: Prisma.DoctorMasterCreateNestedOneWithoutCabRequestsInput
+}
+
+export type DoctorCabRequestUncheckedCreateWithoutReviewedByInput = {
+  id?: string
+  doctorId: string
+  pickup: string
+  drop: string
+  pickupLat?: number | null
+  pickupLng?: number | null
+  dropLat?: number | null
+  dropLng?: number | null
+  scheduledFor: Date | string
+  status?: $Enums.AppointmentStatus
+  reviewNotes?: string | null
+  reviewedAt?: Date | string | null
+  vendorName?: string | null
+  vendorPhone?: string | null
+  assignedVendorById?: string | null
+  assignedVendorAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DoctorCabRequestCreateOrConnectWithoutReviewedByInput = {
   where: Prisma.DoctorCabRequestWhereUniqueInput
-  update: Prisma.XOR<Prisma.DoctorCabRequestUpdateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedUpdateWithoutReviewedByInput>
   create: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput>
 }
 
-export type DoctorCabRequestUpdateWithWhereUniqueWithoutReviewedByInput = {
-  where: Prisma.DoctorCabRequestWhereUniqueInput
-  data: Prisma.XOR<Prisma.DoctorCabRequestUpdateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedUpdateWithoutReviewedByInput>
+export type DoctorCabRequestCreateManyReviewedByInputEnvelope = {
+  data: Prisma.DoctorCabRequestCreateManyReviewedByInput | Prisma.DoctorCabRequestCreateManyReviewedByInput[]
+  skipDuplicates?: boolean
 }
 
-export type DoctorCabRequestUpdateManyWithWhereWithoutReviewedByInput = {
+export type DoctorCabRequestUpsertWithWhereUniqueWithoutAssignedVendorByInput = {
+  where: Prisma.DoctorCabRequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.DoctorCabRequestUpdateWithoutAssignedVendorByInput, Prisma.DoctorCabRequestUncheckedUpdateWithoutAssignedVendorByInput>
+  create: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutAssignedVendorByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutAssignedVendorByInput>
+}
+
+export type DoctorCabRequestUpdateWithWhereUniqueWithoutAssignedVendorByInput = {
+  where: Prisma.DoctorCabRequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.DoctorCabRequestUpdateWithoutAssignedVendorByInput, Prisma.DoctorCabRequestUncheckedUpdateWithoutAssignedVendorByInput>
+}
+
+export type DoctorCabRequestUpdateManyWithWhereWithoutAssignedVendorByInput = {
   where: Prisma.DoctorCabRequestScalarWhereInput
-  data: Prisma.XOR<Prisma.DoctorCabRequestUpdateManyMutationInput, Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByInput>
+  data: Prisma.XOR<Prisma.DoctorCabRequestUpdateManyMutationInput, Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByInput>
 }
 
 export type DoctorCabRequestScalarWhereInput = {
@@ -962,20 +962,20 @@ export type DoctorCabRequestScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"DoctorCabRequest"> | Date | string
 }
 
-export type DoctorCabRequestUpsertWithWhereUniqueWithoutAssignedVendorByInput = {
+export type DoctorCabRequestUpsertWithWhereUniqueWithoutReviewedByInput = {
   where: Prisma.DoctorCabRequestWhereUniqueInput
-  update: Prisma.XOR<Prisma.DoctorCabRequestUpdateWithoutAssignedVendorByInput, Prisma.DoctorCabRequestUncheckedUpdateWithoutAssignedVendorByInput>
-  create: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutAssignedVendorByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutAssignedVendorByInput>
+  update: Prisma.XOR<Prisma.DoctorCabRequestUpdateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedUpdateWithoutReviewedByInput>
+  create: Prisma.XOR<Prisma.DoctorCabRequestCreateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedCreateWithoutReviewedByInput>
 }
 
-export type DoctorCabRequestUpdateWithWhereUniqueWithoutAssignedVendorByInput = {
+export type DoctorCabRequestUpdateWithWhereUniqueWithoutReviewedByInput = {
   where: Prisma.DoctorCabRequestWhereUniqueInput
-  data: Prisma.XOR<Prisma.DoctorCabRequestUpdateWithoutAssignedVendorByInput, Prisma.DoctorCabRequestUncheckedUpdateWithoutAssignedVendorByInput>
+  data: Prisma.XOR<Prisma.DoctorCabRequestUpdateWithoutReviewedByInput, Prisma.DoctorCabRequestUncheckedUpdateWithoutReviewedByInput>
 }
 
-export type DoctorCabRequestUpdateManyWithWhereWithoutAssignedVendorByInput = {
+export type DoctorCabRequestUpdateManyWithWhereWithoutReviewedByInput = {
   where: Prisma.DoctorCabRequestScalarWhereInput
-  data: Prisma.XOR<Prisma.DoctorCabRequestUpdateManyMutationInput, Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByInput>
+  data: Prisma.XOR<Prisma.DoctorCabRequestUpdateManyMutationInput, Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByInput>
 }
 
 export type DoctorCabRequestCreateWithoutDoctorInput = {
@@ -995,8 +995,8 @@ export type DoctorCabRequestCreateWithoutDoctorInput = {
   assignedVendorAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  reviewedBy?: Prisma.UserCreateNestedOneWithoutDoctorCabRequestsReviewedInput
   assignedVendorBy?: Prisma.UserCreateNestedOneWithoutDoctorCabRequestsVendorAssignedInput
+  reviewedBy?: Prisma.UserCreateNestedOneWithoutDoctorCabRequestsReviewedInput
 }
 
 export type DoctorCabRequestUncheckedCreateWithoutDoctorInput = {
@@ -1046,27 +1046,6 @@ export type DoctorCabRequestUpdateManyWithWhereWithoutDoctorInput = {
   data: Prisma.XOR<Prisma.DoctorCabRequestUpdateManyMutationInput, Prisma.DoctorCabRequestUncheckedUpdateManyWithoutDoctorInput>
 }
 
-export type DoctorCabRequestCreateManyReviewedByInput = {
-  id?: string
-  doctorId: string
-  pickup: string
-  drop: string
-  pickupLat?: number | null
-  pickupLng?: number | null
-  dropLat?: number | null
-  dropLng?: number | null
-  scheduledFor: Date | string
-  status?: $Enums.AppointmentStatus
-  reviewNotes?: string | null
-  reviewedAt?: Date | string | null
-  vendorName?: string | null
-  vendorPhone?: string | null
-  assignedVendorById?: string | null
-  assignedVendorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
 export type DoctorCabRequestCreateManyAssignedVendorByInput = {
   id?: string
   doctorId: string
@@ -1088,67 +1067,25 @@ export type DoctorCabRequestCreateManyAssignedVendorByInput = {
   updatedAt?: Date | string
 }
 
-export type DoctorCabRequestUpdateWithoutReviewedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  pickup?: Prisma.StringFieldUpdateOperationsInput | string
-  drop?: Prisma.StringFieldUpdateOperationsInput | string
-  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dropLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dropLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  scheduledFor?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
-  reviewNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assignedVendorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  doctor?: Prisma.DoctorMasterUpdateOneRequiredWithoutCabRequestsNestedInput
-  assignedVendorBy?: Prisma.UserUpdateOneWithoutDoctorCabRequestsVendorAssignedNestedInput
-}
-
-export type DoctorCabRequestUncheckedUpdateWithoutReviewedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  doctorId?: Prisma.StringFieldUpdateOperationsInput | string
-  pickup?: Prisma.StringFieldUpdateOperationsInput | string
-  drop?: Prisma.StringFieldUpdateOperationsInput | string
-  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dropLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dropLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  scheduledFor?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
-  reviewNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assignedVendorById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assignedVendorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type DoctorCabRequestUncheckedUpdateManyWithoutReviewedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  doctorId?: Prisma.StringFieldUpdateOperationsInput | string
-  pickup?: Prisma.StringFieldUpdateOperationsInput | string
-  drop?: Prisma.StringFieldUpdateOperationsInput | string
-  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dropLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dropLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  scheduledFor?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
-  reviewNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  vendorPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assignedVendorById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assignedVendorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type DoctorCabRequestCreateManyReviewedByInput = {
+  id?: string
+  doctorId: string
+  pickup: string
+  drop: string
+  pickupLat?: number | null
+  pickupLng?: number | null
+  dropLat?: number | null
+  dropLng?: number | null
+  scheduledFor: Date | string
+  status?: $Enums.AppointmentStatus
+  reviewNotes?: string | null
+  reviewedAt?: Date | string | null
+  vendorName?: string | null
+  vendorPhone?: string | null
+  assignedVendorById?: string | null
+  assignedVendorAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type DoctorCabRequestUpdateWithoutAssignedVendorByInput = {
@@ -1214,6 +1151,69 @@ export type DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type DoctorCabRequestUpdateWithoutReviewedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  pickup?: Prisma.StringFieldUpdateOperationsInput | string
+  drop?: Prisma.StringFieldUpdateOperationsInput | string
+  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dropLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dropLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  scheduledFor?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  reviewNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedVendorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedVendorBy?: Prisma.UserUpdateOneWithoutDoctorCabRequestsVendorAssignedNestedInput
+  doctor?: Prisma.DoctorMasterUpdateOneRequiredWithoutCabRequestsNestedInput
+}
+
+export type DoctorCabRequestUncheckedUpdateWithoutReviewedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctorId?: Prisma.StringFieldUpdateOperationsInput | string
+  pickup?: Prisma.StringFieldUpdateOperationsInput | string
+  drop?: Prisma.StringFieldUpdateOperationsInput | string
+  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dropLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dropLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  scheduledFor?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  reviewNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedVendorById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedVendorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DoctorCabRequestUncheckedUpdateManyWithoutReviewedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  doctorId?: Prisma.StringFieldUpdateOperationsInput | string
+  pickup?: Prisma.StringFieldUpdateOperationsInput | string
+  drop?: Prisma.StringFieldUpdateOperationsInput | string
+  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dropLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dropLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  scheduledFor?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  reviewNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedVendorById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedVendorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type DoctorCabRequestCreateManyDoctorInput = {
   id?: string
   pickup: string
@@ -1252,8 +1252,8 @@ export type DoctorCabRequestUpdateWithoutDoctorInput = {
   assignedVendorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  reviewedBy?: Prisma.UserUpdateOneWithoutDoctorCabRequestsReviewedNestedInput
   assignedVendorBy?: Prisma.UserUpdateOneWithoutDoctorCabRequestsVendorAssignedNestedInput
+  reviewedBy?: Prisma.UserUpdateOneWithoutDoctorCabRequestsReviewedNestedInput
 }
 
 export type DoctorCabRequestUncheckedUpdateWithoutDoctorInput = {
@@ -1320,9 +1320,9 @@ export type DoctorCabRequestSelect<ExtArgs extends runtime.Types.Extensions.Inte
   assignedVendorAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
   doctor?: boolean | Prisma.DoctorMasterDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorCabRequest$reviewedByArgs<ExtArgs>
-  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
 }, ExtArgs["result"]["doctorCabRequest"]>
 
 export type DoctorCabRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1345,9 +1345,9 @@ export type DoctorCabRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   assignedVendorAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
   doctor?: boolean | Prisma.DoctorMasterDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorCabRequest$reviewedByArgs<ExtArgs>
-  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
 }, ExtArgs["result"]["doctorCabRequest"]>
 
 export type DoctorCabRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1370,9 +1370,9 @@ export type DoctorCabRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   assignedVendorAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
   doctor?: boolean | Prisma.DoctorMasterDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorCabRequest$reviewedByArgs<ExtArgs>
-  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
 }, ExtArgs["result"]["doctorCabRequest"]>
 
 export type DoctorCabRequestSelectScalar = {
@@ -1399,27 +1399,27 @@ export type DoctorCabRequestSelectScalar = {
 
 export type DoctorCabRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "doctorId" | "pickup" | "drop" | "pickupLat" | "pickupLng" | "dropLat" | "dropLng" | "scheduledFor" | "status" | "reviewNotes" | "reviewedById" | "reviewedAt" | "vendorName" | "vendorPhone" | "assignedVendorById" | "assignedVendorAt" | "createdAt" | "updatedAt", ExtArgs["result"]["doctorCabRequest"]>
 export type DoctorCabRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
   doctor?: boolean | Prisma.DoctorMasterDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorCabRequest$reviewedByArgs<ExtArgs>
-  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
 }
 export type DoctorCabRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
   doctor?: boolean | Prisma.DoctorMasterDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorCabRequest$reviewedByArgs<ExtArgs>
-  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
 }
 export type DoctorCabRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
   doctor?: boolean | Prisma.DoctorMasterDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorCabRequest$reviewedByArgs<ExtArgs>
-  assignedVendorBy?: boolean | Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>
 }
 
 export type $DoctorCabRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DoctorCabRequest"
   objects: {
+    assignedVendorBy: Prisma.$UserPayload<ExtArgs> | null
     doctor: Prisma.$DoctorMasterPayload<ExtArgs>
     reviewedBy: Prisma.$UserPayload<ExtArgs> | null
-    assignedVendorBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1835,9 +1835,9 @@ readonly fields: DoctorCabRequestFieldRefs;
  */
 export interface Prisma__DoctorCabRequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  assignedVendorBy<T extends Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   doctor<T extends Prisma.DoctorMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__DoctorMasterClient<runtime.Types.Result.GetResult<Prisma.$DoctorMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reviewedBy<T extends Prisma.DoctorCabRequest$reviewedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorCabRequest$reviewedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  assignedVendorBy<T extends Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorCabRequest$assignedVendorByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2287,9 +2287,9 @@ export type DoctorCabRequestDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
- * DoctorCabRequest.reviewedBy
+ * DoctorCabRequest.assignedVendorBy
  */
-export type DoctorCabRequest$reviewedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type DoctorCabRequest$assignedVendorByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the User
    */
@@ -2306,9 +2306,9 @@ export type DoctorCabRequest$reviewedByArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * DoctorCabRequest.assignedVendorBy
+ * DoctorCabRequest.reviewedBy
  */
-export type DoctorCabRequest$assignedVendorByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type DoctorCabRequest$reviewedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the User
    */

@@ -199,8 +199,8 @@ export type WarningWhereInput = {
   issuedById?: Prisma.StringFilter<"Warning"> | string
   createdAt?: Prisma.DateTimeFilter<"Warning"> | Date | string
   employee?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
   issuedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
 }
 
 export type WarningOrderByWithRelationInput = {
@@ -212,8 +212,8 @@ export type WarningOrderByWithRelationInput = {
   issuedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   employee?: Prisma.UserOrderByWithRelationInput
-  task?: Prisma.TaskOrderByWithRelationInput
   issuedBy?: Prisma.UserOrderByWithRelationInput
+  task?: Prisma.TaskOrderByWithRelationInput
 }
 
 export type WarningWhereUniqueInput = Prisma.AtLeast<{
@@ -228,8 +228,8 @@ export type WarningWhereUniqueInput = Prisma.AtLeast<{
   issuedById?: Prisma.StringFilter<"Warning"> | string
   createdAt?: Prisma.DateTimeFilter<"Warning"> | Date | string
   employee?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
   issuedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
 }, "id">
 
 export type WarningOrderByWithAggregationInput = {
@@ -264,8 +264,8 @@ export type WarningCreateInput = {
   note: string
   createdAt?: Date | string
   employee: Prisma.UserCreateNestedOneWithoutWarningsReceivedInput
-  task?: Prisma.TaskCreateNestedOneWithoutWarningsInput
   issuedBy: Prisma.UserCreateNestedOneWithoutWarningsIssuedInput
+  task?: Prisma.TaskCreateNestedOneWithoutWarningsInput
 }
 
 export type WarningUncheckedCreateInput = {
@@ -284,8 +284,8 @@ export type WarningUpdateInput = {
   note?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employee?: Prisma.UserUpdateOneRequiredWithoutWarningsReceivedNestedInput
-  task?: Prisma.TaskUpdateOneWithoutWarningsNestedInput
   issuedBy?: Prisma.UserUpdateOneRequiredWithoutWarningsIssuedNestedInput
+  task?: Prisma.TaskUpdateOneWithoutWarningsNestedInput
 }
 
 export type WarningUncheckedUpdateInput = {
@@ -500,8 +500,8 @@ export type WarningCreateWithoutEmployeeInput = {
   type: $Enums.WarningType
   note: string
   createdAt?: Date | string
-  task?: Prisma.TaskCreateNestedOneWithoutWarningsInput
   issuedBy: Prisma.UserCreateNestedOneWithoutWarningsIssuedInput
+  task?: Prisma.TaskCreateNestedOneWithoutWarningsInput
 }
 
 export type WarningUncheckedCreateWithoutEmployeeInput = {
@@ -663,8 +663,8 @@ export type WarningUpdateWithoutEmployeeInput = {
   type?: Prisma.EnumWarningTypeFieldUpdateOperationsInput | $Enums.WarningType
   note?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  task?: Prisma.TaskUpdateOneWithoutWarningsNestedInput
   issuedBy?: Prisma.UserUpdateOneRequiredWithoutWarningsIssuedNestedInput
+  task?: Prisma.TaskUpdateOneWithoutWarningsNestedInput
 }
 
 export type WarningUncheckedUpdateWithoutEmployeeInput = {
@@ -759,8 +759,8 @@ export type WarningSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   issuedById?: boolean
   createdAt?: boolean
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
   issuedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
 }, ExtArgs["result"]["warning"]>
 
 export type WarningSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -772,8 +772,8 @@ export type WarningSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   issuedById?: boolean
   createdAt?: boolean
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
   issuedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
 }, ExtArgs["result"]["warning"]>
 
 export type WarningSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -785,8 +785,8 @@ export type WarningSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   issuedById?: boolean
   createdAt?: boolean
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
   issuedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
 }, ExtArgs["result"]["warning"]>
 
 export type WarningSelectScalar = {
@@ -802,26 +802,26 @@ export type WarningSelectScalar = {
 export type WarningOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "taskId" | "type" | "note" | "issuedById" | "createdAt", ExtArgs["result"]["warning"]>
 export type WarningInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
   issuedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
 }
 export type WarningIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
   issuedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
 }
 export type WarningIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
   issuedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.Warning$taskArgs<ExtArgs>
 }
 
 export type $WarningPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Warning"
   objects: {
     employee: Prisma.$UserPayload<ExtArgs>
-    task: Prisma.$TaskPayload<ExtArgs> | null
     issuedBy: Prisma.$UserPayload<ExtArgs>
+    task: Prisma.$TaskPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1226,8 +1226,8 @@ readonly fields: WarningFieldRefs;
 export interface Prisma__WarningClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   employee<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  task<T extends Prisma.Warning$taskArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Warning$taskArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   issuedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  task<T extends Prisma.Warning$taskArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Warning$taskArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

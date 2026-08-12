@@ -61,10 +61,10 @@ export type ComplianceCallMinAggregateOutputType = {
   opdMode: string | null
   additionalRemark: string | null
   satisfaction: $Enums.SatisfactionLevel | null
-  reviewStatus: $Enums.ReviewStatus | null
-  reviewScreenshot: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  reviewStatus: $Enums.ReviewStatus | null
+  reviewScreenshot: string | null
 }
 
 export type ComplianceCallMaxAggregateOutputType = {
@@ -94,10 +94,10 @@ export type ComplianceCallMaxAggregateOutputType = {
   opdMode: string | null
   additionalRemark: string | null
   satisfaction: $Enums.SatisfactionLevel | null
-  reviewStatus: $Enums.ReviewStatus | null
-  reviewScreenshot: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  reviewStatus: $Enums.ReviewStatus | null
+  reviewScreenshot: string | null
 }
 
 export type ComplianceCallCountAggregateOutputType = {
@@ -128,10 +128,10 @@ export type ComplianceCallCountAggregateOutputType = {
   additionalRemark: number
   satisfaction: number
   concernCategories: number
-  reviewStatus: number
-  reviewScreenshot: number
   createdAt: number
   updatedAt: number
+  reviewStatus: number
+  reviewScreenshot: number
   _all: number
 }
 
@@ -171,10 +171,10 @@ export type ComplianceCallMinAggregateInputType = {
   opdMode?: true
   additionalRemark?: true
   satisfaction?: true
-  reviewStatus?: true
-  reviewScreenshot?: true
   createdAt?: true
   updatedAt?: true
+  reviewStatus?: true
+  reviewScreenshot?: true
 }
 
 export type ComplianceCallMaxAggregateInputType = {
@@ -204,10 +204,10 @@ export type ComplianceCallMaxAggregateInputType = {
   opdMode?: true
   additionalRemark?: true
   satisfaction?: true
-  reviewStatus?: true
-  reviewScreenshot?: true
   createdAt?: true
   updatedAt?: true
+  reviewStatus?: true
+  reviewScreenshot?: true
 }
 
 export type ComplianceCallCountAggregateInputType = {
@@ -238,10 +238,10 @@ export type ComplianceCallCountAggregateInputType = {
   additionalRemark?: true
   satisfaction?: true
   concernCategories?: true
-  reviewStatus?: true
-  reviewScreenshot?: true
   createdAt?: true
   updatedAt?: true
+  reviewStatus?: true
+  reviewScreenshot?: true
   _all?: true
 }
 
@@ -359,10 +359,10 @@ export type ComplianceCallGroupByOutputType = {
   additionalRemark: string | null
   satisfaction: $Enums.SatisfactionLevel | null
   concernCategories: $Enums.ConcernCategory[]
-  reviewStatus: $Enums.ReviewStatus | null
-  reviewScreenshot: string | null
   createdAt: Date
   updatedAt: Date
+  reviewStatus: $Enums.ReviewStatus | null
+  reviewScreenshot: string | null
   _count: ComplianceCallCountAggregateOutputType | null
   _avg: ComplianceCallAvgAggregateOutputType | null
   _sum: ComplianceCallSumAggregateOutputType | null
@@ -416,12 +416,12 @@ export type ComplianceCallWhereInput = {
   additionalRemark?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
   satisfaction?: Prisma.EnumSatisfactionLevelNullableFilter<"ComplianceCall"> | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.EnumConcernCategoryNullableListFilter<"ComplianceCall">
-  reviewStatus?: Prisma.EnumReviewStatusNullableFilter<"ComplianceCall"> | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  reviewStatus?: Prisma.EnumReviewStatusNullableFilter<"ComplianceCall"> | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
   calledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
 }
 
 export type ComplianceCallOrderByWithRelationInput = {
@@ -452,12 +452,12 @@ export type ComplianceCallOrderByWithRelationInput = {
   additionalRemark?: Prisma.SortOrderInput | Prisma.SortOrder
   satisfaction?: Prisma.SortOrderInput | Prisma.SortOrder
   concernCategories?: Prisma.SortOrder
-  reviewStatus?: Prisma.SortOrderInput | Prisma.SortOrder
-  reviewScreenshot?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  lead?: Prisma.LeadOrderByWithRelationInput
+  reviewStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewScreenshot?: Prisma.SortOrderInput | Prisma.SortOrder
   calledBy?: Prisma.UserOrderByWithRelationInput
+  lead?: Prisma.LeadOrderByWithRelationInput
 }
 
 export type ComplianceCallWhereUniqueInput = Prisma.AtLeast<{
@@ -491,12 +491,12 @@ export type ComplianceCallWhereUniqueInput = Prisma.AtLeast<{
   additionalRemark?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
   satisfaction?: Prisma.EnumSatisfactionLevelNullableFilter<"ComplianceCall"> | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.EnumConcernCategoryNullableListFilter<"ComplianceCall">
-  reviewStatus?: Prisma.EnumReviewStatusNullableFilter<"ComplianceCall"> | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  reviewStatus?: Prisma.EnumReviewStatusNullableFilter<"ComplianceCall"> | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
   calledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
 }, "id" | "leadId">
 
 export type ComplianceCallOrderByWithAggregationInput = {
@@ -527,10 +527,10 @@ export type ComplianceCallOrderByWithAggregationInput = {
   additionalRemark?: Prisma.SortOrderInput | Prisma.SortOrder
   satisfaction?: Prisma.SortOrderInput | Prisma.SortOrder
   concernCategories?: Prisma.SortOrder
-  reviewStatus?: Prisma.SortOrderInput | Prisma.SortOrder
-  reviewScreenshot?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  reviewStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewScreenshot?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ComplianceCallCountOrderByAggregateInput
   _avg?: Prisma.ComplianceCallAvgOrderByAggregateInput
   _max?: Prisma.ComplianceCallMaxOrderByAggregateInput
@@ -569,10 +569,10 @@ export type ComplianceCallScalarWhereWithAggregatesInput = {
   additionalRemark?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
   satisfaction?: Prisma.EnumSatisfactionLevelNullableWithAggregatesFilter<"ComplianceCall"> | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.EnumConcernCategoryNullableListFilter<"ComplianceCall">
-  reviewStatus?: Prisma.EnumReviewStatusNullableWithAggregatesFilter<"ComplianceCall"> | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ComplianceCall"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ComplianceCall"> | Date | string
+  reviewStatus?: Prisma.EnumReviewStatusNullableWithAggregatesFilter<"ComplianceCall"> | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
 }
 
 export type ComplianceCallCreateInput = {
@@ -601,12 +601,12 @@ export type ComplianceCallCreateInput = {
   additionalRemark?: string | null
   satisfaction?: $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: $Enums.ReviewStatus | null
-  reviewScreenshot?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutComplianceCallInput
+  reviewStatus?: $Enums.ReviewStatus | null
+  reviewScreenshot?: string | null
   calledBy?: Prisma.UserCreateNestedOneWithoutComplianceCallsHandledInput
+  lead: Prisma.LeadCreateNestedOneWithoutComplianceCallInput
 }
 
 export type ComplianceCallUncheckedCreateInput = {
@@ -637,10 +637,10 @@ export type ComplianceCallUncheckedCreateInput = {
   additionalRemark?: string | null
   satisfaction?: $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: $Enums.ReviewStatus | null
-  reviewScreenshot?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewStatus?: $Enums.ReviewStatus | null
+  reviewScreenshot?: string | null
 }
 
 export type ComplianceCallUpdateInput = {
@@ -669,12 +669,12 @@ export type ComplianceCallUpdateInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutComplianceCallNestedInput
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calledBy?: Prisma.UserUpdateOneWithoutComplianceCallsHandledNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutComplianceCallNestedInput
 }
 
 export type ComplianceCallUncheckedUpdateInput = {
@@ -705,10 +705,10 @@ export type ComplianceCallUncheckedUpdateInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ComplianceCallCreateManyInput = {
@@ -739,10 +739,10 @@ export type ComplianceCallCreateManyInput = {
   additionalRemark?: string | null
   satisfaction?: $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: $Enums.ReviewStatus | null
-  reviewScreenshot?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewStatus?: $Enums.ReviewStatus | null
+  reviewScreenshot?: string | null
 }
 
 export type ComplianceCallUpdateManyMutationInput = {
@@ -771,10 +771,10 @@ export type ComplianceCallUpdateManyMutationInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ComplianceCallUncheckedUpdateManyInput = {
@@ -805,10 +805,10 @@ export type ComplianceCallUncheckedUpdateManyInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ComplianceCallListRelationFilter = {
@@ -862,10 +862,10 @@ export type ComplianceCallCountOrderByAggregateInput = {
   additionalRemark?: Prisma.SortOrder
   satisfaction?: Prisma.SortOrder
   concernCategories?: Prisma.SortOrder
-  reviewStatus?: Prisma.SortOrder
-  reviewScreenshot?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  reviewStatus?: Prisma.SortOrder
+  reviewScreenshot?: Prisma.SortOrder
 }
 
 export type ComplianceCallAvgOrderByAggregateInput = {
@@ -899,10 +899,10 @@ export type ComplianceCallMaxOrderByAggregateInput = {
   opdMode?: Prisma.SortOrder
   additionalRemark?: Prisma.SortOrder
   satisfaction?: Prisma.SortOrder
-  reviewStatus?: Prisma.SortOrder
-  reviewScreenshot?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  reviewStatus?: Prisma.SortOrder
+  reviewScreenshot?: Prisma.SortOrder
 }
 
 export type ComplianceCallMinOrderByAggregateInput = {
@@ -932,10 +932,10 @@ export type ComplianceCallMinOrderByAggregateInput = {
   opdMode?: Prisma.SortOrder
   additionalRemark?: Prisma.SortOrder
   satisfaction?: Prisma.SortOrder
-  reviewStatus?: Prisma.SortOrder
-  reviewScreenshot?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  reviewStatus?: Prisma.SortOrder
+  reviewScreenshot?: Prisma.SortOrder
 }
 
 export type ComplianceCallSumOrderByAggregateInput = {
@@ -1063,10 +1063,10 @@ export type ComplianceCallCreateWithoutCalledByInput = {
   additionalRemark?: string | null
   satisfaction?: $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: $Enums.ReviewStatus | null
-  reviewScreenshot?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewStatus?: $Enums.ReviewStatus | null
+  reviewScreenshot?: string | null
   lead: Prisma.LeadCreateNestedOneWithoutComplianceCallInput
 }
 
@@ -1097,10 +1097,10 @@ export type ComplianceCallUncheckedCreateWithoutCalledByInput = {
   additionalRemark?: string | null
   satisfaction?: $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: $Enums.ReviewStatus | null
-  reviewScreenshot?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewStatus?: $Enums.ReviewStatus | null
+  reviewScreenshot?: string | null
 }
 
 export type ComplianceCallCreateOrConnectWithoutCalledByInput = {
@@ -1160,10 +1160,10 @@ export type ComplianceCallScalarWhereInput = {
   additionalRemark?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
   satisfaction?: Prisma.EnumSatisfactionLevelNullableFilter<"ComplianceCall"> | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.EnumConcernCategoryNullableListFilter<"ComplianceCall">
-  reviewStatus?: Prisma.EnumReviewStatusNullableFilter<"ComplianceCall"> | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
+  reviewStatus?: Prisma.EnumReviewStatusNullableFilter<"ComplianceCall"> | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
 }
 
 export type ComplianceCallCreateWithoutLeadInput = {
@@ -1192,10 +1192,10 @@ export type ComplianceCallCreateWithoutLeadInput = {
   additionalRemark?: string | null
   satisfaction?: $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: $Enums.ReviewStatus | null
-  reviewScreenshot?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewStatus?: $Enums.ReviewStatus | null
+  reviewScreenshot?: string | null
   calledBy?: Prisma.UserCreateNestedOneWithoutComplianceCallsHandledInput
 }
 
@@ -1226,10 +1226,10 @@ export type ComplianceCallUncheckedCreateWithoutLeadInput = {
   additionalRemark?: string | null
   satisfaction?: $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: $Enums.ReviewStatus | null
-  reviewScreenshot?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewStatus?: $Enums.ReviewStatus | null
+  reviewScreenshot?: string | null
 }
 
 export type ComplianceCallCreateOrConnectWithoutLeadInput = {
@@ -1274,10 +1274,10 @@ export type ComplianceCallUpdateWithoutLeadInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calledBy?: Prisma.UserUpdateOneWithoutComplianceCallsHandledNestedInput
 }
 
@@ -1308,10 +1308,10 @@ export type ComplianceCallUncheckedUpdateWithoutLeadInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ComplianceCallCreateManyCalledByInput = {
@@ -1341,10 +1341,10 @@ export type ComplianceCallCreateManyCalledByInput = {
   additionalRemark?: string | null
   satisfaction?: $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: $Enums.ReviewStatus | null
-  reviewScreenshot?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  reviewStatus?: $Enums.ReviewStatus | null
+  reviewScreenshot?: string | null
 }
 
 export type ComplianceCallUpdateWithoutCalledByInput = {
@@ -1373,10 +1373,10 @@ export type ComplianceCallUpdateWithoutCalledByInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneRequiredWithoutComplianceCallNestedInput
 }
 
@@ -1407,10 +1407,10 @@ export type ComplianceCallUncheckedUpdateWithoutCalledByInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ComplianceCallUncheckedUpdateManyWithoutCalledByInput = {
@@ -1440,10 +1440,10 @@ export type ComplianceCallUncheckedUpdateManyWithoutCalledByInput = {
   additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
   concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
-  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
-  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewStatus?: Prisma.NullableEnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus | null
+  reviewScreenshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1476,12 +1476,12 @@ export type ComplianceCallSelect<ExtArgs extends runtime.Types.Extensions.Intern
   additionalRemark?: boolean
   satisfaction?: boolean
   concernCategories?: boolean
-  reviewStatus?: boolean
-  reviewScreenshot?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  reviewStatus?: boolean
+  reviewScreenshot?: boolean
   calledBy?: boolean | Prisma.ComplianceCall$calledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["complianceCall"]>
 
 export type ComplianceCallSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1512,12 +1512,12 @@ export type ComplianceCallSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   additionalRemark?: boolean
   satisfaction?: boolean
   concernCategories?: boolean
-  reviewStatus?: boolean
-  reviewScreenshot?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  reviewStatus?: boolean
+  reviewScreenshot?: boolean
   calledBy?: boolean | Prisma.ComplianceCall$calledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["complianceCall"]>
 
 export type ComplianceCallSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1548,12 +1548,12 @@ export type ComplianceCallSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   additionalRemark?: boolean
   satisfaction?: boolean
   concernCategories?: boolean
-  reviewStatus?: boolean
-  reviewScreenshot?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  reviewStatus?: boolean
+  reviewScreenshot?: boolean
   calledBy?: boolean | Prisma.ComplianceCall$calledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["complianceCall"]>
 
 export type ComplianceCallSelectScalar = {
@@ -1584,31 +1584,31 @@ export type ComplianceCallSelectScalar = {
   additionalRemark?: boolean
   satisfaction?: boolean
   concernCategories?: boolean
-  reviewStatus?: boolean
-  reviewScreenshot?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  reviewStatus?: boolean
+  reviewScreenshot?: boolean
 }
 
-export type ComplianceCallOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "status" | "rating" | "notes" | "lastAttemptedAt" | "completedAt" | "callbackAt" | "calledByUserId" | "problemDuringSurgery" | "problemAfterSurgery" | "commitmentStatus" | "concernResolved" | "doctorBehaviour" | "hospitalStaffBehaviour" | "bdmBehaviour" | "mediendService" | "overallExperience" | "paymentQuery" | "referralConfirmation" | "referralName" | "referralContact" | "opdStatus" | "opdMode" | "additionalRemark" | "satisfaction" | "concernCategories" | "reviewStatus" | "reviewScreenshot" | "createdAt" | "updatedAt", ExtArgs["result"]["complianceCall"]>
+export type ComplianceCallOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "status" | "rating" | "notes" | "lastAttemptedAt" | "completedAt" | "callbackAt" | "calledByUserId" | "problemDuringSurgery" | "problemAfterSurgery" | "commitmentStatus" | "concernResolved" | "doctorBehaviour" | "hospitalStaffBehaviour" | "bdmBehaviour" | "mediendService" | "overallExperience" | "paymentQuery" | "referralConfirmation" | "referralName" | "referralContact" | "opdStatus" | "opdMode" | "additionalRemark" | "satisfaction" | "concernCategories" | "createdAt" | "updatedAt" | "reviewStatus" | "reviewScreenshot", ExtArgs["result"]["complianceCall"]>
 export type ComplianceCallInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   calledBy?: boolean | Prisma.ComplianceCall$calledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type ComplianceCallIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   calledBy?: boolean | Prisma.ComplianceCall$calledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type ComplianceCallIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   calledBy?: boolean | Prisma.ComplianceCall$calledByArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 
 export type $ComplianceCallPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ComplianceCall"
   objects: {
-    lead: Prisma.$LeadPayload<ExtArgs>
     calledBy: Prisma.$UserPayload<ExtArgs> | null
+    lead: Prisma.$LeadPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1638,10 +1638,10 @@ export type $ComplianceCallPayload<ExtArgs extends runtime.Types.Extensions.Inte
     additionalRemark: string | null
     satisfaction: $Enums.SatisfactionLevel | null
     concernCategories: $Enums.ConcernCategory[]
-    reviewStatus: $Enums.ReviewStatus | null
-    reviewScreenshot: string | null
     createdAt: Date
     updatedAt: Date
+    reviewStatus: $Enums.ReviewStatus | null
+    reviewScreenshot: string | null
   }, ExtArgs["result"]["complianceCall"]>
   composites: {}
 }
@@ -2036,8 +2036,8 @@ readonly fields: ComplianceCallFieldRefs;
  */
 export interface Prisma__ComplianceCallClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   calledBy<T extends Prisma.ComplianceCall$calledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ComplianceCall$calledByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2094,10 +2094,10 @@ export interface ComplianceCallFieldRefs {
   readonly additionalRemark: Prisma.FieldRef<"ComplianceCall", 'String'>
   readonly satisfaction: Prisma.FieldRef<"ComplianceCall", 'SatisfactionLevel'>
   readonly concernCategories: Prisma.FieldRef<"ComplianceCall", 'ConcernCategory[]'>
-  readonly reviewStatus: Prisma.FieldRef<"ComplianceCall", 'ReviewStatus'>
-  readonly reviewScreenshot: Prisma.FieldRef<"ComplianceCall", 'String'>
   readonly createdAt: Prisma.FieldRef<"ComplianceCall", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ComplianceCall", 'DateTime'>
+  readonly reviewStatus: Prisma.FieldRef<"ComplianceCall", 'ReviewStatus'>
+  readonly reviewScreenshot: Prisma.FieldRef<"ComplianceCall", 'String'>
 }
     
 

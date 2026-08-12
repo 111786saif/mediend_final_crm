@@ -174,8 +174,8 @@ export type MDTaskTeamMemberWhereInput = {
   teamId?: Prisma.StringFilter<"MDTaskTeamMember"> | string
   employeeId?: Prisma.StringFilter<"MDTaskTeamMember"> | string
   createdAt?: Prisma.DateTimeFilter<"MDTaskTeamMember"> | Date | string
-  team?: Prisma.XOR<Prisma.MDTaskTeamScalarRelationFilter, Prisma.MDTaskTeamWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
+  team?: Prisma.XOR<Prisma.MDTaskTeamScalarRelationFilter, Prisma.MDTaskTeamWhereInput>
 }
 
 export type MDTaskTeamMemberOrderByWithRelationInput = {
@@ -183,8 +183,8 @@ export type MDTaskTeamMemberOrderByWithRelationInput = {
   teamId?: Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  team?: Prisma.MDTaskTeamOrderByWithRelationInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
+  team?: Prisma.MDTaskTeamOrderByWithRelationInput
 }
 
 export type MDTaskTeamMemberWhereUniqueInput = Prisma.AtLeast<{
@@ -196,8 +196,8 @@ export type MDTaskTeamMemberWhereUniqueInput = Prisma.AtLeast<{
   teamId?: Prisma.StringFilter<"MDTaskTeamMember"> | string
   employeeId?: Prisma.StringFilter<"MDTaskTeamMember"> | string
   createdAt?: Prisma.DateTimeFilter<"MDTaskTeamMember"> | Date | string
-  team?: Prisma.XOR<Prisma.MDTaskTeamScalarRelationFilter, Prisma.MDTaskTeamWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
+  team?: Prisma.XOR<Prisma.MDTaskTeamScalarRelationFilter, Prisma.MDTaskTeamWhereInput>
 }, "id" | "teamId_employeeId">
 
 export type MDTaskTeamMemberOrderByWithAggregationInput = {
@@ -223,8 +223,8 @@ export type MDTaskTeamMemberScalarWhereWithAggregatesInput = {
 export type MDTaskTeamMemberCreateInput = {
   id?: string
   createdAt?: Date | string
-  team: Prisma.MDTaskTeamCreateNestedOneWithoutMembersInput
   employee: Prisma.EmployeeCreateNestedOneWithoutMdTaskTeamMembershipsInput
+  team: Prisma.MDTaskTeamCreateNestedOneWithoutMembersInput
 }
 
 export type MDTaskTeamMemberUncheckedCreateInput = {
@@ -237,8 +237,8 @@ export type MDTaskTeamMemberUncheckedCreateInput = {
 export type MDTaskTeamMemberUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.MDTaskTeamUpdateOneRequiredWithoutMembersNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutMdTaskTeamMembershipsNestedInput
+  team?: Prisma.MDTaskTeamUpdateOneRequiredWithoutMembersNestedInput
 }
 
 export type MDTaskTeamMemberUncheckedUpdateInput = {
@@ -528,8 +528,8 @@ export type MDTaskTeamMemberSelect<ExtArgs extends runtime.Types.Extensions.Inte
   teamId?: boolean
   employeeId?: boolean
   createdAt?: boolean
-  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mDTaskTeamMember"]>
 
 export type MDTaskTeamMemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,8 +537,8 @@ export type MDTaskTeamMemberSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   teamId?: boolean
   employeeId?: boolean
   createdAt?: boolean
-  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mDTaskTeamMember"]>
 
 export type MDTaskTeamMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -546,8 +546,8 @@ export type MDTaskTeamMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   teamId?: boolean
   employeeId?: boolean
   createdAt?: boolean
-  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mDTaskTeamMember"]>
 
 export type MDTaskTeamMemberSelectScalar = {
@@ -559,23 +559,23 @@ export type MDTaskTeamMemberSelectScalar = {
 
 export type MDTaskTeamMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teamId" | "employeeId" | "createdAt", ExtArgs["result"]["mDTaskTeamMember"]>
 export type MDTaskTeamMemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
 }
 export type MDTaskTeamMemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
 }
 export type MDTaskTeamMemberIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.MDTaskTeamDefaultArgs<ExtArgs>
 }
 
 export type $MDTaskTeamMemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "MDTaskTeamMember"
   objects: {
-    team: Prisma.$MDTaskTeamPayload<ExtArgs>
     employee: Prisma.$EmployeePayload<ExtArgs>
+    team: Prisma.$MDTaskTeamPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -976,8 +976,8 @@ readonly fields: MDTaskTeamMemberFieldRefs;
  */
 export interface Prisma__MDTaskTeamMemberClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  team<T extends Prisma.MDTaskTeamDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MDTaskTeamDefaultArgs<ExtArgs>>): Prisma.Prisma__MDTaskTeamClient<runtime.Types.Result.GetResult<Prisma.$MDTaskTeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  team<T extends Prisma.MDTaskTeamDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MDTaskTeamDefaultArgs<ExtArgs>>): Prisma.Prisma__MDTaskTeamClient<runtime.Types.Result.GetResult<Prisma.$MDTaskTeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

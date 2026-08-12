@@ -198,8 +198,8 @@ export type CaseStageHistoryWhereInput = {
   changedById?: Prisma.StringFilter<"CaseStageHistory"> | string
   changedAt?: Prisma.DateTimeFilter<"CaseStageHistory"> | Date | string
   note?: Prisma.StringNullableFilter<"CaseStageHistory"> | string | null
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
   changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
 }
 
 export type CaseStageHistoryOrderByWithRelationInput = {
@@ -210,8 +210,8 @@ export type CaseStageHistoryOrderByWithRelationInput = {
   changedById?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
-  lead?: Prisma.LeadOrderByWithRelationInput
   changedBy?: Prisma.UserOrderByWithRelationInput
+  lead?: Prisma.LeadOrderByWithRelationInput
 }
 
 export type CaseStageHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -225,8 +225,8 @@ export type CaseStageHistoryWhereUniqueInput = Prisma.AtLeast<{
   changedById?: Prisma.StringFilter<"CaseStageHistory"> | string
   changedAt?: Prisma.DateTimeFilter<"CaseStageHistory"> | Date | string
   note?: Prisma.StringNullableFilter<"CaseStageHistory"> | string | null
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
   changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
 }, "id">
 
 export type CaseStageHistoryOrderByWithAggregationInput = {
@@ -261,8 +261,8 @@ export type CaseStageHistoryCreateInput = {
   toStage: $Enums.CaseStage
   changedAt?: Date | string
   note?: string | null
-  lead: Prisma.LeadCreateNestedOneWithoutCaseStageHistoryInput
   changedBy: Prisma.UserCreateNestedOneWithoutCaseStageChangesInput
+  lead: Prisma.LeadCreateNestedOneWithoutCaseStageHistoryInput
 }
 
 export type CaseStageHistoryUncheckedCreateInput = {
@@ -281,8 +281,8 @@ export type CaseStageHistoryUpdateInput = {
   toStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lead?: Prisma.LeadUpdateOneRequiredWithoutCaseStageHistoryNestedInput
   changedBy?: Prisma.UserUpdateOneRequiredWithoutCaseStageChangesNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutCaseStageHistoryNestedInput
 }
 
 export type CaseStageHistoryUncheckedUpdateInput = {
@@ -634,8 +634,8 @@ export type CaseStageHistorySelect<ExtArgs extends runtime.Types.Extensions.Inte
   changedById?: boolean
   changedAt?: boolean
   note?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["caseStageHistory"]>
 
 export type CaseStageHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -646,8 +646,8 @@ export type CaseStageHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   changedById?: boolean
   changedAt?: boolean
   note?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["caseStageHistory"]>
 
 export type CaseStageHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -658,8 +658,8 @@ export type CaseStageHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   changedById?: boolean
   changedAt?: boolean
   note?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["caseStageHistory"]>
 
 export type CaseStageHistorySelectScalar = {
@@ -674,23 +674,23 @@ export type CaseStageHistorySelectScalar = {
 
 export type CaseStageHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "fromStage" | "toStage" | "changedById" | "changedAt" | "note", ExtArgs["result"]["caseStageHistory"]>
 export type CaseStageHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type CaseStageHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type CaseStageHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 
 export type $CaseStageHistoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CaseStageHistory"
   objects: {
-    lead: Prisma.$LeadPayload<ExtArgs>
     changedBy: Prisma.$UserPayload<ExtArgs>
+    lead: Prisma.$LeadPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1094,8 +1094,8 @@ readonly fields: CaseStageHistoryFieldRefs;
  */
 export interface Prisma__CaseStageHistoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   changedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
