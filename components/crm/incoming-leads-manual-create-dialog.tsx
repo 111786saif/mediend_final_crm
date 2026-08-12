@@ -140,6 +140,42 @@ function getMonthNameFromDateTimeLocal(value: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date)
 }
 
+function mergeCsvTexts(csvChunks: string[]) {
+  const normalizedChunks = csvChunks
+    .map((chunk) => chunk.replace(/^\uFEFF/, '').trim())
+    .filter((chunk) => chunk.length > 0)
+
+  if (normalizedChunks.length === 0) return ''
+
+  let header: string | null = null
+  const dataLines: string[] = []
+
+  for (const chunk of normalizedChunks) {
+    const lines = chunk
+      .split(/\r?\n/)
+      .map((line) => line.trimEnd())
+      .filter((line) => line.trim().length > 0)
+
+    if (lines.length === 0) continue
+
+    const [chunkHeader, ...chunkRows] = lines
+    if (!header) {
+      header = chunkHeader
+      dataLines.push(...chunkRows)
+      continue
+    }
+
+    if (chunkHeader === header) {
+      dataLines.push(...chunkRows)
+    } else {
+      dataLines.push(...lines)
+    }
+  }
+
+  if (!header) return ''
+  return [header, ...dataLines].join('\n')
+}
+
 export function IncomingLeadsManualCreateDialog({
   open,
   onOpenChange,
@@ -159,6 +195,7 @@ export function IncomingLeadsManualCreateDialog({
     formatDateTimeLocalValue(new Date())
   )
   const [csvText, setCsvText] = useState('')
+  const [uploadedCsvFileNames, setUploadedCsvFileNames] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const groupedFields = useMemo(
@@ -204,6 +241,7 @@ export function IncomingLeadsManualCreateDialog({
     setFormValues(createEmptyManualMySQLLeadValues())
     setManualLeadDate(formatDateTimeLocalValue(new Date()))
     setCsvText('')
+    setUploadedCsvFileNames([])
   }
 
   const mutation = useMutation({
@@ -234,10 +272,12 @@ export function IncomingLeadsManualCreateDialog({
     URL.revokeObjectURL(url)
   }
 
-  const handleCsvFileSelect = async (file: File | null) => {
-    if (!file) return
-    const text = await file.text()
-    setCsvText(text)
+  const handleCsvFileSelect = async (files: FileList | File[] | null) => {
+    if (!files || files.length === 0) return
+    const selectedFiles = Array.from(files)
+    const texts = await Promise.all(selectedFiles.map((file) => file.text()))
+    setUploadedCsvFileNames(selectedFiles.map((file) => file.name))
+    setCsvText((current) => mergeCsvTexts([...texts, current]))
   }
 
   const handleFieldChange = (key: string, value: string) => {
@@ -552,26 +592,34 @@ export function IncomingLeadsManualCreateDialog({
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
                   <FileUp className="mr-2 h-4 w-4" />
-                  Upload CSV
+                  Upload CSVs
                 </Button>
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept=".csv,text/csv"
+                  multiple
                   className="hidden"
                   onChange={(event) => {
-                    void handleCsvFileSelect(event.target.files?.[0] ?? null)
+                    void handleCsvFileSelect(event.target.files)
                     event.currentTarget.value = ''
                   }}
                 />
               </div>
+
+              {uploadedCsvFileNames.length > 0 ? (
+                <div className="rounded-lg border px-3 py-2 text-sm text-muted-foreground">
+                  Added {uploadedCsvFileNames.length} file
+                  {uploadedCsvFileNames.length === 1 ? '' : 's'}: {uploadedCsvFileNames.join(', ')}
+                </div>
+              ) : null}
 
               <div>
                 <Label className="mb-2 block">CSV content</Label>
                 <Textarea
                   value={csvText}
                   onChange={(event) => setCsvText(event.target.value)}
-                  placeholder="Paste CSV content here or upload a .csv file"
+                  placeholder="Paste CSV content here or upload one or more .csv files"
                   rows={18}
                 />
               </div>
