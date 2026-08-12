@@ -475,20 +475,7 @@ export function buildPipelineFiltersWhere(
         ],
       })
     } else {
-      const q = params.search
-      and.push({
-        OR: [
-          { patientName: { contains: q, mode: 'insensitive' } },
-          { leadRef: { contains: q, mode: 'insensitive' } },
-          { circle: { contains: q, mode: 'insensitive' } },
-          { hospitalName: { contains: q, mode: 'insensitive' } },
-          { treatment: { contains: q, mode: 'insensitive' } },
-          { category: { contains: q, mode: 'insensitive' } },
-          { campaignName: { contains: q, mode: 'insensitive' } },
-          { bd: { name: { contains: q, mode: 'insensitive' } } },
-          { status: { contains: q, mode: 'insensitive' } },
-        ],
-      })
+      and.push(buildPipelineGlobalSearchWhere(params.search))
     }
   }
 
@@ -782,6 +769,146 @@ function buildModeOfPaymentFilterWhere(values: string[]): Prisma.LeadWhereInput 
 
   if (or.length === 0) return undefined
   return or.length === 1 ? or[0] : { OR: or }
+}
+
+function buildLeadStatusSearchWhere(query: string): Prisma.LeadWhereInput | undefined {
+  const normalizedQuery = query.trim().toLowerCase()
+  if (!normalizedQuery) return undefined
+
+  const matchingLabels = [...new Set(
+    Object.keys(PIPELINE_STATUS_FILTER_VARIANTS).filter((label) =>
+      label.toLowerCase().includes(normalizedQuery),
+    ),
+  )]
+
+  if (matchingLabels.length === 0) return undefined
+  return buildStatusFilterWhere(matchingLabels)
+}
+
+function buildCaseStageSearchWhere(query: string): Prisma.LeadWhereInput | undefined {
+  const normalizedQuery = query.trim().toLowerCase()
+  if (!normalizedQuery) return undefined
+
+  const stages = [...new Set(
+    Object.entries(PIPELINE_STAGE_FILTER_CASE_STAGES)
+      .filter(([label]) => label.toLowerCase().includes(normalizedQuery))
+      .flatMap(([, values]) => values),
+  )]
+
+  if (stages.length === 0) return undefined
+  return { caseStage: { in: stages } }
+}
+
+function buildModeOfPaymentSearchWhere(query: string): Prisma.LeadWhereInput | undefined {
+  const normalizedQuery = query.trim().toLowerCase()
+  if (!normalizedQuery) return undefined
+
+  const matchingLabels = Object.keys(MODE_OF_PAYMENT_FILTER_VARIANTS).filter((label) =>
+    label.toLowerCase().includes(normalizedQuery),
+  )
+
+  if (matchingLabels.length === 0) return undefined
+  return buildModeOfPaymentFilterWhere(matchingLabels)
+}
+
+function buildFlowTypeSearchWhere(query: string): Prisma.LeadWhereInput | undefined {
+  const normalizedQuery = query.trim().toLowerCase()
+  if (!normalizedQuery) return undefined
+
+  const flows: string[] = []
+  if ('cash'.includes(normalizedQuery) || normalizedQuery.includes('cash')) {
+    flows.push('CASH')
+  }
+  if (
+    'insurance'.includes(normalizedQuery) ||
+    normalizedQuery.includes('insurance') ||
+    normalizedQuery.includes('medi')
+  ) {
+    flows.push('INSURANCE')
+  }
+
+  if (flows.length === 0) return undefined
+  return { flowType: { in: flows as Array<'CASH' | 'INSURANCE'> } }
+}
+
+function buildNumericGlobalSearchWhere(query: string): Prisma.LeadWhereInput | undefined {
+  if (!/^\d+$/.test(query)) return undefined
+
+  const parsed = Number.parseInt(query, 10)
+  if (!Number.isFinite(parsed)) return undefined
+
+  const or: Prisma.LeadWhereInput[] = []
+
+  if (parsed >= 0 && parsed <= 120) {
+    or.push({ age: parsed })
+  }
+
+  or.push({ duplCount: parsed })
+
+  return or.length === 1 ? or[0] : { OR: or }
+}
+
+function buildPipelineGlobalSearchWhere(query: string): Prisma.LeadWhereInput {
+  const q = query.trim()
+  const numericWhere = buildNumericGlobalSearchWhere(q)
+  const statusWhere = buildLeadStatusSearchWhere(q)
+  const stageWhere = buildCaseStageSearchWhere(q)
+  const modeOfPaymentWhere = buildModeOfPaymentSearchWhere(q)
+  const flowTypeWhere = buildFlowTypeSearchWhere(q)
+
+  const or: Prisma.LeadWhereInput[] = [
+    { patientName: { contains: q, mode: 'insensitive' } },
+    { leadRef: { contains: q, mode: 'insensitive' } },
+    { sex: { contains: q, mode: 'insensitive' } },
+    { circle: { contains: q, mode: 'insensitive' } },
+    { category: { contains: q, mode: 'insensitive' } },
+    { treatment: { contains: q, mode: 'insensitive' } },
+    { diseaseDetails: { contains: q, mode: 'insensitive' } },
+    { profession: { contains: q, mode: 'insensitive' } },
+    { hospitalName: { contains: q, mode: 'insensitive' } },
+    { opdHospital: { contains: q, mode: 'insensitive' } },
+    { ipdHospital: { contains: q, mode: 'insensitive' } },
+    { surgeonName: { contains: q, mode: 'insensitive' } },
+    { ipdDrName: { contains: q, mode: 'insensitive' } },
+    { opdDrName: { contains: q, mode: 'insensitive' } },
+    { insuranceName: { contains: q, mode: 'insensitive' } },
+    { subStatus: { contains: q, mode: 'insensitive' } },
+    { source: { contains: q, mode: 'insensitive' } },
+    { campaignName: { contains: q, mode: 'insensitive' } },
+    { remarks: { contains: q, mode: 'insensitive' } },
+    { month: { contains: q, mode: 'insensitive' } },
+    { bd: { name: { contains: q, mode: 'insensitive' } } },
+    { updatedBy: { name: { contains: q, mode: 'insensitive' } } },
+    { leadRemarkEntries: { some: { content: { contains: q, mode: 'insensitive' } } } },
+    { plRecord: { is: { bdmName: { contains: q, mode: 'insensitive' } } } },
+    { plRecord: { is: { managerName: { contains: q, mode: 'insensitive' } } } },
+    { plRecord: { is: { doctorName: { contains: q, mode: 'insensitive' } } } },
+    { plRecord: { is: { hospitalName: { contains: q, mode: 'insensitive' } } } },
+    { dischargeSheet: { is: { doctorName: { contains: q, mode: 'insensitive' } } } },
+    { dischargeSheet: { is: { hospitalName: { contains: q, mode: 'insensitive' } } } },
+    { kypSubmission: { is: { location: { contains: q, mode: 'insensitive' } } } },
+    { kypSubmission: { is: { preAuthData: { is: { requestedHospitalName: { contains: q, mode: 'insensitive' } } } } } },
+    { kypSubmission: { is: { preAuthData: { is: { hospitalNameSuggestion: { contains: q, mode: 'insensitive' } } } } } },
+    { status: { contains: q, mode: 'insensitive' } },
+  ]
+
+  if (numericWhere) {
+    or.push(numericWhere)
+  }
+  if (statusWhere) {
+    or.push(statusWhere)
+  }
+  if (stageWhere) {
+    or.push(stageWhere)
+  }
+  if (modeOfPaymentWhere) {
+    or.push(modeOfPaymentWhere)
+  }
+  if (flowTypeWhere) {
+    or.push(flowTypeWhere)
+  }
+
+  return { OR: or }
 }
 
 function buildPipelineMultiSelectWhere(
