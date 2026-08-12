@@ -1135,7 +1135,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                 <div className="relative min-w-[200px] flex-1">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Name, ref, hospital… — or full mobile (10 digits or 91…)"
+                    placeholder="Search all table columns except dates… or full mobile (10 digits or 91…) "
                     className="pl-9"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
