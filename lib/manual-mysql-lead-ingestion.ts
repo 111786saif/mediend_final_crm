@@ -9,6 +9,10 @@ import {
   processMySQLIncomingLead,
   queueMySQLIncomingLead,
 } from '@/lib/mysql-incoming-leads'
+import {
+  normalizeFlexibleDateInput,
+  parseFlexibleDateInput,
+} from '@/lib/flexible-date-input'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps, type LookupMaps } from '@/lib/sync/mysql-lookup-cache'
@@ -71,96 +75,13 @@ function parseNumberishOrText(value: unknown) {
   return /^-?\d+$/.test(normalized) ? Number.parseInt(normalized, 10) : normalized
 }
 
-function padDatePart(value: number) {
-  return String(value).padStart(2, '0')
-}
-
-function formatNormalizedDate(
-  year: number,
-  month: number,
-  day: number,
-  hour: number,
-  minute: number,
-  second: number
-) {
-  return `${year}-${padDatePart(month)}-${padDatePart(day)}T${padDatePart(hour)}:${padDatePart(minute)}:${padDatePart(second)}`
-}
-
 function getCurrentNormalizedDateTime() {
-  const now = new Date()
-  return formatNormalizedDate(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    now.getDate(),
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds()
-  )
-}
-
-function parseManualDateInput(value: unknown): string | null {
-  const normalized = normalizeString(value)
-  if (!normalized) return null
-
-  const isoLikeMatch = normalized.match(
-    /^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2}))?)?$/
-  )
-
-  if (isoLikeMatch) {
-    const [, yearText, monthText, dayText, hourText, minuteText, secondText] = isoLikeMatch
-    return formatNormalizedDate(
-      Number.parseInt(yearText, 10),
-      Number.parseInt(monthText, 10),
-      Number.parseInt(dayText, 10),
-      Number.parseInt(hourText ?? '0', 10),
-      Number.parseInt(minuteText ?? '0', 10),
-      Number.parseInt(secondText ?? '0', 10)
-    )
-  }
-
-  const slashMatch = normalized.match(
-    /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2}))?)?$/
-  )
-
-  if (slashMatch) {
-    const [, firstText, secondText, yearText, hourText, minuteText, secondValueText] = slashMatch
-    const first = Number.parseInt(firstText, 10)
-    const second = Number.parseInt(secondText, 10)
-
-    // Manual imports may arrive as M/D/YYYY from exported sheets, while larger
-    // values in the first segment clearly indicate D/M/YYYY.
-    const month = first > 12 ? second : first
-    const day = first > 12 ? first : second
-
-    return formatNormalizedDate(
-      Number.parseInt(yearText, 10),
-      month,
-      day,
-      Number.parseInt(hourText ?? '0', 10),
-      Number.parseInt(minuteText ?? '0', 10),
-      Number.parseInt(secondValueText ?? '0', 10)
-    )
-  }
-
-  const parsed = new Date(normalized)
-  if (Number.isNaN(parsed.getTime())) return null
-
-  return formatNormalizedDate(
-    parsed.getFullYear(),
-    parsed.getMonth() + 1,
-    parsed.getDate(),
-    parsed.getHours(),
-    parsed.getMinutes(),
-    parsed.getSeconds()
-  )
+  return normalizeFlexibleDateInput(new Date())!
 }
 
 function deriveMonthNameFromLeadDate(value: string) {
-  const normalized = parseManualDateInput(value)
-  if (!normalized) return null
-
-  const date = new Date(normalized)
-  if (Number.isNaN(date.getTime())) return null
+  const date = parseFlexibleDateInput(value)
+  if (!date) return null
 
   return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date)
 }
@@ -183,11 +104,12 @@ function validateManualRow(record: ManualLeadInputRecord) {
 
 function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQLLeadRow {
   // CSV/manual intake should always get a valid lead timestamp even when Lead_Date is blank or malformed.
-  const normalizedLeadDate = parseManualDateInput(record.Lead_Date) ?? getCurrentNormalizedDateTime()
+  const normalizedLeadDate =
+    normalizeFlexibleDateInput(record.Lead_Date) ?? getCurrentNormalizedDateTime()
   const normalizedLeadEntryDate =
-    parseManualDateInput(record.LeadEntryDate) || normalizedLeadDate
+    normalizeFlexibleDateInput(record.LeadEntryDate) || normalizedLeadDate
   const normalizedCreateDate =
-    parseManualDateInput(record.create_date) || normalizedLeadDate
+    normalizeFlexibleDateInput(record.create_date) || normalizedLeadDate
   const normalizedMonth =
     normalizeString(record.month) || deriveMonthNameFromLeadDate(normalizedLeadDate ?? '')
 
@@ -216,17 +138,17 @@ function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQL
     remarks_id: normalizeString(record.remarks_id) || null,
     Remarks: normalizeString(record.Remarks) || null,
     LastRemarks: normalizeString(record.LastRemarks) || null,
-    Follow_up_Date: parseManualDateInput(record.Follow_up_Date),
+    Follow_up_Date: normalizeFlexibleDateInput(record.Follow_up_Date),
     Status: parseNumberishOrText(record.Status),
     SubStatus: parseOptionalSubStatusText(record.SubStatus),
-    Surgery_Date: parseManualDateInput(record.Surgery_Date),
+    Surgery_Date: normalizeFlexibleDateInput(record.Surgery_Date),
     OPD_Hospital: normalizeString(record.OPD_Hospital) || null,
     OPD_DrName: normalizeString(record.OPD_DrName) || null,
     OPD_ContactNo: normalizeString(record.OPD_ContactNo) || null,
     OPD_Charges: parseNumberish(record.OPD_Charges),
-    OPD_ScheduleDate: parseManualDateInput(record.OPD_ScheduleDate),
+    OPD_ScheduleDate: normalizeFlexibleDateInput(record.OPD_ScheduleDate),
     OPD_Meeting: parseNumberish(record.OPD_Meeting),
-    IPD_AdmisisonDate: parseManualDateInput(record.IPD_AdmisisonDate),
+    IPD_AdmisisonDate: normalizeFlexibleDateInput(record.IPD_AdmisisonDate),
     IPD_Hospital: normalizeString(record.IPD_Hospital) || null,
     IPD_DrName: normalizeString(record.IPD_DrName) || null,
     IPD_ContactNo: normalizeString(record.IPD_ContactNo) || null,
@@ -247,7 +169,7 @@ function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQL
     whatsapp_msg: parseBooleanish(record.whatsapp_msg),
     create_by: parseNumberish(record.create_by),
     update_by: parseNumberish(record.update_by),
-    update_date: parseManualDateInput(record.update_date),
+    update_date: normalizeFlexibleDateInput(record.update_date),
     ip: normalizeString(record.ip) || null,
     website: normalizeString(record.website) || null,
     description: normalizeString(record.description) || null,

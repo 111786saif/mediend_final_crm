@@ -15,6 +15,7 @@ type AssignableBdContext = {
   userName: string
   managerUserId: string | null
   managerEmployeeId: string | null
+  managerLeadId: number | null
 }
 
 type IncomingLeadForManualAssign = {
@@ -138,6 +139,7 @@ async function getAssignableBdContexts(userIds: string[]) {
             select: {
               id: true,
               userId: true,
+              bdNumber: true,
             },
           },
         },
@@ -153,6 +155,7 @@ async function getAssignableBdContexts(userIds: string[]) {
         userName: user.name,
         managerUserId: user.employee?.manager?.userId ?? null,
         managerEmployeeId: user.employee?.manager?.id ?? null,
+        managerLeadId: user.employee?.manager?.bdNumber ?? null,
       },
     ])
   )
@@ -228,6 +231,7 @@ async function reassignExistingLead(
     data: {
       bdId: bd.userId,
       bdeName: bd.userName,
+      teamLeadId: bd.managerLeadId,
       assignedDate: assignedAt,
     },
   })
@@ -398,6 +402,7 @@ async function processManualAssignedMySQLLead(
       ...(updatedDate !== null ? { updatedDate } : {}),
       bdId: bd.userId,
       bdeName: bd.userName,
+      teamLeadId: bd.managerLeadId,
     },
     select: {
       id: true,
@@ -598,6 +603,7 @@ async function processManualAssignedSaveMyLeadsLead(
       treatmentMasterId: finalTreatment === cleanStr(campaign.treatment) ? (campaign.treatmentMasterId ?? null) : null,
       bdeName: bd.userName,
       bdId: bd.userId,
+      teamLeadId: bd.managerLeadId,
       patientEmail: extracted.email || null,
       circle: finalCircle,
       month: `${month}`,

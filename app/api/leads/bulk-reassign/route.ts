@@ -5,7 +5,7 @@ import {
   createBulkLeadReassignmentRun,
 } from '@/lib/lead-bulk-reassign/server'
 import type { CreateBulkLeadReassignmentRunInput } from '@/lib/lead-bulk-reassign/shared'
-import { getBulkReassignableBdUsersForActor } from '@/lib/lead-ownership'
+import { getBulkReassignableLeadUsersForActor } from '@/lib/lead-ownership'
 import { hasPermission } from '@/lib/rbac'
 import { getSessionFromRequest } from '@/lib/session'
 
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
     return errorResponse('Forbidden', 403)
   }
 
-  const assignableUsers = await getBulkReassignableBdUsersForActor(user)
+  const assignableUsers = await getBulkReassignableLeadUsersForActor(user)
   return successResponse({
     canBulkReassign: assignableUsers.length > 0,
     assignableUsers,

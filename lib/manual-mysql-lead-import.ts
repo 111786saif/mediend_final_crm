@@ -17,7 +17,7 @@ export type ManualMySQLLeadField = {
 }
 
 export const MANUAL_MYSQL_LEAD_FIELDS: ManualMySQLLeadField[] = [
-  { key: 'Lead_Date', label: 'Lead_Date', type: 'date', section: 'Identity', helperText: 'Assignment date/time.', sample: '2026-08-02 10:30:00' },
+  { key: 'Lead_Date', label: 'Lead_Date', type: 'date', section: 'Identity', helperText: 'Use DD/MM/YYYY with optional time, for example 12/08/2026 10:30 AM.', sample: '12/08/2026 10:30 AM' },
 
   { key: 'Patient_Number', label: 'Patient_Number', type: 'string', section: 'Patient', required: true, sample: '9876543210' },
   { key: 'AlternativePhone', label: 'AlternativePhone', type: 'string', section: 'Patient', sample: '9123456789' },

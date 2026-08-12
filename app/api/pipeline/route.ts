@@ -13,6 +13,7 @@ import { maskPhoneNumber } from '@/lib/phone-utils'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import {
   applyPipelineColumnFilters,
+  buildPipelineColumnFacets,
   buildPipelineFiltersWhere,
   buildPipelineRoleWhere,
   bucketsFromStatusGroups,
@@ -31,8 +32,12 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const params = parsePipelineQueryParams(searchParams)
     const { where: roleWhere } = await buildPipelineRoleWhere(user)
+    const columnFacetParams = { ...params, columnFilters: [] }
 
     const listWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: true })
+    const columnFacetWhere = buildPipelineFiltersWhere(columnFacetParams, roleWhere, {
+      includeStatusBucket: true,
+    })
     // Status card counts ignore the selected status bucket so cards stay stable while drilling in.
     const facetWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: false })
 
@@ -40,7 +45,8 @@ export async function GET(request: NextRequest) {
     const orderBy = pipelineOrderBy(params.sortBy, params.sortDir)
     const needsPostQueryColumnFiltering = hasPostQueryPipelineColumnFilters(params.columnFilters)
 
-    const [statusGroups, categoryRows, circleRows, bdRows, campaignAgg] = await Promise.all([
+    const [statusGroups, categoryRows, circleRows, bdRows, campaignAgg, columnFacetLeads] =
+      await Promise.all([
       prisma.lead.groupBy({
         by: ['status'],
         where: facetWhere,
@@ -69,6 +75,11 @@ export async function GET(request: NextRequest) {
         orderBy: { bdId: 'asc' },
       }),
       loadCampaignTree(facetWhere, params.groupBy),
+      prisma.lead.findMany({
+        where: columnFacetWhere,
+        select: pipelineTableSelect,
+        orderBy,
+      }),
     ])
 
     let total: number
@@ -117,6 +128,7 @@ export async function GET(request: NextRequest) {
       .filter((r) => r.bd?.id && r.bd.name)
       .map((r) => ({ id: r.bd!.id, name: r.bd!.name }))
       .sort((a, b) => a.name.localeCompare(b.name))
+    const columnFacets = buildPipelineColumnFacets(columnFacetLeads)
 
     const mappedLeads = leads.map((lead) => {
       const latestRemark = getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries, user.role) ?? null
@@ -150,6 +162,7 @@ export async function GET(request: NextRequest) {
         categories,
         circles,
         bds,
+        columnFacets,
       },
       campaignTree: campaignAgg,
       sortBy: params.sortBy,

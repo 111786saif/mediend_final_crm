@@ -49,6 +49,10 @@ import {
   type IncomingLeadEditValues,
 } from '@/lib/crm-incoming-leads'
 import {
+  parseFlexibleDateInput,
+  toDateTimeLocalInputValue,
+} from '@/lib/flexible-date-input'
+import {
   CRM_LEAD_STATUS_OPTIONS,
   CRM_MODE_OF_PAYMENT_OPTIONS,
 } from '@/lib/lead-status-options'
@@ -430,8 +434,8 @@ function isSelectableIncomingLead(record: IncomingLeadRecord) {
 function formatDateOnly(value: string | null) {
   if (!value) return '—'
 
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
+  const date = parseFlexibleDateInput(value)
+  if (!date) return value
 
   return new Intl.DateTimeFormat('en-IN', {
     dateStyle: 'medium',
@@ -439,26 +443,7 @@ function formatDateOnly(value: string | null) {
 }
 
 function toDateTimeLocalValue(value: string) {
-  const trimmed = value.trim()
-  if (!trimmed) return ''
-
-  const normalized = trimmed.includes('T') ? trimmed : trimmed.replace(' ', 'T')
-  const parsed = new Date(normalized)
-  if (!Number.isNaN(parsed.getTime())) {
-    const year = parsed.getFullYear()
-    const month = String(parsed.getMonth() + 1).padStart(2, '0')
-    const day = String(parsed.getDate()).padStart(2, '0')
-    const hours = String(parsed.getHours()).padStart(2, '0')
-    const minutes = String(parsed.getMinutes()).padStart(2, '0')
-    return `${year}-${month}-${day}T${hours}:${minutes}`
-  }
-
-  const compactMatch = normalized.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::\d{2})?$/)
-  if (compactMatch) {
-    return `${compactMatch[1]}T${compactMatch[2]}`
-  }
-
-  return ''
+  return toDateTimeLocalInputValue(value)
 }
 
 function convertDateTimeLocalToMysql(value: string) {

@@ -3,11 +3,11 @@ import type { JsonValue } from '@/generated/prisma/runtime/library'
 import type { SessionUser } from '@/lib/auth'
 import { logCrmActivity } from '@/lib/crm-activity'
 import {
-  buildLeadOwnershipTransferUpdate,
+  buildLeadOwnershipTransferUpdateForAssigneeManager,
   canUserRemoveLeadRemarks,
   canUserUpdateLeadStatus,
   canUserViewLeadOwner,
-  getBulkReassignableBdUsersForActor,
+  getBulkReassignableLeadUsersForActor,
 } from '@/lib/lead-ownership'
 import { enqueueLeadBulkReassignCycle } from '@/lib/lead-bulk-reassign/queue'
 import type {
@@ -248,13 +248,13 @@ export async function createBulkLeadReassignmentRun(
     }
   }
 
-  const assignableUsers = await getBulkReassignableBdUsersForActor(user)
+  const assignableUsers = await getBulkReassignableLeadUsersForActor(user)
   const assignableUserMap = new Map(assignableUsers.map((item) => [item.id, item]))
   const selectedBdUsers = bdUserIds.map((id) => assignableUserMap.get(id))
 
   if (selectedBdUsers.some((entry) => !entry)) {
     throw new BulkLeadReassignError(
-      'You cannot reassign leads to one or more selected BDs',
+      'You cannot reassign leads to one or more selected assignees',
       403
     )
   }
@@ -533,7 +533,7 @@ export async function processBulkLeadReassignCycle(
     })
 
     if (targetUsers.length !== bdUserIds.length) {
-      throw new Error('One or more selected BDs are no longer available')
+      throw new Error('One or more selected assignees are no longer available')
     }
 
     const targetUserMap = new Map(targetUsers.map((entry) => [entry.id, entry]))
@@ -550,7 +550,7 @@ export async function processBulkLeadReassignCycle(
       const nextOwner = targetUserMap.get(nextOwnerUserId)
 
       if (!nextOwner) {
-        throw new Error('A selected BD is no longer available')
+        throw new Error('A selected assignee is no longer available')
       }
 
       const lead = await prisma.lead.findUnique({
@@ -585,7 +585,10 @@ export async function processBulkLeadReassignCycle(
               connect: { id: run!.actorUserId },
             },
             updatedDate: assignedAt,
-            ...buildLeadOwnershipTransferUpdate(nextOwnerUserId, assignedAt),
+            ...(await buildLeadOwnershipTransferUpdateForAssigneeManager(
+              nextOwnerUserId,
+              assignedAt,
+            )),
             ...(workflowMetadata.leadStatus
               ? { status: workflowMetadata.leadStatus }
               : {}),

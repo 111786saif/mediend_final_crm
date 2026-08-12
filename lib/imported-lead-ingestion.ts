@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+import { getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
 import { prisma } from '@/lib/prisma'
 import {
   getCampaignCircleNames,
@@ -202,6 +203,9 @@ export async function createImportedLeadWithCrmAssignment(
     normalizeImportedLeadString(typeof leadDataWithoutOwner.campaignId === 'string' ? leadDataWithoutOwner.campaignId : null) ??
     campaign?.externalCampaignId ??
     externalCampaignId
+  const teamLeadId = await getLeadTeamLeadIdForAssigneeManager(
+    assignmentResult.assignment.bd.userId,
+  )
 
   const lead = await prisma.lead.create({
     data: {
@@ -216,6 +220,7 @@ export async function createImportedLeadWithCrmAssignment(
       duplCount: 0,
       bdId: assignmentResult.assignment.bd.userId,
       bdeName: assignmentResult.assignment.bd.name,
+      teamLeadId,
     },
     select: {
       id: true,

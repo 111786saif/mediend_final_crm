@@ -7,7 +7,11 @@ import { apiGet } from '@/lib/api-client'
 import type { Lead } from '@/hooks/use-leads'
 import type { CampaignSelection, SidebarGroupMode } from '@/components/pipeline/campaign-sidebar'
 import type { LeadAgeFilter, PipelineStatusBucket } from '@/lib/pipeline-lead-buckets'
-import type { PipelineSortDir, PipelineSortField } from '@/lib/pipeline/server-query'
+import type {
+  PipelineMultiColumnFilterField,
+  PipelineSortDir,
+  PipelineSortField,
+} from '@/lib/pipeline/server-query'
 
 export interface PipelineCampaignGroup {
   groupValue: string
@@ -27,6 +31,7 @@ export interface PipelinePageResponse {
     categories: string[]
     circles: string[]
     bds: { id: string; name: string }[]
+    columnFacets: Partial<Record<PipelineMultiColumnFilterField, string[]>>
   }
   campaignTree: PipelineCampaignGroup[]
   sortBy: PipelineSortField
