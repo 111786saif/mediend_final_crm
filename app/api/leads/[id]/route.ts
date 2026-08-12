@@ -29,6 +29,7 @@ import {
 } from '@/lib/mode-of-payment'
 import {
   buildLeadOwnershipTransferUpdate,
+  buildLeadOwnershipTransferUpdateForAssigneeManager,
   canUserAddLeadRemarks,
   canUserEditLeadProfile,
   canUserRemoveLeadRemarks,
@@ -886,7 +887,10 @@ export async function PATCH(
 
     // Handle BD reassignment
     if (assigneeChanged && !churnAutomationResult) {
-      Object.assign(updateData, buildLeadOwnershipTransferUpdate(String(body.bdId)))
+      Object.assign(
+        updateData,
+        await buildLeadOwnershipTransferUpdateForAssigneeManager(String(body.bdId))
+      )
     }
 
     const nextCaseStage =

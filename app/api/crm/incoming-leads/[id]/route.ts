@@ -19,7 +19,9 @@ import {
   getDefaultMySQLSystemUserId,
   processMySQLIncomingLead,
 } from '@/lib/mysql-incoming-leads'
+import { parseFlexibleDateInput } from '@/lib/flexible-date-input'
 import { normalizeLeadPhoneToLast10 } from '@/lib/lead-duplicates'
+import { getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { inferPipelineStage, mapMySQLLeadToPrismaWithoutOwner } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
@@ -66,9 +68,7 @@ function normalizeComparableText(value: string | null | undefined) {
 }
 
 function parseDate(value: string | null | undefined) {
-  if (!value) return null
-  const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? null : parsed
+  return parseFlexibleDateInput(value)
 }
 
 function parseAge(value: string | null | undefined) {
@@ -447,56 +447,65 @@ export async function PATCH(
       !existing.processedLeadId &&
       (existing.status === 'FAILED' || existing.status === 'PENDING' || routingChanged)
 
-    await prisma.$transaction(async (tx) => {
-      const incomingLeadUpdateData: Record<string, unknown> = {
+    const incomingLeadUpdateData: Record<string, unknown> = {
+      payload: nextPayload,
+    }
+
+    if (normalizedFields.Source !== undefined) {
+      incomingLeadUpdateData.source = normalizedFields.Source
+    }
+    if (normalizedFields.campaign_id !== undefined) {
+      incomingLeadUpdateData.externalCampaignId = normalizedFields.campaign_id
+    }
+    if (normalizedFields.Patient_Number !== undefined) {
+      incomingLeadUpdateData.normalizedPhone = nextNormalizedPhone
+    }
+
+    let processedLeadUpdateData: Awaited<
+      ReturnType<typeof buildProcessedLeadUpdateData>
+    >['updateData'] | null = null
+
+    if (existing.processedLeadId) {
+      const processedLeadUpdate = await buildProcessedLeadUpdateData({
         payload: nextPayload,
-      }
+        currentUserId: currentUser.id,
+        externalCampaignId: nextCampaignId ?? null,
+      })
 
-      if (normalizedFields.Source !== undefined) {
-        incomingLeadUpdateData.source = normalizedFields.Source
-      }
-      if (normalizedFields.campaign_id !== undefined) {
-        incomingLeadUpdateData.externalCampaignId = normalizedFields.campaign_id
-      }
-      if (normalizedFields.Patient_Number !== undefined) {
-        incomingLeadUpdateData.normalizedPhone = nextNormalizedPhone
-      }
-
-      if (existing.processedLeadId) {
-        const processedLeadUpdate = await buildProcessedLeadUpdateData({
-          payload: nextPayload,
-          currentUserId: currentUser.id,
-          externalCampaignId: nextCampaignId ?? null,
+      if (routingChanged) {
+        const assignmentPreview = await previewImportedLeadAssignment({
+          externalCampaignId: nextCampaignId ?? undefined,
+          city: processedLeadUpdate.routingCircle ?? null,
+          category: processedLeadUpdate.routingCategory ?? null,
+          assignmentDate: processedLeadUpdate.updateData.assignedDate ?? new Date(),
         })
 
-        if (routingChanged) {
-          const assignmentPreview = await previewImportedLeadAssignment({
-            externalCampaignId: nextCampaignId ?? undefined,
-            city: processedLeadUpdate.routingCircle ?? null,
-            category: processedLeadUpdate.routingCategory ?? null,
-            assignmentDate:
-              processedLeadUpdate.updateData.assignedDate ?? new Date(),
-          })
-
-          if (!assignmentPreview.assignment) {
-            throw new Error(
-              assignmentPreview.explanation ||
-                'No valid CRM assignment was found for the updated campaign/circle.'
-            )
-          }
-
-          processedLeadUpdate.updateData.bdId = assignmentPreview.assignment.bd.userId
-          processedLeadUpdate.updateData.bdeName = assignmentPreview.assignment.bd.name
-          incomingLeadUpdateData.selectedTeamLeadUserId =
-            assignmentPreview.assignment.teamLead.userId
-          incomingLeadUpdateData.selectedTeamLeadEmployeeId =
-            assignmentPreview.assignment.teamLead.employeeId
-          incomingLeadUpdateData.selectedBdUserId = assignmentPreview.assignment.bd.userId
+        if (!assignmentPreview.assignment) {
+          throw new Error(
+            assignmentPreview.explanation ||
+              'No valid CRM assignment was found for the updated campaign/circle.'
+          )
         }
 
+        processedLeadUpdate.updateData.bdId = assignmentPreview.assignment.bd.userId
+        processedLeadUpdate.updateData.bdeName = assignmentPreview.assignment.bd.name
+        processedLeadUpdate.updateData.teamLeadId =
+          await getLeadTeamLeadIdForAssigneeManager(assignmentPreview.assignment.bd.userId)
+        incomingLeadUpdateData.selectedTeamLeadUserId =
+          assignmentPreview.assignment.teamLead.userId
+        incomingLeadUpdateData.selectedTeamLeadEmployeeId =
+          assignmentPreview.assignment.teamLead.employeeId
+        incomingLeadUpdateData.selectedBdUserId = assignmentPreview.assignment.bd.userId
+      }
+
+      processedLeadUpdateData = processedLeadUpdate.updateData
+    }
+
+    await prisma.$transaction(async (tx) => {
+      if (existing.processedLeadId && processedLeadUpdateData) {
         await tx.lead.update({
           where: { id: existing.processedLeadId },
-          data: processedLeadUpdate.updateData,
+          data: processedLeadUpdateData,
         })
       }
 

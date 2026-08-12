@@ -1,5 +1,6 @@
 import { EmployeeStatus, UserRole } from '@/generated/prisma/client'
 import type { SessionUser } from '@/lib/auth'
+import { formatLeadAssigneeName } from '@/lib/lead-assignee-display'
 import { getCrmLeadRemarkSettings } from '@/lib/crm-lead-remarks'
 import { getEmployeeByUserId, getSubordinates } from '@/lib/hierarchy'
 import { prisma } from '@/lib/prisma'
@@ -10,12 +11,12 @@ const FULL_LEAD_ACCESS_ROLES = new Set<UserRole>([
   'MD',
   'INSURANCE_HEAD',
   'PL_HEAD',
-  'EXECUTIVE_ASSISTANT',
   'TESTER',
   'COMPLIANCE_HEAD',
 ])
 
 const HIERARCHY_LEAD_ACCESS_ROLES = new Set<UserRole>([
+  'EXECUTIVE_ASSISTANT',
   'TEAM_LEAD',
   'CATEGORY_MANAGER',
   'ASSISTANT_CATEGORY_MANAGER',
@@ -26,19 +27,14 @@ const LEAD_STATUS_OVERRIDE_ROLES = new Set<UserRole>(['SUPER_ADMIN', 'ADMIN', 'M
 const LEAD_PROFILE_OVERRIDE_ROLES = new Set<UserRole>(['SUPER_ADMIN', 'ADMIN'])
 
 const LEAD_STATUS_HIERARCHY_ROLES = new Set<UserRole>([
-  'TEAM_LEAD',
-  'CATEGORY_MANAGER',
-  'ASSISTANT_CATEGORY_MANAGER',
-  'SALES_HEAD',
-])
-const LEAD_TRANSFER_CROSS_TEAM_ROLES = new Set<UserRole>([
   'EXECUTIVE_ASSISTANT',
   'TEAM_LEAD',
-  'ASSISTANT_CATEGORY_MANAGER',
   'CATEGORY_MANAGER',
+  'ASSISTANT_CATEGORY_MANAGER',
   'SALES_HEAD',
 ])
 const LEAD_PROFILE_HIERARCHY_ROLES = new Set<UserRole>([
+  'EXECUTIVE_ASSISTANT',
   'TEAM_LEAD',
   'CATEGORY_MANAGER',
   'ASSISTANT_CATEGORY_MANAGER',
@@ -52,6 +48,39 @@ const SALES_ASSIGNABLE_ROLES = new Set<UserRole>([
   'ASSISTANT_CATEGORY_MANAGER',
   'SALES_HEAD',
 ])
+
+const HIERARCHY_ASSIGNABLE_ROLE_SCOPE: Partial<Record<UserRole, UserRole[]>> = {
+  EXECUTIVE_ASSISTANT: [
+    UserRole.SALES_HEAD,
+    UserRole.CATEGORY_MANAGER,
+    UserRole.ASSISTANT_CATEGORY_MANAGER,
+    UserRole.TEAM_LEAD,
+    UserRole.BD,
+  ],
+  SALES_HEAD: [
+    UserRole.SALES_HEAD,
+    UserRole.CATEGORY_MANAGER,
+    UserRole.ASSISTANT_CATEGORY_MANAGER,
+    UserRole.TEAM_LEAD,
+    UserRole.BD,
+  ],
+  CATEGORY_MANAGER: [
+    UserRole.CATEGORY_MANAGER,
+    UserRole.ASSISTANT_CATEGORY_MANAGER,
+    UserRole.TEAM_LEAD,
+    UserRole.BD,
+  ],
+  ASSISTANT_CATEGORY_MANAGER: [
+    UserRole.ASSISTANT_CATEGORY_MANAGER,
+    UserRole.TEAM_LEAD,
+    UserRole.BD,
+  ],
+  TEAM_LEAD: [
+    UserRole.TEAM_LEAD,
+    UserRole.ASSISTANT_CATEGORY_MANAGER,
+    UserRole.BD,
+  ],
+}
 
 const EXECUTIVE_LEAD_HISTORY_ROLES = new Set<UserRole>([
   'SUPER_ADMIN',
@@ -101,6 +130,37 @@ export function buildLeadOwnershipTransferUpdate(nextOwnerUserId: string, assign
     },
     assignedDate: assignedAt,
   } as const
+}
+
+export async function getLeadTeamLeadIdForAssigneeManager(nextOwnerUserId: string) {
+  const assigneeEmployee = await prisma.employee.findUnique({
+    where: { userId: nextOwnerUserId },
+    select: {
+      manager: {
+        select: {
+          bdNumber: true,
+        },
+      },
+    },
+  })
+
+  return assigneeEmployee?.manager?.bdNumber ?? null
+}
+
+export async function buildLeadOwnershipTransferUpdateForAssigneeManager(
+  nextOwnerUserId: string,
+  assignedAt: Date = new Date(),
+) {
+  const update = {
+    ...buildLeadOwnershipTransferUpdate(nextOwnerUserId, assignedAt),
+  } as {
+    bd: { connect: { id: string } }
+    assignedDate: Date
+    teamLeadId?: number | null
+  }
+
+  update.teamLeadId = await getLeadTeamLeadIdForAssigneeManager(nextOwnerUserId)
+  return update
 }
 
 export async function getLeadVisibilityScopeUserIds(
@@ -213,7 +273,7 @@ export async function canUserRemoveLeadRemarks(
 export async function getAssignableLeadUsersForActor(
   user: SessionUser
 ): Promise<AssignableLeadUser[]> {
-  if (LEAD_STATUS_OVERRIDE_ROLES.has(user.role) || LEAD_TRANSFER_CROSS_TEAM_ROLES.has(user.role)) {
+  if (LEAD_STATUS_OVERRIDE_ROLES.has(user.role)) {
     const users = await prisma.user.findMany({
       where: {
         role: { in: Array.from(SALES_ASSIGNABLE_ROLES) },
@@ -239,27 +299,53 @@ export async function getAssignableLeadUsersForActor(
     return []
   }
 
-  if (!LEAD_STATUS_HIERARCHY_ROLES.has(user.role)) {
+  if (!HIERARCHY_LEAD_ACCESS_ROLES.has(user.role)) {
     return []
   }
 
+  const allowedRoles = new Set(HIERARCHY_ASSIGNABLE_ROLE_SCOPE[user.role] ?? [])
   const employee = await getEmployeeByUserId(user.id)
-  if (!employee) {
-    return []
+  const subordinates = employee ? await getSubordinates(employee.id, true) : []
+
+  const assignableUsers = new Map<string, AssignableLeadUser>()
+
+  if (
+    employee?.status === EmployeeStatus.ACTIVE &&
+    allowedRoles.has(user.role) &&
+    SALES_ASSIGNABLE_ROLES.has(user.role)
+  ) {
+    assignableUsers.set(user.id, {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    })
   }
 
-  const subordinates = await getSubordinates(employee.id, true)
+  for (const subordinate of subordinates) {
+    if (subordinate.status !== EmployeeStatus.ACTIVE) continue
+    if (!allowedRoles.has(subordinate.user.role)) continue
+    if (!SALES_ASSIGNABLE_ROLES.has(subordinate.user.role)) continue
 
-  return subordinates
-    .filter((subordinate) => subordinate.user.role !== user.role)
-    .filter((subordinate) => SALES_ASSIGNABLE_ROLES.has(subordinate.user.role))
-    .map((subordinate) => ({
+    assignableUsers.set(subordinate.user.id, {
       id: subordinate.user.id,
       name: subordinate.user.name,
       email: subordinate.user.email,
       role: subordinate.user.role,
-    }))
-    .sort((left, right) => left.name.localeCompare(right.name))
+    })
+  }
+
+  return Array.from(assignableUsers.values()).sort((left, right) =>
+    formatLeadAssigneeName(left.name, left.email).localeCompare(
+      formatLeadAssigneeName(right.name, right.email),
+    )
+  )
+}
+
+export async function getBulkReassignableLeadUsersForActor(
+  user: SessionUser
+): Promise<AssignableLeadUser[]> {
+  return getAssignableLeadUsersForActor(user)
 }
 
 export async function getBulkReassignableBdUsersForActor(

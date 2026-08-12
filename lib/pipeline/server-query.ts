@@ -13,6 +13,10 @@ import {
 } from '@/lib/pipeline-lead-buckets'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
+import {
+  normalizePipelineMonthValue,
+  normalizePipelineSexValue,
+} from '@/lib/pipeline/filter-normalizers'
 import { format } from 'date-fns'
 
 export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd' | 'followUpDate'
@@ -61,7 +65,10 @@ type PipelineDateColumnFilterField =
   | 'createDate'
   | 'modifyDate'
 
-type PipelineMultiColumnFilterField = Exclude<PipelineServerColumnFilterField, PipelineDateColumnFilterField>
+export type PipelineMultiColumnFilterField = Exclude<
+  PipelineServerColumnFilterField,
+  PipelineDateColumnFilterField
+>
 
 export type PipelineServerColumnFilter =
   | {
@@ -675,16 +682,33 @@ export const pipelineTableSelect = {
 
 type PipelineSelectedLead = Prisma.LeadGetPayload<{ select: typeof pipelineTableSelect }>
 
-function formatPipelineTableDate(value: unknown) {
-  if (!value) return '—'
-  const parsed = new Date(String(value))
-  return Number.isNaN(parsed.getTime()) ? String(value) : format(parsed, 'dd MMM yyyy')
-}
+function sortPipelineFacetValues(
+  field: PipelineMultiColumnFilterField,
+  values: Iterable<string>,
+) {
+  const items = [...values]
 
-function formatPipelineMonthCell(value: unknown) {
-  if (!value) return '—'
-  if (typeof value === 'string') return value.trim() || '—'
-  return formatPipelineTableDate(value)
+  if (field === 'age' || field === 'dupCount') {
+    return items.sort((left, right) => {
+      const leftNumber = Number.parseInt(left, 10)
+      const rightNumber = Number.parseInt(right, 10)
+      const leftIsNumber = !Number.isNaN(leftNumber)
+      const rightIsNumber = !Number.isNaN(rightNumber)
+
+      if (leftIsNumber && rightIsNumber) {
+        return leftNumber - rightNumber
+      }
+
+      if (leftIsNumber) return -1
+      if (rightIsNumber) return 1
+
+      return left.localeCompare(right, undefined, { sensitivity: 'base' })
+    })
+  }
+
+  return items.sort((left, right) =>
+    left.localeCompare(right, undefined, { sensitivity: 'base' }),
+  )
 }
 
 function normalizePipelineText(value: unknown, fallback: string) {
@@ -753,11 +777,11 @@ function getPipelineLeadColumnFilterValue(
     case 'patient':
       return typeof lead.patientName === 'string' ? lead.patientName : '—'
     case 'month':
-      return formatPipelineMonthCell(lead.month)
+      return normalizePipelineMonthValue(lead.month)
     case 'age':
       return lead.age != null ? String(lead.age) : '—'
     case 'sex':
-      return normalizePipelineText(lead.sex, '—')
+      return normalizePipelineSexValue(lead.sex)
     case 'circle':
       return normalizePipelineText(lead.circle, 'Unknown')
     case 'city':
@@ -805,6 +829,26 @@ function getPipelineLeadColumnFilterValue(
     default:
       return '—'
   }
+}
+
+export function buildPipelineColumnFacets(leads: PipelineSelectedLead[]) {
+  const facets = {} as Record<PipelineMultiColumnFilterField, string[]>
+
+  for (const field of PIPELINE_MULTI_COLUMN_FILTER_FIELDS) {
+    const values = new Set<string>()
+
+    for (const lead of leads) {
+      const value = getPipelineLeadColumnFilterValue(lead, field)
+      const normalized = value.trim()
+      if (normalized.length > 0) {
+        values.add(normalized)
+      }
+    }
+
+    facets[field] = sortPipelineFacetValues(field, values)
+  }
+
+  return facets
 }
 
 export function applyPipelineColumnFilters(

@@ -917,7 +917,17 @@ export default function PatientDetailsPage() {
     (isSalesLeadWorkerRole(user.role) || user.role === 'ADMIN')
   const canFillIPDCash = !readOnly && !!user && canFillIPDCashForm(user as any, lead)
   const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
-  const canMarkIpdPotential = !readOnly && user?.role === 'BD' && !lead.ipdPotentialDate
+  const canMarkIpdPotential =
+    !readOnly &&
+    !!user &&
+    (
+      user.role === 'BD' ||
+      user.role === 'TEAM_LEAD' ||
+      user.role === 'CATEGORY_MANAGER' ||
+      user.role === 'SALES_HEAD' ||
+      user.role === 'EXECUTIVE_ASSISTANT'
+    ) &&
+    !lead.ipdPotentialDate
   const displayStatus = normalizeLeadStatus(lead.status)
   const effectiveOpdAppointments = (lead.effectiveOpdAppointments ?? []) as EffectiveOpdEntry[]
   const opdCounts = lead.opdCounts ?? getEffectiveOpdCounts(effectiveOpdAppointments)
@@ -2975,7 +2985,7 @@ export default function PatientDetailsPage() {
             <DialogHeader>
               <DialogTitle>Mark IPD Possibility</DialogTitle>
               <DialogDescription>
-                Set the date by which this patient is likely to convert to IPD. Once saved, BD users cannot edit or delete it.
+                Set the date by which this patient is likely to convert to IPD. Once saved, it cannot be edited or deleted.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">

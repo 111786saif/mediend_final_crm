@@ -30,8 +30,14 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    if (user.role !== 'BD') {
-      return errorResponse('Only BD users can mark IPD possibility', 403)
+    if (
+      user.role !== 'BD' &&
+      user.role !== 'TEAM_LEAD' &&
+      user.role !== 'CATEGORY_MANAGER' &&
+      user.role !== 'SALES_HEAD' &&
+      user.role !== 'EXECUTIVE_ASSISTANT'
+    ) {
+      return errorResponse('Only authorized sales users can mark IPD possibility', 403)
     }
 
     const { id: leadId } = await params

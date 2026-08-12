@@ -9,6 +9,7 @@ import {
 import type { CrmAssignmentDryRunResult } from '@/lib/crm-assignment'
 import { employeeHasAnyCircle, employeeHasCircle, parseEmployeeCircleList } from '@/lib/employee-circles'
 import { getManagementChain } from '@/lib/hierarchy'
+import { getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
 import { prisma } from '@/lib/prisma'
 import { resolveInboundSubStatus } from '@/lib/sub-status'
 import {
@@ -1445,6 +1446,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
     cleanStr(campaign.leadSource.name) ??
     cleanStr(campaign.displayName) ??
     cleanStr(input.campaignName)
+  const teamLeadId = await getLeadTeamLeadIdForAssigneeManager(selectedBd.userId)
 
   const lead = await prisma.lead.create({
     data: {
@@ -1472,6 +1474,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       circle: finalCircle,
       bdeName: selectedBd.user.name,
       bdId: selectedBd.userId,
+      teamLeadId,
       duplCount: 0,
     },
     select: {

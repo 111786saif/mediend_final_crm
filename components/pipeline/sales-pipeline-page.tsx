@@ -47,8 +47,17 @@ import {
   normalizeLeadStatus,
   type LeadAgeFilter,
 } from '@/lib/pipeline-lead-buckets'
-import type { PipelineSortDir, PipelineSortField } from '@/lib/pipeline/server-query'
-import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
+import type {
+  PipelineMultiColumnFilterField,
+  PipelineSortDir,
+  PipelineSortField,
+} from '@/lib/pipeline/server-query'
+import {
+  PIPELINE_MONTH_FILTER_OPTIONS,
+  normalizePipelineSexValue,
+  normalizePipelineMonthValue,
+} from '@/lib/pipeline/filter-normalizers'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import {
@@ -144,6 +153,24 @@ function uniqueSorted(values: (string | null | undefined)[]): string[] {
 
 function mergeUniqueSortedLists(...lists: Array<readonly string[] | undefined>) {
   return uniqueSorted(lists.flatMap((list) => list ?? []))
+}
+
+function numericStringSorted(values: readonly string[]) {
+  return [...new Set(values)].sort((left, right) => {
+    const leftNumber = Number.parseInt(left, 10)
+    const rightNumber = Number.parseInt(right, 10)
+    const leftIsNumber = !Number.isNaN(leftNumber)
+    const rightIsNumber = !Number.isNaN(rightNumber)
+
+    if (leftIsNumber && rightIsNumber) {
+      return leftNumber - rightNumber
+    }
+
+    if (leftIsNumber) return -1
+    if (rightIsNumber) return 1
+
+    return left.localeCompare(right, undefined, { sensitivity: 'base' })
+  })
 }
 
 function normalizedText(value: unknown, fallback: string): string {
@@ -469,11 +496,11 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'patient':
       return typeof lead.patientName === 'string' ? lead.patientName : '—'
     case 'month':
-      return formatMonthCell(lead.month)
+      return normalizePipelineMonthValue(lead.month)
     case 'age':
       return lead.age != null ? String(lead.age) : '—'
     case 'sex':
-      return normalizedText(lead.sex, '—')
+      return normalizePipelineSexValue(lead.sex)
     case 'circle':
       return normalizedText(lead.circle, 'Unknown')
     case 'city':
@@ -751,12 +778,18 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
   const rawPageLeads: Lead[] = useMemo(() => data?.leads ?? [], [data?.leads])
 
-  // Column filter dropdown option lists — built from the current page only.
+  // Column filter dropdown option lists — sourced from server facets across the
+  // full matching dataset, then merged with page/master values where useful.
   const columnFilterOptions = useMemo(() => {
     const options = Object.fromEntries(
       availableColumns.map((column) => [
         column.id,
-        uniqueSorted(rawPageLeads.map((lead) => getPipelineColumnFilterValue(lead, column.id))),
+        isPipelineDateFilterColumn(column.id)
+          ? []
+          : uniqueSorted(
+              data?.facets.columnFacets?.[column.id as PipelineMultiColumnFilterField] ??
+                rawPageLeads.map((lead) => getPipelineColumnFilterValue(lead, column.id))
+            ),
       ])
     ) as Record<PipelineColumnId, string[]>
 
@@ -777,6 +810,9 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     options.hospital = mergeUniqueSortedLists(hospitalMasterOptions, options.hospital)
     options.doctor = mergeUniqueSortedLists(doctorMasterOptions, options.doctor)
     options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
+    options.age = numericStringSorted(options.age)
+    options.sex = uniqueSorted(options.sex.map((value) => normalizePipelineSexValue(value)))
+    options.month = [...PIPELINE_MONTH_FILTER_OPTIONS]
     options.circle = mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
     options.category = mergeUniqueSortedLists(data?.facets.categories ?? [], options.category)
     options.bd = mergeUniqueSortedLists(
@@ -792,6 +828,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     availableColumns,
     data?.facets.bds,
     data?.facets.categories,
+    data?.facets.columnFacets,
     data?.facets.circles,
     rawPageLeads,
     treatmentMasterData,
@@ -1562,11 +1599,6 @@ type PipelineCaseAction = {
   id: 'opd-schedule' | 'card-upload' | 'pre-auth-raised' | 'ipd-schedule'
   label: string
   href: string
-}
-
-function isInsuranceModeOfPayment(modeOfPayment: unknown) {
-  const normalized = normalizeModeOfPaymentKey(modeOfPayment)
-  return normalized === 'cashless' || normalized === 'reimbursement'
 }
 
 function canShowPipelineOpdSchedule(lead: Lead) {

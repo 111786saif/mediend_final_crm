@@ -29,6 +29,10 @@ import {
   CRM_MODE_OF_PAYMENT_OPTIONS,
 } from '@/lib/lead-status-options'
 import {
+  formatLeadAssigneeName,
+  formatLeadAssigneeRoleLabel,
+} from '@/lib/lead-assignee-display'
+import {
   isStatusRequiringFollowUpDate,
   isStatusRequiringModeOfPayment,
 } from '@/lib/lead-status-rules'
@@ -87,10 +91,7 @@ export function BulkLeadReassignDialog({
   const [leadQuery, setLeadQuery] = useState('')
   const [bdPickerOpen, setBdPickerOpen] = useState(false)
   const [bdQuery, setBdQuery] = useState('')
-  const bdAssignableUsers = useMemo(
-    () => assignableUsers.filter((user) => user.role === 'BD'),
-    [assignableUsers]
-  )
+  const reassignableUsers = useMemo(() => assignableUsers, [assignableUsers])
 
   const selectedLeadSummary = useMemo(
     () =>
@@ -121,25 +122,27 @@ export function BulkLeadReassignDialog({
   const selectedBdUsers = useMemo(
     () =>
       selectedBdUserIds
-        .map((userId) => bdAssignableUsers.find((user) => user.id === userId))
+        .map((userId) => reassignableUsers.find((user) => user.id === userId))
         .filter((user): user is AssignableUser => Boolean(user)),
-    [bdAssignableUsers, selectedBdUserIds]
+    [reassignableUsers, selectedBdUserIds]
   )
 
   const filteredAssignableUsers = useMemo(() => {
     const query = bdQuery.trim().toLowerCase()
-    if (!query) return bdAssignableUsers
+    if (!query) return reassignableUsers
 
-    return bdAssignableUsers.filter((user) => {
-      const label = `${user.name} ${user.email} ${user.role}`.toLowerCase()
+    return reassignableUsers.filter((user) => {
+      const label = `${formatLeadAssigneeName(user.name, user.email)} ${user.email} ${formatLeadAssigneeRoleLabel(user.role) ?? ''}`.toLowerCase()
       return label.includes(query)
     })
-  }, [bdAssignableUsers, bdQuery])
+  }, [reassignableUsers, bdQuery])
 
   const selectedBdButtonLabel = useMemo(() => {
-    if (selectedBdUsers.length === 0) return 'Select BDs'
-    if (selectedBdUsers.length === 1) return selectedBdUsers[0]?.name || '1 BD selected'
-    return `${selectedBdUsers.length} BDs selected`
+    if (selectedBdUsers.length === 0) return 'Select assignees'
+    if (selectedBdUsers.length === 1) {
+      return formatLeadAssigneeName(selectedBdUsers[0]?.name, selectedBdUsers[0]?.email)
+    }
+    return `${selectedBdUsers.length} assignees selected`
   }, [selectedBdUsers])
   const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(leadStatus)
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(leadStatus)
@@ -219,7 +222,7 @@ export function BulkLeadReassignDialog({
         <DialogHeader>
           <DialogTitle>Bulk Lead Reassignment</DialogTitle>
           <DialogDescription>
-            Reassign leads in round-robin BD order and pause after each full BD cycle.
+            Reassign leads in round-robin assignee order and pause after each full cycle.
           </DialogDescription>
         </DialogHeader>
 
@@ -316,7 +319,7 @@ export function BulkLeadReassignDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="bulk-reassign-bds">BDs</Label>
+            <Label htmlFor="bulk-reassign-bds">Assign to</Label>
             <Popover open={bdPickerOpen} onOpenChange={setBdPickerOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -338,7 +341,7 @@ export function BulkLeadReassignDialog({
                   <Input
                     value={bdQuery}
                     onChange={(event) => setBdQuery(event.target.value)}
-                    placeholder="Search BD name or email"
+                    placeholder="Search assignee name or email"
                     className="h-8"
                   />
                 </div>
@@ -353,7 +356,7 @@ export function BulkLeadReassignDialog({
                 <ScrollArea className="h-[260px] overscroll-contain">
                   <div className="p-1">
                   {filteredAssignableUsers.length === 0 ? (
-                    <p className="px-2 py-4 text-center text-xs text-muted-foreground">No BDs found</p>
+                    <p className="px-2 py-4 text-center text-xs text-muted-foreground">No assignees found</p>
                   ) : (
                     filteredAssignableUsers.map((assignableUser) => {
                       const checked = selectedBdUserIds.includes(assignableUser.id)
@@ -370,10 +373,14 @@ export function BulkLeadReassignDialog({
                             className="mt-0.5"
                           />
                           <span className="min-w-0 flex-1">
-                            <span className="block truncate">{assignableUser.name}</span>
+                            <span className="block truncate">
+                              {formatLeadAssigneeName(assignableUser.name, assignableUser.email)}
+                            </span>
                             <span className="block truncate text-xs text-muted-foreground">
                               {assignableUser.email}
-                              {assignableUser.role ? ` · ${assignableUser.role}` : ''}
+                              {assignableUser.role
+                                ? ` · ${formatLeadAssigneeRoleLabel(assignableUser.role)}`
+                                : ''}
                             </span>
                           </span>
                           <Check className={cn('mt-0.5 h-3.5 w-3.5 text-primary', checked ? 'opacity-100' : 'opacity-0')} />
@@ -387,7 +394,12 @@ export function BulkLeadReassignDialog({
             </Popover>
             <Textarea
               id="bulk-reassign-bds-summary"
-              value={selectedBdUsers.map((user, index) => `${index + 1}. ${user.name}`).join('\n')}
+              value={selectedBdUsers
+                .map(
+                  (user, index) =>
+                    `${index + 1}. ${formatLeadAssigneeName(user.name, user.email)}`
+                )
+                .join('\n')}
               readOnly
               rows={Math.max(3, Math.min(6, selectedBdUsers.length || 3))}
               className="resize-none"

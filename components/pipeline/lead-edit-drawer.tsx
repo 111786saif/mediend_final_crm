@@ -18,6 +18,10 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import {
+  formatLeadAssigneeName,
+  formatLeadAssigneeRoleLabel,
+} from '@/lib/lead-assignee-display'
 import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { KnowlarityCallRecordingsCard } from '@/components/telephony/knowlarity-call-recordings-card'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
@@ -214,14 +218,6 @@ function ReadonlyField({
   )
 }
 
-function formatRoleLabel(role: string | null | undefined) {
-  if (!role) return null
-  return role
-    .split('_')
-    .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
-    .join(' ')
-}
-
 function getInitials(name: string) {
   const parts = name
     .split(/\s+/)
@@ -357,10 +353,13 @@ export function LeadEditDrawer({
   const canUpdateLeadStatus = leadOwnershipMeta?.canUpdateStatus ?? false
   const canReassignLead = leadOwnershipMeta?.canReassign ?? false
   const currentAssigneeId = leadOwnershipMeta?.currentAssigneeId ?? lead?.bd?.id ?? ''
+  const currentAssigneeRecord =
+    lead?.bd
+      ? { name: lead.bd.name, email: null }
+      : (leadOwnershipMeta?.assignableUsers.find((assignableUser) => assignableUser.id === currentAssigneeId) ??
+        null)
   const currentAssigneeName =
-    lead?.bd?.name ??
-    leadOwnershipMeta?.assignableUsers.find((assignableUser) => assignableUser.id === currentAssigneeId)?.name ??
-    'Unassigned'
+    formatLeadAssigneeName(currentAssigneeRecord?.name, currentAssigneeRecord?.email)
 
   const currentStatus = lead?.status ?? 'New'
   const currentFollowUpDate = toDateInputValue(lead?.followUpDate)
@@ -754,14 +753,16 @@ export function LeadEditDrawer({
                         onValueChange={setAssigneeIdDraft}
                         disabled={!canReassignLead || saving || assigneeOptions.length === 0}
                       >
-                        <SelectTrigger id="drawer-assign-to">
-                          <SelectValue placeholder="Select assignee" />
-                        </SelectTrigger>
+                          <SelectTrigger id="drawer-assign-to">
+                            <SelectValue placeholder="Select assignee" />
+                          </SelectTrigger>
                         <SelectContent>
                           {assigneeOptions.map((assignableUser) => (
                             <SelectItem key={assignableUser.id} value={assignableUser.id}>
-                              {assignableUser.name}
-                              {assignableUser.role ? ` · ${assignableUser.role}` : ''}
+                              {formatLeadAssigneeName(assignableUser.name, assignableUser.email)}
+                              {assignableUser.role
+                                ? ` · ${formatLeadAssigneeRoleLabel(assignableUser.role)}`
+                                : ''}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -1173,7 +1174,7 @@ export function LeadEditDrawer({
                                         {entry.changedBy?.name ? (
                                           <span>
                                             By {entry.changedBy.name}
-                                            {entry.changedBy.role ? ` · ${formatRoleLabel(entry.changedBy.role)}` : ''}
+                                            {entry.changedBy.role ? ` · ${formatLeadAssigneeRoleLabel(entry.changedBy.role)}` : ''}
                                           </span>
                                         ) : null}
                                         {entry.automatic ? <span>Automatic</span> : null}
@@ -1215,7 +1216,7 @@ export function LeadEditDrawer({
                                     activityLog.actorUser?.name ||
                                     activityLog.actorUser?.email ||
                                     'System'
-                                  const actorRole = formatRoleLabel(activityLog.actorRole)
+                                  const actorRole = formatLeadAssigneeRoleLabel(activityLog.actorRole)
 
                                   return (
                                     <div
