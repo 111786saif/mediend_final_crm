@@ -67,11 +67,11 @@ export type PreAuthorizationMinAggregateOutputType = {
   rejectionLetterUrl: string | null
   approvedAt: Date | null
   rejectedAt: Date | null
-  holdReason: string | null
-  heldAt: Date | null
-  heldById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  heldAt: Date | null
+  heldById: string | null
+  holdReason: string | null
 }
 
 export type PreAuthorizationMaxAggregateOutputType = {
@@ -107,11 +107,11 @@ export type PreAuthorizationMaxAggregateOutputType = {
   rejectionLetterUrl: string | null
   approvedAt: Date | null
   rejectedAt: Date | null
-  holdReason: string | null
-  heldAt: Date | null
-  heldById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  heldAt: Date | null
+  heldById: string | null
+  holdReason: string | null
 }
 
 export type PreAuthorizationCountAggregateOutputType = {
@@ -152,11 +152,11 @@ export type PreAuthorizationCountAggregateOutputType = {
   rejectionLetterUrl: number
   approvedAt: number
   rejectedAt: number
-  holdReason: number
-  heldAt: number
-  heldById: number
   createdAt: number
   updatedAt: number
+  heldAt: number
+  heldById: number
+  holdReason: number
   _all: number
 }
 
@@ -202,11 +202,11 @@ export type PreAuthorizationMinAggregateInputType = {
   rejectionLetterUrl?: true
   approvedAt?: true
   rejectedAt?: true
-  holdReason?: true
-  heldAt?: true
-  heldById?: true
   createdAt?: true
   updatedAt?: true
+  heldAt?: true
+  heldById?: true
+  holdReason?: true
 }
 
 export type PreAuthorizationMaxAggregateInputType = {
@@ -242,11 +242,11 @@ export type PreAuthorizationMaxAggregateInputType = {
   rejectionLetterUrl?: true
   approvedAt?: true
   rejectedAt?: true
-  holdReason?: true
-  heldAt?: true
-  heldById?: true
   createdAt?: true
   updatedAt?: true
+  heldAt?: true
+  heldById?: true
+  holdReason?: true
 }
 
 export type PreAuthorizationCountAggregateInputType = {
@@ -287,11 +287,11 @@ export type PreAuthorizationCountAggregateInputType = {
   rejectionLetterUrl?: true
   approvedAt?: true
   rejectedAt?: true
-  holdReason?: true
-  heldAt?: true
-  heldById?: true
   createdAt?: true
   updatedAt?: true
+  heldAt?: true
+  heldById?: true
+  holdReason?: true
   _all?: true
 }
 
@@ -419,11 +419,11 @@ export type PreAuthorizationGroupByOutputType = {
   rejectionLetterUrl: string | null
   approvedAt: Date | null
   rejectedAt: Date | null
-  holdReason: string | null
-  heldAt: Date | null
-  heldById: string | null
   createdAt: Date
   updatedAt: Date
+  heldAt: Date | null
+  heldById: string | null
+  holdReason: string | null
   _count: PreAuthorizationCountAggregateOutputType | null
   _avg: PreAuthorizationAvgAggregateOutputType | null
   _sum: PreAuthorizationSumAggregateOutputType | null
@@ -487,18 +487,18 @@ export type PreAuthorizationWhereInput = {
   rejectionLetterUrl?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
   rejectedAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
-  holdReason?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
-  heldAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
-  heldById?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PreAuthorization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PreAuthorization"> | Date | string
-  kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionScalarRelationFilter, Prisma.KYPSubmissionWhereInput>
-  preAuthRaisedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  heldAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
+  heldById?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
+  holdReason?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionListRelationFilter
+  queries?: Prisma.InsuranceQueryListRelationFilter
+  pdfVersions?: Prisma.PreAuthPDFListRelationFilter
   handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   heldBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  queries?: Prisma.InsuranceQueryListRelationFilter
-  suggestedHospitals?: Prisma.HospitalSuggestionListRelationFilter
-  pdfVersions?: Prisma.PreAuthPDFListRelationFilter
+  kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionScalarRelationFilter, Prisma.KYPSubmissionWhereInput>
+  preAuthRaisedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type PreAuthorizationOrderByWithRelationInput = {
@@ -539,18 +539,18 @@ export type PreAuthorizationOrderByWithRelationInput = {
   rejectionLetterUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  holdReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  heldAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  heldById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  kypSubmission?: Prisma.KYPSubmissionOrderByWithRelationInput
-  preAuthRaisedBy?: Prisma.UserOrderByWithRelationInput
+  heldAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  heldById?: Prisma.SortOrderInput | Prisma.SortOrder
+  holdReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  suggestedHospitals?: Prisma.HospitalSuggestionOrderByRelationAggregateInput
+  queries?: Prisma.InsuranceQueryOrderByRelationAggregateInput
+  pdfVersions?: Prisma.PreAuthPDFOrderByRelationAggregateInput
   handledBy?: Prisma.UserOrderByWithRelationInput
   heldBy?: Prisma.UserOrderByWithRelationInput
-  queries?: Prisma.InsuranceQueryOrderByRelationAggregateInput
-  suggestedHospitals?: Prisma.HospitalSuggestionOrderByRelationAggregateInput
-  pdfVersions?: Prisma.PreAuthPDFOrderByRelationAggregateInput
+  kypSubmission?: Prisma.KYPSubmissionOrderByWithRelationInput
+  preAuthRaisedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PreAuthorizationWhereUniqueInput = Prisma.AtLeast<{
@@ -594,18 +594,18 @@ export type PreAuthorizationWhereUniqueInput = Prisma.AtLeast<{
   rejectionLetterUrl?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
   rejectedAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
-  holdReason?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
-  heldAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
-  heldById?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PreAuthorization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PreAuthorization"> | Date | string
-  kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionScalarRelationFilter, Prisma.KYPSubmissionWhereInput>
-  preAuthRaisedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  heldAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
+  heldById?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
+  holdReason?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionListRelationFilter
+  queries?: Prisma.InsuranceQueryListRelationFilter
+  pdfVersions?: Prisma.PreAuthPDFListRelationFilter
   handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   heldBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  queries?: Prisma.InsuranceQueryListRelationFilter
-  suggestedHospitals?: Prisma.HospitalSuggestionListRelationFilter
-  pdfVersions?: Prisma.PreAuthPDFListRelationFilter
+  kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionScalarRelationFilter, Prisma.KYPSubmissionWhereInput>
+  preAuthRaisedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "kypSubmissionId">
 
 export type PreAuthorizationOrderByWithAggregationInput = {
@@ -646,11 +646,11 @@ export type PreAuthorizationOrderByWithAggregationInput = {
   rejectionLetterUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  holdReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  heldAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  heldById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  heldAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  heldById?: Prisma.SortOrderInput | Prisma.SortOrder
+  holdReason?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PreAuthorizationCountOrderByAggregateInput
   _avg?: Prisma.PreAuthorizationAvgOrderByAggregateInput
   _max?: Prisma.PreAuthorizationMaxOrderByAggregateInput
@@ -699,11 +699,11 @@ export type PreAuthorizationScalarWhereWithAggregatesInput = {
   rejectionLetterUrl?: Prisma.StringNullableWithAggregatesFilter<"PreAuthorization"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PreAuthorization"> | Date | string | null
   rejectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PreAuthorization"> | Date | string | null
-  holdReason?: Prisma.StringNullableWithAggregatesFilter<"PreAuthorization"> | string | null
-  heldAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PreAuthorization"> | Date | string | null
-  heldById?: Prisma.StringNullableWithAggregatesFilter<"PreAuthorization"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PreAuthorization"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PreAuthorization"> | Date | string
+  heldAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PreAuthorization"> | Date | string | null
+  heldById?: Prisma.StringNullableWithAggregatesFilter<"PreAuthorization"> | string | null
+  holdReason?: Prisma.StringNullableWithAggregatesFilter<"PreAuthorization"> | string | null
 }
 
 export type PreAuthorizationCreateInput = {
@@ -741,17 +741,17 @@ export type PreAuthorizationCreateInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
-  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
+  heldAt?: Date | string | null
+  holdReason?: string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
+  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
   handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
   heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
-  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
-  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
-  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
+  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
+  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
 }
 
 export type PreAuthorizationUncheckedCreateInput = {
@@ -792,13 +792,13 @@ export type PreAuthorizationUncheckedCreateInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutPreAuthorizationInput
 }
 
@@ -837,17 +837,17 @@ export type PreAuthorizationUpdateInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
-  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
+  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
   handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
   heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
-  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
-  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
-  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
+  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
 }
 
 export type PreAuthorizationUncheckedUpdateInput = {
@@ -888,13 +888,13 @@ export type PreAuthorizationUncheckedUpdateInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutPreAuthorizationNestedInput
 }
 
@@ -936,11 +936,11 @@ export type PreAuthorizationCreateManyInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
 }
 
 export type PreAuthorizationUpdateManyMutationInput = {
@@ -978,10 +978,10 @@ export type PreAuthorizationUpdateManyMutationInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PreAuthorizationUncheckedUpdateManyInput = {
@@ -1022,11 +1022,11 @@ export type PreAuthorizationUncheckedUpdateManyInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PreAuthorizationListRelationFilter = {
@@ -1082,11 +1082,11 @@ export type PreAuthorizationCountOrderByAggregateInput = {
   rejectionLetterUrl?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   rejectedAt?: Prisma.SortOrder
-  holdReason?: Prisma.SortOrder
-  heldAt?: Prisma.SortOrder
-  heldById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  heldAt?: Prisma.SortOrder
+  heldById?: Prisma.SortOrder
+  holdReason?: Prisma.SortOrder
 }
 
 export type PreAuthorizationAvgOrderByAggregateInput = {
@@ -1126,11 +1126,11 @@ export type PreAuthorizationMaxOrderByAggregateInput = {
   rejectionLetterUrl?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   rejectedAt?: Prisma.SortOrder
-  holdReason?: Prisma.SortOrder
-  heldAt?: Prisma.SortOrder
-  heldById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  heldAt?: Prisma.SortOrder
+  heldById?: Prisma.SortOrder
+  holdReason?: Prisma.SortOrder
 }
 
 export type PreAuthorizationMinOrderByAggregateInput = {
@@ -1166,11 +1166,11 @@ export type PreAuthorizationMinOrderByAggregateInput = {
   rejectionLetterUrl?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
   rejectedAt?: Prisma.SortOrder
-  holdReason?: Prisma.SortOrder
-  heldAt?: Prisma.SortOrder
-  heldById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  heldAt?: Prisma.SortOrder
+  heldById?: Prisma.SortOrder
+  holdReason?: Prisma.SortOrder
 }
 
 export type PreAuthorizationSumOrderByAggregateInput = {
@@ -1421,16 +1421,16 @@ export type PreAuthorizationCreateWithoutHandledByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  heldAt?: Date | string | null
+  holdReason?: string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
+  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
+  heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
   kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
   preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
-  heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
-  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
-  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
-  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
 }
 
 export type PreAuthorizationUncheckedCreateWithoutHandledByInput = {
@@ -1470,13 +1470,13 @@ export type PreAuthorizationUncheckedCreateWithoutHandledByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutPreAuthorizationInput
 }
 
@@ -1525,16 +1525,16 @@ export type PreAuthorizationCreateWithoutHeldByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  heldAt?: Date | string | null
+  holdReason?: string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
+  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
+  handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
   kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
   preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
-  handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
-  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
-  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
-  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
 }
 
 export type PreAuthorizationUncheckedCreateWithoutHeldByInput = {
@@ -1575,12 +1575,12 @@ export type PreAuthorizationUncheckedCreateWithoutHeldByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
+  heldAt?: Date | string | null
+  holdReason?: string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutPreAuthorizationInput
 }
 
@@ -1629,16 +1629,16 @@ export type PreAuthorizationCreateWithoutPreAuthRaisedByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
+  heldAt?: Date | string | null
+  holdReason?: string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
+  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
   handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
   heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
-  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
-  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
-  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
+  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
 }
 
 export type PreAuthorizationUncheckedCreateWithoutPreAuthRaisedByInput = {
@@ -1678,13 +1678,13 @@ export type PreAuthorizationUncheckedCreateWithoutPreAuthRaisedByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutPreAuthorizationInput
 }
 
@@ -1755,11 +1755,11 @@ export type PreAuthorizationScalarWhereInput = {
   rejectionLetterUrl?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
   rejectedAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
-  holdReason?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
-  heldAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
-  heldById?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PreAuthorization"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PreAuthorization"> | Date | string
+  heldAt?: Prisma.DateTimeNullableFilter<"PreAuthorization"> | Date | string | null
+  heldById?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
+  holdReason?: Prisma.StringNullableFilter<"PreAuthorization"> | string | null
 }
 
 export type PreAuthorizationUpsertWithWhereUniqueWithoutHeldByInput = {
@@ -1829,16 +1829,16 @@ export type PreAuthorizationCreateWithoutKypSubmissionInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
+  heldAt?: Date | string | null
+  holdReason?: string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
+  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
   handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
   heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
-  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
-  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
-  pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
+  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
 }
 
 export type PreAuthorizationUncheckedCreateWithoutKypSubmissionInput = {
@@ -1878,13 +1878,13 @@ export type PreAuthorizationUncheckedCreateWithoutKypSubmissionInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutPreAuthorizationInput
 }
 
@@ -1939,16 +1939,16 @@ export type PreAuthorizationUpdateWithoutKypSubmissionInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
+  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
   handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
   heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
-  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
-  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
-  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
+  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
 }
 
 export type PreAuthorizationUncheckedUpdateWithoutKypSubmissionInput = {
@@ -1988,13 +1988,13 @@ export type PreAuthorizationUncheckedUpdateWithoutKypSubmissionInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutPreAuthorizationNestedInput
 }
 
@@ -2033,16 +2033,16 @@ export type PreAuthorizationCreateWithoutSuggestedHospitalsInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
-  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
-  handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
-  heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
+  heldAt?: Date | string | null
+  holdReason?: string | null
   queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
   pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
+  handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
+  heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
+  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
+  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
 }
 
 export type PreAuthorizationUncheckedCreateWithoutSuggestedHospitalsInput = {
@@ -2083,11 +2083,11 @@ export type PreAuthorizationUncheckedCreateWithoutSuggestedHospitalsInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
   queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutPreAuthorizationInput
 }
@@ -2143,16 +2143,16 @@ export type PreAuthorizationUpdateWithoutSuggestedHospitalsInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
-  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
-  handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
-  heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
   pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
+  handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
+  heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
+  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
 }
 
 export type PreAuthorizationUncheckedUpdateWithoutSuggestedHospitalsInput = {
@@ -2193,11 +2193,11 @@ export type PreAuthorizationUncheckedUpdateWithoutSuggestedHospitalsInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutPreAuthorizationNestedInput
 }
@@ -2237,16 +2237,16 @@ export type PreAuthorizationCreateWithoutQueriesInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
-  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
-  handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
-  heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
+  heldAt?: Date | string | null
+  holdReason?: string | null
   suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
   pdfVersions?: Prisma.PreAuthPDFCreateNestedManyWithoutPreAuthorizationInput
+  handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
+  heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
+  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
+  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
 }
 
 export type PreAuthorizationUncheckedCreateWithoutQueriesInput = {
@@ -2287,11 +2287,11 @@ export type PreAuthorizationUncheckedCreateWithoutQueriesInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedCreateNestedManyWithoutPreAuthInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutPreAuthorizationInput
 }
@@ -2347,16 +2347,16 @@ export type PreAuthorizationUpdateWithoutQueriesInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
-  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
-  handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
-  heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
   pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
+  handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
+  heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
+  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
 }
 
 export type PreAuthorizationUncheckedUpdateWithoutQueriesInput = {
@@ -2397,11 +2397,11 @@ export type PreAuthorizationUncheckedUpdateWithoutQueriesInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedUpdateManyWithoutPreAuthNestedInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutPreAuthorizationNestedInput
 }
@@ -2441,16 +2441,16 @@ export type PreAuthorizationCreateWithoutPdfVersionsInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
-  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
+  heldAt?: Date | string | null
+  holdReason?: string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
   handledBy?: Prisma.UserCreateNestedOneWithoutPreAuthHandledInput
   heldBy?: Prisma.UserCreateNestedOneWithoutPreAuthHeldInput
-  queries?: Prisma.InsuranceQueryCreateNestedManyWithoutPreAuthorizationInput
-  suggestedHospitals?: Prisma.HospitalSuggestionCreateNestedManyWithoutPreAuthInput
+  kypSubmission: Prisma.KYPSubmissionCreateNestedOneWithoutPreAuthDataInput
+  preAuthRaisedBy?: Prisma.UserCreateNestedOneWithoutPreAuthsRaisedInput
 }
 
 export type PreAuthorizationUncheckedCreateWithoutPdfVersionsInput = {
@@ -2491,13 +2491,13 @@ export type PreAuthorizationUncheckedCreateWithoutPdfVersionsInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedCreateNestedManyWithoutPreAuthInput
+  queries?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutPreAuthorizationInput
 }
 
 export type PreAuthorizationCreateOrConnectWithoutPdfVersionsInput = {
@@ -2551,16 +2551,16 @@ export type PreAuthorizationUpdateWithoutPdfVersionsInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
-  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
   handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
   heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
-  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
-  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
+  preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
 }
 
 export type PreAuthorizationUncheckedUpdateWithoutPdfVersionsInput = {
@@ -2601,13 +2601,13 @@ export type PreAuthorizationUncheckedUpdateWithoutPdfVersionsInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
 }
 
 export type PreAuthorizationCreateManyHandledByInput = {
@@ -2647,11 +2647,11 @@ export type PreAuthorizationCreateManyHandledByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
 }
 
 export type PreAuthorizationCreateManyHeldByInput = {
@@ -2692,10 +2692,10 @@ export type PreAuthorizationCreateManyHeldByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  heldAt?: Date | string | null
+  holdReason?: string | null
 }
 
 export type PreAuthorizationCreateManyPreAuthRaisedByInput = {
@@ -2735,11 +2735,11 @@ export type PreAuthorizationCreateManyPreAuthRaisedByInput = {
   rejectionLetterUrl?: string | null
   approvedAt?: Date | string | null
   rejectedAt?: Date | string | null
-  holdReason?: string | null
-  heldAt?: Date | string | null
-  heldById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  heldAt?: Date | string | null
+  heldById?: string | null
+  holdReason?: string | null
 }
 
 export type PreAuthorizationUpdateWithoutHandledByInput = {
@@ -2777,16 +2777,16 @@ export type PreAuthorizationUpdateWithoutHandledByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
+  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
+  heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
   kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
   preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
-  heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
-  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
-  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
-  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
 }
 
 export type PreAuthorizationUncheckedUpdateWithoutHandledByInput = {
@@ -2826,13 +2826,13 @@ export type PreAuthorizationUncheckedUpdateWithoutHandledByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutPreAuthorizationNestedInput
 }
 
@@ -2873,11 +2873,11 @@ export type PreAuthorizationUncheckedUpdateManyWithoutHandledByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PreAuthorizationUpdateWithoutHeldByInput = {
@@ -2915,16 +2915,16 @@ export type PreAuthorizationUpdateWithoutHeldByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
+  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
+  handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
   kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
   preAuthRaisedBy?: Prisma.UserUpdateOneWithoutPreAuthsRaisedNestedInput
-  handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
-  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
-  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
-  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
 }
 
 export type PreAuthorizationUncheckedUpdateWithoutHeldByInput = {
@@ -2965,12 +2965,12 @@ export type PreAuthorizationUncheckedUpdateWithoutHeldByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutPreAuthorizationNestedInput
 }
 
@@ -3012,10 +3012,10 @@ export type PreAuthorizationUncheckedUpdateManyWithoutHeldByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PreAuthorizationUpdateWithoutPreAuthRaisedByInput = {
@@ -3053,16 +3053,16 @@ export type PreAuthorizationUpdateWithoutPreAuthRaisedByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
+  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
   handledBy?: Prisma.UserUpdateOneWithoutPreAuthHandledNestedInput
   heldBy?: Prisma.UserUpdateOneWithoutPreAuthHeldNestedInput
-  queries?: Prisma.InsuranceQueryUpdateManyWithoutPreAuthorizationNestedInput
-  suggestedHospitals?: Prisma.HospitalSuggestionUpdateManyWithoutPreAuthNestedInput
-  pdfVersions?: Prisma.PreAuthPDFUpdateManyWithoutPreAuthorizationNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneRequiredWithoutPreAuthDataNestedInput
 }
 
 export type PreAuthorizationUncheckedUpdateWithoutPreAuthRaisedByInput = {
@@ -3102,13 +3102,13 @@ export type PreAuthorizationUncheckedUpdateWithoutPreAuthRaisedByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   suggestedHospitals?: Prisma.HospitalSuggestionUncheckedUpdateManyWithoutPreAuthNestedInput
+  queries?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutPreAuthorizationNestedInput
   pdfVersions?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutPreAuthorizationNestedInput
 }
 
@@ -3149,11 +3149,11 @@ export type PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByInput = {
   rejectionLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  heldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  heldById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holdReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -3162,14 +3162,14 @@ export type PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByInput = {
  */
 
 export type PreAuthorizationCountOutputType = {
-  queries: number
   suggestedHospitals: number
+  queries: number
   pdfVersions: number
 }
 
 export type PreAuthorizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  queries?: boolean | PreAuthorizationCountOutputTypeCountQueriesArgs
   suggestedHospitals?: boolean | PreAuthorizationCountOutputTypeCountSuggestedHospitalsArgs
+  queries?: boolean | PreAuthorizationCountOutputTypeCountQueriesArgs
   pdfVersions?: boolean | PreAuthorizationCountOutputTypeCountPdfVersionsArgs
 }
 
@@ -3186,15 +3186,15 @@ export type PreAuthorizationCountOutputTypeDefaultArgs<ExtArgs extends runtime.T
 /**
  * PreAuthorizationCountOutputType without action
  */
-export type PreAuthorizationCountOutputTypeCountQueriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InsuranceQueryWhereInput
+export type PreAuthorizationCountOutputTypeCountSuggestedHospitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HospitalSuggestionWhereInput
 }
 
 /**
  * PreAuthorizationCountOutputType without action
  */
-export type PreAuthorizationCountOutputTypeCountSuggestedHospitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.HospitalSuggestionWhereInput
+export type PreAuthorizationCountOutputTypeCountQueriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InsuranceQueryWhereInput
 }
 
 /**
@@ -3243,18 +3243,18 @@ export type PreAuthorizationSelect<ExtArgs extends runtime.Types.Extensions.Inte
   rejectionLetterUrl?: boolean
   approvedAt?: boolean
   rejectedAt?: boolean
-  holdReason?: boolean
-  heldAt?: boolean
-  heldById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
-  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
+  heldAt?: boolean
+  heldById?: boolean
+  holdReason?: boolean
+  suggestedHospitals?: boolean | Prisma.PreAuthorization$suggestedHospitalsArgs<ExtArgs>
+  queries?: boolean | Prisma.PreAuthorization$queriesArgs<ExtArgs>
+  pdfVersions?: boolean | Prisma.PreAuthorization$pdfVersionsArgs<ExtArgs>
   handledBy?: boolean | Prisma.PreAuthorization$handledByArgs<ExtArgs>
   heldBy?: boolean | Prisma.PreAuthorization$heldByArgs<ExtArgs>
-  queries?: boolean | Prisma.PreAuthorization$queriesArgs<ExtArgs>
-  suggestedHospitals?: boolean | Prisma.PreAuthorization$suggestedHospitalsArgs<ExtArgs>
-  pdfVersions?: boolean | Prisma.PreAuthorization$pdfVersionsArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
+  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
   _count?: boolean | Prisma.PreAuthorizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["preAuthorization"]>
 
@@ -3296,15 +3296,15 @@ export type PreAuthorizationSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   rejectionLetterUrl?: boolean
   approvedAt?: boolean
   rejectedAt?: boolean
-  holdReason?: boolean
-  heldAt?: boolean
-  heldById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
-  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
+  heldAt?: boolean
+  heldById?: boolean
+  holdReason?: boolean
   handledBy?: boolean | Prisma.PreAuthorization$handledByArgs<ExtArgs>
   heldBy?: boolean | Prisma.PreAuthorization$heldByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
+  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
 }, ExtArgs["result"]["preAuthorization"]>
 
 export type PreAuthorizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -3345,15 +3345,15 @@ export type PreAuthorizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   rejectionLetterUrl?: boolean
   approvedAt?: boolean
   rejectedAt?: boolean
-  holdReason?: boolean
-  heldAt?: boolean
-  heldById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
-  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
+  heldAt?: boolean
+  heldById?: boolean
+  holdReason?: boolean
   handledBy?: boolean | Prisma.PreAuthorization$handledByArgs<ExtArgs>
   heldBy?: boolean | Prisma.PreAuthorization$heldByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
+  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
 }, ExtArgs["result"]["preAuthorization"]>
 
 export type PreAuthorizationSelectScalar = {
@@ -3394,47 +3394,47 @@ export type PreAuthorizationSelectScalar = {
   rejectionLetterUrl?: boolean
   approvedAt?: boolean
   rejectedAt?: boolean
-  holdReason?: boolean
-  heldAt?: boolean
-  heldById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  heldAt?: boolean
+  heldById?: boolean
+  holdReason?: boolean
 }
 
-export type PreAuthorizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "kypSubmissionId" | "sumInsured" | "balanceInsured" | "roomRent" | "capping" | "copay" | "icu" | "hospitalNameSuggestion" | "insurance" | "tpa" | "hospitalSuggestions" | "roomTypes" | "requestedHospitalName" | "requestedRoomType" | "bdSuggestedHospital" | "diseaseDescription" | "diseaseImages" | "preAuthRaisedAt" | "preAuthRaisedById" | "isNewHospitalRequest" | "newHospitalPreAuthRaised" | "expectedAdmissionDate" | "expectedSurgeryDate" | "investigationFileUrls" | "prescriptionFiles" | "notes" | "insuranceType" | "handledById" | "handledAt" | "approvalStatus" | "approvedAmount" | "approvalNotes" | "rejectionReason" | "rejectionLetterUrl" | "approvedAt" | "rejectedAt" | "holdReason" | "heldAt" | "heldById" | "createdAt" | "updatedAt", ExtArgs["result"]["preAuthorization"]>
+export type PreAuthorizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "kypSubmissionId" | "sumInsured" | "balanceInsured" | "roomRent" | "capping" | "copay" | "icu" | "hospitalNameSuggestion" | "insurance" | "tpa" | "hospitalSuggestions" | "roomTypes" | "requestedHospitalName" | "requestedRoomType" | "bdSuggestedHospital" | "diseaseDescription" | "diseaseImages" | "preAuthRaisedAt" | "preAuthRaisedById" | "isNewHospitalRequest" | "newHospitalPreAuthRaised" | "expectedAdmissionDate" | "expectedSurgeryDate" | "investigationFileUrls" | "prescriptionFiles" | "notes" | "insuranceType" | "handledById" | "handledAt" | "approvalStatus" | "approvedAmount" | "approvalNotes" | "rejectionReason" | "rejectionLetterUrl" | "approvedAt" | "rejectedAt" | "createdAt" | "updatedAt" | "heldAt" | "heldById" | "holdReason", ExtArgs["result"]["preAuthorization"]>
 export type PreAuthorizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
-  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
+  suggestedHospitals?: boolean | Prisma.PreAuthorization$suggestedHospitalsArgs<ExtArgs>
+  queries?: boolean | Prisma.PreAuthorization$queriesArgs<ExtArgs>
+  pdfVersions?: boolean | Prisma.PreAuthorization$pdfVersionsArgs<ExtArgs>
   handledBy?: boolean | Prisma.PreAuthorization$handledByArgs<ExtArgs>
   heldBy?: boolean | Prisma.PreAuthorization$heldByArgs<ExtArgs>
-  queries?: boolean | Prisma.PreAuthorization$queriesArgs<ExtArgs>
-  suggestedHospitals?: boolean | Prisma.PreAuthorization$suggestedHospitalsArgs<ExtArgs>
-  pdfVersions?: boolean | Prisma.PreAuthorization$pdfVersionsArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
+  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
   _count?: boolean | Prisma.PreAuthorizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PreAuthorizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
-  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
   handledBy?: boolean | Prisma.PreAuthorization$handledByArgs<ExtArgs>
   heldBy?: boolean | Prisma.PreAuthorization$heldByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
+  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
 }
 export type PreAuthorizationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
-  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
   handledBy?: boolean | Prisma.PreAuthorization$handledByArgs<ExtArgs>
   heldBy?: boolean | Prisma.PreAuthorization$heldByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.KYPSubmissionDefaultArgs<ExtArgs>
+  preAuthRaisedBy?: boolean | Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>
 }
 
 export type $PreAuthorizationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PreAuthorization"
   objects: {
-    kypSubmission: Prisma.$KYPSubmissionPayload<ExtArgs>
-    preAuthRaisedBy: Prisma.$UserPayload<ExtArgs> | null
+    suggestedHospitals: Prisma.$HospitalSuggestionPayload<ExtArgs>[]
+    queries: Prisma.$InsuranceQueryPayload<ExtArgs>[]
+    pdfVersions: Prisma.$PreAuthPDFPayload<ExtArgs>[]
     handledBy: Prisma.$UserPayload<ExtArgs> | null
     heldBy: Prisma.$UserPayload<ExtArgs> | null
-    queries: Prisma.$InsuranceQueryPayload<ExtArgs>[]
-    suggestedHospitals: Prisma.$HospitalSuggestionPayload<ExtArgs>[]
-    pdfVersions: Prisma.$PreAuthPDFPayload<ExtArgs>[]
+    kypSubmission: Prisma.$KYPSubmissionPayload<ExtArgs>
+    preAuthRaisedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3474,11 +3474,11 @@ export type $PreAuthorizationPayload<ExtArgs extends runtime.Types.Extensions.In
     rejectionLetterUrl: string | null
     approvedAt: Date | null
     rejectedAt: Date | null
-    holdReason: string | null
-    heldAt: Date | null
-    heldById: string | null
     createdAt: Date
     updatedAt: Date
+    heldAt: Date | null
+    heldById: string | null
+    holdReason: string | null
   }, ExtArgs["result"]["preAuthorization"]>
   composites: {}
 }
@@ -3873,13 +3873,13 @@ readonly fields: PreAuthorizationFieldRefs;
  */
 export interface Prisma__PreAuthorizationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  kypSubmission<T extends Prisma.KYPSubmissionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KYPSubmissionDefaultArgs<ExtArgs>>): Prisma.Prisma__KYPSubmissionClient<runtime.Types.Result.GetResult<Prisma.$KYPSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  preAuthRaisedBy<T extends Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  suggestedHospitals<T extends Prisma.PreAuthorization$suggestedHospitalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$suggestedHospitalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HospitalSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  queries<T extends Prisma.PreAuthorization$queriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$queriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceQueryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pdfVersions<T extends Prisma.PreAuthorization$pdfVersionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$pdfVersionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PreAuthPDFPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   handledBy<T extends Prisma.PreAuthorization$handledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$handledByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   heldBy<T extends Prisma.PreAuthorization$heldByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$heldByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  queries<T extends Prisma.PreAuthorization$queriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$queriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceQueryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  suggestedHospitals<T extends Prisma.PreAuthorization$suggestedHospitalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$suggestedHospitalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HospitalSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  pdfVersions<T extends Prisma.PreAuthorization$pdfVersionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$pdfVersionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PreAuthPDFPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  kypSubmission<T extends Prisma.KYPSubmissionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KYPSubmissionDefaultArgs<ExtArgs>>): Prisma.Prisma__KYPSubmissionClient<runtime.Types.Result.GetResult<Prisma.$KYPSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  preAuthRaisedBy<T extends Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorization$preAuthRaisedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3946,11 +3946,11 @@ export interface PreAuthorizationFieldRefs {
   readonly rejectionLetterUrl: Prisma.FieldRef<"PreAuthorization", 'String'>
   readonly approvedAt: Prisma.FieldRef<"PreAuthorization", 'DateTime'>
   readonly rejectedAt: Prisma.FieldRef<"PreAuthorization", 'DateTime'>
-  readonly holdReason: Prisma.FieldRef<"PreAuthorization", 'String'>
-  readonly heldAt: Prisma.FieldRef<"PreAuthorization", 'DateTime'>
-  readonly heldById: Prisma.FieldRef<"PreAuthorization", 'String'>
   readonly createdAt: Prisma.FieldRef<"PreAuthorization", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PreAuthorization", 'DateTime'>
+  readonly heldAt: Prisma.FieldRef<"PreAuthorization", 'DateTime'>
+  readonly heldById: Prisma.FieldRef<"PreAuthorization", 'String'>
+  readonly holdReason: Prisma.FieldRef<"PreAuthorization", 'String'>
 }
     
 
@@ -4352,22 +4352,75 @@ export type PreAuthorizationDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
- * PreAuthorization.preAuthRaisedBy
+ * PreAuthorization.suggestedHospitals
  */
-export type PreAuthorization$preAuthRaisedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PreAuthorization$suggestedHospitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the HospitalSuggestion
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.HospitalSuggestionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the HospitalSuggestion
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.HospitalSuggestionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
+  include?: Prisma.HospitalSuggestionInclude<ExtArgs> | null
+  where?: Prisma.HospitalSuggestionWhereInput
+  orderBy?: Prisma.HospitalSuggestionOrderByWithRelationInput | Prisma.HospitalSuggestionOrderByWithRelationInput[]
+  cursor?: Prisma.HospitalSuggestionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HospitalSuggestionScalarFieldEnum | Prisma.HospitalSuggestionScalarFieldEnum[]
+}
+
+/**
+ * PreAuthorization.queries
+ */
+export type PreAuthorization$queriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InsuranceQuery
+   */
+  select?: Prisma.InsuranceQuerySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InsuranceQuery
+   */
+  omit?: Prisma.InsuranceQueryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceQueryInclude<ExtArgs> | null
+  where?: Prisma.InsuranceQueryWhereInput
+  orderBy?: Prisma.InsuranceQueryOrderByWithRelationInput | Prisma.InsuranceQueryOrderByWithRelationInput[]
+  cursor?: Prisma.InsuranceQueryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InsuranceQueryScalarFieldEnum | Prisma.InsuranceQueryScalarFieldEnum[]
+}
+
+/**
+ * PreAuthorization.pdfVersions
+ */
+export type PreAuthorization$pdfVersionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PreAuthPDF
+   */
+  select?: Prisma.PreAuthPDFSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PreAuthPDF
+   */
+  omit?: Prisma.PreAuthPDFOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PreAuthPDFInclude<ExtArgs> | null
+  where?: Prisma.PreAuthPDFWhereInput
+  orderBy?: Prisma.PreAuthPDFOrderByWithRelationInput | Prisma.PreAuthPDFOrderByWithRelationInput[]
+  cursor?: Prisma.PreAuthPDFWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PreAuthPDFScalarFieldEnum | Prisma.PreAuthPDFScalarFieldEnum[]
 }
 
 /**
@@ -4409,75 +4462,22 @@ export type PreAuthorization$heldByArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
- * PreAuthorization.queries
+ * PreAuthorization.preAuthRaisedBy
  */
-export type PreAuthorization$queriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PreAuthorization$preAuthRaisedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the InsuranceQuery
+   * Select specific fields to fetch from the User
    */
-  select?: Prisma.InsuranceQuerySelect<ExtArgs> | null
+  select?: Prisma.UserSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the InsuranceQuery
+   * Omit specific fields from the User
    */
-  omit?: Prisma.InsuranceQueryOmit<ExtArgs> | null
+  omit?: Prisma.UserOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InsuranceQueryInclude<ExtArgs> | null
-  where?: Prisma.InsuranceQueryWhereInput
-  orderBy?: Prisma.InsuranceQueryOrderByWithRelationInput | Prisma.InsuranceQueryOrderByWithRelationInput[]
-  cursor?: Prisma.InsuranceQueryWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.InsuranceQueryScalarFieldEnum | Prisma.InsuranceQueryScalarFieldEnum[]
-}
-
-/**
- * PreAuthorization.suggestedHospitals
- */
-export type PreAuthorization$suggestedHospitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the HospitalSuggestion
-   */
-  select?: Prisma.HospitalSuggestionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the HospitalSuggestion
-   */
-  omit?: Prisma.HospitalSuggestionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.HospitalSuggestionInclude<ExtArgs> | null
-  where?: Prisma.HospitalSuggestionWhereInput
-  orderBy?: Prisma.HospitalSuggestionOrderByWithRelationInput | Prisma.HospitalSuggestionOrderByWithRelationInput[]
-  cursor?: Prisma.HospitalSuggestionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.HospitalSuggestionScalarFieldEnum | Prisma.HospitalSuggestionScalarFieldEnum[]
-}
-
-/**
- * PreAuthorization.pdfVersions
- */
-export type PreAuthorization$pdfVersionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PreAuthPDF
-   */
-  select?: Prisma.PreAuthPDFSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the PreAuthPDF
-   */
-  omit?: Prisma.PreAuthPDFOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PreAuthPDFInclude<ExtArgs> | null
-  where?: Prisma.PreAuthPDFWhereInput
-  orderBy?: Prisma.PreAuthPDFOrderByWithRelationInput | Prisma.PreAuthPDFOrderByWithRelationInput[]
-  cursor?: Prisma.PreAuthPDFWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PreAuthPDFScalarFieldEnum | Prisma.PreAuthPDFScalarFieldEnum[]
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

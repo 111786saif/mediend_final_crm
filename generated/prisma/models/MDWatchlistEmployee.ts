@@ -174,8 +174,8 @@ export type MDWatchlistEmployeeWhereInput = {
   ownerId?: Prisma.StringFilter<"MDWatchlistEmployee"> | string
   employeeId?: Prisma.StringFilter<"MDWatchlistEmployee"> | string
   createdAt?: Prisma.DateTimeFilter<"MDWatchlistEmployee"> | Date | string
-  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
+  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type MDWatchlistEmployeeOrderByWithRelationInput = {
@@ -183,8 +183,8 @@ export type MDWatchlistEmployeeOrderByWithRelationInput = {
   ownerId?: Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  owner?: Prisma.UserOrderByWithRelationInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
+  owner?: Prisma.UserOrderByWithRelationInput
 }
 
 export type MDWatchlistEmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -196,8 +196,8 @@ export type MDWatchlistEmployeeWhereUniqueInput = Prisma.AtLeast<{
   ownerId?: Prisma.StringFilter<"MDWatchlistEmployee"> | string
   employeeId?: Prisma.StringFilter<"MDWatchlistEmployee"> | string
   createdAt?: Prisma.DateTimeFilter<"MDWatchlistEmployee"> | Date | string
-  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
+  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "ownerId_employeeId">
 
 export type MDWatchlistEmployeeOrderByWithAggregationInput = {
@@ -223,8 +223,8 @@ export type MDWatchlistEmployeeScalarWhereWithAggregatesInput = {
 export type MDWatchlistEmployeeCreateInput = {
   id?: string
   createdAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutMdWatchlistOwnedInput
   employee: Prisma.EmployeeCreateNestedOneWithoutMdWatchlistMembershipsInput
+  owner: Prisma.UserCreateNestedOneWithoutMdWatchlistOwnedInput
 }
 
 export type MDWatchlistEmployeeUncheckedCreateInput = {
@@ -237,8 +237,8 @@ export type MDWatchlistEmployeeUncheckedCreateInput = {
 export type MDWatchlistEmployeeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutMdWatchlistOwnedNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutMdWatchlistMembershipsNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutMdWatchlistOwnedNestedInput
 }
 
 export type MDWatchlistEmployeeUncheckedUpdateInput = {
@@ -528,8 +528,8 @@ export type MDWatchlistEmployeeSelect<ExtArgs extends runtime.Types.Extensions.I
   ownerId?: boolean
   employeeId?: boolean
   createdAt?: boolean
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mDWatchlistEmployee"]>
 
 export type MDWatchlistEmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,8 +537,8 @@ export type MDWatchlistEmployeeSelectCreateManyAndReturn<ExtArgs extends runtime
   ownerId?: boolean
   employeeId?: boolean
   createdAt?: boolean
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mDWatchlistEmployee"]>
 
 export type MDWatchlistEmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -546,8 +546,8 @@ export type MDWatchlistEmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime
   ownerId?: boolean
   employeeId?: boolean
   createdAt?: boolean
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mDWatchlistEmployee"]>
 
 export type MDWatchlistEmployeeSelectScalar = {
@@ -559,23 +559,23 @@ export type MDWatchlistEmployeeSelectScalar = {
 
 export type MDWatchlistEmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ownerId" | "employeeId" | "createdAt", ExtArgs["result"]["mDWatchlistEmployee"]>
 export type MDWatchlistEmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type MDWatchlistEmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type MDWatchlistEmployeeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $MDWatchlistEmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "MDWatchlistEmployee"
   objects: {
-    owner: Prisma.$UserPayload<ExtArgs>
     employee: Prisma.$EmployeePayload<ExtArgs>
+    owner: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -976,8 +976,8 @@ readonly fields: MDWatchlistEmployeeFieldRefs;
  */
 export interface Prisma__MDWatchlistEmployeeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

@@ -252,9 +252,9 @@ export type TaskRatingWhereInput = {
   action?: Prisma.StringFilter<"TaskRating"> | string
   month?: Prisma.IntFilter<"TaskRating"> | number
   createdAt?: Prisma.DateTimeFilter<"TaskRating"> | Date | string
-  task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
-  ratedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   employee?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  ratedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
 }
 
 export type TaskRatingOrderByWithRelationInput = {
@@ -267,9 +267,9 @@ export type TaskRatingOrderByWithRelationInput = {
   action?: Prisma.SortOrder
   month?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  task?: Prisma.TaskOrderByWithRelationInput
-  ratedBy?: Prisma.UserOrderByWithRelationInput
   employee?: Prisma.UserOrderByWithRelationInput
+  ratedBy?: Prisma.UserOrderByWithRelationInput
+  task?: Prisma.TaskOrderByWithRelationInput
 }
 
 export type TaskRatingWhereUniqueInput = Prisma.AtLeast<{
@@ -285,9 +285,9 @@ export type TaskRatingWhereUniqueInput = Prisma.AtLeast<{
   action?: Prisma.StringFilter<"TaskRating"> | string
   month?: Prisma.IntFilter<"TaskRating"> | number
   createdAt?: Prisma.DateTimeFilter<"TaskRating"> | Date | string
-  task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
-  ratedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   employee?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  ratedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
 }, "id">
 
 export type TaskRatingOrderByWithAggregationInput = {
@@ -329,9 +329,9 @@ export type TaskRatingCreateInput = {
   action: string
   month: number
   createdAt?: Date | string
-  task: Prisma.TaskCreateNestedOneWithoutRatingsInput
-  ratedBy: Prisma.UserCreateNestedOneWithoutTaskRatingsGivenInput
   employee: Prisma.UserCreateNestedOneWithoutTaskRatingsReceivedInput
+  ratedBy: Prisma.UserCreateNestedOneWithoutTaskRatingsGivenInput
+  task: Prisma.TaskCreateNestedOneWithoutRatingsInput
 }
 
 export type TaskRatingUncheckedCreateInput = {
@@ -353,9 +353,9 @@ export type TaskRatingUpdateInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  task?: Prisma.TaskUpdateOneRequiredWithoutRatingsNestedInput
-  ratedBy?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsGivenNestedInput
   employee?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsReceivedNestedInput
+  ratedBy?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsGivenNestedInput
+  task?: Prisma.TaskUpdateOneRequiredWithoutRatingsNestedInput
 }
 
 export type TaskRatingUncheckedUpdateInput = {
@@ -459,13 +459,6 @@ export type TaskRatingSumOrderByAggregateInput = {
   month?: Prisma.SortOrder
 }
 
-export type TaskRatingCreateNestedManyWithoutRatedByInput = {
-  create?: Prisma.XOR<Prisma.TaskRatingCreateWithoutRatedByInput, Prisma.TaskRatingUncheckedCreateWithoutRatedByInput> | Prisma.TaskRatingCreateWithoutRatedByInput[] | Prisma.TaskRatingUncheckedCreateWithoutRatedByInput[]
-  connectOrCreate?: Prisma.TaskRatingCreateOrConnectWithoutRatedByInput | Prisma.TaskRatingCreateOrConnectWithoutRatedByInput[]
-  createMany?: Prisma.TaskRatingCreateManyRatedByInputEnvelope
-  connect?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
-}
-
 export type TaskRatingCreateNestedManyWithoutEmployeeInput = {
   create?: Prisma.XOR<Prisma.TaskRatingCreateWithoutEmployeeInput, Prisma.TaskRatingUncheckedCreateWithoutEmployeeInput> | Prisma.TaskRatingCreateWithoutEmployeeInput[] | Prisma.TaskRatingUncheckedCreateWithoutEmployeeInput[]
   connectOrCreate?: Prisma.TaskRatingCreateOrConnectWithoutEmployeeInput | Prisma.TaskRatingCreateOrConnectWithoutEmployeeInput[]
@@ -473,7 +466,7 @@ export type TaskRatingCreateNestedManyWithoutEmployeeInput = {
   connect?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
 }
 
-export type TaskRatingUncheckedCreateNestedManyWithoutRatedByInput = {
+export type TaskRatingCreateNestedManyWithoutRatedByInput = {
   create?: Prisma.XOR<Prisma.TaskRatingCreateWithoutRatedByInput, Prisma.TaskRatingUncheckedCreateWithoutRatedByInput> | Prisma.TaskRatingCreateWithoutRatedByInput[] | Prisma.TaskRatingUncheckedCreateWithoutRatedByInput[]
   connectOrCreate?: Prisma.TaskRatingCreateOrConnectWithoutRatedByInput | Prisma.TaskRatingCreateOrConnectWithoutRatedByInput[]
   createMany?: Prisma.TaskRatingCreateManyRatedByInputEnvelope
@@ -487,18 +480,11 @@ export type TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput = {
   connect?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
 }
 
-export type TaskRatingUpdateManyWithoutRatedByNestedInput = {
+export type TaskRatingUncheckedCreateNestedManyWithoutRatedByInput = {
   create?: Prisma.XOR<Prisma.TaskRatingCreateWithoutRatedByInput, Prisma.TaskRatingUncheckedCreateWithoutRatedByInput> | Prisma.TaskRatingCreateWithoutRatedByInput[] | Prisma.TaskRatingUncheckedCreateWithoutRatedByInput[]
   connectOrCreate?: Prisma.TaskRatingCreateOrConnectWithoutRatedByInput | Prisma.TaskRatingCreateOrConnectWithoutRatedByInput[]
-  upsert?: Prisma.TaskRatingUpsertWithWhereUniqueWithoutRatedByInput | Prisma.TaskRatingUpsertWithWhereUniqueWithoutRatedByInput[]
   createMany?: Prisma.TaskRatingCreateManyRatedByInputEnvelope
-  set?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
-  disconnect?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
-  delete?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
   connect?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
-  update?: Prisma.TaskRatingUpdateWithWhereUniqueWithoutRatedByInput | Prisma.TaskRatingUpdateWithWhereUniqueWithoutRatedByInput[]
-  updateMany?: Prisma.TaskRatingUpdateManyWithWhereWithoutRatedByInput | Prisma.TaskRatingUpdateManyWithWhereWithoutRatedByInput[]
-  deleteMany?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
 }
 
 export type TaskRatingUpdateManyWithoutEmployeeNestedInput = {
@@ -515,7 +501,7 @@ export type TaskRatingUpdateManyWithoutEmployeeNestedInput = {
   deleteMany?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
 }
 
-export type TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput = {
+export type TaskRatingUpdateManyWithoutRatedByNestedInput = {
   create?: Prisma.XOR<Prisma.TaskRatingCreateWithoutRatedByInput, Prisma.TaskRatingUncheckedCreateWithoutRatedByInput> | Prisma.TaskRatingCreateWithoutRatedByInput[] | Prisma.TaskRatingUncheckedCreateWithoutRatedByInput[]
   connectOrCreate?: Prisma.TaskRatingCreateOrConnectWithoutRatedByInput | Prisma.TaskRatingCreateOrConnectWithoutRatedByInput[]
   upsert?: Prisma.TaskRatingUpsertWithWhereUniqueWithoutRatedByInput | Prisma.TaskRatingUpsertWithWhereUniqueWithoutRatedByInput[]
@@ -540,6 +526,20 @@ export type TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput = {
   connect?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
   update?: Prisma.TaskRatingUpdateWithWhereUniqueWithoutEmployeeInput | Prisma.TaskRatingUpdateWithWhereUniqueWithoutEmployeeInput[]
   updateMany?: Prisma.TaskRatingUpdateManyWithWhereWithoutEmployeeInput | Prisma.TaskRatingUpdateManyWithWhereWithoutEmployeeInput[]
+  deleteMany?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
+}
+
+export type TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskRatingCreateWithoutRatedByInput, Prisma.TaskRatingUncheckedCreateWithoutRatedByInput> | Prisma.TaskRatingCreateWithoutRatedByInput[] | Prisma.TaskRatingUncheckedCreateWithoutRatedByInput[]
+  connectOrCreate?: Prisma.TaskRatingCreateOrConnectWithoutRatedByInput | Prisma.TaskRatingCreateOrConnectWithoutRatedByInput[]
+  upsert?: Prisma.TaskRatingUpsertWithWhereUniqueWithoutRatedByInput | Prisma.TaskRatingUpsertWithWhereUniqueWithoutRatedByInput[]
+  createMany?: Prisma.TaskRatingCreateManyRatedByInputEnvelope
+  set?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
+  disconnect?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
+  delete?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
+  connect?: Prisma.TaskRatingWhereUniqueInput | Prisma.TaskRatingWhereUniqueInput[]
+  update?: Prisma.TaskRatingUpdateWithWhereUniqueWithoutRatedByInput | Prisma.TaskRatingUpdateWithWhereUniqueWithoutRatedByInput[]
+  updateMany?: Prisma.TaskRatingUpdateManyWithWhereWithoutRatedByInput | Prisma.TaskRatingUpdateManyWithWhereWithoutRatedByInput[]
   deleteMany?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
 }
 
@@ -585,38 +585,6 @@ export type TaskRatingUncheckedUpdateManyWithoutTaskNestedInput = {
   deleteMany?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
 }
 
-export type TaskRatingCreateWithoutRatedByInput = {
-  id?: string
-  grade: number
-  comments?: string | null
-  action: string
-  month: number
-  createdAt?: Date | string
-  task: Prisma.TaskCreateNestedOneWithoutRatingsInput
-  employee: Prisma.UserCreateNestedOneWithoutTaskRatingsReceivedInput
-}
-
-export type TaskRatingUncheckedCreateWithoutRatedByInput = {
-  id?: string
-  taskId: string
-  employeeId: string
-  grade: number
-  comments?: string | null
-  action: string
-  month: number
-  createdAt?: Date | string
-}
-
-export type TaskRatingCreateOrConnectWithoutRatedByInput = {
-  where: Prisma.TaskRatingWhereUniqueInput
-  create: Prisma.XOR<Prisma.TaskRatingCreateWithoutRatedByInput, Prisma.TaskRatingUncheckedCreateWithoutRatedByInput>
-}
-
-export type TaskRatingCreateManyRatedByInputEnvelope = {
-  data: Prisma.TaskRatingCreateManyRatedByInput | Prisma.TaskRatingCreateManyRatedByInput[]
-  skipDuplicates?: boolean
-}
-
 export type TaskRatingCreateWithoutEmployeeInput = {
   id?: string
   grade: number
@@ -624,8 +592,8 @@ export type TaskRatingCreateWithoutEmployeeInput = {
   action: string
   month: number
   createdAt?: Date | string
-  task: Prisma.TaskCreateNestedOneWithoutRatingsInput
   ratedBy: Prisma.UserCreateNestedOneWithoutTaskRatingsGivenInput
+  task: Prisma.TaskCreateNestedOneWithoutRatingsInput
 }
 
 export type TaskRatingUncheckedCreateWithoutEmployeeInput = {
@@ -649,35 +617,36 @@ export type TaskRatingCreateManyEmployeeInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type TaskRatingUpsertWithWhereUniqueWithoutRatedByInput = {
+export type TaskRatingCreateWithoutRatedByInput = {
+  id?: string
+  grade: number
+  comments?: string | null
+  action: string
+  month: number
+  createdAt?: Date | string
+  employee: Prisma.UserCreateNestedOneWithoutTaskRatingsReceivedInput
+  task: Prisma.TaskCreateNestedOneWithoutRatingsInput
+}
+
+export type TaskRatingUncheckedCreateWithoutRatedByInput = {
+  id?: string
+  taskId: string
+  employeeId: string
+  grade: number
+  comments?: string | null
+  action: string
+  month: number
+  createdAt?: Date | string
+}
+
+export type TaskRatingCreateOrConnectWithoutRatedByInput = {
   where: Prisma.TaskRatingWhereUniqueInput
-  update: Prisma.XOR<Prisma.TaskRatingUpdateWithoutRatedByInput, Prisma.TaskRatingUncheckedUpdateWithoutRatedByInput>
   create: Prisma.XOR<Prisma.TaskRatingCreateWithoutRatedByInput, Prisma.TaskRatingUncheckedCreateWithoutRatedByInput>
 }
 
-export type TaskRatingUpdateWithWhereUniqueWithoutRatedByInput = {
-  where: Prisma.TaskRatingWhereUniqueInput
-  data: Prisma.XOR<Prisma.TaskRatingUpdateWithoutRatedByInput, Prisma.TaskRatingUncheckedUpdateWithoutRatedByInput>
-}
-
-export type TaskRatingUpdateManyWithWhereWithoutRatedByInput = {
-  where: Prisma.TaskRatingScalarWhereInput
-  data: Prisma.XOR<Prisma.TaskRatingUpdateManyMutationInput, Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByInput>
-}
-
-export type TaskRatingScalarWhereInput = {
-  AND?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
-  OR?: Prisma.TaskRatingScalarWhereInput[]
-  NOT?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
-  id?: Prisma.StringFilter<"TaskRating"> | string
-  taskId?: Prisma.StringFilter<"TaskRating"> | string
-  ratedById?: Prisma.StringFilter<"TaskRating"> | string
-  employeeId?: Prisma.StringFilter<"TaskRating"> | string
-  grade?: Prisma.IntFilter<"TaskRating"> | number
-  comments?: Prisma.StringNullableFilter<"TaskRating"> | string | null
-  action?: Prisma.StringFilter<"TaskRating"> | string
-  month?: Prisma.IntFilter<"TaskRating"> | number
-  createdAt?: Prisma.DateTimeFilter<"TaskRating"> | Date | string
+export type TaskRatingCreateManyRatedByInputEnvelope = {
+  data: Prisma.TaskRatingCreateManyRatedByInput | Prisma.TaskRatingCreateManyRatedByInput[]
+  skipDuplicates?: boolean
 }
 
 export type TaskRatingUpsertWithWhereUniqueWithoutEmployeeInput = {
@@ -696,6 +665,37 @@ export type TaskRatingUpdateManyWithWhereWithoutEmployeeInput = {
   data: Prisma.XOR<Prisma.TaskRatingUpdateManyMutationInput, Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeInput>
 }
 
+export type TaskRatingScalarWhereInput = {
+  AND?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
+  OR?: Prisma.TaskRatingScalarWhereInput[]
+  NOT?: Prisma.TaskRatingScalarWhereInput | Prisma.TaskRatingScalarWhereInput[]
+  id?: Prisma.StringFilter<"TaskRating"> | string
+  taskId?: Prisma.StringFilter<"TaskRating"> | string
+  ratedById?: Prisma.StringFilter<"TaskRating"> | string
+  employeeId?: Prisma.StringFilter<"TaskRating"> | string
+  grade?: Prisma.IntFilter<"TaskRating"> | number
+  comments?: Prisma.StringNullableFilter<"TaskRating"> | string | null
+  action?: Prisma.StringFilter<"TaskRating"> | string
+  month?: Prisma.IntFilter<"TaskRating"> | number
+  createdAt?: Prisma.DateTimeFilter<"TaskRating"> | Date | string
+}
+
+export type TaskRatingUpsertWithWhereUniqueWithoutRatedByInput = {
+  where: Prisma.TaskRatingWhereUniqueInput
+  update: Prisma.XOR<Prisma.TaskRatingUpdateWithoutRatedByInput, Prisma.TaskRatingUncheckedUpdateWithoutRatedByInput>
+  create: Prisma.XOR<Prisma.TaskRatingCreateWithoutRatedByInput, Prisma.TaskRatingUncheckedCreateWithoutRatedByInput>
+}
+
+export type TaskRatingUpdateWithWhereUniqueWithoutRatedByInput = {
+  where: Prisma.TaskRatingWhereUniqueInput
+  data: Prisma.XOR<Prisma.TaskRatingUpdateWithoutRatedByInput, Prisma.TaskRatingUncheckedUpdateWithoutRatedByInput>
+}
+
+export type TaskRatingUpdateManyWithWhereWithoutRatedByInput = {
+  where: Prisma.TaskRatingScalarWhereInput
+  data: Prisma.XOR<Prisma.TaskRatingUpdateManyMutationInput, Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByInput>
+}
+
 export type TaskRatingCreateWithoutTaskInput = {
   id?: string
   grade: number
@@ -703,8 +703,8 @@ export type TaskRatingCreateWithoutTaskInput = {
   action: string
   month: number
   createdAt?: Date | string
-  ratedBy: Prisma.UserCreateNestedOneWithoutTaskRatingsGivenInput
   employee: Prisma.UserCreateNestedOneWithoutTaskRatingsReceivedInput
+  ratedBy: Prisma.UserCreateNestedOneWithoutTaskRatingsGivenInput
 }
 
 export type TaskRatingUncheckedCreateWithoutTaskInput = {
@@ -744,17 +744,6 @@ export type TaskRatingUpdateManyWithWhereWithoutTaskInput = {
   data: Prisma.XOR<Prisma.TaskRatingUpdateManyMutationInput, Prisma.TaskRatingUncheckedUpdateManyWithoutTaskInput>
 }
 
-export type TaskRatingCreateManyRatedByInput = {
-  id?: string
-  taskId: string
-  employeeId: string
-  grade: number
-  comments?: string | null
-  action: string
-  month: number
-  createdAt?: Date | string
-}
-
 export type TaskRatingCreateManyEmployeeInput = {
   id?: string
   taskId: string
@@ -766,37 +755,15 @@ export type TaskRatingCreateManyEmployeeInput = {
   createdAt?: Date | string
 }
 
-export type TaskRatingUpdateWithoutRatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  grade?: Prisma.IntFieldUpdateOperationsInput | number
-  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  task?: Prisma.TaskUpdateOneRequiredWithoutRatingsNestedInput
-  employee?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsReceivedNestedInput
-}
-
-export type TaskRatingUncheckedUpdateWithoutRatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  taskId?: Prisma.StringFieldUpdateOperationsInput | string
-  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
-  grade?: Prisma.IntFieldUpdateOperationsInput | number
-  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type TaskRatingUncheckedUpdateManyWithoutRatedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  taskId?: Prisma.StringFieldUpdateOperationsInput | string
-  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
-  grade?: Prisma.IntFieldUpdateOperationsInput | number
-  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type TaskRatingCreateManyRatedByInput = {
+  id?: string
+  taskId: string
+  employeeId: string
+  grade: number
+  comments?: string | null
+  action: string
+  month: number
+  createdAt?: Date | string
 }
 
 export type TaskRatingUpdateWithoutEmployeeInput = {
@@ -806,8 +773,8 @@ export type TaskRatingUpdateWithoutEmployeeInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  task?: Prisma.TaskUpdateOneRequiredWithoutRatingsNestedInput
   ratedBy?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsGivenNestedInput
+  task?: Prisma.TaskUpdateOneRequiredWithoutRatingsNestedInput
 }
 
 export type TaskRatingUncheckedUpdateWithoutEmployeeInput = {
@@ -825,6 +792,39 @@ export type TaskRatingUncheckedUpdateManyWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   taskId?: Prisma.StringFieldUpdateOperationsInput | string
   ratedById?: Prisma.StringFieldUpdateOperationsInput | string
+  grade?: Prisma.IntFieldUpdateOperationsInput | number
+  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TaskRatingUpdateWithoutRatedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  grade?: Prisma.IntFieldUpdateOperationsInput | number
+  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsReceivedNestedInput
+  task?: Prisma.TaskUpdateOneRequiredWithoutRatingsNestedInput
+}
+
+export type TaskRatingUncheckedUpdateWithoutRatedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  grade?: Prisma.IntFieldUpdateOperationsInput | number
+  comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TaskRatingUncheckedUpdateManyWithoutRatedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   grade?: Prisma.IntFieldUpdateOperationsInput | number
   comments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   action?: Prisma.StringFieldUpdateOperationsInput | string
@@ -850,8 +850,8 @@ export type TaskRatingUpdateWithoutTaskInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  ratedBy?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsGivenNestedInput
   employee?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsReceivedNestedInput
+  ratedBy?: Prisma.UserUpdateOneRequiredWithoutTaskRatingsGivenNestedInput
 }
 
 export type TaskRatingUncheckedUpdateWithoutTaskInput = {
@@ -888,9 +888,9 @@ export type TaskRatingSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   action?: boolean
   month?: boolean
   createdAt?: boolean
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
-  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskRating"]>
 
 export type TaskRatingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -903,9 +903,9 @@ export type TaskRatingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   action?: boolean
   month?: boolean
   createdAt?: boolean
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
-  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskRating"]>
 
 export type TaskRatingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -918,9 +918,9 @@ export type TaskRatingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   action?: boolean
   month?: boolean
   createdAt?: boolean
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
-  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskRating"]>
 
 export type TaskRatingSelectScalar = {
@@ -937,27 +937,27 @@ export type TaskRatingSelectScalar = {
 
 export type TaskRatingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "taskId" | "ratedById" | "employeeId" | "grade" | "comments" | "action" | "month" | "createdAt", ExtArgs["result"]["taskRating"]>
 export type TaskRatingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
-  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }
 export type TaskRatingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
-  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }
 export type TaskRatingIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
-  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ratedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }
 
 export type $TaskRatingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TaskRating"
   objects: {
-    task: Prisma.$TaskPayload<ExtArgs>
-    ratedBy: Prisma.$UserPayload<ExtArgs>
     employee: Prisma.$UserPayload<ExtArgs>
+    ratedBy: Prisma.$UserPayload<ExtArgs>
+    task: Prisma.$TaskPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1363,9 +1363,9 @@ readonly fields: TaskRatingFieldRefs;
  */
 export interface Prisma__TaskRatingClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  task<T extends Prisma.TaskDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskDefaultArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  ratedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  ratedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  task<T extends Prisma.TaskDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskDefaultArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

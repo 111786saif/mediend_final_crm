@@ -214,11 +214,11 @@ export type LocationMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"LocationMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"LocationMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LocationMaster"> | Date | string
+  issues?: Prisma.IssueTransactionListRelationFilter
+  items?: Prisma.ItemMasterListRelationFilter
   parent?: Prisma.XOR<Prisma.LocationMasterNullableScalarRelationFilter, Prisma.LocationMasterWhereInput> | null
   children?: Prisma.LocationMasterListRelationFilter
-  items?: Prisma.ItemMasterListRelationFilter
   purchases?: Prisma.PurchaseTransactionListRelationFilter
-  issues?: Prisma.IssueTransactionListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
 }
 
@@ -232,11 +232,11 @@ export type LocationMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  issues?: Prisma.IssueTransactionOrderByRelationAggregateInput
+  items?: Prisma.ItemMasterOrderByRelationAggregateInput
   parent?: Prisma.LocationMasterOrderByWithRelationInput
   children?: Prisma.LocationMasterOrderByRelationAggregateInput
-  items?: Prisma.ItemMasterOrderByRelationAggregateInput
   purchases?: Prisma.PurchaseTransactionOrderByRelationAggregateInput
-  issues?: Prisma.IssueTransactionOrderByRelationAggregateInput
   stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
 }
 
@@ -253,11 +253,11 @@ export type LocationMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"LocationMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"LocationMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LocationMaster"> | Date | string
+  issues?: Prisma.IssueTransactionListRelationFilter
+  items?: Prisma.ItemMasterListRelationFilter
   parent?: Prisma.XOR<Prisma.LocationMasterNullableScalarRelationFilter, Prisma.LocationMasterWhereInput> | null
   children?: Prisma.LocationMasterListRelationFilter
-  items?: Prisma.ItemMasterListRelationFilter
   purchases?: Prisma.PurchaseTransactionListRelationFilter
-  issues?: Prisma.IssueTransactionListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
 }, "id" | "code">
 
@@ -300,11 +300,11 @@ export type LocationMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
   parent?: Prisma.LocationMasterCreateNestedOneWithoutChildrenInput
   children?: Prisma.LocationMasterCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
   purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutLocationInput
-  issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutLocationInput
 }
 
@@ -318,10 +318,10 @@ export type LocationMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
-  purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
   issues?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
+  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
+  purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutLocationInput
 }
 
@@ -334,11 +334,11 @@ export type LocationMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
   parent?: Prisma.LocationMasterUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LocationMasterUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
   purchases?: Prisma.PurchaseTransactionUpdateManyWithoutLocationNestedInput
-  issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutLocationNestedInput
 }
 
@@ -352,10 +352,10 @@ export type LocationMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
-  purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
   issues?: Prisma.IssueTransactionUncheckedUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
+  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
+  purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutLocationNestedInput
 }
 
@@ -577,10 +577,10 @@ export type LocationMasterCreateWithoutChildrenInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  parent?: Prisma.LocationMasterCreateNestedOneWithoutChildrenInput
-  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
-  purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutLocationInput
   issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
+  parent?: Prisma.LocationMasterCreateNestedOneWithoutChildrenInput
+  purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutLocationInput
 }
 
@@ -594,9 +594,9 @@ export type LocationMasterUncheckedCreateWithoutChildrenInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  issues?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutLocationInput
   items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
   purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
-  issues?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutLocationInput
 }
 
@@ -614,10 +614,10 @@ export type LocationMasterCreateWithoutParentInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LocationMasterCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
-  purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutLocationInput
   issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
+  children?: Prisma.LocationMasterCreateNestedManyWithoutParentInput
+  purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutLocationInput
 }
 
@@ -630,10 +630,10 @@ export type LocationMasterUncheckedCreateWithoutParentInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
-  purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
   issues?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
+  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
+  purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutLocationInput
 }
 
@@ -667,10 +667,10 @@ export type LocationMasterUpdateWithoutChildrenInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parent?: Prisma.LocationMasterUpdateOneWithoutChildrenNestedInput
-  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
-  purchases?: Prisma.PurchaseTransactionUpdateManyWithoutLocationNestedInput
   issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
+  parent?: Prisma.LocationMasterUpdateOneWithoutChildrenNestedInput
+  purchases?: Prisma.PurchaseTransactionUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutLocationNestedInput
 }
 
@@ -684,9 +684,9 @@ export type LocationMasterUncheckedUpdateWithoutChildrenInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  issues?: Prisma.IssueTransactionUncheckedUpdateManyWithoutLocationNestedInput
   items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
   purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
-  issues?: Prisma.IssueTransactionUncheckedUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutLocationNestedInput
 }
 
@@ -730,10 +730,10 @@ export type LocationMasterCreateWithoutItemsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
   parent?: Prisma.LocationMasterCreateNestedOneWithoutChildrenInput
   children?: Prisma.LocationMasterCreateNestedManyWithoutParentInput
   purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutLocationInput
-  issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutLocationInput
 }
 
@@ -747,9 +747,9 @@ export type LocationMasterUncheckedCreateWithoutItemsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  issues?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutLocationInput
   children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
   purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
-  issues?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutLocationInput
 }
 
@@ -778,10 +778,10 @@ export type LocationMasterUpdateWithoutItemsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
   parent?: Prisma.LocationMasterUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LocationMasterUpdateManyWithoutParentNestedInput
   purchases?: Prisma.PurchaseTransactionUpdateManyWithoutLocationNestedInput
-  issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutLocationNestedInput
 }
 
@@ -795,9 +795,9 @@ export type LocationMasterUncheckedUpdateWithoutItemsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  issues?: Prisma.IssueTransactionUncheckedUpdateManyWithoutLocationNestedInput
   children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
   purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
-  issues?: Prisma.IssueTransactionUncheckedUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutLocationNestedInput
 }
 
@@ -810,11 +810,11 @@ export type LocationMasterCreateWithoutStockMovementsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
   parent?: Prisma.LocationMasterCreateNestedOneWithoutChildrenInput
   children?: Prisma.LocationMasterCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
   purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutLocationInput
-  issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
 }
 
 export type LocationMasterUncheckedCreateWithoutStockMovementsInput = {
@@ -827,10 +827,10 @@ export type LocationMasterUncheckedCreateWithoutStockMovementsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
-  purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
   issues?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
+  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
+  purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
 }
 
 export type LocationMasterCreateOrConnectWithoutStockMovementsInput = {
@@ -858,11 +858,11 @@ export type LocationMasterUpdateWithoutStockMovementsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
   parent?: Prisma.LocationMasterUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LocationMasterUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
   purchases?: Prisma.PurchaseTransactionUpdateManyWithoutLocationNestedInput
-  issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
 }
 
 export type LocationMasterUncheckedUpdateWithoutStockMovementsInput = {
@@ -875,10 +875,10 @@ export type LocationMasterUncheckedUpdateWithoutStockMovementsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
-  purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
   issues?: Prisma.IssueTransactionUncheckedUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
+  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
+  purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
 }
 
 export type LocationMasterCreateWithoutPurchasesInput = {
@@ -890,10 +890,10 @@ export type LocationMasterCreateWithoutPurchasesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
   parent?: Prisma.LocationMasterCreateNestedOneWithoutChildrenInput
   children?: Prisma.LocationMasterCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
-  issues?: Prisma.IssueTransactionCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutLocationInput
 }
 
@@ -907,9 +907,9 @@ export type LocationMasterUncheckedCreateWithoutPurchasesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
   issues?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutLocationInput
+  items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
+  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutLocationInput
 }
 
@@ -938,10 +938,10 @@ export type LocationMasterUpdateWithoutPurchasesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
   parent?: Prisma.LocationMasterUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LocationMasterUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
-  issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutLocationNestedInput
 }
 
@@ -955,9 +955,9 @@ export type LocationMasterUncheckedUpdateWithoutPurchasesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
   issues?: Prisma.IssueTransactionUncheckedUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
+  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutLocationNestedInput
 }
 
@@ -970,9 +970,9 @@ export type LocationMasterCreateWithoutIssuesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
   parent?: Prisma.LocationMasterCreateNestedOneWithoutChildrenInput
   children?: Prisma.LocationMasterCreateNestedManyWithoutParentInput
-  items?: Prisma.ItemMasterCreateNestedManyWithoutLocationInput
   purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutLocationInput
 }
@@ -987,8 +987,8 @@ export type LocationMasterUncheckedCreateWithoutIssuesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
   items?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutLocationInput
+  children?: Prisma.LocationMasterUncheckedCreateNestedManyWithoutParentInput
   purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutLocationInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutLocationInput
 }
@@ -1018,9 +1018,9 @@ export type LocationMasterUpdateWithoutIssuesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
   parent?: Prisma.LocationMasterUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LocationMasterUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
   purchases?: Prisma.PurchaseTransactionUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutLocationNestedInput
 }
@@ -1035,8 +1035,8 @@ export type LocationMasterUncheckedUpdateWithoutIssuesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
   items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
+  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
   purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutLocationNestedInput
 }
@@ -1061,10 +1061,10 @@ export type LocationMasterUpdateWithoutParentInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LocationMasterUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
-  purchases?: Prisma.PurchaseTransactionUpdateManyWithoutLocationNestedInput
   issues?: Prisma.IssueTransactionUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUpdateManyWithoutLocationNestedInput
+  children?: Prisma.LocationMasterUpdateManyWithoutParentNestedInput
+  purchases?: Prisma.PurchaseTransactionUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutLocationNestedInput
 }
 
@@ -1077,10 +1077,10 @@ export type LocationMasterUncheckedUpdateWithoutParentInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
-  items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
-  purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
   issues?: Prisma.IssueTransactionUncheckedUpdateManyWithoutLocationNestedInput
+  items?: Prisma.ItemMasterUncheckedUpdateManyWithoutLocationNestedInput
+  children?: Prisma.LocationMasterUncheckedUpdateManyWithoutParentNestedInput
+  purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutLocationNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutLocationNestedInput
 }
 
@@ -1101,18 +1101,18 @@ export type LocationMasterUncheckedUpdateManyWithoutParentInput = {
  */
 
 export type LocationMasterCountOutputType = {
-  children: number
-  items: number
-  purchases: number
   issues: number
+  items: number
+  children: number
+  purchases: number
   stockMovements: number
 }
 
 export type LocationMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  children?: boolean | LocationMasterCountOutputTypeCountChildrenArgs
-  items?: boolean | LocationMasterCountOutputTypeCountItemsArgs
-  purchases?: boolean | LocationMasterCountOutputTypeCountPurchasesArgs
   issues?: boolean | LocationMasterCountOutputTypeCountIssuesArgs
+  items?: boolean | LocationMasterCountOutputTypeCountItemsArgs
+  children?: boolean | LocationMasterCountOutputTypeCountChildrenArgs
+  purchases?: boolean | LocationMasterCountOutputTypeCountPurchasesArgs
   stockMovements?: boolean | LocationMasterCountOutputTypeCountStockMovementsArgs
 }
 
@@ -1129,8 +1129,8 @@ export type LocationMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Typ
 /**
  * LocationMasterCountOutputType without action
  */
-export type LocationMasterCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LocationMasterWhereInput
+export type LocationMasterCountOutputTypeCountIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.IssueTransactionWhereInput
 }
 
 /**
@@ -1143,15 +1143,15 @@ export type LocationMasterCountOutputTypeCountItemsArgs<ExtArgs extends runtime.
 /**
  * LocationMasterCountOutputType without action
  */
-export type LocationMasterCountOutputTypeCountPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PurchaseTransactionWhereInput
+export type LocationMasterCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LocationMasterWhereInput
 }
 
 /**
  * LocationMasterCountOutputType without action
  */
-export type LocationMasterCountOutputTypeCountIssuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.IssueTransactionWhereInput
+export type LocationMasterCountOutputTypeCountPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseTransactionWhereInput
 }
 
 /**
@@ -1172,11 +1172,11 @@ export type LocationMasterSelect<ExtArgs extends runtime.Types.Extensions.Intern
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  issues?: boolean | Prisma.LocationMaster$issuesArgs<ExtArgs>
+  items?: boolean | Prisma.LocationMaster$itemsArgs<ExtArgs>
   parent?: boolean | Prisma.LocationMaster$parentArgs<ExtArgs>
   children?: boolean | Prisma.LocationMaster$childrenArgs<ExtArgs>
-  items?: boolean | Prisma.LocationMaster$itemsArgs<ExtArgs>
   purchases?: boolean | Prisma.LocationMaster$purchasesArgs<ExtArgs>
-  issues?: boolean | Prisma.LocationMaster$issuesArgs<ExtArgs>
   stockMovements?: boolean | Prisma.LocationMaster$stockMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.LocationMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["locationMaster"]>
@@ -1221,11 +1221,11 @@ export type LocationMasterSelectScalar = {
 
 export type LocationMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "code" | "type" | "parentId" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["locationMaster"]>
 export type LocationMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  issues?: boolean | Prisma.LocationMaster$issuesArgs<ExtArgs>
+  items?: boolean | Prisma.LocationMaster$itemsArgs<ExtArgs>
   parent?: boolean | Prisma.LocationMaster$parentArgs<ExtArgs>
   children?: boolean | Prisma.LocationMaster$childrenArgs<ExtArgs>
-  items?: boolean | Prisma.LocationMaster$itemsArgs<ExtArgs>
   purchases?: boolean | Prisma.LocationMaster$purchasesArgs<ExtArgs>
-  issues?: boolean | Prisma.LocationMaster$issuesArgs<ExtArgs>
   stockMovements?: boolean | Prisma.LocationMaster$stockMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.LocationMasterCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1239,11 +1239,11 @@ export type LocationMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
 export type $LocationMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LocationMaster"
   objects: {
+    issues: Prisma.$IssueTransactionPayload<ExtArgs>[]
+    items: Prisma.$ItemMasterPayload<ExtArgs>[]
     parent: Prisma.$LocationMasterPayload<ExtArgs> | null
     children: Prisma.$LocationMasterPayload<ExtArgs>[]
-    items: Prisma.$ItemMasterPayload<ExtArgs>[]
     purchases: Prisma.$PurchaseTransactionPayload<ExtArgs>[]
-    issues: Prisma.$IssueTransactionPayload<ExtArgs>[]
     stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1650,11 +1650,11 @@ readonly fields: LocationMasterFieldRefs;
  */
 export interface Prisma__LocationMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  issues<T extends Prisma.LocationMaster$issuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMaster$issuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IssueTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  items<T extends Prisma.LocationMaster$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMaster$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   parent<T extends Prisma.LocationMaster$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMaster$parentArgs<ExtArgs>>): Prisma.Prisma__LocationMasterClient<runtime.Types.Result.GetResult<Prisma.$LocationMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.LocationMaster$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMaster$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LocationMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  items<T extends Prisma.LocationMaster$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMaster$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchases<T extends Prisma.LocationMaster$purchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMaster$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  issues<T extends Prisma.LocationMaster$issuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMaster$issuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IssueTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stockMovements<T extends Prisma.LocationMaster$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMaster$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2095,6 +2095,54 @@ export type LocationMasterDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * LocationMaster.issues
+ */
+export type LocationMaster$issuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the IssueTransaction
+   */
+  select?: Prisma.IssueTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the IssueTransaction
+   */
+  omit?: Prisma.IssueTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.IssueTransactionInclude<ExtArgs> | null
+  where?: Prisma.IssueTransactionWhereInput
+  orderBy?: Prisma.IssueTransactionOrderByWithRelationInput | Prisma.IssueTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.IssueTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.IssueTransactionScalarFieldEnum | Prisma.IssueTransactionScalarFieldEnum[]
+}
+
+/**
+ * LocationMaster.items
+ */
+export type LocationMaster$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ItemMaster
+   */
+  select?: Prisma.ItemMasterSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ItemMaster
+   */
+  omit?: Prisma.ItemMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemMasterInclude<ExtArgs> | null
+  where?: Prisma.ItemMasterWhereInput
+  orderBy?: Prisma.ItemMasterOrderByWithRelationInput | Prisma.ItemMasterOrderByWithRelationInput[]
+  cursor?: Prisma.ItemMasterWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ItemMasterScalarFieldEnum | Prisma.ItemMasterScalarFieldEnum[]
+}
+
+/**
  * LocationMaster.parent
  */
 export type LocationMaster$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2138,30 +2186,6 @@ export type LocationMaster$childrenArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
- * LocationMaster.items
- */
-export type LocationMaster$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ItemMaster
-   */
-  select?: Prisma.ItemMasterSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ItemMaster
-   */
-  omit?: Prisma.ItemMasterOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ItemMasterInclude<ExtArgs> | null
-  where?: Prisma.ItemMasterWhereInput
-  orderBy?: Prisma.ItemMasterOrderByWithRelationInput | Prisma.ItemMasterOrderByWithRelationInput[]
-  cursor?: Prisma.ItemMasterWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ItemMasterScalarFieldEnum | Prisma.ItemMasterScalarFieldEnum[]
-}
-
-/**
  * LocationMaster.purchases
  */
 export type LocationMaster$purchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2183,30 +2207,6 @@ export type LocationMaster$purchasesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.PurchaseTransactionScalarFieldEnum | Prisma.PurchaseTransactionScalarFieldEnum[]
-}
-
-/**
- * LocationMaster.issues
- */
-export type LocationMaster$issuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the IssueTransaction
-   */
-  select?: Prisma.IssueTransactionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the IssueTransaction
-   */
-  omit?: Prisma.IssueTransactionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.IssueTransactionInclude<ExtArgs> | null
-  where?: Prisma.IssueTransactionWhereInput
-  orderBy?: Prisma.IssueTransactionOrderByWithRelationInput | Prisma.IssueTransactionOrderByWithRelationInput[]
-  cursor?: Prisma.IssueTransactionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.IssueTransactionScalarFieldEnum | Prisma.IssueTransactionScalarFieldEnum[]
 }
 
 /**

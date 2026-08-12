@@ -36,17 +36,9 @@ export type DischargeSheetAvgAggregateOutputType = {
   consumablesAmount: number | null
   implantsAmount: number | null
   instrumentsAmount: number | null
-  anesthesiaAmount: number | null
-  otherChargesAmount: number | null
   totalFinalBill: number | null
   finalApprovedAmount: number | null
   finalAmount: number | null
-  copayAmount: number | null
-  collectedByHospital: number | null
-  collectedByMediend: number | null
-  axisTariffDeduction: number | null
-  axisTariffDeductionPaid: number | null
-  actualFinalAmount: number | null
   deductionAmount: number | null
   discountAmount: number | null
   waivedOffAmount: number | null
@@ -61,7 +53,6 @@ export type DischargeSheetAvgAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
-  instrumentsCost: number | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -69,6 +60,15 @@ export type DischargeSheetAvgAggregateOutputType = {
   mediendSharePct: number | null
   mediendShareAmount: number | null
   mediendNetProfit: number | null
+  instrumentsCost: number | null
+  anesthesiaAmount: number | null
+  otherChargesAmount: number | null
+  copayAmount: number | null
+  collectedByHospital: number | null
+  collectedByMediend: number | null
+  axisTariffDeduction: number | null
+  axisTariffDeductionPaid: number | null
+  actualFinalAmount: number | null
 }
 
 export type DischargeSheetSumAggregateOutputType = {
@@ -81,17 +81,9 @@ export type DischargeSheetSumAggregateOutputType = {
   consumablesAmount: number | null
   implantsAmount: number | null
   instrumentsAmount: number | null
-  anesthesiaAmount: number | null
-  otherChargesAmount: number | null
   totalFinalBill: number | null
   finalApprovedAmount: number | null
   finalAmount: number | null
-  copayAmount: number | null
-  collectedByHospital: number | null
-  collectedByMediend: number | null
-  axisTariffDeduction: number | null
-  axisTariffDeductionPaid: number | null
-  actualFinalAmount: number | null
   deductionAmount: number | null
   discountAmount: number | null
   waivedOffAmount: number | null
@@ -106,7 +98,6 @@ export type DischargeSheetSumAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
-  instrumentsCost: number | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -114,6 +105,15 @@ export type DischargeSheetSumAggregateOutputType = {
   mediendSharePct: number | null
   mediendShareAmount: number | null
   mediendNetProfit: number | null
+  instrumentsCost: number | null
+  anesthesiaAmount: number | null
+  otherChargesAmount: number | null
+  copayAmount: number | null
+  collectedByHospital: number | null
+  collectedByMediend: number | null
+  axisTariffDeduction: number | null
+  axisTariffDeductionPaid: number | null
+  actualFinalAmount: number | null
 }
 
 export type DischargeSheetMinAggregateOutputType = {
@@ -122,7 +122,6 @@ export type DischargeSheetMinAggregateOutputType = {
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
-  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -145,8 +144,6 @@ export type DischargeSheetMinAggregateOutputType = {
   otNotesUrl: string | null
   codesCount: number | null
   finalBillUrl: string | null
-  finalApprovedUrl: string | null
-  deductionReceiptUrl: string | null
   settlementLetterUrl: string | null
   roomRentAmount: number | null
   pharmacyAmount: number | null
@@ -154,17 +151,9 @@ export type DischargeSheetMinAggregateOutputType = {
   consumablesAmount: number | null
   implantsAmount: number | null
   instrumentsAmount: number | null
-  anesthesiaAmount: number | null
-  otherChargesAmount: number | null
   totalFinalBill: number | null
   finalApprovedAmount: number | null
   finalAmount: number | null
-  copayAmount: number | null
-  collectedByHospital: number | null
-  collectedByMediend: number | null
-  axisTariffDeduction: number | null
-  axisTariffDeductionPaid: number | null
-  actualFinalAmount: number | null
   deductionAmount: number | null
   discountAmount: number | null
   waivedOffAmount: number | null
@@ -179,9 +168,6 @@ export type DischargeSheetMinAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
-  instrumentsCost: number | null
-  implantPaidBy: $Enums.PaidByParty | null
-  instrumentsPaidBy: $Enums.PaidByParty | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -189,23 +175,37 @@ export type DischargeSheetMinAggregateOutputType = {
   mediendSharePct: number | null
   mediendShareAmount: number | null
   mediendNetProfit: number | null
-  packageText: string | null
-  othersText: string | null
-  otherCharges: string | null
-  packageAmount: string | null
-  staplerCharges: string | null
   remarks: string | null
-  doctorRemarks: string | null
-  costBreakdownRemarks: string | null
+  createdById: string | null
+  plRecordId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  admissionDate: Date | null
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsCost: number | null
+  instrumentsPaidBy: $Enums.PaidByParty | null
+  othersText: string | null
+  packageText: string | null
   isFinalized: boolean | null
   markedById: string | null
   markedAt: Date | null
   finalizedById: string | null
   finalizedAt: Date | null
-  createdById: string | null
-  plRecordId: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  anesthesiaAmount: number | null
+  otherChargesAmount: number | null
+  copayAmount: number | null
+  collectedByHospital: number | null
+  collectedByMediend: number | null
+  axisTariffDeduction: number | null
+  axisTariffDeductionPaid: number | null
+  actualFinalAmount: number | null
+  finalApprovedUrl: string | null
+  deductionReceiptUrl: string | null
+  costBreakdownRemarks: string | null
+  doctorRemarks: string | null
+  otherCharges: string | null
+  packageAmount: string | null
+  staplerCharges: string | null
 }
 
 export type DischargeSheetMaxAggregateOutputType = {
@@ -214,7 +214,6 @@ export type DischargeSheetMaxAggregateOutputType = {
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
-  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -237,8 +236,6 @@ export type DischargeSheetMaxAggregateOutputType = {
   otNotesUrl: string | null
   codesCount: number | null
   finalBillUrl: string | null
-  finalApprovedUrl: string | null
-  deductionReceiptUrl: string | null
   settlementLetterUrl: string | null
   roomRentAmount: number | null
   pharmacyAmount: number | null
@@ -246,17 +243,9 @@ export type DischargeSheetMaxAggregateOutputType = {
   consumablesAmount: number | null
   implantsAmount: number | null
   instrumentsAmount: number | null
-  anesthesiaAmount: number | null
-  otherChargesAmount: number | null
   totalFinalBill: number | null
   finalApprovedAmount: number | null
   finalAmount: number | null
-  copayAmount: number | null
-  collectedByHospital: number | null
-  collectedByMediend: number | null
-  axisTariffDeduction: number | null
-  axisTariffDeductionPaid: number | null
-  actualFinalAmount: number | null
   deductionAmount: number | null
   discountAmount: number | null
   waivedOffAmount: number | null
@@ -271,9 +260,6 @@ export type DischargeSheetMaxAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
-  instrumentsCost: number | null
-  implantPaidBy: $Enums.PaidByParty | null
-  instrumentsPaidBy: $Enums.PaidByParty | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -281,23 +267,37 @@ export type DischargeSheetMaxAggregateOutputType = {
   mediendSharePct: number | null
   mediendShareAmount: number | null
   mediendNetProfit: number | null
-  packageText: string | null
-  othersText: string | null
-  otherCharges: string | null
-  packageAmount: string | null
-  staplerCharges: string | null
   remarks: string | null
-  doctorRemarks: string | null
-  costBreakdownRemarks: string | null
+  createdById: string | null
+  plRecordId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  admissionDate: Date | null
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsCost: number | null
+  instrumentsPaidBy: $Enums.PaidByParty | null
+  othersText: string | null
+  packageText: string | null
   isFinalized: boolean | null
   markedById: string | null
   markedAt: Date | null
   finalizedById: string | null
   finalizedAt: Date | null
-  createdById: string | null
-  plRecordId: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  anesthesiaAmount: number | null
+  otherChargesAmount: number | null
+  copayAmount: number | null
+  collectedByHospital: number | null
+  collectedByMediend: number | null
+  axisTariffDeduction: number | null
+  axisTariffDeductionPaid: number | null
+  actualFinalAmount: number | null
+  finalApprovedUrl: string | null
+  deductionReceiptUrl: string | null
+  costBreakdownRemarks: string | null
+  doctorRemarks: string | null
+  otherCharges: string | null
+  packageAmount: string | null
+  staplerCharges: string | null
 }
 
 export type DischargeSheetCountAggregateOutputType = {
@@ -306,7 +306,6 @@ export type DischargeSheetCountAggregateOutputType = {
   kypSubmissionId: number
   month: number
   dischargeDate: number
-  admissionDate: number
   surgeryDate: number
   status: number
   paymentType: number
@@ -329,8 +328,6 @@ export type DischargeSheetCountAggregateOutputType = {
   otNotesUrl: number
   codesCount: number
   finalBillUrl: number
-  finalApprovedUrl: number
-  deductionReceiptUrl: number
   settlementLetterUrl: number
   roomRentAmount: number
   pharmacyAmount: number
@@ -338,17 +335,9 @@ export type DischargeSheetCountAggregateOutputType = {
   consumablesAmount: number
   implantsAmount: number
   instrumentsAmount: number
-  anesthesiaAmount: number
-  otherChargesAmount: number
   totalFinalBill: number
   finalApprovedAmount: number
   finalAmount: number
-  copayAmount: number
-  collectedByHospital: number
-  collectedByMediend: number
-  axisTariffDeduction: number
-  axisTariffDeductionPaid: number
-  actualFinalAmount: number
   deductionAmount: number
   discountAmount: number
   waivedOffAmount: number
@@ -363,9 +352,6 @@ export type DischargeSheetCountAggregateOutputType = {
   referralAmount: number
   cabCharges: number
   implantCost: number
-  instrumentsCost: number
-  implantPaidBy: number
-  instrumentsPaidBy: number
   dcCharges: number
   doctorCharges: number
   hospitalSharePct: number
@@ -373,23 +359,37 @@ export type DischargeSheetCountAggregateOutputType = {
   mediendSharePct: number
   mediendShareAmount: number
   mediendNetProfit: number
-  packageText: number
-  othersText: number
-  otherCharges: number
-  packageAmount: number
-  staplerCharges: number
   remarks: number
-  doctorRemarks: number
-  costBreakdownRemarks: number
+  createdById: number
+  plRecordId: number
+  createdAt: number
+  updatedAt: number
+  admissionDate: number
+  implantPaidBy: number
+  instrumentsCost: number
+  instrumentsPaidBy: number
+  othersText: number
+  packageText: number
   isFinalized: number
   markedById: number
   markedAt: number
   finalizedById: number
   finalizedAt: number
-  createdById: number
-  plRecordId: number
-  createdAt: number
-  updatedAt: number
+  anesthesiaAmount: number
+  otherChargesAmount: number
+  copayAmount: number
+  collectedByHospital: number
+  collectedByMediend: number
+  axisTariffDeduction: number
+  axisTariffDeductionPaid: number
+  actualFinalAmount: number
+  finalApprovedUrl: number
+  deductionReceiptUrl: number
+  costBreakdownRemarks: number
+  doctorRemarks: number
+  otherCharges: number
+  packageAmount: number
+  staplerCharges: number
   _all: number
 }
 
@@ -404,17 +404,9 @@ export type DischargeSheetAvgAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
-  anesthesiaAmount?: true
-  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
-  copayAmount?: true
-  collectedByHospital?: true
-  collectedByMediend?: true
-  axisTariffDeduction?: true
-  axisTariffDeductionPaid?: true
-  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -429,7 +421,6 @@ export type DischargeSheetAvgAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -437,6 +428,15 @@ export type DischargeSheetAvgAggregateInputType = {
   mediendSharePct?: true
   mediendShareAmount?: true
   mediendNetProfit?: true
+  instrumentsCost?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
 }
 
 export type DischargeSheetSumAggregateInputType = {
@@ -449,17 +449,9 @@ export type DischargeSheetSumAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
-  anesthesiaAmount?: true
-  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
-  copayAmount?: true
-  collectedByHospital?: true
-  collectedByMediend?: true
-  axisTariffDeduction?: true
-  axisTariffDeductionPaid?: true
-  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -474,7 +466,6 @@ export type DischargeSheetSumAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -482,6 +473,15 @@ export type DischargeSheetSumAggregateInputType = {
   mediendSharePct?: true
   mediendShareAmount?: true
   mediendNetProfit?: true
+  instrumentsCost?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
 }
 
 export type DischargeSheetMinAggregateInputType = {
@@ -490,7 +490,6 @@ export type DischargeSheetMinAggregateInputType = {
   kypSubmissionId?: true
   month?: true
   dischargeDate?: true
-  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -513,8 +512,6 @@ export type DischargeSheetMinAggregateInputType = {
   otNotesUrl?: true
   codesCount?: true
   finalBillUrl?: true
-  finalApprovedUrl?: true
-  deductionReceiptUrl?: true
   settlementLetterUrl?: true
   roomRentAmount?: true
   pharmacyAmount?: true
@@ -522,17 +519,9 @@ export type DischargeSheetMinAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
-  anesthesiaAmount?: true
-  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
-  copayAmount?: true
-  collectedByHospital?: true
-  collectedByMediend?: true
-  axisTariffDeduction?: true
-  axisTariffDeductionPaid?: true
-  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -547,9 +536,6 @@ export type DischargeSheetMinAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
-  implantPaidBy?: true
-  instrumentsPaidBy?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -557,23 +543,37 @@ export type DischargeSheetMinAggregateInputType = {
   mediendSharePct?: true
   mediendShareAmount?: true
   mediendNetProfit?: true
-  packageText?: true
-  othersText?: true
-  otherCharges?: true
-  packageAmount?: true
-  staplerCharges?: true
   remarks?: true
-  doctorRemarks?: true
-  costBreakdownRemarks?: true
+  createdById?: true
+  plRecordId?: true
+  createdAt?: true
+  updatedAt?: true
+  admissionDate?: true
+  implantPaidBy?: true
+  instrumentsCost?: true
+  instrumentsPaidBy?: true
+  othersText?: true
+  packageText?: true
   isFinalized?: true
   markedById?: true
   markedAt?: true
   finalizedById?: true
   finalizedAt?: true
-  createdById?: true
-  plRecordId?: true
-  createdAt?: true
-  updatedAt?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
+  finalApprovedUrl?: true
+  deductionReceiptUrl?: true
+  costBreakdownRemarks?: true
+  doctorRemarks?: true
+  otherCharges?: true
+  packageAmount?: true
+  staplerCharges?: true
 }
 
 export type DischargeSheetMaxAggregateInputType = {
@@ -582,7 +582,6 @@ export type DischargeSheetMaxAggregateInputType = {
   kypSubmissionId?: true
   month?: true
   dischargeDate?: true
-  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -605,8 +604,6 @@ export type DischargeSheetMaxAggregateInputType = {
   otNotesUrl?: true
   codesCount?: true
   finalBillUrl?: true
-  finalApprovedUrl?: true
-  deductionReceiptUrl?: true
   settlementLetterUrl?: true
   roomRentAmount?: true
   pharmacyAmount?: true
@@ -614,17 +611,9 @@ export type DischargeSheetMaxAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
-  anesthesiaAmount?: true
-  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
-  copayAmount?: true
-  collectedByHospital?: true
-  collectedByMediend?: true
-  axisTariffDeduction?: true
-  axisTariffDeductionPaid?: true
-  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -639,9 +628,6 @@ export type DischargeSheetMaxAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
-  implantPaidBy?: true
-  instrumentsPaidBy?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -649,23 +635,37 @@ export type DischargeSheetMaxAggregateInputType = {
   mediendSharePct?: true
   mediendShareAmount?: true
   mediendNetProfit?: true
-  packageText?: true
-  othersText?: true
-  otherCharges?: true
-  packageAmount?: true
-  staplerCharges?: true
   remarks?: true
-  doctorRemarks?: true
-  costBreakdownRemarks?: true
+  createdById?: true
+  plRecordId?: true
+  createdAt?: true
+  updatedAt?: true
+  admissionDate?: true
+  implantPaidBy?: true
+  instrumentsCost?: true
+  instrumentsPaidBy?: true
+  othersText?: true
+  packageText?: true
   isFinalized?: true
   markedById?: true
   markedAt?: true
   finalizedById?: true
   finalizedAt?: true
-  createdById?: true
-  plRecordId?: true
-  createdAt?: true
-  updatedAt?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
+  finalApprovedUrl?: true
+  deductionReceiptUrl?: true
+  costBreakdownRemarks?: true
+  doctorRemarks?: true
+  otherCharges?: true
+  packageAmount?: true
+  staplerCharges?: true
 }
 
 export type DischargeSheetCountAggregateInputType = {
@@ -674,7 +674,6 @@ export type DischargeSheetCountAggregateInputType = {
   kypSubmissionId?: true
   month?: true
   dischargeDate?: true
-  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -697,8 +696,6 @@ export type DischargeSheetCountAggregateInputType = {
   otNotesUrl?: true
   codesCount?: true
   finalBillUrl?: true
-  finalApprovedUrl?: true
-  deductionReceiptUrl?: true
   settlementLetterUrl?: true
   roomRentAmount?: true
   pharmacyAmount?: true
@@ -706,17 +703,9 @@ export type DischargeSheetCountAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
-  anesthesiaAmount?: true
-  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
-  copayAmount?: true
-  collectedByHospital?: true
-  collectedByMediend?: true
-  axisTariffDeduction?: true
-  axisTariffDeductionPaid?: true
-  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -731,9 +720,6 @@ export type DischargeSheetCountAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
-  instrumentsCost?: true
-  implantPaidBy?: true
-  instrumentsPaidBy?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -741,23 +727,37 @@ export type DischargeSheetCountAggregateInputType = {
   mediendSharePct?: true
   mediendShareAmount?: true
   mediendNetProfit?: true
-  packageText?: true
-  othersText?: true
-  otherCharges?: true
-  packageAmount?: true
-  staplerCharges?: true
   remarks?: true
-  doctorRemarks?: true
-  costBreakdownRemarks?: true
+  createdById?: true
+  plRecordId?: true
+  createdAt?: true
+  updatedAt?: true
+  admissionDate?: true
+  implantPaidBy?: true
+  instrumentsCost?: true
+  instrumentsPaidBy?: true
+  othersText?: true
+  packageText?: true
   isFinalized?: true
   markedById?: true
   markedAt?: true
   finalizedById?: true
   finalizedAt?: true
-  createdById?: true
-  plRecordId?: true
-  createdAt?: true
-  updatedAt?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
+  finalApprovedUrl?: true
+  deductionReceiptUrl?: true
+  costBreakdownRemarks?: true
+  doctorRemarks?: true
+  otherCharges?: true
+  packageAmount?: true
+  staplerCharges?: true
   _all?: true
 }
 
@@ -853,7 +853,6 @@ export type DischargeSheetGroupByOutputType = {
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
-  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -876,8 +875,6 @@ export type DischargeSheetGroupByOutputType = {
   otNotesUrl: string | null
   codesCount: number | null
   finalBillUrl: string | null
-  finalApprovedUrl: string | null
-  deductionReceiptUrl: string | null
   settlementLetterUrl: string | null
   roomRentAmount: number
   pharmacyAmount: number
@@ -885,17 +882,9 @@ export type DischargeSheetGroupByOutputType = {
   consumablesAmount: number
   implantsAmount: number
   instrumentsAmount: number | null
-  anesthesiaAmount: number
-  otherChargesAmount: number
   totalFinalBill: number
   finalApprovedAmount: number
   finalAmount: number | null
-  copayAmount: number
-  collectedByHospital: number
-  collectedByMediend: number
-  axisTariffDeduction: number
-  axisTariffDeductionPaid: number
-  actualFinalAmount: number
   deductionAmount: number
   discountAmount: number
   waivedOffAmount: number
@@ -910,9 +899,6 @@ export type DischargeSheetGroupByOutputType = {
   referralAmount: number
   cabCharges: number
   implantCost: number
-  instrumentsCost: number
-  implantPaidBy: $Enums.PaidByParty | null
-  instrumentsPaidBy: $Enums.PaidByParty | null
   dcCharges: number
   doctorCharges: number
   hospitalSharePct: number | null
@@ -920,23 +906,37 @@ export type DischargeSheetGroupByOutputType = {
   mediendSharePct: number | null
   mediendShareAmount: number
   mediendNetProfit: number
-  packageText: string | null
-  othersText: string | null
-  otherCharges: string | null
-  packageAmount: string | null
-  staplerCharges: string | null
   remarks: string | null
-  doctorRemarks: string | null
-  costBreakdownRemarks: string | null
+  createdById: string
+  plRecordId: string | null
+  createdAt: Date
+  updatedAt: Date
+  admissionDate: Date | null
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsCost: number
+  instrumentsPaidBy: $Enums.PaidByParty | null
+  othersText: string | null
+  packageText: string | null
   isFinalized: boolean
   markedById: string | null
   markedAt: Date | null
   finalizedById: string | null
   finalizedAt: Date | null
-  createdById: string
-  plRecordId: string | null
-  createdAt: Date
-  updatedAt: Date
+  anesthesiaAmount: number
+  otherChargesAmount: number
+  copayAmount: number
+  collectedByHospital: number
+  collectedByMediend: number
+  axisTariffDeduction: number
+  axisTariffDeductionPaid: number
+  actualFinalAmount: number
+  finalApprovedUrl: string | null
+  deductionReceiptUrl: string | null
+  costBreakdownRemarks: string | null
+  doctorRemarks: string | null
+  otherCharges: string | null
+  packageAmount: string | null
+  staplerCharges: string | null
   _count: DischargeSheetCountAggregateOutputType | null
   _avg: DischargeSheetAvgAggregateOutputType | null
   _sum: DischargeSheetSumAggregateOutputType | null
@@ -968,7 +968,6 @@ export type DischargeSheetWhereInput = {
   kypSubmissionId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
-  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   status?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   paymentType?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -991,8 +990,6 @@ export type DischargeSheetWhereInput = {
   otNotesUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   codesCount?: Prisma.IntNullableFilter<"DischargeSheet"> | number | null
   finalBillUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   settlementLetterUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   roomRentAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   pharmacyAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -1000,17 +997,9 @@ export type DischargeSheetWhereInput = {
   consumablesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantsAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   instrumentsAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
-  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
-  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   totalFinalBill?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalApprovedAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
-  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
-  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
-  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
-  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
-  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
-  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   deductionAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   discountAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   waivedOffAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -1025,9 +1014,6 @@ export type DischargeSheetWhereInput = {
   referralAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   cabCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantCost?: Prisma.FloatFilter<"DischargeSheet"> | number
-  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
-  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   doctorCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
@@ -1035,28 +1021,42 @@ export type DischargeSheetWhereInput = {
   mediendSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
   mediendShareAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
-  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  doctorRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  costBreakdownRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  createdById?: Prisma.StringFilter<"DischargeSheet"> | string
+  plRecordId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
+  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   isFinalized?: Prisma.BoolFilter<"DischargeSheet"> | boolean
   markedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   markedAt?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   finalizedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   finalizedAt?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
-  createdById?: Prisma.StringFilter<"DischargeSheet"> | string
-  plRecordId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
-  kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionNullableScalarRelationFilter, Prisma.KYPSubmissionWhereInput> | null
-  markedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  finalizedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
+  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  doctorRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  finalizedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionNullableScalarRelationFilter, Prisma.KYPSubmissionWhereInput> | null
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  markedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   plRecord?: Prisma.XOR<Prisma.PLRecordNullableScalarRelationFilter, Prisma.PLRecordWhereInput> | null
 }
 
@@ -1066,7 +1066,6 @@ export type DischargeSheetOrderByWithRelationInput = {
   kypSubmissionId?: Prisma.SortOrderInput | Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
   dischargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   surgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1089,8 +1088,6 @@ export type DischargeSheetOrderByWithRelationInput = {
   otNotesUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   codesCount?: Prisma.SortOrderInput | Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  finalApprovedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  deductionReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -1098,17 +1095,9 @@ export type DischargeSheetOrderByWithRelationInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  anesthesiaAmount?: Prisma.SortOrder
-  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  copayAmount?: Prisma.SortOrder
-  collectedByHospital?: Prisma.SortOrder
-  collectedByMediend?: Prisma.SortOrder
-  axisTariffDeduction?: Prisma.SortOrder
-  axisTariffDeductionPaid?: Prisma.SortOrder
-  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -1123,9 +1112,6 @@ export type DischargeSheetOrderByWithRelationInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1133,28 +1119,42 @@ export type DischargeSheetOrderByWithRelationInput = {
   mediendSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
-  packageText?: Prisma.SortOrderInput | Prisma.SortOrder
-  othersText?: Prisma.SortOrderInput | Prisma.SortOrder
-  otherCharges?: Prisma.SortOrderInput | Prisma.SortOrder
-  packageAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  staplerCharges?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdById?: Prisma.SortOrder
+  plRecordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  othersText?: Prisma.SortOrderInput | Prisma.SortOrder
+  packageText?: Prisma.SortOrderInput | Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrderInput | Prisma.SortOrder
   markedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   finalizedById?: Prisma.SortOrderInput | Prisma.SortOrder
   finalizedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdById?: Prisma.SortOrder
-  plRecordId?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  lead?: Prisma.LeadOrderByWithRelationInput
-  kypSubmission?: Prisma.KYPSubmissionOrderByWithRelationInput
-  markedBy?: Prisma.UserOrderByWithRelationInput
-  finalizedBy?: Prisma.UserOrderByWithRelationInput
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  otherCharges?: Prisma.SortOrderInput | Prisma.SortOrder
+  packageAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.UserOrderByWithRelationInput
+  finalizedBy?: Prisma.UserOrderByWithRelationInput
+  kypSubmission?: Prisma.KYPSubmissionOrderByWithRelationInput
+  lead?: Prisma.LeadOrderByWithRelationInput
+  markedBy?: Prisma.UserOrderByWithRelationInput
   plRecord?: Prisma.PLRecordOrderByWithRelationInput
 }
 
@@ -1168,7 +1168,6 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DischargeSheetWhereInput | Prisma.DischargeSheetWhereInput[]
   month?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
-  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   status?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   paymentType?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -1191,8 +1190,6 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   otNotesUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   codesCount?: Prisma.IntNullableFilter<"DischargeSheet"> | number | null
   finalBillUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   settlementLetterUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   roomRentAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   pharmacyAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -1200,17 +1197,9 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   consumablesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantsAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   instrumentsAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
-  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
-  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   totalFinalBill?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalApprovedAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
-  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
-  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
-  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
-  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
-  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
-  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   deductionAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   discountAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   waivedOffAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -1225,9 +1214,6 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   referralAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   cabCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantCost?: Prisma.FloatFilter<"DischargeSheet"> | number
-  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
-  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   doctorCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
@@ -1235,27 +1221,41 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   mediendSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
   mediendShareAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
-  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  doctorRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  costBreakdownRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  createdById?: Prisma.StringFilter<"DischargeSheet"> | string
+  createdAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
+  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   isFinalized?: Prisma.BoolFilter<"DischargeSheet"> | boolean
   markedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   markedAt?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   finalizedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   finalizedAt?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
-  createdById?: Prisma.StringFilter<"DischargeSheet"> | string
-  createdAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
-  kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionNullableScalarRelationFilter, Prisma.KYPSubmissionWhereInput> | null
-  markedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  finalizedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
+  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  doctorRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  finalizedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionNullableScalarRelationFilter, Prisma.KYPSubmissionWhereInput> | null
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  markedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   plRecord?: Prisma.XOR<Prisma.PLRecordNullableScalarRelationFilter, Prisma.PLRecordWhereInput> | null
 }, "id" | "leadId" | "kypSubmissionId" | "plRecordId">
 
@@ -1265,7 +1265,6 @@ export type DischargeSheetOrderByWithAggregationInput = {
   kypSubmissionId?: Prisma.SortOrderInput | Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
   dischargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   surgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1288,8 +1287,6 @@ export type DischargeSheetOrderByWithAggregationInput = {
   otNotesUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   codesCount?: Prisma.SortOrderInput | Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  finalApprovedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  deductionReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -1297,17 +1294,9 @@ export type DischargeSheetOrderByWithAggregationInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  anesthesiaAmount?: Prisma.SortOrder
-  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  copayAmount?: Prisma.SortOrder
-  collectedByHospital?: Prisma.SortOrder
-  collectedByMediend?: Prisma.SortOrder
-  axisTariffDeduction?: Prisma.SortOrder
-  axisTariffDeductionPaid?: Prisma.SortOrder
-  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -1322,9 +1311,6 @@ export type DischargeSheetOrderByWithAggregationInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1332,23 +1318,37 @@ export type DischargeSheetOrderByWithAggregationInput = {
   mediendSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
-  packageText?: Prisma.SortOrderInput | Prisma.SortOrder
-  othersText?: Prisma.SortOrderInput | Prisma.SortOrder
-  otherCharges?: Prisma.SortOrderInput | Prisma.SortOrder
-  packageAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  staplerCharges?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdById?: Prisma.SortOrder
+  plRecordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  othersText?: Prisma.SortOrderInput | Prisma.SortOrder
+  packageText?: Prisma.SortOrderInput | Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrderInput | Prisma.SortOrder
   markedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   finalizedById?: Prisma.SortOrderInput | Prisma.SortOrder
   finalizedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdById?: Prisma.SortOrder
-  plRecordId?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  otherCharges?: Prisma.SortOrderInput | Prisma.SortOrder
+  packageAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.DischargeSheetCountOrderByAggregateInput
   _avg?: Prisma.DischargeSheetAvgOrderByAggregateInput
   _max?: Prisma.DischargeSheetMaxOrderByAggregateInput
@@ -1365,7 +1365,6 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   kypSubmissionId?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
-  admissionDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
   status?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   paymentType?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
@@ -1388,8 +1387,6 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   otNotesUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   codesCount?: Prisma.IntNullableWithAggregatesFilter<"DischargeSheet"> | number | null
   finalBillUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  finalApprovedUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  deductionReceiptUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   settlementLetterUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   roomRentAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   pharmacyAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
@@ -1397,17 +1394,9 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   consumablesAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   implantsAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   instrumentsAmount?: Prisma.FloatNullableWithAggregatesFilter<"DischargeSheet"> | number | null
-  anesthesiaAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  otherChargesAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   totalFinalBill?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   finalApprovedAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   finalAmount?: Prisma.FloatNullableWithAggregatesFilter<"DischargeSheet"> | number | null
-  copayAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  collectedByHospital?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  collectedByMediend?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  axisTariffDeduction?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  axisTariffDeductionPaid?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  actualFinalAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   deductionAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   discountAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   waivedOffAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
@@ -1422,9 +1411,6 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   referralAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   cabCharges?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   implantCost?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  instrumentsCost?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  implantPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"DischargeSheet"> | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"DischargeSheet"> | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   doctorCharges?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   hospitalSharePct?: Prisma.FloatNullableWithAggregatesFilter<"DischargeSheet"> | number | null
@@ -1432,30 +1418,43 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   mediendSharePct?: Prisma.FloatNullableWithAggregatesFilter<"DischargeSheet"> | number | null
   mediendShareAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   mediendNetProfit?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
-  packageText?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  othersText?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  otherCharges?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  packageAmount?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  staplerCharges?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  doctorRemarks?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  costBreakdownRemarks?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  createdById?: Prisma.StringWithAggregatesFilter<"DischargeSheet"> | string
+  plRecordId?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"DischargeSheet"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DischargeSheet"> | Date | string
+  admissionDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  othersText?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  packageText?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   isFinalized?: Prisma.BoolWithAggregatesFilter<"DischargeSheet"> | boolean
   markedById?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   markedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
   finalizedById?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   finalizedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
-  createdById?: Prisma.StringWithAggregatesFilter<"DischargeSheet"> | string
-  plRecordId?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"DischargeSheet"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DischargeSheet"> | Date | string
+  anesthesiaAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  otherChargesAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  copayAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  collectedByHospital?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  collectedByMediend?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  axisTariffDeduction?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  axisTariffDeductionPaid?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  actualFinalAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  finalApprovedUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  deductionReceiptUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  costBreakdownRemarks?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  doctorRemarks?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  otherCharges?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  packageAmount?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  staplerCharges?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
 }
 
 export type DischargeSheetCreateInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1478,8 +1477,6 @@ export type DischargeSheetCreateInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -1487,17 +1484,9 @@ export type DischargeSheetCreateInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -1512,9 +1501,6 @@ export type DischargeSheetCreateInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1522,24 +1508,38 @@ export type DischargeSheetCreateInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
   finalizedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
-  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
-  markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
-  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
+  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
+  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
+  markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutDischargeSheetInput
 }
 
@@ -1549,7 +1549,6 @@ export type DischargeSheetUncheckedCreateInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1572,8 +1571,6 @@ export type DischargeSheetUncheckedCreateInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -1581,17 +1578,9 @@ export type DischargeSheetUncheckedCreateInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -1606,9 +1595,6 @@ export type DischargeSheetUncheckedCreateInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1616,30 +1602,43 @@ export type DischargeSheetUncheckedCreateInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdById: string
+  plRecordId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedById?: string | null
   markedAt?: Date | string | null
   finalizedById?: string | null
   finalizedAt?: Date | string | null
-  createdById: string
-  plRecordId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
 }
 
 export type DischargeSheetUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1662,8 +1661,6 @@ export type DischargeSheetUpdateInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1671,17 +1668,9 @@ export type DischargeSheetUpdateInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1696,9 +1685,6 @@ export type DischargeSheetUpdateInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1706,24 +1692,38 @@ export type DischargeSheetUpdateInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
-  markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
-  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
+  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
+  markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
   plRecord?: Prisma.PLRecordUpdateOneWithoutDischargeSheetNestedInput
 }
 
@@ -1733,7 +1733,6 @@ export type DischargeSheetUncheckedUpdateInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1756,8 +1755,6 @@ export type DischargeSheetUncheckedUpdateInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1765,17 +1762,9 @@ export type DischargeSheetUncheckedUpdateInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1790,9 +1779,6 @@ export type DischargeSheetUncheckedUpdateInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1800,23 +1786,37 @@ export type DischargeSheetUncheckedUpdateInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
-  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DischargeSheetCreateManyInput = {
@@ -1825,7 +1825,6 @@ export type DischargeSheetCreateManyInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1848,8 +1847,6 @@ export type DischargeSheetCreateManyInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -1857,17 +1854,9 @@ export type DischargeSheetCreateManyInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -1882,9 +1871,6 @@ export type DischargeSheetCreateManyInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1892,30 +1878,43 @@ export type DischargeSheetCreateManyInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdById: string
+  plRecordId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedById?: string | null
   markedAt?: Date | string | null
   finalizedById?: string | null
   finalizedAt?: Date | string | null
-  createdById: string
-  plRecordId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
 }
 
 export type DischargeSheetUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1938,8 +1937,6 @@ export type DischargeSheetUpdateManyMutationInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1947,17 +1944,9 @@ export type DischargeSheetUpdateManyMutationInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1972,9 +1961,6 @@ export type DischargeSheetUpdateManyMutationInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1982,19 +1968,33 @@ export type DischargeSheetUpdateManyMutationInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DischargeSheetUncheckedUpdateManyInput = {
@@ -2003,7 +2003,6 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2026,8 +2025,6 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2035,17 +2032,9 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -2060,9 +2049,6 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2070,23 +2056,37 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
-  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DischargeSheetListRelationFilter = {
@@ -2110,7 +2110,6 @@ export type DischargeSheetCountOrderByAggregateInput = {
   kypSubmissionId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   dischargeDate?: Prisma.SortOrder
-  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -2133,8 +2132,6 @@ export type DischargeSheetCountOrderByAggregateInput = {
   otNotesUrl?: Prisma.SortOrder
   codesCount?: Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrder
-  finalApprovedUrl?: Prisma.SortOrder
-  deductionReceiptUrl?: Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -2142,17 +2139,9 @@ export type DischargeSheetCountOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
-  anesthesiaAmount?: Prisma.SortOrder
-  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
-  copayAmount?: Prisma.SortOrder
-  collectedByHospital?: Prisma.SortOrder
-  collectedByMediend?: Prisma.SortOrder
-  axisTariffDeduction?: Prisma.SortOrder
-  axisTariffDeductionPaid?: Prisma.SortOrder
-  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2167,9 +2156,6 @@ export type DischargeSheetCountOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -2177,23 +2163,37 @@ export type DischargeSheetCountOrderByAggregateInput = {
   mediendSharePct?: Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
-  packageText?: Prisma.SortOrder
-  othersText?: Prisma.SortOrder
-  otherCharges?: Prisma.SortOrder
-  packageAmount?: Prisma.SortOrder
-  staplerCharges?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrder
+  createdById?: Prisma.SortOrder
+  plRecordId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
+  othersText?: Prisma.SortOrder
+  packageText?: Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrder
   markedAt?: Prisma.SortOrder
   finalizedById?: Prisma.SortOrder
   finalizedAt?: Prisma.SortOrder
-  createdById?: Prisma.SortOrder
-  plRecordId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  otherCharges?: Prisma.SortOrder
+  packageAmount?: Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrder
 }
 
 export type DischargeSheetAvgOrderByAggregateInput = {
@@ -2206,17 +2206,9 @@ export type DischargeSheetAvgOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
-  anesthesiaAmount?: Prisma.SortOrder
-  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
-  copayAmount?: Prisma.SortOrder
-  collectedByHospital?: Prisma.SortOrder
-  collectedByMediend?: Prisma.SortOrder
-  axisTariffDeduction?: Prisma.SortOrder
-  axisTariffDeductionPaid?: Prisma.SortOrder
-  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2231,7 +2223,6 @@ export type DischargeSheetAvgOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -2239,6 +2230,15 @@ export type DischargeSheetAvgOrderByAggregateInput = {
   mediendSharePct?: Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
 }
 
 export type DischargeSheetMaxOrderByAggregateInput = {
@@ -2247,7 +2247,6 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   kypSubmissionId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   dischargeDate?: Prisma.SortOrder
-  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -2270,8 +2269,6 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   otNotesUrl?: Prisma.SortOrder
   codesCount?: Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrder
-  finalApprovedUrl?: Prisma.SortOrder
-  deductionReceiptUrl?: Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -2279,17 +2276,9 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
-  anesthesiaAmount?: Prisma.SortOrder
-  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
-  copayAmount?: Prisma.SortOrder
-  collectedByHospital?: Prisma.SortOrder
-  collectedByMediend?: Prisma.SortOrder
-  axisTariffDeduction?: Prisma.SortOrder
-  axisTariffDeductionPaid?: Prisma.SortOrder
-  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2304,9 +2293,6 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -2314,23 +2300,37 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   mediendSharePct?: Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
-  packageText?: Prisma.SortOrder
-  othersText?: Prisma.SortOrder
-  otherCharges?: Prisma.SortOrder
-  packageAmount?: Prisma.SortOrder
-  staplerCharges?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrder
+  createdById?: Prisma.SortOrder
+  plRecordId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
+  othersText?: Prisma.SortOrder
+  packageText?: Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrder
   markedAt?: Prisma.SortOrder
   finalizedById?: Prisma.SortOrder
   finalizedAt?: Prisma.SortOrder
-  createdById?: Prisma.SortOrder
-  plRecordId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  otherCharges?: Prisma.SortOrder
+  packageAmount?: Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrder
 }
 
 export type DischargeSheetMinOrderByAggregateInput = {
@@ -2339,7 +2339,6 @@ export type DischargeSheetMinOrderByAggregateInput = {
   kypSubmissionId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   dischargeDate?: Prisma.SortOrder
-  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -2362,8 +2361,6 @@ export type DischargeSheetMinOrderByAggregateInput = {
   otNotesUrl?: Prisma.SortOrder
   codesCount?: Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrder
-  finalApprovedUrl?: Prisma.SortOrder
-  deductionReceiptUrl?: Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -2371,17 +2368,9 @@ export type DischargeSheetMinOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
-  anesthesiaAmount?: Prisma.SortOrder
-  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
-  copayAmount?: Prisma.SortOrder
-  collectedByHospital?: Prisma.SortOrder
-  collectedByMediend?: Prisma.SortOrder
-  axisTariffDeduction?: Prisma.SortOrder
-  axisTariffDeductionPaid?: Prisma.SortOrder
-  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2396,9 +2385,6 @@ export type DischargeSheetMinOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
-  implantPaidBy?: Prisma.SortOrder
-  instrumentsPaidBy?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -2406,23 +2392,37 @@ export type DischargeSheetMinOrderByAggregateInput = {
   mediendSharePct?: Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
-  packageText?: Prisma.SortOrder
-  othersText?: Prisma.SortOrder
-  otherCharges?: Prisma.SortOrder
-  packageAmount?: Prisma.SortOrder
-  staplerCharges?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
-  doctorRemarks?: Prisma.SortOrder
-  costBreakdownRemarks?: Prisma.SortOrder
+  createdById?: Prisma.SortOrder
+  plRecordId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
+  othersText?: Prisma.SortOrder
+  packageText?: Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrder
   markedAt?: Prisma.SortOrder
   finalizedById?: Prisma.SortOrder
   finalizedAt?: Prisma.SortOrder
-  createdById?: Prisma.SortOrder
-  plRecordId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  otherCharges?: Prisma.SortOrder
+  packageAmount?: Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrder
 }
 
 export type DischargeSheetSumOrderByAggregateInput = {
@@ -2435,17 +2435,9 @@ export type DischargeSheetSumOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
-  anesthesiaAmount?: Prisma.SortOrder
-  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
-  copayAmount?: Prisma.SortOrder
-  collectedByHospital?: Prisma.SortOrder
-  collectedByMediend?: Prisma.SortOrder
-  axisTariffDeduction?: Prisma.SortOrder
-  axisTariffDeductionPaid?: Prisma.SortOrder
-  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2460,7 +2452,6 @@ export type DischargeSheetSumOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
-  instrumentsCost?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -2468,19 +2459,21 @@ export type DischargeSheetSumOrderByAggregateInput = {
   mediendSharePct?: Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
 }
 
 export type DischargeSheetCreateNestedManyWithoutCreatedByInput = {
   create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutCreatedByInput, Prisma.DischargeSheetUncheckedCreateWithoutCreatedByInput> | Prisma.DischargeSheetCreateWithoutCreatedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutCreatedByInput | Prisma.DischargeSheetCreateOrConnectWithoutCreatedByInput[]
   createMany?: Prisma.DischargeSheetCreateManyCreatedByInputEnvelope
-  connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-}
-
-export type DischargeSheetCreateNestedManyWithoutMarkedByInput = {
-  create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput> | Prisma.DischargeSheetCreateWithoutMarkedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput[]
-  connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput | Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput[]
-  createMany?: Prisma.DischargeSheetCreateManyMarkedByInputEnvelope
   connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
 }
 
@@ -2491,6 +2484,13 @@ export type DischargeSheetCreateNestedManyWithoutFinalizedByInput = {
   connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
 }
 
+export type DischargeSheetCreateNestedManyWithoutMarkedByInput = {
+  create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput> | Prisma.DischargeSheetCreateWithoutMarkedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput[]
+  connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput | Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput[]
+  createMany?: Prisma.DischargeSheetCreateManyMarkedByInputEnvelope
+  connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+}
+
 export type DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput = {
   create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutCreatedByInput, Prisma.DischargeSheetUncheckedCreateWithoutCreatedByInput> | Prisma.DischargeSheetCreateWithoutCreatedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutCreatedByInput | Prisma.DischargeSheetCreateOrConnectWithoutCreatedByInput[]
@@ -2498,17 +2498,17 @@ export type DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput = {
   connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
 }
 
-export type DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput = {
-  create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput> | Prisma.DischargeSheetCreateWithoutMarkedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput[]
-  connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput | Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput[]
-  createMany?: Prisma.DischargeSheetCreateManyMarkedByInputEnvelope
-  connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-}
-
 export type DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput = {
   create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutFinalizedByInput, Prisma.DischargeSheetUncheckedCreateWithoutFinalizedByInput> | Prisma.DischargeSheetCreateWithoutFinalizedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutFinalizedByInput[]
   connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutFinalizedByInput | Prisma.DischargeSheetCreateOrConnectWithoutFinalizedByInput[]
   createMany?: Prisma.DischargeSheetCreateManyFinalizedByInputEnvelope
+  connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+}
+
+export type DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput = {
+  create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput> | Prisma.DischargeSheetCreateWithoutMarkedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput[]
+  connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput | Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput[]
+  createMany?: Prisma.DischargeSheetCreateManyMarkedByInputEnvelope
   connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
 }
 
@@ -2526,20 +2526,6 @@ export type DischargeSheetUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
 }
 
-export type DischargeSheetUpdateManyWithoutMarkedByNestedInput = {
-  create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput> | Prisma.DischargeSheetCreateWithoutMarkedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput[]
-  connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput | Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput[]
-  upsert?: Prisma.DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput | Prisma.DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput[]
-  createMany?: Prisma.DischargeSheetCreateManyMarkedByInputEnvelope
-  set?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-  disconnect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-  delete?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-  connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-  update?: Prisma.DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput | Prisma.DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput[]
-  updateMany?: Prisma.DischargeSheetUpdateManyWithWhereWithoutMarkedByInput | Prisma.DischargeSheetUpdateManyWithWhereWithoutMarkedByInput[]
-  deleteMany?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
-}
-
 export type DischargeSheetUpdateManyWithoutFinalizedByNestedInput = {
   create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutFinalizedByInput, Prisma.DischargeSheetUncheckedCreateWithoutFinalizedByInput> | Prisma.DischargeSheetCreateWithoutFinalizedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutFinalizedByInput[]
   connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutFinalizedByInput | Prisma.DischargeSheetCreateOrConnectWithoutFinalizedByInput[]
@@ -2551,6 +2537,20 @@ export type DischargeSheetUpdateManyWithoutFinalizedByNestedInput = {
   connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
   update?: Prisma.DischargeSheetUpdateWithWhereUniqueWithoutFinalizedByInput | Prisma.DischargeSheetUpdateWithWhereUniqueWithoutFinalizedByInput[]
   updateMany?: Prisma.DischargeSheetUpdateManyWithWhereWithoutFinalizedByInput | Prisma.DischargeSheetUpdateManyWithWhereWithoutFinalizedByInput[]
+  deleteMany?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
+}
+
+export type DischargeSheetUpdateManyWithoutMarkedByNestedInput = {
+  create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput> | Prisma.DischargeSheetCreateWithoutMarkedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput[]
+  connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput | Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput[]
+  upsert?: Prisma.DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput | Prisma.DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput[]
+  createMany?: Prisma.DischargeSheetCreateManyMarkedByInputEnvelope
+  set?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+  disconnect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+  delete?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+  connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+  update?: Prisma.DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput | Prisma.DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput[]
+  updateMany?: Prisma.DischargeSheetUpdateManyWithWhereWithoutMarkedByInput | Prisma.DischargeSheetUpdateManyWithWhereWithoutMarkedByInput[]
   deleteMany?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
 }
 
@@ -2568,20 +2568,6 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
 }
 
-export type DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput = {
-  create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput> | Prisma.DischargeSheetCreateWithoutMarkedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput[]
-  connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput | Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput[]
-  upsert?: Prisma.DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput | Prisma.DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput[]
-  createMany?: Prisma.DischargeSheetCreateManyMarkedByInputEnvelope
-  set?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-  disconnect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-  delete?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-  connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
-  update?: Prisma.DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput | Prisma.DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput[]
-  updateMany?: Prisma.DischargeSheetUpdateManyWithWhereWithoutMarkedByInput | Prisma.DischargeSheetUpdateManyWithWhereWithoutMarkedByInput[]
-  deleteMany?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
-}
-
 export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput = {
   create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutFinalizedByInput, Prisma.DischargeSheetUncheckedCreateWithoutFinalizedByInput> | Prisma.DischargeSheetCreateWithoutFinalizedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutFinalizedByInput[]
   connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutFinalizedByInput | Prisma.DischargeSheetCreateOrConnectWithoutFinalizedByInput[]
@@ -2593,6 +2579,20 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput = {
   connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
   update?: Prisma.DischargeSheetUpdateWithWhereUniqueWithoutFinalizedByInput | Prisma.DischargeSheetUpdateWithWhereUniqueWithoutFinalizedByInput[]
   updateMany?: Prisma.DischargeSheetUpdateManyWithWhereWithoutFinalizedByInput | Prisma.DischargeSheetUpdateManyWithWhereWithoutFinalizedByInput[]
+  deleteMany?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
+}
+
+export type DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput = {
+  create?: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput> | Prisma.DischargeSheetCreateWithoutMarkedByInput[] | Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput[]
+  connectOrCreate?: Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput | Prisma.DischargeSheetCreateOrConnectWithoutMarkedByInput[]
+  upsert?: Prisma.DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput | Prisma.DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput[]
+  createMany?: Prisma.DischargeSheetCreateManyMarkedByInputEnvelope
+  set?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+  disconnect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+  delete?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+  connect?: Prisma.DischargeSheetWhereUniqueInput | Prisma.DischargeSheetWhereUniqueInput[]
+  update?: Prisma.DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput | Prisma.DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput[]
+  updateMany?: Prisma.DischargeSheetUpdateManyWithWhereWithoutMarkedByInput | Prisma.DischargeSheetUpdateManyWithWhereWithoutMarkedByInput[]
   deleteMany?: Prisma.DischargeSheetScalarWhereInput | Prisma.DischargeSheetScalarWhereInput[]
 }
 
@@ -2696,7 +2696,6 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2719,8 +2718,6 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -2728,17 +2725,9 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -2753,9 +2742,6 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2763,23 +2749,37 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
   finalizedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
-  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
-  markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
+  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
+  markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutDischargeSheetInput
 }
 
@@ -2789,7 +2789,6 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2812,8 +2811,6 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -2821,17 +2818,9 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -2846,9 +2835,6 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2856,22 +2842,36 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  plRecordId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedById?: string | null
   markedAt?: Date | string | null
   finalizedById?: string | null
   finalizedAt?: Date | string | null
-  plRecordId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
 }
 
 export type DischargeSheetCreateOrConnectWithoutCreatedByInput = {
@@ -2884,203 +2884,10 @@ export type DischargeSheetCreateManyCreatedByInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type DischargeSheetCreateWithoutMarkedByInput = {
-  id?: string
-  month?: Date | string | null
-  dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
-  surgeryDate?: Date | string | null
-  status?: string | null
-  paymentType?: string | null
-  approvedOrCash?: string | null
-  paymentCollectedAt?: string | null
-  managerRole?: string | null
-  managerName?: string | null
-  bdmName?: string | null
-  patientName?: string | null
-  patientPhone?: string | null
-  doctorName?: string | null
-  hospitalName?: string | null
-  category?: string | null
-  treatment?: string | null
-  circle?: string | null
-  leadSource?: string | null
-  tentativeAmount?: number | null
-  copayPct?: number | null
-  dischargeSummaryUrl?: string | null
-  otNotesUrl?: string | null
-  codesCount?: number | null
-  finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
-  settlementLetterUrl?: string | null
-  roomRentAmount?: number
-  pharmacyAmount?: number
-  investigationAmount?: number
-  consumablesAmount?: number
-  implantsAmount?: number
-  instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
-  totalFinalBill?: number
-  finalApprovedAmount?: number
-  finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
-  deductionAmount?: number
-  discountAmount?: number
-  waivedOffAmount?: number
-  settlementPart?: number
-  tdsAmount?: number
-  otherDeduction?: number
-  netSettlementAmount?: number
-  totalAmount?: number
-  billAmount?: number
-  cashPaidByPatient?: number
-  cashOrDedPaid?: number
-  referralAmount?: number
-  cabCharges?: number
-  implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  dcCharges?: number
-  doctorCharges?: number
-  hospitalSharePct?: number | null
-  hospitalShareAmount?: number
-  mediendSharePct?: number | null
-  mediendShareAmount?: number
-  mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
-  remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
-  isFinalized?: boolean
-  markedAt?: Date | string | null
-  finalizedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
-  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
-  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
-  createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
-  plRecord?: Prisma.PLRecordCreateNestedOneWithoutDischargeSheetInput
-}
-
-export type DischargeSheetUncheckedCreateWithoutMarkedByInput = {
-  id?: string
-  leadId: string
-  kypSubmissionId?: string | null
-  month?: Date | string | null
-  dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
-  surgeryDate?: Date | string | null
-  status?: string | null
-  paymentType?: string | null
-  approvedOrCash?: string | null
-  paymentCollectedAt?: string | null
-  managerRole?: string | null
-  managerName?: string | null
-  bdmName?: string | null
-  patientName?: string | null
-  patientPhone?: string | null
-  doctorName?: string | null
-  hospitalName?: string | null
-  category?: string | null
-  treatment?: string | null
-  circle?: string | null
-  leadSource?: string | null
-  tentativeAmount?: number | null
-  copayPct?: number | null
-  dischargeSummaryUrl?: string | null
-  otNotesUrl?: string | null
-  codesCount?: number | null
-  finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
-  settlementLetterUrl?: string | null
-  roomRentAmount?: number
-  pharmacyAmount?: number
-  investigationAmount?: number
-  consumablesAmount?: number
-  implantsAmount?: number
-  instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
-  totalFinalBill?: number
-  finalApprovedAmount?: number
-  finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
-  deductionAmount?: number
-  discountAmount?: number
-  waivedOffAmount?: number
-  settlementPart?: number
-  tdsAmount?: number
-  otherDeduction?: number
-  netSettlementAmount?: number
-  totalAmount?: number
-  billAmount?: number
-  cashPaidByPatient?: number
-  cashOrDedPaid?: number
-  referralAmount?: number
-  cabCharges?: number
-  implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  dcCharges?: number
-  doctorCharges?: number
-  hospitalSharePct?: number | null
-  hospitalShareAmount?: number
-  mediendSharePct?: number | null
-  mediendShareAmount?: number
-  mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
-  remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
-  isFinalized?: boolean
-  markedAt?: Date | string | null
-  finalizedById?: string | null
-  finalizedAt?: Date | string | null
-  createdById: string
-  plRecordId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type DischargeSheetCreateOrConnectWithoutMarkedByInput = {
-  where: Prisma.DischargeSheetWhereUniqueInput
-  create: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput>
-}
-
-export type DischargeSheetCreateManyMarkedByInputEnvelope = {
-  data: Prisma.DischargeSheetCreateManyMarkedByInput | Prisma.DischargeSheetCreateManyMarkedByInput[]
-  skipDuplicates?: boolean
-}
-
 export type DischargeSheetCreateWithoutFinalizedByInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -3103,8 +2910,6 @@ export type DischargeSheetCreateWithoutFinalizedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3112,17 +2917,9 @@ export type DischargeSheetCreateWithoutFinalizedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3137,9 +2934,6 @@ export type DischargeSheetCreateWithoutFinalizedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -3147,23 +2941,37 @@ export type DischargeSheetCreateWithoutFinalizedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
   finalizedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
-  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
-  markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
+  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
+  markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutDischargeSheetInput
 }
 
@@ -3173,7 +2981,6 @@ export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -3196,8 +3003,6 @@ export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3205,17 +3010,9 @@ export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3230,9 +3027,6 @@ export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -3240,22 +3034,36 @@ export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
-  isFinalized?: boolean
-  markedById?: string | null
-  markedAt?: Date | string | null
-  finalizedAt?: Date | string | null
   createdById: string
   plRecordId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
+  isFinalized?: boolean
+  markedById?: string | null
+  markedAt?: Date | string | null
+  finalizedAt?: Date | string | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
 }
 
 export type DischargeSheetCreateOrConnectWithoutFinalizedByInput = {
@@ -3265,6 +3073,198 @@ export type DischargeSheetCreateOrConnectWithoutFinalizedByInput = {
 
 export type DischargeSheetCreateManyFinalizedByInputEnvelope = {
   data: Prisma.DischargeSheetCreateManyFinalizedByInput | Prisma.DischargeSheetCreateManyFinalizedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type DischargeSheetCreateWithoutMarkedByInput = {
+  id?: string
+  month?: Date | string | null
+  dischargeDate?: Date | string | null
+  surgeryDate?: Date | string | null
+  status?: string | null
+  paymentType?: string | null
+  approvedOrCash?: string | null
+  paymentCollectedAt?: string | null
+  managerRole?: string | null
+  managerName?: string | null
+  bdmName?: string | null
+  patientName?: string | null
+  patientPhone?: string | null
+  doctorName?: string | null
+  hospitalName?: string | null
+  category?: string | null
+  treatment?: string | null
+  circle?: string | null
+  leadSource?: string | null
+  tentativeAmount?: number | null
+  copayPct?: number | null
+  dischargeSummaryUrl?: string | null
+  otNotesUrl?: string | null
+  codesCount?: number | null
+  finalBillUrl?: string | null
+  settlementLetterUrl?: string | null
+  roomRentAmount?: number
+  pharmacyAmount?: number
+  investigationAmount?: number
+  consumablesAmount?: number
+  implantsAmount?: number
+  instrumentsAmount?: number | null
+  totalFinalBill?: number
+  finalApprovedAmount?: number
+  finalAmount?: number | null
+  deductionAmount?: number
+  discountAmount?: number
+  waivedOffAmount?: number
+  settlementPart?: number
+  tdsAmount?: number
+  otherDeduction?: number
+  netSettlementAmount?: number
+  totalAmount?: number
+  billAmount?: number
+  cashPaidByPatient?: number
+  cashOrDedPaid?: number
+  referralAmount?: number
+  cabCharges?: number
+  implantCost?: number
+  dcCharges?: number
+  doctorCharges?: number
+  hospitalSharePct?: number | null
+  hospitalShareAmount?: number
+  mediendSharePct?: number | null
+  mediendShareAmount?: number
+  mediendNetProfit?: number
+  remarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
+  isFinalized?: boolean
+  markedAt?: Date | string | null
+  finalizedAt?: Date | string | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
+  createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
+  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
+  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
+  plRecord?: Prisma.PLRecordCreateNestedOneWithoutDischargeSheetInput
+}
+
+export type DischargeSheetUncheckedCreateWithoutMarkedByInput = {
+  id?: string
+  leadId: string
+  kypSubmissionId?: string | null
+  month?: Date | string | null
+  dischargeDate?: Date | string | null
+  surgeryDate?: Date | string | null
+  status?: string | null
+  paymentType?: string | null
+  approvedOrCash?: string | null
+  paymentCollectedAt?: string | null
+  managerRole?: string | null
+  managerName?: string | null
+  bdmName?: string | null
+  patientName?: string | null
+  patientPhone?: string | null
+  doctorName?: string | null
+  hospitalName?: string | null
+  category?: string | null
+  treatment?: string | null
+  circle?: string | null
+  leadSource?: string | null
+  tentativeAmount?: number | null
+  copayPct?: number | null
+  dischargeSummaryUrl?: string | null
+  otNotesUrl?: string | null
+  codesCount?: number | null
+  finalBillUrl?: string | null
+  settlementLetterUrl?: string | null
+  roomRentAmount?: number
+  pharmacyAmount?: number
+  investigationAmount?: number
+  consumablesAmount?: number
+  implantsAmount?: number
+  instrumentsAmount?: number | null
+  totalFinalBill?: number
+  finalApprovedAmount?: number
+  finalAmount?: number | null
+  deductionAmount?: number
+  discountAmount?: number
+  waivedOffAmount?: number
+  settlementPart?: number
+  tdsAmount?: number
+  otherDeduction?: number
+  netSettlementAmount?: number
+  totalAmount?: number
+  billAmount?: number
+  cashPaidByPatient?: number
+  cashOrDedPaid?: number
+  referralAmount?: number
+  cabCharges?: number
+  implantCost?: number
+  dcCharges?: number
+  doctorCharges?: number
+  hospitalSharePct?: number | null
+  hospitalShareAmount?: number
+  mediendSharePct?: number | null
+  mediendShareAmount?: number
+  mediendNetProfit?: number
+  remarks?: string | null
+  createdById: string
+  plRecordId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
+  isFinalized?: boolean
+  markedAt?: Date | string | null
+  finalizedById?: string | null
+  finalizedAt?: Date | string | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
+}
+
+export type DischargeSheetCreateOrConnectWithoutMarkedByInput = {
+  where: Prisma.DischargeSheetWhereUniqueInput
+  create: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput>
+}
+
+export type DischargeSheetCreateManyMarkedByInputEnvelope = {
+  data: Prisma.DischargeSheetCreateManyMarkedByInput | Prisma.DischargeSheetCreateManyMarkedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -3293,7 +3293,6 @@ export type DischargeSheetScalarWhereInput = {
   kypSubmissionId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
-  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   status?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   paymentType?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -3316,8 +3315,6 @@ export type DischargeSheetScalarWhereInput = {
   otNotesUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   codesCount?: Prisma.IntNullableFilter<"DischargeSheet"> | number | null
   finalBillUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   settlementLetterUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   roomRentAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   pharmacyAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -3325,17 +3322,9 @@ export type DischargeSheetScalarWhereInput = {
   consumablesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantsAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   instrumentsAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
-  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
-  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   totalFinalBill?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalApprovedAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
-  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
-  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
-  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
-  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
-  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
-  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   deductionAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   discountAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   waivedOffAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -3350,9 +3339,6 @@ export type DischargeSheetScalarWhereInput = {
   referralAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   cabCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantCost?: Prisma.FloatFilter<"DischargeSheet"> | number
-  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
-  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   doctorCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
@@ -3360,39 +3346,37 @@ export type DischargeSheetScalarWhereInput = {
   mediendSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
   mediendShareAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
-  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  doctorRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  costBreakdownRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  createdById?: Prisma.StringFilter<"DischargeSheet"> | string
+  plRecordId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
+  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   isFinalized?: Prisma.BoolFilter<"DischargeSheet"> | boolean
   markedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   markedAt?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   finalizedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   finalizedAt?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
-  createdById?: Prisma.StringFilter<"DischargeSheet"> | string
-  plRecordId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
-}
-
-export type DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput = {
-  where: Prisma.DischargeSheetWhereUniqueInput
-  update: Prisma.XOR<Prisma.DischargeSheetUpdateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedUpdateWithoutMarkedByInput>
-  create: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput>
-}
-
-export type DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput = {
-  where: Prisma.DischargeSheetWhereUniqueInput
-  data: Prisma.XOR<Prisma.DischargeSheetUpdateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedUpdateWithoutMarkedByInput>
-}
-
-export type DischargeSheetUpdateManyWithWhereWithoutMarkedByInput = {
-  where: Prisma.DischargeSheetScalarWhereInput
-  data: Prisma.XOR<Prisma.DischargeSheetUpdateManyMutationInput, Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByInput>
+  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
+  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  doctorRemarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
 }
 
 export type DischargeSheetUpsertWithWhereUniqueWithoutFinalizedByInput = {
@@ -3411,11 +3395,26 @@ export type DischargeSheetUpdateManyWithWhereWithoutFinalizedByInput = {
   data: Prisma.XOR<Prisma.DischargeSheetUpdateManyMutationInput, Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput>
 }
 
+export type DischargeSheetUpsertWithWhereUniqueWithoutMarkedByInput = {
+  where: Prisma.DischargeSheetWhereUniqueInput
+  update: Prisma.XOR<Prisma.DischargeSheetUpdateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedUpdateWithoutMarkedByInput>
+  create: Prisma.XOR<Prisma.DischargeSheetCreateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedCreateWithoutMarkedByInput>
+}
+
+export type DischargeSheetUpdateWithWhereUniqueWithoutMarkedByInput = {
+  where: Prisma.DischargeSheetWhereUniqueInput
+  data: Prisma.XOR<Prisma.DischargeSheetUpdateWithoutMarkedByInput, Prisma.DischargeSheetUncheckedUpdateWithoutMarkedByInput>
+}
+
+export type DischargeSheetUpdateManyWithWhereWithoutMarkedByInput = {
+  where: Prisma.DischargeSheetScalarWhereInput
+  data: Prisma.XOR<Prisma.DischargeSheetUpdateManyMutationInput, Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByInput>
+}
+
 export type DischargeSheetCreateWithoutLeadInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -3438,8 +3437,6 @@ export type DischargeSheetCreateWithoutLeadInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3447,17 +3444,9 @@ export type DischargeSheetCreateWithoutLeadInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3472,9 +3461,6 @@ export type DischargeSheetCreateWithoutLeadInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -3482,23 +3468,37 @@ export type DischargeSheetCreateWithoutLeadInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
   finalizedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
+  createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
+  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
   markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
-  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
-  createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutDischargeSheetInput
 }
 
@@ -3507,7 +3507,6 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -3530,8 +3529,6 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3539,17 +3536,9 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3564,9 +3553,6 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -3574,23 +3560,37 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdById: string
+  plRecordId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedById?: string | null
   markedAt?: Date | string | null
   finalizedById?: string | null
   finalizedAt?: Date | string | null
-  createdById: string
-  plRecordId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
 }
 
 export type DischargeSheetCreateOrConnectWithoutLeadInput = {
@@ -3613,7 +3613,6 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3636,8 +3635,6 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3645,17 +3642,9 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3670,9 +3659,6 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3680,23 +3666,37 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
+  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
   markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
-  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
   plRecord?: Prisma.PLRecordUpdateOneWithoutDischargeSheetNestedInput
 }
 
@@ -3705,7 +3705,6 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3728,8 +3727,6 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3737,17 +3734,9 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3762,9 +3751,6 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3772,30 +3758,43 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
-  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DischargeSheetCreateWithoutPlRecordInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -3818,8 +3817,6 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3827,17 +3824,9 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3852,9 +3841,6 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -3862,24 +3848,38 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
   finalizedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
-  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
-  markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
-  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
+  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutDischargeSheetInput
+  lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
+  markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
 }
 
 export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
@@ -3888,7 +3888,6 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -3911,8 +3910,6 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3920,17 +3917,9 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3945,9 +3934,6 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -3955,22 +3941,36 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedById?: string | null
   markedAt?: Date | string | null
   finalizedById?: string | null
   finalizedAt?: Date | string | null
-  createdById: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
 }
 
 export type DischargeSheetCreateOrConnectWithoutPlRecordInput = {
@@ -3993,7 +3993,6 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4016,8 +4015,6 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4025,17 +4022,9 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4050,9 +4039,6 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4060,24 +4046,38 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
-  markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
-  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
+  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
+  markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
 }
 
 export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
@@ -4086,7 +4086,6 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4109,8 +4108,6 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4118,17 +4115,9 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4143,9 +4132,6 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4153,29 +4139,42 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DischargeSheetCreateWithoutKypSubmissionInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -4198,8 +4197,6 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -4207,17 +4204,9 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -4232,9 +4221,6 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -4242,23 +4228,37 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
   finalizedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
+  createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
+  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
   lead: Prisma.LeadCreateNestedOneWithoutDischargeSheetInput
   markedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsMarkedInput
-  finalizedBy?: Prisma.UserCreateNestedOneWithoutDischargeSheetsFinalizedInput
-  createdBy: Prisma.UserCreateNestedOneWithoutDischargeSheetsCreatedInput
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutDischargeSheetInput
 }
 
@@ -4267,7 +4267,6 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   leadId: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -4290,8 +4289,6 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -4299,17 +4296,9 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -4324,9 +4313,6 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -4334,23 +4320,37 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  createdById: string
+  plRecordId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedById?: string | null
   markedAt?: Date | string | null
   finalizedById?: string | null
   finalizedAt?: Date | string | null
-  createdById: string
-  plRecordId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
 }
 
 export type DischargeSheetCreateOrConnectWithoutKypSubmissionInput = {
@@ -4373,7 +4373,6 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4396,8 +4395,6 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4405,17 +4402,9 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4430,9 +4419,6 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4440,23 +4426,37 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
+  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
   markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
-  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
   plRecord?: Prisma.PLRecordUpdateOneWithoutDischargeSheetNestedInput
 }
 
@@ -4465,7 +4465,6 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4488,8 +4487,6 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4497,17 +4494,9 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4522,9 +4511,6 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4532,23 +4518,37 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
-  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DischargeSheetCreateManyCreatedByInput = {
@@ -4557,7 +4557,6 @@ export type DischargeSheetCreateManyCreatedByInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -4580,8 +4579,6 @@ export type DischargeSheetCreateManyCreatedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -4589,17 +4586,9 @@ export type DischargeSheetCreateManyCreatedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -4614,9 +4603,6 @@ export type DischargeSheetCreateManyCreatedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -4624,113 +4610,36 @@ export type DischargeSheetCreateManyCreatedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
+  plRecordId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
   isFinalized?: boolean
   markedById?: string | null
   markedAt?: Date | string | null
   finalizedById?: string | null
   finalizedAt?: Date | string | null
-  plRecordId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type DischargeSheetCreateManyMarkedByInput = {
-  id?: string
-  leadId: string
-  kypSubmissionId?: string | null
-  month?: Date | string | null
-  dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
-  surgeryDate?: Date | string | null
-  status?: string | null
-  paymentType?: string | null
-  approvedOrCash?: string | null
-  paymentCollectedAt?: string | null
-  managerRole?: string | null
-  managerName?: string | null
-  bdmName?: string | null
-  patientName?: string | null
-  patientPhone?: string | null
-  doctorName?: string | null
-  hospitalName?: string | null
-  category?: string | null
-  treatment?: string | null
-  circle?: string | null
-  leadSource?: string | null
-  tentativeAmount?: number | null
-  copayPct?: number | null
-  dischargeSummaryUrl?: string | null
-  otNotesUrl?: string | null
-  codesCount?: number | null
-  finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
-  settlementLetterUrl?: string | null
-  roomRentAmount?: number
-  pharmacyAmount?: number
-  investigationAmount?: number
-  consumablesAmount?: number
-  implantsAmount?: number
-  instrumentsAmount?: number | null
   anesthesiaAmount?: number
   otherChargesAmount?: number
-  totalFinalBill?: number
-  finalApprovedAmount?: number
-  finalAmount?: number | null
   copayAmount?: number
   collectedByHospital?: number
   collectedByMediend?: number
   axisTariffDeduction?: number
   axisTariffDeductionPaid?: number
   actualFinalAmount?: number
-  deductionAmount?: number
-  discountAmount?: number
-  waivedOffAmount?: number
-  settlementPart?: number
-  tdsAmount?: number
-  otherDeduction?: number
-  netSettlementAmount?: number
-  totalAmount?: number
-  billAmount?: number
-  cashPaidByPatient?: number
-  cashOrDedPaid?: number
-  referralAmount?: number
-  cabCharges?: number
-  implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
-  dcCharges?: number
-  doctorCharges?: number
-  hospitalSharePct?: number | null
-  hospitalShareAmount?: number
-  mediendSharePct?: number | null
-  mediendShareAmount?: number
-  mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
   otherCharges?: string | null
   packageAmount?: string | null
   staplerCharges?: string | null
-  remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
-  isFinalized?: boolean
-  markedAt?: Date | string | null
-  finalizedById?: string | null
-  finalizedAt?: Date | string | null
-  createdById: string
-  plRecordId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type DischargeSheetCreateManyFinalizedByInput = {
@@ -4739,7 +4648,6 @@ export type DischargeSheetCreateManyFinalizedByInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
-  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -4762,8 +4670,6 @@ export type DischargeSheetCreateManyFinalizedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
-  finalApprovedUrl?: string | null
-  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -4771,17 +4677,9 @@ export type DischargeSheetCreateManyFinalizedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
-  anesthesiaAmount?: number
-  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
-  copayAmount?: number
-  collectedByHospital?: number
-  collectedByMediend?: number
-  axisTariffDeduction?: number
-  axisTariffDeductionPaid?: number
-  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -4796,9 +4694,6 @@ export type DischargeSheetCreateManyFinalizedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
-  instrumentsCost?: number
-  implantPaidBy?: $Enums.PaidByParty | null
-  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -4806,29 +4701,133 @@ export type DischargeSheetCreateManyFinalizedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
-  packageText?: string | null
-  othersText?: string | null
-  otherCharges?: string | null
-  packageAmount?: string | null
-  staplerCharges?: string | null
   remarks?: string | null
-  doctorRemarks?: string | null
-  costBreakdownRemarks?: string | null
-  isFinalized?: boolean
-  markedById?: string | null
-  markedAt?: Date | string | null
-  finalizedAt?: Date | string | null
   createdById: string
   plRecordId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
+  isFinalized?: boolean
+  markedById?: string | null
+  markedAt?: Date | string | null
+  finalizedAt?: Date | string | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
+}
+
+export type DischargeSheetCreateManyMarkedByInput = {
+  id?: string
+  leadId: string
+  kypSubmissionId?: string | null
+  month?: Date | string | null
+  dischargeDate?: Date | string | null
+  surgeryDate?: Date | string | null
+  status?: string | null
+  paymentType?: string | null
+  approvedOrCash?: string | null
+  paymentCollectedAt?: string | null
+  managerRole?: string | null
+  managerName?: string | null
+  bdmName?: string | null
+  patientName?: string | null
+  patientPhone?: string | null
+  doctorName?: string | null
+  hospitalName?: string | null
+  category?: string | null
+  treatment?: string | null
+  circle?: string | null
+  leadSource?: string | null
+  tentativeAmount?: number | null
+  copayPct?: number | null
+  dischargeSummaryUrl?: string | null
+  otNotesUrl?: string | null
+  codesCount?: number | null
+  finalBillUrl?: string | null
+  settlementLetterUrl?: string | null
+  roomRentAmount?: number
+  pharmacyAmount?: number
+  investigationAmount?: number
+  consumablesAmount?: number
+  implantsAmount?: number
+  instrumentsAmount?: number | null
+  totalFinalBill?: number
+  finalApprovedAmount?: number
+  finalAmount?: number | null
+  deductionAmount?: number
+  discountAmount?: number
+  waivedOffAmount?: number
+  settlementPart?: number
+  tdsAmount?: number
+  otherDeduction?: number
+  netSettlementAmount?: number
+  totalAmount?: number
+  billAmount?: number
+  cashPaidByPatient?: number
+  cashOrDedPaid?: number
+  referralAmount?: number
+  cabCharges?: number
+  implantCost?: number
+  dcCharges?: number
+  doctorCharges?: number
+  hospitalSharePct?: number | null
+  hospitalShareAmount?: number
+  mediendSharePct?: number | null
+  mediendShareAmount?: number
+  mediendNetProfit?: number
+  remarks?: string | null
+  createdById: string
+  plRecordId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admissionDate?: Date | string | null
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsCost?: number
+  instrumentsPaidBy?: $Enums.PaidByParty | null
+  othersText?: string | null
+  packageText?: string | null
+  isFinalized?: boolean
+  markedAt?: Date | string | null
+  finalizedById?: string | null
+  finalizedAt?: Date | string | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
+  costBreakdownRemarks?: string | null
+  doctorRemarks?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
 }
 
 export type DischargeSheetUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4851,8 +4850,6 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4860,17 +4857,9 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4885,9 +4874,6 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4895,23 +4881,37 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
-  markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
+  markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
   plRecord?: Prisma.PLRecordUpdateOneWithoutDischargeSheetNestedInput
 }
 
@@ -4921,7 +4921,6 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4944,8 +4943,6 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4953,17 +4950,9 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4978,9 +4967,6 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -4988,22 +4974,36 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
@@ -5012,7 +5012,6 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5035,8 +5034,6 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5044,17 +5041,9 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5069,9 +5058,6 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5079,302 +5065,42 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type DischargeSheetUpdateWithoutMarkedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedOrCash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentCollectedAt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  managerRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bdmName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  patientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  patientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tentativeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayPct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dischargeSummaryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  investigationAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
-  finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
   collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
   axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
   axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
   actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  settlementPart?: Prisma.FloatFieldUpdateOperationsInput | number
-  tdsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  netSettlementAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  cashPaidByPatient?: Prisma.FloatFieldUpdateOperationsInput | number
-  cashOrDedPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  hospitalShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
-  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
-  plRecord?: Prisma.PLRecordUpdateOneWithoutDischargeSheetNestedInput
-}
-
-export type DischargeSheetUncheckedUpdateWithoutMarkedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
-  kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedOrCash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentCollectedAt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  managerRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bdmName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  patientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  patientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tentativeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayPct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dischargeSummaryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  investigationAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
-  finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  settlementPart?: Prisma.FloatFieldUpdateOperationsInput | number
-  tdsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  netSettlementAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  cashPaidByPatient?: Prisma.FloatFieldUpdateOperationsInput | number
-  cashOrDedPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  hospitalShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
-  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type DischargeSheetUncheckedUpdateManyWithoutMarkedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  leadId?: Prisma.StringFieldUpdateOperationsInput | string
-  kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedOrCash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentCollectedAt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  managerRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bdmName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  patientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  patientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  leadSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tentativeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayPct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dischargeSummaryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  investigationAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
-  finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  settlementPart?: Prisma.FloatFieldUpdateOperationsInput | number
-  tdsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  netSettlementAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  cashPaidByPatient?: Prisma.FloatFieldUpdateOperationsInput | number
-  cashOrDedPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
-  hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  hospitalShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
-  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type DischargeSheetUpdateWithoutFinalizedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5397,8 +5123,6 @@ export type DischargeSheetUpdateWithoutFinalizedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5406,17 +5130,9 @@ export type DischargeSheetUpdateWithoutFinalizedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5431,9 +5147,6 @@ export type DischargeSheetUpdateWithoutFinalizedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5441,23 +5154,37 @@ export type DischargeSheetUpdateWithoutFinalizedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
-  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
-  markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
+  markedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsMarkedNestedInput
   plRecord?: Prisma.PLRecordUpdateOneWithoutDischargeSheetNestedInput
 }
 
@@ -5467,7 +5194,6 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5490,8 +5216,6 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5499,17 +5223,9 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5524,9 +5240,6 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5534,22 +5247,36 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
@@ -5558,7 +5285,6 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5581,8 +5307,6 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5590,17 +5314,9 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
-  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
-  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
-  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5615,9 +5331,6 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
-  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -5625,22 +5338,309 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
-  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type DischargeSheetUpdateWithoutMarkedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedOrCash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCollectedAt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  patientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  patientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tentativeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayPct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dischargeSummaryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  investigationAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  settlementPart?: Prisma.FloatFieldUpdateOperationsInput | number
+  tdsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  netSettlementAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashPaidByPatient?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashOrDedPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  hospitalShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutDischargeSheetsCreatedNestedInput
+  finalizedBy?: Prisma.UserUpdateOneWithoutDischargeSheetsFinalizedNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutDischargeSheetNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutDischargeSheetNestedInput
+  plRecord?: Prisma.PLRecordUpdateOneWithoutDischargeSheetNestedInput
+}
+
+export type DischargeSheetUncheckedUpdateWithoutMarkedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedOrCash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCollectedAt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  patientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  patientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tentativeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayPct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dischargeSummaryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  investigationAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  settlementPart?: Prisma.FloatFieldUpdateOperationsInput | number
+  tdsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  netSettlementAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashPaidByPatient?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashOrDedPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  hospitalShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type DischargeSheetUncheckedUpdateManyWithoutMarkedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedOrCash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCollectedAt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  patientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  patientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tentativeAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayPct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dischargeSummaryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  investigationAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  settlementPart?: Prisma.FloatFieldUpdateOperationsInput | number
+  tdsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  netSettlementAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashPaidByPatient?: Prisma.FloatFieldUpdateOperationsInput | number
+  cashOrDedPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  hospitalShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalizedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -5651,7 +5651,6 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   kypSubmissionId?: boolean
   month?: boolean
   dischargeDate?: boolean
-  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -5674,8 +5673,6 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   otNotesUrl?: boolean
   codesCount?: boolean
   finalBillUrl?: boolean
-  finalApprovedUrl?: boolean
-  deductionReceiptUrl?: boolean
   settlementLetterUrl?: boolean
   roomRentAmount?: boolean
   pharmacyAmount?: boolean
@@ -5683,17 +5680,9 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   consumablesAmount?: boolean
   implantsAmount?: boolean
   instrumentsAmount?: boolean
-  anesthesiaAmount?: boolean
-  otherChargesAmount?: boolean
   totalFinalBill?: boolean
   finalApprovedAmount?: boolean
   finalAmount?: boolean
-  copayAmount?: boolean
-  collectedByHospital?: boolean
-  collectedByMediend?: boolean
-  axisTariffDeduction?: boolean
-  axisTariffDeductionPaid?: boolean
-  actualFinalAmount?: boolean
   deductionAmount?: boolean
   discountAmount?: boolean
   waivedOffAmount?: boolean
@@ -5708,9 +5697,6 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
-  instrumentsCost?: boolean
-  implantPaidBy?: boolean
-  instrumentsPaidBy?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -5718,28 +5704,42 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   mediendSharePct?: boolean
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
-  packageText?: boolean
-  othersText?: boolean
-  otherCharges?: boolean
-  packageAmount?: boolean
-  staplerCharges?: boolean
   remarks?: boolean
-  doctorRemarks?: boolean
-  costBreakdownRemarks?: boolean
+  createdById?: boolean
+  plRecordId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  admissionDate?: boolean
+  implantPaidBy?: boolean
+  instrumentsCost?: boolean
+  instrumentsPaidBy?: boolean
+  othersText?: boolean
+  packageText?: boolean
   isFinalized?: boolean
   markedById?: boolean
   markedAt?: boolean
   finalizedById?: boolean
   finalizedAt?: boolean
-  createdById?: boolean
-  plRecordId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
-  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
-  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  anesthesiaAmount?: boolean
+  otherChargesAmount?: boolean
+  copayAmount?: boolean
+  collectedByHospital?: boolean
+  collectedByMediend?: boolean
+  axisTariffDeduction?: boolean
+  axisTariffDeductionPaid?: boolean
+  actualFinalAmount?: boolean
+  finalApprovedUrl?: boolean
+  deductionReceiptUrl?: boolean
+  costBreakdownRemarks?: boolean
+  doctorRemarks?: boolean
+  otherCharges?: boolean
+  packageAmount?: boolean
+  staplerCharges?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
   plRecord?: boolean | Prisma.DischargeSheet$plRecordArgs<ExtArgs>
 }, ExtArgs["result"]["dischargeSheet"]>
 
@@ -5749,7 +5749,6 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   kypSubmissionId?: boolean
   month?: boolean
   dischargeDate?: boolean
-  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -5772,8 +5771,6 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   otNotesUrl?: boolean
   codesCount?: boolean
   finalBillUrl?: boolean
-  finalApprovedUrl?: boolean
-  deductionReceiptUrl?: boolean
   settlementLetterUrl?: boolean
   roomRentAmount?: boolean
   pharmacyAmount?: boolean
@@ -5781,17 +5778,9 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   consumablesAmount?: boolean
   implantsAmount?: boolean
   instrumentsAmount?: boolean
-  anesthesiaAmount?: boolean
-  otherChargesAmount?: boolean
   totalFinalBill?: boolean
   finalApprovedAmount?: boolean
   finalAmount?: boolean
-  copayAmount?: boolean
-  collectedByHospital?: boolean
-  collectedByMediend?: boolean
-  axisTariffDeduction?: boolean
-  axisTariffDeductionPaid?: boolean
-  actualFinalAmount?: boolean
   deductionAmount?: boolean
   discountAmount?: boolean
   waivedOffAmount?: boolean
@@ -5806,9 +5795,6 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
-  instrumentsCost?: boolean
-  implantPaidBy?: boolean
-  instrumentsPaidBy?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -5816,28 +5802,42 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   mediendSharePct?: boolean
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
-  packageText?: boolean
-  othersText?: boolean
-  otherCharges?: boolean
-  packageAmount?: boolean
-  staplerCharges?: boolean
   remarks?: boolean
-  doctorRemarks?: boolean
-  costBreakdownRemarks?: boolean
+  createdById?: boolean
+  plRecordId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  admissionDate?: boolean
+  implantPaidBy?: boolean
+  instrumentsCost?: boolean
+  instrumentsPaidBy?: boolean
+  othersText?: boolean
+  packageText?: boolean
   isFinalized?: boolean
   markedById?: boolean
   markedAt?: boolean
   finalizedById?: boolean
   finalizedAt?: boolean
-  createdById?: boolean
-  plRecordId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
-  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
-  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  anesthesiaAmount?: boolean
+  otherChargesAmount?: boolean
+  copayAmount?: boolean
+  collectedByHospital?: boolean
+  collectedByMediend?: boolean
+  axisTariffDeduction?: boolean
+  axisTariffDeductionPaid?: boolean
+  actualFinalAmount?: boolean
+  finalApprovedUrl?: boolean
+  deductionReceiptUrl?: boolean
+  costBreakdownRemarks?: boolean
+  doctorRemarks?: boolean
+  otherCharges?: boolean
+  packageAmount?: boolean
+  staplerCharges?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
   plRecord?: boolean | Prisma.DischargeSheet$plRecordArgs<ExtArgs>
 }, ExtArgs["result"]["dischargeSheet"]>
 
@@ -5847,7 +5847,6 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   kypSubmissionId?: boolean
   month?: boolean
   dischargeDate?: boolean
-  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -5870,8 +5869,6 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   otNotesUrl?: boolean
   codesCount?: boolean
   finalBillUrl?: boolean
-  finalApprovedUrl?: boolean
-  deductionReceiptUrl?: boolean
   settlementLetterUrl?: boolean
   roomRentAmount?: boolean
   pharmacyAmount?: boolean
@@ -5879,17 +5876,9 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   consumablesAmount?: boolean
   implantsAmount?: boolean
   instrumentsAmount?: boolean
-  anesthesiaAmount?: boolean
-  otherChargesAmount?: boolean
   totalFinalBill?: boolean
   finalApprovedAmount?: boolean
   finalAmount?: boolean
-  copayAmount?: boolean
-  collectedByHospital?: boolean
-  collectedByMediend?: boolean
-  axisTariffDeduction?: boolean
-  axisTariffDeductionPaid?: boolean
-  actualFinalAmount?: boolean
   deductionAmount?: boolean
   discountAmount?: boolean
   waivedOffAmount?: boolean
@@ -5904,9 +5893,6 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
-  instrumentsCost?: boolean
-  implantPaidBy?: boolean
-  instrumentsPaidBy?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -5914,28 +5900,42 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   mediendSharePct?: boolean
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
-  packageText?: boolean
-  othersText?: boolean
-  otherCharges?: boolean
-  packageAmount?: boolean
-  staplerCharges?: boolean
   remarks?: boolean
-  doctorRemarks?: boolean
-  costBreakdownRemarks?: boolean
+  createdById?: boolean
+  plRecordId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  admissionDate?: boolean
+  implantPaidBy?: boolean
+  instrumentsCost?: boolean
+  instrumentsPaidBy?: boolean
+  othersText?: boolean
+  packageText?: boolean
   isFinalized?: boolean
   markedById?: boolean
   markedAt?: boolean
   finalizedById?: boolean
   finalizedAt?: boolean
-  createdById?: boolean
-  plRecordId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
-  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
-  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  anesthesiaAmount?: boolean
+  otherChargesAmount?: boolean
+  copayAmount?: boolean
+  collectedByHospital?: boolean
+  collectedByMediend?: boolean
+  axisTariffDeduction?: boolean
+  axisTariffDeductionPaid?: boolean
+  actualFinalAmount?: boolean
+  finalApprovedUrl?: boolean
+  deductionReceiptUrl?: boolean
+  costBreakdownRemarks?: boolean
+  doctorRemarks?: boolean
+  otherCharges?: boolean
+  packageAmount?: boolean
+  staplerCharges?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
   plRecord?: boolean | Prisma.DischargeSheet$plRecordArgs<ExtArgs>
 }, ExtArgs["result"]["dischargeSheet"]>
 
@@ -5945,7 +5945,6 @@ export type DischargeSheetSelectScalar = {
   kypSubmissionId?: boolean
   month?: boolean
   dischargeDate?: boolean
-  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -5968,8 +5967,6 @@ export type DischargeSheetSelectScalar = {
   otNotesUrl?: boolean
   codesCount?: boolean
   finalBillUrl?: boolean
-  finalApprovedUrl?: boolean
-  deductionReceiptUrl?: boolean
   settlementLetterUrl?: boolean
   roomRentAmount?: boolean
   pharmacyAmount?: boolean
@@ -5977,17 +5974,9 @@ export type DischargeSheetSelectScalar = {
   consumablesAmount?: boolean
   implantsAmount?: boolean
   instrumentsAmount?: boolean
-  anesthesiaAmount?: boolean
-  otherChargesAmount?: boolean
   totalFinalBill?: boolean
   finalApprovedAmount?: boolean
   finalAmount?: boolean
-  copayAmount?: boolean
-  collectedByHospital?: boolean
-  collectedByMediend?: boolean
-  axisTariffDeduction?: boolean
-  axisTariffDeductionPaid?: boolean
-  actualFinalAmount?: boolean
   deductionAmount?: boolean
   discountAmount?: boolean
   waivedOffAmount?: boolean
@@ -6002,9 +5991,6 @@ export type DischargeSheetSelectScalar = {
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
-  instrumentsCost?: boolean
-  implantPaidBy?: boolean
-  instrumentsPaidBy?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -6012,59 +5998,73 @@ export type DischargeSheetSelectScalar = {
   mediendSharePct?: boolean
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
-  packageText?: boolean
-  othersText?: boolean
-  otherCharges?: boolean
-  packageAmount?: boolean
-  staplerCharges?: boolean
   remarks?: boolean
-  doctorRemarks?: boolean
-  costBreakdownRemarks?: boolean
+  createdById?: boolean
+  plRecordId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  admissionDate?: boolean
+  implantPaidBy?: boolean
+  instrumentsCost?: boolean
+  instrumentsPaidBy?: boolean
+  othersText?: boolean
+  packageText?: boolean
   isFinalized?: boolean
   markedById?: boolean
   markedAt?: boolean
   finalizedById?: boolean
   finalizedAt?: boolean
-  createdById?: boolean
-  plRecordId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  anesthesiaAmount?: boolean
+  otherChargesAmount?: boolean
+  copayAmount?: boolean
+  collectedByHospital?: boolean
+  collectedByMediend?: boolean
+  axisTariffDeduction?: boolean
+  axisTariffDeductionPaid?: boolean
+  actualFinalAmount?: boolean
+  finalApprovedUrl?: boolean
+  deductionReceiptUrl?: boolean
+  costBreakdownRemarks?: boolean
+  doctorRemarks?: boolean
+  otherCharges?: boolean
+  packageAmount?: boolean
+  staplerCharges?: boolean
 }
 
-export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "finalApprovedUrl" | "deductionReceiptUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "anesthesiaAmount" | "otherChargesAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "copayAmount" | "collectedByHospital" | "collectedByMediend" | "axisTariffDeduction" | "axisTariffDeductionPaid" | "actualFinalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "packageText" | "othersText" | "otherCharges" | "packageAmount" | "staplerCharges" | "remarks" | "doctorRemarks" | "costBreakdownRemarks" | "isFinalized" | "markedById" | "markedAt" | "finalizedById" | "finalizedAt" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
+export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "remarks" | "createdById" | "plRecordId" | "createdAt" | "updatedAt" | "admissionDate" | "implantPaidBy" | "instrumentsCost" | "instrumentsPaidBy" | "othersText" | "packageText" | "isFinalized" | "markedById" | "markedAt" | "finalizedById" | "finalizedAt" | "anesthesiaAmount" | "otherChargesAmount" | "copayAmount" | "collectedByHospital" | "collectedByMediend" | "axisTariffDeduction" | "axisTariffDeductionPaid" | "actualFinalAmount" | "finalApprovedUrl" | "deductionReceiptUrl" | "costBreakdownRemarks" | "doctorRemarks" | "otherCharges" | "packageAmount" | "staplerCharges", ExtArgs["result"]["dischargeSheet"]>
 export type DischargeSheetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
-  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
-  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
   plRecord?: boolean | Prisma.DischargeSheet$plRecordArgs<ExtArgs>
 }
 export type DischargeSheetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
-  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
-  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
   plRecord?: boolean | Prisma.DischargeSheet$plRecordArgs<ExtArgs>
 }
 export type DischargeSheetIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
-  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
-  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  finalizedBy?: boolean | Prisma.DischargeSheet$finalizedByArgs<ExtArgs>
+  kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  markedBy?: boolean | Prisma.DischargeSheet$markedByArgs<ExtArgs>
   plRecord?: boolean | Prisma.DischargeSheet$plRecordArgs<ExtArgs>
 }
 
 export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DischargeSheet"
   objects: {
-    lead: Prisma.$LeadPayload<ExtArgs>
-    kypSubmission: Prisma.$KYPSubmissionPayload<ExtArgs> | null
-    markedBy: Prisma.$UserPayload<ExtArgs> | null
-    finalizedBy: Prisma.$UserPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
+    finalizedBy: Prisma.$UserPayload<ExtArgs> | null
+    kypSubmission: Prisma.$KYPSubmissionPayload<ExtArgs> | null
+    lead: Prisma.$LeadPayload<ExtArgs>
+    markedBy: Prisma.$UserPayload<ExtArgs> | null
     plRecord: Prisma.$PLRecordPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -6073,7 +6073,6 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     kypSubmissionId: string | null
     month: Date | null
     dischargeDate: Date | null
-    admissionDate: Date | null
     surgeryDate: Date | null
     status: string | null
     paymentType: string | null
@@ -6096,8 +6095,6 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     otNotesUrl: string | null
     codesCount: number | null
     finalBillUrl: string | null
-    finalApprovedUrl: string | null
-    deductionReceiptUrl: string | null
     settlementLetterUrl: string | null
     roomRentAmount: number
     pharmacyAmount: number
@@ -6105,17 +6102,9 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     consumablesAmount: number
     implantsAmount: number
     instrumentsAmount: number | null
-    anesthesiaAmount: number
-    otherChargesAmount: number
     totalFinalBill: number
     finalApprovedAmount: number
     finalAmount: number | null
-    copayAmount: number
-    collectedByHospital: number
-    collectedByMediend: number
-    axisTariffDeduction: number
-    axisTariffDeductionPaid: number
-    actualFinalAmount: number
     deductionAmount: number
     discountAmount: number
     waivedOffAmount: number
@@ -6130,9 +6119,6 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     referralAmount: number
     cabCharges: number
     implantCost: number
-    instrumentsCost: number
-    implantPaidBy: $Enums.PaidByParty | null
-    instrumentsPaidBy: $Enums.PaidByParty | null
     dcCharges: number
     doctorCharges: number
     hospitalSharePct: number | null
@@ -6140,23 +6126,37 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     mediendSharePct: number | null
     mediendShareAmount: number
     mediendNetProfit: number
-    packageText: string | null
-    othersText: string | null
-    otherCharges: string | null
-    packageAmount: string | null
-    staplerCharges: string | null
     remarks: string | null
-    doctorRemarks: string | null
-    costBreakdownRemarks: string | null
+    createdById: string
+    plRecordId: string | null
+    createdAt: Date
+    updatedAt: Date
+    admissionDate: Date | null
+    implantPaidBy: $Enums.PaidByParty | null
+    instrumentsCost: number
+    instrumentsPaidBy: $Enums.PaidByParty | null
+    othersText: string | null
+    packageText: string | null
     isFinalized: boolean
     markedById: string | null
     markedAt: Date | null
     finalizedById: string | null
     finalizedAt: Date | null
-    createdById: string
-    plRecordId: string | null
-    createdAt: Date
-    updatedAt: Date
+    anesthesiaAmount: number
+    otherChargesAmount: number
+    copayAmount: number
+    collectedByHospital: number
+    collectedByMediend: number
+    axisTariffDeduction: number
+    axisTariffDeductionPaid: number
+    actualFinalAmount: number
+    finalApprovedUrl: string | null
+    deductionReceiptUrl: string | null
+    costBreakdownRemarks: string | null
+    doctorRemarks: string | null
+    otherCharges: string | null
+    packageAmount: string | null
+    staplerCharges: string | null
   }, ExtArgs["result"]["dischargeSheet"]>
   composites: {}
 }
@@ -6551,11 +6551,11 @@ readonly fields: DischargeSheetFieldRefs;
  */
 export interface Prisma__DischargeSheetClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  kypSubmission<T extends Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>>): Prisma.Prisma__KYPSubmissionClient<runtime.Types.Result.GetResult<Prisma.$KYPSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  markedBy<T extends Prisma.DischargeSheet$markedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DischargeSheet$markedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  finalizedBy<T extends Prisma.DischargeSheet$finalizedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DischargeSheet$finalizedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  finalizedBy<T extends Prisma.DischargeSheet$finalizedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DischargeSheet$finalizedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  kypSubmission<T extends Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>>): Prisma.Prisma__KYPSubmissionClient<runtime.Types.Result.GetResult<Prisma.$KYPSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  markedBy<T extends Prisma.DischargeSheet$markedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DischargeSheet$markedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   plRecord<T extends Prisma.DischargeSheet$plRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DischargeSheet$plRecordArgs<ExtArgs>>): Prisma.Prisma__PLRecordClient<runtime.Types.Result.GetResult<Prisma.$PLRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6591,7 +6591,6 @@ export interface DischargeSheetFieldRefs {
   readonly kypSubmissionId: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly month: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
   readonly dischargeDate: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
-  readonly admissionDate: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
   readonly surgeryDate: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
   readonly status: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly paymentType: Prisma.FieldRef<"DischargeSheet", 'String'>
@@ -6614,8 +6613,6 @@ export interface DischargeSheetFieldRefs {
   readonly otNotesUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly codesCount: Prisma.FieldRef<"DischargeSheet", 'Int'>
   readonly finalBillUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly finalApprovedUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly deductionReceiptUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly settlementLetterUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly roomRentAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly pharmacyAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
@@ -6623,17 +6620,9 @@ export interface DischargeSheetFieldRefs {
   readonly consumablesAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly implantsAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly instrumentsAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly anesthesiaAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly otherChargesAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly totalFinalBill: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly finalApprovedAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly finalAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly copayAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly collectedByHospital: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly collectedByMediend: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly axisTariffDeduction: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly axisTariffDeductionPaid: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly actualFinalAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly deductionAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly discountAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly waivedOffAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
@@ -6648,9 +6637,6 @@ export interface DischargeSheetFieldRefs {
   readonly referralAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly cabCharges: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly implantCost: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly instrumentsCost: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly implantPaidBy: Prisma.FieldRef<"DischargeSheet", 'PaidByParty'>
-  readonly instrumentsPaidBy: Prisma.FieldRef<"DischargeSheet", 'PaidByParty'>
   readonly dcCharges: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly doctorCharges: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly hospitalSharePct: Prisma.FieldRef<"DischargeSheet", 'Float'>
@@ -6658,23 +6644,37 @@ export interface DischargeSheetFieldRefs {
   readonly mediendSharePct: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly mediendShareAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly mediendNetProfit: Prisma.FieldRef<"DischargeSheet", 'Float'>
-  readonly packageText: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly othersText: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly otherCharges: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly packageAmount: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly staplerCharges: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly remarks: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly doctorRemarks: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly costBreakdownRemarks: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly createdById: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly plRecordId: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly createdAt: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
+  readonly admissionDate: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
+  readonly implantPaidBy: Prisma.FieldRef<"DischargeSheet", 'PaidByParty'>
+  readonly instrumentsCost: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly instrumentsPaidBy: Prisma.FieldRef<"DischargeSheet", 'PaidByParty'>
+  readonly othersText: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly packageText: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly isFinalized: Prisma.FieldRef<"DischargeSheet", 'Boolean'>
   readonly markedById: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly markedAt: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
   readonly finalizedById: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly finalizedAt: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
-  readonly createdById: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly plRecordId: Prisma.FieldRef<"DischargeSheet", 'String'>
-  readonly createdAt: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
+  readonly anesthesiaAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly otherChargesAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly copayAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly collectedByHospital: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly collectedByMediend: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly axisTariffDeduction: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly axisTariffDeductionPaid: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly actualFinalAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly finalApprovedUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly deductionReceiptUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly costBreakdownRemarks: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly doctorRemarks: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly otherCharges: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly packageAmount: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly staplerCharges: Prisma.FieldRef<"DischargeSheet", 'String'>
 }
     
 
@@ -7076,6 +7076,25 @@ export type DischargeSheetDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
+ * DischargeSheet.finalizedBy
+ */
+export type DischargeSheet$finalizedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
  * DischargeSheet.kypSubmission
  */
 export type DischargeSheet$kypSubmissionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7098,25 +7117,6 @@ export type DischargeSheet$kypSubmissionArgs<ExtArgs extends runtime.Types.Exten
  * DischargeSheet.markedBy
  */
 export type DischargeSheet$markedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the User
-   */
-  select?: Prisma.UserSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the User
-   */
-  omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
-}
-
-/**
- * DischargeSheet.finalizedBy
- */
-export type DischargeSheet$finalizedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the User
    */

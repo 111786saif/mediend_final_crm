@@ -49,8 +49,6 @@ export type AdmissionRecordMinAggregateOutputType = {
   cabDischargeTo: string | null
   ipdStatus: $Enums.IpdStatus | null
   ipdStatusReason: string | null
-  ipdImplantUsed: boolean | null
-  ipdNoShowReason: string | null
   newSurgeryDate: Date | null
   ipdDischargeDate: Date | null
   ipdStatusNotes: string | null
@@ -58,6 +56,8 @@ export type AdmissionRecordMinAggregateOutputType = {
   notes: string | null
   initiatedById: string | null
   initiatedAt: Date | null
+  ipdImplantUsed: boolean | null
+  ipdNoShowReason: string | null
 }
 
 export type AdmissionRecordMaxAggregateOutputType = {
@@ -85,8 +85,6 @@ export type AdmissionRecordMaxAggregateOutputType = {
   cabDischargeTo: string | null
   ipdStatus: $Enums.IpdStatus | null
   ipdStatusReason: string | null
-  ipdImplantUsed: boolean | null
-  ipdNoShowReason: string | null
   newSurgeryDate: Date | null
   ipdDischargeDate: Date | null
   ipdStatusNotes: string | null
@@ -94,6 +92,8 @@ export type AdmissionRecordMaxAggregateOutputType = {
   notes: string | null
   initiatedById: string | null
   initiatedAt: Date | null
+  ipdImplantUsed: boolean | null
+  ipdNoShowReason: string | null
 }
 
 export type AdmissionRecordCountAggregateOutputType = {
@@ -121,8 +121,6 @@ export type AdmissionRecordCountAggregateOutputType = {
   cabDischargeTo: number
   ipdStatus: number
   ipdStatusReason: number
-  ipdImplantUsed: number
-  ipdNoShowReason: number
   newSurgeryDate: number
   ipdDischargeDate: number
   ipdStatusNotes: number
@@ -130,6 +128,8 @@ export type AdmissionRecordCountAggregateOutputType = {
   notes: number
   initiatedById: number
   initiatedAt: number
+  ipdImplantUsed: number
+  ipdNoShowReason: number
   _all: number
 }
 
@@ -159,8 +159,6 @@ export type AdmissionRecordMinAggregateInputType = {
   cabDischargeTo?: true
   ipdStatus?: true
   ipdStatusReason?: true
-  ipdImplantUsed?: true
-  ipdNoShowReason?: true
   newSurgeryDate?: true
   ipdDischargeDate?: true
   ipdStatusNotes?: true
@@ -168,6 +166,8 @@ export type AdmissionRecordMinAggregateInputType = {
   notes?: true
   initiatedById?: true
   initiatedAt?: true
+  ipdImplantUsed?: true
+  ipdNoShowReason?: true
 }
 
 export type AdmissionRecordMaxAggregateInputType = {
@@ -195,8 +195,6 @@ export type AdmissionRecordMaxAggregateInputType = {
   cabDischargeTo?: true
   ipdStatus?: true
   ipdStatusReason?: true
-  ipdImplantUsed?: true
-  ipdNoShowReason?: true
   newSurgeryDate?: true
   ipdDischargeDate?: true
   ipdStatusNotes?: true
@@ -204,6 +202,8 @@ export type AdmissionRecordMaxAggregateInputType = {
   notes?: true
   initiatedById?: true
   initiatedAt?: true
+  ipdImplantUsed?: true
+  ipdNoShowReason?: true
 }
 
 export type AdmissionRecordCountAggregateInputType = {
@@ -231,8 +231,6 @@ export type AdmissionRecordCountAggregateInputType = {
   cabDischargeTo?: true
   ipdStatus?: true
   ipdStatusReason?: true
-  ipdImplantUsed?: true
-  ipdNoShowReason?: true
   newSurgeryDate?: true
   ipdDischargeDate?: true
   ipdStatusNotes?: true
@@ -240,6 +238,8 @@ export type AdmissionRecordCountAggregateInputType = {
   notes?: true
   initiatedById?: true
   initiatedAt?: true
+  ipdImplantUsed?: true
+  ipdNoShowReason?: true
   _all?: true
 }
 
@@ -340,8 +340,6 @@ export type AdmissionRecordGroupByOutputType = {
   cabDischargeTo: string | null
   ipdStatus: $Enums.IpdStatus | null
   ipdStatusReason: string | null
-  ipdImplantUsed: boolean | null
-  ipdNoShowReason: string | null
   newSurgeryDate: Date | null
   ipdDischargeDate: Date | null
   ipdStatusNotes: string | null
@@ -349,6 +347,8 @@ export type AdmissionRecordGroupByOutputType = {
   notes: string | null
   initiatedById: string
   initiatedAt: Date
+  ipdImplantUsed: boolean | null
+  ipdNoShowReason: string | null
   _count: AdmissionRecordCountAggregateOutputType | null
   _min: AdmissionRecordMinAggregateOutputType | null
   _max: AdmissionRecordMaxAggregateOutputType | null
@@ -397,8 +397,6 @@ export type AdmissionRecordWhereInput = {
   cabDischargeTo?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   ipdStatus?: Prisma.EnumIpdStatusNullableFilter<"AdmissionRecord"> | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
-  ipdImplantUsed?: Prisma.BoolNullableFilter<"AdmissionRecord"> | boolean | null
-  ipdNoShowReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   newSurgeryDate?: Prisma.DateTimeNullableFilter<"AdmissionRecord"> | Date | string | null
   ipdDischargeDate?: Prisma.DateTimeNullableFilter<"AdmissionRecord"> | Date | string | null
   ipdStatusNotes?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
@@ -406,8 +404,10 @@ export type AdmissionRecordWhereInput = {
   notes?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   initiatedById?: Prisma.StringFilter<"AdmissionRecord"> | string
   initiatedAt?: Prisma.DateTimeFilter<"AdmissionRecord"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  ipdImplantUsed?: Prisma.BoolNullableFilter<"AdmissionRecord"> | boolean | null
+  ipdNoShowReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   initiatedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
   implantUsages?: Prisma.AdmissionRecordImplantUsageListRelationFilter
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageListRelationFilter
 }
@@ -437,8 +437,6 @@ export type AdmissionRecordOrderByWithRelationInput = {
   cabDischargeTo?: Prisma.SortOrderInput | Prisma.SortOrder
   ipdStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   ipdStatusReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  ipdImplantUsed?: Prisma.SortOrderInput | Prisma.SortOrder
-  ipdNoShowReason?: Prisma.SortOrderInput | Prisma.SortOrder
   newSurgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   ipdDischargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
   ipdStatusNotes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -446,8 +444,10 @@ export type AdmissionRecordOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   initiatedById?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
-  lead?: Prisma.LeadOrderByWithRelationInput
+  ipdImplantUsed?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipdNoShowReason?: Prisma.SortOrderInput | Prisma.SortOrder
   initiatedBy?: Prisma.UserOrderByWithRelationInput
+  lead?: Prisma.LeadOrderByWithRelationInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageOrderByRelationAggregateInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageOrderByRelationAggregateInput
 }
@@ -480,8 +480,6 @@ export type AdmissionRecordWhereUniqueInput = Prisma.AtLeast<{
   cabDischargeTo?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   ipdStatus?: Prisma.EnumIpdStatusNullableFilter<"AdmissionRecord"> | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
-  ipdImplantUsed?: Prisma.BoolNullableFilter<"AdmissionRecord"> | boolean | null
-  ipdNoShowReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   newSurgeryDate?: Prisma.DateTimeNullableFilter<"AdmissionRecord"> | Date | string | null
   ipdDischargeDate?: Prisma.DateTimeNullableFilter<"AdmissionRecord"> | Date | string | null
   ipdStatusNotes?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
@@ -489,8 +487,10 @@ export type AdmissionRecordWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   initiatedById?: Prisma.StringFilter<"AdmissionRecord"> | string
   initiatedAt?: Prisma.DateTimeFilter<"AdmissionRecord"> | Date | string
-  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  ipdImplantUsed?: Prisma.BoolNullableFilter<"AdmissionRecord"> | boolean | null
+  ipdNoShowReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   initiatedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
   implantUsages?: Prisma.AdmissionRecordImplantUsageListRelationFilter
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageListRelationFilter
 }, "id" | "leadId">
@@ -520,8 +520,6 @@ export type AdmissionRecordOrderByWithAggregationInput = {
   cabDischargeTo?: Prisma.SortOrderInput | Prisma.SortOrder
   ipdStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   ipdStatusReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  ipdImplantUsed?: Prisma.SortOrderInput | Prisma.SortOrder
-  ipdNoShowReason?: Prisma.SortOrderInput | Prisma.SortOrder
   newSurgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   ipdDischargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
   ipdStatusNotes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -529,6 +527,8 @@ export type AdmissionRecordOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   initiatedById?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
+  ipdImplantUsed?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipdNoShowReason?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AdmissionRecordCountOrderByAggregateInput
   _max?: Prisma.AdmissionRecordMaxOrderByAggregateInput
   _min?: Prisma.AdmissionRecordMinOrderByAggregateInput
@@ -562,8 +562,6 @@ export type AdmissionRecordScalarWhereWithAggregatesInput = {
   cabDischargeTo?: Prisma.StringNullableWithAggregatesFilter<"AdmissionRecord"> | string | null
   ipdStatus?: Prisma.EnumIpdStatusNullableWithAggregatesFilter<"AdmissionRecord"> | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.StringNullableWithAggregatesFilter<"AdmissionRecord"> | string | null
-  ipdImplantUsed?: Prisma.BoolNullableWithAggregatesFilter<"AdmissionRecord"> | boolean | null
-  ipdNoShowReason?: Prisma.StringNullableWithAggregatesFilter<"AdmissionRecord"> | string | null
   newSurgeryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"AdmissionRecord"> | Date | string | null
   ipdDischargeDate?: Prisma.DateTimeNullableWithAggregatesFilter<"AdmissionRecord"> | Date | string | null
   ipdStatusNotes?: Prisma.StringNullableWithAggregatesFilter<"AdmissionRecord"> | string | null
@@ -571,6 +569,8 @@ export type AdmissionRecordScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"AdmissionRecord"> | string | null
   initiatedById?: Prisma.StringWithAggregatesFilter<"AdmissionRecord"> | string
   initiatedAt?: Prisma.DateTimeWithAggregatesFilter<"AdmissionRecord"> | Date | string
+  ipdImplantUsed?: Prisma.BoolNullableWithAggregatesFilter<"AdmissionRecord"> | boolean | null
+  ipdNoShowReason?: Prisma.StringNullableWithAggregatesFilter<"AdmissionRecord"> | string | null
 }
 
 export type AdmissionRecordCreateInput = {
@@ -597,16 +597,16 @@ export type AdmissionRecordCreateInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
   ipdStatusUpdatedAt?: Date | string | null
   notes?: string | null
   initiatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutAdmissionRecordInput
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   initiatedBy: Prisma.UserCreateNestedOneWithoutAdmissionsInitiatedInput
+  lead: Prisma.LeadCreateNestedOneWithoutAdmissionRecordInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageCreateNestedManyWithoutAdmissionRecordInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageCreateNestedManyWithoutAdmissionRecordInput
 }
@@ -636,8 +636,6 @@ export type AdmissionRecordUncheckedCreateInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
@@ -645,6 +643,8 @@ export type AdmissionRecordUncheckedCreateInput = {
   notes?: string | null
   initiatedById: string
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   implantUsages?: Prisma.AdmissionRecordImplantUsageUncheckedCreateNestedManyWithoutAdmissionRecordInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUncheckedCreateNestedManyWithoutAdmissionRecordInput
 }
@@ -673,16 +673,16 @@ export type AdmissionRecordUpdateInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutAdmissionRecordNestedInput
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedBy?: Prisma.UserUpdateOneRequiredWithoutAdmissionsInitiatedNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutAdmissionRecordNestedInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageUpdateManyWithoutAdmissionRecordNestedInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUpdateManyWithoutAdmissionRecordNestedInput
 }
@@ -712,8 +712,6 @@ export type AdmissionRecordUncheckedUpdateInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -721,6 +719,8 @@ export type AdmissionRecordUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedById?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   implantUsages?: Prisma.AdmissionRecordImplantUsageUncheckedUpdateManyWithoutAdmissionRecordNestedInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUncheckedUpdateManyWithoutAdmissionRecordNestedInput
 }
@@ -750,8 +750,6 @@ export type AdmissionRecordCreateManyInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
@@ -759,6 +757,8 @@ export type AdmissionRecordCreateManyInput = {
   notes?: string | null
   initiatedById: string
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
 }
 
 export type AdmissionRecordUpdateManyMutationInput = {
@@ -785,14 +785,14 @@ export type AdmissionRecordUpdateManyMutationInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdmissionRecordUncheckedUpdateManyInput = {
@@ -820,8 +820,6 @@ export type AdmissionRecordUncheckedUpdateManyInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -829,6 +827,8 @@ export type AdmissionRecordUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedById?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdmissionRecordListRelationFilter = {
@@ -871,8 +871,6 @@ export type AdmissionRecordCountOrderByAggregateInput = {
   cabDischargeTo?: Prisma.SortOrder
   ipdStatus?: Prisma.SortOrder
   ipdStatusReason?: Prisma.SortOrder
-  ipdImplantUsed?: Prisma.SortOrder
-  ipdNoShowReason?: Prisma.SortOrder
   newSurgeryDate?: Prisma.SortOrder
   ipdDischargeDate?: Prisma.SortOrder
   ipdStatusNotes?: Prisma.SortOrder
@@ -880,6 +878,8 @@ export type AdmissionRecordCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   initiatedById?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
+  ipdImplantUsed?: Prisma.SortOrder
+  ipdNoShowReason?: Prisma.SortOrder
 }
 
 export type AdmissionRecordMaxOrderByAggregateInput = {
@@ -907,8 +907,6 @@ export type AdmissionRecordMaxOrderByAggregateInput = {
   cabDischargeTo?: Prisma.SortOrder
   ipdStatus?: Prisma.SortOrder
   ipdStatusReason?: Prisma.SortOrder
-  ipdImplantUsed?: Prisma.SortOrder
-  ipdNoShowReason?: Prisma.SortOrder
   newSurgeryDate?: Prisma.SortOrder
   ipdDischargeDate?: Prisma.SortOrder
   ipdStatusNotes?: Prisma.SortOrder
@@ -916,6 +914,8 @@ export type AdmissionRecordMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   initiatedById?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
+  ipdImplantUsed?: Prisma.SortOrder
+  ipdNoShowReason?: Prisma.SortOrder
 }
 
 export type AdmissionRecordMinOrderByAggregateInput = {
@@ -943,8 +943,6 @@ export type AdmissionRecordMinOrderByAggregateInput = {
   cabDischargeTo?: Prisma.SortOrder
   ipdStatus?: Prisma.SortOrder
   ipdStatusReason?: Prisma.SortOrder
-  ipdImplantUsed?: Prisma.SortOrder
-  ipdNoShowReason?: Prisma.SortOrder
   newSurgeryDate?: Prisma.SortOrder
   ipdDischargeDate?: Prisma.SortOrder
   ipdStatusNotes?: Prisma.SortOrder
@@ -952,6 +950,8 @@ export type AdmissionRecordMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   initiatedById?: Prisma.SortOrder
   initiatedAt?: Prisma.SortOrder
+  ipdImplantUsed?: Prisma.SortOrder
+  ipdNoShowReason?: Prisma.SortOrder
 }
 
 export type AdmissionRecordScalarRelationFilter = {
@@ -1089,14 +1089,14 @@ export type AdmissionRecordCreateWithoutInitiatedByInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
   ipdStatusUpdatedAt?: Date | string | null
   notes?: string | null
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   lead: Prisma.LeadCreateNestedOneWithoutAdmissionRecordInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageCreateNestedManyWithoutAdmissionRecordInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageCreateNestedManyWithoutAdmissionRecordInput
@@ -1127,14 +1127,14 @@ export type AdmissionRecordUncheckedCreateWithoutInitiatedByInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
   ipdStatusUpdatedAt?: Date | string | null
   notes?: string | null
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   implantUsages?: Prisma.AdmissionRecordImplantUsageUncheckedCreateNestedManyWithoutAdmissionRecordInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUncheckedCreateNestedManyWithoutAdmissionRecordInput
 }
@@ -1193,8 +1193,6 @@ export type AdmissionRecordScalarWhereInput = {
   cabDischargeTo?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   ipdStatus?: Prisma.EnumIpdStatusNullableFilter<"AdmissionRecord"> | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
-  ipdImplantUsed?: Prisma.BoolNullableFilter<"AdmissionRecord"> | boolean | null
-  ipdNoShowReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   newSurgeryDate?: Prisma.DateTimeNullableFilter<"AdmissionRecord"> | Date | string | null
   ipdDischargeDate?: Prisma.DateTimeNullableFilter<"AdmissionRecord"> | Date | string | null
   ipdStatusNotes?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
@@ -1202,6 +1200,8 @@ export type AdmissionRecordScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
   initiatedById?: Prisma.StringFilter<"AdmissionRecord"> | string
   initiatedAt?: Prisma.DateTimeFilter<"AdmissionRecord"> | Date | string
+  ipdImplantUsed?: Prisma.BoolNullableFilter<"AdmissionRecord"> | boolean | null
+  ipdNoShowReason?: Prisma.StringNullableFilter<"AdmissionRecord"> | string | null
 }
 
 export type AdmissionRecordCreateWithoutLeadInput = {
@@ -1228,14 +1228,14 @@ export type AdmissionRecordCreateWithoutLeadInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
   ipdStatusUpdatedAt?: Date | string | null
   notes?: string | null
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   initiatedBy: Prisma.UserCreateNestedOneWithoutAdmissionsInitiatedInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageCreateNestedManyWithoutAdmissionRecordInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageCreateNestedManyWithoutAdmissionRecordInput
@@ -1265,8 +1265,6 @@ export type AdmissionRecordUncheckedCreateWithoutLeadInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
@@ -1274,6 +1272,8 @@ export type AdmissionRecordUncheckedCreateWithoutLeadInput = {
   notes?: string | null
   initiatedById: string
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   implantUsages?: Prisma.AdmissionRecordImplantUsageUncheckedCreateNestedManyWithoutAdmissionRecordInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUncheckedCreateNestedManyWithoutAdmissionRecordInput
 }
@@ -1318,14 +1318,14 @@ export type AdmissionRecordUpdateWithoutLeadInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedBy?: Prisma.UserUpdateOneRequiredWithoutAdmissionsInitiatedNestedInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageUpdateManyWithoutAdmissionRecordNestedInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUpdateManyWithoutAdmissionRecordNestedInput
@@ -1355,8 +1355,6 @@ export type AdmissionRecordUncheckedUpdateWithoutLeadInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1364,6 +1362,8 @@ export type AdmissionRecordUncheckedUpdateWithoutLeadInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedById?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   implantUsages?: Prisma.AdmissionRecordImplantUsageUncheckedUpdateManyWithoutAdmissionRecordNestedInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUncheckedUpdateManyWithoutAdmissionRecordNestedInput
 }
@@ -1392,16 +1392,16 @@ export type AdmissionRecordCreateWithoutImplantUsagesInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
   ipdStatusUpdatedAt?: Date | string | null
   notes?: string | null
   initiatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutAdmissionRecordInput
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   initiatedBy: Prisma.UserCreateNestedOneWithoutAdmissionsInitiatedInput
+  lead: Prisma.LeadCreateNestedOneWithoutAdmissionRecordInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageCreateNestedManyWithoutAdmissionRecordInput
 }
 
@@ -1430,8 +1430,6 @@ export type AdmissionRecordUncheckedCreateWithoutImplantUsagesInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
@@ -1439,6 +1437,8 @@ export type AdmissionRecordUncheckedCreateWithoutImplantUsagesInput = {
   notes?: string | null
   initiatedById: string
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUncheckedCreateNestedManyWithoutAdmissionRecordInput
 }
 
@@ -1482,16 +1482,16 @@ export type AdmissionRecordUpdateWithoutImplantUsagesInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutAdmissionRecordNestedInput
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedBy?: Prisma.UserUpdateOneRequiredWithoutAdmissionsInitiatedNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutAdmissionRecordNestedInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUpdateManyWithoutAdmissionRecordNestedInput
 }
 
@@ -1520,8 +1520,6 @@ export type AdmissionRecordUncheckedUpdateWithoutImplantUsagesInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1529,6 +1527,8 @@ export type AdmissionRecordUncheckedUpdateWithoutImplantUsagesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedById?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUncheckedUpdateManyWithoutAdmissionRecordNestedInput
 }
 
@@ -1556,16 +1556,16 @@ export type AdmissionRecordCreateWithoutPrescriptionImagesInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
   ipdStatusUpdatedAt?: Date | string | null
   notes?: string | null
   initiatedAt?: Date | string
-  lead: Prisma.LeadCreateNestedOneWithoutAdmissionRecordInput
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   initiatedBy: Prisma.UserCreateNestedOneWithoutAdmissionsInitiatedInput
+  lead: Prisma.LeadCreateNestedOneWithoutAdmissionRecordInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageCreateNestedManyWithoutAdmissionRecordInput
 }
 
@@ -1594,8 +1594,6 @@ export type AdmissionRecordUncheckedCreateWithoutPrescriptionImagesInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
@@ -1603,6 +1601,8 @@ export type AdmissionRecordUncheckedCreateWithoutPrescriptionImagesInput = {
   notes?: string | null
   initiatedById: string
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
   implantUsages?: Prisma.AdmissionRecordImplantUsageUncheckedCreateNestedManyWithoutAdmissionRecordInput
 }
 
@@ -1646,16 +1646,16 @@ export type AdmissionRecordUpdateWithoutPrescriptionImagesInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lead?: Prisma.LeadUpdateOneRequiredWithoutAdmissionRecordNestedInput
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedBy?: Prisma.UserUpdateOneRequiredWithoutAdmissionsInitiatedNestedInput
+  lead?: Prisma.LeadUpdateOneRequiredWithoutAdmissionRecordNestedInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageUpdateManyWithoutAdmissionRecordNestedInput
 }
 
@@ -1684,8 +1684,6 @@ export type AdmissionRecordUncheckedUpdateWithoutPrescriptionImagesInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1693,6 +1691,8 @@ export type AdmissionRecordUncheckedUpdateWithoutPrescriptionImagesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedById?: Prisma.StringFieldUpdateOperationsInput | string
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   implantUsages?: Prisma.AdmissionRecordImplantUsageUncheckedUpdateManyWithoutAdmissionRecordNestedInput
 }
 
@@ -1721,14 +1721,14 @@ export type AdmissionRecordCreateManyInitiatedByInput = {
   cabDischargeTo?: string | null
   ipdStatus?: $Enums.IpdStatus | null
   ipdStatusReason?: string | null
-  ipdImplantUsed?: boolean | null
-  ipdNoShowReason?: string | null
   newSurgeryDate?: Date | string | null
   ipdDischargeDate?: Date | string | null
   ipdStatusNotes?: string | null
   ipdStatusUpdatedAt?: Date | string | null
   notes?: string | null
   initiatedAt?: Date | string
+  ipdImplantUsed?: boolean | null
+  ipdNoShowReason?: string | null
 }
 
 export type AdmissionRecordUpdateWithoutInitiatedByInput = {
@@ -1755,14 +1755,14 @@ export type AdmissionRecordUpdateWithoutInitiatedByInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneRequiredWithoutAdmissionRecordNestedInput
   implantUsages?: Prisma.AdmissionRecordImplantUsageUpdateManyWithoutAdmissionRecordNestedInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUpdateManyWithoutAdmissionRecordNestedInput
@@ -1793,14 +1793,14 @@ export type AdmissionRecordUncheckedUpdateWithoutInitiatedByInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   implantUsages?: Prisma.AdmissionRecordImplantUsageUncheckedUpdateManyWithoutAdmissionRecordNestedInput
   prescriptionImages?: Prisma.AdmissionRecordPrescriptionImageUncheckedUpdateManyWithoutAdmissionRecordNestedInput
 }
@@ -1830,14 +1830,14 @@ export type AdmissionRecordUncheckedUpdateManyWithoutInitiatedByInput = {
   cabDischargeTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatus?: Prisma.NullableEnumIpdStatusFieldUpdateOperationsInput | $Enums.IpdStatus | null
   ipdStatusReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   newSurgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdDischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ipdStatusNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipdStatusUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   initiatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ipdImplantUsed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  ipdNoShowReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1905,8 +1905,6 @@ export type AdmissionRecordSelect<ExtArgs extends runtime.Types.Extensions.Inter
   cabDischargeTo?: boolean
   ipdStatus?: boolean
   ipdStatusReason?: boolean
-  ipdImplantUsed?: boolean
-  ipdNoShowReason?: boolean
   newSurgeryDate?: boolean
   ipdDischargeDate?: boolean
   ipdStatusNotes?: boolean
@@ -1914,8 +1912,10 @@ export type AdmissionRecordSelect<ExtArgs extends runtime.Types.Extensions.Inter
   notes?: boolean
   initiatedById?: boolean
   initiatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  ipdImplantUsed?: boolean
+  ipdNoShowReason?: boolean
   initiatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   implantUsages?: boolean | Prisma.AdmissionRecord$implantUsagesArgs<ExtArgs>
   prescriptionImages?: boolean | Prisma.AdmissionRecord$prescriptionImagesArgs<ExtArgs>
   _count?: boolean | Prisma.AdmissionRecordCountOutputTypeDefaultArgs<ExtArgs>
@@ -1946,8 +1946,6 @@ export type AdmissionRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   cabDischargeTo?: boolean
   ipdStatus?: boolean
   ipdStatusReason?: boolean
-  ipdImplantUsed?: boolean
-  ipdNoShowReason?: boolean
   newSurgeryDate?: boolean
   ipdDischargeDate?: boolean
   ipdStatusNotes?: boolean
@@ -1955,8 +1953,10 @@ export type AdmissionRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   notes?: boolean
   initiatedById?: boolean
   initiatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  ipdImplantUsed?: boolean
+  ipdNoShowReason?: boolean
   initiatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admissionRecord"]>
 
 export type AdmissionRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1984,8 +1984,6 @@ export type AdmissionRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   cabDischargeTo?: boolean
   ipdStatus?: boolean
   ipdStatusReason?: boolean
-  ipdImplantUsed?: boolean
-  ipdNoShowReason?: boolean
   newSurgeryDate?: boolean
   ipdDischargeDate?: boolean
   ipdStatusNotes?: boolean
@@ -1993,8 +1991,10 @@ export type AdmissionRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   notes?: boolean
   initiatedById?: boolean
   initiatedAt?: boolean
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  ipdImplantUsed?: boolean
+  ipdNoShowReason?: boolean
   initiatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admissionRecord"]>
 
 export type AdmissionRecordSelectScalar = {
@@ -2022,8 +2022,6 @@ export type AdmissionRecordSelectScalar = {
   cabDischargeTo?: boolean
   ipdStatus?: boolean
   ipdStatusReason?: boolean
-  ipdImplantUsed?: boolean
-  ipdNoShowReason?: boolean
   newSurgeryDate?: boolean
   ipdDischargeDate?: boolean
   ipdStatusNotes?: boolean
@@ -2031,30 +2029,32 @@ export type AdmissionRecordSelectScalar = {
   notes?: boolean
   initiatedById?: boolean
   initiatedAt?: boolean
+  ipdImplantUsed?: boolean
+  ipdNoShowReason?: boolean
 }
 
-export type AdmissionRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "admissionDate" | "admissionTime" | "admittingHospital" | "expectedSurgeryDate" | "surgeryDate" | "surgeryTime" | "hospitalAddress" | "googleMapLocation" | "tpa" | "instrument" | "implantConsumables" | "noMediendLogo" | "cabAdmissionPickupLocation" | "cabAdmissionPickupDateTime" | "cabAdmissionFrom" | "cabAdmissionTo" | "cabDischargePickupLocation" | "cabDischargePickupDateTime" | "cabDischargeFrom" | "cabDischargeTo" | "ipdStatus" | "ipdStatusReason" | "ipdImplantUsed" | "ipdNoShowReason" | "newSurgeryDate" | "ipdDischargeDate" | "ipdStatusNotes" | "ipdStatusUpdatedAt" | "notes" | "initiatedById" | "initiatedAt", ExtArgs["result"]["admissionRecord"]>
+export type AdmissionRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "admissionDate" | "admissionTime" | "admittingHospital" | "expectedSurgeryDate" | "surgeryDate" | "surgeryTime" | "hospitalAddress" | "googleMapLocation" | "tpa" | "instrument" | "implantConsumables" | "noMediendLogo" | "cabAdmissionPickupLocation" | "cabAdmissionPickupDateTime" | "cabAdmissionFrom" | "cabAdmissionTo" | "cabDischargePickupLocation" | "cabDischargePickupDateTime" | "cabDischargeFrom" | "cabDischargeTo" | "ipdStatus" | "ipdStatusReason" | "newSurgeryDate" | "ipdDischargeDate" | "ipdStatusNotes" | "ipdStatusUpdatedAt" | "notes" | "initiatedById" | "initiatedAt" | "ipdImplantUsed" | "ipdNoShowReason", ExtArgs["result"]["admissionRecord"]>
 export type AdmissionRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   initiatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   implantUsages?: boolean | Prisma.AdmissionRecord$implantUsagesArgs<ExtArgs>
   prescriptionImages?: boolean | Prisma.AdmissionRecord$prescriptionImagesArgs<ExtArgs>
   _count?: boolean | Prisma.AdmissionRecordCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AdmissionRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   initiatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 export type AdmissionRecordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   initiatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
 }
 
 export type $AdmissionRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AdmissionRecord"
   objects: {
-    lead: Prisma.$LeadPayload<ExtArgs>
     initiatedBy: Prisma.$UserPayload<ExtArgs>
+    lead: Prisma.$LeadPayload<ExtArgs>
     implantUsages: Prisma.$AdmissionRecordImplantUsagePayload<ExtArgs>[]
     prescriptionImages: Prisma.$AdmissionRecordPrescriptionImagePayload<ExtArgs>[]
   }
@@ -2083,8 +2083,6 @@ export type $AdmissionRecordPayload<ExtArgs extends runtime.Types.Extensions.Int
     cabDischargeTo: string | null
     ipdStatus: $Enums.IpdStatus | null
     ipdStatusReason: string | null
-    ipdImplantUsed: boolean | null
-    ipdNoShowReason: string | null
     newSurgeryDate: Date | null
     ipdDischargeDate: Date | null
     ipdStatusNotes: string | null
@@ -2092,6 +2090,8 @@ export type $AdmissionRecordPayload<ExtArgs extends runtime.Types.Extensions.Int
     notes: string | null
     initiatedById: string
     initiatedAt: Date
+    ipdImplantUsed: boolean | null
+    ipdNoShowReason: string | null
   }, ExtArgs["result"]["admissionRecord"]>
   composites: {}
 }
@@ -2486,8 +2486,8 @@ readonly fields: AdmissionRecordFieldRefs;
  */
 export interface Prisma__AdmissionRecordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   initiatedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   implantUsages<T extends Prisma.AdmissionRecord$implantUsagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdmissionRecord$implantUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdmissionRecordImplantUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   prescriptionImages<T extends Prisma.AdmissionRecord$prescriptionImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdmissionRecord$prescriptionImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdmissionRecordPrescriptionImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2543,8 +2543,6 @@ export interface AdmissionRecordFieldRefs {
   readonly cabDischargeTo: Prisma.FieldRef<"AdmissionRecord", 'String'>
   readonly ipdStatus: Prisma.FieldRef<"AdmissionRecord", 'IpdStatus'>
   readonly ipdStatusReason: Prisma.FieldRef<"AdmissionRecord", 'String'>
-  readonly ipdImplantUsed: Prisma.FieldRef<"AdmissionRecord", 'Boolean'>
-  readonly ipdNoShowReason: Prisma.FieldRef<"AdmissionRecord", 'String'>
   readonly newSurgeryDate: Prisma.FieldRef<"AdmissionRecord", 'DateTime'>
   readonly ipdDischargeDate: Prisma.FieldRef<"AdmissionRecord", 'DateTime'>
   readonly ipdStatusNotes: Prisma.FieldRef<"AdmissionRecord", 'String'>
@@ -2552,6 +2550,8 @@ export interface AdmissionRecordFieldRefs {
   readonly notes: Prisma.FieldRef<"AdmissionRecord", 'String'>
   readonly initiatedById: Prisma.FieldRef<"AdmissionRecord", 'String'>
   readonly initiatedAt: Prisma.FieldRef<"AdmissionRecord", 'DateTime'>
+  readonly ipdImplantUsed: Prisma.FieldRef<"AdmissionRecord", 'Boolean'>
+  readonly ipdNoShowReason: Prisma.FieldRef<"AdmissionRecord", 'String'>
 }
     
 

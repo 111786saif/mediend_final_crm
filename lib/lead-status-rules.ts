@@ -16,6 +16,10 @@ export function normalizeLeadStatusRuleValue(status: string | null | undefined) 
     return 'out of station'
   }
 
+  if (normalized === 'dnp exhausted') {
+    return 'dnp exhausted'
+  }
+
   if (/^dnp/.test(normalized)) {
     return 'dnp'
   }
@@ -64,4 +68,3 @@ export function isStatusRequiringModeOfPayment(status: string | null | undefined
 export function isStatusRequiringRemark(status: string | null | undefined) {
   return true
 }
-

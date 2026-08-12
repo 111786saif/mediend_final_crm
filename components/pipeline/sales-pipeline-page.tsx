@@ -225,6 +225,7 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'tl', label: 'Team Lead', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'bd', label: 'BDM', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'lastRemarks', label: 'Last Remark', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'status', label: 'Lead Status', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'followUpDate', label: 'Follow Up Date', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'mop', label: 'MOP', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'surgeryDate', label: 'Surgery Date', defaultVisible: { bd: true, 'team-lead': true } },
@@ -239,7 +240,6 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'modifyBy', label: 'Modify By', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyDate', label: 'Modified Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'dupCount', label: 'Duplicate Count', defaultVisible: { bd: true, 'team-lead': true } },
-  { id: 'status', label: 'Lead Status', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
 ]
 
@@ -269,11 +269,11 @@ const PIPELINE_SERVER_FILTER_COLUMNS = new Set<PipelineColumnId>([
   'tl',
   'hospital',
   'doctor',
+  'lastRemarks',
   'status',
+  'followUpDate',
   'stage',
   'mop',
-  'lastRemarks',
-  'followUpDate',
   'subStatus',
   'surgeryDate',
   'healthInsurance',
@@ -1381,6 +1381,15 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             />
                           )}
                           {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remark" {...getHeaderFilterProps('lastRemarks')} />}
+                          {isColumnVisible('status') && (
+                            <HeaderCell
+                              label="Status"
+                              sortField="status"
+                              state={state}
+                              onSort={handleSort}
+                              {...getHeaderFilterProps('status')}
+                            />
+                          )}
                           {isColumnVisible('followUpDate') && (
                             <HeaderCell
                               label="Follow Up Date"
@@ -1419,15 +1428,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             <HeaderCell
                               label="Doctor"
                               {...getHeaderFilterProps('doctor')}
-                            />
-                          )}
-                          {isColumnVisible('status') && (
-                            <HeaderCell
-                              label="Status"
-                              sortField="status"
-                              state={state}
-                              onSort={handleSort}
-                              {...getHeaderFilterProps('status')}
                             />
                           )}
                           {isColumnVisible('stage') && (
@@ -1961,6 +1961,19 @@ const PipelineRow = memo(function PipelineRow({
           {lastRemarksText}
         </td>
       )}
+      {show('status') && (
+        <td className="px-3 py-2">
+          <span
+            className="rounded-md px-2 py-0.5 text-xs font-medium"
+            style={{
+              backgroundColor: sc.backgroundColor,
+              color: sc.textColor,
+            }}
+          >
+            {st}
+          </span>
+        </td>
+      )}
       {show('followUpDate') && (
         <td
           className={`whitespace-nowrap px-3 py-2 text-sm ${
@@ -2012,19 +2025,6 @@ const PipelineRow = memo(function PipelineRow({
         <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.duplCount != null ? String(lead.duplCount) : '0'}</td>
       )}
       {/* {show('bdm') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{bdmText}</td>} */}
-      {show('status') && (
-        <td className="px-3 py-2">
-          <span
-            className="rounded-md px-2 py-0.5 text-xs font-medium"
-            style={{
-              backgroundColor: sc.backgroundColor,
-              color: sc.textColor,
-            }}
-          >
-            {st}
-          </span>
-        </td>
-      )}
       {show('stage') && (
         <td className="px-3 py-2">
           {stage ? (

@@ -272,8 +272,8 @@ export type EmployeeMonthlyIncentiveWhereInput = {
   updatedByUserId?: Prisma.StringNullableFilter<"EmployeeMonthlyIncentive"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmployeeMonthlyIncentive"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeMonthlyIncentive"> | Date | string
-  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -289,8 +289,8 @@ export type EmployeeMonthlyIncentiveOrderByWithRelationInput = {
   updatedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  employee?: Prisma.EmployeeOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  employee?: Prisma.EmployeeOrderByWithRelationInput
   updatedBy?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -310,8 +310,8 @@ export type EmployeeMonthlyIncentiveWhereUniqueInput = Prisma.AtLeast<{
   updatedByUserId?: Prisma.StringNullableFilter<"EmployeeMonthlyIncentive"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmployeeMonthlyIncentive"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeMonthlyIncentive"> | Date | string
-  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "employeeId_month_year">
 
@@ -360,8 +360,8 @@ export type EmployeeMonthlyIncentiveCreateInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  employee: Prisma.EmployeeCreateNestedOneWithoutMonthlyIncentivesInput
   createdBy: Prisma.UserCreateNestedOneWithoutEmployeeIncentivesCreatedInput
+  employee: Prisma.EmployeeCreateNestedOneWithoutMonthlyIncentivesInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutEmployeeIncentivesUpdatedInput
 }
 
@@ -388,8 +388,8 @@ export type EmployeeMonthlyIncentiveUpdateInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneRequiredWithoutMonthlyIncentivesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutEmployeeIncentivesCreatedNestedInput
+  employee?: Prisma.EmployeeUpdateOneRequiredWithoutMonthlyIncentivesNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutEmployeeIncentivesUpdatedNestedInput
 }
 
@@ -691,8 +691,8 @@ export type EmployeeMonthlyIncentiveCreateWithoutUpdatedByInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  employee: Prisma.EmployeeCreateNestedOneWithoutMonthlyIncentivesInput
   createdBy: Prisma.UserCreateNestedOneWithoutEmployeeIncentivesCreatedInput
+  employee: Prisma.EmployeeCreateNestedOneWithoutMonthlyIncentivesInput
 }
 
 export type EmployeeMonthlyIncentiveUncheckedCreateWithoutUpdatedByInput = {
@@ -893,8 +893,8 @@ export type EmployeeMonthlyIncentiveUpdateWithoutUpdatedByInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneRequiredWithoutMonthlyIncentivesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutEmployeeIncentivesCreatedNestedInput
+  employee?: Prisma.EmployeeUpdateOneRequiredWithoutMonthlyIncentivesNestedInput
 }
 
 export type EmployeeMonthlyIncentiveUncheckedUpdateWithoutUpdatedByInput = {
@@ -989,8 +989,8 @@ export type EmployeeMonthlyIncentiveSelect<ExtArgs extends runtime.Types.Extensi
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMonthlyIncentive$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["employeeMonthlyIncentive"]>
 
@@ -1006,8 +1006,8 @@ export type EmployeeMonthlyIncentiveSelectCreateManyAndReturn<ExtArgs extends ru
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMonthlyIncentive$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["employeeMonthlyIncentive"]>
 
@@ -1023,8 +1023,8 @@ export type EmployeeMonthlyIncentiveSelectUpdateManyAndReturn<ExtArgs extends ru
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMonthlyIncentive$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["employeeMonthlyIncentive"]>
 
@@ -1044,26 +1044,26 @@ export type EmployeeMonthlyIncentiveSelectScalar = {
 
 export type EmployeeMonthlyIncentiveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "month" | "year" | "amount" | "status" | "note" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["employeeMonthlyIncentive"]>
 export type EmployeeMonthlyIncentiveInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMonthlyIncentive$updatedByArgs<ExtArgs>
 }
 export type EmployeeMonthlyIncentiveIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMonthlyIncentive$updatedByArgs<ExtArgs>
 }
 export type EmployeeMonthlyIncentiveIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMonthlyIncentive$updatedByArgs<ExtArgs>
 }
 
 export type $EmployeeMonthlyIncentivePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "EmployeeMonthlyIncentive"
   objects: {
-    employee: Prisma.$EmployeePayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs>
+    employee: Prisma.$EmployeePayload<ExtArgs>
     updatedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1472,8 +1472,8 @@ readonly fields: EmployeeMonthlyIncentiveFieldRefs;
  */
 export interface Prisma__EmployeeMonthlyIncentiveClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   updatedBy<T extends Prisma.EmployeeMonthlyIncentive$updatedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeMonthlyIncentive$updatedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
