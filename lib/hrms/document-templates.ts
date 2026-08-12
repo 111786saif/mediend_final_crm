@@ -40,7 +40,8 @@ function getBaseUrl(): string {
 /** IST midnight 10 July 2026 — signatory name switches on or after this date. */
 export const HR_SIGNATURE_CUTOVER = new Date('2026-07-10T00:00:00+05:30')
 
-const HR_SIGNATURE_IMAGE = '/images/hr-sign-and-stamp.png'
+const VAISHALI_SIGNATURE_IMAGE = '/images/hr-sign-and-stamp.png'
+const MEGHA_SIGNATURE_IMAGE = '/images/sign-megha-roy-square.jpg'
 const HR_SIGNATURE_DESIGNATION = 'Senior Manager-Human Resources'
 
 export type DocumentGenerationOptions = {
@@ -65,13 +66,18 @@ type HrSignature = {
   designation: string
 }
 
-/** Date-based HR signatory — same stamp image, name switches at cutover. */
+/** Date-based HR signatory — name and signature image switch at cutover. */
 export function resolveHrSignature(referenceDate: Date): HrSignature {
-  const name =
-    referenceDate < HR_SIGNATURE_CUTOVER ? 'Vaishali Tomar' : 'Megha Roy'
+  if (referenceDate < HR_SIGNATURE_CUTOVER) {
+    return {
+      name: 'Vaishali Tomar',
+      imagePath: VAISHALI_SIGNATURE_IMAGE,
+      designation: HR_SIGNATURE_DESIGNATION,
+    }
+  }
   return {
-    name,
-    imagePath: HR_SIGNATURE_IMAGE,
+    name: 'Megha Roy',
+    imagePath: MEGHA_SIGNATURE_IMAGE,
     designation: HR_SIGNATURE_DESIGNATION,
   }
 }
