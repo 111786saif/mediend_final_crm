@@ -12,12 +12,9 @@ import { mapStatusCode } from '@/lib/mysql-code-mappings'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import {
-  applyPipelineColumnFilters,
-  buildPipelineColumnFacets,
   buildPipelineFiltersWhere,
   buildPipelineRoleWhere,
   bucketsFromStatusGroups,
-  hasPostQueryPipelineColumnFilters,
   parsePipelineQueryParams,
   pipelineOrderBy,
   type PipelineSelectedLead,
@@ -33,18 +30,13 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const params = parsePipelineQueryParams(searchParams)
     const { where: roleWhere } = await buildPipelineRoleWhere(user)
-    const columnFacetParams = { ...params, columnFilters: [] }
 
     const listWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: true })
-    const columnFacetWhere = buildPipelineFiltersWhere(columnFacetParams, roleWhere, {
-      includeStatusBucket: true,
-    })
     // Status card counts ignore the selected status bucket so cards stay stable while drilling in.
     const facetWhere = buildPipelineFiltersWhere(params, roleWhere, { includeStatusBucket: false })
 
     const skip = (params.page - 1) * params.pageSize
     const orderBy = pipelineOrderBy(params.sortBy, params.sortDir)
-    const needsPostQueryColumnFiltering = hasPostQueryPipelineColumnFilters(params.columnFilters)
 
     // With the pg driver adapter we keep the Prisma pool deliberately small.
     // Running a burst of parallel pipeline queries on the same adapter/client
@@ -78,34 +70,14 @@ export async function GET(request: NextRequest) {
       orderBy: { bdId: 'asc' },
     })
     const campaignAgg = await loadCampaignTree(facetWhere, params.groupBy)
-    const columnFacetLeads = await prisma.lead.findMany({
-      where: columnFacetWhere,
+    const total = await prisma.lead.count({ where: listWhere })
+    const leads: PipelineSelectedLead[] = await prisma.lead.findMany({
+      where: listWhere,
       select: pipelineTableSelect,
       orderBy,
+      skip,
+      take: params.pageSize,
     })
-
-    let total: number
-    let leads: PipelineSelectedLead[]
-
-    if (needsPostQueryColumnFiltering) {
-      const allMatchingLeads = await prisma.lead.findMany({
-        where: listWhere,
-        select: pipelineTableSelect,
-        orderBy,
-      })
-      const filteredLeads = applyPipelineColumnFilters(allMatchingLeads, params.columnFilters)
-      total = filteredLeads.length
-      leads = filteredLeads.slice(skip, skip + params.pageSize)
-    } else {
-      total = await prisma.lead.count({ where: listWhere })
-      leads = await prisma.lead.findMany({
-        where: listWhere,
-        select: pipelineTableSelect,
-        orderBy,
-        skip,
-        take: params.pageSize,
-      })
-    }
 
     const statusCounts = bucketsFromStatusGroups(statusGroups)
     const facetTotal = Object.values(statusCounts).reduce((s, n) => s + n, 0)
@@ -128,7 +100,6 @@ export async function GET(request: NextRequest) {
       .filter((r) => r.bd?.id && r.bd.name)
       .map((r) => ({ id: r.bd!.id, name: r.bd!.name }))
       .sort((a, b) => a.name.localeCompare(b.name))
-    const columnFacets = buildPipelineColumnFacets(columnFacetLeads)
 
     const mappedLeads = leads.map((lead) => {
       const latestRemark = getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries, user.role) ?? null
@@ -162,7 +133,7 @@ export async function GET(request: NextRequest) {
         categories,
         circles,
         bds,
-        columnFacets,
+        columnFacets: {},
       },
       campaignTree: campaignAgg,
       sortBy: params.sortBy,
