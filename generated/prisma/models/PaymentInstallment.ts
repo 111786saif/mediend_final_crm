@@ -37,7 +37,6 @@ export type PaymentInstallmentSumAggregateOutputType = {
 export type PaymentInstallmentMinAggregateOutputType = {
   id: string | null
   leadId: string | null
-  hospitalName: string | null
   recipient: $Enums.InstallmentRecipient | null
   amount: number | null
   paidOn: Date | null
@@ -45,18 +44,18 @@ export type PaymentInstallmentMinAggregateOutputType = {
   reference: string | null
   notes: string | null
   recordedById: string | null
-  verificationStatus: $Enums.InstallmentVerificationStatus | null
-  verifiedById: string | null
-  verifiedAt: Date | null
-  rejectionRemarks: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  rejectionRemarks: string | null
+  verificationStatus: $Enums.InstallmentVerificationStatus | null
+  verifiedAt: Date | null
+  verifiedById: string | null
+  hospitalName: string | null
 }
 
 export type PaymentInstallmentMaxAggregateOutputType = {
   id: string | null
   leadId: string | null
-  hospitalName: string | null
   recipient: $Enums.InstallmentRecipient | null
   amount: number | null
   paidOn: Date | null
@@ -64,18 +63,18 @@ export type PaymentInstallmentMaxAggregateOutputType = {
   reference: string | null
   notes: string | null
   recordedById: string | null
-  verificationStatus: $Enums.InstallmentVerificationStatus | null
-  verifiedById: string | null
-  verifiedAt: Date | null
-  rejectionRemarks: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  rejectionRemarks: string | null
+  verificationStatus: $Enums.InstallmentVerificationStatus | null
+  verifiedAt: Date | null
+  verifiedById: string | null
+  hospitalName: string | null
 }
 
 export type PaymentInstallmentCountAggregateOutputType = {
   id: number
   leadId: number
-  hospitalName: number
   recipient: number
   amount: number
   paidOn: number
@@ -83,12 +82,13 @@ export type PaymentInstallmentCountAggregateOutputType = {
   reference: number
   notes: number
   recordedById: number
-  verificationStatus: number
-  verifiedById: number
-  verifiedAt: number
-  rejectionRemarks: number
   createdAt: number
   updatedAt: number
+  rejectionRemarks: number
+  verificationStatus: number
+  verifiedAt: number
+  verifiedById: number
+  hospitalName: number
   _all: number
 }
 
@@ -104,7 +104,6 @@ export type PaymentInstallmentSumAggregateInputType = {
 export type PaymentInstallmentMinAggregateInputType = {
   id?: true
   leadId?: true
-  hospitalName?: true
   recipient?: true
   amount?: true
   paidOn?: true
@@ -112,18 +111,18 @@ export type PaymentInstallmentMinAggregateInputType = {
   reference?: true
   notes?: true
   recordedById?: true
-  verificationStatus?: true
-  verifiedById?: true
-  verifiedAt?: true
-  rejectionRemarks?: true
   createdAt?: true
   updatedAt?: true
+  rejectionRemarks?: true
+  verificationStatus?: true
+  verifiedAt?: true
+  verifiedById?: true
+  hospitalName?: true
 }
 
 export type PaymentInstallmentMaxAggregateInputType = {
   id?: true
   leadId?: true
-  hospitalName?: true
   recipient?: true
   amount?: true
   paidOn?: true
@@ -131,18 +130,18 @@ export type PaymentInstallmentMaxAggregateInputType = {
   reference?: true
   notes?: true
   recordedById?: true
-  verificationStatus?: true
-  verifiedById?: true
-  verifiedAt?: true
-  rejectionRemarks?: true
   createdAt?: true
   updatedAt?: true
+  rejectionRemarks?: true
+  verificationStatus?: true
+  verifiedAt?: true
+  verifiedById?: true
+  hospitalName?: true
 }
 
 export type PaymentInstallmentCountAggregateInputType = {
   id?: true
   leadId?: true
-  hospitalName?: true
   recipient?: true
   amount?: true
   paidOn?: true
@@ -150,12 +149,13 @@ export type PaymentInstallmentCountAggregateInputType = {
   reference?: true
   notes?: true
   recordedById?: true
-  verificationStatus?: true
-  verifiedById?: true
-  verifiedAt?: true
-  rejectionRemarks?: true
   createdAt?: true
   updatedAt?: true
+  rejectionRemarks?: true
+  verificationStatus?: true
+  verifiedAt?: true
+  verifiedById?: true
+  hospitalName?: true
   _all?: true
 }
 
@@ -248,7 +248,6 @@ export type PaymentInstallmentGroupByArgs<ExtArgs extends runtime.Types.Extensio
 export type PaymentInstallmentGroupByOutputType = {
   id: string
   leadId: string | null
-  hospitalName: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date
@@ -256,12 +255,13 @@ export type PaymentInstallmentGroupByOutputType = {
   reference: string | null
   notes: string | null
   recordedById: string
-  verificationStatus: $Enums.InstallmentVerificationStatus
-  verifiedById: string | null
-  verifiedAt: Date | null
-  rejectionRemarks: string | null
   createdAt: Date
   updatedAt: Date
+  rejectionRemarks: string | null
+  verificationStatus: $Enums.InstallmentVerificationStatus
+  verifiedAt: Date | null
+  verifiedById: string | null
+  hospitalName: string | null
   _count: PaymentInstallmentCountAggregateOutputType | null
   _avg: PaymentInstallmentAvgAggregateOutputType | null
   _sum: PaymentInstallmentSumAggregateOutputType | null
@@ -290,7 +290,6 @@ export type PaymentInstallmentWhereInput = {
   NOT?: Prisma.PaymentInstallmentWhereInput | Prisma.PaymentInstallmentWhereInput[]
   id?: Prisma.StringFilter<"PaymentInstallment"> | string
   leadId?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
-  hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recipient?: Prisma.EnumInstallmentRecipientFilter<"PaymentInstallment"> | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFilter<"PaymentInstallment"> | number
   paidOn?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
@@ -298,12 +297,13 @@ export type PaymentInstallmentWhereInput = {
   reference?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   notes?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentInstallment"> | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
-  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
-  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
+  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
+  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   lead?: Prisma.XOR<Prisma.LeadNullableScalarRelationFilter, Prisma.LeadWhereInput> | null
   recordedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   verifiedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -312,7 +312,6 @@ export type PaymentInstallmentWhereInput = {
 export type PaymentInstallmentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrderInput | Prisma.SortOrder
-  hospitalName?: Prisma.SortOrderInput | Prisma.SortOrder
   recipient?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   paidOn?: Prisma.SortOrder
@@ -320,12 +319,13 @@ export type PaymentInstallmentOrderByWithRelationInput = {
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   recordedById?: Prisma.SortOrder
-  verificationStatus?: Prisma.SortOrder
-  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  rejectionRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  hospitalName?: Prisma.SortOrderInput | Prisma.SortOrder
   lead?: Prisma.LeadOrderByWithRelationInput
   recordedBy?: Prisma.UserOrderByWithRelationInput
   verifiedBy?: Prisma.UserOrderByWithRelationInput
@@ -337,7 +337,6 @@ export type PaymentInstallmentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PaymentInstallmentWhereInput[]
   NOT?: Prisma.PaymentInstallmentWhereInput | Prisma.PaymentInstallmentWhereInput[]
   leadId?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
-  hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recipient?: Prisma.EnumInstallmentRecipientFilter<"PaymentInstallment"> | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFilter<"PaymentInstallment"> | number
   paidOn?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
@@ -345,12 +344,13 @@ export type PaymentInstallmentWhereUniqueInput = Prisma.AtLeast<{
   reference?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   notes?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentInstallment"> | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
-  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
-  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
+  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
+  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   lead?: Prisma.XOR<Prisma.LeadNullableScalarRelationFilter, Prisma.LeadWhereInput> | null
   recordedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   verifiedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -359,7 +359,6 @@ export type PaymentInstallmentWhereUniqueInput = Prisma.AtLeast<{
 export type PaymentInstallmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrderInput | Prisma.SortOrder
-  hospitalName?: Prisma.SortOrderInput | Prisma.SortOrder
   recipient?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   paidOn?: Prisma.SortOrder
@@ -367,12 +366,13 @@ export type PaymentInstallmentOrderByWithAggregationInput = {
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   recordedById?: Prisma.SortOrder
-  verificationStatus?: Prisma.SortOrder
-  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  rejectionRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  hospitalName?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PaymentInstallmentCountOrderByAggregateInput
   _avg?: Prisma.PaymentInstallmentAvgOrderByAggregateInput
   _max?: Prisma.PaymentInstallmentMaxOrderByAggregateInput
@@ -386,7 +386,6 @@ export type PaymentInstallmentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PaymentInstallmentScalarWhereWithAggregatesInput | Prisma.PaymentInstallmentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PaymentInstallment"> | string
   leadId?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
-  hospitalName?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
   recipient?: Prisma.EnumInstallmentRecipientWithAggregatesFilter<"PaymentInstallment"> | $Enums.InstallmentRecipient
   amount?: Prisma.FloatWithAggregatesFilter<"PaymentInstallment"> | number
   paidOn?: Prisma.DateTimeWithAggregatesFilter<"PaymentInstallment"> | Date | string
@@ -394,28 +393,29 @@ export type PaymentInstallmentScalarWhereWithAggregatesInput = {
   reference?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
   recordedById?: Prisma.StringWithAggregatesFilter<"PaymentInstallment"> | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusWithAggregatesFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
-  verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PaymentInstallment"> | Date | string | null
-  rejectionRemarks?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentInstallment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentInstallment"> | Date | string
+  rejectionRemarks?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusWithAggregatesFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PaymentInstallment"> | Date | string | null
+  verifiedById?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
+  hospitalName?: Prisma.StringNullableWithAggregatesFilter<"PaymentInstallment"> | string | null
 }
 
 export type PaymentInstallmentCreateInput = {
   id?: string
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  hospitalName?: string | null
   lead?: Prisma.LeadCreateNestedOneWithoutPaymentInstallmentsInput
   recordedBy: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsRecordedInput
   verifiedBy?: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsVerifiedInput
@@ -424,7 +424,6 @@ export type PaymentInstallmentCreateInput = {
 export type PaymentInstallmentUncheckedCreateInput = {
   id?: string
   leadId?: string | null
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
@@ -432,28 +431,29 @@ export type PaymentInstallmentUncheckedCreateInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedById?: string | null
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  hospitalName?: string | null
 }
 
 export type PaymentInstallmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneWithoutPaymentInstallmentsNestedInput
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutPaymentInstallmentsRecordedNestedInput
   verifiedBy?: Prisma.UserUpdateOneWithoutPaymentInstallmentsVerifiedNestedInput
@@ -462,7 +462,6 @@ export type PaymentInstallmentUpdateInput = {
 export type PaymentInstallmentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -470,18 +469,18 @@ export type PaymentInstallmentUncheckedUpdateInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentInstallmentCreateManyInput = {
   id?: string
   leadId?: string | null
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
@@ -489,34 +488,34 @@ export type PaymentInstallmentCreateManyInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedById?: string | null
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  hospitalName?: string | null
 }
 
 export type PaymentInstallmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentInstallmentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -524,12 +523,13 @@ export type PaymentInstallmentUncheckedUpdateManyInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentInstallmentListRelationFilter = {
@@ -545,7 +545,6 @@ export type PaymentInstallmentOrderByRelationAggregateInput = {
 export type PaymentInstallmentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
-  hospitalName?: Prisma.SortOrder
   recipient?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   paidOn?: Prisma.SortOrder
@@ -553,12 +552,13 @@ export type PaymentInstallmentCountOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
-  verificationStatus?: Prisma.SortOrder
-  verifiedById?: Prisma.SortOrder
-  verifiedAt?: Prisma.SortOrder
-  rejectionRemarks?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
+  hospitalName?: Prisma.SortOrder
 }
 
 export type PaymentInstallmentAvgOrderByAggregateInput = {
@@ -568,7 +568,6 @@ export type PaymentInstallmentAvgOrderByAggregateInput = {
 export type PaymentInstallmentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
-  hospitalName?: Prisma.SortOrder
   recipient?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   paidOn?: Prisma.SortOrder
@@ -576,18 +575,18 @@ export type PaymentInstallmentMaxOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
-  verificationStatus?: Prisma.SortOrder
-  verifiedById?: Prisma.SortOrder
-  verifiedAt?: Prisma.SortOrder
-  rejectionRemarks?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
+  hospitalName?: Prisma.SortOrder
 }
 
 export type PaymentInstallmentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
-  hospitalName?: Prisma.SortOrder
   recipient?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   paidOn?: Prisma.SortOrder
@@ -595,12 +594,13 @@ export type PaymentInstallmentMinOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
-  verificationStatus?: Prisma.SortOrder
-  verifiedById?: Prisma.SortOrder
-  verifiedAt?: Prisma.SortOrder
-  rejectionRemarks?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  rejectionRemarks?: Prisma.SortOrder
+  verificationStatus?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
+  hospitalName?: Prisma.SortOrder
 }
 
 export type PaymentInstallmentSumOrderByAggregateInput = {
@@ -747,18 +747,18 @@ export type EnumInstallmentVerificationStatusFieldUpdateOperationsInput = {
 
 export type PaymentInstallmentCreateWithoutRecordedByInput = {
   id?: string
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  hospitalName?: string | null
   lead?: Prisma.LeadCreateNestedOneWithoutPaymentInstallmentsInput
   verifiedBy?: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsVerifiedInput
 }
@@ -766,19 +766,19 @@ export type PaymentInstallmentCreateWithoutRecordedByInput = {
 export type PaymentInstallmentUncheckedCreateWithoutRecordedByInput = {
   id?: string
   leadId?: string | null
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedById?: string | null
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  hospitalName?: string | null
 }
 
 export type PaymentInstallmentCreateOrConnectWithoutRecordedByInput = {
@@ -793,18 +793,18 @@ export type PaymentInstallmentCreateManyRecordedByInputEnvelope = {
 
 export type PaymentInstallmentCreateWithoutVerifiedByInput = {
   id?: string
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  hospitalName?: string | null
   lead?: Prisma.LeadCreateNestedOneWithoutPaymentInstallmentsInput
   recordedBy: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsRecordedInput
 }
@@ -812,7 +812,6 @@ export type PaymentInstallmentCreateWithoutVerifiedByInput = {
 export type PaymentInstallmentUncheckedCreateWithoutVerifiedByInput = {
   id?: string
   leadId?: string | null
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
@@ -820,11 +819,12 @@ export type PaymentInstallmentUncheckedCreateWithoutVerifiedByInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  hospitalName?: string | null
 }
 
 export type PaymentInstallmentCreateOrConnectWithoutVerifiedByInput = {
@@ -859,7 +859,6 @@ export type PaymentInstallmentScalarWhereInput = {
   NOT?: Prisma.PaymentInstallmentScalarWhereInput | Prisma.PaymentInstallmentScalarWhereInput[]
   id?: Prisma.StringFilter<"PaymentInstallment"> | string
   leadId?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
-  hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recipient?: Prisma.EnumInstallmentRecipientFilter<"PaymentInstallment"> | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFilter<"PaymentInstallment"> | number
   paidOn?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
@@ -867,12 +866,13 @@ export type PaymentInstallmentScalarWhereInput = {
   reference?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   notes?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   recordedById?: Prisma.StringFilter<"PaymentInstallment"> | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
-  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
-  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentInstallment"> | Date | string
+  rejectionRemarks?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFilter<"PaymentInstallment"> | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.DateTimeNullableFilter<"PaymentInstallment"> | Date | string | null
+  verifiedById?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
+  hospitalName?: Prisma.StringNullableFilter<"PaymentInstallment"> | string | null
 }
 
 export type PaymentInstallmentUpsertWithWhereUniqueWithoutVerifiedByInput = {
@@ -893,25 +893,24 @@ export type PaymentInstallmentUpdateManyWithWhereWithoutVerifiedByInput = {
 
 export type PaymentInstallmentCreateWithoutLeadInput = {
   id?: string
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  hospitalName?: string | null
   recordedBy: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsRecordedInput
   verifiedBy?: Prisma.UserCreateNestedOneWithoutPaymentInstallmentsVerifiedInput
 }
 
 export type PaymentInstallmentUncheckedCreateWithoutLeadInput = {
   id?: string
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
@@ -919,12 +918,13 @@ export type PaymentInstallmentUncheckedCreateWithoutLeadInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedById?: string | null
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  hospitalName?: string | null
 }
 
 export type PaymentInstallmentCreateOrConnectWithoutLeadInput = {
@@ -956,25 +956,24 @@ export type PaymentInstallmentUpdateManyWithWhereWithoutLeadInput = {
 export type PaymentInstallmentCreateManyRecordedByInput = {
   id?: string
   leadId?: string | null
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
   mode?: $Enums.InstallmentMode | null
   reference?: string | null
   notes?: string | null
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedById?: string | null
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  hospitalName?: string | null
 }
 
 export type PaymentInstallmentCreateManyVerifiedByInput = {
   id?: string
   leadId?: string | null
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
@@ -982,27 +981,28 @@ export type PaymentInstallmentCreateManyVerifiedByInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  hospitalName?: string | null
 }
 
 export type PaymentInstallmentUpdateWithoutRecordedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneWithoutPaymentInstallmentsNestedInput
   verifiedBy?: Prisma.UserUpdateOneWithoutPaymentInstallmentsVerifiedNestedInput
 }
@@ -1010,53 +1010,53 @@ export type PaymentInstallmentUpdateWithoutRecordedByInput = {
 export type PaymentInstallmentUncheckedUpdateWithoutRecordedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentInstallmentUncheckedUpdateManyWithoutRecordedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentInstallmentUpdateWithoutVerifiedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneWithoutPaymentInstallmentsNestedInput
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutPaymentInstallmentsRecordedNestedInput
 }
@@ -1064,7 +1064,6 @@ export type PaymentInstallmentUpdateWithoutVerifiedByInput = {
 export type PaymentInstallmentUncheckedUpdateWithoutVerifiedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1072,17 +1071,17 @@ export type PaymentInstallmentUncheckedUpdateWithoutVerifiedByInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1090,16 +1089,16 @@ export type PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentInstallmentCreateManyLeadInput = {
   id?: string
-  hospitalName?: string | null
   recipient: $Enums.InstallmentRecipient
   amount: number
   paidOn: Date | string
@@ -1107,35 +1106,35 @@ export type PaymentInstallmentCreateManyLeadInput = {
   reference?: string | null
   notes?: string | null
   recordedById: string
-  verificationStatus?: $Enums.InstallmentVerificationStatus
-  verifiedById?: string | null
-  verifiedAt?: Date | string | null
-  rejectionRemarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  rejectionRemarks?: string | null
+  verificationStatus?: $Enums.InstallmentVerificationStatus
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  hospitalName?: string | null
 }
 
 export type PaymentInstallmentUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.NullableEnumInstallmentModeFieldUpdateOperationsInput | $Enums.InstallmentMode | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutPaymentInstallmentsRecordedNestedInput
   verifiedBy?: Prisma.UserUpdateOneWithoutPaymentInstallmentsVerifiedNestedInput
 }
 
 export type PaymentInstallmentUncheckedUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1143,17 +1142,17 @@ export type PaymentInstallmentUncheckedUpdateWithoutLeadInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentInstallmentUncheckedUpdateManyWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipient?: Prisma.EnumInstallmentRecipientFieldUpdateOperationsInput | $Enums.InstallmentRecipient
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   paidOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1161,12 +1160,13 @@ export type PaymentInstallmentUncheckedUpdateManyWithoutLeadInput = {
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
-  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
-  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationStatus?: Prisma.EnumInstallmentVerificationStatusFieldUpdateOperationsInput | $Enums.InstallmentVerificationStatus
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1174,7 +1174,6 @@ export type PaymentInstallmentUncheckedUpdateManyWithoutLeadInput = {
 export type PaymentInstallmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
-  hospitalName?: boolean
   recipient?: boolean
   amount?: boolean
   paidOn?: boolean
@@ -1182,12 +1181,13 @@ export type PaymentInstallmentSelect<ExtArgs extends runtime.Types.Extensions.In
   reference?: boolean
   notes?: boolean
   recordedById?: boolean
-  verificationStatus?: boolean
-  verifiedById?: boolean
-  verifiedAt?: boolean
-  rejectionRemarks?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  rejectionRemarks?: boolean
+  verificationStatus?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
+  hospitalName?: boolean
   lead?: boolean | Prisma.PaymentInstallment$leadArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
@@ -1196,7 +1196,6 @@ export type PaymentInstallmentSelect<ExtArgs extends runtime.Types.Extensions.In
 export type PaymentInstallmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
-  hospitalName?: boolean
   recipient?: boolean
   amount?: boolean
   paidOn?: boolean
@@ -1204,12 +1203,13 @@ export type PaymentInstallmentSelectCreateManyAndReturn<ExtArgs extends runtime.
   reference?: boolean
   notes?: boolean
   recordedById?: boolean
-  verificationStatus?: boolean
-  verifiedById?: boolean
-  verifiedAt?: boolean
-  rejectionRemarks?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  rejectionRemarks?: boolean
+  verificationStatus?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
+  hospitalName?: boolean
   lead?: boolean | Prisma.PaymentInstallment$leadArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
@@ -1218,7 +1218,6 @@ export type PaymentInstallmentSelectCreateManyAndReturn<ExtArgs extends runtime.
 export type PaymentInstallmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
-  hospitalName?: boolean
   recipient?: boolean
   amount?: boolean
   paidOn?: boolean
@@ -1226,12 +1225,13 @@ export type PaymentInstallmentSelectUpdateManyAndReturn<ExtArgs extends runtime.
   reference?: boolean
   notes?: boolean
   recordedById?: boolean
-  verificationStatus?: boolean
-  verifiedById?: boolean
-  verifiedAt?: boolean
-  rejectionRemarks?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  rejectionRemarks?: boolean
+  verificationStatus?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
+  hospitalName?: boolean
   lead?: boolean | Prisma.PaymentInstallment$leadArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   verifiedBy?: boolean | Prisma.PaymentInstallment$verifiedByArgs<ExtArgs>
@@ -1240,7 +1240,6 @@ export type PaymentInstallmentSelectUpdateManyAndReturn<ExtArgs extends runtime.
 export type PaymentInstallmentSelectScalar = {
   id?: boolean
   leadId?: boolean
-  hospitalName?: boolean
   recipient?: boolean
   amount?: boolean
   paidOn?: boolean
@@ -1248,15 +1247,16 @@ export type PaymentInstallmentSelectScalar = {
   reference?: boolean
   notes?: boolean
   recordedById?: boolean
-  verificationStatus?: boolean
-  verifiedById?: boolean
-  verifiedAt?: boolean
-  rejectionRemarks?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  rejectionRemarks?: boolean
+  verificationStatus?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
+  hospitalName?: boolean
 }
 
-export type PaymentInstallmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "hospitalName" | "recipient" | "amount" | "paidOn" | "mode" | "reference" | "notes" | "recordedById" | "verificationStatus" | "verifiedById" | "verifiedAt" | "rejectionRemarks" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentInstallment"]>
+export type PaymentInstallmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "recipient" | "amount" | "paidOn" | "mode" | "reference" | "notes" | "recordedById" | "createdAt" | "updatedAt" | "rejectionRemarks" | "verificationStatus" | "verifiedAt" | "verifiedById" | "hospitalName", ExtArgs["result"]["paymentInstallment"]>
 export type PaymentInstallmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.PaymentInstallment$leadArgs<ExtArgs>
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1286,10 +1286,6 @@ export type $PaymentInstallmentPayload<ExtArgs extends runtime.Types.Extensions.
      * Optional — hospital-level MediEND receipts may have no case attached
      */
     leadId: string | null
-    /**
-     * Set when payment is recorded against a hospital without selecting cases
-     */
-    hospitalName: string | null
     recipient: $Enums.InstallmentRecipient
     amount: number
     paidOn: Date
@@ -1297,15 +1293,19 @@ export type $PaymentInstallmentPayload<ExtArgs extends runtime.Types.Extensions.
     reference: string | null
     notes: string | null
     recordedById: string
+    createdAt: Date
+    updatedAt: Date
+    rejectionRemarks: string | null
     /**
      * * Finance verification — hospital/P&L recorded payments await Finance confirm.
      */
     verificationStatus: $Enums.InstallmentVerificationStatus
-    verifiedById: string | null
     verifiedAt: Date | null
-    rejectionRemarks: string | null
-    createdAt: Date
-    updatedAt: Date
+    verifiedById: string | null
+    /**
+     * Set when payment is recorded against a hospital without selecting cases
+     */
+    hospitalName: string | null
   }, ExtArgs["result"]["paymentInstallment"]>
   composites: {}
 }
@@ -1734,7 +1734,6 @@ export interface Prisma__PaymentInstallmentClient<T, Null = never, ExtArgs exten
 export interface PaymentInstallmentFieldRefs {
   readonly id: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly leadId: Prisma.FieldRef<"PaymentInstallment", 'String'>
-  readonly hospitalName: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly recipient: Prisma.FieldRef<"PaymentInstallment", 'InstallmentRecipient'>
   readonly amount: Prisma.FieldRef<"PaymentInstallment", 'Float'>
   readonly paidOn: Prisma.FieldRef<"PaymentInstallment", 'DateTime'>
@@ -1742,12 +1741,13 @@ export interface PaymentInstallmentFieldRefs {
   readonly reference: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly notes: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly recordedById: Prisma.FieldRef<"PaymentInstallment", 'String'>
-  readonly verificationStatus: Prisma.FieldRef<"PaymentInstallment", 'InstallmentVerificationStatus'>
-  readonly verifiedById: Prisma.FieldRef<"PaymentInstallment", 'String'>
-  readonly verifiedAt: Prisma.FieldRef<"PaymentInstallment", 'DateTime'>
-  readonly rejectionRemarks: Prisma.FieldRef<"PaymentInstallment", 'String'>
   readonly createdAt: Prisma.FieldRef<"PaymentInstallment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PaymentInstallment", 'DateTime'>
+  readonly rejectionRemarks: Prisma.FieldRef<"PaymentInstallment", 'String'>
+  readonly verificationStatus: Prisma.FieldRef<"PaymentInstallment", 'InstallmentVerificationStatus'>
+  readonly verifiedAt: Prisma.FieldRef<"PaymentInstallment", 'DateTime'>
+  readonly verifiedById: Prisma.FieldRef<"PaymentInstallment", 'String'>
+  readonly hospitalName: Prisma.FieldRef<"PaymentInstallment", 'String'>
 }
     
 

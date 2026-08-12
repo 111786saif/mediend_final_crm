@@ -355,6 +355,11 @@ export function TeamCalendar({
           box-shadow: 0 2px 8px rgb(var(--foreground) / 0.12);
           transform: translateY(-0.5px);
         }
+
+        .team-calendar .fc .fc-event-main,
+.team-calendar .fc .fc-event-title {
+  color: inherit !important;
+}
         .team-calendar .fc .fc-timegrid-event {
           border-radius: 6px;
         }
@@ -376,7 +381,7 @@ export function TeamCalendar({
         .team-calendar .cal-ev-md-appt   { background: #fef3c7; border-left-color: #d97706; color: #78350f; }
         .team-calendar .cal-ev-general   { background: #e0e7ff; border-left-color: #4f46e5; color: #312e81; }
         /* IPD — greens/teal family */
-        .team-calendar .cal-ev-ipd-done       { background: #d1fae5; border-left-color: #059669; color: #065f46; font-weight: 600; }
+        .team-calendar .cal-ev-ipd-done      { background: #d1fae5; border-left-color: #059669; color: #065f46; font-weight: 600; }
         .team-calendar .cal-ev-ipd-scheduled  { background: #dbeafe; border-left-color: #2563eb; color: #1e3a8a; font-weight: 600; }
         .team-calendar .cal-ev-ipd-postponed  { background: #fef3c7; border-left-color: #d97706; color: #78350f; font-weight: 600; }
         .team-calendar .cal-ev-ipd-cancelled  { background: #ffe4e6; border-left-color: #e11d48; color: #881337; font-weight: 600; text-decoration: line-through; }
@@ -397,7 +402,7 @@ export function TeamCalendar({
         .dark .team-calendar .cal-ev-interview { background: rgb(124 58 237 / 0.2); border-left-color: #a78bfa; color: #d8b4fe; }
         .dark .team-calendar .cal-ev-md-appt   { background: rgb(217 119 6 / 0.2); border-left-color: #fbbf24; color: #fde68a; }
         .dark .team-calendar .cal-ev-general   { background: rgb(79 70 229 / 0.2); border-left-color: #818cf8; color: #c7d2fe; }
-        .dark .team-calendar .cal-ev-ipd-done       { background: rgb(5 150 105 / 0.22); border-left-color: #34d399; color: #86efac; }
+        .dark .team-calendar .cal-ev-ipd-done { background: rgb(5 150 105 / 0.22); border-left-color: #34d399; color: #86efac; }
         .dark .team-calendar .cal-ev-ipd-scheduled  { background: rgb(37 99 235 / 0.22); border-left-color: #60a5fa; color: #93c5fd; }
         .dark .team-calendar .cal-ev-ipd-postponed  { background: rgb(217 119 6 / 0.22); border-left-color: #fbbf24; color: #fde68a; }
         .dark .team-calendar .cal-ev-ipd-cancelled  { background: rgb(225 29 72 / 0.22); border-left-color: #fb7185; color: #fda4af; }
@@ -472,6 +477,15 @@ export function TeamCalendar({
           .team-calendar .fc .fc-daygrid-day-number {
             padding: 2px 4px;
           }
+
+          .team-calendar .fc-event-main {
+            color: inherit;
+          }
+
+          .team-calendar .fc-event {
+            --fc-event-text-color: inherit;
+          }
+
           .team-calendar .fc .fc-event {
             padding: 0 3px;
             font-size: 10px;

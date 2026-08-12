@@ -190,8 +190,8 @@ export type UserFeaturePermissionWhereInput = {
   enabled?: Prisma.BoolFilter<"UserFeaturePermission"> | boolean
   grantedById?: Prisma.StringNullableFilter<"UserFeaturePermission"> | string | null
   updatedAt?: Prisma.DateTimeFilter<"UserFeaturePermission"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   grantedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type UserFeaturePermissionOrderByWithRelationInput = {
@@ -201,8 +201,8 @@ export type UserFeaturePermissionOrderByWithRelationInput = {
   enabled?: Prisma.SortOrder
   grantedById?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   grantedBy?: Prisma.UserOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type UserFeaturePermissionWhereUniqueInput = Prisma.AtLeast<{
@@ -216,8 +216,8 @@ export type UserFeaturePermissionWhereUniqueInput = Prisma.AtLeast<{
   enabled?: Prisma.BoolFilter<"UserFeaturePermission"> | boolean
   grantedById?: Prisma.StringNullableFilter<"UserFeaturePermission"> | string | null
   updatedAt?: Prisma.DateTimeFilter<"UserFeaturePermission"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   grantedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId_featureKey">
 
 export type UserFeaturePermissionOrderByWithAggregationInput = {
@@ -249,8 +249,8 @@ export type UserFeaturePermissionCreateInput = {
   featureKey: string
   enabled?: boolean
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFeaturePermissionsInput
   grantedBy?: Prisma.UserCreateNestedOneWithoutFeaturePermissionsGrantedInput
+  user: Prisma.UserCreateNestedOneWithoutFeaturePermissionsInput
 }
 
 export type UserFeaturePermissionUncheckedCreateInput = {
@@ -267,8 +267,8 @@ export type UserFeaturePermissionUpdateInput = {
   featureKey?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFeaturePermissionsNestedInput
   grantedBy?: Prisma.UserUpdateOneWithoutFeaturePermissionsGrantedNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFeaturePermissionsNestedInput
 }
 
 export type UserFeaturePermissionUncheckedUpdateInput = {
@@ -347,13 +347,6 @@ export type UserFeaturePermissionMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type UserFeaturePermissionCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput> | Prisma.UserFeaturePermissionCreateWithoutUserInput[] | Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput | Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.UserFeaturePermissionCreateManyUserInputEnvelope
-  connect?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
-}
-
 export type UserFeaturePermissionCreateNestedManyWithoutGrantedByInput = {
   create?: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutGrantedByInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutGrantedByInput> | Prisma.UserFeaturePermissionCreateWithoutGrantedByInput[] | Prisma.UserFeaturePermissionUncheckedCreateWithoutGrantedByInput[]
   connectOrCreate?: Prisma.UserFeaturePermissionCreateOrConnectWithoutGrantedByInput | Prisma.UserFeaturePermissionCreateOrConnectWithoutGrantedByInput[]
@@ -361,7 +354,7 @@ export type UserFeaturePermissionCreateNestedManyWithoutGrantedByInput = {
   connect?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
 }
 
-export type UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput = {
+export type UserFeaturePermissionCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput> | Prisma.UserFeaturePermissionCreateWithoutUserInput[] | Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput | Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput[]
   createMany?: Prisma.UserFeaturePermissionCreateManyUserInputEnvelope
@@ -375,18 +368,11 @@ export type UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput 
   connect?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
 }
 
-export type UserFeaturePermissionUpdateManyWithoutUserNestedInput = {
+export type UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput> | Prisma.UserFeaturePermissionCreateWithoutUserInput[] | Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput | Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.UserFeaturePermissionUpsertWithWhereUniqueWithoutUserInput | Prisma.UserFeaturePermissionUpsertWithWhereUniqueWithoutUserInput[]
   createMany?: Prisma.UserFeaturePermissionCreateManyUserInputEnvelope
-  set?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
-  disconnect?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
-  delete?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
   connect?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
-  update?: Prisma.UserFeaturePermissionUpdateWithWhereUniqueWithoutUserInput | Prisma.UserFeaturePermissionUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.UserFeaturePermissionUpdateManyWithWhereWithoutUserInput | Prisma.UserFeaturePermissionUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.UserFeaturePermissionScalarWhereInput | Prisma.UserFeaturePermissionScalarWhereInput[]
 }
 
 export type UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput = {
@@ -403,7 +389,7 @@ export type UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput = {
   deleteMany?: Prisma.UserFeaturePermissionScalarWhereInput | Prisma.UserFeaturePermissionScalarWhereInput[]
 }
 
-export type UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput = {
+export type UserFeaturePermissionUpdateManyWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput> | Prisma.UserFeaturePermissionCreateWithoutUserInput[] | Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput | Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput[]
   upsert?: Prisma.UserFeaturePermissionUpsertWithWhereUniqueWithoutUserInput | Prisma.UserFeaturePermissionUpsertWithWhereUniqueWithoutUserInput[]
@@ -431,30 +417,18 @@ export type UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput 
   deleteMany?: Prisma.UserFeaturePermissionScalarWhereInput | Prisma.UserFeaturePermissionScalarWhereInput[]
 }
 
-export type UserFeaturePermissionCreateWithoutUserInput = {
-  id?: string
-  featureKey: string
-  enabled?: boolean
-  updatedAt?: Date | string
-  grantedBy?: Prisma.UserCreateNestedOneWithoutFeaturePermissionsGrantedInput
-}
-
-export type UserFeaturePermissionUncheckedCreateWithoutUserInput = {
-  id?: string
-  featureKey: string
-  enabled?: boolean
-  grantedById?: string | null
-  updatedAt?: Date | string
-}
-
-export type UserFeaturePermissionCreateOrConnectWithoutUserInput = {
-  where: Prisma.UserFeaturePermissionWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput>
-}
-
-export type UserFeaturePermissionCreateManyUserInputEnvelope = {
-  data: Prisma.UserFeaturePermissionCreateManyUserInput | Prisma.UserFeaturePermissionCreateManyUserInput[]
-  skipDuplicates?: boolean
+export type UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput> | Prisma.UserFeaturePermissionCreateWithoutUserInput[] | Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput | Prisma.UserFeaturePermissionCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.UserFeaturePermissionUpsertWithWhereUniqueWithoutUserInput | Prisma.UserFeaturePermissionUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.UserFeaturePermissionCreateManyUserInputEnvelope
+  set?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
+  disconnect?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
+  delete?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
+  connect?: Prisma.UserFeaturePermissionWhereUniqueInput | Prisma.UserFeaturePermissionWhereUniqueInput[]
+  update?: Prisma.UserFeaturePermissionUpdateWithWhereUniqueWithoutUserInput | Prisma.UserFeaturePermissionUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.UserFeaturePermissionUpdateManyWithWhereWithoutUserInput | Prisma.UserFeaturePermissionUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.UserFeaturePermissionScalarWhereInput | Prisma.UserFeaturePermissionScalarWhereInput[]
 }
 
 export type UserFeaturePermissionCreateWithoutGrantedByInput = {
@@ -483,32 +457,30 @@ export type UserFeaturePermissionCreateManyGrantedByInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type UserFeaturePermissionUpsertWithWhereUniqueWithoutUserInput = {
+export type UserFeaturePermissionCreateWithoutUserInput = {
+  id?: string
+  featureKey: string
+  enabled?: boolean
+  updatedAt?: Date | string
+  grantedBy?: Prisma.UserCreateNestedOneWithoutFeaturePermissionsGrantedInput
+}
+
+export type UserFeaturePermissionUncheckedCreateWithoutUserInput = {
+  id?: string
+  featureKey: string
+  enabled?: boolean
+  grantedById?: string | null
+  updatedAt?: Date | string
+}
+
+export type UserFeaturePermissionCreateOrConnectWithoutUserInput = {
   where: Prisma.UserFeaturePermissionWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserFeaturePermissionUpdateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput>
 }
 
-export type UserFeaturePermissionUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.UserFeaturePermissionWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserFeaturePermissionUpdateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedUpdateWithoutUserInput>
-}
-
-export type UserFeaturePermissionUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.UserFeaturePermissionScalarWhereInput
-  data: Prisma.XOR<Prisma.UserFeaturePermissionUpdateManyMutationInput, Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserInput>
-}
-
-export type UserFeaturePermissionScalarWhereInput = {
-  AND?: Prisma.UserFeaturePermissionScalarWhereInput | Prisma.UserFeaturePermissionScalarWhereInput[]
-  OR?: Prisma.UserFeaturePermissionScalarWhereInput[]
-  NOT?: Prisma.UserFeaturePermissionScalarWhereInput | Prisma.UserFeaturePermissionScalarWhereInput[]
-  id?: Prisma.StringFilter<"UserFeaturePermission"> | string
-  userId?: Prisma.StringFilter<"UserFeaturePermission"> | string
-  featureKey?: Prisma.StringFilter<"UserFeaturePermission"> | string
-  enabled?: Prisma.BoolFilter<"UserFeaturePermission"> | boolean
-  grantedById?: Prisma.StringNullableFilter<"UserFeaturePermission"> | string | null
-  updatedAt?: Prisma.DateTimeFilter<"UserFeaturePermission"> | Date | string
+export type UserFeaturePermissionCreateManyUserInputEnvelope = {
+  data: Prisma.UserFeaturePermissionCreateManyUserInput | Prisma.UserFeaturePermissionCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type UserFeaturePermissionUpsertWithWhereUniqueWithoutGrantedByInput = {
@@ -527,12 +499,32 @@ export type UserFeaturePermissionUpdateManyWithWhereWithoutGrantedByInput = {
   data: Prisma.XOR<Prisma.UserFeaturePermissionUpdateManyMutationInput, Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByInput>
 }
 
-export type UserFeaturePermissionCreateManyUserInput = {
-  id?: string
-  featureKey: string
-  enabled?: boolean
-  grantedById?: string | null
-  updatedAt?: Date | string
+export type UserFeaturePermissionScalarWhereInput = {
+  AND?: Prisma.UserFeaturePermissionScalarWhereInput | Prisma.UserFeaturePermissionScalarWhereInput[]
+  OR?: Prisma.UserFeaturePermissionScalarWhereInput[]
+  NOT?: Prisma.UserFeaturePermissionScalarWhereInput | Prisma.UserFeaturePermissionScalarWhereInput[]
+  id?: Prisma.StringFilter<"UserFeaturePermission"> | string
+  userId?: Prisma.StringFilter<"UserFeaturePermission"> | string
+  featureKey?: Prisma.StringFilter<"UserFeaturePermission"> | string
+  enabled?: Prisma.BoolFilter<"UserFeaturePermission"> | boolean
+  grantedById?: Prisma.StringNullableFilter<"UserFeaturePermission"> | string | null
+  updatedAt?: Prisma.DateTimeFilter<"UserFeaturePermission"> | Date | string
+}
+
+export type UserFeaturePermissionUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.UserFeaturePermissionWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserFeaturePermissionUpdateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.UserFeaturePermissionCreateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedCreateWithoutUserInput>
+}
+
+export type UserFeaturePermissionUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.UserFeaturePermissionWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserFeaturePermissionUpdateWithoutUserInput, Prisma.UserFeaturePermissionUncheckedUpdateWithoutUserInput>
+}
+
+export type UserFeaturePermissionUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.UserFeaturePermissionScalarWhereInput
+  data: Prisma.XOR<Prisma.UserFeaturePermissionUpdateManyMutationInput, Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserInput>
 }
 
 export type UserFeaturePermissionCreateManyGrantedByInput = {
@@ -543,28 +535,12 @@ export type UserFeaturePermissionCreateManyGrantedByInput = {
   updatedAt?: Date | string
 }
 
-export type UserFeaturePermissionUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  featureKey?: Prisma.StringFieldUpdateOperationsInput | string
-  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  grantedBy?: Prisma.UserUpdateOneWithoutFeaturePermissionsGrantedNestedInput
-}
-
-export type UserFeaturePermissionUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  featureKey?: Prisma.StringFieldUpdateOperationsInput | string
-  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  grantedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type UserFeaturePermissionUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  featureKey?: Prisma.StringFieldUpdateOperationsInput | string
-  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  grantedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type UserFeaturePermissionCreateManyUserInput = {
+  id?: string
+  featureKey: string
+  enabled?: boolean
+  grantedById?: string | null
+  updatedAt?: Date | string
 }
 
 export type UserFeaturePermissionUpdateWithoutGrantedByInput = {
@@ -591,6 +567,30 @@ export type UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type UserFeaturePermissionUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  featureKey?: Prisma.StringFieldUpdateOperationsInput | string
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  grantedBy?: Prisma.UserUpdateOneWithoutFeaturePermissionsGrantedNestedInput
+}
+
+export type UserFeaturePermissionUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  featureKey?: Prisma.StringFieldUpdateOperationsInput | string
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  grantedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserFeaturePermissionUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  featureKey?: Prisma.StringFieldUpdateOperationsInput | string
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  grantedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 
 
 export type UserFeaturePermissionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -600,8 +600,8 @@ export type UserFeaturePermissionSelect<ExtArgs extends runtime.Types.Extensions
   enabled?: boolean
   grantedById?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserFeaturePermission$grantedByArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userFeaturePermission"]>
 
 export type UserFeaturePermissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -611,8 +611,8 @@ export type UserFeaturePermissionSelectCreateManyAndReturn<ExtArgs extends runti
   enabled?: boolean
   grantedById?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserFeaturePermission$grantedByArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userFeaturePermission"]>
 
 export type UserFeaturePermissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -622,8 +622,8 @@ export type UserFeaturePermissionSelectUpdateManyAndReturn<ExtArgs extends runti
   enabled?: boolean
   grantedById?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserFeaturePermission$grantedByArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userFeaturePermission"]>
 
 export type UserFeaturePermissionSelectScalar = {
@@ -637,23 +637,23 @@ export type UserFeaturePermissionSelectScalar = {
 
 export type UserFeaturePermissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "featureKey" | "enabled" | "grantedById" | "updatedAt", ExtArgs["result"]["userFeaturePermission"]>
 export type UserFeaturePermissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserFeaturePermission$grantedByArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type UserFeaturePermissionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserFeaturePermission$grantedByArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type UserFeaturePermissionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   grantedBy?: boolean | Prisma.UserFeaturePermission$grantedByArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $UserFeaturePermissionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UserFeaturePermission"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     grantedBy: Prisma.$UserPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1056,8 +1056,8 @@ readonly fields: UserFeaturePermissionFieldRefs;
  */
 export interface Prisma__UserFeaturePermissionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   grantedBy<T extends Prisma.UserFeaturePermission$grantedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserFeaturePermission$grantedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

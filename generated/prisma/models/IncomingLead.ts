@@ -28,30 +28,30 @@ export type IncomingLeadMinAggregateOutputType = {
   id: string | null
   source: string | null
   status: string | null
+  receivedAt: Date | null
+  errorMessage: string | null
   externalCampaignId: string | null
   normalizedPhone: string | null
-  processedLeadId: string | null
-  selectedTeamLeadUserId: string | null
-  selectedTeamLeadEmployeeId: string | null
-  selectedBdUserId: string | null
-  errorMessage: string | null
   processedAt: Date | null
-  receivedAt: Date | null
+  processedLeadId: string | null
+  selectedBdUserId: string | null
+  selectedTeamLeadEmployeeId: string | null
+  selectedTeamLeadUserId: string | null
 }
 
 export type IncomingLeadMaxAggregateOutputType = {
   id: string | null
   source: string | null
   status: string | null
+  receivedAt: Date | null
+  errorMessage: string | null
   externalCampaignId: string | null
   normalizedPhone: string | null
-  processedLeadId: string | null
-  selectedTeamLeadUserId: string | null
-  selectedTeamLeadEmployeeId: string | null
-  selectedBdUserId: string | null
-  errorMessage: string | null
   processedAt: Date | null
-  receivedAt: Date | null
+  processedLeadId: string | null
+  selectedBdUserId: string | null
+  selectedTeamLeadEmployeeId: string | null
+  selectedTeamLeadUserId: string | null
 }
 
 export type IncomingLeadCountAggregateOutputType = {
@@ -59,15 +59,15 @@ export type IncomingLeadCountAggregateOutputType = {
   source: number
   payload: number
   status: number
+  receivedAt: number
+  errorMessage: number
   externalCampaignId: number
   normalizedPhone: number
-  processedLeadId: number
-  selectedTeamLeadUserId: number
-  selectedTeamLeadEmployeeId: number
-  selectedBdUserId: number
-  errorMessage: number
   processedAt: number
-  receivedAt: number
+  processedLeadId: number
+  selectedBdUserId: number
+  selectedTeamLeadEmployeeId: number
+  selectedTeamLeadUserId: number
   _all: number
 }
 
@@ -76,30 +76,30 @@ export type IncomingLeadMinAggregateInputType = {
   id?: true
   source?: true
   status?: true
+  receivedAt?: true
+  errorMessage?: true
   externalCampaignId?: true
   normalizedPhone?: true
-  processedLeadId?: true
-  selectedTeamLeadUserId?: true
-  selectedTeamLeadEmployeeId?: true
-  selectedBdUserId?: true
-  errorMessage?: true
   processedAt?: true
-  receivedAt?: true
+  processedLeadId?: true
+  selectedBdUserId?: true
+  selectedTeamLeadEmployeeId?: true
+  selectedTeamLeadUserId?: true
 }
 
 export type IncomingLeadMaxAggregateInputType = {
   id?: true
   source?: true
   status?: true
+  receivedAt?: true
+  errorMessage?: true
   externalCampaignId?: true
   normalizedPhone?: true
-  processedLeadId?: true
-  selectedTeamLeadUserId?: true
-  selectedTeamLeadEmployeeId?: true
-  selectedBdUserId?: true
-  errorMessage?: true
   processedAt?: true
-  receivedAt?: true
+  processedLeadId?: true
+  selectedBdUserId?: true
+  selectedTeamLeadEmployeeId?: true
+  selectedTeamLeadUserId?: true
 }
 
 export type IncomingLeadCountAggregateInputType = {
@@ -107,15 +107,15 @@ export type IncomingLeadCountAggregateInputType = {
   source?: true
   payload?: true
   status?: true
+  receivedAt?: true
+  errorMessage?: true
   externalCampaignId?: true
   normalizedPhone?: true
-  processedLeadId?: true
-  selectedTeamLeadUserId?: true
-  selectedTeamLeadEmployeeId?: true
-  selectedBdUserId?: true
-  errorMessage?: true
   processedAt?: true
-  receivedAt?: true
+  processedLeadId?: true
+  selectedBdUserId?: true
+  selectedTeamLeadEmployeeId?: true
+  selectedTeamLeadUserId?: true
   _all?: true
 }
 
@@ -196,15 +196,15 @@ export type IncomingLeadGroupByOutputType = {
   source: string | null
   payload: runtime.JsonValue
   status: string
+  receivedAt: Date
+  errorMessage: string | null
   externalCampaignId: string | null
   normalizedPhone: string | null
-  processedLeadId: string | null
-  selectedTeamLeadUserId: string | null
-  selectedTeamLeadEmployeeId: string | null
-  selectedBdUserId: string | null
-  errorMessage: string | null
   processedAt: Date | null
-  receivedAt: Date
+  processedLeadId: string | null
+  selectedBdUserId: string | null
+  selectedTeamLeadEmployeeId: string | null
+  selectedTeamLeadUserId: string | null
   _count: IncomingLeadCountAggregateOutputType | null
   _min: IncomingLeadMinAggregateOutputType | null
   _max: IncomingLeadMaxAggregateOutputType | null
@@ -233,15 +233,15 @@ export type IncomingLeadWhereInput = {
   source?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
   payload?: Prisma.JsonFilter<"IncomingLead">
   status?: Prisma.StringFilter<"IncomingLead"> | string
+  receivedAt?: Prisma.DateTimeFilter<"IncomingLead"> | Date | string
+  errorMessage?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
   externalCampaignId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
   normalizedPhone?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  processedLeadId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  selectedTeamLeadUserId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  selectedTeamLeadEmployeeId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  selectedBdUserId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  errorMessage?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
   processedAt?: Prisma.DateTimeNullableFilter<"IncomingLead"> | Date | string | null
-  receivedAt?: Prisma.DateTimeFilter<"IncomingLead"> | Date | string
+  processedLeadId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
+  selectedBdUserId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
+  selectedTeamLeadEmployeeId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
+  selectedTeamLeadUserId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
 }
 
 export type IncomingLeadOrderByWithRelationInput = {
@@ -249,15 +249,15 @@ export type IncomingLeadOrderByWithRelationInput = {
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   payload?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   externalCampaignId?: Prisma.SortOrderInput | Prisma.SortOrder
   normalizedPhone?: Prisma.SortOrderInput | Prisma.SortOrder
-  processedLeadId?: Prisma.SortOrderInput | Prisma.SortOrder
-  selectedTeamLeadUserId?: Prisma.SortOrderInput | Prisma.SortOrder
-  selectedTeamLeadEmployeeId?: Prisma.SortOrderInput | Prisma.SortOrder
-  selectedBdUserId?: Prisma.SortOrderInput | Prisma.SortOrder
-  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   processedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  receivedAt?: Prisma.SortOrder
+  processedLeadId?: Prisma.SortOrderInput | Prisma.SortOrder
+  selectedBdUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  selectedTeamLeadEmployeeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  selectedTeamLeadUserId?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type IncomingLeadWhereUniqueInput = Prisma.AtLeast<{
@@ -268,15 +268,15 @@ export type IncomingLeadWhereUniqueInput = Prisma.AtLeast<{
   source?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
   payload?: Prisma.JsonFilter<"IncomingLead">
   status?: Prisma.StringFilter<"IncomingLead"> | string
+  receivedAt?: Prisma.DateTimeFilter<"IncomingLead"> | Date | string
+  errorMessage?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
   externalCampaignId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
   normalizedPhone?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  processedLeadId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  selectedTeamLeadUserId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  selectedTeamLeadEmployeeId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  selectedBdUserId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
-  errorMessage?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
   processedAt?: Prisma.DateTimeNullableFilter<"IncomingLead"> | Date | string | null
-  receivedAt?: Prisma.DateTimeFilter<"IncomingLead"> | Date | string
+  processedLeadId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
+  selectedBdUserId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
+  selectedTeamLeadEmployeeId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
+  selectedTeamLeadUserId?: Prisma.StringNullableFilter<"IncomingLead"> | string | null
 }, "id">
 
 export type IncomingLeadOrderByWithAggregationInput = {
@@ -284,15 +284,15 @@ export type IncomingLeadOrderByWithAggregationInput = {
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   payload?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   externalCampaignId?: Prisma.SortOrderInput | Prisma.SortOrder
   normalizedPhone?: Prisma.SortOrderInput | Prisma.SortOrder
-  processedLeadId?: Prisma.SortOrderInput | Prisma.SortOrder
-  selectedTeamLeadUserId?: Prisma.SortOrderInput | Prisma.SortOrder
-  selectedTeamLeadEmployeeId?: Prisma.SortOrderInput | Prisma.SortOrder
-  selectedBdUserId?: Prisma.SortOrderInput | Prisma.SortOrder
-  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   processedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  receivedAt?: Prisma.SortOrder
+  processedLeadId?: Prisma.SortOrderInput | Prisma.SortOrder
+  selectedBdUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  selectedTeamLeadEmployeeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  selectedTeamLeadUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.IncomingLeadCountOrderByAggregateInput
   _max?: Prisma.IncomingLeadMaxOrderByAggregateInput
   _min?: Prisma.IncomingLeadMinOrderByAggregateInput
@@ -306,15 +306,15 @@ export type IncomingLeadScalarWhereWithAggregatesInput = {
   source?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
   payload?: Prisma.JsonWithAggregatesFilter<"IncomingLead">
   status?: Prisma.StringWithAggregatesFilter<"IncomingLead"> | string
+  receivedAt?: Prisma.DateTimeWithAggregatesFilter<"IncomingLead"> | Date | string
+  errorMessage?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
   externalCampaignId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
   normalizedPhone?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
-  processedLeadId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
-  selectedTeamLeadUserId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
-  selectedTeamLeadEmployeeId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
-  selectedBdUserId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
-  errorMessage?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
   processedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"IncomingLead"> | Date | string | null
-  receivedAt?: Prisma.DateTimeWithAggregatesFilter<"IncomingLead"> | Date | string
+  processedLeadId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
+  selectedBdUserId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
+  selectedTeamLeadEmployeeId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
+  selectedTeamLeadUserId?: Prisma.StringNullableWithAggregatesFilter<"IncomingLead"> | string | null
 }
 
 export type IncomingLeadCreateInput = {
@@ -322,15 +322,15 @@ export type IncomingLeadCreateInput = {
   source?: string | null
   payload: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: string
+  receivedAt?: Date | string
+  errorMessage?: string | null
   externalCampaignId?: string | null
   normalizedPhone?: string | null
-  processedLeadId?: string | null
-  selectedTeamLeadUserId?: string | null
-  selectedTeamLeadEmployeeId?: string | null
-  selectedBdUserId?: string | null
-  errorMessage?: string | null
   processedAt?: Date | string | null
-  receivedAt?: Date | string
+  processedLeadId?: string | null
+  selectedBdUserId?: string | null
+  selectedTeamLeadEmployeeId?: string | null
+  selectedTeamLeadUserId?: string | null
 }
 
 export type IncomingLeadUncheckedCreateInput = {
@@ -338,15 +338,15 @@ export type IncomingLeadUncheckedCreateInput = {
   source?: string | null
   payload: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: string
+  receivedAt?: Date | string
+  errorMessage?: string | null
   externalCampaignId?: string | null
   normalizedPhone?: string | null
-  processedLeadId?: string | null
-  selectedTeamLeadUserId?: string | null
-  selectedTeamLeadEmployeeId?: string | null
-  selectedBdUserId?: string | null
-  errorMessage?: string | null
   processedAt?: Date | string | null
-  receivedAt?: Date | string
+  processedLeadId?: string | null
+  selectedBdUserId?: string | null
+  selectedTeamLeadEmployeeId?: string | null
+  selectedTeamLeadUserId?: string | null
 }
 
 export type IncomingLeadUpdateInput = {
@@ -354,15 +354,15 @@ export type IncomingLeadUpdateInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payload?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalCampaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   normalizedPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processedLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedTeamLeadUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedTeamLeadEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedBdUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  processedLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedBdUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedTeamLeadEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedTeamLeadUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type IncomingLeadUncheckedUpdateInput = {
@@ -370,15 +370,15 @@ export type IncomingLeadUncheckedUpdateInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payload?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalCampaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   normalizedPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processedLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedTeamLeadUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedTeamLeadEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedBdUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  processedLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedBdUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedTeamLeadEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedTeamLeadUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type IncomingLeadCreateManyInput = {
@@ -386,15 +386,15 @@ export type IncomingLeadCreateManyInput = {
   source?: string | null
   payload: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: string
+  receivedAt?: Date | string
+  errorMessage?: string | null
   externalCampaignId?: string | null
   normalizedPhone?: string | null
-  processedLeadId?: string | null
-  selectedTeamLeadUserId?: string | null
-  selectedTeamLeadEmployeeId?: string | null
-  selectedBdUserId?: string | null
-  errorMessage?: string | null
   processedAt?: Date | string | null
-  receivedAt?: Date | string
+  processedLeadId?: string | null
+  selectedBdUserId?: string | null
+  selectedTeamLeadEmployeeId?: string | null
+  selectedTeamLeadUserId?: string | null
 }
 
 export type IncomingLeadUpdateManyMutationInput = {
@@ -402,15 +402,15 @@ export type IncomingLeadUpdateManyMutationInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payload?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalCampaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   normalizedPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processedLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedTeamLeadUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedTeamLeadEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedBdUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  processedLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedBdUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedTeamLeadEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedTeamLeadUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type IncomingLeadUncheckedUpdateManyInput = {
@@ -418,15 +418,15 @@ export type IncomingLeadUncheckedUpdateManyInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payload?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalCampaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   normalizedPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  processedLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedTeamLeadUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedTeamLeadEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  selectedBdUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  processedLeadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedBdUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedTeamLeadEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  selectedTeamLeadUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type IncomingLeadCountOrderByAggregateInput = {
@@ -434,45 +434,45 @@ export type IncomingLeadCountOrderByAggregateInput = {
   source?: Prisma.SortOrder
   payload?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   externalCampaignId?: Prisma.SortOrder
   normalizedPhone?: Prisma.SortOrder
-  processedLeadId?: Prisma.SortOrder
-  selectedTeamLeadUserId?: Prisma.SortOrder
-  selectedTeamLeadEmployeeId?: Prisma.SortOrder
-  selectedBdUserId?: Prisma.SortOrder
-  errorMessage?: Prisma.SortOrder
   processedAt?: Prisma.SortOrder
-  receivedAt?: Prisma.SortOrder
+  processedLeadId?: Prisma.SortOrder
+  selectedBdUserId?: Prisma.SortOrder
+  selectedTeamLeadEmployeeId?: Prisma.SortOrder
+  selectedTeamLeadUserId?: Prisma.SortOrder
 }
 
 export type IncomingLeadMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   source?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   externalCampaignId?: Prisma.SortOrder
   normalizedPhone?: Prisma.SortOrder
-  processedLeadId?: Prisma.SortOrder
-  selectedTeamLeadUserId?: Prisma.SortOrder
-  selectedTeamLeadEmployeeId?: Prisma.SortOrder
-  selectedBdUserId?: Prisma.SortOrder
-  errorMessage?: Prisma.SortOrder
   processedAt?: Prisma.SortOrder
-  receivedAt?: Prisma.SortOrder
+  processedLeadId?: Prisma.SortOrder
+  selectedBdUserId?: Prisma.SortOrder
+  selectedTeamLeadEmployeeId?: Prisma.SortOrder
+  selectedTeamLeadUserId?: Prisma.SortOrder
 }
 
 export type IncomingLeadMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   source?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   externalCampaignId?: Prisma.SortOrder
   normalizedPhone?: Prisma.SortOrder
-  processedLeadId?: Prisma.SortOrder
-  selectedTeamLeadUserId?: Prisma.SortOrder
-  selectedTeamLeadEmployeeId?: Prisma.SortOrder
-  selectedBdUserId?: Prisma.SortOrder
-  errorMessage?: Prisma.SortOrder
   processedAt?: Prisma.SortOrder
-  receivedAt?: Prisma.SortOrder
+  processedLeadId?: Prisma.SortOrder
+  selectedBdUserId?: Prisma.SortOrder
+  selectedTeamLeadEmployeeId?: Prisma.SortOrder
+  selectedTeamLeadUserId?: Prisma.SortOrder
 }
 
 
@@ -482,15 +482,15 @@ export type IncomingLeadSelect<ExtArgs extends runtime.Types.Extensions.Internal
   source?: boolean
   payload?: boolean
   status?: boolean
+  receivedAt?: boolean
+  errorMessage?: boolean
   externalCampaignId?: boolean
   normalizedPhone?: boolean
-  processedLeadId?: boolean
-  selectedTeamLeadUserId?: boolean
-  selectedTeamLeadEmployeeId?: boolean
-  selectedBdUserId?: boolean
-  errorMessage?: boolean
   processedAt?: boolean
-  receivedAt?: boolean
+  processedLeadId?: boolean
+  selectedBdUserId?: boolean
+  selectedTeamLeadEmployeeId?: boolean
+  selectedTeamLeadUserId?: boolean
 }, ExtArgs["result"]["incomingLead"]>
 
 export type IncomingLeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -498,15 +498,15 @@ export type IncomingLeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   source?: boolean
   payload?: boolean
   status?: boolean
+  receivedAt?: boolean
+  errorMessage?: boolean
   externalCampaignId?: boolean
   normalizedPhone?: boolean
-  processedLeadId?: boolean
-  selectedTeamLeadUserId?: boolean
-  selectedTeamLeadEmployeeId?: boolean
-  selectedBdUserId?: boolean
-  errorMessage?: boolean
   processedAt?: boolean
-  receivedAt?: boolean
+  processedLeadId?: boolean
+  selectedBdUserId?: boolean
+  selectedTeamLeadEmployeeId?: boolean
+  selectedTeamLeadUserId?: boolean
 }, ExtArgs["result"]["incomingLead"]>
 
 export type IncomingLeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -514,15 +514,15 @@ export type IncomingLeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   source?: boolean
   payload?: boolean
   status?: boolean
+  receivedAt?: boolean
+  errorMessage?: boolean
   externalCampaignId?: boolean
   normalizedPhone?: boolean
-  processedLeadId?: boolean
-  selectedTeamLeadUserId?: boolean
-  selectedTeamLeadEmployeeId?: boolean
-  selectedBdUserId?: boolean
-  errorMessage?: boolean
   processedAt?: boolean
-  receivedAt?: boolean
+  processedLeadId?: boolean
+  selectedBdUserId?: boolean
+  selectedTeamLeadEmployeeId?: boolean
+  selectedTeamLeadUserId?: boolean
 }, ExtArgs["result"]["incomingLead"]>
 
 export type IncomingLeadSelectScalar = {
@@ -530,18 +530,18 @@ export type IncomingLeadSelectScalar = {
   source?: boolean
   payload?: boolean
   status?: boolean
+  receivedAt?: boolean
+  errorMessage?: boolean
   externalCampaignId?: boolean
   normalizedPhone?: boolean
-  processedLeadId?: boolean
-  selectedTeamLeadUserId?: boolean
-  selectedTeamLeadEmployeeId?: boolean
-  selectedBdUserId?: boolean
-  errorMessage?: boolean
   processedAt?: boolean
-  receivedAt?: boolean
+  processedLeadId?: boolean
+  selectedBdUserId?: boolean
+  selectedTeamLeadEmployeeId?: boolean
+  selectedTeamLeadUserId?: boolean
 }
 
-export type IncomingLeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "source" | "payload" | "status" | "externalCampaignId" | "normalizedPhone" | "processedLeadId" | "selectedTeamLeadUserId" | "selectedTeamLeadEmployeeId" | "selectedBdUserId" | "errorMessage" | "processedAt" | "receivedAt", ExtArgs["result"]["incomingLead"]>
+export type IncomingLeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "source" | "payload" | "status" | "receivedAt" | "errorMessage" | "externalCampaignId" | "normalizedPhone" | "processedAt" | "processedLeadId" | "selectedBdUserId" | "selectedTeamLeadEmployeeId" | "selectedTeamLeadUserId", ExtArgs["result"]["incomingLead"]>
 
 export type $IncomingLeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "IncomingLead"
@@ -551,15 +551,15 @@ export type $IncomingLeadPayload<ExtArgs extends runtime.Types.Extensions.Intern
     source: string | null
     payload: runtime.JsonValue
     status: string
+    receivedAt: Date
+    errorMessage: string | null
     externalCampaignId: string | null
     normalizedPhone: string | null
-    processedLeadId: string | null
-    selectedTeamLeadUserId: string | null
-    selectedTeamLeadEmployeeId: string | null
-    selectedBdUserId: string | null
-    errorMessage: string | null
     processedAt: Date | null
-    receivedAt: Date
+    processedLeadId: string | null
+    selectedBdUserId: string | null
+    selectedTeamLeadEmployeeId: string | null
+    selectedTeamLeadUserId: string | null
   }, ExtArgs["result"]["incomingLead"]>
   composites: {}
 }
@@ -987,15 +987,15 @@ export interface IncomingLeadFieldRefs {
   readonly source: Prisma.FieldRef<"IncomingLead", 'String'>
   readonly payload: Prisma.FieldRef<"IncomingLead", 'Json'>
   readonly status: Prisma.FieldRef<"IncomingLead", 'String'>
+  readonly receivedAt: Prisma.FieldRef<"IncomingLead", 'DateTime'>
+  readonly errorMessage: Prisma.FieldRef<"IncomingLead", 'String'>
   readonly externalCampaignId: Prisma.FieldRef<"IncomingLead", 'String'>
   readonly normalizedPhone: Prisma.FieldRef<"IncomingLead", 'String'>
-  readonly processedLeadId: Prisma.FieldRef<"IncomingLead", 'String'>
-  readonly selectedTeamLeadUserId: Prisma.FieldRef<"IncomingLead", 'String'>
-  readonly selectedTeamLeadEmployeeId: Prisma.FieldRef<"IncomingLead", 'String'>
-  readonly selectedBdUserId: Prisma.FieldRef<"IncomingLead", 'String'>
-  readonly errorMessage: Prisma.FieldRef<"IncomingLead", 'String'>
   readonly processedAt: Prisma.FieldRef<"IncomingLead", 'DateTime'>
-  readonly receivedAt: Prisma.FieldRef<"IncomingLead", 'DateTime'>
+  readonly processedLeadId: Prisma.FieldRef<"IncomingLead", 'String'>
+  readonly selectedBdUserId: Prisma.FieldRef<"IncomingLead", 'String'>
+  readonly selectedTeamLeadEmployeeId: Prisma.FieldRef<"IncomingLead", 'String'>
+  readonly selectedTeamLeadUserId: Prisma.FieldRef<"IncomingLead", 'String'>
 }
     
 

@@ -29,16 +29,16 @@ export type EmployeeDocumentMinAggregateOutputType = {
   employeeId: string | null
   documentType: $Enums.DocumentType | null
   documentUrl: string | null
-  title: string | null
-  applicantName: string | null
-  applicantEmail: string | null
-  contentHtml: string | null
   generatedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  title: string | null
   ackToken: string | null
   acknowledgedAt: Date | null
   acknowledgedIp: string | null
+  applicantEmail: string | null
+  applicantName: string | null
+  contentHtml: string | null
 }
 
 export type EmployeeDocumentMaxAggregateOutputType = {
@@ -46,16 +46,16 @@ export type EmployeeDocumentMaxAggregateOutputType = {
   employeeId: string | null
   documentType: $Enums.DocumentType | null
   documentUrl: string | null
-  title: string | null
-  applicantName: string | null
-  applicantEmail: string | null
-  contentHtml: string | null
   generatedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  title: string | null
   ackToken: string | null
   acknowledgedAt: Date | null
   acknowledgedIp: string | null
+  applicantEmail: string | null
+  applicantName: string | null
+  contentHtml: string | null
 }
 
 export type EmployeeDocumentCountAggregateOutputType = {
@@ -63,17 +63,17 @@ export type EmployeeDocumentCountAggregateOutputType = {
   employeeId: number
   documentType: number
   documentUrl: number
-  title: number
-  applicantName: number
-  applicantEmail: number
   metadata: number
-  contentHtml: number
   generatedAt: number
   createdAt: number
   updatedAt: number
+  title: number
   ackToken: number
   acknowledgedAt: number
   acknowledgedIp: number
+  applicantEmail: number
+  applicantName: number
+  contentHtml: number
   _all: number
 }
 
@@ -83,16 +83,16 @@ export type EmployeeDocumentMinAggregateInputType = {
   employeeId?: true
   documentType?: true
   documentUrl?: true
-  title?: true
-  applicantName?: true
-  applicantEmail?: true
-  contentHtml?: true
   generatedAt?: true
   createdAt?: true
   updatedAt?: true
+  title?: true
   ackToken?: true
   acknowledgedAt?: true
   acknowledgedIp?: true
+  applicantEmail?: true
+  applicantName?: true
+  contentHtml?: true
 }
 
 export type EmployeeDocumentMaxAggregateInputType = {
@@ -100,16 +100,16 @@ export type EmployeeDocumentMaxAggregateInputType = {
   employeeId?: true
   documentType?: true
   documentUrl?: true
-  title?: true
-  applicantName?: true
-  applicantEmail?: true
-  contentHtml?: true
   generatedAt?: true
   createdAt?: true
   updatedAt?: true
+  title?: true
   ackToken?: true
   acknowledgedAt?: true
   acknowledgedIp?: true
+  applicantEmail?: true
+  applicantName?: true
+  contentHtml?: true
 }
 
 export type EmployeeDocumentCountAggregateInputType = {
@@ -117,17 +117,17 @@ export type EmployeeDocumentCountAggregateInputType = {
   employeeId?: true
   documentType?: true
   documentUrl?: true
-  title?: true
-  applicantName?: true
-  applicantEmail?: true
   metadata?: true
-  contentHtml?: true
   generatedAt?: true
   createdAt?: true
   updatedAt?: true
+  title?: true
   ackToken?: true
   acknowledgedAt?: true
   acknowledgedIp?: true
+  applicantEmail?: true
+  applicantName?: true
+  contentHtml?: true
   _all?: true
 }
 
@@ -208,17 +208,17 @@ export type EmployeeDocumentGroupByOutputType = {
   employeeId: string | null
   documentType: $Enums.DocumentType
   documentUrl: string | null
-  title: string | null
-  applicantName: string | null
-  applicantEmail: string | null
   metadata: runtime.JsonValue | null
-  contentHtml: string | null
   generatedAt: Date
   createdAt: Date
   updatedAt: Date
+  title: string | null
   ackToken: string | null
   acknowledgedAt: Date | null
   acknowledgedIp: string | null
+  applicantEmail: string | null
+  applicantName: string | null
+  contentHtml: string | null
   _count: EmployeeDocumentCountAggregateOutputType | null
   _min: EmployeeDocumentMinAggregateOutputType | null
   _max: EmployeeDocumentMaxAggregateOutputType | null
@@ -247,17 +247,17 @@ export type EmployeeDocumentWhereInput = {
   employeeId?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   documentType?: Prisma.EnumDocumentTypeFilter<"EmployeeDocument"> | $Enums.DocumentType
   documentUrl?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  title?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  applicantName?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  applicantEmail?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   metadata?: Prisma.JsonNullableFilter<"EmployeeDocument">
-  contentHtml?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   generatedAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
+  title?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   ackToken?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   acknowledgedAt?: Prisma.DateTimeNullableFilter<"EmployeeDocument"> | Date | string | null
   acknowledgedIp?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  applicantEmail?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  applicantName?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  contentHtml?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
 }
 
@@ -266,17 +266,17 @@ export type EmployeeDocumentOrderByWithRelationInput = {
   employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  title?: Prisma.SortOrderInput | Prisma.SortOrder
-  applicantName?: Prisma.SortOrderInput | Prisma.SortOrder
-  applicantEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
-  contentHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
   ackToken?: Prisma.SortOrderInput | Prisma.SortOrder
   acknowledgedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   acknowledgedIp?: Prisma.SortOrderInput | Prisma.SortOrder
+  applicantEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  applicantName?: Prisma.SortOrderInput | Prisma.SortOrder
+  contentHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   employee?: Prisma.EmployeeOrderByWithRelationInput
 }
 
@@ -289,16 +289,16 @@ export type EmployeeDocumentWhereUniqueInput = Prisma.AtLeast<{
   employeeId?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   documentType?: Prisma.EnumDocumentTypeFilter<"EmployeeDocument"> | $Enums.DocumentType
   documentUrl?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  title?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  applicantName?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  applicantEmail?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   metadata?: Prisma.JsonNullableFilter<"EmployeeDocument">
-  contentHtml?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   generatedAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
+  title?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   acknowledgedAt?: Prisma.DateTimeNullableFilter<"EmployeeDocument"> | Date | string | null
   acknowledgedIp?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  applicantEmail?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  applicantName?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  contentHtml?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
 }, "id" | "ackToken">
 
@@ -307,17 +307,17 @@ export type EmployeeDocumentOrderByWithAggregationInput = {
   employeeId?: Prisma.SortOrderInput | Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  title?: Prisma.SortOrderInput | Prisma.SortOrder
-  applicantName?: Prisma.SortOrderInput | Prisma.SortOrder
-  applicantEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
-  contentHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
   ackToken?: Prisma.SortOrderInput | Prisma.SortOrder
   acknowledgedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   acknowledgedIp?: Prisma.SortOrderInput | Prisma.SortOrder
+  applicantEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  applicantName?: Prisma.SortOrderInput | Prisma.SortOrder
+  contentHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.EmployeeDocumentCountOrderByAggregateInput
   _max?: Prisma.EmployeeDocumentMaxOrderByAggregateInput
   _min?: Prisma.EmployeeDocumentMinOrderByAggregateInput
@@ -331,34 +331,34 @@ export type EmployeeDocumentScalarWhereWithAggregatesInput = {
   employeeId?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
   documentType?: Prisma.EnumDocumentTypeWithAggregatesFilter<"EmployeeDocument"> | $Enums.DocumentType
   documentUrl?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
-  title?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
-  applicantName?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
-  applicantEmail?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"EmployeeDocument">
-  contentHtml?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
   generatedAt?: Prisma.DateTimeWithAggregatesFilter<"EmployeeDocument"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"EmployeeDocument"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"EmployeeDocument"> | Date | string
+  title?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
   ackToken?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
   acknowledgedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"EmployeeDocument"> | Date | string | null
   acknowledgedIp?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
+  applicantEmail?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
+  applicantName?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
+  contentHtml?: Prisma.StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
 }
 
 export type EmployeeDocumentCreateInput = {
   id?: string
   documentType: $Enums.DocumentType
   documentUrl?: string | null
-  title?: string | null
-  applicantName?: string | null
-  applicantEmail?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: string | null
   generatedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  title?: string | null
   ackToken?: string | null
   acknowledgedAt?: Date | string | null
   acknowledgedIp?: string | null
+  applicantEmail?: string | null
+  applicantName?: string | null
+  contentHtml?: string | null
   employee?: Prisma.EmployeeCreateNestedOneWithoutDocumentsInput
 }
 
@@ -367,34 +367,34 @@ export type EmployeeDocumentUncheckedCreateInput = {
   employeeId?: string | null
   documentType: $Enums.DocumentType
   documentUrl?: string | null
-  title?: string | null
-  applicantName?: string | null
-  applicantEmail?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: string | null
   generatedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  title?: string | null
   ackToken?: string | null
   acknowledgedAt?: Date | string | null
   acknowledgedIp?: string | null
+  applicantEmail?: string | null
+  applicantName?: string | null
+  contentHtml?: string | null
 }
 
 export type EmployeeDocumentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ackToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acknowledgedIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employee?: Prisma.EmployeeUpdateOneWithoutDocumentsNestedInput
 }
 
@@ -403,17 +403,17 @@ export type EmployeeDocumentUncheckedUpdateInput = {
   employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ackToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acknowledgedIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmployeeDocumentCreateManyInput = {
@@ -421,34 +421,34 @@ export type EmployeeDocumentCreateManyInput = {
   employeeId?: string | null
   documentType: $Enums.DocumentType
   documentUrl?: string | null
-  title?: string | null
-  applicantName?: string | null
-  applicantEmail?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: string | null
   generatedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  title?: string | null
   ackToken?: string | null
   acknowledgedAt?: Date | string | null
   acknowledgedIp?: string | null
+  applicantEmail?: string | null
+  applicantName?: string | null
+  contentHtml?: string | null
 }
 
 export type EmployeeDocumentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ackToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acknowledgedIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmployeeDocumentUncheckedUpdateManyInput = {
@@ -456,17 +456,17 @@ export type EmployeeDocumentUncheckedUpdateManyInput = {
   employeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ackToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acknowledgedIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmployeeDocumentListRelationFilter = {
@@ -484,17 +484,17 @@ export type EmployeeDocumentCountOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentUrl?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  applicantName?: Prisma.SortOrder
-  applicantEmail?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
-  contentHtml?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   ackToken?: Prisma.SortOrder
   acknowledgedAt?: Prisma.SortOrder
   acknowledgedIp?: Prisma.SortOrder
+  applicantEmail?: Prisma.SortOrder
+  applicantName?: Prisma.SortOrder
+  contentHtml?: Prisma.SortOrder
 }
 
 export type EmployeeDocumentMaxOrderByAggregateInput = {
@@ -502,16 +502,16 @@ export type EmployeeDocumentMaxOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentUrl?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  applicantName?: Prisma.SortOrder
-  applicantEmail?: Prisma.SortOrder
-  contentHtml?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   ackToken?: Prisma.SortOrder
   acknowledgedAt?: Prisma.SortOrder
   acknowledgedIp?: Prisma.SortOrder
+  applicantEmail?: Prisma.SortOrder
+  applicantName?: Prisma.SortOrder
+  contentHtml?: Prisma.SortOrder
 }
 
 export type EmployeeDocumentMinOrderByAggregateInput = {
@@ -519,16 +519,16 @@ export type EmployeeDocumentMinOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   documentType?: Prisma.SortOrder
   documentUrl?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  applicantName?: Prisma.SortOrder
-  applicantEmail?: Prisma.SortOrder
-  contentHtml?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   ackToken?: Prisma.SortOrder
   acknowledgedAt?: Prisma.SortOrder
   acknowledgedIp?: Prisma.SortOrder
+  applicantEmail?: Prisma.SortOrder
+  applicantName?: Prisma.SortOrder
+  contentHtml?: Prisma.SortOrder
 }
 
 export type EmployeeDocumentCreateNestedManyWithoutEmployeeInput = {
@@ -581,34 +581,34 @@ export type EmployeeDocumentCreateWithoutEmployeeInput = {
   id?: string
   documentType: $Enums.DocumentType
   documentUrl?: string | null
-  title?: string | null
-  applicantName?: string | null
-  applicantEmail?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: string | null
   generatedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  title?: string | null
   ackToken?: string | null
   acknowledgedAt?: Date | string | null
   acknowledgedIp?: string | null
+  applicantEmail?: string | null
+  applicantName?: string | null
+  contentHtml?: string | null
 }
 
 export type EmployeeDocumentUncheckedCreateWithoutEmployeeInput = {
   id?: string
   documentType: $Enums.DocumentType
   documentUrl?: string | null
-  title?: string | null
-  applicantName?: string | null
-  applicantEmail?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: string | null
   generatedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  title?: string | null
   ackToken?: string | null
   acknowledgedAt?: Date | string | null
   acknowledgedIp?: string | null
+  applicantEmail?: string | null
+  applicantName?: string | null
+  contentHtml?: string | null
 }
 
 export type EmployeeDocumentCreateOrConnectWithoutEmployeeInput = {
@@ -645,85 +645,85 @@ export type EmployeeDocumentScalarWhereInput = {
   employeeId?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   documentType?: Prisma.EnumDocumentTypeFilter<"EmployeeDocument"> | $Enums.DocumentType
   documentUrl?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  title?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  applicantName?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
-  applicantEmail?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   metadata?: Prisma.JsonNullableFilter<"EmployeeDocument">
-  contentHtml?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   generatedAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeDocument"> | Date | string
+  title?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   ackToken?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
   acknowledgedAt?: Prisma.DateTimeNullableFilter<"EmployeeDocument"> | Date | string | null
   acknowledgedIp?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  applicantEmail?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  applicantName?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
+  contentHtml?: Prisma.StringNullableFilter<"EmployeeDocument"> | string | null
 }
 
 export type EmployeeDocumentCreateManyEmployeeInput = {
   id?: string
   documentType: $Enums.DocumentType
   documentUrl?: string | null
-  title?: string | null
-  applicantName?: string | null
-  applicantEmail?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: string | null
   generatedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  title?: string | null
   ackToken?: string | null
   acknowledgedAt?: Date | string | null
   acknowledgedIp?: string | null
+  applicantEmail?: string | null
+  applicantName?: string | null
+  contentHtml?: string | null
 }
 
 export type EmployeeDocumentUpdateWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ackToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acknowledgedIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmployeeDocumentUncheckedUpdateWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ackToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acknowledgedIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EmployeeDocumentUncheckedUpdateManyWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentType?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
   documentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ackToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acknowledgedIp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applicantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -733,17 +733,17 @@ export type EmployeeDocumentSelect<ExtArgs extends runtime.Types.Extensions.Inte
   employeeId?: boolean
   documentType?: boolean
   documentUrl?: boolean
-  title?: boolean
-  applicantName?: boolean
-  applicantEmail?: boolean
   metadata?: boolean
-  contentHtml?: boolean
   generatedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  title?: boolean
   ackToken?: boolean
   acknowledgedAt?: boolean
   acknowledgedIp?: boolean
+  applicantEmail?: boolean
+  applicantName?: boolean
+  contentHtml?: boolean
   employee?: boolean | Prisma.EmployeeDocument$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["employeeDocument"]>
 
@@ -752,17 +752,17 @@ export type EmployeeDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   employeeId?: boolean
   documentType?: boolean
   documentUrl?: boolean
-  title?: boolean
-  applicantName?: boolean
-  applicantEmail?: boolean
   metadata?: boolean
-  contentHtml?: boolean
   generatedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  title?: boolean
   ackToken?: boolean
   acknowledgedAt?: boolean
   acknowledgedIp?: boolean
+  applicantEmail?: boolean
+  applicantName?: boolean
+  contentHtml?: boolean
   employee?: boolean | Prisma.EmployeeDocument$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["employeeDocument"]>
 
@@ -771,17 +771,17 @@ export type EmployeeDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   employeeId?: boolean
   documentType?: boolean
   documentUrl?: boolean
-  title?: boolean
-  applicantName?: boolean
-  applicantEmail?: boolean
   metadata?: boolean
-  contentHtml?: boolean
   generatedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  title?: boolean
   ackToken?: boolean
   acknowledgedAt?: boolean
   acknowledgedIp?: boolean
+  applicantEmail?: boolean
+  applicantName?: boolean
+  contentHtml?: boolean
   employee?: boolean | Prisma.EmployeeDocument$employeeArgs<ExtArgs>
 }, ExtArgs["result"]["employeeDocument"]>
 
@@ -790,20 +790,20 @@ export type EmployeeDocumentSelectScalar = {
   employeeId?: boolean
   documentType?: boolean
   documentUrl?: boolean
-  title?: boolean
-  applicantName?: boolean
-  applicantEmail?: boolean
   metadata?: boolean
-  contentHtml?: boolean
   generatedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  title?: boolean
   ackToken?: boolean
   acknowledgedAt?: boolean
   acknowledgedIp?: boolean
+  applicantEmail?: boolean
+  applicantName?: boolean
+  contentHtml?: boolean
 }
 
-export type EmployeeDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "documentType" | "documentUrl" | "title" | "applicantName" | "applicantEmail" | "metadata" | "contentHtml" | "generatedAt" | "createdAt" | "updatedAt" | "ackToken" | "acknowledgedAt" | "acknowledgedIp", ExtArgs["result"]["employeeDocument"]>
+export type EmployeeDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "documentType" | "documentUrl" | "metadata" | "generatedAt" | "createdAt" | "updatedAt" | "title" | "ackToken" | "acknowledgedAt" | "acknowledgedIp" | "applicantEmail" | "applicantName" | "contentHtml", ExtArgs["result"]["employeeDocument"]>
 export type EmployeeDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.EmployeeDocument$employeeArgs<ExtArgs>
 }
@@ -824,17 +824,17 @@ export type $EmployeeDocumentPayload<ExtArgs extends runtime.Types.Extensions.In
     employeeId: string | null
     documentType: $Enums.DocumentType
     documentUrl: string | null
-    title: string | null
-    applicantName: string | null
-    applicantEmail: string | null
     metadata: runtime.JsonValue | null
-    contentHtml: string | null
     generatedAt: Date
     createdAt: Date
     updatedAt: Date
+    title: string | null
     ackToken: string | null
     acknowledgedAt: Date | null
     acknowledgedIp: string | null
+    applicantEmail: string | null
+    applicantName: string | null
+    contentHtml: string | null
   }, ExtArgs["result"]["employeeDocument"]>
   composites: {}
 }
@@ -1263,17 +1263,17 @@ export interface EmployeeDocumentFieldRefs {
   readonly employeeId: Prisma.FieldRef<"EmployeeDocument", 'String'>
   readonly documentType: Prisma.FieldRef<"EmployeeDocument", 'DocumentType'>
   readonly documentUrl: Prisma.FieldRef<"EmployeeDocument", 'String'>
-  readonly title: Prisma.FieldRef<"EmployeeDocument", 'String'>
-  readonly applicantName: Prisma.FieldRef<"EmployeeDocument", 'String'>
-  readonly applicantEmail: Prisma.FieldRef<"EmployeeDocument", 'String'>
   readonly metadata: Prisma.FieldRef<"EmployeeDocument", 'Json'>
-  readonly contentHtml: Prisma.FieldRef<"EmployeeDocument", 'String'>
   readonly generatedAt: Prisma.FieldRef<"EmployeeDocument", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"EmployeeDocument", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"EmployeeDocument", 'DateTime'>
+  readonly title: Prisma.FieldRef<"EmployeeDocument", 'String'>
   readonly ackToken: Prisma.FieldRef<"EmployeeDocument", 'String'>
   readonly acknowledgedAt: Prisma.FieldRef<"EmployeeDocument", 'DateTime'>
   readonly acknowledgedIp: Prisma.FieldRef<"EmployeeDocument", 'String'>
+  readonly applicantEmail: Prisma.FieldRef<"EmployeeDocument", 'String'>
+  readonly applicantName: Prisma.FieldRef<"EmployeeDocument", 'String'>
+  readonly contentHtml: Prisma.FieldRef<"EmployeeDocument", 'String'>
 }
     
 

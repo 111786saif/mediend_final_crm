@@ -236,8 +236,8 @@ export type PreAuthPDFWhereInput = {
   sentAt?: Prisma.DateTimeNullableFilter<"PreAuthPDF"> | Date | string | null
   createdById?: Prisma.StringFilter<"PreAuthPDF"> | string
   createdAt?: Prisma.DateTimeFilter<"PreAuthPDF"> | Date | string
-  preAuthorization?: Prisma.XOR<Prisma.PreAuthorizationScalarRelationFilter, Prisma.PreAuthorizationWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  preAuthorization?: Prisma.XOR<Prisma.PreAuthorizationScalarRelationFilter, Prisma.PreAuthorizationWhereInput>
 }
 
 export type PreAuthPDFOrderByWithRelationInput = {
@@ -249,8 +249,8 @@ export type PreAuthPDFOrderByWithRelationInput = {
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  preAuthorization?: Prisma.PreAuthorizationOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  preAuthorization?: Prisma.PreAuthorizationOrderByWithRelationInput
 }
 
 export type PreAuthPDFWhereUniqueInput = Prisma.AtLeast<{
@@ -265,8 +265,8 @@ export type PreAuthPDFWhereUniqueInput = Prisma.AtLeast<{
   sentAt?: Prisma.DateTimeNullableFilter<"PreAuthPDF"> | Date | string | null
   createdById?: Prisma.StringFilter<"PreAuthPDF"> | string
   createdAt?: Prisma.DateTimeFilter<"PreAuthPDF"> | Date | string
-  preAuthorization?: Prisma.XOR<Prisma.PreAuthorizationScalarRelationFilter, Prisma.PreAuthorizationWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  preAuthorization?: Prisma.XOR<Prisma.PreAuthorizationScalarRelationFilter, Prisma.PreAuthorizationWhereInput>
 }, "id">
 
 export type PreAuthPDFOrderByWithAggregationInput = {
@@ -306,8 +306,8 @@ export type PreAuthPDFCreateInput = {
   recipients?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sentAt?: Date | string | null
   createdAt?: Date | string
-  preAuthorization: Prisma.PreAuthorizationCreateNestedOneWithoutPdfVersionsInput
   createdBy: Prisma.UserCreateNestedOneWithoutPdfsCreatedInput
+  preAuthorization: Prisma.PreAuthorizationCreateNestedOneWithoutPdfVersionsInput
 }
 
 export type PreAuthPDFUncheckedCreateInput = {
@@ -328,8 +328,8 @@ export type PreAuthPDFUpdateInput = {
   recipients?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  preAuthorization?: Prisma.PreAuthorizationUpdateOneRequiredWithoutPdfVersionsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutPdfsCreatedNestedInput
+  preAuthorization?: Prisma.PreAuthorizationUpdateOneRequiredWithoutPdfVersionsNestedInput
 }
 
 export type PreAuthPDFUncheckedUpdateInput = {
@@ -704,8 +704,8 @@ export type PreAuthPDFSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   sentAt?: boolean
   createdById?: boolean
   createdAt?: boolean
-  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["preAuthPDF"]>
 
 export type PreAuthPDFSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -717,8 +717,8 @@ export type PreAuthPDFSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   sentAt?: boolean
   createdById?: boolean
   createdAt?: boolean
-  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["preAuthPDF"]>
 
 export type PreAuthPDFSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -730,8 +730,8 @@ export type PreAuthPDFSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   sentAt?: boolean
   createdById?: boolean
   createdAt?: boolean
-  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["preAuthPDF"]>
 
 export type PreAuthPDFSelectScalar = {
@@ -747,23 +747,23 @@ export type PreAuthPDFSelectScalar = {
 
 export type PreAuthPDFOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "preAuthorizationId" | "version" | "pdfUrl" | "recipients" | "sentAt" | "createdById" | "createdAt", ExtArgs["result"]["preAuthPDF"]>
 export type PreAuthPDFInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
 }
 export type PreAuthPDFIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
 }
 export type PreAuthPDFIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  preAuthorization?: boolean | Prisma.PreAuthorizationDefaultArgs<ExtArgs>
 }
 
 export type $PreAuthPDFPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PreAuthPDF"
   objects: {
-    preAuthorization: Prisma.$PreAuthorizationPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs>
+    preAuthorization: Prisma.$PreAuthorizationPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1168,8 +1168,8 @@ readonly fields: PreAuthPDFFieldRefs;
  */
 export interface Prisma__PreAuthPDFClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  preAuthorization<T extends Prisma.PreAuthorizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorizationDefaultArgs<ExtArgs>>): Prisma.Prisma__PreAuthorizationClient<runtime.Types.Result.GetResult<Prisma.$PreAuthorizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  preAuthorization<T extends Prisma.PreAuthorizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PreAuthorizationDefaultArgs<ExtArgs>>): Prisma.Prisma__PreAuthorizationClient<runtime.Types.Result.GetResult<Prisma.$PreAuthorizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

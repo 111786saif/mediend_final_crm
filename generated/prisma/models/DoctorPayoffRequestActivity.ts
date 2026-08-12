@@ -198,8 +198,8 @@ export type DoctorPayoffRequestActivityWhereInput = {
   remarks?: Prisma.StringNullableFilter<"DoctorPayoffRequestActivity"> | string | null
   actorId?: Prisma.StringFilter<"DoctorPayoffRequestActivity"> | string
   createdAt?: Prisma.DateTimeFilter<"DoctorPayoffRequestActivity"> | Date | string
-  request?: Prisma.XOR<Prisma.DoctorPayoffRequestScalarRelationFilter, Prisma.DoctorPayoffRequestWhereInput>
   actor?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  request?: Prisma.XOR<Prisma.DoctorPayoffRequestScalarRelationFilter, Prisma.DoctorPayoffRequestWhereInput>
 }
 
 export type DoctorPayoffRequestActivityOrderByWithRelationInput = {
@@ -210,8 +210,8 @@ export type DoctorPayoffRequestActivityOrderByWithRelationInput = {
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   actorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  request?: Prisma.DoctorPayoffRequestOrderByWithRelationInput
   actor?: Prisma.UserOrderByWithRelationInput
+  request?: Prisma.DoctorPayoffRequestOrderByWithRelationInput
 }
 
 export type DoctorPayoffRequestActivityWhereUniqueInput = Prisma.AtLeast<{
@@ -225,8 +225,8 @@ export type DoctorPayoffRequestActivityWhereUniqueInput = Prisma.AtLeast<{
   remarks?: Prisma.StringNullableFilter<"DoctorPayoffRequestActivity"> | string | null
   actorId?: Prisma.StringFilter<"DoctorPayoffRequestActivity"> | string
   createdAt?: Prisma.DateTimeFilter<"DoctorPayoffRequestActivity"> | Date | string
-  request?: Prisma.XOR<Prisma.DoctorPayoffRequestScalarRelationFilter, Prisma.DoctorPayoffRequestWhereInput>
   actor?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  request?: Prisma.XOR<Prisma.DoctorPayoffRequestScalarRelationFilter, Prisma.DoctorPayoffRequestWhereInput>
 }, "id">
 
 export type DoctorPayoffRequestActivityOrderByWithAggregationInput = {
@@ -261,8 +261,8 @@ export type DoctorPayoffRequestActivityCreateInput = {
   message: string
   remarks?: string | null
   createdAt?: Date | string
-  request: Prisma.DoctorPayoffRequestCreateNestedOneWithoutActivityLogsInput
   actor: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestActivitiesInput
+  request: Prisma.DoctorPayoffRequestCreateNestedOneWithoutActivityLogsInput
 }
 
 export type DoctorPayoffRequestActivityUncheckedCreateInput = {
@@ -281,8 +281,8 @@ export type DoctorPayoffRequestActivityUpdateInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  request?: Prisma.DoctorPayoffRequestUpdateOneRequiredWithoutActivityLogsNestedInput
   actor?: Prisma.UserUpdateOneRequiredWithoutDoctorPayoffRequestActivitiesNestedInput
+  request?: Prisma.DoctorPayoffRequestUpdateOneRequiredWithoutActivityLogsNestedInput
 }
 
 export type DoctorPayoffRequestActivityUncheckedUpdateInput = {
@@ -630,8 +630,8 @@ export type DoctorPayoffRequestActivitySelect<ExtArgs extends runtime.Types.Exte
   remarks?: boolean
   actorId?: boolean
   createdAt?: boolean
-  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["doctorPayoffRequestActivity"]>
 
 export type DoctorPayoffRequestActivitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -642,8 +642,8 @@ export type DoctorPayoffRequestActivitySelectCreateManyAndReturn<ExtArgs extends
   remarks?: boolean
   actorId?: boolean
   createdAt?: boolean
-  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["doctorPayoffRequestActivity"]>
 
 export type DoctorPayoffRequestActivitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -654,8 +654,8 @@ export type DoctorPayoffRequestActivitySelectUpdateManyAndReturn<ExtArgs extends
   remarks?: boolean
   actorId?: boolean
   createdAt?: boolean
-  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["doctorPayoffRequestActivity"]>
 
 export type DoctorPayoffRequestActivitySelectScalar = {
@@ -670,23 +670,23 @@ export type DoctorPayoffRequestActivitySelectScalar = {
 
 export type DoctorPayoffRequestActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "requestId" | "action" | "message" | "remarks" | "actorId" | "createdAt", ExtArgs["result"]["doctorPayoffRequestActivity"]>
 export type DoctorPayoffRequestActivityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
 }
 export type DoctorPayoffRequestActivityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
 }
 export type DoctorPayoffRequestActivityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
   actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  request?: boolean | Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>
 }
 
 export type $DoctorPayoffRequestActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DoctorPayoffRequestActivity"
   objects: {
-    request: Prisma.$DoctorPayoffRequestPayload<ExtArgs>
     actor: Prisma.$UserPayload<ExtArgs>
+    request: Prisma.$DoctorPayoffRequestPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1090,8 +1090,8 @@ readonly fields: DoctorPayoffRequestActivityFieldRefs;
  */
 export interface Prisma__DoctorPayoffRequestActivityClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  request<T extends Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>>): Prisma.Prisma__DoctorPayoffRequestClient<runtime.Types.Result.GetResult<Prisma.$DoctorPayoffRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   actor<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  request<T extends Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorPayoffRequestDefaultArgs<ExtArgs>>): Prisma.Prisma__DoctorPayoffRequestClient<runtime.Types.Result.GetResult<Prisma.$DoctorPayoffRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
