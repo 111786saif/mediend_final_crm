@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasEffectivePermission } from '@/lib/rbac-new'
 import { successResponse, errorResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-utils'
 import { doctorMasterPatchSchema, emptyToNull } from '@/lib/masters/schemas'
 import { normalizeIndianPhone } from '@/lib/doctor-app/phone'
@@ -14,7 +14,7 @@ export async function PATCH(
 ) {
   const user = getSessionFromRequest(request)
   if (!user) return unauthorizedResponse()
-  if (!hasPermission(user, 'masters:write')) return forbiddenResponse()
+  if (!(await hasEffectivePermission(user, 'masters:write'))) return forbiddenResponse()
 
   const { id } = await context.params
 
@@ -101,7 +101,7 @@ export async function DELETE(
 ) {
   const user = getSessionFromRequest(request)
   if (!user) return unauthorizedResponse()
-  if (!hasPermission(user, 'masters:write')) return forbiddenResponse()
+  if (!(await hasEffectivePermission(user, 'masters:write'))) return forbiddenResponse()
 
   const { id } = await context.params
 

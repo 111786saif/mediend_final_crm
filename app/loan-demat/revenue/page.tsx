@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost, apiPatch, apiDelete } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions, PermissionLevel } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -82,10 +83,11 @@ function formatInr(n: number) {
 
 export default function LoanDematRevenuePage() {
   const { user } = useAuth()
+  const { hasAccess } = usePermissions()
   const qc = useQueryClient()
   const canAccess =
-    user && (hasPermission(user, 'loan-demat:write') || hasPermission(user, 'loan-demat:read'))
-  const canWrite = user && hasPermission(user, 'loan-demat:write')
+    user && (hasAccess('main.loan_demat_revenue') || hasPermission(user, 'loan-demat:write') || hasPermission(user, 'loan-demat:read'))
+  const canWrite = user && (hasAccess('main.loan_demat_revenue', PermissionLevel.READ_WRITE) || hasPermission(user, 'loan-demat:write'))
 
   const yearNow = new Date().getFullYear()
   const monthNow = new Date().getMonth() + 1

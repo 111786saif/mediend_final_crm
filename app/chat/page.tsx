@@ -2,6 +2,7 @@
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions } from '@/hooks/use-permissions'
 import { useRouter } from 'next/navigation'
 import { ChatList } from '@/components/chat/chat-list'
 import { useEffect } from 'react'
@@ -9,14 +10,16 @@ import { canAccessChat } from '@/lib/chat/access'
 
 export default function ChatPage() {
   const { user } = useAuth()
+  const { hasAccess } = usePermissions()
   const router = useRouter()
+  const allowed = !!(user && (hasAccess('main.chat') || canAccessChat(user)))
 
   useEffect(() => {
     if (!user) return
-    if (!canAccessChat(user)) {
+    if (!allowed) {
       router.push('/')
     }
-  }, [user, router])
+  }, [user, allowed, router])
 
   if (!user) {
     return (
@@ -28,7 +31,7 @@ export default function ChatPage() {
     )
   }
 
-  if (!canAccessChat(user)) {
+  if (!allowed) {
     return (
       <AuthenticatedLayout>
         <div className="flex items-center justify-center min-h-[400px]">

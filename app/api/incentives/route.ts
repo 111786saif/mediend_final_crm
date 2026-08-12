@@ -6,12 +6,9 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { incentiveInclude, mapIncentiveRecord } from '@/lib/incentives/mapper'
 import {
-  canCreateIncentives,
-  canDeleteIncentive,
-  canEditIncentiveFields,
-  canReadIncentives,
-  canTransitionIncentiveStatus,
-} from '@/lib/incentives/permissions'
+  canCreateEffectiveIncentives,
+  canReadEffectiveIncentives,
+} from '@/lib/incentives/permissions-server'
 import type { IncentiveEmployeeOption } from '@/lib/incentives/types'
 
 const entrySchema = z.object({
@@ -41,7 +38,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!canReadIncentives(user)) return errorResponse('Forbidden', 403)
+    if (!(await canReadEffectiveIncentives(user))) return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
     const month = searchParams.get('month')
@@ -111,7 +108,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!canCreateIncentives(user)) return errorResponse('Forbidden', 403)
+    if (!(await canCreateEffectiveIncentives(user))) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
     const parsed = createSchema.safeParse(body)

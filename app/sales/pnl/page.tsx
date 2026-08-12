@@ -1,15 +1,17 @@
 'use client'
 
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 import { ProtectedRoute } from '@/components/protected-route'
 import { SalesPnlView } from '@/components/pnl/sales-pnl-view'
 
 export default function SalesPnlPage() {
   const { user } = useAuth()
+  const { hasAccess } = usePermissions()
   const canRead =
     user &&
-    (hasPermission(user, 'sales:pnl:read') || hasPermission(user, 'pnl:read'))
+    (hasAccess('sales.sales_pnl') || hasAccess('main.company_pnl') || hasPermission(user, 'sales:pnl:read') || hasPermission(user, 'pnl:read'))
 
   return (
     <ProtectedRoute>

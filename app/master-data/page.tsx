@@ -41,6 +41,7 @@ import { Switch } from '@/components/ui/switch'
 import { apiGet, apiPost, apiPatch } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { useFileUpload } from '@/hooks/use-file-upload'
+import { usePermissions, PermissionLevel } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 import { toast } from 'sonner'
 import { ExternalLink, Eye, Loader2, Pencil, Plus, Database, Trash2, Upload } from 'lucide-react'
@@ -168,8 +169,9 @@ export default function MasterDataPage() {
     endpoint: '/api/masters/upload',
   })
 
-  const canAccess = !!(user && hasPermission(user, 'masters:read'))
-  const canWrite = !!(user && hasPermission(user, 'masters:write'))
+  const { hasAccess } = usePermissions()
+  const canAccess = !!(user && (hasAccess('main.master_data') || hasPermission(user, 'masters:read')))
+  const canWrite = !!(user && (hasAccess('main.master_data', PermissionLevel.READ_WRITE) || hasPermission(user, 'masters:write')))
 
   const { data, isLoading, refetch } = useMasterList(tab, search, canAccess && !authLoading)
 

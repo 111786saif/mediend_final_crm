@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
-    if (!canAccessSalesDashboard(user)) {
+    if (!(await canAccessSalesDashboard(user))) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -129,6 +129,8 @@ export async function GET(request: NextRequest) {
         WHERE l."bdId" = ${bdId}
           AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
                OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND COALESCE(l."surgeryDate", ar."surgeryDate") IS NOT NULL))
+          AND COALESCE(l."surgeryDate", ar."surgeryDate") >= ${start}
+          AND COALESCE(l."surgeryDate", ar."surgeryDate") <= ${end}
         GROUP BY 1
         ORDER BY 1
       `,
@@ -161,12 +163,13 @@ export async function GET(request: NextRequest) {
     let ipdPrev3 = 0
     let ipdOlder = 0
 
-    allLeadsAllTime.forEach((r) => {
-      if (r.month === currentMonthKey) ipdCurrent = r.ipdCount
-      else if (r.month === prevMonthKey) ipdPrev = r.ipdCount
-      else if (r.month === prev2MonthKey) ipdPrev2 = r.ipdCount
-      else if (r.month === prev3MonthKey) ipdPrev3 = r.ipdCount
-      else if (r.month < currentMonthKey) ipdOlder += r.ipdCount
+    ipdByMonth.forEach((r) => {
+      const c = Number(r.count)
+      if (r.month === currentMonthKey) ipdCurrent = c
+      else if (r.month === prevMonthKey) ipdPrev = c
+      else if (r.month === prev2MonthKey) ipdPrev2 = c
+      else if (r.month === prev3MonthKey) ipdPrev3 = c
+      else ipdOlder += c
     })
 
     // Treatment breakdown for pie chart

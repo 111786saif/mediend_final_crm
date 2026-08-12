@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission, hasPlOrFinanceRead } from '@/lib/rbac'
+import { hasEffectivePlOrFinanceRead, hasEffectivePlOrFinanceWrite } from '@/lib/rbac-new'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { recomputeOutstandingFromInstallments } from '@/lib/pl/installments'
 import type { InstallmentRecipient, InstallmentMode } from '@/generated/prisma/client'
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPlOrFinanceRead(user)) return errorResponse('Forbidden', 403)
+    if (!(await hasEffectivePlOrFinanceRead(user))) return errorResponse('Forbidden', 403)
 
     const url = new URL(request.url)
     const leadId = url.searchParams.get('leadId')
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     })
     return successResponse(rows)
   } catch (error) {
-    console.error('Error listing installments:', error)
+    console.error('Error listing payment installments:', error)
     return errorResponse('Failed to list installments', 500)
   }
 }
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'pl:write')) return errorResponse('Forbidden', 403)
+    if (!(await hasEffectivePlOrFinanceWrite(user))) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
     const leadId = body.leadId ? String(body.leadId).trim() : ''

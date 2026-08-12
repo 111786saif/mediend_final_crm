@@ -24,6 +24,7 @@ import { RecentActivityLog } from '@/components/recent-activity-log'
 import { RecordPaymentForm } from '@/components/record-payment-form'
 import { ColumnFilter } from '@/components/ui/column-filter'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions, PermissionLevel } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -97,7 +98,8 @@ export default function DoctorDetailPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { user } = useAuth()
-  const canRequestPayoff = user ? hasPermission(user, 'pl:write') : false
+  const { hasAccess } = usePermissions()
+  const canRequestPayoff = user ? (hasAccess('insurance_pl.pl_ledger', PermissionLevel.READ_WRITE) || hasPermission(user, 'pl:write')) : false
   const rawName = Array.isArray(params.name) ? params.name[0] : params.name
   const name = decodeURIComponent(rawName || '')
   const startDate = searchParams.get('startDate') || ''

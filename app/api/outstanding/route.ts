@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPlOrFinanceRead } from '@/lib/rbac'
+import { hasEffectivePlOrFinanceRead } from '@/lib/rbac-new'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { Prisma } from '@/generated/prisma/client'
 
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       return unauthorizedResponse()
     }
 
-    if (!hasPlOrFinanceRead(user)) {
+    if (!(await hasEffectivePlOrFinanceRead(user))) {
       return errorResponse('Forbidden', 403)
     }
 
