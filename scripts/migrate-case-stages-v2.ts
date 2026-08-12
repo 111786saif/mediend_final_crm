@@ -17,7 +17,7 @@ const OLD_TO_NEW_STAGE: Record<string, CaseStage> = {
   KYP_PENDING: CaseStage.KYP_BASIC_PENDING,
   KYP_COMPLETE: CaseStage.KYP_DETAILED_COMPLETE,
   ADMITTED: CaseStage.INITIATED,
-  IPD_DONE: CaseStage.DISCHARGED,
+  // IPD_DONE is still a live stage (surgery done, before discharge) — do NOT map to DISCHARGED.
 }
 
 async function migrateCaseStagesV2() {
@@ -28,7 +28,7 @@ async function migrateCaseStagesV2() {
     const leads = await prisma.lead.findMany({
       where: {
         caseStage: {
-          in: ['KYP_PENDING', 'KYP_COMPLETE', 'ADMITTED', 'IPD_DONE'] as CaseStage[],
+          in: ['KYP_PENDING', 'KYP_COMPLETE', 'ADMITTED'] as CaseStage[],
         },
       },
       include: {
@@ -59,8 +59,8 @@ async function migrateCaseStagesV2() {
     const historyRecords = await prisma.caseStageHistory.findMany({
       where: {
         OR: [
-          { fromStage: { in: ['KYP_PENDING', 'KYP_COMPLETE', 'ADMITTED', 'IPD_DONE'] as CaseStage[] } },
-          { toStage: { in: ['KYP_PENDING', 'KYP_COMPLETE', 'ADMITTED', 'IPD_DONE'] as CaseStage[] } },
+          { fromStage: { in: ['KYP_PENDING', 'KYP_COMPLETE', 'ADMITTED'] as CaseStage[] } },
+          { toStage: { in: ['KYP_PENDING', 'KYP_COMPLETE', 'ADMITTED'] as CaseStage[] } },
         ],
       },
     })

@@ -21,7 +21,7 @@ import { toast } from 'sonner'
 import Link from 'next/link'
 import { EditDocumentDialog } from '@/components/hr/edit-document-dialog'
 import { DocumentRichEditor } from '@/components/hr/document-rich-editor'
-import { extractBodyHtml } from '@/lib/hrms/document-merge'
+import { extractEditableBody } from '@/lib/hrms/document-merge'
 
 interface Employee {
   id: string
@@ -728,7 +728,7 @@ function GenerateDocumentForm({
       if (!res.ok) throw new Error(data.error || 'Preview failed')
       const html = data.data?.htmlContent || data.htmlContent
       setPreviewHtml(html)
-      setEditableHtml(extractBodyHtml(html || ''))
+      setEditableHtml(extractEditableBody(html || ''))
       setStep('preview')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to preview')

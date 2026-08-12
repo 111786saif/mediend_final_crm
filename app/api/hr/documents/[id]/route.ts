@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { resolveDocumentHtml, wrapEditedBody } from '@/lib/hrms/document-render'
+import { isEditorContentEmpty } from '@/lib/hrms/document-merge'
 import { z } from 'zod'
 
 const patchSchema = z.object({
@@ -77,6 +78,7 @@ export async function GET(
       employee: employeeData,
       metadata,
       documentUrl: document.documentUrl,
+      generatedAt: document.generatedAt,
     })
 
     if (
@@ -152,9 +154,14 @@ export async function PATCH(
 
     let nextHtml = contentHtml
     if (contentHtml && bodyOnly) {
+      if (isEditorContentEmpty(contentHtml)) {
+        return errorResponse('Document content cannot be empty', 400)
+      }
       nextHtml = wrapEditedBody(contentHtml, document.documentType)
     } else if (contentHtml && !contentHtml.includes('<!DOCTYPE') && !contentHtml.includes('<html')) {
-      // TipTap typically returns body fragments — wrap for consistent view/print
+      if (isEditorContentEmpty(contentHtml)) {
+        return errorResponse('Document content cannot be empty', 400)
+      }
       nextHtml = wrapEditedBody(contentHtml, document.documentType)
     }
 

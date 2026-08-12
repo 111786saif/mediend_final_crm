@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
-import { mergeTemplatePlaceholders, extractBodyHtml, formatLetterDate, LETTER_DATETIME_FORMAT } from '@/lib/hrms/document-merge'
+import { prisma } from '@/lib/prisma'
+import { mergeTemplatePlaceholders, extractBodyHtml, stripDocumentChrome, formatLetterDate, LETTER_DATETIME_FORMAT } from '@/lib/hrms/document-merge'
 import {
   DEFAULT_TEMPLATE_BODIES,
   DOCUMENT_TEMPLATE_NAMES,
@@ -8,6 +9,8 @@ import {
 import {
   buildDocumentHtml,
   getSignatureHtml,
+  resolveDocumentDate,
+  type DocumentGenerationOptions,
   COMPANY_DATA,
   formatCurrency,
   numberToWords,
@@ -63,11 +66,13 @@ function assetRow(label: string, status: unknown, comment: unknown): string {
 export function buildMergeVars(
   documentType: DocumentTypeKey,
   employee: EmployeeData,
-  metadata?: Record<string, unknown> | null
+  metadata?: Record<string, unknown> | null,
+  options?: DocumentGenerationOptions
 ): Record<string, string> {
   const m = metadata || {}
-  const today = format(new Date(), 'do MMMM, yyyy')
-  const year = format(new Date(), 'yyyy')
+  const documentDate = resolveDocumentDate(options)
+  const today = format(documentDate, 'do MMMM, yyyy')
+  const year = format(documentDate, 'yyyy')
   const salutation = (m.salutation as string) || 'Mr.'
   const designation =
     (m.designation as string) ||
@@ -82,7 +87,7 @@ export function buildMergeVars(
   const addressBlock = address ? `\n    <p>${address}</p>` : ''
   const addressAcceptance = address ? `, residing at ${address}` : ''
   const firstName = employee.name.split(' ')[0] || employee.name
-  const signatureHtml = getSignatureHtml()
+  const signatureHtml = getSignatureHtml(documentDate)
 
   const base: Record<string, string> = {
     employeeName: (m.employeeName as string) || employee.name,
@@ -140,7 +145,7 @@ export function buildMergeVars(
         ),
         acceptanceDeadline: formatLetterDate(
           m.acceptanceDeadline as string,
-          formatLetterDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+          formatLetterDate(new Date(documentDate.getTime() + 7 * 24 * 60 * 60 * 1000))
         ),
         salesSection,
       }
@@ -178,7 +183,7 @@ export function buildMergeVars(
         lastWorkingDate: formatLetterDate(m.lastWorkingDate as string, today),
         resignationDate: formatLetterDate(
           m.resignationDate as string,
-          formatLetterDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+          formatLetterDate(new Date(documentDate.getTime() - 30 * 24 * 60 * 60 * 1000))
         ),
       }
     case 'INTERNSHIP_OFFER_LETTER': {
@@ -196,7 +201,7 @@ export function buildMergeVars(
         internshipType: (m.internshipType as string) || 'Full-time',
         acceptanceDeadline: formatLetterDate(
           m.acceptanceDeadline as string,
-          formatLetterDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+          formatLetterDate(new Date(documentDate.getTime() + 7 * 24 * 60 * 60 * 1000))
         ),
       }
     }
@@ -284,22 +289,23 @@ export function buildMergeVars(
 function legacyGenerate(
   documentType: DocumentTypeKey,
   employee: EmployeeData,
-  metadata?: Record<string, unknown> | null
+  metadata?: Record<string, unknown> | null,
+  options?: DocumentGenerationOptions
 ): string {
   const meta = metadata || undefined
   switch (documentType) {
     case 'OFFER_LETTER':
-      return generateOfferLetterHTML(employee, meta as any)
+      return generateOfferLetterHTML(employee, meta as any, options)
     case 'INCREMENT_LETTER':
-      return generateIncrementLetterHTML(employee, meta as any)
+      return generateIncrementLetterHTML(employee, meta as any, options)
     case 'EXPERIENCE_LETTER':
-      return generateExperienceLetterHTML(employee, meta as any)
+      return generateExperienceLetterHTML(employee, meta as any, options)
     case 'RELIEVING_LETTER':
-      return generateRelievingLetterHTML(employee, meta as any)
+      return generateRelievingLetterHTML(employee, meta as any, options)
     case 'INTERNSHIP_OFFER_LETTER':
-      return generateInternshipOfferLetterHTML(employee, meta as any)
+      return generateInternshipOfferLetterHTML(employee, meta as any, options)
     case 'INTERNSHIP_COMPLETION_LETTER':
-      return generateInternshipCompletionLetterHTML(employee, meta as any)
+      return generateInternshipCompletionLetterHTML(employee, meta as any, options)
     case 'EXIT_INTERVIEW_FORM':
       return generateExitInterviewHTML(employee, meta as any)
     default:
@@ -320,19 +326,20 @@ export async function getTemplateBody(documentType: DocumentTypeKey): Promise<st
 export async function renderDocumentHtml(
   documentType: DocumentTypeKey,
   employee: EmployeeData,
-  metadata?: Record<string, unknown> | null
+  metadata?: Record<string, unknown> | null,
+  options?: DocumentGenerationOptions
 ): Promise<string> {
   try {
     const bodyTemplate = await getTemplateBody(documentType)
     if (!bodyTemplate) {
-      return legacyGenerate(documentType, employee, metadata)
+      return legacyGenerate(documentType, employee, metadata, options)
     }
-    const vars = buildMergeVars(documentType, employee, metadata)
+    const vars = buildMergeVars(documentType, employee, metadata, options)
     const mergedBody = mergeTemplatePlaceholders(bodyTemplate, vars)
     return buildDocumentHtml(mergedBody, TEMPLATE_EXTRA_STYLES[documentType] || '')
   } catch (err) {
     console.error('Template render failed, using legacy generator:', err)
-    return legacyGenerate(documentType, employee, metadata)
+    return legacyGenerate(documentType, employee, metadata, options)
   }
 }
 
@@ -343,6 +350,7 @@ export async function resolveDocumentHtml(opts: {
   employee: EmployeeData
   metadata?: Record<string, unknown> | null
   documentUrl?: string | null
+  generatedAt?: Date | string | null
 }): Promise<string> {
   if (opts.documentType === 'CUSTOM') {
     return opts.documentUrl
@@ -357,16 +365,18 @@ export async function resolveDocumentHtml(opts: {
   return renderDocumentHtml(
     opts.documentType as DocumentTypeKey,
     opts.employee,
-    opts.metadata
+    opts.metadata,
+    { generatedAt: opts.generatedAt }
   )
 }
 
 /** Rebuild full HTML after TipTap body edit. */
 export function wrapEditedBody(bodyHtml: string, documentType?: string): string {
   const extra = documentType ? TEMPLATE_EXTRA_STYLES[documentType] || '' : ''
-  // If editor returned a full document, extract body first
-  const body = extractBodyHtml(bodyHtml)
+  const extracted = extractBodyHtml(bodyHtml)
+  const body = stripDocumentChrome(extracted)
   return buildDocumentHtml(body, extra)
 }
 
 export { DOCUMENT_TEMPLATE_NAMES, DEFAULT_TEMPLATE_BODIES, extractBodyHtml }
+export type { DocumentGenerationOptions }

@@ -24,11 +24,6 @@ psql_exec() {
   docker compose exec -T postgres psql -U postgres -d mediend_crm "$@"
 }
 
-migrate_node() {
-  docker compose --profile tools run --rm \
-    --entrypoint "prisma" migrate-deploy-node "$@"
-}
-
 generate_schema_gap() {
   echo "Building migrate-deploy-node image..."
   docker compose --profile tools build migrate-deploy-node
@@ -69,12 +64,16 @@ generate_schema_gap() {
 }
 
 mark_all_migrations_applied() {
-  echo "Marking all timestamped migrations as applied..."
-  for d in prisma/migrations/202*/; do
-    m=$(basename "$d")
-    echo "  → $m"
-    migrate_node migrate resolve --applied "$m" 2>/dev/null || true
-  done
+  echo "Marking all timestamped migrations as applied (53 folders)..."
+  docker compose --profile tools run --rm \
+    --entrypoint "sh" migrate-deploy-node \
+    -c '
+      for d in prisma/migrations/202*/; do
+        m=$(basename "$d")
+        echo "  → $m"
+        prisma migrate resolve --applied "$m" 2>/dev/null || true
+      done
+    '
 }
 
 echo "=== Step 1: Baseline row counts (save these) ==="
@@ -101,13 +100,13 @@ psql_exec <prisma/migrations/new_hire_welcome.sql
 
 echo ""
 echo "=== Step 4: Sync Prisma migration history ==="
-migrate_node migrate resolve --rolled-back 20260714010000_sales_team_other_cost 2>/dev/null || true
+echo "Clearing restored _prisma_migrations (old workspace history + duplicate marks)..."
+psql_exec -c 'TRUNCATE "_prisma_migrations";'
 mark_all_migrations_applied
 
-echo "Verifying migrate deploy (expect: no pending migrations)..."
-set +e
-migrate_node migrate deploy
-set -e
+applied=$(psql_exec -t -A -c 'SELECT COUNT(*) FROM "_prisma_migrations";' | tr -d '[:space:]')
+distinct=$(psql_exec -t -A -c 'SELECT COUNT(DISTINCT migration_name) FROM "_prisma_migrations";' | tr -d '[:space:]')
+echo "Migrations recorded in DB: ${applied:-0} rows, ${distinct:-0} distinct (expect 53 / 53)"
 
 echo ""
 echo "=== Step 5: Seed RBAC + page permissions (no users/leads) ==="
@@ -127,7 +126,7 @@ LEGACY_COUNT=$(psql_exec -t -A -c "
 SELECT COUNT(*)
 FROM \"Lead\"
 WHERE \"caseStage\" IN (
-  'KYP_PENDING','KYP_COMPLETE','ADMITTED','IPD_DONE',
+  'KYP_PENDING','KYP_COMPLETE','ADMITTED',
   'KYP_BASIC_PENDING','KYP_DETAILED_PENDING','KYP_DETAILED_COMPLETE'
 );
 " | tr -d '[:space:]')

@@ -52,6 +52,33 @@ export function extractBodyHtml(fullHtml: string): string {
   return fullHtml
 }
 
+/** Remove letterhead, watermark, and footer chrome from body HTML before editing. */
+export function stripDocumentChrome(html: string): string {
+  if (!html?.trim()) return html
+  return html
+    .replace(/<div[^>]*class="[^"]*watermark[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+    .replace(/<div[^>]*class="[^"]*letterhead[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+    .replace(/<div[^>]*class="[^"]*doc-footer[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+    .trim()
+}
+
+/** Body content suitable for TipTap — no outer document chrome. */
+export function extractEditableBody(fullHtml: string): string {
+  return stripDocumentChrome(extractBodyHtml(fullHtml))
+}
+
+/** True when TipTap output has no meaningful text content. */
+export function isEditorContentEmpty(html: string): boolean {
+  if (!html?.trim()) return true
+  const textOnly = html
+    .replace(/<p[^>]*>\s*<\/p>/gi, '')
+    .replace(/<br\s*\/?>/gi, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/<[^>]+>/g, '')
+    .trim()
+  return textOnly.length === 0
+}
+
 /** List of common placeholders available when editing templates. */
 export const TEMPLATE_PLACEHOLDERS: { key: string; label: string }[] = [
   { key: 'employeeName', label: 'Employee Name' },

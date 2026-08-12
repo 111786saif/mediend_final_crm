@@ -88,6 +88,7 @@ export async function GET(
       employee: employeeData,
       metadata,
       documentUrl: document.documentUrl,
+      generatedAt: document.generatedAt,
     })
 
     return successResponse({

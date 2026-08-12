@@ -63,6 +63,7 @@ export async function GET(request: NextRequest) {
       employee: employeeData,
       metadata,
       documentUrl: document.documentUrl,
+      generatedAt: document.generatedAt,
     })
 
     if (

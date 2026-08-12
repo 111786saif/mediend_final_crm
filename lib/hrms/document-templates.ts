@@ -37,6 +37,45 @@ function getBaseUrl(): string {
   return process.env.NEXT_PUBLIC_APP_URL || 'https://app.mediend.com'
 }
 
+/** IST midnight 10 July 2026 — signatory name switches on or after this date. */
+export const HR_SIGNATURE_CUTOVER = new Date('2026-07-10T00:00:00+05:30')
+
+const HR_SIGNATURE_IMAGE = '/images/hr-sign-and-stamp.png'
+const HR_SIGNATURE_DESIGNATION = 'Senior Manager-Human Resources'
+
+export type DocumentGenerationOptions = {
+  generatedAt?: Date | string | null
+}
+
+/** Resolve the document reference date from options or current time. */
+export function resolveDocumentDate(options?: DocumentGenerationOptions): Date {
+  if (options?.generatedAt) {
+    const parsed =
+      options.generatedAt instanceof Date
+        ? options.generatedAt
+        : new Date(options.generatedAt)
+    if (!Number.isNaN(parsed.getTime())) return parsed
+  }
+  return new Date()
+}
+
+type HrSignature = {
+  name: string
+  imagePath: string
+  designation: string
+}
+
+/** Date-based HR signatory — same stamp image, name switches at cutover. */
+export function resolveHrSignature(referenceDate: Date): HrSignature {
+  const name =
+    referenceDate < HR_SIGNATURE_CUTOVER ? 'Vaishali Tomar' : 'Megha Roy'
+  return {
+    name,
+    imagePath: HR_SIGNATURE_IMAGE,
+    designation: HR_SIGNATURE_DESIGNATION,
+  }
+}
+
 function renderLetterhead(): string {
   const baseUrl = getBaseUrl()
   const logoUrl = `${baseUrl}/images/mediend-logo.png`
@@ -55,18 +94,19 @@ function renderWatermark(): string {
   </div>`
 }
 
-function renderSignature(): string {
-  return getSignatureHtml()
+function renderSignature(referenceDate?: Date): string {
+  return getSignatureHtml(referenceDate)
 }
 
-export function getSignatureHtml(): string {
+export function getSignatureHtml(referenceDate?: Date): string {
+  const sig = resolveHrSignature(referenceDate ?? new Date())
   const baseUrl = getBaseUrl()
-  const stampUrl = `${baseUrl}/images/hr-sign-and-stamp.png`
+  const stampUrl = `${baseUrl}${sig.imagePath}`
   return `
   <div class="signature">
     <img src="${stampUrl}" alt="Authorized Signature" style="max-width: 180px; height: auto; display: block; margin-bottom: 8px;" />
-    <p><strong>Vaishali Tomar</strong></p>
-    <p>Senior Manager-Human Resources</p>
+    <p><strong>${sig.name}</strong></p>
+    <p>${sig.designation}</p>
   </div>`
 }
 
@@ -151,9 +191,11 @@ export function generateOfferLetterHTML(
     guardianRelation?: string
     address?: string
     salutation?: string
-  }
+  },
+  options?: DocumentGenerationOptions
 ): string {
-  const today = format(new Date(), 'do MMMM, yyyy')
+  const documentDate = resolveDocumentDate(options)
+  const today = format(documentDate, 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Associate'
   const ctc = metadata?.ctc || employee.salary || 0
   const monthlySalary = Math.round(ctc / 12)
@@ -168,7 +210,7 @@ export function generateOfferLetterHTML(
   const joiningDate = formatLetterDate(joiningDateRaw, 'To be confirmed', LETTER_DATETIME_FORMAT)
   const acceptanceDeadline = formatLetterDate(
     metadata?.acceptanceDeadline,
-    formatLetterDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+    formatLetterDate(new Date(documentDate.getTime() + 7 * 24 * 60 * 60 * 1000))
   )
 
   const salesSection = isSales
@@ -196,7 +238,7 @@ export function generateOfferLetterHTML(
 
   <div class="date">
     <p>Date: ${today}</p>
-    <p>Ref: KUNDKUND/HR/OFFER/${employee.employeeCode}/${format(new Date(), 'yyyy')}</p>
+    <p>Ref: KUNDKUND/HR/OFFER/${employee.employeeCode}/${format(documentDate, 'yyyy')}</p>
   </div>
 
   <div>
@@ -257,7 +299,7 @@ export function generateOfferLetterHTML(
   <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
     <div>
       <p>Sincerely</p>
-      ${renderSignature()}
+      ${renderSignature(documentDate)}
     </div>
     <div style="text-align: right;">
       <p><strong>Employee Acceptance</strong></p>
@@ -288,9 +330,11 @@ export function generateIncrementLetterHTML(
     joinDate?: string
     remarks?: string
     salutation?: string
-  }
+  },
+  options?: DocumentGenerationOptions
 ): string {
-  const today = format(new Date(), 'do MMMM, yyyy')
+  const documentDate = resolveDocumentDate(options)
+  const today = format(documentDate, 'do MMMM, yyyy')
   const designation = metadata?.designation || employee.designation || 'Associate'
   const salutation = metadata?.salutation || 'Mr.'
   const previousSalary = metadata?.previousSalary || employee.salary || 0
@@ -313,7 +357,7 @@ export function generateIncrementLetterHTML(
 
   <div class="date">
     <p>Date: ${today}</p>
-    <p>Ref: KUNDKUND/HR/INCREMENT/${employee.employeeCode}/${format(new Date(), 'yyyy')}</p>
+    <p>Ref: KUNDKUND/HR/INCREMENT/${employee.employeeCode}/${format(documentDate, 'yyyy')}</p>
   </div>
 
   <div>
@@ -346,7 +390,7 @@ export function generateIncrementLetterHTML(
     <p>Congratulations on this well-deserved recognition! Let's continue to achieve great things together.</p>
   </div>
 
-  ${renderSignature()}
+  ${renderSignature(documentDate)}
 
   ${renderFooter()}
 </body>
@@ -359,9 +403,11 @@ export function generateExperienceLetterHTML(
     designation?: string
     lastWorkingDate?: string
     salutation?: string
-  }
+  },
+  options?: DocumentGenerationOptions
 ): string {
-  const today = format(new Date(), 'do MMMM, yyyy')
+  const documentDate = resolveDocumentDate(options)
+  const today = format(documentDate, 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Associate'
   const salutation = metadata?.salutation || 'Mr.'
   const lastWorkingDate = formatLetterDate(metadata?.lastWorkingDate, today)
@@ -380,7 +426,7 @@ export function generateExperienceLetterHTML(
 
   <div class="date">
     <p>Date: ${today}</p>
-    <p>Ref: KUNDKUND/HR/EXP/${employee.employeeCode}/${format(new Date(), 'yyyy')}</p>
+    <p>Ref: KUNDKUND/HR/EXP/${employee.employeeCode}/${format(documentDate, 'yyyy')}</p>
   </div>
 
   <div class="subject">EXPERIENCE CERTIFICATE</div>
@@ -401,7 +447,7 @@ export function generateExperienceLetterHTML(
 
   <div style="margin-top: 40px;">
     <p>For Kundkund Healthcare Pvt. Ltd.</p>
-    ${renderSignature()}
+    ${renderSignature(documentDate)}
   </div>
 
   ${renderFooter()}
@@ -416,14 +462,16 @@ export function generateRelievingLetterHTML(
     lastWorkingDate?: string
     resignationDate?: string
     salutation?: string
-  }
+  },
+  options?: DocumentGenerationOptions
 ): string {
-  const today = format(new Date(), 'do MMMM, yyyy')
+  const documentDate = resolveDocumentDate(options)
+  const today = format(documentDate, 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Associate'
   const lastWorkingDate = formatLetterDate(metadata?.lastWorkingDate, today)
   const resignationDate = formatLetterDate(
     metadata?.resignationDate,
-    formatLetterDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+    formatLetterDate(new Date(documentDate.getTime() - 30 * 24 * 60 * 60 * 1000))
   )
 
   return `
@@ -439,7 +487,7 @@ export function generateRelievingLetterHTML(
 
   <div class="date">
     <p>Date: ${today}</p>
-    <p>Ref: KUNDKUND/HR/REL/${employee.employeeCode}/${format(new Date(), 'yyyy')}</p>
+    <p>Ref: KUNDKUND/HR/REL/${employee.employeeCode}/${format(documentDate, 'yyyy')}</p>
   </div>
 
   <div class="subject">RELIEVING LETTER</div>
@@ -462,7 +510,7 @@ export function generateRelievingLetterHTML(
 
   <div style="margin-top: 40px;">
     <p>For ${COMPANY_DATA.name}</p>
-    ${renderSignature()}
+    ${renderSignature(documentDate)}
   </div>
 
   ${renderFooter()}
@@ -485,9 +533,11 @@ export function generateInternshipOfferLetterHTML(
     guardianRelation?: string
     address?: string
     salutation?: string
-  }
+  },
+  options?: DocumentGenerationOptions
 ): string {
-  const today = format(new Date(), 'do MMMM, yyyy')
+  const documentDate = resolveDocumentDate(options)
+  const today = format(documentDate, 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Intern'
   const stipend = metadata?.stipend || 0
   const duration = metadata?.duration || '3 Months'
@@ -501,7 +551,7 @@ export function generateInternshipOfferLetterHTML(
   const startDate = formatLetterDate(metadata?.startDate, 'To be confirmed')
   const acceptanceDeadline = formatLetterDate(
     metadata?.acceptanceDeadline,
-    formatLetterDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+    formatLetterDate(new Date(documentDate.getTime() + 7 * 24 * 60 * 60 * 1000))
   )
 
   return `
@@ -521,7 +571,7 @@ export function generateInternshipOfferLetterHTML(
 
   <div class="date">
     <p>Date: ${today}</p>
-    <p>Ref: KUNDKUND/HR/INTERN-OFFER/${employee.employeeCode}/${format(new Date(), 'yyyy')}</p>
+    <p>Ref: KUNDKUND/HR/INTERN-OFFER/${employee.employeeCode}/${format(documentDate, 'yyyy')}</p>
   </div>
 
   <div>
@@ -557,7 +607,7 @@ export function generateInternshipOfferLetterHTML(
   <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
     <div>
       <p>Sincerely</p>
-      ${renderSignature()}
+      ${renderSignature(documentDate)}
     </div>
     <div style="text-align: right;">
       <p><strong>Intern Acceptance</strong></p>
@@ -585,9 +635,11 @@ export function generateInternshipCompletionLetterHTML(
     startDate?: string
     endDate?: string
     salutation?: string
-  }
+  },
+  options?: DocumentGenerationOptions
 ): string {
-  const today = format(new Date(), 'do MMMM, yyyy')
+  const documentDate = resolveDocumentDate(options)
+  const today = format(documentDate, 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Intern'
   const salutation = metadata?.salutation || 'Mr.'
   const department = metadata?.department || employee.department || 'Operations'
@@ -607,7 +659,7 @@ export function generateInternshipCompletionLetterHTML(
 
   <div class="date">
     <p>Date: ${today}</p>
-    <p>Ref: KUNDKUND/HR/INTERN-COMP/${employee.employeeCode}/${format(new Date(), 'yyyy')}</p>
+    <p>Ref: KUNDKUND/HR/INTERN-COMP/${employee.employeeCode}/${format(documentDate, 'yyyy')}</p>
   </div>
 
   <div class="subject">INTERNSHIP COMPLETION CERTIFICATE</div>
@@ -627,7 +679,7 @@ export function generateInternshipCompletionLetterHTML(
   <div style="margin-top: 40px;">
     <p>For ${COMPANY_DATA.name}</p>
     <p>Thanks &amp; Regards</p>
-    ${renderSignature()}
+    ${renderSignature(documentDate)}
   </div>
 
   ${renderFooter()}

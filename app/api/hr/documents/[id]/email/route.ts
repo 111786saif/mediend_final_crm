@@ -91,6 +91,7 @@ export async function POST(
       employee: employeeData,
       metadata,
       documentUrl: document.documentUrl,
+      generatedAt: document.generatedAt,
     })
 
     let ackToken: string | null = null
