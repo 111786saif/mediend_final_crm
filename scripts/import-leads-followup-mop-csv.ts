@@ -19,7 +19,6 @@
 import 'dotenv/config'
 import * as fs from 'fs'
 import * as path from 'path'
-import { parse } from 'csv-parse/sync'
 import { prisma } from '@/lib/prisma'
 import { normalizeModeOfPaymentStorageValue } from '@/lib/mode-of-payment'
 
@@ -40,13 +39,6 @@ function resolveCsvPath(): string {
 }
 
 const CSV_PATH = resolveCsvPath()
-
-type CsvRow = {
-  id?: string
-  Follow_up_Date?: string
-  'Follow-up_Date'?: string
-  Mode_Of_Payment?: string
-}
 
 type ParsedCsvRow = {
   leadRef: string
@@ -79,33 +71,50 @@ function parseCsvModeOfPayment(value: string | undefined | null): string | null 
   return normalizeModeOfPaymentStorageValue(value!.trim())
 }
 
-function readCsvRows(): ParsedCsvRow[] {
+// Patient_Name / Patient_Number columns are ignored (often malformed quotes in export).
+// Format: id,<name>,<phone>,Follow-up_Date,Mode_Of_Payment
+const LOOSE_CSV_LINE =
+  /^(\d+),(?:.*?,){2}([^,]+),([^,\r\n]+)\s*$/
+
+function parseLooseCsvLine(line: string): ParsedCsvRow | null | 'skip' {
+  const trimmed = line.trim().replace(/^\uFEFF/, '')
+  if (!trimmed || /^id,/i.test(trimmed)) return 'skip'
+
+  const match = LOOSE_CSV_LINE.exec(trimmed)
+  if (!match) return null
+
+  const leadRef = match[1]!.trim()
+  const followUpDate = parseCsvDate(match[2])
+  const modeOfPayment = parseCsvModeOfPayment(match[3])
+
+  if (!followUpDate && !modeOfPayment) return 'skip'
+
+  return { leadRef, followUpDate, modeOfPayment }
+}
+
+function readCsvRows(): { rows: ParsedCsvRow[]; skippedMalformedLines: number; skippedEmptyLines: number } {
   if (!fs.existsSync(CSV_PATH)) {
     throw new Error(`CSV not found: ${CSV_PATH}`)
   }
 
-  const rawRows = parse(fs.readFileSync(CSV_PATH, 'utf8'), {
-    columns: true,
-    skip_empty_lines: true,
-    trim: true,
-    relax_column_count: true,
-  }) as CsvRow[]
-
   const parsed: ParsedCsvRow[] = []
+  let skippedMalformedLines = 0
+  let skippedEmptyLines = 0
 
-  for (const row of rawRows) {
-    const leadRef = String(row.id ?? '').trim()
-    if (!leadRef) continue
-
-    const followUpDate = parseCsvDate(row['Follow-up_Date'] ?? row.Follow_up_Date)
-    const modeOfPayment = parseCsvModeOfPayment(row.Mode_Of_Payment)
-
-    if (!followUpDate && !modeOfPayment) continue
-
-    parsed.push({ leadRef, followUpDate, modeOfPayment })
+  for (const line of fs.readFileSync(CSV_PATH, 'utf8').split(/\r?\n/)) {
+    const row = parseLooseCsvLine(line)
+    if (row === 'skip') {
+      skippedEmptyLines += 1
+      continue
+    }
+    if (row === null) {
+      skippedMalformedLines += 1
+      continue
+    }
+    parsed.push(row)
   }
 
-  return parsed
+  return { rows: parsed, skippedMalformedLines, skippedEmptyLines }
 }
 
 function datesEqual(left: Date | null | undefined, right: Date | null | undefined) {
@@ -124,8 +133,12 @@ async function importLeadFollowupMopCsv() {
   console.log(`CSV: ${CSV_PATH}`)
   console.log(`Mode: ${DRY_RUN ? 'DRY RUN' : 'APPLY'}${OVERWRITE ? ' (overwrite existing values)' : ' (fill missing only)'}`)
 
-  const rows = readCsvRows()
+  const { rows, skippedMalformedLines, skippedEmptyLines } = readCsvRows()
   console.log(`Parsed ${rows.length} CSV rows with follow-up date and/or mode of payment`)
+  console.log(`Skipped ${skippedEmptyLines} rows with no follow-up date or MOP in CSV`)
+  if (skippedMalformedLines > 0) {
+    console.log(`Skipped ${skippedMalformedLines} malformed CSV lines`)
+  }
 
   const stats = {
     batches: 0,
