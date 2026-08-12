@@ -32,6 +32,7 @@
     "backfill:old-crm-leads": "tsx scripts/backfill-old-crm-leads.ts",
     "backfill:lead-date": "tsx scripts/backfill-lead-date.ts",
     "backfill:conversion-dates": "bun run scripts/backfill-conversion-dates.ts",
+    "import:leads-followup-mop": "bun run scripts/import-leads-followup-mop-csv.ts",
     "fix:lead-mappings": "tsx scripts/fix-existing-lead-mappings.ts",
     "fix:lead-categories-circles": "bun run scripts/fix-lead-categories-circles.ts",
     "seed:employees": "bun scripts/seed-employees-from-json.ts",

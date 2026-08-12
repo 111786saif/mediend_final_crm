@@ -466,6 +466,26 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/revert-ipd-stage-backfill.ts"]
 
+  # One-off: backfill Lead.followUpDate + Lead.modeOfPayment from leads_export.csv
+  # Copy CSV to data/leads_export.csv first, then:
+  #   docker compose --profile tools run --rm import-leads-followup-mop -- --dry-run
+  #   docker compose --profile tools run --rm import-leads-followup-mop
+  import-leads-followup-mop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data:ro
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/import-leads-followup-mop-csv.ts"]
+
   # One-off: import historical IPD PNL data from CSV
   # Usage: docker compose --profile tools run --rm import-ipd-pnl
   # Dry run: docker compose --profile tools run --rm import-ipd-pnl -- --dry-run
