@@ -656,12 +656,27 @@ export default function PatientDetailsPage() {
     if (
       quickAction === 'ipd-cash' &&
       lead.flowType === FlowType.CASH &&
-      ([CaseStage.CASH_OPD_DONE, CaseStage.CASH_IPD_SUBMITTED, CaseStage.CASH_ON_HOLD, CaseStage.CASH_APPROVED] as CaseStage[]).includes(
+      ([
+        CaseStage.CASH_IPD_PENDING,
+        CaseStage.CASH_OPD_SCHEDULED,
+        CaseStage.CASH_OPD_DONE,
+        CaseStage.CASH_IPD_SUBMITTED,
+        CaseStage.CASH_ON_HOLD,
+        CaseStage.CASH_APPROVED,
+      ] as CaseStage[]).includes(
         lead.caseStage as CaseStage
       )
     ) {
       const timer = window.setTimeout(() => {
         setShowIPDCashModal(true)
+        setHandledQuickAction(quickAction)
+      }, 0)
+      return () => window.clearTimeout(timer)
+    }
+
+    if (quickAction === 'edit-lead') {
+      const timer = window.setTimeout(() => {
+        setLeadEditDrawerOpen(true)
         setHandledQuickAction(quickAction)
       }, 0)
       return () => window.clearTimeout(timer)

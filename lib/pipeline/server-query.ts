@@ -1,7 +1,6 @@
 import { CaseStage, Prisma } from '@/generated/prisma/client'
 import type { SessionUser } from '@/lib/auth'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
-import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
 import { resolveLeadCity, resolveLeadHospitalDoctor, resolveLeadSourceDisplay } from '@/lib/lead-display'
 import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import {
@@ -271,19 +270,58 @@ export async function buildPipelineRoleWhere(
   if (user.role === 'BD') {
     return { where: { bdId: user.id } }
   }
-  // TL, ACM (TL-equivalent), and CM: self + recursive subordinates
+
+  // Fixed-depth sales hierarchy:
+  // Executive Assistant -> Sales Head -> Category Manager -> Team Lead -> BD
+  // Build access through the assignee's manager chain instead of expanding a
+  // very large bdId IN (...) list, which is safer for the pg driver adapter.
   if (
     user.role === 'TEAM_LEAD' ||
     user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
-    user.role === 'CATEGORY_MANAGER'
+    user.role === 'CATEGORY_MANAGER' ||
+    user.role === 'SALES_HEAD' ||
+    user.role === 'EXECUTIVE_ASSISTANT'
   ) {
-    const subordinateUserIds = await getTeamLeadLeadAccessBdUserIds(user.id)
     return {
-      where: { bdId: { in: [user.id, ...subordinateUserIds] } },
-      subordinateUserIds,
+      where: buildPipelineHierarchyScopeWhere(user.id),
     }
   }
   return { where: {} }
+}
+
+function buildPipelineHierarchyScopeWhere(userId: string): Prisma.LeadWhereInput {
+  const or: Prisma.LeadWhereInput[] = [{ bdId: userId }]
+
+  for (let depth = 1; depth <= 4; depth += 1) {
+    or.push({
+      bd: {
+        is: {
+          employee: {
+            is: buildEmployeeManagerChainWhere(userId, depth),
+          },
+        },
+      },
+    })
+  }
+
+  return { OR: or }
+}
+
+function buildEmployeeManagerChainWhere(
+  managerUserId: string,
+  depth: number,
+): Prisma.EmployeeWhereInput {
+  let current: Prisma.EmployeeWhereInput = { userId: managerUserId }
+
+  for (let level = 0; level < depth; level += 1) {
+    current = {
+      manager: {
+        is: current,
+      },
+    }
+  }
+
+  return current
 }
 
 export function statusBucketWhere(

@@ -383,11 +383,7 @@ export function canFillIPDCashForm(user: User, lead: Lead): boolean {
     return false
   }
 
-  if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
-    return hasLeadOpdDone(lead)
-  }
-
-  return lead.caseStage !== CaseStage.CASH_OPD_SCHEDULED || hasLeadOpdDone(lead)
+  return true
 }
 
 // Insurance can review cash case when submitted
