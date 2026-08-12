@@ -1,6 +1,6 @@
 import { CaseStage, Prisma } from '@/generated/prisma/client'
 import type { SessionUser } from '@/lib/auth'
-import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
+import { CASE_STAGE_CONFIG, getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { resolveLeadCity, resolveLeadHospitalDoctor, resolveLeadSourceDisplay } from '@/lib/lead-display'
 import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import {
@@ -91,33 +91,15 @@ const PIPELINE_DATE_COLUMN_FILTER_FIELDS = new Set<PipelineDateColumnFilterField
 ])
 
 const PIPELINE_MULTI_COLUMN_FILTER_FIELDS = new Set<PipelineMultiColumnFilterField>([
-  'leadRef',
-  'patient',
   'month',
   'age',
   'sex',
   'circle',
-  'city',
   'category',
   'treatment',
-  'planningTreatment',
-  'profession',
-  'tl',
-  'hospital',
-  'doctor',
   'status',
   'stage',
   'mop',
-  'lastRemarks',
-  'subStatus',
-  'healthInsurance',
-  'preferredLocation',
-  'source',
-  'leadSource',
-  'modifyBy',
-  'dupCount',
-  'recency',
-  'bd',
 ])
 
 export interface PipelineQueryParams {
@@ -552,6 +534,14 @@ function buildPipelineColumnFiltersWhere(
   const and: Prisma.LeadWhereInput[] = []
 
   for (const filter of filters) {
+    if (filter.operator === 'in') {
+      const where = buildPipelineMultiSelectWhere(filter.field, filter.value)
+      if (where) {
+        and.push(where)
+      }
+      continue
+    }
+
     if (filter.operator !== 'between') {
       continue
     }
@@ -599,8 +589,227 @@ function buildPipelineColumnFiltersWhere(
   return and.length === 1 ? and[0] : { AND: and }
 }
 
-export function hasPostQueryPipelineColumnFilters(filters: PipelineServerColumnFilter[]) {
-  return filters.some((filter) => filter.operator === 'in')
+function buildExactInsensitiveStringWhere(
+  field: keyof Prisma.LeadWhereInput,
+  values: string[],
+): Prisma.LeadWhereInput | undefined {
+  const normalizedValues = [...new Set(values.map((value) => value.trim()).filter((value) => value.length > 0))]
+  if (normalizedValues.length === 0) return undefined
+
+  return {
+    OR: normalizedValues.map((value) => ({
+      [field]: { equals: value, mode: 'insensitive' },
+    })),
+  } as Prisma.LeadWhereInput
+}
+
+function buildAgeFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const ages = [...new Set(
+    values
+      .map((value) => Number.parseInt(value, 10))
+      .filter((value) => Number.isInteger(value) && value >= 0 && value <= 120),
+  )]
+
+  if (ages.length === 0) return undefined
+  return { age: { in: ages } }
+}
+
+function buildSexFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const normalizedValues = [...new Set(values.map((value) => normalizePipelineSexValue(value)))]
+  const or: Prisma.LeadWhereInput[] = []
+
+  for (const value of normalizedValues) {
+    if (value === 'Male') {
+      or.push({ OR: [{ sex: { equals: 'Male', mode: 'insensitive' } }, { sex: { equals: 'M', mode: 'insensitive' } }] })
+      continue
+    }
+
+    if (value === 'Female') {
+      or.push({ OR: [{ sex: { equals: 'Female', mode: 'insensitive' } }, { sex: { equals: 'F', mode: 'insensitive' } }] })
+      continue
+    }
+
+    if (value === 'Not Specified') {
+      or.push({
+        OR: [
+          { sex: { equals: 'Not Specified', mode: 'insensitive' } },
+          { sex: { equals: 'Not_Specified', mode: 'insensitive' } },
+          { sex: { equals: 'Unknown', mode: 'insensitive' } },
+          { sex: { equals: 'Unspecified', mode: 'insensitive' } },
+          { sex: { equals: 'N/A', mode: 'insensitive' } },
+          { sex: { equals: 'NA', mode: 'insensitive' } },
+          { sex: { equals: 'Other', mode: 'insensitive' } },
+          { sex: { equals: 'O', mode: 'insensitive' } },
+          { sex: '' },
+        ],
+      })
+    }
+  }
+
+  if (or.length === 0) return undefined
+  return or.length === 1 ? or[0] : { OR: or }
+}
+
+const PIPELINE_STATUS_FILTER_VARIANTS: Record<string, string[]> = {
+  'New Lead': ['27', 'New Lead'],
+  'Hot Lead': ['28', 'Hot Lead'],
+  Interested: ['39', 'Interested'],
+  'Follow-up 1': ['1', 'Follow-up 1'],
+  'Follow-up 2': ['2', 'Follow-up 2'],
+  'Follow-up 3': ['3', 'Follow-up 3'],
+  'Follow-up 4': ['Follow-up 4'],
+  'Follow-up 5': ['Follow-up 5'],
+  'Follow-up': ['35', 'Follow-up'],
+  'Call Back (SD)': ['19', 'Call Back (SD)'],
+  'Call Back (T)': ['20', 'Call Back (T)'],
+  'Call Back Next Week': ['21', 'Call Back Next Week'],
+  'Call Back Next Month': ['22', 'Call Back Next Month'],
+  'OPD Done': ['11', 'OPD Done', 'opd_done'],
+  'OPD Schedule': ['12', 'OPD Schedule', 'OPD Scheduled', 'opd_scheduled'],
+  'IPD Done': ['13', 'IPD Done'],
+  'IPD Schedule': ['14', 'IPD Schedule'],
+  'IPD Lost': ['15', 'IPD Lost'],
+  'Fund Issues': ['10', 'Fund Issues'],
+  'DNP-1': ['4', 'DNP-1'],
+  'DNP-2': ['5', 'DNP-2'],
+  'DNP-3': ['6', 'DNP-3'],
+  'DNP-4': ['7', 'DNP-4'],
+  'DNP-5': ['8', 'DNP-5'],
+  'DNP Exhausted': ['9', 'DNP Exhausted'],
+  'Call Done': ['30', 'Call Done'],
+  Closed: ['25', 'Closed'],
+  'Out of Station': ['16', 'Out of Station'],
+  'Out of Station follow-up': ['42', 'Out of Station follow-up', 'Out of station follow-up'],
+  'Supply Gap': ['17', 'Supply Gap'],
+  'SX Not Suggested': ['23', 'SX Not Suggested'],
+  'Language Barrier': ['18', 'Language Barrier'],
+  Junk: ['26', 'Junk'],
+  'Duplicate lead': ['34', 'Duplicate lead'],
+  'Not Interested': ['33', 'Not Interested'],
+  Nurture: ['37', 'Nurture'],
+  'Nurture 1': ['Nurture 1', 'Nuture 1'],
+  'Nurture 2': ['Nurture 2', 'Nuture 2'],
+  'Nurture 3': ['Nurture 3', 'Nuture 3'],
+  'Nurture 4': ['Nurture 4', 'Nuture 4'],
+  'Nurture 5': ['Nurture 5', 'Nuture 5'],
+  'Nuture 1': ['Nurture 1', 'Nuture 1'],
+  'Nuture 2': ['Nurture 2', 'Nuture 2'],
+  'Nuture 3': ['Nurture 3', 'Nuture 3'],
+  'Nuture 4': ['Nurture 4', 'Nuture 4'],
+  'Nuture 5': ['Nurture 5', 'Nuture 5'],
+  'Invalid Number': ['36', 'Invalid Number'],
+  'Order Booked': ['24', 'Order Booked'],
+  'Already Insured': ['41', 'Already Insured'],
+  'Policy Booked': ['38', 'Policy Booked'],
+  'Policy Issued': ['40', 'Policy Issued'],
+  Lost: ['Lost', 'Churned'],
+  Churned: ['Lost', 'Churned'],
+  'C/W Done': ['32', 'C/W Done'],
+  'WA Done': ['31', 'WA Done'],
+  'Scan Done': ['29', 'Scan Done'],
+}
+
+function buildStatusFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const or: Prisma.LeadWhereInput[] = []
+
+  for (const rawValue of values) {
+    const normalizedValue = normalizeLeadStatus(rawValue)
+    const variants = PIPELINE_STATUS_FILTER_VARIANTS[normalizedValue] ?? [normalizedValue]
+
+    or.push({
+      OR: variants.map((variant) => {
+        if (/^\d+$/.test(variant)) {
+          return { status: variant }
+        }
+
+        return { status: { equals: variant, mode: 'insensitive' } }
+      }),
+    })
+  }
+
+  if (or.length === 0) return undefined
+  return or.length === 1 ? or[0] : { OR: or }
+}
+
+const PIPELINE_STAGE_FILTER_CASE_STAGES: Record<string, CaseStage[]> = Object.entries(CASE_STAGE_CONFIG).reduce(
+  (acc, [stage, config]) => {
+    const label = config.label.trim()
+    if (!acc[label]) {
+      acc[label] = []
+    }
+    acc[label].push(stage as CaseStage)
+    return acc
+  },
+  {} as Record<string, CaseStage[]>,
+)
+
+PIPELINE_STAGE_FILTER_CASE_STAGES['OPD Schedule'] = [CaseStage.OPD_SCHEDULED]
+PIPELINE_STAGE_FILTER_CASE_STAGES['OPD Done'] = [CaseStage.OPD_DONE]
+
+function buildStageFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const stages = [...new Set(values.flatMap((value) => PIPELINE_STAGE_FILTER_CASE_STAGES[value.trim()] ?? []))]
+  if (stages.length === 0) return undefined
+  return { caseStage: { in: stages } }
+}
+
+const MODE_OF_PAYMENT_FILTER_VARIANTS: Record<string, string[]> = {
+  Cash: ['1', 'Cash'],
+  Cashless: ['2', 'Cashless'],
+  EMI: ['3', 'EMI'],
+  Reimbursement: ['4', 'Reimbursement'],
+}
+
+function buildModeOfPaymentFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const or: Prisma.LeadWhereInput[] = []
+
+  for (const rawValue of values) {
+    const normalizedValue = normalizeModeOfPaymentLabel(rawValue)
+    if (!normalizedValue) {
+      continue
+    }
+
+    const variants = MODE_OF_PAYMENT_FILTER_VARIANTS[normalizedValue] ?? [normalizedValue]
+    or.push({
+      OR: variants.map((variant) => {
+        if (/^\d+$/.test(variant)) {
+          return { modeOfPayment: variant }
+        }
+
+        return { modeOfPayment: { equals: variant, mode: 'insensitive' } }
+      }),
+    })
+  }
+
+  if (or.length === 0) return undefined
+  return or.length === 1 ? or[0] : { OR: or }
+}
+
+function buildPipelineMultiSelectWhere(
+  field: PipelineMultiColumnFilterField,
+  values: string[],
+): Prisma.LeadWhereInput | undefined {
+  switch (field) {
+    case 'month':
+      return buildExactInsensitiveStringWhere('month', values)
+    case 'age':
+      return buildAgeFilterWhere(values)
+    case 'sex':
+      return buildSexFilterWhere(values)
+    case 'circle':
+      return buildExactInsensitiveStringWhere('circle', values)
+    case 'category':
+      return buildExactInsensitiveStringWhere('category', values)
+    case 'treatment':
+      return buildExactInsensitiveStringWhere('treatment', values)
+    case 'status':
+      return buildStatusFilterWhere(values)
+    case 'stage':
+      return buildStageFilterWhere(values)
+    case 'mop':
+      return buildModeOfPaymentFilterWhere(values)
+    default:
+      return undefined
+  }
 }
 
 export function pipelineOrderBy(
@@ -649,6 +858,8 @@ export const pipelineTableSelect = {
   leadRef: true,
   openedInCrmAt: true,
   patientName: true,
+  phoneNumber: true,
+  alternateNumber: true,
   age: true,
   sex: true,
   treatment: true,

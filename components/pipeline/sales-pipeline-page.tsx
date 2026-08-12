@@ -40,6 +40,7 @@ import {
   isActiveBulkLeadReassignStatus,
 } from '@/lib/lead-bulk-reassign/shared'
 import { getStatusColor } from '@/lib/lead-status-colors'
+import { CRM_LEAD_STATUS_OPTIONS, CRM_MODE_OF_PAYMENT_OPTIONS } from '@/lib/lead-status-options'
 import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import {
   getLeadAgeInfo,
@@ -155,24 +156,6 @@ function mergeUniqueSortedLists(...lists: Array<readonly string[] | undefined>) 
   return uniqueSorted(lists.flatMap((list) => list ?? []))
 }
 
-function numericStringSorted(values: readonly string[]) {
-  return [...new Set(values)].sort((left, right) => {
-    const leftNumber = Number.parseInt(left, 10)
-    const rightNumber = Number.parseInt(right, 10)
-    const leftIsNumber = !Number.isNaN(leftNumber)
-    const rightIsNumber = !Number.isNaN(rightNumber)
-
-    if (leftIsNumber && rightIsNumber) {
-      return leftNumber - rightNumber
-    }
-
-    if (leftIsNumber) return -1
-    if (rightIsNumber) return 1
-
-    return left.localeCompare(right, undefined, { sensitivity: 'base' })
-  })
-}
-
 function normalizedText(value: unknown, fallback: string): string {
   if (typeof value !== 'string') return fallback
   const trimmed = value.trim()
@@ -181,7 +164,25 @@ function normalizedText(value: unknown, fallback: string): string {
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500]
 
-const PIPELINE_MOP_FILTER_OPTIONS = ['—', 'Cash', 'Cashless', 'EMI', 'Reimbursement']
+const PIPELINE_AGE_FILTER_OPTIONS = Array.from({ length: 121 }, (_, index) => String(index))
+const PIPELINE_SEX_FILTER_OPTIONS = ['Male', 'Female', 'Not Specified']
+const PIPELINE_STATUS_FILTER_OPTIONS = Array.from(
+  new Set([
+    ...CRM_LEAD_STATUS_OPTIONS,
+    'Follow-up 4',
+    'Follow-up 5',
+    'Call Done',
+    'Already Insured',
+    'Policy Booked',
+    'Policy Issued',
+    'Lost',
+    'Churned',
+    'C/W Done',
+    'WA Done',
+    'Scan Done',
+  ].map((status) => normalizeLeadStatus(status)))
+)
+const PIPELINE_MOP_FILTER_OPTIONS = [...CRM_MODE_OF_PAYMENT_OPTIONS]
 const PIPELINE_RECENCY_FILTER_OPTIONS = ['New', '< 1 month', '1 month', '2 months', '3+ months', 'Unknown']
 const PIPELINE_STAGE_FILTER_OPTIONS = uniqueSorted([
   'OPD Schedule',
@@ -280,39 +281,21 @@ const PIPELINE_DATE_FILTER_COLUMNS = new Set<PipelineColumnId>([
 ])
 
 const PIPELINE_SERVER_FILTER_COLUMNS = new Set<PipelineColumnId>([
-  'leadRef',
   'assignDate',
   'leadDate',
-  'patient',
   'month',
   'age',
   'sex',
   'circle',
-  'city',
   'category',
   'treatment',
-  'planningTreatment',
-  'profession',
-  'tl',
-  'hospital',
-  'doctor',
-  'lastRemarks',
   'status',
   'followUpDate',
   'stage',
   'mop',
-  'subStatus',
   'surgeryDate',
-  'healthInsurance',
-  'preferredLocation',
-  'source',
-  'leadSource',
   'createDate',
-  'modifyBy',
   'modifyDate',
-  'dupCount',
-  'recency',
-  'bd',
 ])
 
 function getPipelineColumnDefinitions(variant: 'bd' | 'team-lead') {
@@ -734,6 +717,12 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     staleTime: 5 * 60_000,
     retry: false,
   })
+  const { data: treatmentCategoryMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
+    queryKey: ['pipeline-master-filter', 'treatment-categories'],
+    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/treatment-categories?includeInactive=true'),
+    staleTime: 5 * 60_000,
+    retry: false,
+  })
 
   const { data: hospitalMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
     queryKey: ['pipeline-master-filter', 'hospitals'],
@@ -796,6 +785,9 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     const treatmentMasterOptions = uniqueSorted(
       (treatmentMasterData?.items ?? []).map((item) => item.name)
     )
+    const categoryMasterOptions = uniqueSorted(
+      (treatmentCategoryMasterData?.items ?? []).map((item) => item.name)
+    )
     const hospitalMasterOptions = uniqueSorted(
       (hospitalMasterData?.items ?? []).map((item) => item.name)
     )
@@ -806,15 +798,15 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       (insuranceMasterData?.items ?? []).map((item) => item.name)
     )
 
-    options.treatment = mergeUniqueSortedLists(treatmentMasterOptions, options.treatment)
+    options.treatment = treatmentMasterOptions
+    options.category = categoryMasterOptions
     options.hospital = mergeUniqueSortedLists(hospitalMasterOptions, options.hospital)
     options.doctor = mergeUniqueSortedLists(doctorMasterOptions, options.doctor)
     options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
-    options.age = numericStringSorted(options.age)
-    options.sex = uniqueSorted(options.sex.map((value) => normalizePipelineSexValue(value)))
+    options.age = PIPELINE_AGE_FILTER_OPTIONS
+    options.sex = PIPELINE_SEX_FILTER_OPTIONS
     options.month = [...PIPELINE_MONTH_FILTER_OPTIONS]
     options.circle = mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
-    options.category = mergeUniqueSortedLists(data?.facets.categories ?? [], options.category)
     options.bd = mergeUniqueSortedLists(
       (data?.facets.bds ?? []).map((item) => item.name),
       options.bd
@@ -822,28 +814,40 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     options.mop = mergeUniqueSortedLists(PIPELINE_MOP_FILTER_OPTIONS, options.mop)
     options.recency = mergeUniqueSortedLists(PIPELINE_RECENCY_FILTER_OPTIONS, options.recency)
     options.stage = mergeUniqueSortedLists(PIPELINE_STAGE_FILTER_OPTIONS, options.stage)
+    options.status = PIPELINE_STATUS_FILTER_OPTIONS
 
     return options
   }, [
     availableColumns,
     data?.facets.bds,
-    data?.facets.categories,
     data?.facets.columnFacets,
     data?.facets.circles,
     rawPageLeads,
     treatmentMasterData,
+    treatmentCategoryMasterData,
     hospitalMasterData,
     doctorMasterData,
     insuranceMasterData,
   ])
 
   const getHeaderFilterProps = useCallback(
-    (columnId: PipelineColumnId) => ({
-      filterValue: columnFilters[columnId] ?? [],
-      filterOptions: isPipelineDateFilterColumn(columnId) ? undefined : (columnFilterOptions[columnId] ?? []),
-      filterType: (isPipelineDateFilterColumn(columnId) ? 'dateRange' : 'multiSelect') as 'dateRange' | 'multiSelect',
-      onFilterChange: (values: string[]) => handleColumnFilterChange(columnId, values),
-    }),
+    (columnId: PipelineColumnId) => {
+      if (!isPipelineServerFilterColumn(columnId)) {
+        return {
+          filterValue: undefined,
+          filterOptions: undefined,
+          filterType: undefined,
+          onFilterChange: undefined,
+        }
+      }
+
+      return {
+        filterValue: columnFilters[columnId] ?? [],
+        filterOptions: isPipelineDateFilterColumn(columnId) ? undefined : (columnFilterOptions[columnId] ?? []),
+        filterType: (isPipelineDateFilterColumn(columnId) ? 'dateRange' : 'multiSelect') as 'dateRange' | 'multiSelect',
+        onFilterChange: (values: string[]) => handleColumnFilterChange(columnId, values),
+      }
+    },
     [columnFilterOptions, columnFilters, handleColumnFilterChange]
   )
 
