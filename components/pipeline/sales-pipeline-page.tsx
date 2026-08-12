@@ -1648,13 +1648,13 @@ function canShowPipelinePreAuthRaised(lead: Lead) {
 function canShowPipelineIpdSchedule(lead: Lead) {
   if (!lead.caseStage) return false
 
-  if (isCashCaseStage(lead.caseStage)) {
+  if (isCashCaseStage(lead.caseStage) || lead.flowType === 'CASH') {
     if (lead.caseStage === CaseStage.CASH_OPD_DONE) {
       return true
     }
 
     if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
-      return hasLeadOpdDone(lead)
+      return true
     }
 
     return ([
@@ -1673,6 +1673,14 @@ function getPipelineIpdScheduleHref(lead: Lead) {
   return isCashCaseStage(lead.caseStage) || lead.flowType === 'CASH'
     ? `/patient/${lead.id}?action=ipd-cash`
     : `/patient/${lead.id}?action=ipd-schedule`
+}
+
+function getPipelineIpdScheduleLabel(lead: Lead) {
+  if (isCashCaseStage(lead.caseStage) || lead.flowType === 'CASH') {
+    return lead.admissionRecord ? 'Edit IPD Cash Form' : 'Fill IPD Cash Form'
+  }
+
+  return 'IPD Schedule'
 }
 
 function appendReturnTo(href: string, returnTo: string) {
@@ -1716,7 +1724,7 @@ function getPipelineCaseActions(lead: Lead, returnTo: string): PipelineCaseActio
   if (canShowPipelineIpdSchedule(lead)) {
     actions.push({
       id: 'ipd-schedule',
-      label: 'IPD Schedule',
+      label: getPipelineIpdScheduleLabel(lead),
       href: appendReturnTo(getPipelineIpdScheduleHref(lead), returnTo),
     })
   }
@@ -1960,7 +1968,15 @@ const PipelineRow = memo(function PipelineRow({
             </button>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="inline-block max-w-[120px] truncate align-bottom font-medium">{patientName}</span>
+                <Link
+                  href={appendReturnTo(`/patient/${lead.id}?action=edit-lead`, returnTo)}
+                  onClick={(e) => e.stopPropagation()}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block max-w-[120px] truncate align-bottom font-medium hover:underline"
+                >
+                  {patientName}
+                </Link>
               </TooltipTrigger>
               <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
                 {latestRemarkPreview}
