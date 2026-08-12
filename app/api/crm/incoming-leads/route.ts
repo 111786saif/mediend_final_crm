@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { extractIncomingLeadSummary } from '@/lib/crm-incoming-leads'
 import { getBusinessMonthRange, getBusinessMonthYear, getCampaignManagementPageData } from '@/lib/crm-campaigns'
-import { mapCircleCode } from '@/lib/mysql-code-mappings'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 import { maskPhoneNumber } from '@/lib/phone-utils'
@@ -13,72 +13,6 @@ const querySchema = z.object({
   month: z.coerce.number().int().min(1).max(12).optional(),
   year: z.coerce.number().int().min(2000).max(2100).optional(),
 })
-
-function toNullableString(value: unknown) {
-  if (value == null) return null
-  const normalized = String(value).trim()
-  return normalized.length > 0 ? normalized : null
-}
-
-function getIncomingLeadPayloadRecord(payload: unknown) {
-  const root =
-    payload && typeof payload === 'object' && !Array.isArray(payload)
-      ? (payload as Record<string, unknown>)
-      : {}
-
-  const nested = root.data
-  if (nested && typeof nested === 'object' && !Array.isArray(nested)) {
-    return nested as Record<string, unknown>
-  }
-
-  return root
-}
-
-function extractIncomingLeadSummary(payload: unknown) {
-  const record = getIncomingLeadPayloadRecord(payload)
-  const mysqlLead =
-    record.mysqlLead && typeof record.mysqlLead === 'object' && !Array.isArray(record.mysqlLead)
-      ? (record.mysqlLead as Record<string, unknown>)
-      : null
-
-  if (mysqlLead) {
-    return {
-      campaignId: toNullableString(
-        mysqlLead.campaign_id ?? mysqlLead.campaignId ?? mysqlLead['campaign id']
-      ),
-      circle: mapCircleCode(
-        (mysqlLead.Circle ?? mysqlLead.circle) as string | number | null | undefined
-      ),
-      city: toNullableString(mysqlLead.city_option ?? mysqlLead.city),
-      patientName: toNullableString(
-        mysqlLead.Patient_Name ?? mysqlLead.patientName ?? mysqlLead.patient_name
-      ),
-      phone: toNullableString(
-        mysqlLead.Patient_Number ??
-          mysqlLead.phone ??
-          mysqlLead.phoneNumber ??
-          mysqlLead.mobile ??
-          mysqlLead.mobileNumber
-      ),
-      email: toNullableString(mysqlLead.PatientEmail ?? mysqlLead.email),
-    }
-  }
-
-  return {
-    campaignId: toNullableString(
-      record.campaignId ?? record['campaign id'] ?? record.campaign_id ?? record.campaign
-    ),
-    circle: mapCircleCode(
-      (record.Circle ?? record.circle) as string | number | null | undefined
-    ),
-    city: toNullableString(record.city_option ?? record.city),
-    patientName: toNullableString(record.name ?? record.patientName ?? record.patient_name),
-    phone: toNullableString(
-      record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber
-    ),
-    email: toNullableString(record.email),
-  }
-}
 
 export async function GET(request: NextRequest) {
   try {

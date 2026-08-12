@@ -5,7 +5,7 @@ import type { ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { format } from 'date-fns'
-import { AlertTriangle, CalendarIcon, Eye, Inbox, RefreshCw, SlidersHorizontal, X } from 'lucide-react'
+import { AlertTriangle, CalendarIcon, Eye, Inbox, Loader2, Pencil, RefreshCw, SlidersHorizontal, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { IncomingLeadsManualAssignDialog } from '@/components/crm/incoming-leads-manual-assign-dialog'
 import { IncomingLeadsManualCreateDialog } from '@/components/crm/incoming-leads-manual-create-dialog'
@@ -33,6 +33,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Table,
   TableBody,
@@ -42,7 +43,19 @@ import {
   TableRow,
 } from '@/components/crm/crm-filter-table'
 import { useAuth } from '@/hooks/use-auth'
-import { apiGet, apiPost } from '@/lib/api-client'
+import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import {
+  extractIncomingLeadEditValues,
+  type IncomingLeadEditValues,
+} from '@/lib/crm-incoming-leads'
+import {
+  CRM_LEAD_STATUS_OPTIONS,
+  CRM_MODE_OF_PAYMENT_OPTIONS,
+} from '@/lib/lead-status-options'
+import {
+  MANUAL_MYSQL_LEAD_FIELDS,
+  MANUAL_MYSQL_LEAD_SECTION_ORDER,
+} from '@/lib/manual-mysql-lead-import'
 
 type SourceMaster = {
   id: string
@@ -106,6 +119,7 @@ type CampaignRecord = {
   externalCampaignId: string
   displayName: string
   category: string | null
+  treatmentMasterId: string | null
   departmentId: string | null
   isActive: boolean
   sourceId: string
@@ -117,6 +131,7 @@ type CampaignRecord = {
   circle: CircleMaster
   city: CityMaster | null
   department: DepartmentOption | null
+  treatmentMaster: TreatmentOption | null
 }
 
 type IncomingLeadRecord = {
@@ -131,6 +146,7 @@ type IncomingLeadRecord = {
   receivedAt: string
   summary: {
     campaignId: string | null
+    leadDate: string | null
     circle: string | null
     city: string | null
     patientName: string | null
@@ -211,6 +227,8 @@ type IncomingLeadRetryResult = {
   }>
 }
 
+type IncomingLeadEditDraft = IncomingLeadEditValues
+
 type IncomingLeadTableRow = {
   id: string
   receivedAt: string
@@ -223,7 +241,7 @@ type IncomingLeadTableRow = {
   campaignSource: string
   leadSource: string
   category: string
-  department: string
+  treatment: string
   circle: string
   city: string
   patientName: string
@@ -266,19 +284,19 @@ const INCOMING_LEAD_VIEW_ROLES = new Set([
 ])
 const ALL_FILTER_VALUE = '__all__'
 const ALL_MONTHS_VALUE = '__all_months__'
-const INCOMING_LEAD_HEADER_FILTERS = [
-  'Received',
-  'Processed',
-  'Status',
-  'Source',
-  'Campaign ID',
-  'Campaign Source',
-  'Lead Source',
-  'Category',
-  'Department',
-  'Circle',
-  'City',
-] as const
+const INCOMING_LEAD_HEADER_FILTER_COLUMN_IDS = [
+  'receivedAt',
+  'processedAt',
+  'status',
+  'source',
+  'campaignName',
+  'campaignSource',
+  'leadSource',
+  'category',
+  'treatment',
+  'circle',
+  'city',
+] as const satisfies ReadonlyArray<IncomingLeadColumn['id']>
 
 const MONTH_OPTIONS = [
   { value: 1, label: 'January' },
@@ -295,16 +313,77 @@ const MONTH_OPTIONS = [
   { value: 12, label: 'December' },
 ] as const
 
+const HIDDEN_INCOMING_LEAD_EDIT_FIELD_KEYS = new Set([
+  'id',
+  'month',
+  'LeadEntryDate',
+  'create_date',
+  'BDM',
+  'TL',
+  'ad_id',
+  'form_id',
+  'create_by',
+  'update_by',
+  'update_date',
+  'Follow_up_Date',
+  'Surgery_Date',
+  'PaymentDetails',
+  'aes',
+  'OPD_Hospital',
+  'OPD_DrName',
+  'OPD_ContactNo',
+  'OPD_Charges',
+  'OPD_ScheduleDate',
+  'OPD_Meeting',
+  'IPD_AdmisisonDate',
+  'IPD_Hospital',
+  'IPD_DrName',
+  'IPD_ContactNo',
+  'IPD_TotalPayment',
+  'IPD_Details',
+  'Attendant',
+  'AttendantName',
+  'AttendantContactNo',
+])
+
+const HIDDEN_INCOMING_LEAD_EDIT_SECTIONS = new Set(['Communication', 'Tracking'])
+
+const EMPTY_INCOMING_LEAD_EDIT_DRAFT: IncomingLeadEditDraft = {
+  Lead_Date: '',
+  Patient_Number: '',
+  AlternativePhone: '',
+  Whatsapp: '',
+  Patient_Name: '',
+  PatientEmail: '',
+  Age: '',
+  Sex: '',
+  Profession: '',
+  Circle: '',
+  city_option: '',
+  address: '',
+  website: '',
+  ip: '',
+  Category: '',
+  Treatment: '',
+  DiseaseDetails: '',
+  Status: '',
+  SubStatus: '',
+  MOP: '',
+  Source: '',
+  Lead_Source: '',
+  campaign_id: '',
+}
+
 const INCOMING_LEAD_COLUMNS: IncomingLeadColumn[] = [
   { id: 'receivedAt', label: 'Received', type: 'date', cell: (row) => formatDateOnly(row.receivedAt) },
   { id: 'processedAt', label: 'Processed', type: 'date', cell: (row) => formatDateOnly(row.processedAt) },
   { id: 'status', label: 'Status', type: 'string', cell: (row) => webhookStatusBadge(row.status) },
   { id: 'source', label: 'Source', type: 'string' },
-  { id: 'externalCampaignId', label: 'Campaign ID', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.externalCampaignId}</span> },
+  { id: 'campaignName', label: 'Campaign Name', type: 'string' },
   { id: 'campaignSource', label: 'Campaign Source', type: 'string', masterKey: 'sources' },
   { id: 'leadSource', label: 'Lead Source', type: 'string', masterKey: 'leadSources' },
   { id: 'category', label: 'Category', type: 'string' },
-  { id: 'department', label: 'Department', type: 'string', masterKey: 'departments' },
+  { id: 'treatment', label: 'Treatment', type: 'string', masterKey: 'treatments' },
   { id: 'circle', label: 'Circle', type: 'string', masterKey: 'circles' },
   { id: 'city', label: 'City', type: 'string', masterKey: 'cities' },
   { id: 'patientName', label: 'Patient', type: 'string' },
@@ -315,12 +394,8 @@ const INCOMING_LEAD_COLUMNS: IncomingLeadColumn[] = [
   { id: 'followUpDate', label: 'Follow up Date', type: 'date', cell: (row) => formatDateOnly(row.followUpDate) },
   { id: 'surgeryDate', label: 'Surgery Date', type: 'date', cell: (row) => formatDateOnly(row.surgeryDate) },
   { id: 'processedLeadRef', label: 'Lead Ref', type: 'string' },
-  { id: 'processedLeadPatientName', label: 'Lead Patient', type: 'string' },
-  { id: 'processedLeadPhoneNumber', label: 'Lead Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.processedLeadPhoneNumber}</span> },
   { id: 'teamLeadName', label: 'Team Lead', type: 'string' },
-  { id: 'teamLeadEmail', label: 'Team Lead Email', type: 'string' },
   { id: 'bdName', label: 'BD', type: 'string' },
-  { id: 'bdEmail', label: 'BD Email', type: 'string' },
 ]
 
 function getInitialMonthYear() {
@@ -363,6 +438,36 @@ function formatDateOnly(value: string | null) {
   }).format(date)
 }
 
+function toDateTimeLocalValue(value: string) {
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+
+  const normalized = trimmed.includes('T') ? trimmed : trimmed.replace(' ', 'T')
+  const parsed = new Date(normalized)
+  if (!Number.isNaN(parsed.getTime())) {
+    const year = parsed.getFullYear()
+    const month = String(parsed.getMonth() + 1).padStart(2, '0')
+    const day = String(parsed.getDate()).padStart(2, '0')
+    const hours = String(parsed.getHours()).padStart(2, '0')
+    const minutes = String(parsed.getMinutes()).padStart(2, '0')
+    return `${year}-${month}-${day}T${hours}:${minutes}`
+  }
+
+  const compactMatch = normalized.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::\d{2})?$/)
+  if (compactMatch) {
+    return `${compactMatch[1]}T${compactMatch[2]}`
+  }
+
+  return ''
+}
+
+function convertDateTimeLocalToMysql(value: string) {
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+  const normalized = trimmed.replace('T', ' ')
+  return normalized.length === 16 ? `${normalized}:00` : normalized
+}
+
 function getDateOnlyValue(value: string | null) {
   if (!value) return ''
   const date = new Date(value)
@@ -399,6 +504,19 @@ function webhookStatusBadge(status: string) {
       return <Badge variant="destructive">Failed</Badge>
     default:
       return <Badge variant="secondary">{status}</Badge>
+  }
+}
+
+function createIncomingLeadEditDraft(record: IncomingLeadRecord, canViewPhone: boolean): IncomingLeadEditDraft {
+  const values = extractIncomingLeadEditValues(record.payload, {
+    externalCampaignId: record.externalCampaignId,
+    source: record.source,
+  })
+
+  return {
+    ...values,
+    Lead_Date: toDateTimeLocalValue(values.Lead_Date),
+    Patient_Number: canViewPhone ? values.Patient_Number : '',
   }
 }
 
@@ -496,19 +614,20 @@ export function CrmIncomingLeadsPage() {
   const queryClient = useQueryClient()
   const searchParams = useSearchParams()
   const initialMonthYear = getInitialMonthYear()
-  const initialCampaignFilter = searchParams.get('campaignId')?.trim() ?? ''
   const initialStatusFilter = searchParams.get('status')?.trim() ?? ''
   const [month, setMonth] = useState(ALL_MONTHS_VALUE)
   const [year, setYear] = useState(String(initialMonthYear.year))
-  const [searchColumn, setSearchColumn] = useState<IncomingLeadColumn['id']>(
-    initialCampaignFilter ? 'externalCampaignId' : 'patientName'
-  )
-  const [searchValue, setSearchValue] = useState(initialCampaignFilter)
+  const [searchColumn, setSearchColumn] = useState<IncomingLeadColumn['id']>('patientName')
+  const [searchValue, setSearchValue] = useState('')
   const [sortColumn, setSortColumn] = useState<IncomingLeadColumn['id']>('receivedAt')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [visibleColumns, setVisibleColumns] = useState(createInitialVisibleColumns)
   const [tableFilterVersion, setTableFilterVersion] = useState(0)
   const [selectedIncomingLead, setSelectedIncomingLead] = useState<IncomingLeadRecord | null>(null)
+  const [incomingLeadEditMode, setIncomingLeadEditMode] = useState(false)
+  const [incomingLeadEditDraft, setIncomingLeadEditDraft] = useState<IncomingLeadEditDraft>(
+    EMPTY_INCOMING_LEAD_EDIT_DRAFT
+  )
   const [selectedManualAssignLeadIds, setSelectedManualAssignLeadIds] = useState<string[]>([])
   const [visibleTableLeadIds, setVisibleTableLeadIds] = useState<string[]>([])
   const [manualAssignDialogOpen, setManualAssignDialogOpen] = useState(false)
@@ -530,7 +649,7 @@ export function CrmIncomingLeadsPage() {
   const [campaignSourceFilter, setCampaignSourceFilter] = useState(ALL_FILTER_VALUE)
   const [leadSourceFilter, setLeadSourceFilter] = useState(ALL_FILTER_VALUE)
   const [categoryFilter, setCategoryFilter] = useState(ALL_FILTER_VALUE)
-  const [departmentFilter, setDepartmentFilter] = useState(ALL_FILTER_VALUE)
+  const [treatmentFilter, setTreatmentFilter] = useState(ALL_FILTER_VALUE)
   const [circleFilter, setCircleFilter] = useState(ALL_FILTER_VALUE)
   const [cityFilter, setCityFilter] = useState(ALL_FILTER_VALUE)
   const [teamLeadFilter, setTeamLeadFilter] = useState(ALL_FILTER_VALUE)
@@ -540,6 +659,8 @@ export function CrmIncomingLeadsPage() {
   const hasAccess = Boolean(user?.role && INCOMING_LEAD_VIEW_ROLES.has(user.role))
   const canManuallyAssignFailedLeads = user?.role === 'SUPER_ADMIN'
   const canCreateManualLeads = user?.role === 'SUPER_ADMIN'
+  const canEditIncomingLeads = user?.role === 'SUPER_ADMIN' || user?.role === 'CRM_ADMIN'
+  const canViewIncomingLeadPhone = user?.role === 'ADMIN'
   const selectedMonth = month === ALL_MONTHS_VALUE ? null : Number.parseInt(month, 10) || initialMonthYear.month
   const selectedYear = Number.parseInt(year, 10) || initialMonthYear.year
 
@@ -561,6 +682,73 @@ export function CrmIncomingLeadsPage() {
     retry: false,
     enabled: hasAccess && canManuallyAssignFailedLeads,
   })
+
+  const incomingLeadEditGroups = useMemo(
+    () =>
+      MANUAL_MYSQL_LEAD_SECTION_ORDER.map((section) => ({
+        section,
+        fields: MANUAL_MYSQL_LEAD_FIELDS.filter(
+          (field) =>
+            field.section === section &&
+            !HIDDEN_INCOMING_LEAD_EDIT_FIELD_KEYS.has(field.key)
+        ),
+      })).filter(
+        (group) =>
+          group.fields.length > 0 && !HIDDEN_INCOMING_LEAD_EDIT_SECTIONS.has(group.section)
+      ),
+    []
+  )
+
+  const availableIncomingLeadColumns = useMemo(() => INCOMING_LEAD_COLUMNS, [])
+
+  const availableIncomingLeadHeaderFilters = useMemo(
+    () =>
+      INCOMING_LEAD_HEADER_FILTER_COLUMN_IDS.flatMap((columnId) => {
+        const column = availableIncomingLeadColumns.find((entry) => entry.id === columnId)
+        return column ? [column.label] : []
+      }),
+    [availableIncomingLeadColumns]
+  )
+
+  const effectiveSearchColumn = useMemo<IncomingLeadColumn['id']>(
+    () =>
+      availableIncomingLeadColumns.some((column) => column.id === searchColumn)
+        ? searchColumn
+        : (availableIncomingLeadColumns[0]?.id ?? searchColumn),
+    [availableIncomingLeadColumns, searchColumn]
+  )
+
+  const effectiveSortColumn = useMemo<IncomingLeadColumn['id']>(
+    () =>
+      availableIncomingLeadColumns.some((column) => column.id === sortColumn)
+        ? sortColumn
+        : (availableIncomingLeadColumns[0]?.id ?? sortColumn),
+    [availableIncomingLeadColumns, sortColumn]
+  )
+
+  const incomingLeadCategoryOptions = useMemo(
+    () => (data?.masters.treatmentCategories ?? []).filter((item) => item.isActive !== false),
+    [data?.masters.treatmentCategories]
+  )
+
+  const incomingLeadTreatmentOptions = useMemo(() => {
+    const selectedCategory = incomingLeadEditDraft.Category.trim()
+    const base = (data?.masters.treatments ?? []).filter((item) => item.isActive !== false)
+    if (!selectedCategory) return base
+    return base.filter((item) => item.category === selectedCategory)
+  }, [data?.masters.treatments, incomingLeadEditDraft.Category])
+
+  const incomingLeadSourceOptions = useMemo(
+    () => (data?.masters.sources ?? []).filter((item) => item.isActive !== false),
+    [data?.masters.sources]
+  )
+
+  const incomingLeadLeadSourceOptions = useMemo(() => {
+    const selectedSource = incomingLeadEditDraft.Source.trim()
+    const base = (data?.masters.leadSources ?? []).filter((item) => item.isActive !== false)
+    if (!selectedSource) return base
+    return base.filter((item) => item.source.name === selectedSource)
+  }, [data?.masters.leadSources, incomingLeadEditDraft.Source])
 
   const rows = useMemo<IncomingLeadTableRow[]>(() => {
     const campaignByExternalId = new Map(
@@ -584,14 +772,14 @@ export function CrmIncomingLeadsPage() {
         campaignSource: mappedCampaign?.source.name ?? '—',
         leadSource: mappedCampaign?.leadSource.name ?? '—',
         category: mappedCampaign?.category ?? '—',
-        department: mappedCampaign?.department?.name ?? '—',
+        treatment: mappedCampaign?.treatmentMaster?.name ?? '—',
         circle: incomingLead.summary.circle ?? mappedCampaign?.circle.name ?? '—',
         city: incomingLead.summary.city ?? '—',
         patientName: incomingLead.summary.patientName ?? '—',
         email: incomingLead.summary.email ?? '—',
         normalizedPhone: incomingLead.normalizedPhone ?? '—',
         assignedDate: incomingLead.processedLead?.assignedDate ?? '',
-        leadDate: incomingLead.processedLead?.leadEntryDate ?? '',
+        leadDate: incomingLead.processedLead?.leadEntryDate ?? incomingLead.summary.leadDate ?? '',
         followUpDate: incomingLead.processedLead?.followUpDate ?? '',
         surgeryDate: incomingLead.processedLead?.surgeryDate ?? '',
         processedLeadRef: incomingLead.processedLead?.leadRef ?? '—',
@@ -608,8 +796,8 @@ export function CrmIncomingLeadsPage() {
   }, [data?.campaigns, data?.incomingLeads])
 
   const visibleColumnDefinitions = useMemo(
-    () => INCOMING_LEAD_COLUMNS.filter((column) => visibleColumns[column.id]),
-    [visibleColumns]
+    () => availableIncomingLeadColumns.filter((column) => visibleColumns[column.id]),
+    [availableIncomingLeadColumns, visibleColumns]
   )
 
   const allColumnOptions = useMemo(() => {
@@ -623,7 +811,7 @@ export function CrmIncomingLeadsPage() {
 
   const filteredRows = useMemo(() => {
     const normalizedSearch = searchValue.trim().toLowerCase()
-    const selectedSearchColumn = INCOMING_LEAD_COLUMNS.find((column) => column.id === searchColumn)
+    const selectedSearchColumn = availableIncomingLeadColumns.find((column) => column.id === effectiveSearchColumn)
 
     return rows.filter((row) => {
       for (const [colIndexStr, filterValues] of Object.entries(headerColumnFilters)) {
@@ -665,7 +853,7 @@ export function CrmIncomingLeadsPage() {
       if (campaignSourceFilter !== ALL_FILTER_VALUE && row.campaignSource !== campaignSourceFilter) return false
       if (leadSourceFilter !== ALL_FILTER_VALUE && row.leadSource !== leadSourceFilter) return false
       if (categoryFilter !== ALL_FILTER_VALUE && row.category !== categoryFilter) return false
-      if (departmentFilter !== ALL_FILTER_VALUE && row.department !== departmentFilter) return false
+      if (treatmentFilter !== ALL_FILTER_VALUE && row.treatment !== treatmentFilter) return false
       if (circleFilter !== ALL_FILTER_VALUE && row.circle !== circleFilter) return false
       if (cityFilter !== ALL_FILTER_VALUE && row.city !== cityFilter) return false
       if (teamLeadFilter !== ALL_FILTER_VALUE && row.teamLeadName !== teamLeadFilter) return false
@@ -673,7 +861,7 @@ export function CrmIncomingLeadsPage() {
 
       if (!normalizedSearch) return true
 
-      const rawValue = String(row[searchColumn] ?? '')
+      const rawValue = String(row[effectiveSearchColumn] ?? '')
       if (selectedSearchColumn?.type === 'date') {
         const dateOnlyValue = getDateOnlyValue(rawValue)
         const displayValue = formatDateOnly(rawValue).toLowerCase()
@@ -686,14 +874,14 @@ export function CrmIncomingLeadsPage() {
     })
   }, [
     rows,
-    searchColumn,
+    effectiveSearchColumn,
     searchValue,
     statusFilter,
     sourceFilter,
     campaignSourceFilter,
     leadSourceFilter,
     categoryFilter,
-    departmentFilter,
+    treatmentFilter,
     circleFilter,
     cityFilter,
     teamLeadFilter,
@@ -709,20 +897,21 @@ export function CrmIncomingLeadsPage() {
     headerColumnFilters,
     visibleColumnDefinitions,
     canManuallyAssignFailedLeads,
+    availableIncomingLeadColumns,
   ])
 
   const sortedRows = useMemo(() => {
-    const selectedSortColumn = INCOMING_LEAD_COLUMNS.find((column) => column.id === sortColumn)
+    const selectedSortColumn = availableIncomingLeadColumns.find((column) => column.id === effectiveSortColumn)
     if (!selectedSortColumn) return filteredRows
 
     const nextRows = [...filteredRows].sort((left, right) =>
       compareValues(
         selectedSortColumn.type === 'date'
-          ? getDateOnlyValue(String(left[sortColumn] ?? ''))
-          : String(left[sortColumn] ?? ''),
+          ? getDateOnlyValue(String(left[effectiveSortColumn] ?? ''))
+          : String(left[effectiveSortColumn] ?? ''),
         selectedSortColumn.type === 'date'
-          ? getDateOnlyValue(String(right[sortColumn] ?? ''))
-          : String(right[sortColumn] ?? ''),
+          ? getDateOnlyValue(String(right[effectiveSortColumn] ?? ''))
+          : String(right[effectiveSortColumn] ?? ''),
         selectedSortColumn.type
       )
     )
@@ -732,7 +921,7 @@ export function CrmIncomingLeadsPage() {
     }
 
     return nextRows
-  }, [filteredRows, sortColumn, sortDirection])
+  }, [availableIncomingLeadColumns, effectiveSortColumn, filteredRows, sortDirection])
 
   const pageSizeNumber = Number.parseInt(pageSize, 10) || 50
   const totalRows = sortedRows.length
@@ -796,6 +985,7 @@ export function CrmIncomingLeadsPage() {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1)
   }, [
     month,
@@ -817,7 +1007,7 @@ export function CrmIncomingLeadsPage() {
     campaignSourceFilter,
     leadSourceFilter,
     categoryFilter,
-    departmentFilter,
+    treatmentFilter,
     circleFilter,
     cityFilter,
     teamLeadFilter,
@@ -832,6 +1022,7 @@ export function CrmIncomingLeadsPage() {
         .map((row) => row.id)
     )
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedManualAssignLeadIds((current) =>
       current.filter((leadId) => eligibleLeadIds.has(leadId))
     )
@@ -839,6 +1030,7 @@ export function CrmIncomingLeadsPage() {
 
   useEffect(() => {
     const paginatedLeadIdSet = new Set(paginatedRows.map((row) => row.id))
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisibleTableLeadIds((current) => {
       const next = current.filter((leadId) => paginatedLeadIdSet.has(leadId))
       return current.length === next.length &&
@@ -848,11 +1040,9 @@ export function CrmIncomingLeadsPage() {
     })
   }, [paginatedRows])
 
-
-
   const selectedSearchColumnDefinition = useMemo(
-    () => INCOMING_LEAD_COLUMNS.find((column) => column.id === searchColumn) ?? null,
-    [searchColumn]
+    () => availableIncomingLeadColumns.find((column) => column.id === effectiveSearchColumn) ?? null,
+    [availableIncomingLeadColumns, effectiveSearchColumn]
   )
 
   const masterFilterOptions = useMemo(() => {
@@ -875,7 +1065,7 @@ export function CrmIncomingLeadsPage() {
       campaignSources: getUniqueRowValues(rows, 'campaignSource'),
       leadSources: getUniqueRowValues(rows, 'leadSource'),
       categories: getUniqueRowValues(rows, 'category'),
-      departments: getUniqueRowValues(rows, 'department'),
+      treatments: getUniqueRowValues(rows, 'treatment'),
       circles: getUniqueRowValues(rows, 'circle'),
       cities: getUniqueRowValues(circleScopedRows, 'city'),
       teamLeads: getUniqueRowValues(rows, 'teamLeadName'),
@@ -900,7 +1090,7 @@ export function CrmIncomingLeadsPage() {
         campaignSourceFilter !== ALL_FILTER_VALUE,
         leadSourceFilter !== ALL_FILTER_VALUE,
         categoryFilter !== ALL_FILTER_VALUE,
-        departmentFilter !== ALL_FILTER_VALUE,
+        treatmentFilter !== ALL_FILTER_VALUE,
         circleFilter !== ALL_FILTER_VALUE,
         cityFilter !== ALL_FILTER_VALUE,
         teamLeadFilter !== ALL_FILTER_VALUE,
@@ -915,7 +1105,7 @@ export function CrmIncomingLeadsPage() {
       categoryFilter,
       circleFilter,
       cityFilter,
-      departmentFilter,
+      treatmentFilter,
       followUpDateFrom,
       followUpDateTo,
       headerColumnFilters,
@@ -947,7 +1137,7 @@ export function CrmIncomingLeadsPage() {
     setCampaignSourceFilter(ALL_FILTER_VALUE)
     setLeadSourceFilter(ALL_FILTER_VALUE)
     setCategoryFilter(ALL_FILTER_VALUE)
-    setDepartmentFilter(ALL_FILTER_VALUE)
+    setTreatmentFilter(ALL_FILTER_VALUE)
     setCircleFilter(ALL_FILTER_VALUE)
     setCityFilter(ALL_FILTER_VALUE)
     setTeamLeadFilter(ALL_FILTER_VALUE)
@@ -1042,6 +1232,26 @@ export function CrmIncomingLeadsPage() {
     },
   })
 
+  const editIncomingLeadMutation = useMutation({
+    mutationFn: (payload: { incomingLeadId: string; data: Record<string, string | null> }) =>
+      apiPatch<IncomingLeadRecord>(
+        `/api/crm/incoming-leads/${payload.incomingLeadId}`,
+        payload.data,
+      ),
+    onSuccess: async (updatedIncomingLead) => {
+      toast.success('Incoming lead updated')
+      setSelectedIncomingLead(updatedIncomingLead)
+      setIncomingLeadEditDraft(
+        createIncomingLeadEditDraft(updatedIncomingLead, canViewIncomingLeadPhone),
+      )
+      setIncomingLeadEditMode(false)
+      await refetch()
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update incoming lead')
+    },
+  })
+
   const summary = useMemo(() => {
     const total = rows.length
     const processed = rows.filter((row) => row.status === 'PROCESSED').length
@@ -1052,6 +1262,99 @@ export function CrmIncomingLeadsPage() {
 
   const errorMessage =
     error instanceof Error ? error.message : 'We could not load the incoming lead audit right now.'
+
+  const handleIncomingLeadEditSave = useCallback(async () => {
+    if (!selectedIncomingLead) return
+
+    const trimmedPatientName = incomingLeadEditDraft.Patient_Name.trim()
+    const trimmedPhone = incomingLeadEditDraft.Patient_Number.trim()
+
+    if (trimmedPatientName.length === 0) {
+      toast.error('Patient name is required')
+      return
+    }
+
+    if (canViewIncomingLeadPhone && trimmedPhone.length === 0) {
+      toast.error('Phone number is required')
+      return
+    }
+
+    const currentDraft = createIncomingLeadEditDraft(
+      selectedIncomingLead,
+      canViewIncomingLeadPhone
+    )
+    const payload: Record<string, string | null> = {}
+    const draftKeys = Object.keys(EMPTY_INCOMING_LEAD_EDIT_DRAFT) as Array<
+      keyof IncomingLeadEditDraft
+    >
+
+    for (const key of draftKeys) {
+      const nextValue =
+        key === 'Lead_Date'
+          ? convertDateTimeLocalToMysql(incomingLeadEditDraft[key])
+          : incomingLeadEditDraft[key].trim()
+      const currentValue =
+        key === 'Lead_Date'
+          ? convertDateTimeLocalToMysql(currentDraft[key])
+          : currentDraft[key].trim()
+
+      if (key === 'Patient_Number' && !canViewIncomingLeadPhone && nextValue.length === 0) {
+        continue
+      }
+
+      if (nextValue !== currentValue) {
+        payload[key] = nextValue || null
+      }
+    }
+
+    if (Object.keys(payload).length === 0) {
+      setIncomingLeadEditMode(false)
+      return
+    }
+
+    await editIncomingLeadMutation.mutateAsync({
+      incomingLeadId: selectedIncomingLead.id,
+      data: payload,
+    })
+  }, [
+    canViewIncomingLeadPhone,
+    editIncomingLeadMutation,
+    incomingLeadEditDraft,
+    selectedIncomingLead,
+  ])
+
+  const handleIncomingLeadEditFieldChange = useCallback(
+    (key: keyof IncomingLeadEditDraft, value: string) => {
+      setIncomingLeadEditDraft((current) => {
+        const next = {
+          ...current,
+          [key]: value,
+        }
+
+        if (key === 'Category' && current.Category !== value) {
+          next.Treatment = ''
+        }
+
+        if (key === 'Source' && current.Source !== value) {
+          next.Lead_Source = ''
+        }
+
+        return next
+      })
+    },
+    []
+  )
+
+  const openIncomingLeadSheet = useCallback(
+    (incomingLead: IncomingLeadRecord, mode: 'view' | 'edit') => {
+      setSelectedIncomingLead(incomingLead)
+      setIncomingLeadEditDraft(
+        createIncomingLeadEditDraft(incomingLead, canViewIncomingLeadPhone),
+      )
+      setIncomingLeadEditMode(mode === 'edit')
+    },
+    [canViewIncomingLeadPhone],
+  )
 
   return (
     <ProtectedRoute>
@@ -1150,7 +1453,7 @@ export function CrmIncomingLeadsPage() {
                   <div className="min-w-0 space-y-2">
                     <Label>Search column</Label>
                     <Select
-                      value={searchColumn}
+                      value={effectiveSearchColumn}
                       onValueChange={(value) => {
                         setSearchColumn(value as IncomingLeadColumn['id'])
                         setSearchValue('')
@@ -1160,7 +1463,7 @@ export function CrmIncomingLeadsPage() {
                         <SelectValue placeholder="Choose column" />
                       </SelectTrigger>
                       <SelectContent>
-                        {INCOMING_LEAD_COLUMNS.map((column) => (
+                        {availableIncomingLeadColumns.map((column) => (
                           <SelectItem key={column.id} value={column.id}>
                             {column.label}
                           </SelectItem>
@@ -1240,12 +1543,15 @@ export function CrmIncomingLeadsPage() {
                   </div>
                   <div className="min-w-0 space-y-2">
                     <Label>Sort by</Label>
-                    <Select value={sortColumn} onValueChange={(value) => setSortColumn(value as IncomingLeadColumn['id'])}>
+                    <Select
+                      value={effectiveSortColumn}
+                      onValueChange={(value) => setSortColumn(value as IncomingLeadColumn['id'])}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Choose column" />
                       </SelectTrigger>
                       <SelectContent>
-                        {INCOMING_LEAD_COLUMNS.map((column) => (
+                        {availableIncomingLeadColumns.map((column) => (
                           <SelectItem key={column.id} value={column.id}>
                             {column.label}
                           </SelectItem>
@@ -1362,14 +1668,14 @@ export function CrmIncomingLeadsPage() {
                     </Select>
                   </div>
                   <div className="min-w-0 space-y-2">
-                    <Label>Department</Label>
-                    <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+                    <Label>Treatment</Label>
+                    <Select value={treatmentFilter} onValueChange={setTreatmentFilter}>
                       <SelectTrigger>
-                        <SelectValue placeholder="All departments" />
+                        <SelectValue placeholder="All treatments" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={ALL_FILTER_VALUE}>All departments</SelectItem>
-                        {filterOptions.departments.map((option) => (
+                        <SelectItem value={ALL_FILTER_VALUE}>All treatments</SelectItem>
+                        {filterOptions.treatments.map((option) => (
                           <SelectItem key={option} value={option}>
                             {option}
                           </SelectItem>
@@ -1580,7 +1886,7 @@ export function CrmIncomingLeadsPage() {
                       <DropdownMenuContent align="end" className="max-h-[360px] w-64 overflow-y-auto">
                         <DropdownMenuLabel>Visible columns</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {INCOMING_LEAD_COLUMNS.map((column) => (
+                        {availableIncomingLeadColumns.map((column) => (
                           <DropdownMenuCheckboxItem
                             key={column.id}
                             checked={visibleColumns[column.id]}
@@ -1601,18 +1907,19 @@ export function CrmIncomingLeadsPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="w-full min-w-0 rounded-xl border">
-                    <div className="overflow-x-auto">
+                    <div className="max-h-[min(70vh,900px)] overflow-auto">
                       <Table
                         key={tableFilterVersion}
-                        filterableHeaders={[...INCOMING_LEAD_HEADER_FILTERS]}
+                        containerClassName="overflow-visible"
+                        filterableHeaders={availableIncomingLeadHeaderFilters}
                         rowIds={paginatedRows.map((row) => row.id)}
                         onVisibleRowIdsChange={handleVisibleRowIdsChange}
                         externalColumnOptions={allColumnOptions}
                         externalActiveFilters={headerColumnFilters}
                         onFilterChange={handleColumnFilterChange}
                       >
-                        <TableHeader>
-                          <TableRow>
+                        <TableHeader className="sticky top-0 z-10 bg-background [&_tr]:border-b">
+                          <TableRow className="bg-background hover:bg-background">
                             {canManuallyAssignFailedLeads ? (
                               <TableHead className="w-[52px] text-center">
                                 <Checkbox
@@ -1695,15 +2002,28 @@ export function CrmIncomingLeadsPage() {
                                   </TableCell>
                                 ))}
                                 <TableCell className="text-right">
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setSelectedIncomingLead(row.raw)}
-                                  >
-                                    <Eye className="mr-2 h-4 w-4" />
-                                    View
-                                  </Button>
+                                  <div className="flex justify-end gap-2">
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => openIncomingLeadSheet(row.raw, 'view')}
+                                    >
+                                      <Eye className="mr-2 h-4 w-4" />
+                                      View
+                                    </Button>
+                                    {canEditIncomingLeads ? (
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => openIncomingLeadSheet(row.raw, 'edit')}
+                                      >
+                                        <Pencil className="mr-2 h-4 w-4" />
+                                        Edit
+                                      </Button>
+                                    ) : null}
+                                  </div>
                                 </TableCell>
                               </TableRow>
                             ))
@@ -1807,10 +2127,23 @@ export function CrmIncomingLeadsPage() {
         }}
       />
 
-      <Sheet open={Boolean(selectedIncomingLead)} onOpenChange={(open) => !open && setSelectedIncomingLead(null)}>
+      <Sheet
+        open={Boolean(selectedIncomingLead)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedIncomingLead(null)
+            setIncomingLeadEditMode(false)
+            setIncomingLeadEditDraft(EMPTY_INCOMING_LEAD_EDIT_DRAFT)
+          }
+        }}
+      >
         <SheetContent
           side="right"
-          className="flex h-full w-full max-w-2xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-2xl"
+          className={
+            incomingLeadEditMode
+              ? 'flex h-full w-full max-w-5xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-5xl'
+              : 'flex h-full w-full max-w-2xl flex-col gap-0 overflow-hidden rounded-none border-l p-0 sm:max-w-2xl'
+          }
         >
           <SheetHeader className="shrink-0 border-b p-4 text-left">
             <SheetTitle>Incoming lead {selectedIncomingLead?.id ?? ''}</SheetTitle>
@@ -1829,9 +2162,9 @@ export function CrmIncomingLeadsPage() {
                     <p className="font-medium">{formatDateOnly(selectedIncomingLead.receivedAt)}</p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Campaign ID</p>
-                    <p className="font-mono text-sm">
-                      {selectedIncomingLead.externalCampaignId ?? selectedIncomingLead.summary.campaignId ?? '—'}
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Campaign Name</p>
+                    <p className="font-medium">
+                      {selectedIncomingLead.campaign?.displayName ?? 'Unmapped campaign'}
                     </p>
                   </div>
                   <div>
@@ -1840,40 +2173,294 @@ export function CrmIncomingLeadsPage() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 rounded-xl border p-4 sm:grid-cols-2">
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Patient</p>
-                    <p className="font-medium">{selectedIncomingLead.summary.patientName ?? '—'}</p>
-                    <p className="text-sm text-muted-foreground">{selectedIncomingLead.summary.email ?? 'No email'}</p>
+                {incomingLeadEditMode ? (
+                  <div className="space-y-6">
+                    <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                      Editing keeps the current assignee unless <code>campaign_id</code> or{' '}
+                      <code>Circle</code> changes. If either routing field changes, the linked lead
+                      will be routed again using the current campaign rules.
+                    </div>
+
+                    {incomingLeadEditGroups.map((group) => (
+                      <div key={group.section} className="rounded-xl border p-4">
+                        <h3 className="text-sm font-semibold">{group.section}</h3>
+                        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                          {group.fields.map((field) => {
+                            const draftKey = field.key as keyof IncomingLeadEditDraft
+                            const fieldValue = incomingLeadEditDraft[draftKey] ?? ''
+
+                            return (
+                              <div
+                                key={field.key}
+                                className={field.multiline ? 'md:col-span-2 xl:col-span-3' : ''}
+                              >
+                                <Label className="mb-2 block">
+                                  {field.label}
+                                  {field.required ? ' *' : ''}
+                                </Label>
+                                {field.key === 'Category' ? (
+                                  <Select
+                                    value={fieldValue || '__empty__'}
+                                    onValueChange={(value) =>
+                                      handleIncomingLeadEditFieldChange(
+                                        draftKey,
+                                        value === '__empty__' ? '' : value
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="__empty__">Blank</SelectItem>
+                                      {incomingLeadCategoryOptions.map((option) => (
+                                        <SelectItem key={option.id} value={option.name}>
+                                          {option.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                ) : field.key === 'Treatment' ? (
+                                  <Select
+                                    value={fieldValue || '__empty__'}
+                                    onValueChange={(value) =>
+                                      handleIncomingLeadEditFieldChange(
+                                        draftKey,
+                                        value === '__empty__' ? '' : value
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select treatment" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="__empty__">Blank</SelectItem>
+                                      {incomingLeadTreatmentOptions.map((option) => (
+                                        <SelectItem key={option.id} value={option.name}>
+                                          {option.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                ) : field.key === 'Status' ? (
+                                  <Select
+                                    value={fieldValue || '__empty__'}
+                                    onValueChange={(value) =>
+                                      handleIncomingLeadEditFieldChange(
+                                        draftKey,
+                                        value === '__empty__' ? '' : value
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="__empty__">Blank</SelectItem>
+                                      {CRM_LEAD_STATUS_OPTIONS.map((option) => (
+                                        <SelectItem key={option} value={option}>
+                                          {option}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                ) : field.key === 'MOP' ? (
+                                  <Select
+                                    value={fieldValue || '__empty__'}
+                                    onValueChange={(value) =>
+                                      handleIncomingLeadEditFieldChange(
+                                        draftKey,
+                                        value === '__empty__' ? '' : value
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select mode of payment" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="__empty__">Blank</SelectItem>
+                                      {CRM_MODE_OF_PAYMENT_OPTIONS.map((option) => (
+                                        <SelectItem key={option} value={option}>
+                                          {option}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                ) : field.key === 'Source' ? (
+                                  <Select
+                                    value={fieldValue || '__empty__'}
+                                    onValueChange={(value) =>
+                                      handleIncomingLeadEditFieldChange(
+                                        draftKey,
+                                        value === '__empty__' ? '' : value
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select source" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="__empty__">Blank</SelectItem>
+                                      {incomingLeadSourceOptions.map((option) => (
+                                        <SelectItem key={option.id} value={option.name}>
+                                          {option.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                ) : field.key === 'Lead_Source' ? (
+                                  <Select
+                                    value={fieldValue || '__empty__'}
+                                    onValueChange={(value) =>
+                                      handleIncomingLeadEditFieldChange(
+                                        draftKey,
+                                        value === '__empty__' ? '' : value
+                                      )
+                                    }
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select lead source" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="__empty__">Blank</SelectItem>
+                                      {incomingLeadLeadSourceOptions.map((option) => (
+                                        <SelectItem key={option.id} value={option.name}>
+                                          {option.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                ) : field.key === 'SubStatus' ? (
+                                  <Input
+                                    value={fieldValue}
+                                    onChange={(event) =>
+                                      handleIncomingLeadEditFieldChange(
+                                        draftKey,
+                                        event.target.value.slice(0, 25)
+                                      )
+                                    }
+                                    placeholder="Enter sub status"
+                                    maxLength={25}
+                                  />
+                                ) : field.type === 'date' ? (
+                                  <Input
+                                    type="datetime-local"
+                                    value={fieldValue}
+                                    onChange={(event) =>
+                                      handleIncomingLeadEditFieldChange(draftKey, event.target.value)
+                                    }
+                                  />
+                                ) : field.multiline ? (
+                                  <Textarea
+                                    value={fieldValue}
+                                    onChange={(event) =>
+                                      handleIncomingLeadEditFieldChange(draftKey, event.target.value)
+                                    }
+                                    placeholder={field.sample || field.helperText || field.label}
+                                    rows={3}
+                                  />
+                                ) : (
+                                  <Input
+                                    type={field.type === 'number' ? 'number' : 'text'}
+                                    value={fieldValue}
+                                    onChange={(event) =>
+                                      handleIncomingLeadEditFieldChange(draftKey, event.target.value)
+                                    }
+                                    placeholder={
+                                      field.key === 'Patient_Number' && !canViewIncomingLeadPhone
+                                        ? 'Enter new phone to replace existing'
+                                        : field.sample || field.helperText || field.label
+                                    }
+                                  />
+                                )}
+                                {field.key === 'Patient_Number' ? (
+                                  <p className="mt-1 text-xs text-muted-foreground">
+                                    Current normalized phone: {selectedIncomingLead.normalizedPhone ?? '—'}
+                                  </p>
+                                ) : null}
+                                {field.helperText ? (
+                                  <p className="mt-1 text-xs text-muted-foreground">
+                                    {field.helperText}
+                                  </p>
+                                ) : null}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    ))}
+
+                    <div className="grid gap-4 rounded-xl border p-4 sm:grid-cols-2">
+                      <div>
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">Team Lead</p>
+                        <p className="font-medium">{selectedIncomingLead.teamLead?.name ?? '—'}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {selectedIncomingLead.teamLead?.email ?? ''}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">BD</p>
+                        <p className="font-medium">{selectedIncomingLead.bd?.name ?? '—'}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {selectedIncomingLead.bd?.email ?? ''}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Phone</p>
-                    <p className="font-medium">
-                      {selectedIncomingLead.summary.phone ?? selectedIncomingLead.normalizedPhone ?? '—'}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Normalized: {selectedIncomingLead.normalizedPhone ?? '—'}
-                    </p>
+                ) : (
+                  <div className="grid gap-4 rounded-xl border p-4 sm:grid-cols-2">
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Patient</p>
+                      <p className="font-medium">{selectedIncomingLead.summary.patientName ?? '—'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedIncomingLead.summary.email ?? 'No email'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Phone</p>
+                      <p className="font-medium">
+                        {selectedIncomingLead.summary.phone ?? selectedIncomingLead.normalizedPhone ?? '—'}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Normalized: {selectedIncomingLead.normalizedPhone ?? '—'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Matched campaign</p>
+                      <p className="font-medium">
+                        {selectedIncomingLead.campaign?.displayName ?? 'Not matched'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Lead result</p>
+                      <p className="font-medium">
+                        {selectedIncomingLead.processedLead?.leadRef ?? 'No lead created'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Circle</p>
+                      <p className="font-medium">{selectedIncomingLead.summary.circle ?? '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">City</p>
+                      <p className="font-medium">{selectedIncomingLead.summary.city ?? '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Team Lead</p>
+                      <p className="font-medium">{selectedIncomingLead.teamLead?.name ?? '—'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedIncomingLead.teamLead?.email ?? ''}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">BD</p>
+                      <p className="font-medium">{selectedIncomingLead.bd?.name ?? '—'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedIncomingLead.bd?.email ?? ''}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Matched campaign</p>
-                    <p className="font-medium">{selectedIncomingLead.campaign?.displayName ?? 'Not matched'}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Lead result</p>
-                    <p className="font-medium">{selectedIncomingLead.processedLead?.leadRef ?? 'No lead created'}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Team Lead</p>
-                    <p className="font-medium">{selectedIncomingLead.teamLead?.name ?? '—'}</p>
-                    <p className="text-sm text-muted-foreground">{selectedIncomingLead.teamLead?.email ?? ''}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">BD</p>
-                    <p className="font-medium">{selectedIncomingLead.bd?.name ?? '—'}</p>
-                    <p className="text-sm text-muted-foreground">{selectedIncomingLead.bd?.email ?? ''}</p>
-                  </div>
-                </div>
+                )}
 
                 {selectedIncomingLead.errorMessage && (
                   <div className="rounded-xl border border-amber-300 bg-amber-50/70 p-4">
@@ -1893,9 +2480,38 @@ export function CrmIncomingLeadsPage() {
           </div>
 
           <SheetFooter className="shrink-0 border-t bg-background/95 p-4 sm:flex-row sm:justify-end">
-            <Button type="button" variant="outline" onClick={() => setSelectedIncomingLead(null)}>
-              Close
-            </Button>
+            {incomingLeadEditMode ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (!selectedIncomingLead) return
+                    setIncomingLeadEditDraft(
+                      createIncomingLeadEditDraft(selectedIncomingLead, canViewIncomingLeadPhone),
+                    )
+                    setIncomingLeadEditMode(false)
+                  }}
+                  disabled={editIncomingLeadMutation.isPending}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => void handleIncomingLeadEditSave()}
+                  disabled={editIncomingLeadMutation.isPending}
+                >
+                  {editIncomingLeadMutation.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : null}
+                  Save changes
+                </Button>
+              </>
+            ) : (
+              <Button type="button" variant="outline" onClick={() => setSelectedIncomingLead(null)}>
+                Close
+              </Button>
+            )}
           </SheetFooter>
         </SheetContent>
       </Sheet>

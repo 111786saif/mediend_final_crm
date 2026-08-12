@@ -86,6 +86,18 @@ function formatNormalizedDate(
   return `${year}-${padDatePart(month)}-${padDatePart(day)}T${padDatePart(hour)}:${padDatePart(minute)}:${padDatePart(second)}`
 }
 
+function getCurrentNormalizedDateTime() {
+  const now = new Date()
+  return formatNormalizedDate(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    now.getDate(),
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds()
+  )
+}
+
 function parseManualDateInput(value: unknown): string | null {
   const normalized = normalizeString(value)
   if (!normalized) return null
@@ -131,7 +143,7 @@ function parseManualDateInput(value: unknown): string | null {
   }
 
   const parsed = new Date(normalized)
-  if (Number.isNaN(parsed.getTime())) return normalized
+  if (Number.isNaN(parsed.getTime())) return null
 
   return formatNormalizedDate(
     parsed.getFullYear(),
@@ -170,7 +182,8 @@ function validateManualRow(record: ManualLeadInputRecord) {
 }
 
 function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQLLeadRow {
-  const normalizedLeadDate = parseManualDateInput(record.Lead_Date)
+  // CSV/manual intake should always get a valid lead timestamp even when Lead_Date is blank or malformed.
+  const normalizedLeadDate = parseManualDateInput(record.Lead_Date) ?? getCurrentNormalizedDateTime()
   const normalizedLeadEntryDate =
     parseManualDateInput(record.LeadEntryDate) || normalizedLeadDate
   const normalizedCreateDate =

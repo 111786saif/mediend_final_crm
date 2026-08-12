@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { last10DigitsFromStored } from '@/lib/phone-search'
 
 type LeadDuplicateStore = Pick<typeof prisma, 'lead'>
+type IncomingLeadDuplicateStore = Pick<typeof prisma, 'incomingLead'>
 
 export class DuplicateLeadPhoneError extends Error {
   leadId: string
@@ -72,6 +73,46 @@ export async function recordDuplicateLeadHitByPrimaryPhone(
       id: true,
       leadRef: true,
       duplCount: true,
+    },
+  })
+}
+
+export async function findLatestPriorIncomingLeadByPrimaryPhone(
+  normalizedPhone: string,
+  options?: {
+    beforeReceivedAt?: Date | null
+    excludeIncomingLeadId?: string | null
+    db?: IncomingLeadDuplicateStore
+  }
+) {
+  const db = options?.db ?? prisma
+
+  return db.incomingLead.findFirst({
+    where: {
+      normalizedPhone,
+      ...(options?.excludeIncomingLeadId
+        ? {
+            id: {
+              not: options.excludeIncomingLeadId,
+            },
+          }
+        : {}),
+      ...(options?.beforeReceivedAt
+        ? {
+            receivedAt: {
+              lt: options.beforeReceivedAt,
+            },
+          }
+        : {}),
+    },
+    select: {
+      id: true,
+      status: true,
+      processedLeadId: true,
+      receivedAt: true,
+    },
+    orderBy: {
+      receivedAt: 'desc',
     },
   })
 }

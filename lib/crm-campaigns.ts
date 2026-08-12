@@ -12,6 +12,7 @@ import { getManagementChain } from '@/lib/hierarchy'
 import { prisma } from '@/lib/prisma'
 import { resolveInboundSubStatus } from '@/lib/sub-status'
 import {
+  findLatestPriorIncomingLeadByPrimaryPhone,
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
@@ -1299,6 +1300,35 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       },
     })
     throw new Error('Phone number must contain at least 10 digits.')
+  }
+
+  const priorIncomingLead = await findLatestPriorIncomingLeadByPrimaryPhone(normalizedPhone, {
+    excludeIncomingLeadId: input.incomingLeadId,
+    beforeReceivedAt: receivedAt,
+  })
+
+  if (priorIncomingLead && !priorIncomingLead.processedLeadId) {
+    await prisma.incomingLead.update({
+      where: { id: input.incomingLeadId },
+      data: {
+        status: 'DUPLICATE',
+        externalCampaignId: input.externalCampaignId,
+        normalizedPhone,
+        processedAt: receivedAt,
+        errorMessage: `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`,
+      },
+    })
+
+    return {
+      success: true,
+      deduplicated: true,
+      leadId: undefined,
+      leadRef: undefined,
+      campaign: null,
+      teamLead: null,
+      bd: null,
+      assignedToTeamLeadFallback: false,
+    }
   }
 
   const campaign = await getCampaignForWebhook(input.externalCampaignId)

@@ -14,7 +14,10 @@ import {
 } from '@/lib/sync/mysql-lead-mapper'
 import type { LookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { resolveInboundSubStatus } from '@/lib/sub-status'
-import { DuplicateLeadPhoneError } from '@/lib/lead-duplicates'
+import {
+  DuplicateLeadPhoneError,
+  findLatestPriorIncomingLeadByPrimaryPhone,
+} from '@/lib/lead-duplicates'
 
 export const MYSQL_INCOMING_SOURCE = 'mysql'
 export const MANUAL_MYSQL_INCOMING_SOURCE = 'manual_mysql'
@@ -167,6 +170,8 @@ export async function processMySQLIncomingLead(
       payload: true,
       processedLeadId: true,
       externalCampaignId: true,
+      normalizedPhone: true,
+      receivedAt: true,
     },
   })
 
@@ -201,6 +206,8 @@ export async function processMySQLIncomingLead(
   }
 
   const leadRef = String(mysqlLead.id)
+  const normalizedPhone =
+    incomingLead.normalizedPhone ?? normalizePhoneToLast10(mysqlLead.Patient_Number)
   const mysqlCampaignId =
     normalizeMySQLCampaignId(mysqlLead.campaign_id) ??
     normalizeMySQLCampaignId(mysqlLead.Lead_Source) ??
@@ -236,6 +243,47 @@ export async function processMySQLIncomingLead(
       leadId: existingLead.id,
       leadRef: leadRef,
       assignedBdName: existingLead.bdeName ?? null,
+    }
+  }
+
+  if (!normalizedPhone) {
+    const errorMessage = 'Phone number must contain at least 10 digits.'
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'FAILED',
+        externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
+        errorMessage,
+        processedAt: new Date(),
+      },
+    })
+    return { status: 'failed' as const, error: errorMessage }
+  }
+
+  const priorIncomingLead = await findLatestPriorIncomingLeadByPrimaryPhone(normalizedPhone, {
+    excludeIncomingLeadId: incomingLead.id,
+    beforeReceivedAt: incomingLead.receivedAt,
+  })
+
+  if (priorIncomingLead && !priorIncomingLead.processedLeadId) {
+    const errorMessage = `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
+    await prisma.incomingLead.update({
+      where: { id: incomingLead.id },
+      data: {
+        status: 'DUPLICATE',
+        externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
+        selectedTeamLeadUserId: null,
+        selectedTeamLeadEmployeeId: null,
+        selectedBdUserId: null,
+        normalizedPhone,
+        processedAt: new Date(),
+        errorMessage,
+      },
+    })
+
+    return {
+      status: 'duplicate' as const,
+      assignedBdName: null,
     }
   }
 
