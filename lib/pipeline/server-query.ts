@@ -718,7 +718,7 @@ export const pipelineTableSelect = {
   },
 } satisfies Prisma.LeadSelect
 
-type PipelineSelectedLead = Prisma.LeadGetPayload<{ select: typeof pipelineTableSelect }>
+export type PipelineSelectedLead = Prisma.LeadGetPayload<{ select: typeof pipelineTableSelect }>
 
 function sortPipelineFacetValues(
   field: PipelineMultiColumnFilterField,

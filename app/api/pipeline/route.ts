@@ -20,6 +20,7 @@ import {
   hasPostQueryPipelineColumnFilters,
   parsePipelineQueryParams,
   pipelineOrderBy,
+  type PipelineSelectedLead,
   pipelineTableSelect,
 } from '@/lib/pipeline/server-query'
 
@@ -45,45 +46,46 @@ export async function GET(request: NextRequest) {
     const orderBy = pipelineOrderBy(params.sortBy, params.sortDir)
     const needsPostQueryColumnFiltering = hasPostQueryPipelineColumnFilters(params.columnFilters)
 
-    const [statusGroups, categoryRows, circleRows, bdRows, campaignAgg, columnFacetLeads] =
-      await Promise.all([
-      prisma.lead.groupBy({
-        by: ['status'],
-        where: facetWhere,
-        _count: { _all: true },
-      }),
-      prisma.lead.findMany({
-        where: facetWhere,
-        select: { category: true },
-        distinct: ['category'],
-        take: 200,
-        orderBy: { category: 'asc' },
-      }),
-      prisma.lead.findMany({
-        where: facetWhere,
-        select: { circle: true },
-        distinct: ['circle'],
-        take: 200,
-        orderBy: { circle: 'asc' },
-      }),
-      // bdId is required on Lead — do not use `{ not: null }` (Prisma rejects it).
-      prisma.lead.findMany({
-        where: facetWhere,
-        select: { bdId: true, bd: { select: { id: true, name: true } } },
-        distinct: ['bdId'],
-        take: 300,
-        orderBy: { bdId: 'asc' },
-      }),
-      loadCampaignTree(facetWhere, params.groupBy),
-      prisma.lead.findMany({
-        where: columnFacetWhere,
-        select: pipelineTableSelect,
-        orderBy,
-      }),
-    ])
+    // With the pg driver adapter we keep the Prisma pool deliberately small.
+    // Running a burst of parallel pipeline queries on the same adapter/client
+    // can produce malformed bind messages on some environments, so keep this
+    // endpoint's reads serial.
+    const statusGroups = await prisma.lead.groupBy({
+      by: ['status'],
+      where: facetWhere,
+      _count: { _all: true },
+    })
+    const categoryRows = await prisma.lead.findMany({
+      where: facetWhere,
+      select: { category: true },
+      distinct: ['category'],
+      take: 200,
+      orderBy: { category: 'asc' },
+    })
+    const circleRows = await prisma.lead.findMany({
+      where: facetWhere,
+      select: { circle: true },
+      distinct: ['circle'],
+      take: 200,
+      orderBy: { circle: 'asc' },
+    })
+    // bdId is required on Lead — do not use `{ not: null }` (Prisma rejects it).
+    const bdRows = await prisma.lead.findMany({
+      where: facetWhere,
+      select: { bdId: true, bd: { select: { id: true, name: true } } },
+      distinct: ['bdId'],
+      take: 300,
+      orderBy: { bdId: 'asc' },
+    })
+    const campaignAgg = await loadCampaignTree(facetWhere, params.groupBy)
+    const columnFacetLeads = await prisma.lead.findMany({
+      where: columnFacetWhere,
+      select: pipelineTableSelect,
+      orderBy,
+    })
 
     let total: number
-    let leads: Awaited<ReturnType<typeof prisma.lead.findMany>>
+    let leads: PipelineSelectedLead[]
 
     if (needsPostQueryColumnFiltering) {
       const allMatchingLeads = await prisma.lead.findMany({
@@ -95,16 +97,14 @@ export async function GET(request: NextRequest) {
       total = filteredLeads.length
       leads = filteredLeads.slice(skip, skip + params.pageSize)
     } else {
-      ;[total, leads] = await Promise.all([
-        prisma.lead.count({ where: listWhere }),
-        prisma.lead.findMany({
-          where: listWhere,
-          select: pipelineTableSelect,
-          orderBy,
-          skip,
-          take: params.pageSize,
-        }),
-      ])
+      total = await prisma.lead.count({ where: listWhere })
+      leads = await prisma.lead.findMany({
+        where: listWhere,
+        select: pipelineTableSelect,
+        orderBy,
+        skip,
+        take: params.pageSize,
+      })
     }
 
     const statusCounts = bucketsFromStatusGroups(statusGroups)
