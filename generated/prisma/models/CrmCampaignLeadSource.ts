@@ -232,8 +232,8 @@ export type CrmCampaignLeadSourceWhereInput = {
   isActive?: Prisma.BoolFilter<"CrmCampaignLeadSource"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CrmCampaignLeadSource"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CrmCampaignLeadSource"> | Date | string
-  campaigns?: Prisma.CrmCampaignListRelationFilter
   source?: Prisma.XOR<Prisma.CrmCampaignSourceScalarRelationFilter, Prisma.CrmCampaignSourceWhereInput>
+  campaigns?: Prisma.CrmCampaignListRelationFilter
 }
 
 export type CrmCampaignLeadSourceOrderByWithRelationInput = {
@@ -244,8 +244,8 @@ export type CrmCampaignLeadSourceOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  campaigns?: Prisma.CrmCampaignOrderByRelationAggregateInput
   source?: Prisma.CrmCampaignSourceOrderByWithRelationInput
+  campaigns?: Prisma.CrmCampaignOrderByRelationAggregateInput
 }
 
 export type CrmCampaignLeadSourceWhereUniqueInput = Prisma.AtLeast<{
@@ -260,8 +260,8 @@ export type CrmCampaignLeadSourceWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"CrmCampaignLeadSource"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CrmCampaignLeadSource"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CrmCampaignLeadSource"> | Date | string
-  campaigns?: Prisma.CrmCampaignListRelationFilter
   source?: Prisma.XOR<Prisma.CrmCampaignSourceScalarRelationFilter, Prisma.CrmCampaignSourceWhereInput>
+  campaigns?: Prisma.CrmCampaignListRelationFilter
 }, "id" | "sourceId_name">
 
 export type CrmCampaignLeadSourceOrderByWithAggregationInput = {
@@ -299,8 +299,8 @@ export type CrmCampaignLeadSourceCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  campaigns?: Prisma.CrmCampaignCreateNestedManyWithoutLeadSourceInput
   source: Prisma.CrmCampaignSourceCreateNestedOneWithoutLeadSourcesInput
+  campaigns?: Prisma.CrmCampaignCreateNestedManyWithoutLeadSourceInput
 }
 
 export type CrmCampaignLeadSourceUncheckedCreateInput = {
@@ -321,8 +321,8 @@ export type CrmCampaignLeadSourceUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  campaigns?: Prisma.CrmCampaignUpdateManyWithoutLeadSourceNestedInput
   source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutLeadSourcesNestedInput
+  campaigns?: Prisma.CrmCampaignUpdateManyWithoutLeadSourceNestedInput
 }
 
 export type CrmCampaignLeadSourceUncheckedUpdateInput = {
@@ -671,8 +671,8 @@ export type CrmCampaignLeadSourceSelect<ExtArgs extends runtime.Types.Extensions
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  campaigns?: boolean | Prisma.CrmCampaignLeadSource$campaignsArgs<ExtArgs>
   source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
+  campaigns?: boolean | Prisma.CrmCampaignLeadSource$campaignsArgs<ExtArgs>
   _count?: boolean | Prisma.CrmCampaignLeadSourceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["crmCampaignLeadSource"]>
 
@@ -710,8 +710,8 @@ export type CrmCampaignLeadSourceSelectScalar = {
 
 export type CrmCampaignLeadSourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "cpl" | "sourceId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["crmCampaignLeadSource"]>
 export type CrmCampaignLeadSourceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  campaigns?: boolean | Prisma.CrmCampaignLeadSource$campaignsArgs<ExtArgs>
   source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
+  campaigns?: boolean | Prisma.CrmCampaignLeadSource$campaignsArgs<ExtArgs>
   _count?: boolean | Prisma.CrmCampaignLeadSourceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CrmCampaignLeadSourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -724,8 +724,8 @@ export type CrmCampaignLeadSourceIncludeUpdateManyAndReturn<ExtArgs extends runt
 export type $CrmCampaignLeadSourcePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CrmCampaignLeadSource"
   objects: {
-    campaigns: Prisma.$CrmCampaignPayload<ExtArgs>[]
     source: Prisma.$CrmCampaignSourcePayload<ExtArgs>
+    campaigns: Prisma.$CrmCampaignPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1129,8 +1129,8 @@ readonly fields: CrmCampaignLeadSourceFieldRefs;
  */
 export interface Prisma__CrmCampaignLeadSourceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  campaigns<T extends Prisma.CrmCampaignLeadSource$campaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignLeadSource$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   source<T extends Prisma.CrmCampaignSourceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>>): Prisma.Prisma__CrmCampaignSourceClient<runtime.Types.Result.GetResult<Prisma.$CrmCampaignSourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  campaigns<T extends Prisma.CrmCampaignLeadSource$campaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignLeadSource$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

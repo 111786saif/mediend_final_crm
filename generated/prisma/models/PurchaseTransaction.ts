@@ -296,10 +296,10 @@ export type PurchaseTransactionWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"PurchaseTransaction"> | Date | string
   createdById?: Prisma.StringFilter<"PurchaseTransaction"> | string
   updatedAt?: Prisma.DateTimeFilter<"PurchaseTransaction"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   item?: Prisma.XOR<Prisma.ItemMasterScalarRelationFilter, Prisma.ItemMasterWhereInput>
-  location?: Prisma.XOR<Prisma.LocationMasterScalarRelationFilter, Prisma.LocationMasterWhereInput>
   supplier?: Prisma.XOR<Prisma.PartyMasterScalarRelationFilter, Prisma.PartyMasterWhereInput>
+  location?: Prisma.XOR<Prisma.LocationMasterScalarRelationFilter, Prisma.LocationMasterWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type PurchaseTransactionOrderByWithRelationInput = {
@@ -317,10 +317,10 @@ export type PurchaseTransactionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  createdBy?: Prisma.UserOrderByWithRelationInput
   item?: Prisma.ItemMasterOrderByWithRelationInput
-  location?: Prisma.LocationMasterOrderByWithRelationInput
   supplier?: Prisma.PartyMasterOrderByWithRelationInput
+  location?: Prisma.LocationMasterOrderByWithRelationInput
+  createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PurchaseTransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -341,10 +341,10 @@ export type PurchaseTransactionWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"PurchaseTransaction"> | Date | string
   createdById?: Prisma.StringFilter<"PurchaseTransaction"> | string
   updatedAt?: Prisma.DateTimeFilter<"PurchaseTransaction"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   item?: Prisma.XOR<Prisma.ItemMasterScalarRelationFilter, Prisma.ItemMasterWhereInput>
-  location?: Prisma.XOR<Prisma.LocationMasterScalarRelationFilter, Prisma.LocationMasterWhereInput>
   supplier?: Prisma.XOR<Prisma.PartyMasterScalarRelationFilter, Prisma.PartyMasterWhereInput>
+  location?: Prisma.XOR<Prisma.LocationMasterScalarRelationFilter, Prisma.LocationMasterWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "purchaseNumber">
 
 export type PurchaseTransactionOrderByWithAggregationInput = {
@@ -400,10 +400,10 @@ export type PurchaseTransactionCreateInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutPurchasesCreatedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutPurchasesInput
-  location: Prisma.LocationMasterCreateNestedOneWithoutPurchasesInput
   supplier: Prisma.PartyMasterCreateNestedOneWithoutPurchasesInput
+  location: Prisma.LocationMasterCreateNestedOneWithoutPurchasesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutPurchasesCreatedInput
 }
 
 export type PurchaseTransactionUncheckedCreateInput = {
@@ -434,10 +434,10 @@ export type PurchaseTransactionUpdateInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutPurchasesCreatedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutPurchasesNestedInput
-  location?: Prisma.LocationMasterUpdateOneRequiredWithoutPurchasesNestedInput
   supplier?: Prisma.PartyMasterUpdateOneRequiredWithoutPurchasesNestedInput
+  location?: Prisma.LocationMasterUpdateOneRequiredWithoutPurchasesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutPurchasesCreatedNestedInput
 }
 
 export type PurchaseTransactionUncheckedUpdateInput = {
@@ -761,8 +761,8 @@ export type PurchaseTransactionCreateWithoutCreatedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   item: Prisma.ItemMasterCreateNestedOneWithoutPurchasesInput
-  location: Prisma.LocationMasterCreateNestedOneWithoutPurchasesInput
   supplier: Prisma.PartyMasterCreateNestedOneWithoutPurchasesInput
+  location: Prisma.LocationMasterCreateNestedOneWithoutPurchasesInput
 }
 
 export type PurchaseTransactionUncheckedCreateWithoutCreatedByInput = {
@@ -838,9 +838,9 @@ export type PurchaseTransactionCreateWithoutSupplierInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutPurchasesCreatedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutPurchasesInput
   location: Prisma.LocationMasterCreateNestedOneWithoutPurchasesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutPurchasesCreatedInput
 }
 
 export type PurchaseTransactionUncheckedCreateWithoutSupplierInput = {
@@ -896,9 +896,9 @@ export type PurchaseTransactionCreateWithoutLocationInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutPurchasesCreatedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutPurchasesInput
   supplier: Prisma.PartyMasterCreateNestedOneWithoutPurchasesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutPurchasesCreatedInput
 }
 
 export type PurchaseTransactionUncheckedCreateWithoutLocationInput = {
@@ -954,9 +954,9 @@ export type PurchaseTransactionCreateWithoutItemInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutPurchasesCreatedInput
-  location: Prisma.LocationMasterCreateNestedOneWithoutPurchasesInput
   supplier: Prisma.PartyMasterCreateNestedOneWithoutPurchasesInput
+  location: Prisma.LocationMasterCreateNestedOneWithoutPurchasesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutPurchasesCreatedInput
 }
 
 export type PurchaseTransactionUncheckedCreateWithoutItemInput = {
@@ -1029,8 +1029,8 @@ export type PurchaseTransactionUpdateWithoutCreatedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutPurchasesNestedInput
-  location?: Prisma.LocationMasterUpdateOneRequiredWithoutPurchasesNestedInput
   supplier?: Prisma.PartyMasterUpdateOneRequiredWithoutPurchasesNestedInput
+  location?: Prisma.LocationMasterUpdateOneRequiredWithoutPurchasesNestedInput
 }
 
 export type PurchaseTransactionUncheckedUpdateWithoutCreatedByInput = {
@@ -1092,9 +1092,9 @@ export type PurchaseTransactionUpdateWithoutSupplierInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutPurchasesCreatedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutPurchasesNestedInput
   location?: Prisma.LocationMasterUpdateOneRequiredWithoutPurchasesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutPurchasesCreatedNestedInput
 }
 
 export type PurchaseTransactionUncheckedUpdateWithoutSupplierInput = {
@@ -1156,9 +1156,9 @@ export type PurchaseTransactionUpdateWithoutLocationInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutPurchasesCreatedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutPurchasesNestedInput
   supplier?: Prisma.PartyMasterUpdateOneRequiredWithoutPurchasesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutPurchasesCreatedNestedInput
 }
 
 export type PurchaseTransactionUncheckedUpdateWithoutLocationInput = {
@@ -1220,9 +1220,9 @@ export type PurchaseTransactionUpdateWithoutItemInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutPurchasesCreatedNestedInput
-  location?: Prisma.LocationMasterUpdateOneRequiredWithoutPurchasesNestedInput
   supplier?: Prisma.PartyMasterUpdateOneRequiredWithoutPurchasesNestedInput
+  location?: Prisma.LocationMasterUpdateOneRequiredWithoutPurchasesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutPurchasesCreatedNestedInput
 }
 
 export type PurchaseTransactionUncheckedUpdateWithoutItemInput = {
@@ -1274,10 +1274,10 @@ export type PurchaseTransactionSelect<ExtArgs extends runtime.Types.Extensions.I
   createdAt?: boolean
   createdById?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
-  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PartyMasterDefaultArgs<ExtArgs>
+  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["purchaseTransaction"]>
 
 export type PurchaseTransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1295,10 +1295,10 @@ export type PurchaseTransactionSelectCreateManyAndReturn<ExtArgs extends runtime
   createdAt?: boolean
   createdById?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
-  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PartyMasterDefaultArgs<ExtArgs>
+  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["purchaseTransaction"]>
 
 export type PurchaseTransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1316,10 +1316,10 @@ export type PurchaseTransactionSelectUpdateManyAndReturn<ExtArgs extends runtime
   createdAt?: boolean
   createdById?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
-  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PartyMasterDefaultArgs<ExtArgs>
+  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["purchaseTransaction"]>
 
 export type PurchaseTransactionSelectScalar = {
@@ -1341,31 +1341,31 @@ export type PurchaseTransactionSelectScalar = {
 
 export type PurchaseTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "purchaseNumber" | "itemId" | "supplierId" | "locationId" | "quantity" | "unitPrice" | "totalPrice" | "purchaseDate" | "description" | "status" | "createdAt" | "createdById" | "updatedAt", ExtArgs["result"]["purchaseTransaction"]>
 export type PurchaseTransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
-  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PartyMasterDefaultArgs<ExtArgs>
+  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PurchaseTransactionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
-  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PartyMasterDefaultArgs<ExtArgs>
+  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PurchaseTransactionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
-  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PartyMasterDefaultArgs<ExtArgs>
+  location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $PurchaseTransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PurchaseTransaction"
   objects: {
-    createdBy: Prisma.$UserPayload<ExtArgs>
     item: Prisma.$ItemMasterPayload<ExtArgs>
-    location: Prisma.$LocationMasterPayload<ExtArgs>
     supplier: Prisma.$PartyMasterPayload<ExtArgs>
+    location: Prisma.$LocationMasterPayload<ExtArgs>
+    createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1776,10 +1776,10 @@ readonly fields: PurchaseTransactionFieldRefs;
  */
 export interface Prisma__PurchaseTransactionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   item<T extends Prisma.ItemMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ItemMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__ItemMasterClient<runtime.Types.Result.GetResult<Prisma.$ItemMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  location<T extends Prisma.LocationMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__LocationMasterClient<runtime.Types.Result.GetResult<Prisma.$LocationMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   supplier<T extends Prisma.PartyMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartyMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__PartyMasterClient<runtime.Types.Result.GetResult<Prisma.$PartyMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  location<T extends Prisma.LocationMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__LocationMasterClient<runtime.Types.Result.GetResult<Prisma.$LocationMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

@@ -44,11 +44,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryMinAggregateOutputType = {
   action: string | null
   seatingCost: number | null
   miscCost: number | null
+  otherCost: number | null
   status: $Enums.EmployeeSeatingMiscCostStatus | null
   remarks: string | null
   changedByUserId: string | null
   changedAt: Date | null
-  otherCost: number | null
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryMaxAggregateOutputType = {
@@ -57,11 +57,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryMaxAggregateOutputType = {
   action: string | null
   seatingCost: number | null
   miscCost: number | null
+  otherCost: number | null
   status: $Enums.EmployeeSeatingMiscCostStatus | null
   remarks: string | null
   changedByUserId: string | null
   changedAt: Date | null
-  otherCost: number | null
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryCountAggregateOutputType = {
@@ -70,11 +70,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryCountAggregateOutputType = {
   action: number
   seatingCost: number
   miscCost: number
+  otherCost: number
   status: number
   remarks: number
   changedByUserId: number
   changedAt: number
-  otherCost: number
   _all: number
 }
 
@@ -97,11 +97,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryMinAggregateInputType = {
   action?: true
   seatingCost?: true
   miscCost?: true
+  otherCost?: true
   status?: true
   remarks?: true
   changedByUserId?: true
   changedAt?: true
-  otherCost?: true
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryMaxAggregateInputType = {
@@ -110,11 +110,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryMaxAggregateInputType = {
   action?: true
   seatingCost?: true
   miscCost?: true
+  otherCost?: true
   status?: true
   remarks?: true
   changedByUserId?: true
   changedAt?: true
-  otherCost?: true
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryCountAggregateInputType = {
@@ -123,11 +123,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryCountAggregateInputType = {
   action?: true
   seatingCost?: true
   miscCost?: true
+  otherCost?: true
   status?: true
   remarks?: true
   changedByUserId?: true
   changedAt?: true
-  otherCost?: true
   _all?: true
 }
 
@@ -223,11 +223,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryGroupByOutputType = {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks: string | null
   changedByUserId: string
   changedAt: Date
-  otherCost: number
   _count: EmployeeMonthlySeatingMiscCostHistoryCountAggregateOutputType | null
   _avg: EmployeeMonthlySeatingMiscCostHistoryAvgAggregateOutputType | null
   _sum: EmployeeMonthlySeatingMiscCostHistorySumAggregateOutputType | null
@@ -259,13 +259,13 @@ export type EmployeeMonthlySeatingMiscCostHistoryWhereInput = {
   action?: Prisma.StringFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string
   seatingCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
   miscCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
+  otherCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFilter<"EmployeeMonthlySeatingMiscCostHistory"> | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.StringNullableFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string | null
   changedByUserId?: Prisma.StringFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string
   changedAt?: Prisma.DateTimeFilter<"EmployeeMonthlySeatingMiscCostHistory"> | Date | string
-  otherCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
-  changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   record?: Prisma.XOR<Prisma.EmployeeMonthlySeatingMiscCostScalarRelationFilter, Prisma.EmployeeMonthlySeatingMiscCostWhereInput>
+  changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryOrderByWithRelationInput = {
@@ -274,13 +274,13 @@ export type EmployeeMonthlySeatingMiscCostHistoryOrderByWithRelationInput = {
   action?: Prisma.SortOrder
   seatingCost?: Prisma.SortOrder
   miscCost?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   changedByUserId?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
-  otherCost?: Prisma.SortOrder
-  changedBy?: Prisma.UserOrderByWithRelationInput
   record?: Prisma.EmployeeMonthlySeatingMiscCostOrderByWithRelationInput
+  changedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -292,13 +292,13 @@ export type EmployeeMonthlySeatingMiscCostHistoryWhereUniqueInput = Prisma.AtLea
   action?: Prisma.StringFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string
   seatingCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
   miscCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
+  otherCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFilter<"EmployeeMonthlySeatingMiscCostHistory"> | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.StringNullableFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string | null
   changedByUserId?: Prisma.StringFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string
   changedAt?: Prisma.DateTimeFilter<"EmployeeMonthlySeatingMiscCostHistory"> | Date | string
-  otherCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
-  changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   record?: Prisma.XOR<Prisma.EmployeeMonthlySeatingMiscCostScalarRelationFilter, Prisma.EmployeeMonthlySeatingMiscCostWhereInput>
+  changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type EmployeeMonthlySeatingMiscCostHistoryOrderByWithAggregationInput = {
@@ -307,11 +307,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryOrderByWithAggregationInput = {
   action?: Prisma.SortOrder
   seatingCost?: Prisma.SortOrder
   miscCost?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   changedByUserId?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
-  otherCost?: Prisma.SortOrder
   _count?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCountOrderByAggregateInput
   _avg?: Prisma.EmployeeMonthlySeatingMiscCostHistoryAvgOrderByAggregateInput
   _max?: Prisma.EmployeeMonthlySeatingMiscCostHistoryMaxOrderByAggregateInput
@@ -328,11 +328,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryScalarWhereWithAggregatesInput 
   action?: Prisma.StringWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string
   seatingCost?: Prisma.FloatWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
   miscCost?: Prisma.FloatWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
+  otherCost?: Prisma.FloatWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.StringNullableWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string | null
   changedByUserId?: Prisma.StringWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string
   changedAt?: Prisma.DateTimeWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | Date | string
-  otherCost?: Prisma.FloatWithAggregatesFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryCreateInput = {
@@ -340,12 +340,12 @@ export type EmployeeMonthlySeatingMiscCostHistoryCreateInput = {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedAt?: Date | string
-  otherCost?: number
-  changedBy: Prisma.UserCreateNestedOneWithoutSeatingMiscCostHistoryInput
   record: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedOneWithoutHistoryInput
+  changedBy: Prisma.UserCreateNestedOneWithoutSeatingMiscCostHistoryInput
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateInput = {
@@ -354,11 +354,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateInput = {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedByUserId: string
   changedAt?: Date | string
-  otherCost?: number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUpdateInput = {
@@ -366,12 +366,12 @@ export type EmployeeMonthlySeatingMiscCostHistoryUpdateInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
-  changedBy?: Prisma.UserUpdateOneRequiredWithoutSeatingMiscCostHistoryNestedInput
   record?: Prisma.EmployeeMonthlySeatingMiscCostUpdateOneRequiredWithoutHistoryNestedInput
+  changedBy?: Prisma.UserUpdateOneRequiredWithoutSeatingMiscCostHistoryNestedInput
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateInput = {
@@ -380,11 +380,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryCreateManyInput = {
@@ -393,11 +393,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryCreateManyInput = {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedByUserId: string
   changedAt?: Date | string
-  otherCost?: number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUpdateManyMutationInput = {
@@ -405,10 +405,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryUpdateManyMutationInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyInput = {
@@ -417,11 +417,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryListRelationFilter = {
@@ -440,11 +440,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryCountOrderByAggregateInput = {
   action?: Prisma.SortOrder
   seatingCost?: Prisma.SortOrder
   miscCost?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   changedByUserId?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
-  otherCost?: Prisma.SortOrder
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryAvgOrderByAggregateInput = {
@@ -459,11 +459,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryMaxOrderByAggregateInput = {
   action?: Prisma.SortOrder
   seatingCost?: Prisma.SortOrder
   miscCost?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   changedByUserId?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
-  otherCost?: Prisma.SortOrder
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryMinOrderByAggregateInput = {
@@ -472,11 +472,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryMinOrderByAggregateInput = {
   action?: Prisma.SortOrder
   seatingCost?: Prisma.SortOrder
   miscCost?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
   status?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   changedByUserId?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
-  otherCost?: Prisma.SortOrder
 }
 
 export type EmployeeMonthlySeatingMiscCostHistorySumOrderByAggregateInput = {
@@ -574,10 +574,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryCreateWithoutChangedByInput = {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedAt?: Date | string
-  otherCost?: number
   record: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedOneWithoutHistoryInput
 }
 
@@ -587,10 +587,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateWithoutChangedBy
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedAt?: Date | string
-  otherCost?: number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryCreateOrConnectWithoutChangedByInput = {
@@ -628,11 +628,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryScalarWhereInput = {
   action?: Prisma.StringFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string
   seatingCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
   miscCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
+  otherCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFilter<"EmployeeMonthlySeatingMiscCostHistory"> | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.StringNullableFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string | null
   changedByUserId?: Prisma.StringFilter<"EmployeeMonthlySeatingMiscCostHistory"> | string
   changedAt?: Prisma.DateTimeFilter<"EmployeeMonthlySeatingMiscCostHistory"> | Date | string
-  otherCost?: Prisma.FloatFilter<"EmployeeMonthlySeatingMiscCostHistory"> | number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryCreateWithoutRecordInput = {
@@ -640,10 +640,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryCreateWithoutRecordInput = {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedAt?: Date | string
-  otherCost?: number
   changedBy: Prisma.UserCreateNestedOneWithoutSeatingMiscCostHistoryInput
 }
 
@@ -652,11 +652,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateWithoutRecordInp
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedByUserId: string
   changedAt?: Date | string
-  otherCost?: number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryCreateOrConnectWithoutRecordInput = {
@@ -691,10 +691,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryCreateManyChangedByInput = {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedAt?: Date | string
-  otherCost?: number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUpdateWithoutChangedByInput = {
@@ -702,10 +702,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryUpdateWithoutChangedByInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   record?: Prisma.EmployeeMonthlySeatingMiscCostUpdateOneRequiredWithoutHistoryNestedInput
 }
 
@@ -715,10 +715,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateWithoutChangedBy
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByInput = {
@@ -727,10 +727,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChang
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryCreateManyRecordInput = {
@@ -738,11 +738,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryCreateManyRecordInput = {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost?: number
   status: $Enums.EmployeeSeatingMiscCostStatus
   remarks?: string | null
   changedByUserId: string
   changedAt?: Date | string
-  otherCost?: number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUpdateWithoutRecordInput = {
@@ -750,10 +750,10 @@ export type EmployeeMonthlySeatingMiscCostHistoryUpdateWithoutRecordInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   changedBy?: Prisma.UserUpdateOneRequiredWithoutSeatingMiscCostHistoryNestedInput
 }
 
@@ -762,11 +762,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateWithoutRecordInp
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutRecordInput = {
@@ -774,11 +774,11 @@ export type EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutRecor
   action?: Prisma.StringFieldUpdateOperationsInput | string
   seatingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   miscCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumEmployeeSeatingMiscCostStatusFieldUpdateOperationsInput | $Enums.EmployeeSeatingMiscCostStatus
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -789,13 +789,13 @@ export type EmployeeMonthlySeatingMiscCostHistorySelect<ExtArgs extends runtime.
   action?: boolean
   seatingCost?: boolean
   miscCost?: boolean
+  otherCost?: boolean
   status?: boolean
   remarks?: boolean
   changedByUserId?: boolean
   changedAt?: boolean
-  otherCost?: boolean
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   record?: boolean | Prisma.EmployeeMonthlySeatingMiscCostDefaultArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employeeMonthlySeatingMiscCostHistory"]>
 
 export type EmployeeMonthlySeatingMiscCostHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -804,13 +804,13 @@ export type EmployeeMonthlySeatingMiscCostHistorySelectCreateManyAndReturn<ExtAr
   action?: boolean
   seatingCost?: boolean
   miscCost?: boolean
+  otherCost?: boolean
   status?: boolean
   remarks?: boolean
   changedByUserId?: boolean
   changedAt?: boolean
-  otherCost?: boolean
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   record?: boolean | Prisma.EmployeeMonthlySeatingMiscCostDefaultArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employeeMonthlySeatingMiscCostHistory"]>
 
 export type EmployeeMonthlySeatingMiscCostHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -819,13 +819,13 @@ export type EmployeeMonthlySeatingMiscCostHistorySelectUpdateManyAndReturn<ExtAr
   action?: boolean
   seatingCost?: boolean
   miscCost?: boolean
+  otherCost?: boolean
   status?: boolean
   remarks?: boolean
   changedByUserId?: boolean
   changedAt?: boolean
-  otherCost?: boolean
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   record?: boolean | Prisma.EmployeeMonthlySeatingMiscCostDefaultArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employeeMonthlySeatingMiscCostHistory"]>
 
 export type EmployeeMonthlySeatingMiscCostHistorySelectScalar = {
@@ -834,32 +834,32 @@ export type EmployeeMonthlySeatingMiscCostHistorySelectScalar = {
   action?: boolean
   seatingCost?: boolean
   miscCost?: boolean
+  otherCost?: boolean
   status?: boolean
   remarks?: boolean
   changedByUserId?: boolean
   changedAt?: boolean
-  otherCost?: boolean
 }
 
-export type EmployeeMonthlySeatingMiscCostHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "recordId" | "action" | "seatingCost" | "miscCost" | "status" | "remarks" | "changedByUserId" | "changedAt" | "otherCost", ExtArgs["result"]["employeeMonthlySeatingMiscCostHistory"]>
+export type EmployeeMonthlySeatingMiscCostHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "recordId" | "action" | "seatingCost" | "miscCost" | "otherCost" | "status" | "remarks" | "changedByUserId" | "changedAt", ExtArgs["result"]["employeeMonthlySeatingMiscCostHistory"]>
 export type EmployeeMonthlySeatingMiscCostHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   record?: boolean | Prisma.EmployeeMonthlySeatingMiscCostDefaultArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type EmployeeMonthlySeatingMiscCostHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   record?: boolean | Prisma.EmployeeMonthlySeatingMiscCostDefaultArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type EmployeeMonthlySeatingMiscCostHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   record?: boolean | Prisma.EmployeeMonthlySeatingMiscCostDefaultArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $EmployeeMonthlySeatingMiscCostHistoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "EmployeeMonthlySeatingMiscCostHistory"
   objects: {
-    changedBy: Prisma.$UserPayload<ExtArgs>
     record: Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>
+    changedBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -867,11 +867,11 @@ export type $EmployeeMonthlySeatingMiscCostHistoryPayload<ExtArgs extends runtim
     action: string
     seatingCost: number
     miscCost: number
+    otherCost: number
     status: $Enums.EmployeeSeatingMiscCostStatus
     remarks: string | null
     changedByUserId: string
     changedAt: Date
-    otherCost: number
   }, ExtArgs["result"]["employeeMonthlySeatingMiscCostHistory"]>
   composites: {}
 }
@@ -1266,8 +1266,8 @@ readonly fields: EmployeeMonthlySeatingMiscCostHistoryFieldRefs;
  */
 export interface Prisma__EmployeeMonthlySeatingMiscCostHistoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  changedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   record<T extends Prisma.EmployeeMonthlySeatingMiscCostDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeMonthlySeatingMiscCostDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeMonthlySeatingMiscCostClient<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  changedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1302,11 +1302,11 @@ export interface EmployeeMonthlySeatingMiscCostHistoryFieldRefs {
   readonly action: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'String'>
   readonly seatingCost: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'Float'>
   readonly miscCost: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'Float'>
+  readonly otherCost: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'Float'>
   readonly status: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'EmployeeSeatingMiscCostStatus'>
   readonly remarks: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'String'>
   readonly changedByUserId: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'String'>
   readonly changedAt: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'DateTime'>
-  readonly otherCost: Prisma.FieldRef<"EmployeeMonthlySeatingMiscCostHistory", 'Float'>
 }
     
 

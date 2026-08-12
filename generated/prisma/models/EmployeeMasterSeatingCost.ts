@@ -240,8 +240,8 @@ export type EmployeeMasterSeatingCostWhereInput = {
   updatedByUserId?: Prisma.StringNullableFilter<"EmployeeMasterSeatingCost"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmployeeMasterSeatingCost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeMasterSeatingCost"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   monthlyCosts?: Prisma.EmployeeMonthlySeatingMiscCostListRelationFilter
 }
@@ -255,8 +255,8 @@ export type EmployeeMasterSeatingCostOrderByWithRelationInput = {
   updatedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  createdBy?: Prisma.UserOrderByWithRelationInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
+  createdBy?: Prisma.UserOrderByWithRelationInput
   updatedBy?: Prisma.UserOrderByWithRelationInput
   monthlyCosts?: Prisma.EmployeeMonthlySeatingMiscCostOrderByRelationAggregateInput
 }
@@ -273,8 +273,8 @@ export type EmployeeMasterSeatingCostWhereUniqueInput = Prisma.AtLeast<{
   updatedByUserId?: Prisma.StringNullableFilter<"EmployeeMasterSeatingCost"> | string | null
   createdAt?: Prisma.DateTimeFilter<"EmployeeMasterSeatingCost"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"EmployeeMasterSeatingCost"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   monthlyCosts?: Prisma.EmployeeMonthlySeatingMiscCostListRelationFilter
 }, "id" | "employeeId">
@@ -315,8 +315,8 @@ export type EmployeeMasterSeatingCostCreateInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutMasterSeatingCostsCreatedInput
   employee: Prisma.EmployeeCreateNestedOneWithoutMasterSeatingCostInput
+  createdBy: Prisma.UserCreateNestedOneWithoutMasterSeatingCostsCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutMasterSeatingCostsUpdatedInput
   monthlyCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutMasterSeatingCostInput
 }
@@ -339,8 +339,8 @@ export type EmployeeMasterSeatingCostUpdateInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutMasterSeatingCostsCreatedNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutMasterSeatingCostNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutMasterSeatingCostsCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutMasterSeatingCostsUpdatedNestedInput
   monthlyCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutMasterSeatingCostNestedInput
 }
@@ -613,8 +613,8 @@ export type EmployeeMasterSeatingCostCreateWithoutUpdatedByInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutMasterSeatingCostsCreatedInput
   employee: Prisma.EmployeeCreateNestedOneWithoutMasterSeatingCostInput
+  createdBy: Prisma.UserCreateNestedOneWithoutMasterSeatingCostsCreatedInput
   monthlyCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutMasterSeatingCostInput
 }
 
@@ -751,8 +751,8 @@ export type EmployeeMasterSeatingCostCreateWithoutMonthlyCostsInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutMasterSeatingCostsCreatedInput
   employee: Prisma.EmployeeCreateNestedOneWithoutMasterSeatingCostInput
+  createdBy: Prisma.UserCreateNestedOneWithoutMasterSeatingCostsCreatedInput
   updatedBy?: Prisma.UserCreateNestedOneWithoutMasterSeatingCostsUpdatedInput
 }
 
@@ -789,8 +789,8 @@ export type EmployeeMasterSeatingCostUpdateWithoutMonthlyCostsInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutMasterSeatingCostsCreatedNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutMasterSeatingCostNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutMasterSeatingCostsCreatedNestedInput
   updatedBy?: Prisma.UserUpdateOneWithoutMasterSeatingCostsUpdatedNestedInput
 }
 
@@ -863,8 +863,8 @@ export type EmployeeMasterSeatingCostUpdateWithoutUpdatedByInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutMasterSeatingCostsCreatedNestedInput
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutMasterSeatingCostNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutMasterSeatingCostsCreatedNestedInput
   monthlyCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutMasterSeatingCostNestedInput
 }
 
@@ -929,8 +929,8 @@ export type EmployeeMasterSeatingCostSelect<ExtArgs extends runtime.Types.Extens
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMasterSeatingCost$updatedByArgs<ExtArgs>
   monthlyCosts?: boolean | Prisma.EmployeeMasterSeatingCost$monthlyCostsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeMasterSeatingCostCountOutputTypeDefaultArgs<ExtArgs>
@@ -945,8 +945,8 @@ export type EmployeeMasterSeatingCostSelectCreateManyAndReturn<ExtArgs extends r
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMasterSeatingCost$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["employeeMasterSeatingCost"]>
 
@@ -959,8 +959,8 @@ export type EmployeeMasterSeatingCostSelectUpdateManyAndReturn<ExtArgs extends r
   updatedByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMasterSeatingCost$updatedByArgs<ExtArgs>
 }, ExtArgs["result"]["employeeMasterSeatingCost"]>
 
@@ -977,28 +977,28 @@ export type EmployeeMasterSeatingCostSelectScalar = {
 
 export type EmployeeMasterSeatingCostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "amount" | "note" | "createdByUserId" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["employeeMasterSeatingCost"]>
 export type EmployeeMasterSeatingCostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMasterSeatingCost$updatedByArgs<ExtArgs>
   monthlyCosts?: boolean | Prisma.EmployeeMasterSeatingCost$monthlyCostsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeMasterSeatingCostCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmployeeMasterSeatingCostIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMasterSeatingCost$updatedByArgs<ExtArgs>
 }
 export type EmployeeMasterSeatingCostIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.EmployeeMasterSeatingCost$updatedByArgs<ExtArgs>
 }
 
 export type $EmployeeMasterSeatingCostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "EmployeeMasterSeatingCost"
   objects: {
-    createdBy: Prisma.$UserPayload<ExtArgs>
     employee: Prisma.$EmployeePayload<ExtArgs>
+    createdBy: Prisma.$UserPayload<ExtArgs>
     updatedBy: Prisma.$UserPayload<ExtArgs> | null
     monthlyCosts: Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>[]
   }
@@ -1405,8 +1405,8 @@ readonly fields: EmployeeMasterSeatingCostFieldRefs;
  */
 export interface Prisma__EmployeeMasterSeatingCostClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   updatedBy<T extends Prisma.EmployeeMasterSeatingCost$updatedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeMasterSeatingCost$updatedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   monthlyCosts<T extends Prisma.EmployeeMasterSeatingCost$monthlyCostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeMasterSeatingCost$monthlyCostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**

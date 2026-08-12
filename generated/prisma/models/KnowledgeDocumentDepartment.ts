@@ -166,16 +166,16 @@ export type KnowledgeDocumentDepartmentWhereInput = {
   id?: Prisma.StringFilter<"KnowledgeDocumentDepartment"> | string
   documentId?: Prisma.StringFilter<"KnowledgeDocumentDepartment"> | string
   departmentId?: Prisma.StringFilter<"KnowledgeDocumentDepartment"> | string
-  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   document?: Prisma.XOR<Prisma.KnowledgeDocumentScalarRelationFilter, Prisma.KnowledgeDocumentWhereInput>
+  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
 }
 
 export type KnowledgeDocumentDepartmentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
-  department?: Prisma.DepartmentOrderByWithRelationInput
   document?: Prisma.KnowledgeDocumentOrderByWithRelationInput
+  department?: Prisma.DepartmentOrderByWithRelationInput
 }
 
 export type KnowledgeDocumentDepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -186,8 +186,8 @@ export type KnowledgeDocumentDepartmentWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.KnowledgeDocumentDepartmentWhereInput | Prisma.KnowledgeDocumentDepartmentWhereInput[]
   documentId?: Prisma.StringFilter<"KnowledgeDocumentDepartment"> | string
   departmentId?: Prisma.StringFilter<"KnowledgeDocumentDepartment"> | string
-  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   document?: Prisma.XOR<Prisma.KnowledgeDocumentScalarRelationFilter, Prisma.KnowledgeDocumentWhereInput>
+  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
 }, "id" | "documentId_departmentId">
 
 export type KnowledgeDocumentDepartmentOrderByWithAggregationInput = {
@@ -210,8 +210,8 @@ export type KnowledgeDocumentDepartmentScalarWhereWithAggregatesInput = {
 
 export type KnowledgeDocumentDepartmentCreateInput = {
   id?: string
-  department: Prisma.DepartmentCreateNestedOneWithoutKnowledgeDocumentsInput
   document: Prisma.KnowledgeDocumentCreateNestedOneWithoutDepartmentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutKnowledgeDocumentsInput
 }
 
 export type KnowledgeDocumentDepartmentUncheckedCreateInput = {
@@ -222,8 +222,8 @@ export type KnowledgeDocumentDepartmentUncheckedCreateInput = {
 
 export type KnowledgeDocumentDepartmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutKnowledgeDocumentsNestedInput
   document?: Prisma.KnowledgeDocumentUpdateOneRequiredWithoutDepartmentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutKnowledgeDocumentsNestedInput
 }
 
 export type KnowledgeDocumentDepartmentUncheckedUpdateInput = {
@@ -492,24 +492,24 @@ export type KnowledgeDocumentDepartmentSelect<ExtArgs extends runtime.Types.Exte
   id?: boolean
   documentId?: boolean
   departmentId?: boolean
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   document?: boolean | Prisma.KnowledgeDocumentDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["knowledgeDocumentDepartment"]>
 
 export type KnowledgeDocumentDepartmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentId?: boolean
   departmentId?: boolean
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   document?: boolean | Prisma.KnowledgeDocumentDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["knowledgeDocumentDepartment"]>
 
 export type KnowledgeDocumentDepartmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentId?: boolean
   departmentId?: boolean
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   document?: boolean | Prisma.KnowledgeDocumentDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["knowledgeDocumentDepartment"]>
 
 export type KnowledgeDocumentDepartmentSelectScalar = {
@@ -520,23 +520,23 @@ export type KnowledgeDocumentDepartmentSelectScalar = {
 
 export type KnowledgeDocumentDepartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentId" | "departmentId", ExtArgs["result"]["knowledgeDocumentDepartment"]>
 export type KnowledgeDocumentDepartmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   document?: boolean | Prisma.KnowledgeDocumentDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }
 export type KnowledgeDocumentDepartmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   document?: boolean | Prisma.KnowledgeDocumentDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }
 export type KnowledgeDocumentDepartmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   document?: boolean | Prisma.KnowledgeDocumentDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
 }
 
 export type $KnowledgeDocumentDepartmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "KnowledgeDocumentDepartment"
   objects: {
-    department: Prisma.$DepartmentPayload<ExtArgs>
     document: Prisma.$KnowledgeDocumentPayload<ExtArgs>
+    department: Prisma.$DepartmentPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -936,8 +936,8 @@ readonly fields: KnowledgeDocumentDepartmentFieldRefs;
  */
 export interface Prisma__KnowledgeDocumentDepartmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   document<T extends Prisma.KnowledgeDocumentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeDocumentDefaultArgs<ExtArgs>>): Prisma.Prisma__KnowledgeDocumentClient<runtime.Types.Result.GetResult<Prisma.$KnowledgeDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

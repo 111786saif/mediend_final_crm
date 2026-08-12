@@ -248,9 +248,9 @@ export type StockMovementWhereInput = {
   referenceType?: Prisma.EnumStockMovementTypeFilter<"StockMovement"> | $Enums.StockMovementType
   createdAt?: Prisma.DateTimeFilter<"StockMovement"> | Date | string
   createdById?: Prisma.StringFilter<"StockMovement"> | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   item?: Prisma.XOR<Prisma.ItemMasterScalarRelationFilter, Prisma.ItemMasterWhereInput>
   location?: Prisma.XOR<Prisma.LocationMasterScalarRelationFilter, Prisma.LocationMasterWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type StockMovementOrderByWithRelationInput = {
@@ -263,9 +263,9 @@ export type StockMovementOrderByWithRelationInput = {
   referenceType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
-  createdBy?: Prisma.UserOrderByWithRelationInput
   item?: Prisma.ItemMasterOrderByWithRelationInput
   location?: Prisma.LocationMasterOrderByWithRelationInput
+  createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type StockMovementWhereUniqueInput = Prisma.AtLeast<{
@@ -281,9 +281,9 @@ export type StockMovementWhereUniqueInput = Prisma.AtLeast<{
   referenceType?: Prisma.EnumStockMovementTypeFilter<"StockMovement"> | $Enums.StockMovementType
   createdAt?: Prisma.DateTimeFilter<"StockMovement"> | Date | string
   createdById?: Prisma.StringFilter<"StockMovement"> | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   item?: Prisma.XOR<Prisma.ItemMasterScalarRelationFilter, Prisma.ItemMasterWhereInput>
   location?: Prisma.XOR<Prisma.LocationMasterScalarRelationFilter, Prisma.LocationMasterWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type StockMovementOrderByWithAggregationInput = {
@@ -325,9 +325,9 @@ export type StockMovementCreateInput = {
   referenceId: string
   referenceType: $Enums.StockMovementType
   createdAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutStockMovementsCreatedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutStockMovementsInput
   location: Prisma.LocationMasterCreateNestedOneWithoutStockMovementsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutStockMovementsCreatedInput
 }
 
 export type StockMovementUncheckedCreateInput = {
@@ -349,9 +349,9 @@ export type StockMovementUpdateInput = {
   referenceId?: Prisma.StringFieldUpdateOperationsInput | string
   referenceType?: Prisma.EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutStockMovementsCreatedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutStockMovementsNestedInput
   location?: Prisma.LocationMasterUpdateOneRequiredWithoutStockMovementsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutStockMovementsCreatedNestedInput
 }
 
 export type StockMovementUncheckedUpdateInput = {
@@ -653,8 +653,8 @@ export type StockMovementCreateWithoutLocationInput = {
   referenceId: string
   referenceType: $Enums.StockMovementType
   createdAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutStockMovementsCreatedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutStockMovementsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutStockMovementsCreatedInput
 }
 
 export type StockMovementUncheckedCreateWithoutLocationInput = {
@@ -701,8 +701,8 @@ export type StockMovementCreateWithoutItemInput = {
   referenceId: string
   referenceType: $Enums.StockMovementType
   createdAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutStockMovementsCreatedInput
   location: Prisma.LocationMasterCreateNestedOneWithoutStockMovementsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutStockMovementsCreatedInput
 }
 
 export type StockMovementUncheckedCreateWithoutItemInput = {
@@ -804,8 +804,8 @@ export type StockMovementUpdateWithoutLocationInput = {
   referenceId?: Prisma.StringFieldUpdateOperationsInput | string
   referenceType?: Prisma.EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutStockMovementsCreatedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutStockMovementsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutStockMovementsCreatedNestedInput
 }
 
 export type StockMovementUncheckedUpdateWithoutLocationInput = {
@@ -848,8 +848,8 @@ export type StockMovementUpdateWithoutItemInput = {
   referenceId?: Prisma.StringFieldUpdateOperationsInput | string
   referenceType?: Prisma.EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutStockMovementsCreatedNestedInput
   location?: Prisma.LocationMasterUpdateOneRequiredWithoutStockMovementsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutStockMovementsCreatedNestedInput
 }
 
 export type StockMovementUncheckedUpdateWithoutItemInput = {
@@ -886,9 +886,9 @@ export type StockMovementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   referenceType?: boolean
   createdAt?: boolean
   createdById?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stockMovement"]>
 
 export type StockMovementSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -901,9 +901,9 @@ export type StockMovementSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   referenceType?: boolean
   createdAt?: boolean
   createdById?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stockMovement"]>
 
 export type StockMovementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -916,9 +916,9 @@ export type StockMovementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   referenceType?: boolean
   createdAt?: boolean
   createdById?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stockMovement"]>
 
 export type StockMovementSelectScalar = {
@@ -935,27 +935,27 @@ export type StockMovementSelectScalar = {
 
 export type StockMovementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "itemId" | "locationId" | "quantity" | "movementType" | "referenceId" | "referenceType" | "createdAt" | "createdById", ExtArgs["result"]["stockMovement"]>
 export type StockMovementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type StockMovementIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type StockMovementIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $StockMovementPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StockMovement"
   objects: {
-    createdBy: Prisma.$UserPayload<ExtArgs>
     item: Prisma.$ItemMasterPayload<ExtArgs>
     location: Prisma.$LocationMasterPayload<ExtArgs>
+    createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1361,9 +1361,9 @@ readonly fields: StockMovementFieldRefs;
  */
 export interface Prisma__StockMovementClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   item<T extends Prisma.ItemMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ItemMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__ItemMasterClient<runtime.Types.Result.GetResult<Prisma.$ItemMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   location<T extends Prisma.LocationMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__LocationMasterClient<runtime.Types.Result.GetResult<Prisma.$LocationMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

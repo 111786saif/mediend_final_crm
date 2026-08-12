@@ -238,8 +238,8 @@ export type PartyMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"PartyMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"PartyMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PartyMaster"> | Date | string
-  itemsSupplied?: Prisma.ItemMasterListRelationFilter
   ledgerEntries?: Prisma.LedgerEntryListRelationFilter
+  itemsSupplied?: Prisma.ItemMasterListRelationFilter
   purchases?: Prisma.PurchaseTransactionListRelationFilter
 }
 
@@ -256,8 +256,8 @@ export type PartyMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  itemsSupplied?: Prisma.ItemMasterOrderByRelationAggregateInput
   ledgerEntries?: Prisma.LedgerEntryOrderByRelationAggregateInput
+  itemsSupplied?: Prisma.ItemMasterOrderByRelationAggregateInput
   purchases?: Prisma.PurchaseTransactionOrderByRelationAggregateInput
 }
 
@@ -277,8 +277,8 @@ export type PartyMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"PartyMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"PartyMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PartyMaster"> | Date | string
-  itemsSupplied?: Prisma.ItemMasterListRelationFilter
   ledgerEntries?: Prisma.LedgerEntryListRelationFilter
+  itemsSupplied?: Prisma.ItemMasterListRelationFilter
   purchases?: Prisma.PurchaseTransactionListRelationFilter
 }, "id">
 
@@ -331,8 +331,8 @@ export type PartyMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  itemsSupplied?: Prisma.ItemMasterCreateNestedManyWithoutSupplierInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutPartyInput
+  itemsSupplied?: Prisma.ItemMasterCreateNestedManyWithoutSupplierInput
   purchases?: Prisma.PurchaseTransactionCreateNestedManyWithoutSupplierInput
 }
 
@@ -349,8 +349,8 @@ export type PartyMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  itemsSupplied?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutSupplierInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutPartyInput
+  itemsSupplied?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutSupplierInput
   purchases?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutSupplierInput
 }
 
@@ -367,8 +367,8 @@ export type PartyMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  itemsSupplied?: Prisma.ItemMasterUpdateManyWithoutSupplierNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutPartyNestedInput
+  itemsSupplied?: Prisma.ItemMasterUpdateManyWithoutSupplierNestedInput
   purchases?: Prisma.PurchaseTransactionUpdateManyWithoutSupplierNestedInput
 }
 
@@ -385,8 +385,8 @@ export type PartyMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  itemsSupplied?: Prisma.ItemMasterUncheckedUpdateManyWithoutSupplierNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutPartyNestedInput
+  itemsSupplied?: Prisma.ItemMasterUncheckedUpdateManyWithoutSupplierNestedInput
   purchases?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutSupplierNestedInput
 }
 
@@ -719,8 +719,8 @@ export type PartyMasterCreateWithoutPurchasesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  itemsSupplied?: Prisma.ItemMasterCreateNestedManyWithoutSupplierInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutPartyInput
+  itemsSupplied?: Prisma.ItemMasterCreateNestedManyWithoutSupplierInput
 }
 
 export type PartyMasterUncheckedCreateWithoutPurchasesInput = {
@@ -736,8 +736,8 @@ export type PartyMasterUncheckedCreateWithoutPurchasesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  itemsSupplied?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutSupplierInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutPartyInput
+  itemsSupplied?: Prisma.ItemMasterUncheckedCreateNestedManyWithoutSupplierInput
 }
 
 export type PartyMasterCreateOrConnectWithoutPurchasesInput = {
@@ -769,8 +769,8 @@ export type PartyMasterUpdateWithoutPurchasesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  itemsSupplied?: Prisma.ItemMasterUpdateManyWithoutSupplierNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutPartyNestedInput
+  itemsSupplied?: Prisma.ItemMasterUpdateManyWithoutSupplierNestedInput
 }
 
 export type PartyMasterUncheckedUpdateWithoutPurchasesInput = {
@@ -786,8 +786,8 @@ export type PartyMasterUncheckedUpdateWithoutPurchasesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  itemsSupplied?: Prisma.ItemMasterUncheckedUpdateManyWithoutSupplierNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutPartyNestedInput
+  itemsSupplied?: Prisma.ItemMasterUncheckedUpdateManyWithoutSupplierNestedInput
 }
 
 
@@ -796,14 +796,14 @@ export type PartyMasterUncheckedUpdateWithoutPurchasesInput = {
  */
 
 export type PartyMasterCountOutputType = {
-  itemsSupplied: number
   ledgerEntries: number
+  itemsSupplied: number
   purchases: number
 }
 
 export type PartyMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  itemsSupplied?: boolean | PartyMasterCountOutputTypeCountItemsSuppliedArgs
   ledgerEntries?: boolean | PartyMasterCountOutputTypeCountLedgerEntriesArgs
+  itemsSupplied?: boolean | PartyMasterCountOutputTypeCountItemsSuppliedArgs
   purchases?: boolean | PartyMasterCountOutputTypeCountPurchasesArgs
 }
 
@@ -820,15 +820,15 @@ export type PartyMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
 /**
  * PartyMasterCountOutputType without action
  */
-export type PartyMasterCountOutputTypeCountItemsSuppliedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ItemMasterWhereInput
+export type PartyMasterCountOutputTypeCountLedgerEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LedgerEntryWhereInput
 }
 
 /**
  * PartyMasterCountOutputType without action
  */
-export type PartyMasterCountOutputTypeCountLedgerEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LedgerEntryWhereInput
+export type PartyMasterCountOutputTypeCountItemsSuppliedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ItemMasterWhereInput
 }
 
 /**
@@ -852,8 +852,8 @@ export type PartyMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  itemsSupplied?: boolean | Prisma.PartyMaster$itemsSuppliedArgs<ExtArgs>
   ledgerEntries?: boolean | Prisma.PartyMaster$ledgerEntriesArgs<ExtArgs>
+  itemsSupplied?: boolean | Prisma.PartyMaster$itemsSuppliedArgs<ExtArgs>
   purchases?: boolean | Prisma.PartyMaster$purchasesArgs<ExtArgs>
   _count?: boolean | Prisma.PartyMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["partyMaster"]>
@@ -905,8 +905,8 @@ export type PartyMasterSelectScalar = {
 
 export type PartyMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "partyType" | "contactName" | "contactEmail" | "contactPhone" | "gstNumber" | "panNumber" | "address" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["partyMaster"]>
 export type PartyMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  itemsSupplied?: boolean | Prisma.PartyMaster$itemsSuppliedArgs<ExtArgs>
   ledgerEntries?: boolean | Prisma.PartyMaster$ledgerEntriesArgs<ExtArgs>
+  itemsSupplied?: boolean | Prisma.PartyMaster$itemsSuppliedArgs<ExtArgs>
   purchases?: boolean | Prisma.PartyMaster$purchasesArgs<ExtArgs>
   _count?: boolean | Prisma.PartyMasterCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -916,8 +916,8 @@ export type PartyMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $PartyMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PartyMaster"
   objects: {
-    itemsSupplied: Prisma.$ItemMasterPayload<ExtArgs>[]
     ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
+    itemsSupplied: Prisma.$ItemMasterPayload<ExtArgs>[]
     purchases: Prisma.$PurchaseTransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1327,8 +1327,8 @@ readonly fields: PartyMasterFieldRefs;
  */
 export interface Prisma__PartyMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  itemsSupplied<T extends Prisma.PartyMaster$itemsSuppliedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartyMaster$itemsSuppliedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ledgerEntries<T extends Prisma.PartyMaster$ledgerEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartyMaster$ledgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  itemsSupplied<T extends Prisma.PartyMaster$itemsSuppliedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartyMaster$itemsSuppliedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   purchases<T extends Prisma.PartyMaster$purchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartyMaster$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1764,30 +1764,6 @@ export type PartyMasterDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * PartyMaster.itemsSupplied
- */
-export type PartyMaster$itemsSuppliedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ItemMaster
-   */
-  select?: Prisma.ItemMasterSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ItemMaster
-   */
-  omit?: Prisma.ItemMasterOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ItemMasterInclude<ExtArgs> | null
-  where?: Prisma.ItemMasterWhereInput
-  orderBy?: Prisma.ItemMasterOrderByWithRelationInput | Prisma.ItemMasterOrderByWithRelationInput[]
-  cursor?: Prisma.ItemMasterWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ItemMasterScalarFieldEnum | Prisma.ItemMasterScalarFieldEnum[]
-}
-
-/**
  * PartyMaster.ledgerEntries
  */
 export type PartyMaster$ledgerEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1809,6 +1785,30 @@ export type PartyMaster$ledgerEntriesArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.LedgerEntryScalarFieldEnum | Prisma.LedgerEntryScalarFieldEnum[]
+}
+
+/**
+ * PartyMaster.itemsSupplied
+ */
+export type PartyMaster$itemsSuppliedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ItemMaster
+   */
+  select?: Prisma.ItemMasterSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ItemMaster
+   */
+  omit?: Prisma.ItemMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ItemMasterInclude<ExtArgs> | null
+  where?: Prisma.ItemMasterWhereInput
+  orderBy?: Prisma.ItemMasterOrderByWithRelationInput | Prisma.ItemMasterOrderByWithRelationInput[]
+  cursor?: Prisma.ItemMasterWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ItemMasterScalarFieldEnum | Prisma.ItemMasterScalarFieldEnum[]
 }
 
 /**

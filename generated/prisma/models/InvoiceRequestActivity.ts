@@ -198,8 +198,8 @@ export type InvoiceRequestActivityWhereInput = {
   remarks?: Prisma.StringNullableFilter<"InvoiceRequestActivity"> | string | null
   actorId?: Prisma.StringFilter<"InvoiceRequestActivity"> | string
   createdAt?: Prisma.DateTimeFilter<"InvoiceRequestActivity"> | Date | string
-  actor?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   request?: Prisma.XOR<Prisma.InvoiceRequestScalarRelationFilter, Prisma.InvoiceRequestWhereInput>
+  actor?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type InvoiceRequestActivityOrderByWithRelationInput = {
@@ -210,8 +210,8 @@ export type InvoiceRequestActivityOrderByWithRelationInput = {
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   actorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  actor?: Prisma.UserOrderByWithRelationInput
   request?: Prisma.InvoiceRequestOrderByWithRelationInput
+  actor?: Prisma.UserOrderByWithRelationInput
 }
 
 export type InvoiceRequestActivityWhereUniqueInput = Prisma.AtLeast<{
@@ -225,8 +225,8 @@ export type InvoiceRequestActivityWhereUniqueInput = Prisma.AtLeast<{
   remarks?: Prisma.StringNullableFilter<"InvoiceRequestActivity"> | string | null
   actorId?: Prisma.StringFilter<"InvoiceRequestActivity"> | string
   createdAt?: Prisma.DateTimeFilter<"InvoiceRequestActivity"> | Date | string
-  actor?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   request?: Prisma.XOR<Prisma.InvoiceRequestScalarRelationFilter, Prisma.InvoiceRequestWhereInput>
+  actor?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type InvoiceRequestActivityOrderByWithAggregationInput = {
@@ -261,8 +261,8 @@ export type InvoiceRequestActivityCreateInput = {
   message: string
   remarks?: string | null
   createdAt?: Date | string
-  actor: Prisma.UserCreateNestedOneWithoutInvoiceRequestActivitiesInput
   request: Prisma.InvoiceRequestCreateNestedOneWithoutActivityLogsInput
+  actor: Prisma.UserCreateNestedOneWithoutInvoiceRequestActivitiesInput
 }
 
 export type InvoiceRequestActivityUncheckedCreateInput = {
@@ -281,8 +281,8 @@ export type InvoiceRequestActivityUpdateInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  actor?: Prisma.UserUpdateOneRequiredWithoutInvoiceRequestActivitiesNestedInput
   request?: Prisma.InvoiceRequestUpdateOneRequiredWithoutActivityLogsNestedInput
+  actor?: Prisma.UserUpdateOneRequiredWithoutInvoiceRequestActivitiesNestedInput
 }
 
 export type InvoiceRequestActivityUncheckedUpdateInput = {
@@ -630,8 +630,8 @@ export type InvoiceRequestActivitySelect<ExtArgs extends runtime.Types.Extension
   remarks?: boolean
   actorId?: boolean
   createdAt?: boolean
-  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   request?: boolean | Prisma.InvoiceRequestDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceRequestActivity"]>
 
 export type InvoiceRequestActivitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -642,8 +642,8 @@ export type InvoiceRequestActivitySelectCreateManyAndReturn<ExtArgs extends runt
   remarks?: boolean
   actorId?: boolean
   createdAt?: boolean
-  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   request?: boolean | Prisma.InvoiceRequestDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceRequestActivity"]>
 
 export type InvoiceRequestActivitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -654,8 +654,8 @@ export type InvoiceRequestActivitySelectUpdateManyAndReturn<ExtArgs extends runt
   remarks?: boolean
   actorId?: boolean
   createdAt?: boolean
-  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   request?: boolean | Prisma.InvoiceRequestDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceRequestActivity"]>
 
 export type InvoiceRequestActivitySelectScalar = {
@@ -670,23 +670,23 @@ export type InvoiceRequestActivitySelectScalar = {
 
 export type InvoiceRequestActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "requestId" | "action" | "message" | "remarks" | "actorId" | "createdAt", ExtArgs["result"]["invoiceRequestActivity"]>
 export type InvoiceRequestActivityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   request?: boolean | Prisma.InvoiceRequestDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type InvoiceRequestActivityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   request?: boolean | Prisma.InvoiceRequestDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type InvoiceRequestActivityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   request?: boolean | Prisma.InvoiceRequestDefaultArgs<ExtArgs>
+  actor?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $InvoiceRequestActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InvoiceRequestActivity"
   objects: {
-    actor: Prisma.$UserPayload<ExtArgs>
     request: Prisma.$InvoiceRequestPayload<ExtArgs>
+    actor: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1090,8 +1090,8 @@ readonly fields: InvoiceRequestActivityFieldRefs;
  */
 export interface Prisma__InvoiceRequestActivityClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  actor<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   request<T extends Prisma.InvoiceRequestDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InvoiceRequestDefaultArgs<ExtArgs>>): Prisma.Prisma__InvoiceRequestClient<runtime.Types.Result.GetResult<Prisma.$InvoiceRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  actor<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

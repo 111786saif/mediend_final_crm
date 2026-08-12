@@ -42,10 +42,10 @@ export type PnLCategoryMinAggregateOutputType = {
   sortOrder: number | null
   isActive: boolean | null
   sourceKey: string | null
+  departmentKey: string | null
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  departmentKey: string | null
 }
 
 export type PnLCategoryMaxAggregateOutputType = {
@@ -56,10 +56,10 @@ export type PnLCategoryMaxAggregateOutputType = {
   sortOrder: number | null
   isActive: boolean | null
   sourceKey: string | null
+  departmentKey: string | null
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  departmentKey: string | null
 }
 
 export type PnLCategoryCountAggregateOutputType = {
@@ -70,10 +70,10 @@ export type PnLCategoryCountAggregateOutputType = {
   sortOrder: number
   isActive: number
   sourceKey: number
+  departmentKey: number
   createdById: number
   createdAt: number
   updatedAt: number
-  departmentKey: number
   _all: number
 }
 
@@ -94,10 +94,10 @@ export type PnLCategoryMinAggregateInputType = {
   sortOrder?: true
   isActive?: true
   sourceKey?: true
+  departmentKey?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
-  departmentKey?: true
 }
 
 export type PnLCategoryMaxAggregateInputType = {
@@ -108,10 +108,10 @@ export type PnLCategoryMaxAggregateInputType = {
   sortOrder?: true
   isActive?: true
   sourceKey?: true
+  departmentKey?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
-  departmentKey?: true
 }
 
 export type PnLCategoryCountAggregateInputType = {
@@ -122,10 +122,10 @@ export type PnLCategoryCountAggregateInputType = {
   sortOrder?: true
   isActive?: true
   sourceKey?: true
+  departmentKey?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
-  departmentKey?: true
   _all?: true
 }
 
@@ -223,10 +223,10 @@ export type PnLCategoryGroupByOutputType = {
   sortOrder: number
   isActive: boolean
   sourceKey: string | null
+  departmentKey: string | null
   createdById: string | null
   createdAt: Date
   updatedAt: Date
-  departmentKey: string | null
   _count: PnLCategoryCountAggregateOutputType | null
   _avg: PnLCategoryAvgAggregateOutputType | null
   _sum: PnLCategorySumAggregateOutputType | null
@@ -260,10 +260,10 @@ export type PnLCategoryWhereInput = {
   sortOrder?: Prisma.IntFilter<"PnLCategory"> | number
   isActive?: Prisma.BoolFilter<"PnLCategory"> | boolean
   sourceKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
+  departmentKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
   createdById?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PnLCategory"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PnLCategory"> | Date | string
-  departmentKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   entries?: Prisma.PnLEntryListRelationFilter
 }
@@ -276,10 +276,10 @@ export type PnLCategoryOrderByWithRelationInput = {
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sourceKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  departmentKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  departmentKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.UserOrderByWithRelationInput
   entries?: Prisma.PnLEntryOrderByRelationAggregateInput
 }
@@ -296,10 +296,10 @@ export type PnLCategoryWhereUniqueInput = Prisma.AtLeast<{
   sortOrder?: Prisma.IntFilter<"PnLCategory"> | number
   isActive?: Prisma.BoolFilter<"PnLCategory"> | boolean
   sourceKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
+  departmentKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
   createdById?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PnLCategory"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PnLCategory"> | Date | string
-  departmentKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   entries?: Prisma.PnLEntryListRelationFilter
 }, "id" | "sourceKey_departmentKey">
@@ -312,10 +312,10 @@ export type PnLCategoryOrderByWithAggregationInput = {
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sourceKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  departmentKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  departmentKey?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PnLCategoryCountOrderByAggregateInput
   _avg?: Prisma.PnLCategoryAvgOrderByAggregateInput
   _max?: Prisma.PnLCategoryMaxOrderByAggregateInput
@@ -334,10 +334,10 @@ export type PnLCategoryScalarWhereWithAggregatesInput = {
   sortOrder?: Prisma.IntWithAggregatesFilter<"PnLCategory"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"PnLCategory"> | boolean
   sourceKey?: Prisma.StringNullableWithAggregatesFilter<"PnLCategory"> | string | null
+  departmentKey?: Prisma.StringNullableWithAggregatesFilter<"PnLCategory"> | string | null
   createdById?: Prisma.StringNullableWithAggregatesFilter<"PnLCategory"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PnLCategory"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PnLCategory"> | Date | string
-  departmentKey?: Prisma.StringNullableWithAggregatesFilter<"PnLCategory"> | string | null
 }
 
 export type PnLCategoryCreateInput = {
@@ -348,9 +348,9 @@ export type PnLCategoryCreateInput = {
   sortOrder?: number
   isActive?: boolean
   sourceKey?: string | null
+  departmentKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  departmentKey?: string | null
   createdBy?: Prisma.UserCreateNestedOneWithoutPnlCategoriesCreatedInput
   entries?: Prisma.PnLEntryCreateNestedManyWithoutCategoryInput
 }
@@ -363,10 +363,10 @@ export type PnLCategoryUncheckedCreateInput = {
   sortOrder?: number
   isActive?: boolean
   sourceKey?: string | null
+  departmentKey?: string | null
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  departmentKey?: string | null
   entries?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCategoryInput
 }
 
@@ -378,9 +378,9 @@ export type PnLCategoryUpdateInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.UserUpdateOneWithoutPnlCategoriesCreatedNestedInput
   entries?: Prisma.PnLEntryUpdateManyWithoutCategoryNestedInput
 }
@@ -393,10 +393,10 @@ export type PnLCategoryUncheckedUpdateInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.PnLEntryUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
@@ -408,10 +408,10 @@ export type PnLCategoryCreateManyInput = {
   sortOrder?: number
   isActive?: boolean
   sourceKey?: string | null
+  departmentKey?: string | null
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  departmentKey?: string | null
 }
 
 export type PnLCategoryUpdateManyMutationInput = {
@@ -422,9 +422,9 @@ export type PnLCategoryUpdateManyMutationInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PnLCategoryUncheckedUpdateManyInput = {
@@ -435,10 +435,10 @@ export type PnLCategoryUncheckedUpdateManyInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PnLCategoryListRelationFilter = {
@@ -464,10 +464,10 @@ export type PnLCategoryCountOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sourceKey?: Prisma.SortOrder
+  departmentKey?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  departmentKey?: Prisma.SortOrder
 }
 
 export type PnLCategoryAvgOrderByAggregateInput = {
@@ -482,10 +482,10 @@ export type PnLCategoryMaxOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sourceKey?: Prisma.SortOrder
+  departmentKey?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  departmentKey?: Prisma.SortOrder
 }
 
 export type PnLCategoryMinOrderByAggregateInput = {
@@ -496,10 +496,10 @@ export type PnLCategoryMinOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   sourceKey?: Prisma.SortOrder
+  departmentKey?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  departmentKey?: Prisma.SortOrder
 }
 
 export type PnLCategorySumOrderByAggregateInput = {
@@ -579,9 +579,9 @@ export type PnLCategoryCreateWithoutCreatedByInput = {
   sortOrder?: number
   isActive?: boolean
   sourceKey?: string | null
+  departmentKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  departmentKey?: string | null
   entries?: Prisma.PnLEntryCreateNestedManyWithoutCategoryInput
 }
 
@@ -593,9 +593,9 @@ export type PnLCategoryUncheckedCreateWithoutCreatedByInput = {
   sortOrder?: number
   isActive?: boolean
   sourceKey?: string | null
+  departmentKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  departmentKey?: string | null
   entries?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCategoryInput
 }
 
@@ -636,10 +636,10 @@ export type PnLCategoryScalarWhereInput = {
   sortOrder?: Prisma.IntFilter<"PnLCategory"> | number
   isActive?: Prisma.BoolFilter<"PnLCategory"> | boolean
   sourceKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
+  departmentKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
   createdById?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PnLCategory"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PnLCategory"> | Date | string
-  departmentKey?: Prisma.StringNullableFilter<"PnLCategory"> | string | null
 }
 
 export type PnLCategoryCreateWithoutEntriesInput = {
@@ -650,9 +650,9 @@ export type PnLCategoryCreateWithoutEntriesInput = {
   sortOrder?: number
   isActive?: boolean
   sourceKey?: string | null
+  departmentKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  departmentKey?: string | null
   createdBy?: Prisma.UserCreateNestedOneWithoutPnlCategoriesCreatedInput
 }
 
@@ -664,10 +664,10 @@ export type PnLCategoryUncheckedCreateWithoutEntriesInput = {
   sortOrder?: number
   isActive?: boolean
   sourceKey?: string | null
+  departmentKey?: string | null
   createdById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  departmentKey?: string | null
 }
 
 export type PnLCategoryCreateOrConnectWithoutEntriesInput = {
@@ -694,9 +694,9 @@ export type PnLCategoryUpdateWithoutEntriesInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.UserUpdateOneWithoutPnlCategoriesCreatedNestedInput
 }
 
@@ -708,10 +708,10 @@ export type PnLCategoryUncheckedUpdateWithoutEntriesInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PnLCategoryCreateManyCreatedByInput = {
@@ -722,9 +722,9 @@ export type PnLCategoryCreateManyCreatedByInput = {
   sortOrder?: number
   isActive?: boolean
   sourceKey?: string | null
+  departmentKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  departmentKey?: string | null
 }
 
 export type PnLCategoryUpdateWithoutCreatedByInput = {
@@ -735,9 +735,9 @@ export type PnLCategoryUpdateWithoutCreatedByInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.PnLEntryUpdateManyWithoutCategoryNestedInput
 }
 
@@ -749,9 +749,9 @@ export type PnLCategoryUncheckedUpdateWithoutCreatedByInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.PnLEntryUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
@@ -763,9 +763,9 @@ export type PnLCategoryUncheckedUpdateManyWithoutCreatedByInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sourceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departmentKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -807,10 +807,10 @@ export type PnLCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   sortOrder?: boolean
   isActive?: boolean
   sourceKey?: boolean
+  departmentKey?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  departmentKey?: boolean
   createdBy?: boolean | Prisma.PnLCategory$createdByArgs<ExtArgs>
   entries?: boolean | Prisma.PnLCategory$entriesArgs<ExtArgs>
   _count?: boolean | Prisma.PnLCategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -824,10 +824,10 @@ export type PnLCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   sortOrder?: boolean
   isActive?: boolean
   sourceKey?: boolean
+  departmentKey?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  departmentKey?: boolean
   createdBy?: boolean | Prisma.PnLCategory$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["pnLCategory"]>
 
@@ -839,10 +839,10 @@ export type PnLCategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   sortOrder?: boolean
   isActive?: boolean
   sourceKey?: boolean
+  departmentKey?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  departmentKey?: boolean
   createdBy?: boolean | Prisma.PnLCategory$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["pnLCategory"]>
 
@@ -854,13 +854,13 @@ export type PnLCategorySelectScalar = {
   sortOrder?: boolean
   isActive?: boolean
   sourceKey?: boolean
+  departmentKey?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  departmentKey?: boolean
 }
 
-export type PnLCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "isSystem" | "sortOrder" | "isActive" | "sourceKey" | "createdById" | "createdAt" | "updatedAt" | "departmentKey", ExtArgs["result"]["pnLCategory"]>
+export type PnLCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "isSystem" | "sortOrder" | "isActive" | "sourceKey" | "departmentKey" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["pnLCategory"]>
 export type PnLCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.PnLCategory$createdByArgs<ExtArgs>
   entries?: boolean | Prisma.PnLCategory$entriesArgs<ExtArgs>
@@ -890,13 +890,13 @@ export type $PnLCategoryPayload<ExtArgs extends runtime.Types.Extensions.Interna
      * Stable key for revenue sync: SURGERY, IT, LOAN_DEMAT, GOOGLE_ADS; expense: SALARY, SEAT_COST, etc.
      */
     sourceKey: string | null
-    createdById: string | null
-    createdAt: Date
-    updatedAt: Date
     /**
      * SURGERY | IT | LOAN_DEMAT | GOOGLE_ADS for department-scoped expenses; null for revenue rows and ad-hoc categories
      */
     departmentKey: string | null
+    createdById: string | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["pnLCategory"]>
   composites: {}
 }
@@ -1329,10 +1329,10 @@ export interface PnLCategoryFieldRefs {
   readonly sortOrder: Prisma.FieldRef<"PnLCategory", 'Int'>
   readonly isActive: Prisma.FieldRef<"PnLCategory", 'Boolean'>
   readonly sourceKey: Prisma.FieldRef<"PnLCategory", 'String'>
+  readonly departmentKey: Prisma.FieldRef<"PnLCategory", 'String'>
   readonly createdById: Prisma.FieldRef<"PnLCategory", 'String'>
   readonly createdAt: Prisma.FieldRef<"PnLCategory", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PnLCategory", 'DateTime'>
-  readonly departmentKey: Prisma.FieldRef<"PnLCategory", 'String'>
 }
     
 

@@ -182,8 +182,8 @@ export type CrmCampaignSourceWhereInput = {
   isActive?: Prisma.BoolFilter<"CrmCampaignSource"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CrmCampaignSource"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CrmCampaignSource"> | Date | string
-  campaigns?: Prisma.CrmCampaignListRelationFilter
   leadSources?: Prisma.CrmCampaignLeadSourceListRelationFilter
+  campaigns?: Prisma.CrmCampaignListRelationFilter
 }
 
 export type CrmCampaignSourceOrderByWithRelationInput = {
@@ -192,8 +192,8 @@ export type CrmCampaignSourceOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  campaigns?: Prisma.CrmCampaignOrderByRelationAggregateInput
   leadSources?: Prisma.CrmCampaignLeadSourceOrderByRelationAggregateInput
+  campaigns?: Prisma.CrmCampaignOrderByRelationAggregateInput
 }
 
 export type CrmCampaignSourceWhereUniqueInput = Prisma.AtLeast<{
@@ -205,8 +205,8 @@ export type CrmCampaignSourceWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"CrmCampaignSource"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CrmCampaignSource"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CrmCampaignSource"> | Date | string
-  campaigns?: Prisma.CrmCampaignListRelationFilter
   leadSources?: Prisma.CrmCampaignLeadSourceListRelationFilter
+  campaigns?: Prisma.CrmCampaignListRelationFilter
 }, "id" | "name">
 
 export type CrmCampaignSourceOrderByWithAggregationInput = {
@@ -237,8 +237,8 @@ export type CrmCampaignSourceCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  campaigns?: Prisma.CrmCampaignCreateNestedManyWithoutSourceInput
   leadSources?: Prisma.CrmCampaignLeadSourceCreateNestedManyWithoutSourceInput
+  campaigns?: Prisma.CrmCampaignCreateNestedManyWithoutSourceInput
 }
 
 export type CrmCampaignSourceUncheckedCreateInput = {
@@ -247,8 +247,8 @@ export type CrmCampaignSourceUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  campaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutSourceInput
   leadSources?: Prisma.CrmCampaignLeadSourceUncheckedCreateNestedManyWithoutSourceInput
+  campaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutSourceInput
 }
 
 export type CrmCampaignSourceUpdateInput = {
@@ -257,8 +257,8 @@ export type CrmCampaignSourceUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  campaigns?: Prisma.CrmCampaignUpdateManyWithoutSourceNestedInput
   leadSources?: Prisma.CrmCampaignLeadSourceUpdateManyWithoutSourceNestedInput
+  campaigns?: Prisma.CrmCampaignUpdateManyWithoutSourceNestedInput
 }
 
 export type CrmCampaignSourceUncheckedUpdateInput = {
@@ -267,8 +267,8 @@ export type CrmCampaignSourceUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  campaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutSourceNestedInput
   leadSources?: Prisma.CrmCampaignLeadSourceUncheckedUpdateManyWithoutSourceNestedInput
+  campaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutSourceNestedInput
 }
 
 export type CrmCampaignSourceCreateManyInput = {
@@ -462,13 +462,13 @@ export type CrmCampaignSourceUncheckedUpdateWithoutCampaignsInput = {
  */
 
 export type CrmCampaignSourceCountOutputType = {
-  campaigns: number
   leadSources: number
+  campaigns: number
 }
 
 export type CrmCampaignSourceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  campaigns?: boolean | CrmCampaignSourceCountOutputTypeCountCampaignsArgs
   leadSources?: boolean | CrmCampaignSourceCountOutputTypeCountLeadSourcesArgs
+  campaigns?: boolean | CrmCampaignSourceCountOutputTypeCountCampaignsArgs
 }
 
 /**
@@ -484,15 +484,15 @@ export type CrmCampaignSourceCountOutputTypeDefaultArgs<ExtArgs extends runtime.
 /**
  * CrmCampaignSourceCountOutputType without action
  */
-export type CrmCampaignSourceCountOutputTypeCountCampaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CrmCampaignWhereInput
+export type CrmCampaignSourceCountOutputTypeCountLeadSourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignLeadSourceWhereInput
 }
 
 /**
  * CrmCampaignSourceCountOutputType without action
  */
-export type CrmCampaignSourceCountOutputTypeCountLeadSourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CrmCampaignLeadSourceWhereInput
+export type CrmCampaignSourceCountOutputTypeCountCampaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignWhereInput
 }
 
 
@@ -502,8 +502,8 @@ export type CrmCampaignSourceSelect<ExtArgs extends runtime.Types.Extensions.Int
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  campaigns?: boolean | Prisma.CrmCampaignSource$campaignsArgs<ExtArgs>
   leadSources?: boolean | Prisma.CrmCampaignSource$leadSourcesArgs<ExtArgs>
+  campaigns?: boolean | Prisma.CrmCampaignSource$campaignsArgs<ExtArgs>
   _count?: boolean | Prisma.CrmCampaignSourceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["crmCampaignSource"]>
 
@@ -533,8 +533,8 @@ export type CrmCampaignSourceSelectScalar = {
 
 export type CrmCampaignSourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["crmCampaignSource"]>
 export type CrmCampaignSourceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  campaigns?: boolean | Prisma.CrmCampaignSource$campaignsArgs<ExtArgs>
   leadSources?: boolean | Prisma.CrmCampaignSource$leadSourcesArgs<ExtArgs>
+  campaigns?: boolean | Prisma.CrmCampaignSource$campaignsArgs<ExtArgs>
   _count?: boolean | Prisma.CrmCampaignSourceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CrmCampaignSourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -543,8 +543,8 @@ export type CrmCampaignSourceIncludeUpdateManyAndReturn<ExtArgs extends runtime.
 export type $CrmCampaignSourcePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CrmCampaignSource"
   objects: {
-    campaigns: Prisma.$CrmCampaignPayload<ExtArgs>[]
     leadSources: Prisma.$CrmCampaignLeadSourcePayload<ExtArgs>[]
+    campaigns: Prisma.$CrmCampaignPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -946,8 +946,8 @@ readonly fields: CrmCampaignSourceFieldRefs;
  */
 export interface Prisma__CrmCampaignSourceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  campaigns<T extends Prisma.CrmCampaignSource$campaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignSource$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadSources<T extends Prisma.CrmCampaignSource$leadSourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignSource$leadSourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignLeadSourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaigns<T extends Prisma.CrmCampaignSource$campaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignSource$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1375,30 +1375,6 @@ export type CrmCampaignSourceDeleteManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * CrmCampaignSource.campaigns
- */
-export type CrmCampaignSource$campaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CrmCampaign
-   */
-  select?: Prisma.CrmCampaignSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the CrmCampaign
-   */
-  omit?: Prisma.CrmCampaignOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CrmCampaignInclude<ExtArgs> | null
-  where?: Prisma.CrmCampaignWhereInput
-  orderBy?: Prisma.CrmCampaignOrderByWithRelationInput | Prisma.CrmCampaignOrderByWithRelationInput[]
-  cursor?: Prisma.CrmCampaignWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.CrmCampaignScalarFieldEnum | Prisma.CrmCampaignScalarFieldEnum[]
-}
-
-/**
  * CrmCampaignSource.leadSources
  */
 export type CrmCampaignSource$leadSourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1420,6 +1396,30 @@ export type CrmCampaignSource$leadSourcesArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.CrmCampaignLeadSourceScalarFieldEnum | Prisma.CrmCampaignLeadSourceScalarFieldEnum[]
+}
+
+/**
+ * CrmCampaignSource.campaigns
+ */
+export type CrmCampaignSource$campaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaign
+   */
+  select?: Prisma.CrmCampaignSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaign
+   */
+  omit?: Prisma.CrmCampaignOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignWhereInput
+  orderBy?: Prisma.CrmCampaignOrderByWithRelationInput | Prisma.CrmCampaignOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignScalarFieldEnum | Prisma.CrmCampaignScalarFieldEnum[]
 }
 
 /**

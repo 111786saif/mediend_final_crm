@@ -281,6 +281,7 @@ export type TreatmentMasterWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"TreatmentMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TreatmentMaster"> | Date | string
   leads?: Prisma.LeadListRelationFilter
+  crmCampaigns?: Prisma.CrmCampaignListRelationFilter
 }
 
 export type TreatmentMasterOrderByWithRelationInput = {
@@ -296,6 +297,7 @@ export type TreatmentMasterOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   leads?: Prisma.LeadOrderByRelationAggregateInput
+  crmCampaigns?: Prisma.CrmCampaignOrderByRelationAggregateInput
 }
 
 export type TreatmentMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -314,6 +316,7 @@ export type TreatmentMasterWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"TreatmentMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TreatmentMaster"> | Date | string
   leads?: Prisma.LeadListRelationFilter
+  crmCampaigns?: Prisma.CrmCampaignListRelationFilter
 }, "id" | "name">
 
 export type TreatmentMasterOrderByWithAggregationInput = {
@@ -365,6 +368,7 @@ export type TreatmentMasterCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadCreateNestedManyWithoutTreatmentMasterInput
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutTreatmentMasterInput
 }
 
 export type TreatmentMasterUncheckedCreateInput = {
@@ -380,6 +384,7 @@ export type TreatmentMasterUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutTreatmentMasterInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutTreatmentMasterInput
 }
 
 export type TreatmentMasterUpdateInput = {
@@ -395,6 +400,7 @@ export type TreatmentMasterUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUpdateManyWithoutTreatmentMasterNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutTreatmentMasterNestedInput
 }
 
 export type TreatmentMasterUncheckedUpdateInput = {
@@ -410,6 +416,7 @@ export type TreatmentMasterUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUncheckedUpdateManyWithoutTreatmentMasterNestedInput
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutTreatmentMasterNestedInput
 }
 
 export type TreatmentMasterCreateManyInput = {
@@ -533,6 +540,22 @@ export type TreatmentMasterUpdateOneWithoutLeadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TreatmentMasterUpdateToOneWithWhereWithoutLeadsInput, Prisma.TreatmentMasterUpdateWithoutLeadsInput>, Prisma.TreatmentMasterUncheckedUpdateWithoutLeadsInput>
 }
 
+export type TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput = {
+  create?: Prisma.XOR<Prisma.TreatmentMasterCreateWithoutCrmCampaignsInput, Prisma.TreatmentMasterUncheckedCreateWithoutCrmCampaignsInput>
+  connectOrCreate?: Prisma.TreatmentMasterCreateOrConnectWithoutCrmCampaignsInput
+  connect?: Prisma.TreatmentMasterWhereUniqueInput
+}
+
+export type TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput = {
+  create?: Prisma.XOR<Prisma.TreatmentMasterCreateWithoutCrmCampaignsInput, Prisma.TreatmentMasterUncheckedCreateWithoutCrmCampaignsInput>
+  connectOrCreate?: Prisma.TreatmentMasterCreateOrConnectWithoutCrmCampaignsInput
+  upsert?: Prisma.TreatmentMasterUpsertWithoutCrmCampaignsInput
+  disconnect?: Prisma.TreatmentMasterWhereInput | boolean
+  delete?: Prisma.TreatmentMasterWhereInput | boolean
+  connect?: Prisma.TreatmentMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TreatmentMasterUpdateToOneWithWhereWithoutCrmCampaignsInput, Prisma.TreatmentMasterUpdateWithoutCrmCampaignsInput>, Prisma.TreatmentMasterUncheckedUpdateWithoutCrmCampaignsInput>
+}
+
 export type TreatmentMasterCreateWithoutLeadsInput = {
   id?: string
   name: string
@@ -545,6 +568,7 @@ export type TreatmentMasterCreateWithoutLeadsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  crmCampaigns?: Prisma.CrmCampaignCreateNestedManyWithoutTreatmentMasterInput
 }
 
 export type TreatmentMasterUncheckedCreateWithoutLeadsInput = {
@@ -559,6 +583,7 @@ export type TreatmentMasterUncheckedCreateWithoutLeadsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  crmCampaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutTreatmentMasterInput
 }
 
 export type TreatmentMasterCreateOrConnectWithoutLeadsInput = {
@@ -589,6 +614,7 @@ export type TreatmentMasterUpdateWithoutLeadsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  crmCampaigns?: Prisma.CrmCampaignUpdateManyWithoutTreatmentMasterNestedInput
 }
 
 export type TreatmentMasterUncheckedUpdateWithoutLeadsInput = {
@@ -603,6 +629,83 @@ export type TreatmentMasterUncheckedUpdateWithoutLeadsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  crmCampaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutTreatmentMasterNestedInput
+}
+
+export type TreatmentMasterCreateWithoutCrmCampaignsInput = {
+  id?: string
+  name: string
+  category: string
+  atsNewDelhi?: number | null
+  atsMumbai?: number | null
+  atsPune?: number | null
+  atsHyderabad?: number | null
+  atsBangalore?: number | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leads?: Prisma.LeadCreateNestedManyWithoutTreatmentMasterInput
+}
+
+export type TreatmentMasterUncheckedCreateWithoutCrmCampaignsInput = {
+  id?: string
+  name: string
+  category: string
+  atsNewDelhi?: number | null
+  atsMumbai?: number | null
+  atsPune?: number | null
+  atsHyderabad?: number | null
+  atsBangalore?: number | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutTreatmentMasterInput
+}
+
+export type TreatmentMasterCreateOrConnectWithoutCrmCampaignsInput = {
+  where: Prisma.TreatmentMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.TreatmentMasterCreateWithoutCrmCampaignsInput, Prisma.TreatmentMasterUncheckedCreateWithoutCrmCampaignsInput>
+}
+
+export type TreatmentMasterUpsertWithoutCrmCampaignsInput = {
+  update: Prisma.XOR<Prisma.TreatmentMasterUpdateWithoutCrmCampaignsInput, Prisma.TreatmentMasterUncheckedUpdateWithoutCrmCampaignsInput>
+  create: Prisma.XOR<Prisma.TreatmentMasterCreateWithoutCrmCampaignsInput, Prisma.TreatmentMasterUncheckedCreateWithoutCrmCampaignsInput>
+  where?: Prisma.TreatmentMasterWhereInput
+}
+
+export type TreatmentMasterUpdateToOneWithWhereWithoutCrmCampaignsInput = {
+  where?: Prisma.TreatmentMasterWhereInput
+  data: Prisma.XOR<Prisma.TreatmentMasterUpdateWithoutCrmCampaignsInput, Prisma.TreatmentMasterUncheckedUpdateWithoutCrmCampaignsInput>
+}
+
+export type TreatmentMasterUpdateWithoutCrmCampaignsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  atsNewDelhi?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsMumbai?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsPune?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsHyderabad?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsBangalore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUpdateManyWithoutTreatmentMasterNestedInput
+}
+
+export type TreatmentMasterUncheckedUpdateWithoutCrmCampaignsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  atsNewDelhi?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsMumbai?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsPune?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsHyderabad?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  atsBangalore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutTreatmentMasterNestedInput
 }
 
 
@@ -612,10 +715,12 @@ export type TreatmentMasterUncheckedUpdateWithoutLeadsInput = {
 
 export type TreatmentMasterCountOutputType = {
   leads: number
+  crmCampaigns: number
 }
 
 export type TreatmentMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leads?: boolean | TreatmentMasterCountOutputTypeCountLeadsArgs
+  crmCampaigns?: boolean | TreatmentMasterCountOutputTypeCountCrmCampaignsArgs
 }
 
 /**
@@ -635,6 +740,13 @@ export type TreatmentMasterCountOutputTypeCountLeadsArgs<ExtArgs extends runtime
   where?: Prisma.LeadWhereInput
 }
 
+/**
+ * TreatmentMasterCountOutputType without action
+ */
+export type TreatmentMasterCountOutputTypeCountCrmCampaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignWhereInput
+}
+
 
 export type TreatmentMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -649,6 +761,7 @@ export type TreatmentMasterSelect<ExtArgs extends runtime.Types.Extensions.Inter
   createdAt?: boolean
   updatedAt?: boolean
   leads?: boolean | Prisma.TreatmentMaster$leadsArgs<ExtArgs>
+  crmCampaigns?: boolean | Prisma.TreatmentMaster$crmCampaignsArgs<ExtArgs>
   _count?: boolean | Prisma.TreatmentMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["treatmentMaster"]>
 
@@ -697,6 +810,7 @@ export type TreatmentMasterSelectScalar = {
 export type TreatmentMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "atsNewDelhi" | "atsMumbai" | "atsPune" | "atsHyderabad" | "atsBangalore" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["treatmentMaster"]>
 export type TreatmentMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leads?: boolean | Prisma.TreatmentMaster$leadsArgs<ExtArgs>
+  crmCampaigns?: boolean | Prisma.TreatmentMaster$crmCampaignsArgs<ExtArgs>
   _count?: boolean | Prisma.TreatmentMasterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TreatmentMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -706,6 +820,7 @@ export type $TreatmentMasterPayload<ExtArgs extends runtime.Types.Extensions.Int
   name: "TreatmentMaster"
   objects: {
     leads: Prisma.$LeadPayload<ExtArgs>[]
+    crmCampaigns: Prisma.$CrmCampaignPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1114,6 +1229,7 @@ readonly fields: TreatmentMasterFieldRefs;
 export interface Prisma__TreatmentMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   leads<T extends Prisma.TreatmentMaster$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TreatmentMaster$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  crmCampaigns<T extends Prisma.TreatmentMaster$crmCampaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TreatmentMaster$crmCampaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1568,6 +1684,30 @@ export type TreatmentMaster$leadsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
+ * TreatmentMaster.crmCampaigns
+ */
+export type TreatmentMaster$crmCampaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaign
+   */
+  select?: Prisma.CrmCampaignSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaign
+   */
+  omit?: Prisma.CrmCampaignOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignWhereInput
+  orderBy?: Prisma.CrmCampaignOrderByWithRelationInput | Prisma.CrmCampaignOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignScalarFieldEnum | Prisma.CrmCampaignScalarFieldEnum[]
 }
 
 /**

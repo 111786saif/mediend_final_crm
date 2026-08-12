@@ -182,8 +182,9 @@ export type CrmCampaignCircleWhereInput = {
   isActive?: Prisma.BoolFilter<"CrmCampaignCircle"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CrmCampaignCircle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CrmCampaignCircle"> | Date | string
-  campaigns?: Prisma.CrmCampaignListRelationFilter
   cities?: Prisma.CrmCampaignCityListRelationFilter
+  campaigns?: Prisma.CrmCampaignListRelationFilter
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionListRelationFilter
 }
 
 export type CrmCampaignCircleOrderByWithRelationInput = {
@@ -192,8 +193,9 @@ export type CrmCampaignCircleOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  campaigns?: Prisma.CrmCampaignOrderByRelationAggregateInput
   cities?: Prisma.CrmCampaignCityOrderByRelationAggregateInput
+  campaigns?: Prisma.CrmCampaignOrderByRelationAggregateInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionOrderByRelationAggregateInput
 }
 
 export type CrmCampaignCircleWhereUniqueInput = Prisma.AtLeast<{
@@ -205,8 +207,9 @@ export type CrmCampaignCircleWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"CrmCampaignCircle"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CrmCampaignCircle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CrmCampaignCircle"> | Date | string
-  campaigns?: Prisma.CrmCampaignListRelationFilter
   cities?: Prisma.CrmCampaignCityListRelationFilter
+  campaigns?: Prisma.CrmCampaignListRelationFilter
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionListRelationFilter
 }, "id" | "name">
 
 export type CrmCampaignCircleOrderByWithAggregationInput = {
@@ -237,8 +240,9 @@ export type CrmCampaignCircleCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  campaigns?: Prisma.CrmCampaignCreateNestedManyWithoutCircleInput
   cities?: Prisma.CrmCampaignCityCreateNestedManyWithoutCircleInput
+  campaigns?: Prisma.CrmCampaignCreateNestedManyWithoutCircleInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCircleInput
 }
 
 export type CrmCampaignCircleUncheckedCreateInput = {
@@ -247,8 +251,9 @@ export type CrmCampaignCircleUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  campaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutCircleInput
   cities?: Prisma.CrmCampaignCityUncheckedCreateNestedManyWithoutCircleInput
+  campaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutCircleInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCircleInput
 }
 
 export type CrmCampaignCircleUpdateInput = {
@@ -257,8 +262,9 @@ export type CrmCampaignCircleUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  campaigns?: Prisma.CrmCampaignUpdateManyWithoutCircleNestedInput
   cities?: Prisma.CrmCampaignCityUpdateManyWithoutCircleNestedInput
+  campaigns?: Prisma.CrmCampaignUpdateManyWithoutCircleNestedInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCircleNestedInput
 }
 
 export type CrmCampaignCircleUncheckedUpdateInput = {
@@ -267,8 +273,9 @@ export type CrmCampaignCircleUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  campaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutCircleNestedInput
   cities?: Prisma.CrmCampaignCityUncheckedUpdateManyWithoutCircleNestedInput
+  campaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutCircleNestedInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCircleNestedInput
 }
 
 export type CrmCampaignCircleCreateManyInput = {
@@ -324,6 +331,20 @@ export type CrmCampaignCircleScalarRelationFilter = {
   isNot?: Prisma.CrmCampaignCircleWhereInput
 }
 
+export type CrmCampaignCircleCreateNestedOneWithoutCampaignSelectionsInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCircleCreateWithoutCampaignSelectionsInput, Prisma.CrmCampaignCircleUncheckedCreateWithoutCampaignSelectionsInput>
+  connectOrCreate?: Prisma.CrmCampaignCircleCreateOrConnectWithoutCampaignSelectionsInput
+  connect?: Prisma.CrmCampaignCircleWhereUniqueInput
+}
+
+export type CrmCampaignCircleUpdateOneRequiredWithoutCampaignSelectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCircleCreateWithoutCampaignSelectionsInput, Prisma.CrmCampaignCircleUncheckedCreateWithoutCampaignSelectionsInput>
+  connectOrCreate?: Prisma.CrmCampaignCircleCreateOrConnectWithoutCampaignSelectionsInput
+  upsert?: Prisma.CrmCampaignCircleUpsertWithoutCampaignSelectionsInput
+  connect?: Prisma.CrmCampaignCircleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CrmCampaignCircleUpdateToOneWithWhereWithoutCampaignSelectionsInput, Prisma.CrmCampaignCircleUpdateWithoutCampaignSelectionsInput>, Prisma.CrmCampaignCircleUncheckedUpdateWithoutCampaignSelectionsInput>
+}
+
 export type CrmCampaignCircleCreateNestedOneWithoutCitiesInput = {
   create?: Prisma.XOR<Prisma.CrmCampaignCircleCreateWithoutCitiesInput, Prisma.CrmCampaignCircleUncheckedCreateWithoutCitiesInput>
   connectOrCreate?: Prisma.CrmCampaignCircleCreateOrConnectWithoutCitiesInput
@@ -352,6 +373,62 @@ export type CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CrmCampaignCircleUpdateToOneWithWhereWithoutCampaignsInput, Prisma.CrmCampaignCircleUpdateWithoutCampaignsInput>, Prisma.CrmCampaignCircleUncheckedUpdateWithoutCampaignsInput>
 }
 
+export type CrmCampaignCircleCreateWithoutCampaignSelectionsInput = {
+  id?: string
+  name: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cities?: Prisma.CrmCampaignCityCreateNestedManyWithoutCircleInput
+  campaigns?: Prisma.CrmCampaignCreateNestedManyWithoutCircleInput
+}
+
+export type CrmCampaignCircleUncheckedCreateWithoutCampaignSelectionsInput = {
+  id?: string
+  name: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  cities?: Prisma.CrmCampaignCityUncheckedCreateNestedManyWithoutCircleInput
+  campaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutCircleInput
+}
+
+export type CrmCampaignCircleCreateOrConnectWithoutCampaignSelectionsInput = {
+  where: Prisma.CrmCampaignCircleWhereUniqueInput
+  create: Prisma.XOR<Prisma.CrmCampaignCircleCreateWithoutCampaignSelectionsInput, Prisma.CrmCampaignCircleUncheckedCreateWithoutCampaignSelectionsInput>
+}
+
+export type CrmCampaignCircleUpsertWithoutCampaignSelectionsInput = {
+  update: Prisma.XOR<Prisma.CrmCampaignCircleUpdateWithoutCampaignSelectionsInput, Prisma.CrmCampaignCircleUncheckedUpdateWithoutCampaignSelectionsInput>
+  create: Prisma.XOR<Prisma.CrmCampaignCircleCreateWithoutCampaignSelectionsInput, Prisma.CrmCampaignCircleUncheckedCreateWithoutCampaignSelectionsInput>
+  where?: Prisma.CrmCampaignCircleWhereInput
+}
+
+export type CrmCampaignCircleUpdateToOneWithWhereWithoutCampaignSelectionsInput = {
+  where?: Prisma.CrmCampaignCircleWhereInput
+  data: Prisma.XOR<Prisma.CrmCampaignCircleUpdateWithoutCampaignSelectionsInput, Prisma.CrmCampaignCircleUncheckedUpdateWithoutCampaignSelectionsInput>
+}
+
+export type CrmCampaignCircleUpdateWithoutCampaignSelectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cities?: Prisma.CrmCampaignCityUpdateManyWithoutCircleNestedInput
+  campaigns?: Prisma.CrmCampaignUpdateManyWithoutCircleNestedInput
+}
+
+export type CrmCampaignCircleUncheckedUpdateWithoutCampaignSelectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cities?: Prisma.CrmCampaignCityUncheckedUpdateManyWithoutCircleNestedInput
+  campaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutCircleNestedInput
+}
+
 export type CrmCampaignCircleCreateWithoutCitiesInput = {
   id?: string
   name: string
@@ -359,6 +436,7 @@ export type CrmCampaignCircleCreateWithoutCitiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   campaigns?: Prisma.CrmCampaignCreateNestedManyWithoutCircleInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCircleInput
 }
 
 export type CrmCampaignCircleUncheckedCreateWithoutCitiesInput = {
@@ -368,6 +446,7 @@ export type CrmCampaignCircleUncheckedCreateWithoutCitiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   campaigns?: Prisma.CrmCampaignUncheckedCreateNestedManyWithoutCircleInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCircleInput
 }
 
 export type CrmCampaignCircleCreateOrConnectWithoutCitiesInput = {
@@ -393,6 +472,7 @@ export type CrmCampaignCircleUpdateWithoutCitiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   campaigns?: Prisma.CrmCampaignUpdateManyWithoutCircleNestedInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCircleNestedInput
 }
 
 export type CrmCampaignCircleUncheckedUpdateWithoutCitiesInput = {
@@ -402,6 +482,7 @@ export type CrmCampaignCircleUncheckedUpdateWithoutCitiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   campaigns?: Prisma.CrmCampaignUncheckedUpdateManyWithoutCircleNestedInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCircleNestedInput
 }
 
 export type CrmCampaignCircleCreateWithoutCampaignsInput = {
@@ -411,6 +492,7 @@ export type CrmCampaignCircleCreateWithoutCampaignsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   cities?: Prisma.CrmCampaignCityCreateNestedManyWithoutCircleInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCircleInput
 }
 
 export type CrmCampaignCircleUncheckedCreateWithoutCampaignsInput = {
@@ -420,6 +502,7 @@ export type CrmCampaignCircleUncheckedCreateWithoutCampaignsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   cities?: Prisma.CrmCampaignCityUncheckedCreateNestedManyWithoutCircleInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCircleInput
 }
 
 export type CrmCampaignCircleCreateOrConnectWithoutCampaignsInput = {
@@ -445,6 +528,7 @@ export type CrmCampaignCircleUpdateWithoutCampaignsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cities?: Prisma.CrmCampaignCityUpdateManyWithoutCircleNestedInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCircleNestedInput
 }
 
 export type CrmCampaignCircleUncheckedUpdateWithoutCampaignsInput = {
@@ -454,6 +538,7 @@ export type CrmCampaignCircleUncheckedUpdateWithoutCampaignsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cities?: Prisma.CrmCampaignCityUncheckedUpdateManyWithoutCircleNestedInput
+  campaignSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCircleNestedInput
 }
 
 
@@ -462,13 +547,15 @@ export type CrmCampaignCircleUncheckedUpdateWithoutCampaignsInput = {
  */
 
 export type CrmCampaignCircleCountOutputType = {
-  campaigns: number
   cities: number
+  campaigns: number
+  campaignSelections: number
 }
 
 export type CrmCampaignCircleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  campaigns?: boolean | CrmCampaignCircleCountOutputTypeCountCampaignsArgs
   cities?: boolean | CrmCampaignCircleCountOutputTypeCountCitiesArgs
+  campaigns?: boolean | CrmCampaignCircleCountOutputTypeCountCampaignsArgs
+  campaignSelections?: boolean | CrmCampaignCircleCountOutputTypeCountCampaignSelectionsArgs
 }
 
 /**
@@ -484,6 +571,13 @@ export type CrmCampaignCircleCountOutputTypeDefaultArgs<ExtArgs extends runtime.
 /**
  * CrmCampaignCircleCountOutputType without action
  */
+export type CrmCampaignCircleCountOutputTypeCountCitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignCityWhereInput
+}
+
+/**
+ * CrmCampaignCircleCountOutputType without action
+ */
 export type CrmCampaignCircleCountOutputTypeCountCampaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CrmCampaignWhereInput
 }
@@ -491,8 +585,8 @@ export type CrmCampaignCircleCountOutputTypeCountCampaignsArgs<ExtArgs extends r
 /**
  * CrmCampaignCircleCountOutputType without action
  */
-export type CrmCampaignCircleCountOutputTypeCountCitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CrmCampaignCityWhereInput
+export type CrmCampaignCircleCountOutputTypeCountCampaignSelectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignCircleSelectionWhereInput
 }
 
 
@@ -502,8 +596,9 @@ export type CrmCampaignCircleSelect<ExtArgs extends runtime.Types.Extensions.Int
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  campaigns?: boolean | Prisma.CrmCampaignCircle$campaignsArgs<ExtArgs>
   cities?: boolean | Prisma.CrmCampaignCircle$citiesArgs<ExtArgs>
+  campaigns?: boolean | Prisma.CrmCampaignCircle$campaignsArgs<ExtArgs>
+  campaignSelections?: boolean | Prisma.CrmCampaignCircle$campaignSelectionsArgs<ExtArgs>
   _count?: boolean | Prisma.CrmCampaignCircleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["crmCampaignCircle"]>
 
@@ -533,8 +628,9 @@ export type CrmCampaignCircleSelectScalar = {
 
 export type CrmCampaignCircleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["crmCampaignCircle"]>
 export type CrmCampaignCircleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  campaigns?: boolean | Prisma.CrmCampaignCircle$campaignsArgs<ExtArgs>
   cities?: boolean | Prisma.CrmCampaignCircle$citiesArgs<ExtArgs>
+  campaigns?: boolean | Prisma.CrmCampaignCircle$campaignsArgs<ExtArgs>
+  campaignSelections?: boolean | Prisma.CrmCampaignCircle$campaignSelectionsArgs<ExtArgs>
   _count?: boolean | Prisma.CrmCampaignCircleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CrmCampaignCircleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -543,8 +639,9 @@ export type CrmCampaignCircleIncludeUpdateManyAndReturn<ExtArgs extends runtime.
 export type $CrmCampaignCirclePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CrmCampaignCircle"
   objects: {
-    campaigns: Prisma.$CrmCampaignPayload<ExtArgs>[]
     cities: Prisma.$CrmCampaignCityPayload<ExtArgs>[]
+    campaigns: Prisma.$CrmCampaignPayload<ExtArgs>[]
+    campaignSelections: Prisma.$CrmCampaignCircleSelectionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -946,8 +1043,9 @@ readonly fields: CrmCampaignCircleFieldRefs;
  */
 export interface Prisma__CrmCampaignCircleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  campaigns<T extends Prisma.CrmCampaignCircle$campaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignCircle$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cities<T extends Prisma.CrmCampaignCircle$citiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignCircle$citiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignCityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaigns<T extends Prisma.CrmCampaignCircle$campaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignCircle$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaignSelections<T extends Prisma.CrmCampaignCircle$campaignSelectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignCircle$campaignSelectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignCircleSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1375,6 +1473,30 @@ export type CrmCampaignCircleDeleteManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
+ * CrmCampaignCircle.cities
+ */
+export type CrmCampaignCircle$citiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaignCity
+   */
+  select?: Prisma.CrmCampaignCitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaignCity
+   */
+  omit?: Prisma.CrmCampaignCityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignCityInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignCityWhereInput
+  orderBy?: Prisma.CrmCampaignCityOrderByWithRelationInput | Prisma.CrmCampaignCityOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignCityWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignCityScalarFieldEnum | Prisma.CrmCampaignCityScalarFieldEnum[]
+}
+
+/**
  * CrmCampaignCircle.campaigns
  */
 export type CrmCampaignCircle$campaignsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1399,27 +1521,27 @@ export type CrmCampaignCircle$campaignsArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * CrmCampaignCircle.cities
+ * CrmCampaignCircle.campaignSelections
  */
-export type CrmCampaignCircle$citiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CrmCampaignCircle$campaignSelectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the CrmCampaignCity
+   * Select specific fields to fetch from the CrmCampaignCircleSelection
    */
-  select?: Prisma.CrmCampaignCitySelect<ExtArgs> | null
+  select?: Prisma.CrmCampaignCircleSelectionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the CrmCampaignCity
+   * Omit specific fields from the CrmCampaignCircleSelection
    */
-  omit?: Prisma.CrmCampaignCityOmit<ExtArgs> | null
+  omit?: Prisma.CrmCampaignCircleSelectionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CrmCampaignCityInclude<ExtArgs> | null
-  where?: Prisma.CrmCampaignCityWhereInput
-  orderBy?: Prisma.CrmCampaignCityOrderByWithRelationInput | Prisma.CrmCampaignCityOrderByWithRelationInput[]
-  cursor?: Prisma.CrmCampaignCityWhereUniqueInput
+  include?: Prisma.CrmCampaignCircleSelectionInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignCircleSelectionWhereInput
+  orderBy?: Prisma.CrmCampaignCircleSelectionOrderByWithRelationInput | Prisma.CrmCampaignCircleSelectionOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignCircleSelectionWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.CrmCampaignCityScalarFieldEnum | Prisma.CrmCampaignCityScalarFieldEnum[]
+  distinct?: Prisma.CrmCampaignCircleSelectionScalarFieldEnum | Prisma.CrmCampaignCircleSelectionScalarFieldEnum[]
 }
 
 /**

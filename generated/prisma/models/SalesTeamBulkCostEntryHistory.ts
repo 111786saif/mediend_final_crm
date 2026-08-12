@@ -316,8 +316,8 @@ export type SalesTeamBulkCostEntryHistoryWhereInput = {
   previousEmployeeName?: Prisma.StringNullableFilter<"SalesTeamBulkCostEntryHistory"> | string | null
   changedByUserId?: Prisma.StringFilter<"SalesTeamBulkCostEntryHistory"> | string
   changedAt?: Prisma.DateTimeFilter<"SalesTeamBulkCostEntryHistory"> | Date | string
-  changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   entry?: Prisma.XOR<Prisma.SalesTeamBulkCostEntryNullableScalarRelationFilter, Prisma.SalesTeamBulkCostEntryWhereInput> | null
+  changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type SalesTeamBulkCostEntryHistoryOrderByWithRelationInput = {
@@ -337,8 +337,8 @@ export type SalesTeamBulkCostEntryHistoryOrderByWithRelationInput = {
   previousEmployeeName?: Prisma.SortOrderInput | Prisma.SortOrder
   changedByUserId?: Prisma.SortOrder
   changedAt?: Prisma.SortOrder
-  changedBy?: Prisma.UserOrderByWithRelationInput
   entry?: Prisma.SalesTeamBulkCostEntryOrderByWithRelationInput
+  changedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type SalesTeamBulkCostEntryHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -361,8 +361,8 @@ export type SalesTeamBulkCostEntryHistoryWhereUniqueInput = Prisma.AtLeast<{
   previousEmployeeName?: Prisma.StringNullableFilter<"SalesTeamBulkCostEntryHistory"> | string | null
   changedByUserId?: Prisma.StringFilter<"SalesTeamBulkCostEntryHistory"> | string
   changedAt?: Prisma.DateTimeFilter<"SalesTeamBulkCostEntryHistory"> | Date | string
-  changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   entry?: Prisma.XOR<Prisma.SalesTeamBulkCostEntryNullableScalarRelationFilter, Prisma.SalesTeamBulkCostEntryWhereInput> | null
+  changedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type SalesTeamBulkCostEntryHistoryOrderByWithAggregationInput = {
@@ -426,8 +426,8 @@ export type SalesTeamBulkCostEntryHistoryCreateInput = {
   previousEmployeeId?: string | null
   previousEmployeeName?: string | null
   changedAt?: Date | string
-  changedBy: Prisma.UserCreateNestedOneWithoutSalesTeamBulkCostHistoryInput
   entry?: Prisma.SalesTeamBulkCostEntryCreateNestedOneWithoutHistoryInput
+  changedBy: Prisma.UserCreateNestedOneWithoutSalesTeamBulkCostHistoryInput
 }
 
 export type SalesTeamBulkCostEntryHistoryUncheckedCreateInput = {
@@ -464,8 +464,8 @@ export type SalesTeamBulkCostEntryHistoryUpdateInput = {
   previousEmployeeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   previousEmployeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  changedBy?: Prisma.UserUpdateOneRequiredWithoutSalesTeamBulkCostHistoryNestedInput
   entry?: Prisma.SalesTeamBulkCostEntryUpdateOneWithoutHistoryNestedInput
+  changedBy?: Prisma.UserUpdateOneRequiredWithoutSalesTeamBulkCostHistoryNestedInput
 }
 
 export type SalesTeamBulkCostEntryHistoryUncheckedUpdateInput = {
@@ -1016,8 +1016,8 @@ export type SalesTeamBulkCostEntryHistorySelect<ExtArgs extends runtime.Types.Ex
   previousEmployeeName?: boolean
   changedByUserId?: boolean
   changedAt?: boolean
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   entry?: boolean | Prisma.SalesTeamBulkCostEntryHistory$entryArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesTeamBulkCostEntryHistory"]>
 
 export type SalesTeamBulkCostEntryHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1037,8 +1037,8 @@ export type SalesTeamBulkCostEntryHistorySelectCreateManyAndReturn<ExtArgs exten
   previousEmployeeName?: boolean
   changedByUserId?: boolean
   changedAt?: boolean
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   entry?: boolean | Prisma.SalesTeamBulkCostEntryHistory$entryArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesTeamBulkCostEntryHistory"]>
 
 export type SalesTeamBulkCostEntryHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1058,8 +1058,8 @@ export type SalesTeamBulkCostEntryHistorySelectUpdateManyAndReturn<ExtArgs exten
   previousEmployeeName?: boolean
   changedByUserId?: boolean
   changedAt?: boolean
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   entry?: boolean | Prisma.SalesTeamBulkCostEntryHistory$entryArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["salesTeamBulkCostEntryHistory"]>
 
 export type SalesTeamBulkCostEntryHistorySelectScalar = {
@@ -1083,23 +1083,23 @@ export type SalesTeamBulkCostEntryHistorySelectScalar = {
 
 export type SalesTeamBulkCostEntryHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "entryId" | "costType" | "month" | "year" | "action" | "amount" | "remark" | "employeeId" | "employeeName" | "previousAmount" | "previousRemark" | "previousEmployeeId" | "previousEmployeeName" | "changedByUserId" | "changedAt", ExtArgs["result"]["salesTeamBulkCostEntryHistory"]>
 export type SalesTeamBulkCostEntryHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   entry?: boolean | Prisma.SalesTeamBulkCostEntryHistory$entryArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type SalesTeamBulkCostEntryHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   entry?: boolean | Prisma.SalesTeamBulkCostEntryHistory$entryArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type SalesTeamBulkCostEntryHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   entry?: boolean | Prisma.SalesTeamBulkCostEntryHistory$entryArgs<ExtArgs>
+  changedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $SalesTeamBulkCostEntryHistoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SalesTeamBulkCostEntryHistory"
   objects: {
-    changedBy: Prisma.$UserPayload<ExtArgs>
     entry: Prisma.$SalesTeamBulkCostEntryPayload<ExtArgs> | null
+    changedBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1512,8 +1512,8 @@ readonly fields: SalesTeamBulkCostEntryHistoryFieldRefs;
  */
 export interface Prisma__SalesTeamBulkCostEntryHistoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  changedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   entry<T extends Prisma.SalesTeamBulkCostEntryHistory$entryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SalesTeamBulkCostEntryHistory$entryArgs<ExtArgs>>): Prisma.Prisma__SalesTeamBulkCostEntryClient<runtime.Types.Result.GetResult<Prisma.$SalesTeamBulkCostEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  changedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

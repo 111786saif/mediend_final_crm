@@ -190,10 +190,10 @@ export type TaskCommentWhereInput = {
   content?: Prisma.StringFilter<"TaskComment"> | string
   parentId?: Prisma.StringNullableFilter<"TaskComment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TaskComment"> | Date | string
-  parent?: Prisma.XOR<Prisma.TaskCommentNullableScalarRelationFilter, Prisma.TaskCommentWhereInput> | null
-  replies?: Prisma.TaskCommentListRelationFilter
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  parent?: Prisma.XOR<Prisma.TaskCommentNullableScalarRelationFilter, Prisma.TaskCommentWhereInput> | null
+  replies?: Prisma.TaskCommentListRelationFilter
 }
 
 export type TaskCommentOrderByWithRelationInput = {
@@ -203,10 +203,10 @@ export type TaskCommentOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  parent?: Prisma.TaskCommentOrderByWithRelationInput
-  replies?: Prisma.TaskCommentOrderByRelationAggregateInput
   task?: Prisma.TaskOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  parent?: Prisma.TaskCommentOrderByWithRelationInput
+  replies?: Prisma.TaskCommentOrderByRelationAggregateInput
 }
 
 export type TaskCommentWhereUniqueInput = Prisma.AtLeast<{
@@ -219,10 +219,10 @@ export type TaskCommentWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringFilter<"TaskComment"> | string
   parentId?: Prisma.StringNullableFilter<"TaskComment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TaskComment"> | Date | string
-  parent?: Prisma.XOR<Prisma.TaskCommentNullableScalarRelationFilter, Prisma.TaskCommentWhereInput> | null
-  replies?: Prisma.TaskCommentListRelationFilter
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  parent?: Prisma.XOR<Prisma.TaskCommentNullableScalarRelationFilter, Prisma.TaskCommentWhereInput> | null
+  replies?: Prisma.TaskCommentListRelationFilter
 }, "id">
 
 export type TaskCommentOrderByWithAggregationInput = {
@@ -253,10 +253,10 @@ export type TaskCommentCreateInput = {
   id?: string
   content: string
   createdAt?: Date | string
-  parent?: Prisma.TaskCommentCreateNestedOneWithoutRepliesInput
-  replies?: Prisma.TaskCommentCreateNestedManyWithoutParentInput
   task: Prisma.TaskCreateNestedOneWithoutCommentsInput
   user: Prisma.UserCreateNestedOneWithoutTaskCommentsInput
+  parent?: Prisma.TaskCommentCreateNestedOneWithoutRepliesInput
+  replies?: Prisma.TaskCommentCreateNestedManyWithoutParentInput
 }
 
 export type TaskCommentUncheckedCreateInput = {
@@ -273,10 +273,10 @@ export type TaskCommentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parent?: Prisma.TaskCommentUpdateOneWithoutRepliesNestedInput
-  replies?: Prisma.TaskCommentUpdateManyWithoutParentNestedInput
   task?: Prisma.TaskUpdateOneRequiredWithoutCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTaskCommentsNestedInput
+  parent?: Prisma.TaskCommentUpdateOneWithoutRepliesNestedInput
+  replies?: Prisma.TaskCommentUpdateManyWithoutParentNestedInput
 }
 
 export type TaskCommentUncheckedUpdateInput = {
@@ -501,9 +501,9 @@ export type TaskCommentCreateWithoutUserInput = {
   id?: string
   content: string
   createdAt?: Date | string
+  task: Prisma.TaskCreateNestedOneWithoutCommentsInput
   parent?: Prisma.TaskCommentCreateNestedOneWithoutRepliesInput
   replies?: Prisma.TaskCommentCreateNestedManyWithoutParentInput
-  task: Prisma.TaskCreateNestedOneWithoutCommentsInput
 }
 
 export type TaskCommentUncheckedCreateWithoutUserInput = {
@@ -557,9 +557,9 @@ export type TaskCommentCreateWithoutTaskInput = {
   id?: string
   content: string
   createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTaskCommentsInput
   parent?: Prisma.TaskCommentCreateNestedOneWithoutRepliesInput
   replies?: Prisma.TaskCommentCreateNestedManyWithoutParentInput
-  user: Prisma.UserCreateNestedOneWithoutTaskCommentsInput
 }
 
 export type TaskCommentUncheckedCreateWithoutTaskInput = {
@@ -601,9 +601,9 @@ export type TaskCommentCreateWithoutRepliesInput = {
   id?: string
   content: string
   createdAt?: Date | string
-  parent?: Prisma.TaskCommentCreateNestedOneWithoutRepliesInput
   task: Prisma.TaskCreateNestedOneWithoutCommentsInput
   user: Prisma.UserCreateNestedOneWithoutTaskCommentsInput
+  parent?: Prisma.TaskCommentCreateNestedOneWithoutRepliesInput
 }
 
 export type TaskCommentUncheckedCreateWithoutRepliesInput = {
@@ -624,9 +624,9 @@ export type TaskCommentCreateWithoutParentInput = {
   id?: string
   content: string
   createdAt?: Date | string
-  replies?: Prisma.TaskCommentCreateNestedManyWithoutParentInput
   task: Prisma.TaskCreateNestedOneWithoutCommentsInput
   user: Prisma.UserCreateNestedOneWithoutTaskCommentsInput
+  replies?: Prisma.TaskCommentCreateNestedManyWithoutParentInput
 }
 
 export type TaskCommentUncheckedCreateWithoutParentInput = {
@@ -663,9 +663,9 @@ export type TaskCommentUpdateWithoutRepliesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parent?: Prisma.TaskCommentUpdateOneWithoutRepliesNestedInput
   task?: Prisma.TaskUpdateOneRequiredWithoutCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTaskCommentsNestedInput
+  parent?: Prisma.TaskCommentUpdateOneWithoutRepliesNestedInput
 }
 
 export type TaskCommentUncheckedUpdateWithoutRepliesInput = {
@@ -705,9 +705,9 @@ export type TaskCommentUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  task?: Prisma.TaskUpdateOneRequiredWithoutCommentsNestedInput
   parent?: Prisma.TaskCommentUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.TaskCommentUpdateManyWithoutParentNestedInput
-  task?: Prisma.TaskUpdateOneRequiredWithoutCommentsNestedInput
 }
 
 export type TaskCommentUncheckedUpdateWithoutUserInput = {
@@ -739,9 +739,9 @@ export type TaskCommentUpdateWithoutTaskInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTaskCommentsNestedInput
   parent?: Prisma.TaskCommentUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.TaskCommentUpdateManyWithoutParentNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutTaskCommentsNestedInput
 }
 
 export type TaskCommentUncheckedUpdateWithoutTaskInput = {
@@ -773,9 +773,9 @@ export type TaskCommentUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  replies?: Prisma.TaskCommentUpdateManyWithoutParentNestedInput
   task?: Prisma.TaskUpdateOneRequiredWithoutCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTaskCommentsNestedInput
+  replies?: Prisma.TaskCommentUpdateManyWithoutParentNestedInput
 }
 
 export type TaskCommentUncheckedUpdateWithoutParentInput = {
@@ -833,10 +833,10 @@ export type TaskCommentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   content?: boolean
   parentId?: boolean
   createdAt?: boolean
-  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
-  replies?: boolean | Prisma.TaskComment$repliesArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
+  replies?: boolean | Prisma.TaskComment$repliesArgs<ExtArgs>
   _count?: boolean | Prisma.TaskCommentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskComment"]>
 
@@ -847,9 +847,9 @@ export type TaskCommentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   content?: boolean
   parentId?: boolean
   createdAt?: boolean
-  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
 }, ExtArgs["result"]["taskComment"]>
 
 export type TaskCommentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -859,9 +859,9 @@ export type TaskCommentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   content?: boolean
   parentId?: boolean
   createdAt?: boolean
-  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
 }, ExtArgs["result"]["taskComment"]>
 
 export type TaskCommentSelectScalar = {
@@ -875,30 +875,30 @@ export type TaskCommentSelectScalar = {
 
 export type TaskCommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "taskId" | "userId" | "content" | "parentId" | "createdAt", ExtArgs["result"]["taskComment"]>
 export type TaskCommentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
-  replies?: boolean | Prisma.TaskComment$repliesArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
+  replies?: boolean | Prisma.TaskComment$repliesArgs<ExtArgs>
   _count?: boolean | Prisma.TaskCommentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TaskCommentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
 }
 export type TaskCommentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.TaskComment$parentArgs<ExtArgs>
 }
 
 export type $TaskCommentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TaskComment"
   objects: {
-    parent: Prisma.$TaskCommentPayload<ExtArgs> | null
-    replies: Prisma.$TaskCommentPayload<ExtArgs>[]
     task: Prisma.$TaskPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    parent: Prisma.$TaskCommentPayload<ExtArgs> | null
+    replies: Prisma.$TaskCommentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1301,10 +1301,10 @@ readonly fields: TaskCommentFieldRefs;
  */
 export interface Prisma__TaskCommentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  parent<T extends Prisma.TaskComment$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskComment$parentArgs<ExtArgs>>): Prisma.Prisma__TaskCommentClient<runtime.Types.Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  replies<T extends Prisma.TaskComment$repliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskComment$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   task<T extends Prisma.TaskDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskDefaultArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  parent<T extends Prisma.TaskComment$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskComment$parentArgs<ExtArgs>>): Prisma.Prisma__TaskCommentClient<runtime.Types.Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  replies<T extends Prisma.TaskComment$repliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskComment$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

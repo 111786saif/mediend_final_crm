@@ -256,8 +256,8 @@ export type InsuranceCaseWhereInput = {
   handledById?: Prisma.StringNullableFilter<"InsuranceCase"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InsuranceCase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InsuranceCase"> | Date | string
-  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type InsuranceCaseOrderByWithRelationInput = {
@@ -271,8 +271,8 @@ export type InsuranceCaseOrderByWithRelationInput = {
   handledById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  handledBy?: Prisma.UserOrderByWithRelationInput
   lead?: Prisma.LeadOrderByWithRelationInput
+  handledBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type InsuranceCaseWhereUniqueInput = Prisma.AtLeast<{
@@ -289,8 +289,8 @@ export type InsuranceCaseWhereUniqueInput = Prisma.AtLeast<{
   handledById?: Prisma.StringNullableFilter<"InsuranceCase"> | string | null
   createdAt?: Prisma.DateTimeFilter<"InsuranceCase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InsuranceCase"> | Date | string
-  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "leadId">
 
 export type InsuranceCaseOrderByWithAggregationInput = {
@@ -336,8 +336,8 @@ export type InsuranceCaseCreateInput = {
   approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  handledBy?: Prisma.UserCreateNestedOneWithoutInsuranceCasesInput
   lead: Prisma.LeadCreateNestedOneWithoutInsuranceCaseInput
+  handledBy?: Prisma.UserCreateNestedOneWithoutInsuranceCasesInput
 }
 
 export type InsuranceCaseUncheckedCreateInput = {
@@ -362,8 +362,8 @@ export type InsuranceCaseUpdateInput = {
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  handledBy?: Prisma.UserUpdateOneWithoutInsuranceCasesNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutInsuranceCaseNestedInput
+  handledBy?: Prisma.UserUpdateOneWithoutInsuranceCasesNestedInput
 }
 
 export type InsuranceCaseUncheckedUpdateInput = {
@@ -747,8 +747,8 @@ export type InsuranceCaseSelect<ExtArgs extends runtime.Types.Extensions.Interna
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceCase"]>
 
 export type InsuranceCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -762,8 +762,8 @@ export type InsuranceCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceCase"]>
 
 export type InsuranceCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -777,8 +777,8 @@ export type InsuranceCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceCase"]>
 
 export type InsuranceCaseSelectScalar = {
@@ -796,23 +796,23 @@ export type InsuranceCaseSelectScalar = {
 
 export type InsuranceCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "caseStatus" | "approvalAmount" | "tpaRemarks" | "submittedAt" | "approvedAt" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["insuranceCase"]>
 export type InsuranceCaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
 }
 export type InsuranceCaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
 }
 export type InsuranceCaseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.InsuranceCase$handledByArgs<ExtArgs>
 }
 
 export type $InsuranceCasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InsuranceCase"
   objects: {
-    handledBy: Prisma.$UserPayload<ExtArgs> | null
     lead: Prisma.$LeadPayload<ExtArgs>
+    handledBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1219,8 +1219,8 @@ readonly fields: InsuranceCaseFieldRefs;
  */
 export interface Prisma__InsuranceCaseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  handledBy<T extends Prisma.InsuranceCase$handledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InsuranceCase$handledByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  handledBy<T extends Prisma.InsuranceCase$handledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InsuranceCase$handledByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

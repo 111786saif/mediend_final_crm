@@ -344,8 +344,8 @@ export type InsuranceInitiateFormWhereInput = {
   createdById?: Prisma.StringFilter<"InsuranceInitiateForm"> | string
   createdAt?: Prisma.DateTimeFilter<"InsuranceInitiateForm"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InsuranceInitiateForm"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type InsuranceInitiateFormOrderByWithRelationInput = {
@@ -366,8 +366,8 @@ export type InsuranceInitiateFormOrderByWithRelationInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  createdBy?: Prisma.UserOrderByWithRelationInput
   lead?: Prisma.LeadOrderByWithRelationInput
+  createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type InsuranceInitiateFormWhereUniqueInput = Prisma.AtLeast<{
@@ -391,8 +391,8 @@ export type InsuranceInitiateFormWhereUniqueInput = Prisma.AtLeast<{
   createdById?: Prisma.StringFilter<"InsuranceInitiateForm"> | string
   createdAt?: Prisma.DateTimeFilter<"InsuranceInitiateForm"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InsuranceInitiateForm"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "leadId">
 
 export type InsuranceInitiateFormOrderByWithAggregationInput = {
@@ -459,8 +459,8 @@ export type InsuranceInitiateFormCreateInput = {
   initialApprovalByHospitalUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutInsuranceInitiateFormsCreatedInput
   lead: Prisma.LeadCreateNestedOneWithoutInsuranceInitiateFormInput
+  createdBy: Prisma.UserCreateNestedOneWithoutInsuranceInitiateFormsCreatedInput
 }
 
 export type InsuranceInitiateFormUncheckedCreateInput = {
@@ -499,8 +499,8 @@ export type InsuranceInitiateFormUpdateInput = {
   initialApprovalByHospitalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutInsuranceInitiateFormsCreatedNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutInsuranceInitiateFormNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutInsuranceInitiateFormsCreatedNestedInput
 }
 
 export type InsuranceInitiateFormUncheckedUpdateInput = {
@@ -1029,8 +1029,8 @@ export type InsuranceInitiateFormSelect<ExtArgs extends runtime.Types.Extensions
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceInitiateForm"]>
 
 export type InsuranceInitiateFormSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1051,8 +1051,8 @@ export type InsuranceInitiateFormSelectCreateManyAndReturn<ExtArgs extends runti
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceInitiateForm"]>
 
 export type InsuranceInitiateFormSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1073,8 +1073,8 @@ export type InsuranceInitiateFormSelectUpdateManyAndReturn<ExtArgs extends runti
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceInitiateForm"]>
 
 export type InsuranceInitiateFormSelectScalar = {
@@ -1099,23 +1099,23 @@ export type InsuranceInitiateFormSelectScalar = {
 
 export type InsuranceInitiateFormOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "totalBillAmount" | "discount" | "otherReductions" | "copay" | "copayBuffer" | "deductible" | "exceedsPolicyLimit" | "policyDeductibleAmount" | "totalAuthorizedAmount" | "amountToBePaidByInsurance" | "roomCategory" | "initialApprovalByHospitalUrl" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["insuranceInitiateForm"]>
 export type InsuranceInitiateFormInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type InsuranceInitiateFormIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type InsuranceInitiateFormIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $InsuranceInitiateFormPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InsuranceInitiateForm"
   objects: {
-    createdBy: Prisma.$UserPayload<ExtArgs>
     lead: Prisma.$LeadPayload<ExtArgs>
+    createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1529,8 +1529,8 @@ readonly fields: InsuranceInitiateFormFieldRefs;
  */
 export interface Prisma__InsuranceInitiateFormClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

@@ -238,11 +238,11 @@ export type KnowledgeDocumentWhereInput = {
   uploadedById?: Prisma.StringFilter<"KnowledgeDocument"> | string
   createdAt?: Prisma.DateTimeFilter<"KnowledgeDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KnowledgeDocument"> | Date | string
-  chunks?: Prisma.KnowledgeChunkListRelationFilter
   uploadedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  departments?: Prisma.KnowledgeDocumentDepartmentListRelationFilter
+  chunks?: Prisma.KnowledgeChunkListRelationFilter
   roles?: Prisma.KnowledgeDocumentRoleListRelationFilter
   users?: Prisma.KnowledgeDocumentUserListRelationFilter
+  departments?: Prisma.KnowledgeDocumentDepartmentListRelationFilter
 }
 
 export type KnowledgeDocumentOrderByWithRelationInput = {
@@ -258,11 +258,11 @@ export type KnowledgeDocumentOrderByWithRelationInput = {
   uploadedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  chunks?: Prisma.KnowledgeChunkOrderByRelationAggregateInput
   uploadedBy?: Prisma.UserOrderByWithRelationInput
-  departments?: Prisma.KnowledgeDocumentDepartmentOrderByRelationAggregateInput
+  chunks?: Prisma.KnowledgeChunkOrderByRelationAggregateInput
   roles?: Prisma.KnowledgeDocumentRoleOrderByRelationAggregateInput
   users?: Prisma.KnowledgeDocumentUserOrderByRelationAggregateInput
+  departments?: Prisma.KnowledgeDocumentDepartmentOrderByRelationAggregateInput
 }
 
 export type KnowledgeDocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -281,11 +281,11 @@ export type KnowledgeDocumentWhereUniqueInput = Prisma.AtLeast<{
   uploadedById?: Prisma.StringFilter<"KnowledgeDocument"> | string
   createdAt?: Prisma.DateTimeFilter<"KnowledgeDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KnowledgeDocument"> | Date | string
-  chunks?: Prisma.KnowledgeChunkListRelationFilter
   uploadedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  departments?: Prisma.KnowledgeDocumentDepartmentListRelationFilter
+  chunks?: Prisma.KnowledgeChunkListRelationFilter
   roles?: Prisma.KnowledgeDocumentRoleListRelationFilter
   users?: Prisma.KnowledgeDocumentUserListRelationFilter
+  departments?: Prisma.KnowledgeDocumentDepartmentListRelationFilter
 }, "id">
 
 export type KnowledgeDocumentOrderByWithAggregationInput = {
@@ -336,11 +336,11 @@ export type KnowledgeDocumentCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
   uploadedBy: Prisma.UserCreateNestedOneWithoutKnowledgeDocumentsUploadedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
+  chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentUncheckedCreateInput = {
@@ -357,9 +357,9 @@ export type KnowledgeDocumentUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.KnowledgeChunkUncheckedCreateNestedManyWithoutDocumentInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleUncheckedCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentUpdateInput = {
@@ -374,11 +374,11 @@ export type KnowledgeDocumentUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
   uploadedBy?: Prisma.UserUpdateOneRequiredWithoutKnowledgeDocumentsUploadedNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
+  chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentUncheckedUpdateInput = {
@@ -395,9 +395,9 @@ export type KnowledgeDocumentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.KnowledgeChunkUncheckedUpdateManyWithoutDocumentNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUncheckedUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentCreateManyInput = {
@@ -623,9 +623,9 @@ export type KnowledgeDocumentCreateWithoutUploadedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
-  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentUncheckedCreateWithoutUploadedByInput = {
@@ -641,9 +641,9 @@ export type KnowledgeDocumentUncheckedCreateWithoutUploadedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.KnowledgeChunkUncheckedCreateNestedManyWithoutDocumentInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleUncheckedCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentCreateOrConnectWithoutUploadedByInput = {
@@ -703,9 +703,9 @@ export type KnowledgeDocumentCreateWithoutChunksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   uploadedBy: Prisma.UserCreateNestedOneWithoutKnowledgeDocumentsUploadedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentUncheckedCreateWithoutChunksInput = {
@@ -721,9 +721,9 @@ export type KnowledgeDocumentUncheckedCreateWithoutChunksInput = {
   uploadedById: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleUncheckedCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentCreateOrConnectWithoutChunksInput = {
@@ -755,9 +755,9 @@ export type KnowledgeDocumentUpdateWithoutChunksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   uploadedBy?: Prisma.UserUpdateOneRequiredWithoutKnowledgeDocumentsUploadedNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentUncheckedUpdateWithoutChunksInput = {
@@ -773,9 +773,9 @@ export type KnowledgeDocumentUncheckedUpdateWithoutChunksInput = {
   uploadedById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUncheckedUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentCreateWithoutRolesInput = {
@@ -790,10 +790,10 @@ export type KnowledgeDocumentCreateWithoutRolesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
   uploadedBy: Prisma.UserCreateNestedOneWithoutKnowledgeDocumentsUploadedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
+  chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentUncheckedCreateWithoutRolesInput = {
@@ -810,8 +810,8 @@ export type KnowledgeDocumentUncheckedCreateWithoutRolesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.KnowledgeChunkUncheckedCreateNestedManyWithoutDocumentInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentCreateOrConnectWithoutRolesInput = {
@@ -842,10 +842,10 @@ export type KnowledgeDocumentUpdateWithoutRolesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
   uploadedBy?: Prisma.UserUpdateOneRequiredWithoutKnowledgeDocumentsUploadedNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
+  chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentUncheckedUpdateWithoutRolesInput = {
@@ -862,8 +862,8 @@ export type KnowledgeDocumentUncheckedUpdateWithoutRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.KnowledgeChunkUncheckedUpdateManyWithoutDocumentNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentCreateWithoutUsersInput = {
@@ -878,10 +878,10 @@ export type KnowledgeDocumentCreateWithoutUsersInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
   uploadedBy: Prisma.UserCreateNestedOneWithoutKnowledgeDocumentsUploadedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
+  chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentUncheckedCreateWithoutUsersInput = {
@@ -898,8 +898,8 @@ export type KnowledgeDocumentUncheckedCreateWithoutUsersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.KnowledgeChunkUncheckedCreateNestedManyWithoutDocumentInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleUncheckedCreateNestedManyWithoutDocumentInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type KnowledgeDocumentCreateOrConnectWithoutUsersInput = {
@@ -930,10 +930,10 @@ export type KnowledgeDocumentUpdateWithoutUsersInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
   uploadedBy?: Prisma.UserUpdateOneRequiredWithoutKnowledgeDocumentsUploadedNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
+  chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentUncheckedUpdateWithoutUsersInput = {
@@ -950,8 +950,8 @@ export type KnowledgeDocumentUncheckedUpdateWithoutUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.KnowledgeChunkUncheckedUpdateManyWithoutDocumentNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUncheckedUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentCreateWithoutDepartmentsInput = {
@@ -966,8 +966,8 @@ export type KnowledgeDocumentCreateWithoutDepartmentsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
   uploadedBy: Prisma.UserCreateNestedOneWithoutKnowledgeDocumentsUploadedInput
+  chunks?: Prisma.KnowledgeChunkCreateNestedManyWithoutDocumentInput
   roles?: Prisma.KnowledgeDocumentRoleCreateNestedManyWithoutDocumentInput
   users?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutDocumentInput
 }
@@ -1018,8 +1018,8 @@ export type KnowledgeDocumentUpdateWithoutDepartmentsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
   uploadedBy?: Prisma.UserUpdateOneRequiredWithoutKnowledgeDocumentsUploadedNestedInput
+  chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUpdateManyWithoutDocumentNestedInput
 }
@@ -1069,9 +1069,9 @@ export type KnowledgeDocumentUpdateWithoutUploadedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.KnowledgeChunkUpdateManyWithoutDocumentNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentUncheckedUpdateWithoutUploadedByInput = {
@@ -1087,9 +1087,9 @@ export type KnowledgeDocumentUncheckedUpdateWithoutUploadedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.KnowledgeChunkUncheckedUpdateManyWithoutDocumentNestedInput
-  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
   roles?: Prisma.KnowledgeDocumentRoleUncheckedUpdateManyWithoutDocumentNestedInput
   users?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutDocumentNestedInput
+  departments?: Prisma.KnowledgeDocumentDepartmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type KnowledgeDocumentUncheckedUpdateManyWithoutUploadedByInput = {
@@ -1113,16 +1113,16 @@ export type KnowledgeDocumentUncheckedUpdateManyWithoutUploadedByInput = {
 
 export type KnowledgeDocumentCountOutputType = {
   chunks: number
-  departments: number
   roles: number
   users: number
+  departments: number
 }
 
 export type KnowledgeDocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chunks?: boolean | KnowledgeDocumentCountOutputTypeCountChunksArgs
-  departments?: boolean | KnowledgeDocumentCountOutputTypeCountDepartmentsArgs
   roles?: boolean | KnowledgeDocumentCountOutputTypeCountRolesArgs
   users?: boolean | KnowledgeDocumentCountOutputTypeCountUsersArgs
+  departments?: boolean | KnowledgeDocumentCountOutputTypeCountDepartmentsArgs
 }
 
 /**
@@ -1145,13 +1145,6 @@ export type KnowledgeDocumentCountOutputTypeCountChunksArgs<ExtArgs extends runt
 /**
  * KnowledgeDocumentCountOutputType without action
  */
-export type KnowledgeDocumentCountOutputTypeCountDepartmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.KnowledgeDocumentDepartmentWhereInput
-}
-
-/**
- * KnowledgeDocumentCountOutputType without action
- */
 export type KnowledgeDocumentCountOutputTypeCountRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.KnowledgeDocumentRoleWhereInput
 }
@@ -1161,6 +1154,13 @@ export type KnowledgeDocumentCountOutputTypeCountRolesArgs<ExtArgs extends runti
  */
 export type KnowledgeDocumentCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.KnowledgeDocumentUserWhereInput
+}
+
+/**
+ * KnowledgeDocumentCountOutputType without action
+ */
+export type KnowledgeDocumentCountOutputTypeCountDepartmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.KnowledgeDocumentDepartmentWhereInput
 }
 
 
@@ -1177,11 +1177,11 @@ export type KnowledgeDocumentSelect<ExtArgs extends runtime.Types.Extensions.Int
   uploadedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  chunks?: boolean | Prisma.KnowledgeDocument$chunksArgs<ExtArgs>
   uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  departments?: boolean | Prisma.KnowledgeDocument$departmentsArgs<ExtArgs>
+  chunks?: boolean | Prisma.KnowledgeDocument$chunksArgs<ExtArgs>
   roles?: boolean | Prisma.KnowledgeDocument$rolesArgs<ExtArgs>
   users?: boolean | Prisma.KnowledgeDocument$usersArgs<ExtArgs>
+  departments?: boolean | Prisma.KnowledgeDocument$departmentsArgs<ExtArgs>
   _count?: boolean | Prisma.KnowledgeDocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["knowledgeDocument"]>
 
@@ -1234,11 +1234,11 @@ export type KnowledgeDocumentSelectScalar = {
 
 export type KnowledgeDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "sourceType" | "fileUrl" | "mimeType" | "contentText" | "visibility" | "isActive" | "uploadedById" | "createdAt" | "updatedAt", ExtArgs["result"]["knowledgeDocument"]>
 export type KnowledgeDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  chunks?: boolean | Prisma.KnowledgeDocument$chunksArgs<ExtArgs>
   uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  departments?: boolean | Prisma.KnowledgeDocument$departmentsArgs<ExtArgs>
+  chunks?: boolean | Prisma.KnowledgeDocument$chunksArgs<ExtArgs>
   roles?: boolean | Prisma.KnowledgeDocument$rolesArgs<ExtArgs>
   users?: boolean | Prisma.KnowledgeDocument$usersArgs<ExtArgs>
+  departments?: boolean | Prisma.KnowledgeDocument$departmentsArgs<ExtArgs>
   _count?: boolean | Prisma.KnowledgeDocumentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type KnowledgeDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1251,11 +1251,11 @@ export type KnowledgeDocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.
 export type $KnowledgeDocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "KnowledgeDocument"
   objects: {
-    chunks: Prisma.$KnowledgeChunkPayload<ExtArgs>[]
     uploadedBy: Prisma.$UserPayload<ExtArgs>
-    departments: Prisma.$KnowledgeDocumentDepartmentPayload<ExtArgs>[]
+    chunks: Prisma.$KnowledgeChunkPayload<ExtArgs>[]
     roles: Prisma.$KnowledgeDocumentRolePayload<ExtArgs>[]
     users: Prisma.$KnowledgeDocumentUserPayload<ExtArgs>[]
+    departments: Prisma.$KnowledgeDocumentDepartmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1664,11 +1664,11 @@ readonly fields: KnowledgeDocumentFieldRefs;
  */
 export interface Prisma__KnowledgeDocumentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  chunks<T extends Prisma.KnowledgeDocument$chunksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeDocument$chunksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   uploadedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  departments<T extends Prisma.KnowledgeDocument$departmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeDocument$departmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeDocumentDepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chunks<T extends Prisma.KnowledgeDocument$chunksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeDocument$chunksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   roles<T extends Prisma.KnowledgeDocument$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeDocument$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeDocumentRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   users<T extends Prisma.KnowledgeDocument$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeDocument$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeDocumentUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  departments<T extends Prisma.KnowledgeDocument$departmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeDocument$departmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeDocumentDepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2135,30 +2135,6 @@ export type KnowledgeDocument$chunksArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
- * KnowledgeDocument.departments
- */
-export type KnowledgeDocument$departmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the KnowledgeDocumentDepartment
-   */
-  select?: Prisma.KnowledgeDocumentDepartmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the KnowledgeDocumentDepartment
-   */
-  omit?: Prisma.KnowledgeDocumentDepartmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.KnowledgeDocumentDepartmentInclude<ExtArgs> | null
-  where?: Prisma.KnowledgeDocumentDepartmentWhereInput
-  orderBy?: Prisma.KnowledgeDocumentDepartmentOrderByWithRelationInput | Prisma.KnowledgeDocumentDepartmentOrderByWithRelationInput[]
-  cursor?: Prisma.KnowledgeDocumentDepartmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.KnowledgeDocumentDepartmentScalarFieldEnum | Prisma.KnowledgeDocumentDepartmentScalarFieldEnum[]
-}
-
-/**
  * KnowledgeDocument.roles
  */
 export type KnowledgeDocument$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2204,6 +2180,30 @@ export type KnowledgeDocument$usersArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.KnowledgeDocumentUserScalarFieldEnum | Prisma.KnowledgeDocumentUserScalarFieldEnum[]
+}
+
+/**
+ * KnowledgeDocument.departments
+ */
+export type KnowledgeDocument$departmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the KnowledgeDocumentDepartment
+   */
+  select?: Prisma.KnowledgeDocumentDepartmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the KnowledgeDocumentDepartment
+   */
+  omit?: Prisma.KnowledgeDocumentDepartmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KnowledgeDocumentDepartmentInclude<ExtArgs> | null
+  where?: Prisma.KnowledgeDocumentDepartmentWhereInput
+  orderBy?: Prisma.KnowledgeDocumentDepartmentOrderByWithRelationInput | Prisma.KnowledgeDocumentDepartmentOrderByWithRelationInput[]
+  cursor?: Prisma.KnowledgeDocumentDepartmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KnowledgeDocumentDepartmentScalarFieldEnum | Prisma.KnowledgeDocumentDepartmentScalarFieldEnum[]
 }
 
 /**

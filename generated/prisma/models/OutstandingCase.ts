@@ -444,8 +444,8 @@ export type OutstandingCaseWhereInput = {
   handledById?: Prisma.StringNullableFilter<"OutstandingCase"> | string | null
   createdAt?: Prisma.DateTimeFilter<"OutstandingCase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutstandingCase"> | Date | string
-  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type OutstandingCaseOrderByWithRelationInput = {
@@ -477,8 +477,8 @@ export type OutstandingCaseOrderByWithRelationInput = {
   handledById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  handledBy?: Prisma.UserOrderByWithRelationInput
   lead?: Prisma.LeadOrderByWithRelationInput
+  handledBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type OutstandingCaseWhereUniqueInput = Prisma.AtLeast<{
@@ -513,8 +513,8 @@ export type OutstandingCaseWhereUniqueInput = Prisma.AtLeast<{
   handledById?: Prisma.StringNullableFilter<"OutstandingCase"> | string | null
   createdAt?: Prisma.DateTimeFilter<"OutstandingCase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutstandingCase"> | Date | string
-  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  handledBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "leadId">
 
 export type OutstandingCaseOrderByWithAggregationInput = {
@@ -614,8 +614,8 @@ export type OutstandingCaseCreateInput = {
   remark2?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  handledBy?: Prisma.UserCreateNestedOneWithoutOutstandingCasesHandledInput
   lead: Prisma.LeadCreateNestedOneWithoutOutstandingCaseInput
+  handledBy?: Prisma.UserCreateNestedOneWithoutOutstandingCasesHandledInput
 }
 
 export type OutstandingCaseUncheckedCreateInput = {
@@ -676,8 +676,8 @@ export type OutstandingCaseUpdateInput = {
   remark2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  handledBy?: Prisma.UserUpdateOneWithoutOutstandingCasesHandledNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutOutstandingCaseNestedInput
+  handledBy?: Prisma.UserUpdateOneWithoutOutstandingCasesHandledNestedInput
 }
 
 export type OutstandingCaseUncheckedUpdateInput = {
@@ -1421,8 +1421,8 @@ export type OutstandingCaseSelect<ExtArgs extends runtime.Types.Extensions.Inter
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
 }, ExtArgs["result"]["outstandingCase"]>
 
 export type OutstandingCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1454,8 +1454,8 @@ export type OutstandingCaseSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
 }, ExtArgs["result"]["outstandingCase"]>
 
 export type OutstandingCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1487,8 +1487,8 @@ export type OutstandingCaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   handledById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
 }, ExtArgs["result"]["outstandingCase"]>
 
 export type OutstandingCaseSelectScalar = {
@@ -1524,23 +1524,23 @@ export type OutstandingCaseSelectScalar = {
 
 export type OutstandingCaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "srNo" | "month" | "dos" | "status" | "paymentReceived" | "managerName" | "bdmName" | "patientName" | "treatment" | "hospitalName" | "billAmount" | "settlementAmount" | "cashPaidByPatient" | "overallAmount" | "implantCost" | "dciCost" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "outstandingDays" | "remarks" | "remark2" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["outstandingCase"]>
 export type OutstandingCaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
 }
 export type OutstandingCaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
 }
 export type OutstandingCaseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  handledBy?: boolean | Prisma.OutstandingCase$handledByArgs<ExtArgs>
 }
 
 export type $OutstandingCasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OutstandingCase"
   objects: {
-    handledBy: Prisma.$UserPayload<ExtArgs> | null
     lead: Prisma.$LeadPayload<ExtArgs>
+    handledBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1965,8 +1965,8 @@ readonly fields: OutstandingCaseFieldRefs;
  */
 export interface Prisma__OutstandingCaseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  handledBy<T extends Prisma.OutstandingCase$handledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OutstandingCase$handledByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  handledBy<T extends Prisma.OutstandingCase$handledByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OutstandingCase$handledByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

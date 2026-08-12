@@ -182,8 +182,8 @@ export type LeadRemarkEntryWhereInput = {
   content?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdById?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"LeadRemarkEntry"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type LeadRemarkEntryOrderByWithRelationInput = {
@@ -192,8 +192,8 @@ export type LeadRemarkEntryOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  createdBy?: Prisma.UserOrderByWithRelationInput
   lead?: Prisma.LeadOrderByWithRelationInput
+  createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type LeadRemarkEntryWhereUniqueInput = Prisma.AtLeast<{
@@ -205,8 +205,8 @@ export type LeadRemarkEntryWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdById?: Prisma.StringFilter<"LeadRemarkEntry"> | string
   createdAt?: Prisma.DateTimeFilter<"LeadRemarkEntry"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type LeadRemarkEntryOrderByWithAggregationInput = {
@@ -235,8 +235,8 @@ export type LeadRemarkEntryCreateInput = {
   id?: string
   content: string
   createdAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutLeadRemarkEntriesAuthoredInput
   lead: Prisma.LeadCreateNestedOneWithoutLeadRemarkEntriesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutLeadRemarkEntriesAuthoredInput
 }
 
 export type LeadRemarkEntryUncheckedCreateInput = {
@@ -251,8 +251,8 @@ export type LeadRemarkEntryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutLeadRemarkEntriesAuthoredNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutLeadRemarkEntriesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutLeadRemarkEntriesAuthoredNestedInput
 }
 
 export type LeadRemarkEntryUncheckedUpdateInput = {
@@ -558,8 +558,8 @@ export type LeadRemarkEntrySelect<ExtArgs extends runtime.Types.Extensions.Inter
   content?: boolean
   createdById?: boolean
   createdAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leadRemarkEntry"]>
 
 export type LeadRemarkEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -568,8 +568,8 @@ export type LeadRemarkEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   content?: boolean
   createdById?: boolean
   createdAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leadRemarkEntry"]>
 
 export type LeadRemarkEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -578,8 +578,8 @@ export type LeadRemarkEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   content?: boolean
   createdById?: boolean
   createdAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leadRemarkEntry"]>
 
 export type LeadRemarkEntrySelectScalar = {
@@ -592,23 +592,23 @@ export type LeadRemarkEntrySelectScalar = {
 
 export type LeadRemarkEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "content" | "createdById" | "createdAt", ExtArgs["result"]["leadRemarkEntry"]>
 export type LeadRemarkEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type LeadRemarkEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type LeadRemarkEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $LeadRemarkEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LeadRemarkEntry"
   objects: {
-    createdBy: Prisma.$UserPayload<ExtArgs>
     lead: Prisma.$LeadPayload<ExtArgs>
+    createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1010,8 +1010,8 @@ readonly fields: LeadRemarkEntryFieldRefs;
  */
 export interface Prisma__LeadRemarkEntryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

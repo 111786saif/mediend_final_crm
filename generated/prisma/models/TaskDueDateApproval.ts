@@ -206,8 +206,8 @@ export type TaskDueDateApprovalWhereInput = {
   reason?: Prisma.StringFilter<"TaskDueDateApproval"> | string
   status?: Prisma.EnumTaskApprovalStatusFilter<"TaskDueDateApproval"> | $Enums.TaskApprovalStatus
   createdAt?: Prisma.DateTimeFilter<"TaskDueDateApproval"> | Date | string
-  requestedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
+  requestedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type TaskDueDateApprovalOrderByWithRelationInput = {
@@ -219,8 +219,8 @@ export type TaskDueDateApprovalOrderByWithRelationInput = {
   reason?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  requestedBy?: Prisma.UserOrderByWithRelationInput
   task?: Prisma.TaskOrderByWithRelationInput
+  requestedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type TaskDueDateApprovalWhereUniqueInput = Prisma.AtLeast<{
@@ -235,8 +235,8 @@ export type TaskDueDateApprovalWhereUniqueInput = Prisma.AtLeast<{
   reason?: Prisma.StringFilter<"TaskDueDateApproval"> | string
   status?: Prisma.EnumTaskApprovalStatusFilter<"TaskDueDateApproval"> | $Enums.TaskApprovalStatus
   createdAt?: Prisma.DateTimeFilter<"TaskDueDateApproval"> | Date | string
-  requestedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
+  requestedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type TaskDueDateApprovalOrderByWithAggregationInput = {
@@ -274,8 +274,8 @@ export type TaskDueDateApprovalCreateInput = {
   reason: string
   status?: $Enums.TaskApprovalStatus
   createdAt?: Date | string
-  requestedBy: Prisma.UserCreateNestedOneWithoutTaskApprovalsRequestedInput
   task: Prisma.TaskCreateNestedOneWithoutApprovalsInput
+  requestedBy: Prisma.UserCreateNestedOneWithoutTaskApprovalsRequestedInput
 }
 
 export type TaskDueDateApprovalUncheckedCreateInput = {
@@ -296,8 +296,8 @@ export type TaskDueDateApprovalUpdateInput = {
   reason?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTaskApprovalStatusFieldUpdateOperationsInput | $Enums.TaskApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  requestedBy?: Prisma.UserUpdateOneRequiredWithoutTaskApprovalsRequestedNestedInput
   task?: Prisma.TaskUpdateOneRequiredWithoutApprovalsNestedInput
+  requestedBy?: Prisma.UserUpdateOneRequiredWithoutTaskApprovalsRequestedNestedInput
 }
 
 export type TaskDueDateApprovalUncheckedUpdateInput = {
@@ -670,8 +670,8 @@ export type TaskDueDateApprovalSelect<ExtArgs extends runtime.Types.Extensions.I
   reason?: boolean
   status?: boolean
   createdAt?: boolean
-  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskDueDateApproval"]>
 
 export type TaskDueDateApprovalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -683,8 +683,8 @@ export type TaskDueDateApprovalSelectCreateManyAndReturn<ExtArgs extends runtime
   reason?: boolean
   status?: boolean
   createdAt?: boolean
-  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskDueDateApproval"]>
 
 export type TaskDueDateApprovalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -696,8 +696,8 @@ export type TaskDueDateApprovalSelectUpdateManyAndReturn<ExtArgs extends runtime
   reason?: boolean
   status?: boolean
   createdAt?: boolean
-  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskDueDateApproval"]>
 
 export type TaskDueDateApprovalSelectScalar = {
@@ -713,23 +713,23 @@ export type TaskDueDateApprovalSelectScalar = {
 
 export type TaskDueDateApprovalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "taskId" | "requestedById" | "oldDueDate" | "newDueDate" | "reason" | "status" | "createdAt", ExtArgs["result"]["taskDueDateApproval"]>
 export type TaskDueDateApprovalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type TaskDueDateApprovalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type TaskDueDateApprovalIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
+  requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $TaskDueDateApprovalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TaskDueDateApproval"
   objects: {
-    requestedBy: Prisma.$UserPayload<ExtArgs>
     task: Prisma.$TaskPayload<ExtArgs>
+    requestedBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1134,8 +1134,8 @@ readonly fields: TaskDueDateApprovalFieldRefs;
  */
 export interface Prisma__TaskDueDateApprovalClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  requestedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   task<T extends Prisma.TaskDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskDefaultArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  requestedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

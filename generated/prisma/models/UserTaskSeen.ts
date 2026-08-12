@@ -174,8 +174,8 @@ export type UserTaskSeenWhereInput = {
   userId?: Prisma.StringFilter<"UserTaskSeen"> | string
   taskId?: Prisma.StringFilter<"UserTaskSeen"> | string
   lastSeenAt?: Prisma.DateTimeFilter<"UserTaskSeen"> | Date | string
-  task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
 }
 
 export type UserTaskSeenOrderByWithRelationInput = {
@@ -183,8 +183,8 @@ export type UserTaskSeenOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
-  task?: Prisma.TaskOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  task?: Prisma.TaskOrderByWithRelationInput
 }
 
 export type UserTaskSeenWhereUniqueInput = Prisma.AtLeast<{
@@ -196,8 +196,8 @@ export type UserTaskSeenWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"UserTaskSeen"> | string
   taskId?: Prisma.StringFilter<"UserTaskSeen"> | string
   lastSeenAt?: Prisma.DateTimeFilter<"UserTaskSeen"> | Date | string
-  task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  task?: Prisma.XOR<Prisma.TaskScalarRelationFilter, Prisma.TaskWhereInput>
 }, "id" | "userId_taskId">
 
 export type UserTaskSeenOrderByWithAggregationInput = {
@@ -223,8 +223,8 @@ export type UserTaskSeenScalarWhereWithAggregatesInput = {
 export type UserTaskSeenCreateInput = {
   id?: string
   lastSeenAt?: Date | string
-  task: Prisma.TaskCreateNestedOneWithoutUserTaskSeenInput
   user: Prisma.UserCreateNestedOneWithoutUserTaskSeenInput
+  task: Prisma.TaskCreateNestedOneWithoutUserTaskSeenInput
 }
 
 export type UserTaskSeenUncheckedCreateInput = {
@@ -237,8 +237,8 @@ export type UserTaskSeenUncheckedCreateInput = {
 export type UserTaskSeenUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   lastSeenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  task?: Prisma.TaskUpdateOneRequiredWithoutUserTaskSeenNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutUserTaskSeenNestedInput
+  task?: Prisma.TaskUpdateOneRequiredWithoutUserTaskSeenNestedInput
 }
 
 export type UserTaskSeenUncheckedUpdateInput = {
@@ -528,8 +528,8 @@ export type UserTaskSeenSelect<ExtArgs extends runtime.Types.Extensions.Internal
   userId?: boolean
   taskId?: boolean
   lastSeenAt?: boolean
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userTaskSeen"]>
 
 export type UserTaskSeenSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,8 +537,8 @@ export type UserTaskSeenSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   taskId?: boolean
   lastSeenAt?: boolean
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userTaskSeen"]>
 
 export type UserTaskSeenSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -546,8 +546,8 @@ export type UserTaskSeenSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   taskId?: boolean
   lastSeenAt?: boolean
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userTaskSeen"]>
 
 export type UserTaskSeenSelectScalar = {
@@ -559,23 +559,23 @@ export type UserTaskSeenSelectScalar = {
 
 export type UserTaskSeenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "taskId" | "lastSeenAt", ExtArgs["result"]["userTaskSeen"]>
 export type UserTaskSeenInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }
 export type UserTaskSeenIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }
 export type UserTaskSeenIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  task?: boolean | Prisma.TaskDefaultArgs<ExtArgs>
 }
 
 export type $UserTaskSeenPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UserTaskSeen"
   objects: {
-    task: Prisma.$TaskPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    task: Prisma.$TaskPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -976,8 +976,8 @@ readonly fields: UserTaskSeenFieldRefs;
  */
 export interface Prisma__UserTaskSeenClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  task<T extends Prisma.TaskDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskDefaultArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  task<T extends Prisma.TaskDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskDefaultArgs<ExtArgs>>): Prisma.Prisma__TaskClient<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

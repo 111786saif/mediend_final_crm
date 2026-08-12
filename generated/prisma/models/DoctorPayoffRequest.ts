@@ -43,14 +43,14 @@ export type DoctorPayoffRequestMinAggregateOutputType = {
   requestRemarks: string | null
   financeRemarks: string | null
   rejectionRemarks: string | null
+  verificationDocUrl: string | null
+  verificationDocName: string | null
   status: $Enums.DoctorPayoffRequestStatus | null
   requestedById: string | null
   reviewedById: string | null
   reviewedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
-  verificationDocUrl: string | null
-  verificationDocName: string | null
 }
 
 export type DoctorPayoffRequestMaxAggregateOutputType = {
@@ -62,14 +62,14 @@ export type DoctorPayoffRequestMaxAggregateOutputType = {
   requestRemarks: string | null
   financeRemarks: string | null
   rejectionRemarks: string | null
+  verificationDocUrl: string | null
+  verificationDocName: string | null
   status: $Enums.DoctorPayoffRequestStatus | null
   requestedById: string | null
   reviewedById: string | null
   reviewedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
-  verificationDocUrl: string | null
-  verificationDocName: string | null
 }
 
 export type DoctorPayoffRequestCountAggregateOutputType = {
@@ -83,14 +83,14 @@ export type DoctorPayoffRequestCountAggregateOutputType = {
   financeRemarks: number
   rejectionRemarks: number
   attachments: number
+  verificationDocUrl: number
+  verificationDocName: number
   status: number
   requestedById: number
   reviewedById: number
   reviewedAt: number
   createdAt: number
   updatedAt: number
-  verificationDocUrl: number
-  verificationDocName: number
   _all: number
 }
 
@@ -112,14 +112,14 @@ export type DoctorPayoffRequestMinAggregateInputType = {
   requestRemarks?: true
   financeRemarks?: true
   rejectionRemarks?: true
+  verificationDocUrl?: true
+  verificationDocName?: true
   status?: true
   requestedById?: true
   reviewedById?: true
   reviewedAt?: true
   createdAt?: true
   updatedAt?: true
-  verificationDocUrl?: true
-  verificationDocName?: true
 }
 
 export type DoctorPayoffRequestMaxAggregateInputType = {
@@ -131,14 +131,14 @@ export type DoctorPayoffRequestMaxAggregateInputType = {
   requestRemarks?: true
   financeRemarks?: true
   rejectionRemarks?: true
+  verificationDocUrl?: true
+  verificationDocName?: true
   status?: true
   requestedById?: true
   reviewedById?: true
   reviewedAt?: true
   createdAt?: true
   updatedAt?: true
-  verificationDocUrl?: true
-  verificationDocName?: true
 }
 
 export type DoctorPayoffRequestCountAggregateInputType = {
@@ -152,14 +152,14 @@ export type DoctorPayoffRequestCountAggregateInputType = {
   financeRemarks?: true
   rejectionRemarks?: true
   attachments?: true
+  verificationDocUrl?: true
+  verificationDocName?: true
   status?: true
   requestedById?: true
   reviewedById?: true
   reviewedAt?: true
   createdAt?: true
   updatedAt?: true
-  verificationDocUrl?: true
-  verificationDocName?: true
   _all?: true
 }
 
@@ -260,14 +260,14 @@ export type DoctorPayoffRequestGroupByOutputType = {
   financeRemarks: string | null
   rejectionRemarks: string | null
   attachments: runtime.JsonValue | null
+  verificationDocUrl: string | null
+  verificationDocName: string | null
   status: $Enums.DoctorPayoffRequestStatus
   requestedById: string
   reviewedById: string | null
   reviewedAt: Date | null
   createdAt: Date
   updatedAt: Date
-  verificationDocUrl: string | null
-  verificationDocName: string | null
   _count: DoctorPayoffRequestCountAggregateOutputType | null
   _avg: DoctorPayoffRequestAvgAggregateOutputType | null
   _sum: DoctorPayoffRequestSumAggregateOutputType | null
@@ -304,14 +304,14 @@ export type DoctorPayoffRequestWhereInput = {
   financeRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   rejectionRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   attachments?: Prisma.JsonNullableFilter<"DoctorPayoffRequest">
+  verificationDocUrl?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
+  verificationDocName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFilter<"DoctorPayoffRequest"> | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFilter<"DoctorPayoffRequest"> | string
   reviewedById?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"DoctorPayoffRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DoctorPayoffRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorPayoffRequest"> | Date | string
-  verificationDocUrl?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
-  verificationDocName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   lead?: Prisma.XOR<Prisma.LeadNullableScalarRelationFilter, Prisma.LeadWhereInput> | null
   requestedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -329,14 +329,14 @@ export type DoctorPayoffRequestOrderByWithRelationInput = {
   financeRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   rejectionRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   attachments?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationDocName?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedById?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  verificationDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  verificationDocName?: Prisma.SortOrderInput | Prisma.SortOrder
   lead?: Prisma.LeadOrderByWithRelationInput
   requestedBy?: Prisma.UserOrderByWithRelationInput
   reviewedBy?: Prisma.UserOrderByWithRelationInput
@@ -357,14 +357,14 @@ export type DoctorPayoffRequestWhereUniqueInput = Prisma.AtLeast<{
   financeRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   rejectionRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   attachments?: Prisma.JsonNullableFilter<"DoctorPayoffRequest">
+  verificationDocUrl?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
+  verificationDocName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFilter<"DoctorPayoffRequest"> | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFilter<"DoctorPayoffRequest"> | string
   reviewedById?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"DoctorPayoffRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DoctorPayoffRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorPayoffRequest"> | Date | string
-  verificationDocUrl?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
-  verificationDocName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   lead?: Prisma.XOR<Prisma.LeadNullableScalarRelationFilter, Prisma.LeadWhereInput> | null
   requestedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -382,14 +382,14 @@ export type DoctorPayoffRequestOrderByWithAggregationInput = {
   financeRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   rejectionRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   attachments?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  verificationDocName?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedById?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  verificationDocUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  verificationDocName?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.DoctorPayoffRequestCountOrderByAggregateInput
   _avg?: Prisma.DoctorPayoffRequestAvgOrderByAggregateInput
   _max?: Prisma.DoctorPayoffRequestMaxOrderByAggregateInput
@@ -411,14 +411,14 @@ export type DoctorPayoffRequestScalarWhereWithAggregatesInput = {
   financeRemarks?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
   rejectionRemarks?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
   attachments?: Prisma.JsonNullableWithAggregatesFilter<"DoctorPayoffRequest">
+  verificationDocUrl?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
+  verificationDocName?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusWithAggregatesFilter<"DoctorPayoffRequest"> | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringWithAggregatesFilter<"DoctorPayoffRequest"> | string
   reviewedById?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DoctorPayoffRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DoctorPayoffRequest"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DoctorPayoffRequest"> | Date | string
-  verificationDocUrl?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
-  verificationDocName?: Prisma.StringNullableWithAggregatesFilter<"DoctorPayoffRequest"> | string | null
 }
 
 export type DoctorPayoffRequestCreateInput = {
@@ -431,12 +431,12 @@ export type DoctorPayoffRequestCreateInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   lead?: Prisma.LeadCreateNestedOneWithoutDoctorPayoffRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestsSubmittedInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestsReviewedInput
@@ -454,14 +454,14 @@ export type DoctorPayoffRequestUncheckedCreateInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   requestedById: string
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   activityLogs?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutRequestInput
 }
 
@@ -475,12 +475,12 @@ export type DoctorPayoffRequestUpdateInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneWithoutDoctorPayoffRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutDoctorPayoffRequestsSubmittedNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutDoctorPayoffRequestsReviewedNestedInput
@@ -498,14 +498,14 @@ export type DoctorPayoffRequestUncheckedUpdateInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityLogs?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutRequestNestedInput
 }
 
@@ -520,14 +520,14 @@ export type DoctorPayoffRequestCreateManyInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   requestedById: string
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
 }
 
 export type DoctorPayoffRequestUpdateManyMutationInput = {
@@ -540,12 +540,12 @@ export type DoctorPayoffRequestUpdateManyMutationInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DoctorPayoffRequestUncheckedUpdateManyInput = {
@@ -559,14 +559,14 @@ export type DoctorPayoffRequestUncheckedUpdateManyInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DoctorPayoffRequestListRelationFilter = {
@@ -590,14 +590,14 @@ export type DoctorPayoffRequestCountOrderByAggregateInput = {
   financeRemarks?: Prisma.SortOrder
   rejectionRemarks?: Prisma.SortOrder
   attachments?: Prisma.SortOrder
+  verificationDocUrl?: Prisma.SortOrder
+  verificationDocName?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedById?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  verificationDocUrl?: Prisma.SortOrder
-  verificationDocName?: Prisma.SortOrder
 }
 
 export type DoctorPayoffRequestAvgOrderByAggregateInput = {
@@ -613,14 +613,14 @@ export type DoctorPayoffRequestMaxOrderByAggregateInput = {
   requestRemarks?: Prisma.SortOrder
   financeRemarks?: Prisma.SortOrder
   rejectionRemarks?: Prisma.SortOrder
+  verificationDocUrl?: Prisma.SortOrder
+  verificationDocName?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedById?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  verificationDocUrl?: Prisma.SortOrder
-  verificationDocName?: Prisma.SortOrder
 }
 
 export type DoctorPayoffRequestMinOrderByAggregateInput = {
@@ -632,14 +632,14 @@ export type DoctorPayoffRequestMinOrderByAggregateInput = {
   requestRemarks?: Prisma.SortOrder
   financeRemarks?: Prisma.SortOrder
   rejectionRemarks?: Prisma.SortOrder
+  verificationDocUrl?: Prisma.SortOrder
+  verificationDocName?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedById?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  verificationDocUrl?: Prisma.SortOrder
-  verificationDocName?: Prisma.SortOrder
 }
 
 export type DoctorPayoffRequestSumOrderByAggregateInput = {
@@ -805,12 +805,12 @@ export type DoctorPayoffRequestCreateWithoutRequestedByInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   lead?: Prisma.LeadCreateNestedOneWithoutDoctorPayoffRequestsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestsReviewedInput
   activityLogs?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutRequestInput
@@ -827,13 +827,13 @@ export type DoctorPayoffRequestUncheckedCreateWithoutRequestedByInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   activityLogs?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutRequestInput
 }
 
@@ -857,12 +857,12 @@ export type DoctorPayoffRequestCreateWithoutReviewedByInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   lead?: Prisma.LeadCreateNestedOneWithoutDoctorPayoffRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestsSubmittedInput
   activityLogs?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutRequestInput
@@ -879,13 +879,13 @@ export type DoctorPayoffRequestUncheckedCreateWithoutReviewedByInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   requestedById: string
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   activityLogs?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutRequestInput
 }
 
@@ -929,14 +929,14 @@ export type DoctorPayoffRequestScalarWhereInput = {
   financeRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   rejectionRemarks?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   attachments?: Prisma.JsonNullableFilter<"DoctorPayoffRequest">
+  verificationDocUrl?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
+  verificationDocName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFilter<"DoctorPayoffRequest"> | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFilter<"DoctorPayoffRequest"> | string
   reviewedById?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"DoctorPayoffRequest"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DoctorPayoffRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorPayoffRequest"> | Date | string
-  verificationDocUrl?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
-  verificationDocName?: Prisma.StringNullableFilter<"DoctorPayoffRequest"> | string | null
 }
 
 export type DoctorPayoffRequestUpsertWithWhereUniqueWithoutReviewedByInput = {
@@ -965,12 +965,12 @@ export type DoctorPayoffRequestCreateWithoutLeadInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   requestedBy: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestsSubmittedInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestsReviewedInput
   activityLogs?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutRequestInput
@@ -986,14 +986,14 @@ export type DoctorPayoffRequestUncheckedCreateWithoutLeadInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   requestedById: string
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   activityLogs?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutRequestInput
 }
 
@@ -1033,12 +1033,12 @@ export type DoctorPayoffRequestCreateWithoutActivityLogsInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
   lead?: Prisma.LeadCreateNestedOneWithoutDoctorPayoffRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestsSubmittedInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDoctorPayoffRequestsReviewedInput
@@ -1055,14 +1055,14 @@ export type DoctorPayoffRequestUncheckedCreateWithoutActivityLogsInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   requestedById: string
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
 }
 
 export type DoctorPayoffRequestCreateOrConnectWithoutActivityLogsInput = {
@@ -1091,12 +1091,12 @@ export type DoctorPayoffRequestUpdateWithoutActivityLogsInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneWithoutDoctorPayoffRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutDoctorPayoffRequestsSubmittedNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutDoctorPayoffRequestsReviewedNestedInput
@@ -1113,14 +1113,14 @@ export type DoctorPayoffRequestUncheckedUpdateWithoutActivityLogsInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DoctorPayoffRequestCreateManyRequestedByInput = {
@@ -1134,13 +1134,13 @@ export type DoctorPayoffRequestCreateManyRequestedByInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
 }
 
 export type DoctorPayoffRequestCreateManyReviewedByInput = {
@@ -1154,13 +1154,13 @@ export type DoctorPayoffRequestCreateManyReviewedByInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   requestedById: string
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
 }
 
 export type DoctorPayoffRequestUpdateWithoutRequestedByInput = {
@@ -1173,12 +1173,12 @@ export type DoctorPayoffRequestUpdateWithoutRequestedByInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneWithoutDoctorPayoffRequestsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutDoctorPayoffRequestsReviewedNestedInput
   activityLogs?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutRequestNestedInput
@@ -1195,13 +1195,13 @@ export type DoctorPayoffRequestUncheckedUpdateWithoutRequestedByInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityLogs?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutRequestNestedInput
 }
 
@@ -1216,13 +1216,13 @@ export type DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DoctorPayoffRequestUpdateWithoutReviewedByInput = {
@@ -1235,12 +1235,12 @@ export type DoctorPayoffRequestUpdateWithoutReviewedByInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lead?: Prisma.LeadUpdateOneWithoutDoctorPayoffRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutDoctorPayoffRequestsSubmittedNestedInput
   activityLogs?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutRequestNestedInput
@@ -1257,13 +1257,13 @@ export type DoctorPayoffRequestUncheckedUpdateWithoutReviewedByInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityLogs?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutRequestNestedInput
 }
 
@@ -1278,13 +1278,13 @@ export type DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DoctorPayoffRequestCreateManyLeadInput = {
@@ -1297,14 +1297,14 @@ export type DoctorPayoffRequestCreateManyLeadInput = {
   financeRemarks?: string | null
   rejectionRemarks?: string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: string | null
+  verificationDocName?: string | null
   status?: $Enums.DoctorPayoffRequestStatus
   requestedById: string
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  verificationDocUrl?: string | null
-  verificationDocName?: string | null
 }
 
 export type DoctorPayoffRequestUpdateWithoutLeadInput = {
@@ -1317,12 +1317,12 @@ export type DoctorPayoffRequestUpdateWithoutLeadInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutDoctorPayoffRequestsSubmittedNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutDoctorPayoffRequestsReviewedNestedInput
   activityLogs?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutRequestNestedInput
@@ -1338,14 +1338,14 @@ export type DoctorPayoffRequestUncheckedUpdateWithoutLeadInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityLogs?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutRequestNestedInput
 }
 
@@ -1359,14 +1359,14 @@ export type DoctorPayoffRequestUncheckedUpdateManyWithoutLeadInput = {
   financeRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rejectionRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDoctorPayoffRequestStatusFieldUpdateOperationsInput | $Enums.DoctorPayoffRequestStatus
   requestedById?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  verificationDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  verificationDocName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1411,14 +1411,14 @@ export type DoctorPayoffRequestSelect<ExtArgs extends runtime.Types.Extensions.I
   financeRemarks?: boolean
   rejectionRemarks?: boolean
   attachments?: boolean
+  verificationDocUrl?: boolean
+  verificationDocName?: boolean
   status?: boolean
   requestedById?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  verificationDocUrl?: boolean
-  verificationDocName?: boolean
   lead?: boolean | Prisma.DoctorPayoffRequest$leadArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorPayoffRequest$reviewedByArgs<ExtArgs>
@@ -1437,14 +1437,14 @@ export type DoctorPayoffRequestSelectCreateManyAndReturn<ExtArgs extends runtime
   financeRemarks?: boolean
   rejectionRemarks?: boolean
   attachments?: boolean
+  verificationDocUrl?: boolean
+  verificationDocName?: boolean
   status?: boolean
   requestedById?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  verificationDocUrl?: boolean
-  verificationDocName?: boolean
   lead?: boolean | Prisma.DoctorPayoffRequest$leadArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorPayoffRequest$reviewedByArgs<ExtArgs>
@@ -1461,14 +1461,14 @@ export type DoctorPayoffRequestSelectUpdateManyAndReturn<ExtArgs extends runtime
   financeRemarks?: boolean
   rejectionRemarks?: boolean
   attachments?: boolean
+  verificationDocUrl?: boolean
+  verificationDocName?: boolean
   status?: boolean
   requestedById?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  verificationDocUrl?: boolean
-  verificationDocName?: boolean
   lead?: boolean | Prisma.DoctorPayoffRequest$leadArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DoctorPayoffRequest$reviewedByArgs<ExtArgs>
@@ -1485,17 +1485,17 @@ export type DoctorPayoffRequestSelectScalar = {
   financeRemarks?: boolean
   rejectionRemarks?: boolean
   attachments?: boolean
+  verificationDocUrl?: boolean
+  verificationDocName?: boolean
   status?: boolean
   requestedById?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  verificationDocUrl?: boolean
-  verificationDocName?: boolean
 }
 
-export type DoctorPayoffRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "doctorName" | "hospitalName" | "leadId" | "leadIds" | "requestAmount" | "requestRemarks" | "financeRemarks" | "rejectionRemarks" | "attachments" | "status" | "requestedById" | "reviewedById" | "reviewedAt" | "createdAt" | "updatedAt" | "verificationDocUrl" | "verificationDocName", ExtArgs["result"]["doctorPayoffRequest"]>
+export type DoctorPayoffRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "doctorName" | "hospitalName" | "leadId" | "leadIds" | "requestAmount" | "requestRemarks" | "financeRemarks" | "rejectionRemarks" | "attachments" | "verificationDocUrl" | "verificationDocName" | "status" | "requestedById" | "reviewedById" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["doctorPayoffRequest"]>
 export type DoctorPayoffRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.DoctorPayoffRequest$leadArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1539,17 +1539,17 @@ export type $DoctorPayoffRequestPayload<ExtArgs extends runtime.Types.Extensions
      * [{ name, url, type }]
      */
     attachments: runtime.JsonValue | null
+    /**
+     * Finance verification document uploaded on approval
+     */
+    verificationDocUrl: string | null
+    verificationDocName: string | null
     status: $Enums.DoctorPayoffRequestStatus
     requestedById: string
     reviewedById: string | null
     reviewedAt: Date | null
     createdAt: Date
     updatedAt: Date
-    /**
-     * Finance verification document uploaded on approval
-     */
-    verificationDocUrl: string | null
-    verificationDocName: string | null
   }, ExtArgs["result"]["doctorPayoffRequest"]>
   composites: {}
 }
@@ -1987,14 +1987,14 @@ export interface DoctorPayoffRequestFieldRefs {
   readonly financeRemarks: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
   readonly rejectionRemarks: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
   readonly attachments: Prisma.FieldRef<"DoctorPayoffRequest", 'Json'>
+  readonly verificationDocUrl: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
+  readonly verificationDocName: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
   readonly status: Prisma.FieldRef<"DoctorPayoffRequest", 'DoctorPayoffRequestStatus'>
   readonly requestedById: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
   readonly reviewedById: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
   readonly reviewedAt: Prisma.FieldRef<"DoctorPayoffRequest", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"DoctorPayoffRequest", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DoctorPayoffRequest", 'DateTime'>
-  readonly verificationDocUrl: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
-  readonly verificationDocName: Prisma.FieldRef<"DoctorPayoffRequest", 'String'>
 }
     
 

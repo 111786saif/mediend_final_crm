@@ -232,9 +232,9 @@ export type ResourceWhereInput = {
   parentId?: Prisma.StringNullableFilter<"Resource"> | string | null
   sortOrder?: Prisma.IntFilter<"Resource"> | number
   isActive?: Prisma.BoolFilter<"Resource"> | boolean
-  assignments?: Prisma.PermissionAssignmentListRelationFilter
   parent?: Prisma.XOR<Prisma.ResourceNullableScalarRelationFilter, Prisma.ResourceWhereInput> | null
   children?: Prisma.ResourceListRelationFilter
+  assignments?: Prisma.PermissionAssignmentListRelationFilter
 }
 
 export type ResourceOrderByWithRelationInput = {
@@ -245,9 +245,9 @@ export type ResourceOrderByWithRelationInput = {
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  assignments?: Prisma.PermissionAssignmentOrderByRelationAggregateInput
   parent?: Prisma.ResourceOrderByWithRelationInput
   children?: Prisma.ResourceOrderByRelationAggregateInput
+  assignments?: Prisma.PermissionAssignmentOrderByRelationAggregateInput
 }
 
 export type ResourceWhereUniqueInput = Prisma.AtLeast<{
@@ -261,9 +261,9 @@ export type ResourceWhereUniqueInput = Prisma.AtLeast<{
   parentId?: Prisma.StringNullableFilter<"Resource"> | string | null
   sortOrder?: Prisma.IntFilter<"Resource"> | number
   isActive?: Prisma.BoolFilter<"Resource"> | boolean
-  assignments?: Prisma.PermissionAssignmentListRelationFilter
   parent?: Prisma.XOR<Prisma.ResourceNullableScalarRelationFilter, Prisma.ResourceWhereInput> | null
   children?: Prisma.ResourceListRelationFilter
+  assignments?: Prisma.PermissionAssignmentListRelationFilter
 }, "id" | "key">
 
 export type ResourceOrderByWithAggregationInput = {
@@ -301,9 +301,9 @@ export type ResourceCreateInput = {
   type: $Enums.ResourceType
   sortOrder?: number
   isActive?: boolean
-  assignments?: Prisma.PermissionAssignmentCreateNestedManyWithoutResourceInput
   parent?: Prisma.ResourceCreateNestedOneWithoutChildrenInput
   children?: Prisma.ResourceCreateNestedManyWithoutParentInput
+  assignments?: Prisma.PermissionAssignmentCreateNestedManyWithoutResourceInput
 }
 
 export type ResourceUncheckedCreateInput = {
@@ -314,8 +314,8 @@ export type ResourceUncheckedCreateInput = {
   parentId?: string | null
   sortOrder?: number
   isActive?: boolean
-  assignments?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutResourceInput
   children?: Prisma.ResourceUncheckedCreateNestedManyWithoutParentInput
+  assignments?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutResourceInput
 }
 
 export type ResourceUpdateInput = {
@@ -325,9 +325,9 @@ export type ResourceUpdateInput = {
   type?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assignments?: Prisma.PermissionAssignmentUpdateManyWithoutResourceNestedInput
   parent?: Prisma.ResourceUpdateOneWithoutChildrenNestedInput
   children?: Prisma.ResourceUpdateManyWithoutParentNestedInput
+  assignments?: Prisma.PermissionAssignmentUpdateManyWithoutResourceNestedInput
 }
 
 export type ResourceUncheckedUpdateInput = {
@@ -338,8 +338,8 @@ export type ResourceUncheckedUpdateInput = {
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assignments?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutResourceNestedInput
   children?: Prisma.ResourceUncheckedUpdateManyWithoutParentNestedInput
+  assignments?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutResourceNestedInput
 }
 
 export type ResourceCreateManyInput = {
@@ -512,8 +512,8 @@ export type ResourceCreateWithoutChildrenInput = {
   type: $Enums.ResourceType
   sortOrder?: number
   isActive?: boolean
-  assignments?: Prisma.PermissionAssignmentCreateNestedManyWithoutResourceInput
   parent?: Prisma.ResourceCreateNestedOneWithoutChildrenInput
+  assignments?: Prisma.PermissionAssignmentCreateNestedManyWithoutResourceInput
 }
 
 export type ResourceUncheckedCreateWithoutChildrenInput = {
@@ -539,8 +539,8 @@ export type ResourceCreateWithoutParentInput = {
   type: $Enums.ResourceType
   sortOrder?: number
   isActive?: boolean
-  assignments?: Prisma.PermissionAssignmentCreateNestedManyWithoutResourceInput
   children?: Prisma.ResourceCreateNestedManyWithoutParentInput
+  assignments?: Prisma.PermissionAssignmentCreateNestedManyWithoutResourceInput
 }
 
 export type ResourceUncheckedCreateWithoutParentInput = {
@@ -550,8 +550,8 @@ export type ResourceUncheckedCreateWithoutParentInput = {
   type: $Enums.ResourceType
   sortOrder?: number
   isActive?: boolean
-  assignments?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutResourceInput
   children?: Prisma.ResourceUncheckedCreateNestedManyWithoutParentInput
+  assignments?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutResourceInput
 }
 
 export type ResourceCreateOrConnectWithoutParentInput = {
@@ -582,8 +582,8 @@ export type ResourceUpdateWithoutChildrenInput = {
   type?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assignments?: Prisma.PermissionAssignmentUpdateManyWithoutResourceNestedInput
   parent?: Prisma.ResourceUpdateOneWithoutChildrenNestedInput
+  assignments?: Prisma.PermissionAssignmentUpdateManyWithoutResourceNestedInput
 }
 
 export type ResourceUncheckedUpdateWithoutChildrenInput = {
@@ -702,8 +702,8 @@ export type ResourceUpdateWithoutParentInput = {
   type?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assignments?: Prisma.PermissionAssignmentUpdateManyWithoutResourceNestedInput
   children?: Prisma.ResourceUpdateManyWithoutParentNestedInput
+  assignments?: Prisma.PermissionAssignmentUpdateManyWithoutResourceNestedInput
 }
 
 export type ResourceUncheckedUpdateWithoutParentInput = {
@@ -713,8 +713,8 @@ export type ResourceUncheckedUpdateWithoutParentInput = {
   type?: Prisma.EnumResourceTypeFieldUpdateOperationsInput | $Enums.ResourceType
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assignments?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutResourceNestedInput
   children?: Prisma.ResourceUncheckedUpdateManyWithoutParentNestedInput
+  assignments?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutResourceNestedInput
 }
 
 export type ResourceUncheckedUpdateManyWithoutParentInput = {
@@ -732,13 +732,13 @@ export type ResourceUncheckedUpdateManyWithoutParentInput = {
  */
 
 export type ResourceCountOutputType = {
-  assignments: number
   children: number
+  assignments: number
 }
 
 export type ResourceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  assignments?: boolean | ResourceCountOutputTypeCountAssignmentsArgs
   children?: boolean | ResourceCountOutputTypeCountChildrenArgs
+  assignments?: boolean | ResourceCountOutputTypeCountAssignmentsArgs
 }
 
 /**
@@ -754,15 +754,15 @@ export type ResourceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
 /**
  * ResourceCountOutputType without action
  */
-export type ResourceCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PermissionAssignmentWhereInput
+export type ResourceCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ResourceWhereInput
 }
 
 /**
  * ResourceCountOutputType without action
  */
-export type ResourceCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ResourceWhereInput
+export type ResourceCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PermissionAssignmentWhereInput
 }
 
 
@@ -774,9 +774,9 @@ export type ResourceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   parentId?: boolean
   sortOrder?: boolean
   isActive?: boolean
-  assignments?: boolean | Prisma.Resource$assignmentsArgs<ExtArgs>
   parent?: boolean | Prisma.Resource$parentArgs<ExtArgs>
   children?: boolean | Prisma.Resource$childrenArgs<ExtArgs>
+  assignments?: boolean | Prisma.Resource$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ResourceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["resource"]>
 
@@ -814,9 +814,9 @@ export type ResourceSelectScalar = {
 
 export type ResourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "key" | "label" | "type" | "parentId" | "sortOrder" | "isActive", ExtArgs["result"]["resource"]>
 export type ResourceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  assignments?: boolean | Prisma.Resource$assignmentsArgs<ExtArgs>
   parent?: boolean | Prisma.Resource$parentArgs<ExtArgs>
   children?: boolean | Prisma.Resource$childrenArgs<ExtArgs>
+  assignments?: boolean | Prisma.Resource$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ResourceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ResourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -829,9 +829,9 @@ export type ResourceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $ResourcePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Resource"
   objects: {
-    assignments: Prisma.$PermissionAssignmentPayload<ExtArgs>[]
     parent: Prisma.$ResourcePayload<ExtArgs> | null
     children: Prisma.$ResourcePayload<ExtArgs>[]
+    assignments: Prisma.$PermissionAssignmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1235,9 +1235,9 @@ readonly fields: ResourceFieldRefs;
  */
 export interface Prisma__ResourceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  assignments<T extends Prisma.Resource$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Resource$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PermissionAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   parent<T extends Prisma.Resource$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Resource$parentArgs<ExtArgs>>): Prisma.Prisma__ResourceClient<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.Resource$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Resource$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignments<T extends Prisma.Resource$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Resource$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PermissionAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1675,30 +1675,6 @@ export type ResourceDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Resource.assignments
- */
-export type Resource$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PermissionAssignment
-   */
-  select?: Prisma.PermissionAssignmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the PermissionAssignment
-   */
-  omit?: Prisma.PermissionAssignmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PermissionAssignmentInclude<ExtArgs> | null
-  where?: Prisma.PermissionAssignmentWhereInput
-  orderBy?: Prisma.PermissionAssignmentOrderByWithRelationInput | Prisma.PermissionAssignmentOrderByWithRelationInput[]
-  cursor?: Prisma.PermissionAssignmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PermissionAssignmentScalarFieldEnum | Prisma.PermissionAssignmentScalarFieldEnum[]
-}
-
-/**
  * Resource.parent
  */
 export type Resource$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1739,6 +1715,30 @@ export type Resource$childrenArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ResourceScalarFieldEnum | Prisma.ResourceScalarFieldEnum[]
+}
+
+/**
+ * Resource.assignments
+ */
+export type Resource$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PermissionAssignment
+   */
+  select?: Prisma.PermissionAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PermissionAssignment
+   */
+  omit?: Prisma.PermissionAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PermissionAssignmentInclude<ExtArgs> | null
+  where?: Prisma.PermissionAssignmentWhereInput
+  orderBy?: Prisma.PermissionAssignmentOrderByWithRelationInput | Prisma.PermissionAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.PermissionAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PermissionAssignmentScalarFieldEnum | Prisma.PermissionAssignmentScalarFieldEnum[]
 }
 
 /**

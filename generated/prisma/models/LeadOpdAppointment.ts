@@ -360,10 +360,10 @@ export type LeadOpdAppointmentWhereInput = {
   updatedById?: Prisma.StringNullableFilter<"LeadOpdAppointment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LeadOpdAppointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LeadOpdAppointment"> | Date | string
-  followUpReason?: Prisma.XOR<Prisma.FollowUpReasonMasterNullableScalarRelationFilter, Prisma.FollowUpReasonMasterWhereInput> | null
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
-  reasonNoSurgery?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterNullableScalarRelationFilter, Prisma.ReasonNoSurgeryMasterWhereInput> | null
   surgeryRemark?: Prisma.XOR<Prisma.SurgeryRemarkMasterNullableScalarRelationFilter, Prisma.SurgeryRemarkMasterWhereInput> | null
+  reasonNoSurgery?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterNullableScalarRelationFilter, Prisma.ReasonNoSurgeryMasterWhereInput> | null
+  followUpReason?: Prisma.XOR<Prisma.FollowUpReasonMasterNullableScalarRelationFilter, Prisma.FollowUpReasonMasterWhereInput> | null
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageListRelationFilter
 }
 
@@ -390,10 +390,10 @@ export type LeadOpdAppointmentOrderByWithRelationInput = {
   updatedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  followUpReason?: Prisma.FollowUpReasonMasterOrderByWithRelationInput
   lead?: Prisma.LeadOrderByWithRelationInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterOrderByWithRelationInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterOrderByWithRelationInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterOrderByWithRelationInput
+  followUpReason?: Prisma.FollowUpReasonMasterOrderByWithRelationInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageOrderByRelationAggregateInput
 }
 
@@ -424,10 +424,10 @@ export type LeadOpdAppointmentWhereUniqueInput = Prisma.AtLeast<{
   updatedById?: Prisma.StringNullableFilter<"LeadOpdAppointment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LeadOpdAppointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LeadOpdAppointment"> | Date | string
-  followUpReason?: Prisma.XOR<Prisma.FollowUpReasonMasterNullableScalarRelationFilter, Prisma.FollowUpReasonMasterWhereInput> | null
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
-  reasonNoSurgery?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterNullableScalarRelationFilter, Prisma.ReasonNoSurgeryMasterWhereInput> | null
   surgeryRemark?: Prisma.XOR<Prisma.SurgeryRemarkMasterNullableScalarRelationFilter, Prisma.SurgeryRemarkMasterWhereInput> | null
+  reasonNoSurgery?: Prisma.XOR<Prisma.ReasonNoSurgeryMasterNullableScalarRelationFilter, Prisma.ReasonNoSurgeryMasterWhereInput> | null
+  followUpReason?: Prisma.XOR<Prisma.FollowUpReasonMasterNullableScalarRelationFilter, Prisma.FollowUpReasonMasterWhereInput> | null
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageListRelationFilter
 }, "id" | "leadId_phase_slot">
 
@@ -508,10 +508,10 @@ export type LeadOpdAppointmentCreateInput = {
   updatedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
   lead: Prisma.LeadCreateNestedOneWithoutOpdAppointmentsInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdAppointmentsInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
+  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageCreateNestedManyWithoutOpdAppointmentInput
 }
 
@@ -560,10 +560,10 @@ export type LeadOpdAppointmentUpdateInput = {
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutOpdAppointmentsNestedInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageUpdateManyWithoutOpdAppointmentNestedInput
 }
 
@@ -981,9 +981,9 @@ export type LeadOpdAppointmentCreateWithoutLeadInput = {
   updatedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdAppointmentsInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
+  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageCreateNestedManyWithoutOpdAppointmentInput
 }
 
@@ -1085,10 +1085,10 @@ export type LeadOpdAppointmentCreateWithoutPrescriptionImagesInput = {
   updatedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
   lead: Prisma.LeadCreateNestedOneWithoutOpdAppointmentsInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdAppointmentsInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
+  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
 }
 
 export type LeadOpdAppointmentUncheckedCreateWithoutPrescriptionImagesInput = {
@@ -1151,10 +1151,10 @@ export type LeadOpdAppointmentUpdateWithoutPrescriptionImagesInput = {
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutOpdAppointmentsNestedInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
 }
 
 export type LeadOpdAppointmentUncheckedUpdateWithoutPrescriptionImagesInput = {
@@ -1201,9 +1201,9 @@ export type LeadOpdAppointmentCreateWithoutSurgeryRemarkInput = {
   updatedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
   lead: Prisma.LeadCreateNestedOneWithoutOpdAppointmentsInput
   reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
+  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageCreateNestedManyWithoutOpdAppointmentInput
 }
 
@@ -1277,9 +1277,9 @@ export type LeadOpdAppointmentCreateWithoutReasonNoSurgeryInput = {
   updatedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
   lead: Prisma.LeadCreateNestedOneWithoutOpdAppointmentsInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdAppointmentsInput
+  followUpReason?: Prisma.FollowUpReasonMasterCreateNestedOneWithoutOpdAppointmentsInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageCreateNestedManyWithoutOpdAppointmentInput
 }
 
@@ -1354,8 +1354,8 @@ export type LeadOpdAppointmentCreateWithoutFollowUpReasonInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutOpdAppointmentsInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterCreateNestedOneWithoutOpdAppointmentsInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterCreateNestedOneWithoutOpdAppointmentsInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageCreateNestedManyWithoutOpdAppointmentInput
 }
 
@@ -1453,9 +1453,9 @@ export type LeadOpdAppointmentUpdateWithoutLeadInput = {
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageUpdateManyWithoutOpdAppointmentNestedInput
 }
 
@@ -1551,9 +1551,9 @@ export type LeadOpdAppointmentUpdateWithoutSurgeryRemarkInput = {
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutOpdAppointmentsNestedInput
   reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageUpdateManyWithoutOpdAppointmentNestedInput
 }
 
@@ -1649,9 +1649,9 @@ export type LeadOpdAppointmentUpdateWithoutReasonNoSurgeryInput = {
   updatedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
   lead?: Prisma.LeadUpdateOneRequiredWithoutOpdAppointmentsNestedInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  followUpReason?: Prisma.FollowUpReasonMasterUpdateOneWithoutOpdAppointmentsNestedInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageUpdateManyWithoutOpdAppointmentNestedInput
 }
 
@@ -1748,8 +1748,8 @@ export type LeadOpdAppointmentUpdateWithoutFollowUpReasonInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutOpdAppointmentsNestedInput
-  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
   surgeryRemark?: Prisma.SurgeryRemarkMasterUpdateOneWithoutOpdAppointmentsNestedInput
+  reasonNoSurgery?: Prisma.ReasonNoSurgeryMasterUpdateOneWithoutOpdAppointmentsNestedInput
   prescriptionImages?: Prisma.LeadOpdAppointmentPrescriptionImageUpdateManyWithoutOpdAppointmentNestedInput
 }
 
@@ -1856,10 +1856,10 @@ export type LeadOpdAppointmentSelect<ExtArgs extends runtime.Types.Extensions.In
   updatedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
   surgeryRemark?: boolean | Prisma.LeadOpdAppointment$surgeryRemarkArgs<ExtArgs>
+  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
+  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
   prescriptionImages?: boolean | Prisma.LeadOpdAppointment$prescriptionImagesArgs<ExtArgs>
   _count?: boolean | Prisma.LeadOpdAppointmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leadOpdAppointment"]>
@@ -1887,10 +1887,10 @@ export type LeadOpdAppointmentSelectCreateManyAndReturn<ExtArgs extends runtime.
   updatedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
   surgeryRemark?: boolean | Prisma.LeadOpdAppointment$surgeryRemarkArgs<ExtArgs>
+  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
+  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
 }, ExtArgs["result"]["leadOpdAppointment"]>
 
 export type LeadOpdAppointmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1916,10 +1916,10 @@ export type LeadOpdAppointmentSelectUpdateManyAndReturn<ExtArgs extends runtime.
   updatedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
   surgeryRemark?: boolean | Prisma.LeadOpdAppointment$surgeryRemarkArgs<ExtArgs>
+  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
+  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
 }, ExtArgs["result"]["leadOpdAppointment"]>
 
 export type LeadOpdAppointmentSelectScalar = {
@@ -1949,33 +1949,33 @@ export type LeadOpdAppointmentSelectScalar = {
 
 export type LeadOpdAppointmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "phase" | "slot" | "status" | "hospitalName" | "doctorName" | "contactNumber" | "charges" | "scheduleDate" | "meetingType" | "surgeryAdvised" | "surgeryRemarkCode" | "reasonNoSurgeryCode" | "followUpReasonCode" | "implantRequired" | "diagnosis" | "remarks" | "createdById" | "updatedById" | "createdAt" | "updatedAt", ExtArgs["result"]["leadOpdAppointment"]>
 export type LeadOpdAppointmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
   surgeryRemark?: boolean | Prisma.LeadOpdAppointment$surgeryRemarkArgs<ExtArgs>
+  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
+  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
   prescriptionImages?: boolean | Prisma.LeadOpdAppointment$prescriptionImagesArgs<ExtArgs>
   _count?: boolean | Prisma.LeadOpdAppointmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LeadOpdAppointmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
   surgeryRemark?: boolean | Prisma.LeadOpdAppointment$surgeryRemarkArgs<ExtArgs>
+  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
+  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
 }
 export type LeadOpdAppointmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
-  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
   surgeryRemark?: boolean | Prisma.LeadOpdAppointment$surgeryRemarkArgs<ExtArgs>
+  reasonNoSurgery?: boolean | Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>
+  followUpReason?: boolean | Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>
 }
 
 export type $LeadOpdAppointmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LeadOpdAppointment"
   objects: {
-    followUpReason: Prisma.$FollowUpReasonMasterPayload<ExtArgs> | null
     lead: Prisma.$LeadPayload<ExtArgs>
-    reasonNoSurgery: Prisma.$ReasonNoSurgeryMasterPayload<ExtArgs> | null
     surgeryRemark: Prisma.$SurgeryRemarkMasterPayload<ExtArgs> | null
+    reasonNoSurgery: Prisma.$ReasonNoSurgeryMasterPayload<ExtArgs> | null
+    followUpReason: Prisma.$FollowUpReasonMasterPayload<ExtArgs> | null
     prescriptionImages: Prisma.$LeadOpdAppointmentPrescriptionImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2395,10 +2395,10 @@ readonly fields: LeadOpdAppointmentFieldRefs;
  */
 export interface Prisma__LeadOpdAppointmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  followUpReason<T extends Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>>): Prisma.Prisma__FollowUpReasonMasterClient<runtime.Types.Result.GetResult<Prisma.$FollowUpReasonMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   lead<T extends Prisma.LeadDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadDefaultArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  reasonNoSurgery<T extends Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>>): Prisma.Prisma__ReasonNoSurgeryMasterClient<runtime.Types.Result.GetResult<Prisma.$ReasonNoSurgeryMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   surgeryRemark<T extends Prisma.LeadOpdAppointment$surgeryRemarkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadOpdAppointment$surgeryRemarkArgs<ExtArgs>>): Prisma.Prisma__SurgeryRemarkMasterClient<runtime.Types.Result.GetResult<Prisma.$SurgeryRemarkMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  reasonNoSurgery<T extends Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs>>): Prisma.Prisma__ReasonNoSurgeryMasterClient<runtime.Types.Result.GetResult<Prisma.$ReasonNoSurgeryMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  followUpReason<T extends Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadOpdAppointment$followUpReasonArgs<ExtArgs>>): Prisma.Prisma__FollowUpReasonMasterClient<runtime.Types.Result.GetResult<Prisma.$FollowUpReasonMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   prescriptionImages<T extends Prisma.LeadOpdAppointment$prescriptionImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LeadOpdAppointment$prescriptionImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadOpdAppointmentPrescriptionImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2852,22 +2852,22 @@ export type LeadOpdAppointmentDeleteManyArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
- * LeadOpdAppointment.followUpReason
+ * LeadOpdAppointment.surgeryRemark
  */
-export type LeadOpdAppointment$followUpReasonArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type LeadOpdAppointment$surgeryRemarkArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the FollowUpReasonMaster
+   * Select specific fields to fetch from the SurgeryRemarkMaster
    */
-  select?: Prisma.FollowUpReasonMasterSelect<ExtArgs> | null
+  select?: Prisma.SurgeryRemarkMasterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the FollowUpReasonMaster
+   * Omit specific fields from the SurgeryRemarkMaster
    */
-  omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
+  omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
-  where?: Prisma.FollowUpReasonMasterWhereInput
+  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
+  where?: Prisma.SurgeryRemarkMasterWhereInput
 }
 
 /**
@@ -2890,22 +2890,22 @@ export type LeadOpdAppointment$reasonNoSurgeryArgs<ExtArgs extends runtime.Types
 }
 
 /**
- * LeadOpdAppointment.surgeryRemark
+ * LeadOpdAppointment.followUpReason
  */
-export type LeadOpdAppointment$surgeryRemarkArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type LeadOpdAppointment$followUpReasonArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the SurgeryRemarkMaster
+   * Select specific fields to fetch from the FollowUpReasonMaster
    */
-  select?: Prisma.SurgeryRemarkMasterSelect<ExtArgs> | null
+  select?: Prisma.FollowUpReasonMasterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the SurgeryRemarkMaster
+   * Omit specific fields from the FollowUpReasonMaster
    */
-  omit?: Prisma.SurgeryRemarkMasterOmit<ExtArgs> | null
+  omit?: Prisma.FollowUpReasonMasterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SurgeryRemarkMasterInclude<ExtArgs> | null
-  where?: Prisma.SurgeryRemarkMasterWhereInput
+  include?: Prisma.FollowUpReasonMasterInclude<ExtArgs> | null
+  where?: Prisma.FollowUpReasonMasterWhereInput
 }
 
 /**

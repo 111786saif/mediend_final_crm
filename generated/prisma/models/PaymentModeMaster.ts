@@ -244,8 +244,8 @@ export type PaymentModeMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"PaymentModeMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"PaymentModeMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentModeMaster"> | Date | string
-  fromTransfers?: Prisma.LedgerEntryListRelationFilter
   ledgerEntries?: Prisma.LedgerEntryListRelationFilter
+  fromTransfers?: Prisma.LedgerEntryListRelationFilter
   toTransfers?: Prisma.LedgerEntryListRelationFilter
 }
 
@@ -258,8 +258,8 @@ export type PaymentModeMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  fromTransfers?: Prisma.LedgerEntryOrderByRelationAggregateInput
   ledgerEntries?: Prisma.LedgerEntryOrderByRelationAggregateInput
+  fromTransfers?: Prisma.LedgerEntryOrderByRelationAggregateInput
   toTransfers?: Prisma.LedgerEntryOrderByRelationAggregateInput
 }
 
@@ -275,8 +275,8 @@ export type PaymentModeMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"PaymentModeMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"PaymentModeMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentModeMaster"> | Date | string
-  fromTransfers?: Prisma.LedgerEntryListRelationFilter
   ledgerEntries?: Prisma.LedgerEntryListRelationFilter
+  fromTransfers?: Prisma.LedgerEntryListRelationFilter
   toTransfers?: Prisma.LedgerEntryListRelationFilter
 }, "id" | "name">
 
@@ -319,8 +319,8 @@ export type PaymentModeMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  fromTransfers?: Prisma.LedgerEntryCreateNestedManyWithoutFromPaymentModeInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutPaymentModeInput
+  fromTransfers?: Prisma.LedgerEntryCreateNestedManyWithoutFromPaymentModeInput
   toTransfers?: Prisma.LedgerEntryCreateNestedManyWithoutToPaymentModeInput
 }
 
@@ -333,8 +333,8 @@ export type PaymentModeMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  fromTransfers?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutFromPaymentModeInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutPaymentModeInput
+  fromTransfers?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutFromPaymentModeInput
   toTransfers?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutToPaymentModeInput
 }
 
@@ -347,8 +347,8 @@ export type PaymentModeMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  fromTransfers?: Prisma.LedgerEntryUpdateManyWithoutFromPaymentModeNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutPaymentModeNestedInput
+  fromTransfers?: Prisma.LedgerEntryUpdateManyWithoutFromPaymentModeNestedInput
   toTransfers?: Prisma.LedgerEntryUpdateManyWithoutToPaymentModeNestedInput
 }
 
@@ -361,8 +361,8 @@ export type PaymentModeMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  fromTransfers?: Prisma.LedgerEntryUncheckedUpdateManyWithoutFromPaymentModeNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutPaymentModeNestedInput
+  fromTransfers?: Prisma.LedgerEntryUncheckedUpdateManyWithoutFromPaymentModeNestedInput
   toTransfers?: Prisma.LedgerEntryUncheckedUpdateManyWithoutToPaymentModeNestedInput
 }
 
@@ -447,15 +447,15 @@ export type PaymentModeMasterNullableScalarRelationFilter = {
   isNot?: Prisma.PaymentModeMasterWhereInput | null
 }
 
-export type PaymentModeMasterCreateNestedOneWithoutFromTransfersInput = {
-  create?: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutFromTransfersInput>
-  connectOrCreate?: Prisma.PaymentModeMasterCreateOrConnectWithoutFromTransfersInput
-  connect?: Prisma.PaymentModeMasterWhereUniqueInput
-}
-
 export type PaymentModeMasterCreateNestedOneWithoutLedgerEntriesInput = {
   create?: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutLedgerEntriesInput, Prisma.PaymentModeMasterUncheckedCreateWithoutLedgerEntriesInput>
   connectOrCreate?: Prisma.PaymentModeMasterCreateOrConnectWithoutLedgerEntriesInput
+  connect?: Prisma.PaymentModeMasterWhereUniqueInput
+}
+
+export type PaymentModeMasterCreateNestedOneWithoutFromTransfersInput = {
+  create?: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutFromTransfersInput>
+  connectOrCreate?: Prisma.PaymentModeMasterCreateOrConnectWithoutFromTransfersInput
   connect?: Prisma.PaymentModeMasterWhereUniqueInput
 }
 
@@ -463,16 +463,6 @@ export type PaymentModeMasterCreateNestedOneWithoutToTransfersInput = {
   create?: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutToTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutToTransfersInput>
   connectOrCreate?: Prisma.PaymentModeMasterCreateOrConnectWithoutToTransfersInput
   connect?: Prisma.PaymentModeMasterWhereUniqueInput
-}
-
-export type PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput = {
-  create?: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutFromTransfersInput>
-  connectOrCreate?: Prisma.PaymentModeMasterCreateOrConnectWithoutFromTransfersInput
-  upsert?: Prisma.PaymentModeMasterUpsertWithoutFromTransfersInput
-  disconnect?: Prisma.PaymentModeMasterWhereInput | boolean
-  delete?: Prisma.PaymentModeMasterWhereInput | boolean
-  connect?: Prisma.PaymentModeMasterWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentModeMasterUpdateToOneWithWhereWithoutFromTransfersInput, Prisma.PaymentModeMasterUpdateWithoutFromTransfersInput>, Prisma.PaymentModeMasterUncheckedUpdateWithoutFromTransfersInput>
 }
 
 export type PaymentModeMasterUpdateOneWithoutLedgerEntriesNestedInput = {
@@ -485,6 +475,16 @@ export type PaymentModeMasterUpdateOneWithoutLedgerEntriesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentModeMasterUpdateToOneWithWhereWithoutLedgerEntriesInput, Prisma.PaymentModeMasterUpdateWithoutLedgerEntriesInput>, Prisma.PaymentModeMasterUncheckedUpdateWithoutLedgerEntriesInput>
 }
 
+export type PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutFromTransfersInput>
+  connectOrCreate?: Prisma.PaymentModeMasterCreateOrConnectWithoutFromTransfersInput
+  upsert?: Prisma.PaymentModeMasterUpsertWithoutFromTransfersInput
+  disconnect?: Prisma.PaymentModeMasterWhereInput | boolean
+  delete?: Prisma.PaymentModeMasterWhereInput | boolean
+  connect?: Prisma.PaymentModeMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentModeMasterUpdateToOneWithWhereWithoutFromTransfersInput, Prisma.PaymentModeMasterUpdateWithoutFromTransfersInput>, Prisma.PaymentModeMasterUncheckedUpdateWithoutFromTransfersInput>
+}
+
 export type PaymentModeMasterUpdateOneWithoutToTransfersNestedInput = {
   create?: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutToTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutToTransfersInput>
   connectOrCreate?: Prisma.PaymentModeMasterCreateOrConnectWithoutToTransfersInput
@@ -493,37 +493,6 @@ export type PaymentModeMasterUpdateOneWithoutToTransfersNestedInput = {
   delete?: Prisma.PaymentModeMasterWhereInput | boolean
   connect?: Prisma.PaymentModeMasterWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentModeMasterUpdateToOneWithWhereWithoutToTransfersInput, Prisma.PaymentModeMasterUpdateWithoutToTransfersInput>, Prisma.PaymentModeMasterUncheckedUpdateWithoutToTransfersInput>
-}
-
-export type PaymentModeMasterCreateWithoutFromTransfersInput = {
-  id?: string
-  name: string
-  description?: string | null
-  openingBalance?: number
-  currentBalance?: number
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutPaymentModeInput
-  toTransfers?: Prisma.LedgerEntryCreateNestedManyWithoutToPaymentModeInput
-}
-
-export type PaymentModeMasterUncheckedCreateWithoutFromTransfersInput = {
-  id?: string
-  name: string
-  description?: string | null
-  openingBalance?: number
-  currentBalance?: number
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutPaymentModeInput
-  toTransfers?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutToPaymentModeInput
-}
-
-export type PaymentModeMasterCreateOrConnectWithoutFromTransfersInput = {
-  where: Prisma.PaymentModeMasterWhereUniqueInput
-  create: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutFromTransfersInput>
 }
 
 export type PaymentModeMasterCreateWithoutLedgerEntriesInput = {
@@ -557,6 +526,37 @@ export type PaymentModeMasterCreateOrConnectWithoutLedgerEntriesInput = {
   create: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutLedgerEntriesInput, Prisma.PaymentModeMasterUncheckedCreateWithoutLedgerEntriesInput>
 }
 
+export type PaymentModeMasterCreateWithoutFromTransfersInput = {
+  id?: string
+  name: string
+  description?: string | null
+  openingBalance?: number
+  currentBalance?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutPaymentModeInput
+  toTransfers?: Prisma.LedgerEntryCreateNestedManyWithoutToPaymentModeInput
+}
+
+export type PaymentModeMasterUncheckedCreateWithoutFromTransfersInput = {
+  id?: string
+  name: string
+  description?: string | null
+  openingBalance?: number
+  currentBalance?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutPaymentModeInput
+  toTransfers?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutToPaymentModeInput
+}
+
+export type PaymentModeMasterCreateOrConnectWithoutFromTransfersInput = {
+  where: Prisma.PaymentModeMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutFromTransfersInput>
+}
+
 export type PaymentModeMasterCreateWithoutToTransfersInput = {
   id?: string
   name: string
@@ -566,8 +566,8 @@ export type PaymentModeMasterCreateWithoutToTransfersInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  fromTransfers?: Prisma.LedgerEntryCreateNestedManyWithoutFromPaymentModeInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutPaymentModeInput
+  fromTransfers?: Prisma.LedgerEntryCreateNestedManyWithoutFromPaymentModeInput
 }
 
 export type PaymentModeMasterUncheckedCreateWithoutToTransfersInput = {
@@ -579,50 +579,13 @@ export type PaymentModeMasterUncheckedCreateWithoutToTransfersInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  fromTransfers?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutFromPaymentModeInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutPaymentModeInput
+  fromTransfers?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutFromPaymentModeInput
 }
 
 export type PaymentModeMasterCreateOrConnectWithoutToTransfersInput = {
   where: Prisma.PaymentModeMasterWhereUniqueInput
   create: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutToTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutToTransfersInput>
-}
-
-export type PaymentModeMasterUpsertWithoutFromTransfersInput = {
-  update: Prisma.XOR<Prisma.PaymentModeMasterUpdateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedUpdateWithoutFromTransfersInput>
-  create: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutFromTransfersInput>
-  where?: Prisma.PaymentModeMasterWhereInput
-}
-
-export type PaymentModeMasterUpdateToOneWithWhereWithoutFromTransfersInput = {
-  where?: Prisma.PaymentModeMasterWhereInput
-  data: Prisma.XOR<Prisma.PaymentModeMasterUpdateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedUpdateWithoutFromTransfersInput>
-}
-
-export type PaymentModeMasterUpdateWithoutFromTransfersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutPaymentModeNestedInput
-  toTransfers?: Prisma.LedgerEntryUpdateManyWithoutToPaymentModeNestedInput
-}
-
-export type PaymentModeMasterUncheckedUpdateWithoutFromTransfersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutPaymentModeNestedInput
-  toTransfers?: Prisma.LedgerEntryUncheckedUpdateManyWithoutToPaymentModeNestedInput
 }
 
 export type PaymentModeMasterUpsertWithoutLedgerEntriesInput = {
@@ -662,6 +625,43 @@ export type PaymentModeMasterUncheckedUpdateWithoutLedgerEntriesInput = {
   toTransfers?: Prisma.LedgerEntryUncheckedUpdateManyWithoutToPaymentModeNestedInput
 }
 
+export type PaymentModeMasterUpsertWithoutFromTransfersInput = {
+  update: Prisma.XOR<Prisma.PaymentModeMasterUpdateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedUpdateWithoutFromTransfersInput>
+  create: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutFromTransfersInput>
+  where?: Prisma.PaymentModeMasterWhereInput
+}
+
+export type PaymentModeMasterUpdateToOneWithWhereWithoutFromTransfersInput = {
+  where?: Prisma.PaymentModeMasterWhereInput
+  data: Prisma.XOR<Prisma.PaymentModeMasterUpdateWithoutFromTransfersInput, Prisma.PaymentModeMasterUncheckedUpdateWithoutFromTransfersInput>
+}
+
+export type PaymentModeMasterUpdateWithoutFromTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutPaymentModeNestedInput
+  toTransfers?: Prisma.LedgerEntryUpdateManyWithoutToPaymentModeNestedInput
+}
+
+export type PaymentModeMasterUncheckedUpdateWithoutFromTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutPaymentModeNestedInput
+  toTransfers?: Prisma.LedgerEntryUncheckedUpdateManyWithoutToPaymentModeNestedInput
+}
+
 export type PaymentModeMasterUpsertWithoutToTransfersInput = {
   update: Prisma.XOR<Prisma.PaymentModeMasterUpdateWithoutToTransfersInput, Prisma.PaymentModeMasterUncheckedUpdateWithoutToTransfersInput>
   create: Prisma.XOR<Prisma.PaymentModeMasterCreateWithoutToTransfersInput, Prisma.PaymentModeMasterUncheckedCreateWithoutToTransfersInput>
@@ -682,8 +682,8 @@ export type PaymentModeMasterUpdateWithoutToTransfersInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  fromTransfers?: Prisma.LedgerEntryUpdateManyWithoutFromPaymentModeNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutPaymentModeNestedInput
+  fromTransfers?: Prisma.LedgerEntryUpdateManyWithoutFromPaymentModeNestedInput
 }
 
 export type PaymentModeMasterUncheckedUpdateWithoutToTransfersInput = {
@@ -695,8 +695,8 @@ export type PaymentModeMasterUncheckedUpdateWithoutToTransfersInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  fromTransfers?: Prisma.LedgerEntryUncheckedUpdateManyWithoutFromPaymentModeNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutPaymentModeNestedInput
+  fromTransfers?: Prisma.LedgerEntryUncheckedUpdateManyWithoutFromPaymentModeNestedInput
 }
 
 
@@ -705,14 +705,14 @@ export type PaymentModeMasterUncheckedUpdateWithoutToTransfersInput = {
  */
 
 export type PaymentModeMasterCountOutputType = {
-  fromTransfers: number
   ledgerEntries: number
+  fromTransfers: number
   toTransfers: number
 }
 
 export type PaymentModeMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  fromTransfers?: boolean | PaymentModeMasterCountOutputTypeCountFromTransfersArgs
   ledgerEntries?: boolean | PaymentModeMasterCountOutputTypeCountLedgerEntriesArgs
+  fromTransfers?: boolean | PaymentModeMasterCountOutputTypeCountFromTransfersArgs
   toTransfers?: boolean | PaymentModeMasterCountOutputTypeCountToTransfersArgs
 }
 
@@ -729,14 +729,14 @@ export type PaymentModeMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.
 /**
  * PaymentModeMasterCountOutputType without action
  */
-export type PaymentModeMasterCountOutputTypeCountFromTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PaymentModeMasterCountOutputTypeCountLedgerEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LedgerEntryWhereInput
 }
 
 /**
  * PaymentModeMasterCountOutputType without action
  */
-export type PaymentModeMasterCountOutputTypeCountLedgerEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PaymentModeMasterCountOutputTypeCountFromTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LedgerEntryWhereInput
 }
 
@@ -757,8 +757,8 @@ export type PaymentModeMasterSelect<ExtArgs extends runtime.Types.Extensions.Int
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  fromTransfers?: boolean | Prisma.PaymentModeMaster$fromTransfersArgs<ExtArgs>
   ledgerEntries?: boolean | Prisma.PaymentModeMaster$ledgerEntriesArgs<ExtArgs>
+  fromTransfers?: boolean | Prisma.PaymentModeMaster$fromTransfersArgs<ExtArgs>
   toTransfers?: boolean | Prisma.PaymentModeMaster$toTransfersArgs<ExtArgs>
   _count?: boolean | Prisma.PaymentModeMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paymentModeMaster"]>
@@ -798,8 +798,8 @@ export type PaymentModeMasterSelectScalar = {
 
 export type PaymentModeMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "openingBalance" | "currentBalance" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentModeMaster"]>
 export type PaymentModeMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  fromTransfers?: boolean | Prisma.PaymentModeMaster$fromTransfersArgs<ExtArgs>
   ledgerEntries?: boolean | Prisma.PaymentModeMaster$ledgerEntriesArgs<ExtArgs>
+  fromTransfers?: boolean | Prisma.PaymentModeMaster$fromTransfersArgs<ExtArgs>
   toTransfers?: boolean | Prisma.PaymentModeMaster$toTransfersArgs<ExtArgs>
   _count?: boolean | Prisma.PaymentModeMasterCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -809,8 +809,8 @@ export type PaymentModeMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.
 export type $PaymentModeMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PaymentModeMaster"
   objects: {
-    fromTransfers: Prisma.$LedgerEntryPayload<ExtArgs>[]
     ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
+    fromTransfers: Prisma.$LedgerEntryPayload<ExtArgs>[]
     toTransfers: Prisma.$LedgerEntryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1216,8 +1216,8 @@ readonly fields: PaymentModeMasterFieldRefs;
  */
 export interface Prisma__PaymentModeMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  fromTransfers<T extends Prisma.PaymentModeMaster$fromTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentModeMaster$fromTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ledgerEntries<T extends Prisma.PaymentModeMaster$ledgerEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentModeMaster$ledgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  fromTransfers<T extends Prisma.PaymentModeMaster$fromTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentModeMaster$fromTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   toTransfers<T extends Prisma.PaymentModeMaster$toTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentModeMaster$toTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1649,9 +1649,9 @@ export type PaymentModeMasterDeleteManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * PaymentModeMaster.fromTransfers
+ * PaymentModeMaster.ledgerEntries
  */
-export type PaymentModeMaster$fromTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PaymentModeMaster$ledgerEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the LedgerEntry
    */
@@ -1673,9 +1673,9 @@ export type PaymentModeMaster$fromTransfersArgs<ExtArgs extends runtime.Types.Ex
 }
 
 /**
- * PaymentModeMaster.ledgerEntries
+ * PaymentModeMaster.fromTransfers
  */
-export type PaymentModeMaster$ledgerEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type PaymentModeMaster$fromTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the LedgerEntry
    */

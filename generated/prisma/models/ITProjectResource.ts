@@ -51,10 +51,10 @@ export type ITProjectResourceMinAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   isActive: boolean | null
-  createdAt: Date | null
-  updatedAt: Date | null
   resourceName: string | null
   seatCostApplied: boolean | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ITProjectResourceMaxAggregateOutputType = {
@@ -70,10 +70,10 @@ export type ITProjectResourceMaxAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   isActive: boolean | null
-  createdAt: Date | null
-  updatedAt: Date | null
   resourceName: string | null
   seatCostApplied: boolean | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ITProjectResourceCountAggregateOutputType = {
@@ -89,10 +89,10 @@ export type ITProjectResourceCountAggregateOutputType = {
   startDate: number
   endDate: number
   isActive: number
-  createdAt: number
-  updatedAt: number
   resourceName: number
   seatCostApplied: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -122,10 +122,10 @@ export type ITProjectResourceMinAggregateInputType = {
   startDate?: true
   endDate?: true
   isActive?: true
-  createdAt?: true
-  updatedAt?: true
   resourceName?: true
   seatCostApplied?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ITProjectResourceMaxAggregateInputType = {
@@ -141,10 +141,10 @@ export type ITProjectResourceMaxAggregateInputType = {
   startDate?: true
   endDate?: true
   isActive?: true
-  createdAt?: true
-  updatedAt?: true
   resourceName?: true
   seatCostApplied?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type ITProjectResourceCountAggregateInputType = {
@@ -160,10 +160,10 @@ export type ITProjectResourceCountAggregateInputType = {
   startDate?: true
   endDate?: true
   isActive?: true
-  createdAt?: true
-  updatedAt?: true
   resourceName?: true
   seatCostApplied?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -266,10 +266,10 @@ export type ITProjectResourceGroupByOutputType = {
   startDate: Date | null
   endDate: Date | null
   isActive: boolean
-  createdAt: Date
-  updatedAt: Date
   resourceName: string | null
   seatCostApplied: boolean
+  createdAt: Date
+  updatedAt: Date
   _count: ITProjectResourceCountAggregateOutputType | null
   _avg: ITProjectResourceAvgAggregateOutputType | null
   _sum: ITProjectResourceSumAggregateOutputType | null
@@ -308,13 +308,13 @@ export type ITProjectResourceWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"ITProjectResource"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"ITProjectResource"> | Date | string | null
   isActive?: Prisma.BoolFilter<"ITProjectResource"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
   resourceName?: Prisma.StringNullableFilter<"ITProjectResource"> | string | null
   seatCostApplied?: Prisma.BoolFilter<"ITProjectResource"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
+  project?: Prisma.XOR<Prisma.ITProjectScalarRelationFilter, Prisma.ITProjectWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   freelancer?: Prisma.XOR<Prisma.ITFreelancerNullableScalarRelationFilter, Prisma.ITFreelancerWhereInput> | null
-  project?: Prisma.XOR<Prisma.ITProjectScalarRelationFilter, Prisma.ITProjectWhereInput>
 }
 
 export type ITProjectResourceOrderByWithRelationInput = {
@@ -330,13 +330,13 @@ export type ITProjectResourceOrderByWithRelationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   resourceName?: Prisma.SortOrderInput | Prisma.SortOrder
   seatCostApplied?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  project?: Prisma.ITProjectOrderByWithRelationInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
   freelancer?: Prisma.ITFreelancerOrderByWithRelationInput
-  project?: Prisma.ITProjectOrderByWithRelationInput
 }
 
 export type ITProjectResourceWhereUniqueInput = Prisma.AtLeast<{
@@ -355,13 +355,13 @@ export type ITProjectResourceWhereUniqueInput = Prisma.AtLeast<{
   startDate?: Prisma.DateTimeNullableFilter<"ITProjectResource"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"ITProjectResource"> | Date | string | null
   isActive?: Prisma.BoolFilter<"ITProjectResource"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
   resourceName?: Prisma.StringNullableFilter<"ITProjectResource"> | string | null
   seatCostApplied?: Prisma.BoolFilter<"ITProjectResource"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
+  project?: Prisma.XOR<Prisma.ITProjectScalarRelationFilter, Prisma.ITProjectWhereInput>
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   freelancer?: Prisma.XOR<Prisma.ITFreelancerNullableScalarRelationFilter, Prisma.ITFreelancerWhereInput> | null
-  project?: Prisma.XOR<Prisma.ITProjectScalarRelationFilter, Prisma.ITProjectWhereInput>
 }, "id">
 
 export type ITProjectResourceOrderByWithAggregationInput = {
@@ -377,10 +377,10 @@ export type ITProjectResourceOrderByWithAggregationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   resourceName?: Prisma.SortOrderInput | Prisma.SortOrder
   seatCostApplied?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ITProjectResourceCountOrderByAggregateInput
   _avg?: Prisma.ITProjectResourceAvgOrderByAggregateInput
   _max?: Prisma.ITProjectResourceMaxOrderByAggregateInput
@@ -404,10 +404,10 @@ export type ITProjectResourceScalarWhereWithAggregatesInput = {
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"ITProjectResource"> | Date | string | null
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"ITProjectResource"> | Date | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"ITProjectResource"> | boolean
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ITProjectResource"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ITProjectResource"> | Date | string
   resourceName?: Prisma.StringNullableWithAggregatesFilter<"ITProjectResource"> | string | null
   seatCostApplied?: Prisma.BoolWithAggregatesFilter<"ITProjectResource"> | boolean
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ITProjectResource"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ITProjectResource"> | Date | string
 }
 
 export type ITProjectResourceCreateInput = {
@@ -420,13 +420,13 @@ export type ITProjectResourceCreateInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ITProjectCreateNestedOneWithoutResourcesInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutItProjectResourcesInput
   freelancer?: Prisma.ITFreelancerCreateNestedOneWithoutProjectResourcesInput
-  project: Prisma.ITProjectCreateNestedOneWithoutResourcesInput
 }
 
 export type ITProjectResourceUncheckedCreateInput = {
@@ -442,10 +442,10 @@ export type ITProjectResourceUncheckedCreateInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ITProjectResourceUpdateInput = {
@@ -458,13 +458,13 @@ export type ITProjectResourceUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ITProjectUpdateOneRequiredWithoutResourcesNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutItProjectResourcesNestedInput
   freelancer?: Prisma.ITFreelancerUpdateOneWithoutProjectResourcesNestedInput
-  project?: Prisma.ITProjectUpdateOneRequiredWithoutResourcesNestedInput
 }
 
 export type ITProjectResourceUncheckedUpdateInput = {
@@ -480,10 +480,10 @@ export type ITProjectResourceUncheckedUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ITProjectResourceCreateManyInput = {
@@ -499,10 +499,10 @@ export type ITProjectResourceCreateManyInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ITProjectResourceUpdateManyMutationInput = {
@@ -515,10 +515,10 @@ export type ITProjectResourceUpdateManyMutationInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ITProjectResourceUncheckedUpdateManyInput = {
@@ -534,10 +534,10 @@ export type ITProjectResourceUncheckedUpdateManyInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ITProjectResourceListRelationFilter = {
@@ -563,10 +563,10 @@ export type ITProjectResourceCountOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   resourceName?: Prisma.SortOrder
   seatCostApplied?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ITProjectResourceAvgOrderByAggregateInput = {
@@ -588,10 +588,10 @@ export type ITProjectResourceMaxOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   resourceName?: Prisma.SortOrder
   seatCostApplied?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ITProjectResourceMinOrderByAggregateInput = {
@@ -607,10 +607,10 @@ export type ITProjectResourceMinOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   resourceName?: Prisma.SortOrder
   seatCostApplied?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ITProjectResourceSumOrderByAggregateInput = {
@@ -763,12 +763,12 @@ export type ITProjectResourceCreateWithoutEmployeeInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
-  freelancer?: Prisma.ITFreelancerCreateNestedOneWithoutProjectResourcesInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
   project: Prisma.ITProjectCreateNestedOneWithoutResourcesInput
+  freelancer?: Prisma.ITFreelancerCreateNestedOneWithoutProjectResourcesInput
 }
 
 export type ITProjectResourceUncheckedCreateWithoutEmployeeInput = {
@@ -783,10 +783,10 @@ export type ITProjectResourceUncheckedCreateWithoutEmployeeInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ITProjectResourceCreateOrConnectWithoutEmployeeInput = {
@@ -831,10 +831,10 @@ export type ITProjectResourceScalarWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"ITProjectResource"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"ITProjectResource"> | Date | string | null
   isActive?: Prisma.BoolFilter<"ITProjectResource"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
   resourceName?: Prisma.StringNullableFilter<"ITProjectResource"> | string | null
   seatCostApplied?: Prisma.BoolFilter<"ITProjectResource"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ITProjectResource"> | Date | string
 }
 
 export type ITProjectResourceCreateWithoutProjectInput = {
@@ -847,10 +847,10 @@ export type ITProjectResourceCreateWithoutProjectInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   employee?: Prisma.EmployeeCreateNestedOneWithoutItProjectResourcesInput
   freelancer?: Prisma.ITFreelancerCreateNestedOneWithoutProjectResourcesInput
 }
@@ -867,10 +867,10 @@ export type ITProjectResourceUncheckedCreateWithoutProjectInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ITProjectResourceCreateOrConnectWithoutProjectInput = {
@@ -909,12 +909,12 @@ export type ITProjectResourceCreateWithoutFreelancerInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
-  employee?: Prisma.EmployeeCreateNestedOneWithoutItProjectResourcesInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
   project: Prisma.ITProjectCreateNestedOneWithoutResourcesInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutItProjectResourcesInput
 }
 
 export type ITProjectResourceUncheckedCreateWithoutFreelancerInput = {
@@ -929,10 +929,10 @@ export type ITProjectResourceUncheckedCreateWithoutFreelancerInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ITProjectResourceCreateOrConnectWithoutFreelancerInput = {
@@ -973,10 +973,10 @@ export type ITProjectResourceCreateManyEmployeeInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ITProjectResourceUpdateWithoutEmployeeInput = {
@@ -989,12 +989,12 @@ export type ITProjectResourceUpdateWithoutEmployeeInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  freelancer?: Prisma.ITFreelancerUpdateOneWithoutProjectResourcesNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ITProjectUpdateOneRequiredWithoutResourcesNestedInput
+  freelancer?: Prisma.ITFreelancerUpdateOneWithoutProjectResourcesNestedInput
 }
 
 export type ITProjectResourceUncheckedUpdateWithoutEmployeeInput = {
@@ -1009,10 +1009,10 @@ export type ITProjectResourceUncheckedUpdateWithoutEmployeeInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ITProjectResourceUncheckedUpdateManyWithoutEmployeeInput = {
@@ -1027,10 +1027,10 @@ export type ITProjectResourceUncheckedUpdateManyWithoutEmployeeInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ITProjectResourceCreateManyProjectInput = {
@@ -1045,10 +1045,10 @@ export type ITProjectResourceCreateManyProjectInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ITProjectResourceUpdateWithoutProjectInput = {
@@ -1061,10 +1061,10 @@ export type ITProjectResourceUpdateWithoutProjectInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employee?: Prisma.EmployeeUpdateOneWithoutItProjectResourcesNestedInput
   freelancer?: Prisma.ITFreelancerUpdateOneWithoutProjectResourcesNestedInput
 }
@@ -1081,10 +1081,10 @@ export type ITProjectResourceUncheckedUpdateWithoutProjectInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ITProjectResourceUncheckedUpdateManyWithoutProjectInput = {
@@ -1099,10 +1099,10 @@ export type ITProjectResourceUncheckedUpdateManyWithoutProjectInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ITProjectResourceCreateManyFreelancerInput = {
@@ -1117,10 +1117,10 @@ export type ITProjectResourceCreateManyFreelancerInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
   resourceName?: string | null
   seatCostApplied?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ITProjectResourceUpdateWithoutFreelancerInput = {
@@ -1133,12 +1133,12 @@ export type ITProjectResourceUpdateWithoutFreelancerInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employee?: Prisma.EmployeeUpdateOneWithoutItProjectResourcesNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ITProjectUpdateOneRequiredWithoutResourcesNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutItProjectResourcesNestedInput
 }
 
 export type ITProjectResourceUncheckedUpdateWithoutFreelancerInput = {
@@ -1153,10 +1153,10 @@ export type ITProjectResourceUncheckedUpdateWithoutFreelancerInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ITProjectResourceUncheckedUpdateManyWithoutFreelancerInput = {
@@ -1171,10 +1171,10 @@ export type ITProjectResourceUncheckedUpdateManyWithoutFreelancerInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resourceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   seatCostApplied?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1192,13 +1192,13 @@ export type ITProjectResourceSelect<ExtArgs extends runtime.Types.Extensions.Int
   startDate?: boolean
   endDate?: boolean
   isActive?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   resourceName?: boolean
   seatCostApplied?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.ITProjectResource$employeeArgs<ExtArgs>
   freelancer?: boolean | Prisma.ITProjectResource$freelancerArgs<ExtArgs>
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["iTProjectResource"]>
 
 export type ITProjectResourceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1214,13 +1214,13 @@ export type ITProjectResourceSelectCreateManyAndReturn<ExtArgs extends runtime.T
   startDate?: boolean
   endDate?: boolean
   isActive?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   resourceName?: boolean
   seatCostApplied?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.ITProjectResource$employeeArgs<ExtArgs>
   freelancer?: boolean | Prisma.ITProjectResource$freelancerArgs<ExtArgs>
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["iTProjectResource"]>
 
 export type ITProjectResourceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1236,13 +1236,13 @@ export type ITProjectResourceSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   startDate?: boolean
   endDate?: boolean
   isActive?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   resourceName?: boolean
   seatCostApplied?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.ITProjectResource$employeeArgs<ExtArgs>
   freelancer?: boolean | Prisma.ITProjectResource$freelancerArgs<ExtArgs>
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["iTProjectResource"]>
 
 export type ITProjectResourceSelectScalar = {
@@ -1258,35 +1258,35 @@ export type ITProjectResourceSelectScalar = {
   startDate?: boolean
   endDate?: boolean
   isActive?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   resourceName?: boolean
   seatCostApplied?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type ITProjectResourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "resourceType" | "employeeId" | "freelancerId" | "allocationPercent" | "paymentType" | "monthlyCost" | "oneTimeCost" | "startDate" | "endDate" | "isActive" | "createdAt" | "updatedAt" | "resourceName" | "seatCostApplied", ExtArgs["result"]["iTProjectResource"]>
+export type ITProjectResourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "resourceType" | "employeeId" | "freelancerId" | "allocationPercent" | "paymentType" | "monthlyCost" | "oneTimeCost" | "startDate" | "endDate" | "isActive" | "resourceName" | "seatCostApplied" | "createdAt" | "updatedAt", ExtArgs["result"]["iTProjectResource"]>
 export type ITProjectResourceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.ITProjectResource$employeeArgs<ExtArgs>
   freelancer?: boolean | Prisma.ITProjectResource$freelancerArgs<ExtArgs>
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }
 export type ITProjectResourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.ITProjectResource$employeeArgs<ExtArgs>
   freelancer?: boolean | Prisma.ITProjectResource$freelancerArgs<ExtArgs>
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }
 export type ITProjectResourceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.ITProjectResource$employeeArgs<ExtArgs>
   freelancer?: boolean | Prisma.ITProjectResource$freelancerArgs<ExtArgs>
-  project?: boolean | Prisma.ITProjectDefaultArgs<ExtArgs>
 }
 
 export type $ITProjectResourcePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ITProjectResource"
   objects: {
+    project: Prisma.$ITProjectPayload<ExtArgs>
     employee: Prisma.$EmployeePayload<ExtArgs> | null
     freelancer: Prisma.$ITFreelancerPayload<ExtArgs> | null
-    project: Prisma.$ITProjectPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1301,10 +1301,10 @@ export type $ITProjectResourcePayload<ExtArgs extends runtime.Types.Extensions.I
     startDate: Date | null
     endDate: Date | null
     isActive: boolean
-    createdAt: Date
-    updatedAt: Date
     resourceName: string | null
     seatCostApplied: boolean
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["iTProjectResource"]>
   composites: {}
 }
@@ -1699,9 +1699,9 @@ readonly fields: ITProjectResourceFieldRefs;
  */
 export interface Prisma__ITProjectResourceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  project<T extends Prisma.ITProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ITProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ITProjectClient<runtime.Types.Result.GetResult<Prisma.$ITProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   employee<T extends Prisma.ITProjectResource$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ITProjectResource$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   freelancer<T extends Prisma.ITProjectResource$freelancerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ITProjectResource$freelancerArgs<ExtArgs>>): Prisma.Prisma__ITFreelancerClient<runtime.Types.Result.GetResult<Prisma.$ITFreelancerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  project<T extends Prisma.ITProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ITProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ITProjectClient<runtime.Types.Result.GetResult<Prisma.$ITProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1743,10 +1743,10 @@ export interface ITProjectResourceFieldRefs {
   readonly startDate: Prisma.FieldRef<"ITProjectResource", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"ITProjectResource", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"ITProjectResource", 'Boolean'>
-  readonly createdAt: Prisma.FieldRef<"ITProjectResource", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"ITProjectResource", 'DateTime'>
   readonly resourceName: Prisma.FieldRef<"ITProjectResource", 'String'>
   readonly seatCostApplied: Prisma.FieldRef<"ITProjectResource", 'Boolean'>
+  readonly createdAt: Prisma.FieldRef<"ITProjectResource", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"ITProjectResource", 'DateTime'>
 }
     
 

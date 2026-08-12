@@ -296,10 +296,10 @@ export type IssueTransactionWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"IssueTransaction"> | Date | string
   createdById?: Prisma.StringFilter<"IssueTransaction"> | string
   updatedAt?: Prisma.DateTimeFilter<"IssueTransaction"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  issuedTo?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   item?: Prisma.XOR<Prisma.ItemMasterScalarRelationFilter, Prisma.ItemMasterWhereInput>
   location?: Prisma.XOR<Prisma.LocationMasterScalarRelationFilter, Prisma.LocationMasterWhereInput>
+  issuedTo?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type IssueTransactionOrderByWithRelationInput = {
@@ -317,10 +317,10 @@ export type IssueTransactionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  createdBy?: Prisma.UserOrderByWithRelationInput
-  issuedTo?: Prisma.UserOrderByWithRelationInput
   item?: Prisma.ItemMasterOrderByWithRelationInput
   location?: Prisma.LocationMasterOrderByWithRelationInput
+  issuedTo?: Prisma.UserOrderByWithRelationInput
+  createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type IssueTransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -341,10 +341,10 @@ export type IssueTransactionWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"IssueTransaction"> | Date | string
   createdById?: Prisma.StringFilter<"IssueTransaction"> | string
   updatedAt?: Prisma.DateTimeFilter<"IssueTransaction"> | Date | string
-  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  issuedTo?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   item?: Prisma.XOR<Prisma.ItemMasterScalarRelationFilter, Prisma.ItemMasterWhereInput>
   location?: Prisma.XOR<Prisma.LocationMasterScalarRelationFilter, Prisma.LocationMasterWhereInput>
+  issuedTo?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "issueNumber">
 
 export type IssueTransactionOrderByWithAggregationInput = {
@@ -400,10 +400,10 @@ export type IssueTransactionCreateInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutIssuesCreatedInput
-  issuedTo: Prisma.UserCreateNestedOneWithoutIssuesReceivedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutIssuesInput
   location: Prisma.LocationMasterCreateNestedOneWithoutIssuesInput
+  issuedTo: Prisma.UserCreateNestedOneWithoutIssuesReceivedInput
+  createdBy: Prisma.UserCreateNestedOneWithoutIssuesCreatedInput
 }
 
 export type IssueTransactionUncheckedCreateInput = {
@@ -434,10 +434,10 @@ export type IssueTransactionUpdateInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutIssuesCreatedNestedInput
-  issuedTo?: Prisma.UserUpdateOneRequiredWithoutIssuesReceivedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutIssuesNestedInput
   location?: Prisma.LocationMasterUpdateOneRequiredWithoutIssuesNestedInput
+  issuedTo?: Prisma.UserUpdateOneRequiredWithoutIssuesReceivedNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutIssuesCreatedNestedInput
 }
 
 export type IssueTransactionUncheckedUpdateInput = {
@@ -756,9 +756,9 @@ export type IssueTransactionCreateWithoutCreatedByInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  issuedTo: Prisma.UserCreateNestedOneWithoutIssuesReceivedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutIssuesInput
   location: Prisma.LocationMasterCreateNestedOneWithoutIssuesInput
+  issuedTo: Prisma.UserCreateNestedOneWithoutIssuesReceivedInput
 }
 
 export type IssueTransactionUncheckedCreateWithoutCreatedByInput = {
@@ -798,9 +798,9 @@ export type IssueTransactionCreateWithoutIssuedToInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutIssuesCreatedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutIssuesInput
   location: Prisma.LocationMasterCreateNestedOneWithoutIssuesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutIssuesCreatedInput
 }
 
 export type IssueTransactionUncheckedCreateWithoutIssuedToInput = {
@@ -892,9 +892,9 @@ export type IssueTransactionCreateWithoutLocationInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutIssuesCreatedInput
-  issuedTo: Prisma.UserCreateNestedOneWithoutIssuesReceivedInput
   item: Prisma.ItemMasterCreateNestedOneWithoutIssuesInput
+  issuedTo: Prisma.UserCreateNestedOneWithoutIssuesReceivedInput
+  createdBy: Prisma.UserCreateNestedOneWithoutIssuesCreatedInput
 }
 
 export type IssueTransactionUncheckedCreateWithoutLocationInput = {
@@ -950,9 +950,9 @@ export type IssueTransactionCreateWithoutItemInput = {
   status?: $Enums.InventoryTransactionStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutIssuesCreatedInput
-  issuedTo: Prisma.UserCreateNestedOneWithoutIssuesReceivedInput
   location: Prisma.LocationMasterCreateNestedOneWithoutIssuesInput
+  issuedTo: Prisma.UserCreateNestedOneWithoutIssuesReceivedInput
+  createdBy: Prisma.UserCreateNestedOneWithoutIssuesCreatedInput
 }
 
 export type IssueTransactionUncheckedCreateWithoutItemInput = {
@@ -1040,9 +1040,9 @@ export type IssueTransactionUpdateWithoutCreatedByInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  issuedTo?: Prisma.UserUpdateOneRequiredWithoutIssuesReceivedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutIssuesNestedInput
   location?: Prisma.LocationMasterUpdateOneRequiredWithoutIssuesNestedInput
+  issuedTo?: Prisma.UserUpdateOneRequiredWithoutIssuesReceivedNestedInput
 }
 
 export type IssueTransactionUncheckedUpdateWithoutCreatedByInput = {
@@ -1088,9 +1088,9 @@ export type IssueTransactionUpdateWithoutIssuedToInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutIssuesCreatedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutIssuesNestedInput
   location?: Prisma.LocationMasterUpdateOneRequiredWithoutIssuesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutIssuesCreatedNestedInput
 }
 
 export type IssueTransactionUncheckedUpdateWithoutIssuedToInput = {
@@ -1152,9 +1152,9 @@ export type IssueTransactionUpdateWithoutLocationInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutIssuesCreatedNestedInput
-  issuedTo?: Prisma.UserUpdateOneRequiredWithoutIssuesReceivedNestedInput
   item?: Prisma.ItemMasterUpdateOneRequiredWithoutIssuesNestedInput
+  issuedTo?: Prisma.UserUpdateOneRequiredWithoutIssuesReceivedNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutIssuesCreatedNestedInput
 }
 
 export type IssueTransactionUncheckedUpdateWithoutLocationInput = {
@@ -1216,9 +1216,9 @@ export type IssueTransactionUpdateWithoutItemInput = {
   status?: Prisma.EnumInventoryTransactionStatusFieldUpdateOperationsInput | $Enums.InventoryTransactionStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutIssuesCreatedNestedInput
-  issuedTo?: Prisma.UserUpdateOneRequiredWithoutIssuesReceivedNestedInput
   location?: Prisma.LocationMasterUpdateOneRequiredWithoutIssuesNestedInput
+  issuedTo?: Prisma.UserUpdateOneRequiredWithoutIssuesReceivedNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutIssuesCreatedNestedInput
 }
 
 export type IssueTransactionUncheckedUpdateWithoutItemInput = {
@@ -1270,10 +1270,10 @@ export type IssueTransactionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   createdAt?: boolean
   createdById?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["issueTransaction"]>
 
 export type IssueTransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1291,10 +1291,10 @@ export type IssueTransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   createdAt?: boolean
   createdById?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["issueTransaction"]>
 
 export type IssueTransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1312,10 +1312,10 @@ export type IssueTransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   createdAt?: boolean
   createdById?: boolean
   updatedAt?: boolean
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["issueTransaction"]>
 
 export type IssueTransactionSelectScalar = {
@@ -1337,31 +1337,31 @@ export type IssueTransactionSelectScalar = {
 
 export type IssueTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "issueNumber" | "itemId" | "locationId" | "quantity" | "unitPrice" | "totalPrice" | "issuedToId" | "issueDate" | "description" | "status" | "createdAt" | "createdById" | "updatedAt", ExtArgs["result"]["issueTransaction"]>
 export type IssueTransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type IssueTransactionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type IssueTransactionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   item?: boolean | Prisma.ItemMasterDefaultArgs<ExtArgs>
   location?: boolean | Prisma.LocationMasterDefaultArgs<ExtArgs>
+  issuedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $IssueTransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "IssueTransaction"
   objects: {
-    createdBy: Prisma.$UserPayload<ExtArgs>
-    issuedTo: Prisma.$UserPayload<ExtArgs>
     item: Prisma.$ItemMasterPayload<ExtArgs>
     location: Prisma.$LocationMasterPayload<ExtArgs>
+    issuedTo: Prisma.$UserPayload<ExtArgs>
+    createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1772,10 +1772,10 @@ readonly fields: IssueTransactionFieldRefs;
  */
 export interface Prisma__IssueTransactionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  issuedTo<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   item<T extends Prisma.ItemMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ItemMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__ItemMasterClient<runtime.Types.Result.GetResult<Prisma.$ItemMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   location<T extends Prisma.LocationMasterDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocationMasterDefaultArgs<ExtArgs>>): Prisma.Prisma__LocationMasterClient<runtime.Types.Result.GetResult<Prisma.$LocationMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  issuedTo<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

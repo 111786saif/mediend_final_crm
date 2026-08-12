@@ -29,6 +29,8 @@ export type CrmCampaignMinAggregateOutputType = {
   externalCampaignId: string | null
   displayName: string | null
   category: string | null
+  treatment: string | null
+  treatmentMasterId: string | null
   departmentId: string | null
   sourceId: string | null
   leadSourceId: string | null
@@ -44,6 +46,8 @@ export type CrmCampaignMaxAggregateOutputType = {
   externalCampaignId: string | null
   displayName: string | null
   category: string | null
+  treatment: string | null
+  treatmentMasterId: string | null
   departmentId: string | null
   sourceId: string | null
   leadSourceId: string | null
@@ -59,6 +63,8 @@ export type CrmCampaignCountAggregateOutputType = {
   externalCampaignId: number
   displayName: number
   category: number
+  treatment: number
+  treatmentMasterId: number
   departmentId: number
   sourceId: number
   leadSourceId: number
@@ -76,6 +82,8 @@ export type CrmCampaignMinAggregateInputType = {
   externalCampaignId?: true
   displayName?: true
   category?: true
+  treatment?: true
+  treatmentMasterId?: true
   departmentId?: true
   sourceId?: true
   leadSourceId?: true
@@ -91,6 +99,8 @@ export type CrmCampaignMaxAggregateInputType = {
   externalCampaignId?: true
   displayName?: true
   category?: true
+  treatment?: true
+  treatmentMasterId?: true
   departmentId?: true
   sourceId?: true
   leadSourceId?: true
@@ -106,6 +116,8 @@ export type CrmCampaignCountAggregateInputType = {
   externalCampaignId?: true
   displayName?: true
   category?: true
+  treatment?: true
+  treatmentMasterId?: true
   departmentId?: true
   sourceId?: true
   leadSourceId?: true
@@ -194,6 +206,8 @@ export type CrmCampaignGroupByOutputType = {
   externalCampaignId: string
   displayName: string
   category: string | null
+  treatment: string | null
+  treatmentMasterId: string | null
   departmentId: string | null
   sourceId: string
   leadSourceId: string
@@ -230,6 +244,8 @@ export type CrmCampaignWhereInput = {
   externalCampaignId?: Prisma.StringFilter<"CrmCampaign"> | string
   displayName?: Prisma.StringFilter<"CrmCampaign"> | string
   category?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
+  treatment?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
+  treatmentMasterId?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
   departmentId?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
   sourceId?: Prisma.StringFilter<"CrmCampaign"> | string
   leadSourceId?: Prisma.StringFilter<"CrmCampaign"> | string
@@ -238,12 +254,15 @@ export type CrmCampaignWhereInput = {
   isActive?: Prisma.BoolFilter<"CrmCampaign"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CrmCampaign"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CrmCampaign"> | Date | string
-  circle?: Prisma.XOR<Prisma.CrmCampaignCircleScalarRelationFilter, Prisma.CrmCampaignCircleWhereInput>
-  city?: Prisma.XOR<Prisma.CrmCampaignCityNullableScalarRelationFilter, Prisma.CrmCampaignCityWhereInput> | null
+  treatmentMaster?: Prisma.XOR<Prisma.TreatmentMasterNullableScalarRelationFilter, Prisma.TreatmentMasterWhereInput> | null
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
-  leadSource?: Prisma.XOR<Prisma.CrmCampaignLeadSourceScalarRelationFilter, Prisma.CrmCampaignLeadSourceWhereInput>
   source?: Prisma.XOR<Prisma.CrmCampaignSourceScalarRelationFilter, Prisma.CrmCampaignSourceWhereInput>
+  leadSource?: Prisma.XOR<Prisma.CrmCampaignLeadSourceScalarRelationFilter, Prisma.CrmCampaignLeadSourceWhereInput>
+  circle?: Prisma.XOR<Prisma.CrmCampaignCircleScalarRelationFilter, Prisma.CrmCampaignCircleWhereInput>
+  circleSelections?: Prisma.CrmCampaignCircleSelectionListRelationFilter
+  city?: Prisma.XOR<Prisma.CrmCampaignCityNullableScalarRelationFilter, Prisma.CrmCampaignCityWhereInput> | null
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentListRelationFilter
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitListRelationFilter
 }
 
 export type CrmCampaignOrderByWithRelationInput = {
@@ -251,6 +270,8 @@ export type CrmCampaignOrderByWithRelationInput = {
   externalCampaignId?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
+  treatment?: Prisma.SortOrderInput | Prisma.SortOrder
+  treatmentMasterId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   leadSourceId?: Prisma.SortOrder
@@ -259,12 +280,15 @@ export type CrmCampaignOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  circle?: Prisma.CrmCampaignCircleOrderByWithRelationInput
-  city?: Prisma.CrmCampaignCityOrderByWithRelationInput
+  treatmentMaster?: Prisma.TreatmentMasterOrderByWithRelationInput
   department?: Prisma.DepartmentOrderByWithRelationInput
-  leadSource?: Prisma.CrmCampaignLeadSourceOrderByWithRelationInput
   source?: Prisma.CrmCampaignSourceOrderByWithRelationInput
+  leadSource?: Prisma.CrmCampaignLeadSourceOrderByWithRelationInput
+  circle?: Prisma.CrmCampaignCircleOrderByWithRelationInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionOrderByRelationAggregateInput
+  city?: Prisma.CrmCampaignCityOrderByWithRelationInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentOrderByRelationAggregateInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitOrderByRelationAggregateInput
 }
 
 export type CrmCampaignWhereUniqueInput = Prisma.AtLeast<{
@@ -275,6 +299,8 @@ export type CrmCampaignWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CrmCampaignWhereInput | Prisma.CrmCampaignWhereInput[]
   displayName?: Prisma.StringFilter<"CrmCampaign"> | string
   category?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
+  treatment?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
+  treatmentMasterId?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
   departmentId?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
   sourceId?: Prisma.StringFilter<"CrmCampaign"> | string
   leadSourceId?: Prisma.StringFilter<"CrmCampaign"> | string
@@ -283,12 +309,15 @@ export type CrmCampaignWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"CrmCampaign"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CrmCampaign"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CrmCampaign"> | Date | string
-  circle?: Prisma.XOR<Prisma.CrmCampaignCircleScalarRelationFilter, Prisma.CrmCampaignCircleWhereInput>
-  city?: Prisma.XOR<Prisma.CrmCampaignCityNullableScalarRelationFilter, Prisma.CrmCampaignCityWhereInput> | null
+  treatmentMaster?: Prisma.XOR<Prisma.TreatmentMasterNullableScalarRelationFilter, Prisma.TreatmentMasterWhereInput> | null
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
-  leadSource?: Prisma.XOR<Prisma.CrmCampaignLeadSourceScalarRelationFilter, Prisma.CrmCampaignLeadSourceWhereInput>
   source?: Prisma.XOR<Prisma.CrmCampaignSourceScalarRelationFilter, Prisma.CrmCampaignSourceWhereInput>
+  leadSource?: Prisma.XOR<Prisma.CrmCampaignLeadSourceScalarRelationFilter, Prisma.CrmCampaignLeadSourceWhereInput>
+  circle?: Prisma.XOR<Prisma.CrmCampaignCircleScalarRelationFilter, Prisma.CrmCampaignCircleWhereInput>
+  circleSelections?: Prisma.CrmCampaignCircleSelectionListRelationFilter
+  city?: Prisma.XOR<Prisma.CrmCampaignCityNullableScalarRelationFilter, Prisma.CrmCampaignCityWhereInput> | null
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentListRelationFilter
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitListRelationFilter
 }, "id" | "externalCampaignId">
 
 export type CrmCampaignOrderByWithAggregationInput = {
@@ -296,6 +325,8 @@ export type CrmCampaignOrderByWithAggregationInput = {
   externalCampaignId?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
+  treatment?: Prisma.SortOrderInput | Prisma.SortOrder
+  treatmentMasterId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   leadSourceId?: Prisma.SortOrder
@@ -317,6 +348,8 @@ export type CrmCampaignScalarWhereWithAggregatesInput = {
   externalCampaignId?: Prisma.StringWithAggregatesFilter<"CrmCampaign"> | string
   displayName?: Prisma.StringWithAggregatesFilter<"CrmCampaign"> | string
   category?: Prisma.StringNullableWithAggregatesFilter<"CrmCampaign"> | string | null
+  treatment?: Prisma.StringNullableWithAggregatesFilter<"CrmCampaign"> | string | null
+  treatmentMasterId?: Prisma.StringNullableWithAggregatesFilter<"CrmCampaign"> | string | null
   departmentId?: Prisma.StringNullableWithAggregatesFilter<"CrmCampaign"> | string | null
   sourceId?: Prisma.StringWithAggregatesFilter<"CrmCampaign"> | string
   leadSourceId?: Prisma.StringWithAggregatesFilter<"CrmCampaign"> | string
@@ -332,15 +365,19 @@ export type CrmCampaignCreateInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
-  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
-  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
   source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignUncheckedCreateInput = {
@@ -348,6 +385,8 @@ export type CrmCampaignUncheckedCreateInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   leadSourceId: string
@@ -356,7 +395,9 @@ export type CrmCampaignUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignUpdateInput = {
@@ -364,15 +405,19 @@ export type CrmCampaignUpdateInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
-  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
-  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
   source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateInput = {
@@ -380,6 +425,8 @@ export type CrmCampaignUncheckedUpdateInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -388,7 +435,9 @@ export type CrmCampaignUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignCreateManyInput = {
@@ -396,6 +445,8 @@ export type CrmCampaignCreateManyInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   leadSourceId: string
@@ -411,6 +462,7 @@ export type CrmCampaignUpdateManyMutationInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -421,6 +473,8 @@ export type CrmCampaignUncheckedUpdateManyInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -441,11 +495,18 @@ export type CrmCampaignOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type CrmCampaignScalarRelationFilter = {
+  is?: Prisma.CrmCampaignWhereInput
+  isNot?: Prisma.CrmCampaignWhereInput
+}
+
 export type CrmCampaignCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   externalCampaignId?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  treatment?: Prisma.SortOrder
+  treatmentMasterId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   leadSourceId?: Prisma.SortOrder
@@ -461,6 +522,8 @@ export type CrmCampaignMaxOrderByAggregateInput = {
   externalCampaignId?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  treatment?: Prisma.SortOrder
+  treatmentMasterId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   leadSourceId?: Prisma.SortOrder
@@ -476,6 +539,8 @@ export type CrmCampaignMinOrderByAggregateInput = {
   externalCampaignId?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  treatment?: Prisma.SortOrder
+  treatmentMasterId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   leadSourceId?: Prisma.SortOrder
@@ -484,11 +549,6 @@ export type CrmCampaignMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type CrmCampaignScalarRelationFilter = {
-  is?: Prisma.CrmCampaignWhereInput
-  isNot?: Prisma.CrmCampaignWhereInput
 }
 
 export type CrmCampaignCreateNestedManyWithoutDepartmentInput = {
@@ -659,6 +719,20 @@ export type CrmCampaignUncheckedUpdateManyWithoutCircleNestedInput = {
   deleteMany?: Prisma.CrmCampaignScalarWhereInput | Prisma.CrmCampaignScalarWhereInput[]
 }
 
+export type CrmCampaignCreateNestedOneWithoutCircleSelectionsInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutCircleSelectionsInput, Prisma.CrmCampaignUncheckedCreateWithoutCircleSelectionsInput>
+  connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutCircleSelectionsInput
+  connect?: Prisma.CrmCampaignWhereUniqueInput
+}
+
+export type CrmCampaignUpdateOneRequiredWithoutCircleSelectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutCircleSelectionsInput, Prisma.CrmCampaignUncheckedCreateWithoutCircleSelectionsInput>
+  connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutCircleSelectionsInput
+  upsert?: Prisma.CrmCampaignUpsertWithoutCircleSelectionsInput
+  connect?: Prisma.CrmCampaignWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CrmCampaignUpdateToOneWithWhereWithoutCircleSelectionsInput, Prisma.CrmCampaignUpdateWithoutCircleSelectionsInput>, Prisma.CrmCampaignUncheckedUpdateWithoutCircleSelectionsInput>
+}
+
 export type CrmCampaignCreateNestedManyWithoutCityInput = {
   create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutCityInput, Prisma.CrmCampaignUncheckedCreateWithoutCityInput> | Prisma.CrmCampaignCreateWithoutCityInput[] | Prisma.CrmCampaignUncheckedCreateWithoutCityInput[]
   connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutCityInput | Prisma.CrmCampaignCreateOrConnectWithoutCityInput[]
@@ -715,19 +789,79 @@ export type CrmCampaignUpdateOneRequiredWithoutAssignmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CrmCampaignUpdateToOneWithWhereWithoutAssignmentsInput, Prisma.CrmCampaignUpdateWithoutAssignmentsInput>, Prisma.CrmCampaignUncheckedUpdateWithoutAssignmentsInput>
 }
 
+export type CrmCampaignCreateNestedOneWithoutBdDailyLimitsInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutBdDailyLimitsInput, Prisma.CrmCampaignUncheckedCreateWithoutBdDailyLimitsInput>
+  connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutBdDailyLimitsInput
+  connect?: Prisma.CrmCampaignWhereUniqueInput
+}
+
+export type CrmCampaignUpdateOneRequiredWithoutBdDailyLimitsNestedInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutBdDailyLimitsInput, Prisma.CrmCampaignUncheckedCreateWithoutBdDailyLimitsInput>
+  connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutBdDailyLimitsInput
+  upsert?: Prisma.CrmCampaignUpsertWithoutBdDailyLimitsInput
+  connect?: Prisma.CrmCampaignWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CrmCampaignUpdateToOneWithWhereWithoutBdDailyLimitsInput, Prisma.CrmCampaignUpdateWithoutBdDailyLimitsInput>, Prisma.CrmCampaignUncheckedUpdateWithoutBdDailyLimitsInput>
+}
+
+export type CrmCampaignCreateNestedManyWithoutTreatmentMasterInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutTreatmentMasterInput, Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput> | Prisma.CrmCampaignCreateWithoutTreatmentMasterInput[] | Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput[]
+  connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutTreatmentMasterInput | Prisma.CrmCampaignCreateOrConnectWithoutTreatmentMasterInput[]
+  createMany?: Prisma.CrmCampaignCreateManyTreatmentMasterInputEnvelope
+  connect?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+}
+
+export type CrmCampaignUncheckedCreateNestedManyWithoutTreatmentMasterInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutTreatmentMasterInput, Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput> | Prisma.CrmCampaignCreateWithoutTreatmentMasterInput[] | Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput[]
+  connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutTreatmentMasterInput | Prisma.CrmCampaignCreateOrConnectWithoutTreatmentMasterInput[]
+  createMany?: Prisma.CrmCampaignCreateManyTreatmentMasterInputEnvelope
+  connect?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+}
+
+export type CrmCampaignUpdateManyWithoutTreatmentMasterNestedInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutTreatmentMasterInput, Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput> | Prisma.CrmCampaignCreateWithoutTreatmentMasterInput[] | Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput[]
+  connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutTreatmentMasterInput | Prisma.CrmCampaignCreateOrConnectWithoutTreatmentMasterInput[]
+  upsert?: Prisma.CrmCampaignUpsertWithWhereUniqueWithoutTreatmentMasterInput | Prisma.CrmCampaignUpsertWithWhereUniqueWithoutTreatmentMasterInput[]
+  createMany?: Prisma.CrmCampaignCreateManyTreatmentMasterInputEnvelope
+  set?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+  disconnect?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+  delete?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+  connect?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+  update?: Prisma.CrmCampaignUpdateWithWhereUniqueWithoutTreatmentMasterInput | Prisma.CrmCampaignUpdateWithWhereUniqueWithoutTreatmentMasterInput[]
+  updateMany?: Prisma.CrmCampaignUpdateManyWithWhereWithoutTreatmentMasterInput | Prisma.CrmCampaignUpdateManyWithWhereWithoutTreatmentMasterInput[]
+  deleteMany?: Prisma.CrmCampaignScalarWhereInput | Prisma.CrmCampaignScalarWhereInput[]
+}
+
+export type CrmCampaignUncheckedUpdateManyWithoutTreatmentMasterNestedInput = {
+  create?: Prisma.XOR<Prisma.CrmCampaignCreateWithoutTreatmentMasterInput, Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput> | Prisma.CrmCampaignCreateWithoutTreatmentMasterInput[] | Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput[]
+  connectOrCreate?: Prisma.CrmCampaignCreateOrConnectWithoutTreatmentMasterInput | Prisma.CrmCampaignCreateOrConnectWithoutTreatmentMasterInput[]
+  upsert?: Prisma.CrmCampaignUpsertWithWhereUniqueWithoutTreatmentMasterInput | Prisma.CrmCampaignUpsertWithWhereUniqueWithoutTreatmentMasterInput[]
+  createMany?: Prisma.CrmCampaignCreateManyTreatmentMasterInputEnvelope
+  set?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+  disconnect?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+  delete?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+  connect?: Prisma.CrmCampaignWhereUniqueInput | Prisma.CrmCampaignWhereUniqueInput[]
+  update?: Prisma.CrmCampaignUpdateWithWhereUniqueWithoutTreatmentMasterInput | Prisma.CrmCampaignUpdateWithWhereUniqueWithoutTreatmentMasterInput[]
+  updateMany?: Prisma.CrmCampaignUpdateManyWithWhereWithoutTreatmentMasterInput | Prisma.CrmCampaignUpdateManyWithWhereWithoutTreatmentMasterInput[]
+  deleteMany?: Prisma.CrmCampaignScalarWhereInput | Prisma.CrmCampaignScalarWhereInput[]
+}
+
 export type CrmCampaignCreateWithoutDepartmentInput = {
   id?: string
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
-  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
-  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
   source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignUncheckedCreateWithoutDepartmentInput = {
@@ -735,6 +869,8 @@ export type CrmCampaignUncheckedCreateWithoutDepartmentInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   sourceId: string
   leadSourceId: string
   circleId: string
@@ -742,7 +878,9 @@ export type CrmCampaignUncheckedCreateWithoutDepartmentInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignCreateOrConnectWithoutDepartmentInput = {
@@ -779,6 +917,8 @@ export type CrmCampaignScalarWhereInput = {
   externalCampaignId?: Prisma.StringFilter<"CrmCampaign"> | string
   displayName?: Prisma.StringFilter<"CrmCampaign"> | string
   category?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
+  treatment?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
+  treatmentMasterId?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
   departmentId?: Prisma.StringNullableFilter<"CrmCampaign"> | string | null
   sourceId?: Prisma.StringFilter<"CrmCampaign"> | string
   leadSourceId?: Prisma.StringFilter<"CrmCampaign"> | string
@@ -794,14 +934,18 @@ export type CrmCampaignCreateWithoutSourceInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
-  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
   leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignUncheckedCreateWithoutSourceInput = {
@@ -809,6 +953,8 @@ export type CrmCampaignUncheckedCreateWithoutSourceInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   leadSourceId: string
   circleId: string
@@ -816,7 +962,9 @@ export type CrmCampaignUncheckedCreateWithoutSourceInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignCreateOrConnectWithoutSourceInput = {
@@ -850,14 +998,18 @@ export type CrmCampaignCreateWithoutLeadSourceInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
-  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
   source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignUncheckedCreateWithoutLeadSourceInput = {
@@ -865,6 +1017,8 @@ export type CrmCampaignUncheckedCreateWithoutLeadSourceInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   circleId: string
@@ -872,7 +1026,9 @@ export type CrmCampaignUncheckedCreateWithoutLeadSourceInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignCreateOrConnectWithoutLeadSourceInput = {
@@ -906,14 +1062,18 @@ export type CrmCampaignCreateWithoutCircleInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
-  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
   source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignUncheckedCreateWithoutCircleInput = {
@@ -921,6 +1081,8 @@ export type CrmCampaignUncheckedCreateWithoutCircleInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   leadSourceId: string
@@ -928,7 +1090,9 @@ export type CrmCampaignUncheckedCreateWithoutCircleInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignCreateOrConnectWithoutCircleInput = {
@@ -957,19 +1121,115 @@ export type CrmCampaignUpdateManyWithWhereWithoutCircleInput = {
   data: Prisma.XOR<Prisma.CrmCampaignUpdateManyMutationInput, Prisma.CrmCampaignUncheckedUpdateManyWithoutCircleInput>
 }
 
+export type CrmCampaignCreateWithoutCircleSelectionsInput = {
+  id?: string
+  externalCampaignId: string
+  displayName: string
+  category?: string | null
+  treatment?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
+  source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
+}
+
+export type CrmCampaignUncheckedCreateWithoutCircleSelectionsInput = {
+  id?: string
+  externalCampaignId: string
+  displayName: string
+  category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
+  departmentId?: string | null
+  sourceId: string
+  leadSourceId: string
+  circleId: string
+  cityId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
+}
+
+export type CrmCampaignCreateOrConnectWithoutCircleSelectionsInput = {
+  where: Prisma.CrmCampaignWhereUniqueInput
+  create: Prisma.XOR<Prisma.CrmCampaignCreateWithoutCircleSelectionsInput, Prisma.CrmCampaignUncheckedCreateWithoutCircleSelectionsInput>
+}
+
+export type CrmCampaignUpsertWithoutCircleSelectionsInput = {
+  update: Prisma.XOR<Prisma.CrmCampaignUpdateWithoutCircleSelectionsInput, Prisma.CrmCampaignUncheckedUpdateWithoutCircleSelectionsInput>
+  create: Prisma.XOR<Prisma.CrmCampaignCreateWithoutCircleSelectionsInput, Prisma.CrmCampaignUncheckedCreateWithoutCircleSelectionsInput>
+  where?: Prisma.CrmCampaignWhereInput
+}
+
+export type CrmCampaignUpdateToOneWithWhereWithoutCircleSelectionsInput = {
+  where?: Prisma.CrmCampaignWhereInput
+  data: Prisma.XOR<Prisma.CrmCampaignUpdateWithoutCircleSelectionsInput, Prisma.CrmCampaignUncheckedUpdateWithoutCircleSelectionsInput>
+}
+
+export type CrmCampaignUpdateWithoutCircleSelectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
+  source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
+}
+
+export type CrmCampaignUncheckedUpdateWithoutCircleSelectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  circleId?: Prisma.StringFieldUpdateOperationsInput | string
+  cityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
+}
+
 export type CrmCampaignCreateWithoutCityInput = {
   id?: string
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
-  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
   source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignUncheckedCreateWithoutCityInput = {
@@ -977,6 +1237,8 @@ export type CrmCampaignUncheckedCreateWithoutCityInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   leadSourceId: string
@@ -984,7 +1246,9 @@ export type CrmCampaignUncheckedCreateWithoutCityInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignCreateOrConnectWithoutCityInput = {
@@ -1018,14 +1282,18 @@ export type CrmCampaignCreateWithoutAssignmentsInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
-  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
-  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
   source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignUncheckedCreateWithoutAssignmentsInput = {
@@ -1033,6 +1301,8 @@ export type CrmCampaignUncheckedCreateWithoutAssignmentsInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   leadSourceId: string
@@ -1041,6 +1311,8 @@ export type CrmCampaignUncheckedCreateWithoutAssignmentsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type CrmCampaignCreateOrConnectWithoutAssignmentsInput = {
@@ -1064,14 +1336,18 @@ export type CrmCampaignUpdateWithoutAssignmentsInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
-  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
-  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
   source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateWithoutAssignmentsInput = {
@@ -1079,6 +1355,8 @@ export type CrmCampaignUncheckedUpdateWithoutAssignmentsInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1087,6 +1365,164 @@ export type CrmCampaignUncheckedUpdateWithoutAssignmentsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
+}
+
+export type CrmCampaignCreateWithoutBdDailyLimitsInput = {
+  id?: string
+  externalCampaignId: string
+  displayName: string
+  category?: string | null
+  treatment?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  treatmentMaster?: Prisma.TreatmentMasterCreateNestedOneWithoutCrmCampaignsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
+  source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+}
+
+export type CrmCampaignUncheckedCreateWithoutBdDailyLimitsInput = {
+  id?: string
+  externalCampaignId: string
+  displayName: string
+  category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
+  departmentId?: string | null
+  sourceId: string
+  leadSourceId: string
+  circleId: string
+  cityId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+}
+
+export type CrmCampaignCreateOrConnectWithoutBdDailyLimitsInput = {
+  where: Prisma.CrmCampaignWhereUniqueInput
+  create: Prisma.XOR<Prisma.CrmCampaignCreateWithoutBdDailyLimitsInput, Prisma.CrmCampaignUncheckedCreateWithoutBdDailyLimitsInput>
+}
+
+export type CrmCampaignUpsertWithoutBdDailyLimitsInput = {
+  update: Prisma.XOR<Prisma.CrmCampaignUpdateWithoutBdDailyLimitsInput, Prisma.CrmCampaignUncheckedUpdateWithoutBdDailyLimitsInput>
+  create: Prisma.XOR<Prisma.CrmCampaignCreateWithoutBdDailyLimitsInput, Prisma.CrmCampaignUncheckedCreateWithoutBdDailyLimitsInput>
+  where?: Prisma.CrmCampaignWhereInput
+}
+
+export type CrmCampaignUpdateToOneWithWhereWithoutBdDailyLimitsInput = {
+  where?: Prisma.CrmCampaignWhereInput
+  data: Prisma.XOR<Prisma.CrmCampaignUpdateWithoutBdDailyLimitsInput, Prisma.CrmCampaignUncheckedUpdateWithoutBdDailyLimitsInput>
+}
+
+export type CrmCampaignUpdateWithoutBdDailyLimitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
+  source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+}
+
+export type CrmCampaignUncheckedUpdateWithoutBdDailyLimitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  circleId?: Prisma.StringFieldUpdateOperationsInput | string
+  cityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+}
+
+export type CrmCampaignCreateWithoutTreatmentMasterInput = {
+  id?: string
+  externalCampaignId: string
+  displayName: string
+  category?: string | null
+  treatment?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  department?: Prisma.DepartmentCreateNestedOneWithoutCrmCampaignsInput
+  source: Prisma.CrmCampaignSourceCreateNestedOneWithoutCampaignsInput
+  leadSource: Prisma.CrmCampaignLeadSourceCreateNestedOneWithoutCampaignsInput
+  circle: Prisma.CrmCampaignCircleCreateNestedOneWithoutCampaignsInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionCreateNestedManyWithoutCampaignInput
+  city?: Prisma.CrmCampaignCityCreateNestedOneWithoutCampaignsInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutCampaignInput
+}
+
+export type CrmCampaignUncheckedCreateWithoutTreatmentMasterInput = {
+  id?: string
+  externalCampaignId: string
+  displayName: string
+  category?: string | null
+  treatment?: string | null
+  departmentId?: string | null
+  sourceId: string
+  leadSourceId: string
+  circleId: string
+  cityId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedCreateNestedManyWithoutCampaignInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutCampaignInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutCampaignInput
+}
+
+export type CrmCampaignCreateOrConnectWithoutTreatmentMasterInput = {
+  where: Prisma.CrmCampaignWhereUniqueInput
+  create: Prisma.XOR<Prisma.CrmCampaignCreateWithoutTreatmentMasterInput, Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput>
+}
+
+export type CrmCampaignCreateManyTreatmentMasterInputEnvelope = {
+  data: Prisma.CrmCampaignCreateManyTreatmentMasterInput | Prisma.CrmCampaignCreateManyTreatmentMasterInput[]
+  skipDuplicates?: boolean
+}
+
+export type CrmCampaignUpsertWithWhereUniqueWithoutTreatmentMasterInput = {
+  where: Prisma.CrmCampaignWhereUniqueInput
+  update: Prisma.XOR<Prisma.CrmCampaignUpdateWithoutTreatmentMasterInput, Prisma.CrmCampaignUncheckedUpdateWithoutTreatmentMasterInput>
+  create: Prisma.XOR<Prisma.CrmCampaignCreateWithoutTreatmentMasterInput, Prisma.CrmCampaignUncheckedCreateWithoutTreatmentMasterInput>
+}
+
+export type CrmCampaignUpdateWithWhereUniqueWithoutTreatmentMasterInput = {
+  where: Prisma.CrmCampaignWhereUniqueInput
+  data: Prisma.XOR<Prisma.CrmCampaignUpdateWithoutTreatmentMasterInput, Prisma.CrmCampaignUncheckedUpdateWithoutTreatmentMasterInput>
+}
+
+export type CrmCampaignUpdateManyWithWhereWithoutTreatmentMasterInput = {
+  where: Prisma.CrmCampaignScalarWhereInput
+  data: Prisma.XOR<Prisma.CrmCampaignUpdateManyMutationInput, Prisma.CrmCampaignUncheckedUpdateManyWithoutTreatmentMasterInput>
 }
 
 export type CrmCampaignCreateManyDepartmentInput = {
@@ -1094,6 +1530,8 @@ export type CrmCampaignCreateManyDepartmentInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   sourceId: string
   leadSourceId: string
   circleId: string
@@ -1108,14 +1546,18 @@ export type CrmCampaignUpdateWithoutDepartmentInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
-  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
-  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
   source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateWithoutDepartmentInput = {
@@ -1123,6 +1565,8 @@ export type CrmCampaignUncheckedUpdateWithoutDepartmentInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1130,7 +1574,9 @@ export type CrmCampaignUncheckedUpdateWithoutDepartmentInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateManyWithoutDepartmentInput = {
@@ -1138,6 +1584,8 @@ export type CrmCampaignUncheckedUpdateManyWithoutDepartmentInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1152,6 +1600,8 @@ export type CrmCampaignCreateManySourceInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   leadSourceId: string
   circleId: string
@@ -1166,14 +1616,18 @@ export type CrmCampaignUpdateWithoutSourceInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
-  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
   leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateWithoutSourceInput = {
@@ -1181,6 +1635,8 @@ export type CrmCampaignUncheckedUpdateWithoutSourceInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1188,7 +1644,9 @@ export type CrmCampaignUncheckedUpdateWithoutSourceInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateManyWithoutSourceInput = {
@@ -1196,6 +1654,8 @@ export type CrmCampaignUncheckedUpdateManyWithoutSourceInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1210,6 +1670,8 @@ export type CrmCampaignCreateManyLeadSourceInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   circleId: string
@@ -1224,14 +1686,18 @@ export type CrmCampaignUpdateWithoutLeadSourceInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
-  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
   source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateWithoutLeadSourceInput = {
@@ -1239,6 +1705,8 @@ export type CrmCampaignUncheckedUpdateWithoutLeadSourceInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1246,7 +1714,9 @@ export type CrmCampaignUncheckedUpdateWithoutLeadSourceInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateManyWithoutLeadSourceInput = {
@@ -1254,6 +1724,8 @@ export type CrmCampaignUncheckedUpdateManyWithoutLeadSourceInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1268,6 +1740,8 @@ export type CrmCampaignCreateManyCircleInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   leadSourceId: string
@@ -1282,14 +1756,18 @@ export type CrmCampaignUpdateWithoutCircleInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
-  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
   source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateWithoutCircleInput = {
@@ -1297,6 +1775,8 @@ export type CrmCampaignUncheckedUpdateWithoutCircleInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1304,7 +1784,9 @@ export type CrmCampaignUncheckedUpdateWithoutCircleInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateManyWithoutCircleInput = {
@@ -1312,6 +1794,8 @@ export type CrmCampaignUncheckedUpdateManyWithoutCircleInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1326,6 +1810,8 @@ export type CrmCampaignCreateManyCityInput = {
   externalCampaignId: string
   displayName: string
   category?: string | null
+  treatment?: string | null
+  treatmentMasterId?: string | null
   departmentId?: string | null
   sourceId: string
   leadSourceId: string
@@ -1340,14 +1826,18 @@ export type CrmCampaignUpdateWithoutCityInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  treatmentMaster?: Prisma.TreatmentMasterUpdateOneWithoutCrmCampaignsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
-  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
   source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateWithoutCityInput = {
@@ -1355,6 +1845,8 @@ export type CrmCampaignUncheckedUpdateWithoutCityInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1362,7 +1854,9 @@ export type CrmCampaignUncheckedUpdateWithoutCityInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
   assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type CrmCampaignUncheckedUpdateManyWithoutCityInput = {
@@ -1370,10 +1864,82 @@ export type CrmCampaignUncheckedUpdateManyWithoutCityInput = {
   externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentMasterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CrmCampaignCreateManyTreatmentMasterInput = {
+  id?: string
+  externalCampaignId: string
+  displayName: string
+  category?: string | null
+  treatment?: string | null
+  departmentId?: string | null
+  sourceId: string
+  leadSourceId: string
+  circleId: string
+  cityId?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CrmCampaignUpdateWithoutTreatmentMasterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  department?: Prisma.DepartmentUpdateOneWithoutCrmCampaignsNestedInput
+  source?: Prisma.CrmCampaignSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  leadSource?: Prisma.CrmCampaignLeadSourceUpdateOneRequiredWithoutCampaignsNestedInput
+  circle?: Prisma.CrmCampaignCircleUpdateOneRequiredWithoutCampaignsNestedInput
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUpdateManyWithoutCampaignNestedInput
+  city?: Prisma.CrmCampaignCityUpdateOneWithoutCampaignsNestedInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutCampaignNestedInput
+}
+
+export type CrmCampaignUncheckedUpdateWithoutTreatmentMasterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  circleId?: Prisma.StringFieldUpdateOperationsInput | string
+  cityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  circleSelections?: Prisma.CrmCampaignCircleSelectionUncheckedUpdateManyWithoutCampaignNestedInput
+  assignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutCampaignNestedInput
+  bdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutCampaignNestedInput
+}
+
+export type CrmCampaignUncheckedUpdateManyWithoutTreatmentMasterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalCampaignId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadSourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  circleId?: Prisma.StringFieldUpdateOperationsInput | string
+  cityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1385,11 +1951,15 @@ export type CrmCampaignUncheckedUpdateManyWithoutCityInput = {
  */
 
 export type CrmCampaignCountOutputType = {
+  circleSelections: number
   assignments: number
+  bdDailyLimits: number
 }
 
 export type CrmCampaignCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  circleSelections?: boolean | CrmCampaignCountOutputTypeCountCircleSelectionsArgs
   assignments?: boolean | CrmCampaignCountOutputTypeCountAssignmentsArgs
+  bdDailyLimits?: boolean | CrmCampaignCountOutputTypeCountBdDailyLimitsArgs
 }
 
 /**
@@ -1405,8 +1975,22 @@ export type CrmCampaignCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
 /**
  * CrmCampaignCountOutputType without action
  */
+export type CrmCampaignCountOutputTypeCountCircleSelectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignCircleSelectionWhereInput
+}
+
+/**
+ * CrmCampaignCountOutputType without action
+ */
 export type CrmCampaignCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CrmCampaignTeamLeadAssignmentWhereInput
+}
+
+/**
+ * CrmCampaignCountOutputType without action
+ */
+export type CrmCampaignCountOutputTypeCountBdDailyLimitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CrmCampaignBdDailyLimitWhereInput
 }
 
 
@@ -1415,6 +1999,8 @@ export type CrmCampaignSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   externalCampaignId?: boolean
   displayName?: boolean
   category?: boolean
+  treatment?: boolean
+  treatmentMasterId?: boolean
   departmentId?: boolean
   sourceId?: boolean
   leadSourceId?: boolean
@@ -1423,12 +2009,15 @@ export type CrmCampaignSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  circle?: boolean | Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>
-  city?: boolean | Prisma.CrmCampaign$cityArgs<ExtArgs>
+  treatmentMaster?: boolean | Prisma.CrmCampaign$treatmentMasterArgs<ExtArgs>
   department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
-  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
   source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
+  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
+  circle?: boolean | Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>
+  circleSelections?: boolean | Prisma.CrmCampaign$circleSelectionsArgs<ExtArgs>
+  city?: boolean | Prisma.CrmCampaign$cityArgs<ExtArgs>
   assignments?: boolean | Prisma.CrmCampaign$assignmentsArgs<ExtArgs>
+  bdDailyLimits?: boolean | Prisma.CrmCampaign$bdDailyLimitsArgs<ExtArgs>
   _count?: boolean | Prisma.CrmCampaignCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["crmCampaign"]>
 
@@ -1437,6 +2026,8 @@ export type CrmCampaignSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   externalCampaignId?: boolean
   displayName?: boolean
   category?: boolean
+  treatment?: boolean
+  treatmentMasterId?: boolean
   departmentId?: boolean
   sourceId?: boolean
   leadSourceId?: boolean
@@ -1445,11 +2036,12 @@ export type CrmCampaignSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  treatmentMaster?: boolean | Prisma.CrmCampaign$treatmentMasterArgs<ExtArgs>
+  department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
+  source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
+  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>
   city?: boolean | Prisma.CrmCampaign$cityArgs<ExtArgs>
-  department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
-  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
-  source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["crmCampaign"]>
 
 export type CrmCampaignSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1457,6 +2049,8 @@ export type CrmCampaignSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   externalCampaignId?: boolean
   displayName?: boolean
   category?: boolean
+  treatment?: boolean
+  treatmentMasterId?: boolean
   departmentId?: boolean
   sourceId?: boolean
   leadSourceId?: boolean
@@ -1465,11 +2059,12 @@ export type CrmCampaignSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  treatmentMaster?: boolean | Prisma.CrmCampaign$treatmentMasterArgs<ExtArgs>
+  department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
+  source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
+  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>
   city?: boolean | Prisma.CrmCampaign$cityArgs<ExtArgs>
-  department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
-  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
-  source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["crmCampaign"]>
 
 export type CrmCampaignSelectScalar = {
@@ -1477,6 +2072,8 @@ export type CrmCampaignSelectScalar = {
   externalCampaignId?: boolean
   displayName?: boolean
   category?: boolean
+  treatment?: boolean
+  treatmentMasterId?: boolean
   departmentId?: boolean
   sourceId?: boolean
   leadSourceId?: boolean
@@ -1487,46 +2084,56 @@ export type CrmCampaignSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CrmCampaignOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "externalCampaignId" | "displayName" | "category" | "departmentId" | "sourceId" | "leadSourceId" | "circleId" | "cityId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["crmCampaign"]>
+export type CrmCampaignOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "externalCampaignId" | "displayName" | "category" | "treatment" | "treatmentMasterId" | "departmentId" | "sourceId" | "leadSourceId" | "circleId" | "cityId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["crmCampaign"]>
 export type CrmCampaignInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  circle?: boolean | Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>
-  city?: boolean | Prisma.CrmCampaign$cityArgs<ExtArgs>
+  treatmentMaster?: boolean | Prisma.CrmCampaign$treatmentMasterArgs<ExtArgs>
   department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
-  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
   source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
+  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
+  circle?: boolean | Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>
+  circleSelections?: boolean | Prisma.CrmCampaign$circleSelectionsArgs<ExtArgs>
+  city?: boolean | Prisma.CrmCampaign$cityArgs<ExtArgs>
   assignments?: boolean | Prisma.CrmCampaign$assignmentsArgs<ExtArgs>
+  bdDailyLimits?: boolean | Prisma.CrmCampaign$bdDailyLimitsArgs<ExtArgs>
   _count?: boolean | Prisma.CrmCampaignCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CrmCampaignIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  treatmentMaster?: boolean | Prisma.CrmCampaign$treatmentMasterArgs<ExtArgs>
+  department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
+  source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
+  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>
   city?: boolean | Prisma.CrmCampaign$cityArgs<ExtArgs>
-  department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
-  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
-  source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
 }
 export type CrmCampaignIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  treatmentMaster?: boolean | Prisma.CrmCampaign$treatmentMasterArgs<ExtArgs>
+  department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
+  source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
+  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>
   city?: boolean | Prisma.CrmCampaign$cityArgs<ExtArgs>
-  department?: boolean | Prisma.CrmCampaign$departmentArgs<ExtArgs>
-  leadSource?: boolean | Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>
-  source?: boolean | Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>
 }
 
 export type $CrmCampaignPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CrmCampaign"
   objects: {
-    circle: Prisma.$CrmCampaignCirclePayload<ExtArgs>
-    city: Prisma.$CrmCampaignCityPayload<ExtArgs> | null
+    treatmentMaster: Prisma.$TreatmentMasterPayload<ExtArgs> | null
     department: Prisma.$DepartmentPayload<ExtArgs> | null
-    leadSource: Prisma.$CrmCampaignLeadSourcePayload<ExtArgs>
     source: Prisma.$CrmCampaignSourcePayload<ExtArgs>
+    leadSource: Prisma.$CrmCampaignLeadSourcePayload<ExtArgs>
+    circle: Prisma.$CrmCampaignCirclePayload<ExtArgs>
+    circleSelections: Prisma.$CrmCampaignCircleSelectionPayload<ExtArgs>[]
+    city: Prisma.$CrmCampaignCityPayload<ExtArgs> | null
     assignments: Prisma.$CrmCampaignTeamLeadAssignmentPayload<ExtArgs>[]
+    bdDailyLimits: Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     externalCampaignId: string
     displayName: string
     category: string | null
+    treatment: string | null
+    treatmentMasterId: string | null
     departmentId: string | null
     sourceId: string
     leadSourceId: string
@@ -1929,12 +2536,15 @@ readonly fields: CrmCampaignFieldRefs;
  */
 export interface Prisma__CrmCampaignClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  circle<T extends Prisma.CrmCampaignCircleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>>): Prisma.Prisma__CrmCampaignCircleClient<runtime.Types.Result.GetResult<Prisma.$CrmCampaignCirclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  city<T extends Prisma.CrmCampaign$cityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaign$cityArgs<ExtArgs>>): Prisma.Prisma__CrmCampaignCityClient<runtime.Types.Result.GetResult<Prisma.$CrmCampaignCityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  treatmentMaster<T extends Prisma.CrmCampaign$treatmentMasterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaign$treatmentMasterArgs<ExtArgs>>): Prisma.Prisma__TreatmentMasterClient<runtime.Types.Result.GetResult<Prisma.$TreatmentMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   department<T extends Prisma.CrmCampaign$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaign$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  leadSource<T extends Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>>): Prisma.Prisma__CrmCampaignLeadSourceClient<runtime.Types.Result.GetResult<Prisma.$CrmCampaignLeadSourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   source<T extends Prisma.CrmCampaignSourceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignSourceDefaultArgs<ExtArgs>>): Prisma.Prisma__CrmCampaignSourceClient<runtime.Types.Result.GetResult<Prisma.$CrmCampaignSourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  leadSource<T extends Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignLeadSourceDefaultArgs<ExtArgs>>): Prisma.Prisma__CrmCampaignLeadSourceClient<runtime.Types.Result.GetResult<Prisma.$CrmCampaignLeadSourcePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  circle<T extends Prisma.CrmCampaignCircleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaignCircleDefaultArgs<ExtArgs>>): Prisma.Prisma__CrmCampaignCircleClient<runtime.Types.Result.GetResult<Prisma.$CrmCampaignCirclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  circleSelections<T extends Prisma.CrmCampaign$circleSelectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaign$circleSelectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignCircleSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  city<T extends Prisma.CrmCampaign$cityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaign$cityArgs<ExtArgs>>): Prisma.Prisma__CrmCampaignCityClient<runtime.Types.Result.GetResult<Prisma.$CrmCampaignCityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assignments<T extends Prisma.CrmCampaign$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaign$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bdDailyLimits<T extends Prisma.CrmCampaign$bdDailyLimitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CrmCampaign$bdDailyLimitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CrmCampaignBdDailyLimitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1968,6 +2578,8 @@ export interface CrmCampaignFieldRefs {
   readonly externalCampaignId: Prisma.FieldRef<"CrmCampaign", 'String'>
   readonly displayName: Prisma.FieldRef<"CrmCampaign", 'String'>
   readonly category: Prisma.FieldRef<"CrmCampaign", 'String'>
+  readonly treatment: Prisma.FieldRef<"CrmCampaign", 'String'>
+  readonly treatmentMasterId: Prisma.FieldRef<"CrmCampaign", 'String'>
   readonly departmentId: Prisma.FieldRef<"CrmCampaign", 'String'>
   readonly sourceId: Prisma.FieldRef<"CrmCampaign", 'String'>
   readonly leadSourceId: Prisma.FieldRef<"CrmCampaign", 'String'>
@@ -2377,22 +2989,22 @@ export type CrmCampaignDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * CrmCampaign.city
+ * CrmCampaign.treatmentMaster
  */
-export type CrmCampaign$cityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CrmCampaign$treatmentMasterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the CrmCampaignCity
+   * Select specific fields to fetch from the TreatmentMaster
    */
-  select?: Prisma.CrmCampaignCitySelect<ExtArgs> | null
+  select?: Prisma.TreatmentMasterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the CrmCampaignCity
+   * Omit specific fields from the TreatmentMaster
    */
-  omit?: Prisma.CrmCampaignCityOmit<ExtArgs> | null
+  omit?: Prisma.TreatmentMasterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CrmCampaignCityInclude<ExtArgs> | null
-  where?: Prisma.CrmCampaignCityWhereInput
+  include?: Prisma.TreatmentMasterInclude<ExtArgs> | null
+  where?: Prisma.TreatmentMasterWhereInput
 }
 
 /**
@@ -2412,6 +3024,49 @@ export type CrmCampaign$departmentArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.DepartmentInclude<ExtArgs> | null
   where?: Prisma.DepartmentWhereInput
+}
+
+/**
+ * CrmCampaign.circleSelections
+ */
+export type CrmCampaign$circleSelectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaignCircleSelection
+   */
+  select?: Prisma.CrmCampaignCircleSelectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaignCircleSelection
+   */
+  omit?: Prisma.CrmCampaignCircleSelectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignCircleSelectionInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignCircleSelectionWhereInput
+  orderBy?: Prisma.CrmCampaignCircleSelectionOrderByWithRelationInput | Prisma.CrmCampaignCircleSelectionOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignCircleSelectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignCircleSelectionScalarFieldEnum | Prisma.CrmCampaignCircleSelectionScalarFieldEnum[]
+}
+
+/**
+ * CrmCampaign.city
+ */
+export type CrmCampaign$cityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaignCity
+   */
+  select?: Prisma.CrmCampaignCitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaignCity
+   */
+  omit?: Prisma.CrmCampaignCityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignCityInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignCityWhereInput
 }
 
 /**
@@ -2436,6 +3091,30 @@ export type CrmCampaign$assignmentsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.CrmCampaignTeamLeadAssignmentScalarFieldEnum | Prisma.CrmCampaignTeamLeadAssignmentScalarFieldEnum[]
+}
+
+/**
+ * CrmCampaign.bdDailyLimits
+ */
+export type CrmCampaign$bdDailyLimitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CrmCampaignBdDailyLimit
+   */
+  select?: Prisma.CrmCampaignBdDailyLimitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CrmCampaignBdDailyLimit
+   */
+  omit?: Prisma.CrmCampaignBdDailyLimitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CrmCampaignBdDailyLimitInclude<ExtArgs> | null
+  where?: Prisma.CrmCampaignBdDailyLimitWhereInput
+  orderBy?: Prisma.CrmCampaignBdDailyLimitOrderByWithRelationInput | Prisma.CrmCampaignBdDailyLimitOrderByWithRelationInput[]
+  cursor?: Prisma.CrmCampaignBdDailyLimitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CrmCampaignBdDailyLimitScalarFieldEnum | Prisma.CrmCampaignBdDailyLimitScalarFieldEnum[]
 }
 
 /**

@@ -174,8 +174,8 @@ export type TaskProjectWhereInput = {
   name?: Prisma.StringFilter<"TaskProject"> | string
   createdById?: Prisma.StringFilter<"TaskProject"> | string
   createdAt?: Prisma.DateTimeFilter<"TaskProject"> | Date | string
-  tasks?: Prisma.TaskListRelationFilter
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  tasks?: Prisma.TaskListRelationFilter
 }
 
 export type TaskProjectOrderByWithRelationInput = {
@@ -183,8 +183,8 @@ export type TaskProjectOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  tasks?: Prisma.TaskOrderByRelationAggregateInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  tasks?: Prisma.TaskOrderByRelationAggregateInput
 }
 
 export type TaskProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -195,8 +195,8 @@ export type TaskProjectWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TaskProjectWhereInput | Prisma.TaskProjectWhereInput[]
   createdById?: Prisma.StringFilter<"TaskProject"> | string
   createdAt?: Prisma.DateTimeFilter<"TaskProject"> | Date | string
-  tasks?: Prisma.TaskListRelationFilter
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  tasks?: Prisma.TaskListRelationFilter
 }, "id" | "name">
 
 export type TaskProjectOrderByWithAggregationInput = {
@@ -223,8 +223,8 @@ export type TaskProjectCreateInput = {
   id?: string
   name: string
   createdAt?: Date | string
-  tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   createdBy: Prisma.UserCreateNestedOneWithoutTaskProjectsCreatedInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
 }
 
 export type TaskProjectUncheckedCreateInput = {
@@ -239,8 +239,8 @@ export type TaskProjectUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutTaskProjectsCreatedNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
 }
 
 export type TaskProjectUncheckedUpdateInput = {
@@ -521,8 +521,8 @@ export type TaskProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   name?: boolean
   createdById?: boolean
   createdAt?: boolean
-  tasks?: boolean | Prisma.TaskProject$tasksArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  tasks?: boolean | Prisma.TaskProject$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.TaskProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["taskProject"]>
 
@@ -551,8 +551,8 @@ export type TaskProjectSelectScalar = {
 
 export type TaskProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdById" | "createdAt", ExtArgs["result"]["taskProject"]>
 export type TaskProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  tasks?: boolean | Prisma.TaskProject$tasksArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  tasks?: boolean | Prisma.TaskProject$tasksArgs<ExtArgs>
   _count?: boolean | Prisma.TaskProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TaskProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -565,8 +565,8 @@ export type TaskProjectIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $TaskProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TaskProject"
   objects: {
-    tasks: Prisma.$TaskPayload<ExtArgs>[]
     createdBy: Prisma.$UserPayload<ExtArgs>
+    tasks: Prisma.$TaskPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -967,8 +967,8 @@ readonly fields: TaskProjectFieldRefs;
  */
 export interface Prisma__TaskProjectClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  tasks<T extends Prisma.TaskProject$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskProject$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  tasks<T extends Prisma.TaskProject$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TaskProject$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

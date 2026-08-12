@@ -58,6 +58,7 @@ export const ModelName = {
   CallNote: 'CallNote',
   LeadRemarkEntry: 'LeadRemarkEntry',
   LeadQrCallAuditLog: 'LeadQrCallAuditLog',
+  LeadQrPublicLink: 'LeadQrPublicLink',
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
@@ -125,10 +126,12 @@ export const ModelName = {
   CrmCampaignSource: 'CrmCampaignSource',
   CrmCampaignLeadSource: 'CrmCampaignLeadSource',
   CrmCampaignCircle: 'CrmCampaignCircle',
+  CrmCampaignCircleSelection: 'CrmCampaignCircleSelection',
   CrmCampaignCity: 'CrmCampaignCity',
   CrmSubStatusMaster: 'CrmSubStatusMaster',
   CrmCampaign: 'CrmCampaign',
   CrmCampaignTeamLeadAssignment: 'CrmCampaignTeamLeadAssignment',
+  CrmCampaignBdDailyLimit: 'CrmCampaignBdDailyLimit',
   CrmActivityLog: 'CrmActivityLog',
   BulkLeadReassignmentRun: 'BulkLeadReassignmentRun',
   Resource: 'Resource',
@@ -238,16 +241,16 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   name: 'name',
   role: 'role',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  address: 'address',
   phoneNumber: 'phoneNumber',
+  address: 'address',
   profilePicture: 'profilePicture',
   gender: 'gender',
   emergencyContactName: 'emergencyContactName',
   emergencyContactPhone: 'emergencyContactPhone',
   currentAddress: 'currentAddress',
-  permanentAddress: 'permanentAddress'
+  permanentAddress: 'permanentAddress',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -283,6 +286,9 @@ export const LeadScalarFieldEnum = {
   circle: 'circle',
   category: 'category',
   treatment: 'treatment',
+  treatmentMasterId: 'treatmentMasterId',
+  atsAmount: 'atsAmount',
+  atsStatus: 'atsStatus',
   anesthesia: 'anesthesia',
   quantityGrade: 'quantityGrade',
   surgeonName: 'surgeonName',
@@ -304,6 +310,8 @@ export const LeadScalarFieldEnum = {
   arrivalDate: 'arrivalDate',
   arrivalTime: 'arrivalTime',
   surgeryDate: 'surgeryDate',
+  ipdPotentialDate: 'ipdPotentialDate',
+  ipdPotentialMarkedAt: 'ipdPotentialMarkedAt',
   operationTime: 'operationTime',
   implantType: 'implantType',
   implantAmount: 'implantAmount',
@@ -327,6 +335,7 @@ export const LeadScalarFieldEnum = {
   collectedByMediend: 'collectedByMediend',
   collectedByHospital: 'collectedByHospital',
   month: 'month',
+  assignedDate: 'assignedDate',
   leadEntryDate: 'leadEntryDate',
   patientEmail: 'patientEmail',
   whatsapp: 'whatsapp',
@@ -341,6 +350,12 @@ export const LeadScalarFieldEnum = {
   opdCharges: 'opdCharges',
   opdScheduleDate: 'opdScheduleDate',
   opdMeeting: 'opdMeeting',
+  opdSurgeryAdvised: 'opdSurgeryAdvised',
+  opdSurgeryRemarkCode: 'opdSurgeryRemarkCode',
+  opdReasonNoSurgeryCode: 'opdReasonNoSurgeryCode',
+  opdFollowUpReasonCode: 'opdFollowUpReasonCode',
+  opdImplantRequired: 'opdImplantRequired',
+  opdDiagnosis: 'opdDiagnosis',
   ipdAdmissionDate: 'ipdAdmissionDate',
   ipdHospital: 'ipdHospital',
   ipdDrName: 'ipdDrName',
@@ -364,25 +379,16 @@ export const LeadScalarFieldEnum = {
   profession: 'profession',
   qr: 'qr',
   removeRemarks: 'removeRemarks',
+  isOldCrmLead: 'isOldCrmLead',
+  remarksClearedAt: 'remarksClearedAt',
   adId: 'adId',
   campaignId: 'campaignId',
   formId: 'formId',
   teamLeadId: 'teamLeadId',
   remarksId: 'remarksId',
+  openedInCrmAt: 'openedInCrmAt',
   lostReason: 'lostReason',
-  lostAt: 'lostAt',
-  assignedDate: 'assignedDate',
-  atsAmount: 'atsAmount',
-  atsStatus: 'atsStatus',
-  treatmentMasterId: 'treatmentMasterId',
-  remarksClearedAt: 'remarksClearedAt',
-  isOldCrmLead: 'isOldCrmLead',
-  opdDiagnosis: 'opdDiagnosis',
-  opdFollowUpReasonCode: 'opdFollowUpReasonCode',
-  opdImplantRequired: 'opdImplantRequired',
-  opdReasonNoSurgeryCode: 'opdReasonNoSurgeryCode',
-  opdSurgeryAdvised: 'opdSurgeryAdvised',
-  opdSurgeryRemarkCode: 'opdSurgeryRemarkCode'
+  lostAt: 'lostAt'
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
@@ -440,6 +446,18 @@ export const LeadQrCallAuditLogScalarFieldEnum = {
 export type LeadQrCallAuditLogScalarFieldEnum = (typeof LeadQrCallAuditLogScalarFieldEnum)[keyof typeof LeadQrCallAuditLogScalarFieldEnum]
 
 
+export const LeadQrPublicLinkScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  actorUserId: 'actorUserId',
+  expiresAt: 'expiresAt',
+  lastOpenedAt: 'lastOpenedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadQrPublicLinkScalarFieldEnum = (typeof LeadQrPublicLinkScalarFieldEnum)[keyof typeof LeadQrPublicLinkScalarFieldEnum]
+
+
 export const LeadStageEventScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
@@ -462,10 +480,10 @@ export const TargetScalarFieldEnum = {
   periodEndDate: 'periodEndDate',
   metric: 'metric',
   targetValue: 'targetValue',
+  departmentTargets: 'departmentTargets',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  departmentTargets: 'departmentTargets'
+  updatedAt: 'updatedAt'
 } as const
 
 export type TargetScalarFieldEnum = (typeof TargetScalarFieldEnum)[keyof typeof TargetScalarFieldEnum]
@@ -520,7 +538,9 @@ export type InsuranceCaseScalarFieldEnum = (typeof InsuranceCaseScalarFieldEnum)
 export const PLRecordScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
+  outstandingStatus: 'outstandingStatus',
   month: 'month',
+  admissionDate: 'admissionDate',
   surgeryDate: 'surgeryDate',
   status: 'status',
   paymentType: 'paymentType',
@@ -544,6 +564,12 @@ export const PLRecordScalarFieldEnum = {
   referralAmount: 'referralAmount',
   cabCharges: 'cabCharges',
   implantCost: 'implantCost',
+  instrumentsCost: 'instrumentsCost',
+  implantPaidBy: 'implantPaidBy',
+  instrumentsPaidBy: 'instrumentsPaidBy',
+  actualImplantCost: 'actualImplantCost',
+  actualInstrumentCost: 'actualInstrumentCost',
+  hospitalRecoverAmount: 'hospitalRecoverAmount',
   dcCharges: 'dcCharges',
   doctorCharges: 'doctorCharges',
   hospitalSharePct: 'hospitalSharePct',
@@ -552,27 +578,19 @@ export const PLRecordScalarFieldEnum = {
   mediendShareAmount: 'mediendShareAmount',
   mediendNetProfit: 'mediendNetProfit',
   finalProfit: 'finalProfit',
+  mediendProfit: 'mediendProfit',
   hospitalPayoutStatus: 'hospitalPayoutStatus',
   doctorPayoutStatus: 'doctorPayoutStatus',
   mediendInvoiceStatus: 'mediendInvoiceStatus',
   hospitalAmountPending: 'hospitalAmountPending',
   doctorAmountPending: 'doctorAmountPending',
+  doctorRemarks: 'doctorRemarks',
+  costBreakdownRemarks: 'costBreakdownRemarks',
   remarks: 'remarks',
   closedAt: 'closedAt',
   handledById: 'handledById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  admissionDate: 'admissionDate',
-  implantPaidBy: 'implantPaidBy',
-  instrumentsCost: 'instrumentsCost',
-  instrumentsPaidBy: 'instrumentsPaidBy',
-  costBreakdownRemarks: 'costBreakdownRemarks',
-  doctorRemarks: 'doctorRemarks',
-  outstandingStatus: 'outstandingStatus',
-  actualImplantCost: 'actualImplantCost',
-  actualInstrumentCost: 'actualInstrumentCost',
-  hospitalRecoverAmount: 'hospitalRecoverAmount',
-  mediendProfit: 'mediendProfit'
+  updatedAt: 'updatedAt'
 } as const
 
 export type PLRecordScalarFieldEnum = (typeof PLRecordScalarFieldEnum)[keyof typeof PLRecordScalarFieldEnum]
@@ -623,14 +641,14 @@ export const DoctorPayoffRequestScalarFieldEnum = {
   financeRemarks: 'financeRemarks',
   rejectionRemarks: 'rejectionRemarks',
   attachments: 'attachments',
+  verificationDocUrl: 'verificationDocUrl',
+  verificationDocName: 'verificationDocName',
   status: 'status',
   requestedById: 'requestedById',
   reviewedById: 'reviewedById',
   reviewedAt: 'reviewedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  verificationDocUrl: 'verificationDocUrl',
-  verificationDocName: 'verificationDocName'
+  updatedAt: 'updatedAt'
 } as const
 
 export type DoctorPayoffRequestScalarFieldEnum = (typeof DoctorPayoffRequestScalarFieldEnum)[keyof typeof DoctorPayoffRequestScalarFieldEnum]
@@ -654,15 +672,15 @@ export const IncomingLeadScalarFieldEnum = {
   source: 'source',
   payload: 'payload',
   status: 'status',
-  receivedAt: 'receivedAt',
-  errorMessage: 'errorMessage',
   externalCampaignId: 'externalCampaignId',
   normalizedPhone: 'normalizedPhone',
-  processedAt: 'processedAt',
   processedLeadId: 'processedLeadId',
-  selectedBdUserId: 'selectedBdUserId',
+  selectedTeamLeadUserId: 'selectedTeamLeadUserId',
   selectedTeamLeadEmployeeId: 'selectedTeamLeadEmployeeId',
-  selectedTeamLeadUserId: 'selectedTeamLeadUserId'
+  selectedBdUserId: 'selectedBdUserId',
+  errorMessage: 'errorMessage',
+  processedAt: 'processedAt',
+  receivedAt: 'receivedAt'
 } as const
 
 export type IncomingLeadScalarFieldEnum = (typeof IncomingLeadScalarFieldEnum)[keyof typeof IncomingLeadScalarFieldEnum]
@@ -703,6 +721,10 @@ export const EmployeeScalarFieldEnum = {
   userId: 'userId',
   employeeCode: 'employeeCode',
   bdNumber: 'bdNumber',
+  circle: 'circle',
+  knowlarityPhoneNumber: 'knowlarityPhoneNumber',
+  knowlarityCallerId: 'knowlarityCallerId',
+  knowlarityNotificationsEnabled: 'knowlarityNotificationsEnabled',
   joinDate: 'joinDate',
   salary: 'salary',
   departmentId: 'departmentId',
@@ -714,46 +736,45 @@ export const EmployeeScalarFieldEnum = {
   aadharDocUrl: 'aadharDocUrl',
   panDocUrl: 'panDocUrl',
   designation: 'designation',
+  bankAccountName: 'bankAccountName',
   bankAccountNumber: 'bankAccountNumber',
   ifscCode: 'ifscCode',
-  uanNumber: 'uanNumber',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  bankAccountName: 'bankAccountName',
-  finalWorkingDay: 'finalWorkingDay',
-  fnfCompleted: 'fnfCompleted',
-  fnfCompletedAt: 'fnfCompletedAt',
-  fnfCompletedById: 'fnfCompletedById',
-  noticePeriodEndDate: 'noticePeriodEndDate',
-  noticePeriodStartDate: 'noticePeriodStartDate',
-  pipEndDate: 'pipEndDate',
-  pipStartDate: 'pipStartDate',
-  status: 'status',
-  terminationReason: 'terminationReason',
-  statusNote: 'statusNote',
-  fnfDeadline: 'fnfDeadline',
-  bloodGroup: 'bloodGroup',
-  employmentType: 'employmentType',
-  workLocation: 'workLocation',
   bankName: 'bankName',
   bankBranch: 'bankBranch',
   upiId: 'upiId',
+  bloodGroup: 'bloodGroup',
+  employmentType: 'employmentType',
+  workLocation: 'workLocation',
   passportDocUrl: 'passportDocUrl',
   drivingLicenseDocUrl: 'drivingLicenseDocUrl',
   resumeDocUrl: 'resumeDocUrl',
   educationalCertDocUrl: 'educationalCertDocUrl',
   experienceCertDocUrl: 'experienceCertDocUrl',
   appointmentLetterDocUrl: 'appointmentLetterDocUrl',
+  salarySlipDocUrl: 'salarySlipDocUrl',
+  bankStatementDocUrl: 'bankStatementDocUrl',
   otherDocuments: 'otherDocuments',
+  uanNumber: 'uanNumber',
+  experienceType: 'experienceType',
+  personalEmail: 'personalEmail',
+  status: 'status',
   onboardingStatus: 'onboardingStatus',
   onboardingSubmittedAt: 'onboardingSubmittedAt',
   onboardingApprovedAt: 'onboardingApprovedAt',
   onboardingApprovedById: 'onboardingApprovedById',
-  circle: 'circle',
-  bankStatementDocUrl: 'bankStatementDocUrl',
-  experienceType: 'experienceType',
-  personalEmail: 'personalEmail',
-  salarySlipDocUrl: 'salarySlipDocUrl'
+  pipStartDate: 'pipStartDate',
+  pipEndDate: 'pipEndDate',
+  noticePeriodStartDate: 'noticePeriodStartDate',
+  noticePeriodEndDate: 'noticePeriodEndDate',
+  finalWorkingDay: 'finalWorkingDay',
+  terminationReason: 'terminationReason',
+  statusNote: 'statusNote',
+  fnfDeadline: 'fnfDeadline',
+  fnfCompleted: 'fnfCompleted',
+  fnfCompletedAt: 'fnfCompletedAt',
+  fnfCompletedById: 'fnfCompletedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
@@ -779,15 +800,15 @@ export const AttendanceNormalizationScalarFieldEnum = {
   type: 'type',
   requestedById: 'requestedById',
   approvedById: 'approvedById',
+  managerApprovedById: 'managerApprovedById',
+  managerApprovedAt: 'managerApprovedAt',
   status: 'status',
   reason: 'reason',
+  hrRejectionReason: 'hrRejectionReason',
   hoursUsed: 'hoursUsed',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  managerApprovedAt: 'managerApprovedAt',
-  managerApprovedById: 'managerApprovedById',
   normalizeAs: 'normalizeAs',
-  hrRejectionReason: 'hrRejectionReason'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type AttendanceNormalizationScalarFieldEnum = (typeof AttendanceNormalizationScalarFieldEnum)[keyof typeof AttendanceNormalizationScalarFieldEnum]
@@ -796,14 +817,14 @@ export type AttendanceNormalizationScalarFieldEnum = (typeof AttendanceNormaliza
 export const LeaveTypeMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  code: 'code',
   maxDays: 'maxDays',
+  monthlyAccrual: 'monthlyAccrual',
+  carryForward: 'carryForward',
+  probationUnlockDays: 'probationUnlockDays',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  carryForward: 'carryForward',
-  code: 'code',
-  monthlyAccrual: 'monthlyAccrual',
-  probationUnlockDays: 'probationUnlockDays'
+  updatedAt: 'updatedAt'
 } as const
 
 export type LeaveTypeMasterScalarFieldEnum = (typeof LeaveTypeMasterScalarFieldEnum)[keyof typeof LeaveTypeMasterScalarFieldEnum]
@@ -977,17 +998,17 @@ export const EmployeeDocumentScalarFieldEnum = {
   employeeId: 'employeeId',
   documentType: 'documentType',
   documentUrl: 'documentUrl',
+  title: 'title',
+  applicantName: 'applicantName',
+  applicantEmail: 'applicantEmail',
   metadata: 'metadata',
+  contentHtml: 'contentHtml',
   generatedAt: 'generatedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  title: 'title',
   ackToken: 'ackToken',
   acknowledgedAt: 'acknowledgedAt',
-  acknowledgedIp: 'acknowledgedIp',
-  applicantEmail: 'applicantEmail',
-  applicantName: 'applicantName',
-  contentHtml: 'contentHtml'
+  acknowledgedIp: 'acknowledgedIp'
 } as const
 
 export type EmployeeDocumentScalarFieldEnum = (typeof EmployeeDocumentScalarFieldEnum)[keyof typeof EmployeeDocumentScalarFieldEnum]
@@ -1054,6 +1075,7 @@ export const MeetScalarFieldEnum = {
   interviewRound: 'interviewRound',
   candidateName: 'candidateName',
   candidateRole: 'candidateRole',
+  candidatePhone: 'candidatePhone',
   departmentId: 'departmentId',
   notes: 'notes',
   resumeUrl: 'resumeUrl',
@@ -1061,8 +1083,7 @@ export const MeetScalarFieldEnum = {
   createdById: 'createdById',
   mdAppointmentId: 'mdAppointmentId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  candidatePhone: 'candidatePhone'
+  updatedAt: 'updatedAt'
 } as const
 
 export type MeetScalarFieldEnum = (typeof MeetScalarFieldEnum)[keyof typeof MeetScalarFieldEnum]
@@ -1097,16 +1118,16 @@ export const SupportTicketScalarFieldEnum = {
   id: 'id',
   employeeId: 'employeeId',
   departmentId: 'departmentId',
+  targetHeadRole: 'targetHeadRole',
   subject: 'subject',
   description: 'description',
   priority: 'priority',
   status: 'status',
   response: 'response',
   respondedAt: 'respondedAt',
+  attachments: 'attachments',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  targetHeadRole: 'targetHeadRole',
-  attachments: 'attachments'
+  updatedAt: 'updatedAt'
 } as const
 
 export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
@@ -1257,6 +1278,13 @@ export const LedgerEntryScalarFieldEnum = {
   deletedAt: 'deletedAt',
   deletedById: 'deletedById',
   deletedReason: 'deletedReason',
+  deleteRequestStatus: 'deleteRequestStatus',
+  deleteRequestReason: 'deleteRequestReason',
+  deleteRequestedById: 'deleteRequestedById',
+  deleteRequestedAt: 'deleteRequestedAt',
+  deleteApprovalReason: 'deleteApprovalReason',
+  deleteApprovedById: 'deleteApprovedById',
+  deleteApprovedAt: 'deleteApprovedAt',
   editRequestStatus: 'editRequestStatus',
   editRequestReason: 'editRequestReason',
   editRequestData: 'editRequestData',
@@ -1271,14 +1299,7 @@ export const LedgerEntryScalarFieldEnum = {
   approvedById: 'approvedById',
   approvedAt: 'approvedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deleteApprovalReason: 'deleteApprovalReason',
-  deleteApprovedAt: 'deleteApprovedAt',
-  deleteApprovedById: 'deleteApprovedById',
-  deleteRequestReason: 'deleteRequestReason',
-  deleteRequestStatus: 'deleteRequestStatus',
-  deleteRequestedAt: 'deleteRequestedAt',
-  deleteRequestedById: 'deleteRequestedById'
+  updatedAt: 'updatedAt'
 } as const
 
 export type LedgerEntryScalarFieldEnum = (typeof LedgerEntryScalarFieldEnum)[keyof typeof LedgerEntryScalarFieldEnum]
@@ -1445,6 +1466,8 @@ export const KYPSubmissionScalarFieldEnum = {
   insuranceType: 'insuranceType',
   aadharFileUrl: 'aadharFileUrl',
   panFileUrl: 'panFileUrl',
+  aadharFiles: 'aadharFiles',
+  panFiles: 'panFiles',
   insuranceCardFileUrl: 'insuranceCardFileUrl',
   prescriptionFileUrl: 'prescriptionFileUrl',
   diseasePhotos: 'diseasePhotos',
@@ -1453,12 +1476,10 @@ export const KYPSubmissionScalarFieldEnum = {
   status: 'status',
   submittedById: 'submittedById',
   submittedAt: 'submittedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  aadharFiles: 'aadharFiles',
-  panFiles: 'panFiles',
   documentEditCounts: 'documentEditCounts',
-  documentEditHistory: 'documentEditHistory'
+  documentEditHistory: 'documentEditHistory',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type KYPSubmissionScalarFieldEnum = (typeof KYPSubmissionScalarFieldEnum)[keyof typeof KYPSubmissionScalarFieldEnum]
@@ -1502,11 +1523,11 @@ export const PreAuthorizationScalarFieldEnum = {
   rejectionLetterUrl: 'rejectionLetterUrl',
   approvedAt: 'approvedAt',
   rejectedAt: 'rejectedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
+  holdReason: 'holdReason',
   heldAt: 'heldAt',
   heldById: 'heldById',
-  holdReason: 'holdReason'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PreAuthorizationScalarFieldEnum = (typeof PreAuthorizationScalarFieldEnum)[keyof typeof PreAuthorizationScalarFieldEnum]
@@ -1574,6 +1595,7 @@ export const MDApprovalRequestScalarFieldEnum = {
   title: 'title',
   description: 'description',
   amount: 'amount',
+  attachments: 'attachments',
   status: 'status',
   requestedById: 'requestedById',
   respondedById: 'respondedById',
@@ -1583,8 +1605,7 @@ export const MDApprovalRequestScalarFieldEnum = {
   financeAcknowledgedById: 'financeAcknowledgedById',
   financeAcknowledgedAt: 'financeAcknowledgedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  attachments: 'attachments'
+  updatedAt: 'updatedAt'
 } as const
 
 export type MDApprovalRequestScalarFieldEnum = (typeof MDApprovalRequestScalarFieldEnum)[keyof typeof MDApprovalRequestScalarFieldEnum]
@@ -1714,6 +1735,17 @@ export const CrmCampaignCircleScalarFieldEnum = {
 export type CrmCampaignCircleScalarFieldEnum = (typeof CrmCampaignCircleScalarFieldEnum)[keyof typeof CrmCampaignCircleScalarFieldEnum]
 
 
+export const CrmCampaignCircleSelectionScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  circleId: 'circleId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignCircleSelectionScalarFieldEnum = (typeof CrmCampaignCircleSelectionScalarFieldEnum)[keyof typeof CrmCampaignCircleSelectionScalarFieldEnum]
+
+
 export const CrmCampaignCityScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1743,6 +1775,8 @@ export const CrmCampaignScalarFieldEnum = {
   externalCampaignId: 'externalCampaignId',
   displayName: 'displayName',
   category: 'category',
+  treatment: 'treatment',
+  treatmentMasterId: 'treatmentMasterId',
   departmentId: 'departmentId',
   sourceId: 'sourceId',
   leadSourceId: 'leadSourceId',
@@ -1771,6 +1805,20 @@ export const CrmCampaignTeamLeadAssignmentScalarFieldEnum = {
 } as const
 
 export type CrmCampaignTeamLeadAssignmentScalarFieldEnum = (typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum)[keyof typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum]
+
+
+export const CrmCampaignBdDailyLimitScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  teamLeadEmployeeId: 'teamLeadEmployeeId',
+  bdEmployeeId: 'bdEmployeeId',
+  bdUserId: 'bdUserId',
+  maxLeadsPerDay: 'maxLeadsPerDay',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignBdDailyLimitScalarFieldEnum = (typeof CrmCampaignBdDailyLimitScalarFieldEnum)[keyof typeof CrmCampaignBdDailyLimitScalarFieldEnum]
 
 
 export const CrmActivityLogScalarFieldEnum = {
@@ -1952,15 +2000,15 @@ export const AdmissionRecordScalarFieldEnum = {
   cabDischargeTo: 'cabDischargeTo',
   ipdStatus: 'ipdStatus',
   ipdStatusReason: 'ipdStatusReason',
+  ipdImplantUsed: 'ipdImplantUsed',
+  ipdNoShowReason: 'ipdNoShowReason',
   newSurgeryDate: 'newSurgeryDate',
   ipdDischargeDate: 'ipdDischargeDate',
   ipdStatusNotes: 'ipdStatusNotes',
   ipdStatusUpdatedAt: 'ipdStatusUpdatedAt',
   notes: 'notes',
   initiatedById: 'initiatedById',
-  initiatedAt: 'initiatedAt',
-  ipdImplantUsed: 'ipdImplantUsed',
-  ipdNoShowReason: 'ipdNoShowReason'
+  initiatedAt: 'initiatedAt'
 } as const
 
 export type AdmissionRecordScalarFieldEnum = (typeof AdmissionRecordScalarFieldEnum)[keyof typeof AdmissionRecordScalarFieldEnum]
@@ -2124,6 +2172,7 @@ export const DischargeSheetScalarFieldEnum = {
   kypSubmissionId: 'kypSubmissionId',
   month: 'month',
   dischargeDate: 'dischargeDate',
+  admissionDate: 'admissionDate',
   surgeryDate: 'surgeryDate',
   status: 'status',
   paymentType: 'paymentType',
@@ -2146,6 +2195,8 @@ export const DischargeSheetScalarFieldEnum = {
   otNotesUrl: 'otNotesUrl',
   codesCount: 'codesCount',
   finalBillUrl: 'finalBillUrl',
+  finalApprovedUrl: 'finalApprovedUrl',
+  deductionReceiptUrl: 'deductionReceiptUrl',
   settlementLetterUrl: 'settlementLetterUrl',
   roomRentAmount: 'roomRentAmount',
   pharmacyAmount: 'pharmacyAmount',
@@ -2153,9 +2204,17 @@ export const DischargeSheetScalarFieldEnum = {
   consumablesAmount: 'consumablesAmount',
   implantsAmount: 'implantsAmount',
   instrumentsAmount: 'instrumentsAmount',
+  anesthesiaAmount: 'anesthesiaAmount',
+  otherChargesAmount: 'otherChargesAmount',
   totalFinalBill: 'totalFinalBill',
   finalApprovedAmount: 'finalApprovedAmount',
   finalAmount: 'finalAmount',
+  copayAmount: 'copayAmount',
+  collectedByHospital: 'collectedByHospital',
+  collectedByMediend: 'collectedByMediend',
+  axisTariffDeduction: 'axisTariffDeduction',
+  axisTariffDeductionPaid: 'axisTariffDeductionPaid',
+  actualFinalAmount: 'actualFinalAmount',
   deductionAmount: 'deductionAmount',
   discountAmount: 'discountAmount',
   waivedOffAmount: 'waivedOffAmount',
@@ -2170,6 +2229,9 @@ export const DischargeSheetScalarFieldEnum = {
   referralAmount: 'referralAmount',
   cabCharges: 'cabCharges',
   implantCost: 'implantCost',
+  instrumentsCost: 'instrumentsCost',
+  implantPaidBy: 'implantPaidBy',
+  instrumentsPaidBy: 'instrumentsPaidBy',
   dcCharges: 'dcCharges',
   doctorCharges: 'doctorCharges',
   hospitalSharePct: 'hospitalSharePct',
@@ -2177,37 +2239,23 @@ export const DischargeSheetScalarFieldEnum = {
   mediendSharePct: 'mediendSharePct',
   mediendShareAmount: 'mediendShareAmount',
   mediendNetProfit: 'mediendNetProfit',
-  remarks: 'remarks',
-  createdById: 'createdById',
-  plRecordId: 'plRecordId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  admissionDate: 'admissionDate',
-  implantPaidBy: 'implantPaidBy',
-  instrumentsCost: 'instrumentsCost',
-  instrumentsPaidBy: 'instrumentsPaidBy',
-  othersText: 'othersText',
   packageText: 'packageText',
+  othersText: 'othersText',
+  otherCharges: 'otherCharges',
+  packageAmount: 'packageAmount',
+  staplerCharges: 'staplerCharges',
+  remarks: 'remarks',
+  doctorRemarks: 'doctorRemarks',
+  costBreakdownRemarks: 'costBreakdownRemarks',
   isFinalized: 'isFinalized',
   markedById: 'markedById',
   markedAt: 'markedAt',
   finalizedById: 'finalizedById',
   finalizedAt: 'finalizedAt',
-  anesthesiaAmount: 'anesthesiaAmount',
-  otherChargesAmount: 'otherChargesAmount',
-  copayAmount: 'copayAmount',
-  collectedByHospital: 'collectedByHospital',
-  collectedByMediend: 'collectedByMediend',
-  axisTariffDeduction: 'axisTariffDeduction',
-  axisTariffDeductionPaid: 'axisTariffDeductionPaid',
-  actualFinalAmount: 'actualFinalAmount',
-  finalApprovedUrl: 'finalApprovedUrl',
-  deductionReceiptUrl: 'deductionReceiptUrl',
-  costBreakdownRemarks: 'costBreakdownRemarks',
-  doctorRemarks: 'doctorRemarks',
-  otherCharges: 'otherCharges',
-  packageAmount: 'packageAmount',
-  staplerCharges: 'staplerCharges'
+  createdById: 'createdById',
+  plRecordId: 'plRecordId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type DischargeSheetScalarFieldEnum = (typeof DischargeSheetScalarFieldEnum)[keyof typeof DischargeSheetScalarFieldEnum]
@@ -2250,6 +2298,7 @@ export type OutstandingCaseScalarFieldEnum = (typeof OutstandingCaseScalarFieldE
 export const PaymentInstallmentScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
+  hospitalName: 'hospitalName',
   recipient: 'recipient',
   amount: 'amount',
   paidOn: 'paidOn',
@@ -2257,13 +2306,12 @@ export const PaymentInstallmentScalarFieldEnum = {
   reference: 'reference',
   notes: 'notes',
   recordedById: 'recordedById',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  rejectionRemarks: 'rejectionRemarks',
   verificationStatus: 'verificationStatus',
-  verifiedAt: 'verifiedAt',
   verifiedById: 'verifiedById',
-  hospitalName: 'hospitalName'
+  verifiedAt: 'verifiedAt',
+  rejectionRemarks: 'rejectionRemarks',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PaymentInstallmentScalarFieldEnum = (typeof PaymentInstallmentScalarFieldEnum)[keyof typeof PaymentInstallmentScalarFieldEnum]
@@ -2297,10 +2345,10 @@ export const ComplianceCallScalarFieldEnum = {
   additionalRemark: 'additionalRemark',
   satisfaction: 'satisfaction',
   concernCategories: 'concernCategories',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   reviewStatus: 'reviewStatus',
-  reviewScreenshot: 'reviewScreenshot'
+  reviewScreenshot: 'reviewScreenshot',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ComplianceCallScalarFieldEnum = (typeof ComplianceCallScalarFieldEnum)[keyof typeof ComplianceCallScalarFieldEnum]
@@ -2372,13 +2420,13 @@ export const EmployeeMonthlySeatingMiscCostScalarFieldEnum = {
   seatingCost: 'seatingCost',
   masterSeatingCostId: 'masterSeatingCostId',
   miscCost: 'miscCost',
+  otherCost: 'otherCost',
   status: 'status',
   remarks: 'remarks',
   createdByUserId: 'createdByUserId',
   updatedByUserId: 'updatedByUserId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  otherCost: 'otherCost'
+  updatedAt: 'updatedAt'
 } as const
 
 export type EmployeeMonthlySeatingMiscCostScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostScalarFieldEnum]
@@ -2390,11 +2438,11 @@ export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
   action: 'action',
   seatingCost: 'seatingCost',
   miscCost: 'miscCost',
+  otherCost: 'otherCost',
   status: 'status',
   remarks: 'remarks',
   changedByUserId: 'changedByUserId',
-  changedAt: 'changedAt',
-  otherCost: 'otherCost'
+  changedAt: 'changedAt'
 } as const
 
 export type EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum]
@@ -2669,13 +2717,13 @@ export const HospitalMasterScalarFieldEnum = {
   name: 'name',
   address: 'address',
   googleMapLink: 'googleMapLink',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   mouAgreementUrl: 'mouAgreementUrl',
   hospitalShare: 'hospitalShare',
+  mediendShare: 'mediendShare',
   details: 'details',
-  mediendShare: 'mediendShare'
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type HospitalMasterScalarFieldEnum = (typeof HospitalMasterScalarFieldEnum)[keyof typeof HospitalMasterScalarFieldEnum]
@@ -2692,13 +2740,11 @@ export type HospitalMasterInsuranceScalarFieldEnum = (typeof HospitalMasterInsur
 export const DoctorMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   category: 'category',
   treatment: 'treatment',
   age: 'age',
   sex: 'sex',
+  phoneNumber: 'phoneNumber',
   aadhaarNumber: 'aadhaarNumber',
   aadhaarCardUrl: 'aadhaarCardUrl',
   panNumber: 'panNumber',
@@ -2710,7 +2756,9 @@ export const DoctorMasterScalarFieldEnum = {
   ratingAverage: 'ratingAverage',
   ratingCount: 'ratingCount',
   documents: 'documents',
-  phoneNumber: 'phoneNumber'
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type DoctorMasterScalarFieldEnum = (typeof DoctorMasterScalarFieldEnum)[keyof typeof DoctorMasterScalarFieldEnum]
@@ -2971,10 +3019,10 @@ export const ITProjectResourceScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   resourceName: 'resourceName',
-  seatCostApplied: 'seatCostApplied'
+  seatCostApplied: 'seatCostApplied',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ITProjectResourceScalarFieldEnum = (typeof ITProjectResourceScalarFieldEnum)[keyof typeof ITProjectResourceScalarFieldEnum]
@@ -3015,10 +3063,10 @@ export const DepartmentRevenueScalarFieldEnum = {
   amount: 'amount',
   description: 'description',
   notes: 'notes',
+  vendorId: 'vendorId',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  vendorId: 'vendorId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type DepartmentRevenueScalarFieldEnum = (typeof DepartmentRevenueScalarFieldEnum)[keyof typeof DepartmentRevenueScalarFieldEnum]
@@ -3032,10 +3080,10 @@ export const PnLCategoryScalarFieldEnum = {
   sortOrder: 'sortOrder',
   isActive: 'isActive',
   sourceKey: 'sourceKey',
+  departmentKey: 'departmentKey',
   createdById: 'createdById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  departmentKey: 'departmentKey'
+  updatedAt: 'updatedAt'
 } as const
 
 export type PnLCategoryScalarFieldEnum = (typeof PnLCategoryScalarFieldEnum)[keyof typeof PnLCategoryScalarFieldEnum]
