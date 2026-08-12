@@ -1,17 +1,59 @@
-import { Prisma } from '@/generated/prisma/client'
+import { CaseStage, Prisma } from '@/generated/prisma/client'
 import type { SessionUser } from '@/lib/auth'
+import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
+import { resolveLeadCity, resolveLeadHospitalDoctor, resolveLeadSourceDisplay } from '@/lib/lead-display'
+import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import {
+  getLeadAgeInfo,
   getLeadPipelineBucket,
+  normalizeLeadStatus,
   type LeadAgeFilter,
   type PipelineStatusBucket,
 } from '@/lib/pipeline-lead-buckets'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
+import { format } from 'date-fns'
 
-export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd'
+export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd' | 'followUpDate'
 export type PipelineSortDir = 'asc' | 'desc'
 
 export type PipelineServerColumnFilterField =
+  | 'leadRef'
+  | 'assignDate'
+  | 'leadDate'
+  | 'patient'
+  | 'month'
+  | 'age'
+  | 'sex'
+  | 'circle'
+  | 'city'
+  | 'category'
+  | 'treatment'
+  | 'planningTreatment'
+  | 'profession'
+  | 'tl'
+  | 'hospital'
+  | 'doctor'
+  | 'status'
+  | 'stage'
+  | 'mop'
+  | 'lastRemarks'
+  | 'followUpDate'
+  | 'subStatus'
+  | 'surgeryDate'
+  | 'healthInsurance'
+  | 'preferredLocation'
+  | 'source'
+  | 'leadSource'
+  | 'createDate'
+  | 'modifyBy'
+  | 'modifyDate'
+  | 'dupCount'
+  | 'recency'
+  | 'bd'
+
+type PipelineDateColumnFilterField =
   | 'assignDate'
   | 'leadDate'
   | 'followUpDate'
@@ -19,11 +61,58 @@ export type PipelineServerColumnFilterField =
   | 'createDate'
   | 'modifyDate'
 
-export interface PipelineServerColumnFilter {
-  field: PipelineServerColumnFilterField
-  operator: 'between'
-  value: [string, string]
-}
+type PipelineMultiColumnFilterField = Exclude<PipelineServerColumnFilterField, PipelineDateColumnFilterField>
+
+export type PipelineServerColumnFilter =
+  | {
+      field: PipelineDateColumnFilterField
+      operator: 'between'
+      value: [string, string]
+    }
+  | {
+      field: PipelineMultiColumnFilterField
+      operator: 'in'
+      value: string[]
+    }
+
+const PIPELINE_DATE_COLUMN_FILTER_FIELDS = new Set<PipelineDateColumnFilterField>([
+  'assignDate',
+  'leadDate',
+  'followUpDate',
+  'surgeryDate',
+  'createDate',
+  'modifyDate',
+])
+
+const PIPELINE_MULTI_COLUMN_FILTER_FIELDS = new Set<PipelineMultiColumnFilterField>([
+  'leadRef',
+  'patient',
+  'month',
+  'age',
+  'sex',
+  'circle',
+  'city',
+  'category',
+  'treatment',
+  'planningTreatment',
+  'profession',
+  'tl',
+  'hospital',
+  'doctor',
+  'status',
+  'stage',
+  'mop',
+  'lastRemarks',
+  'subStatus',
+  'healthInsurance',
+  'preferredLocation',
+  'source',
+  'leadSource',
+  'modifyBy',
+  'dupCount',
+  'recency',
+  'bd',
+])
 
 export interface PipelineQueryParams {
   page: number
@@ -46,7 +135,7 @@ export interface PipelineQueryParams {
 
 export function parsePipelineQueryParams(searchParams: URLSearchParams): PipelineQueryParams {
   const page = Math.max(1, Number(searchParams.get('page') || 1) || 1)
-  const pageSize = Math.min(100, Math.max(10, Number(searchParams.get('pageSize') || 50) || 50))
+  const pageSize = Math.min(500, Math.max(10, Number(searchParams.get('pageSize') || 50) || 50))
   const statusRaw = searchParams.get('status') || 'all'
   const allowedStatus: PipelineStatusBucket[] = [
     'all',
@@ -68,7 +157,7 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
   const leadAge = allowedAge.includes(ageRaw as LeadAgeFilter) ? (ageRaw as LeadAgeFilter) : 'all'
 
   const sortRaw = searchParams.get('sort') || 'date'
-  const allowedSort: PipelineSortField[] = ['date', 'patient', 'status', 'leadRef', 'bd']
+  const allowedSort: PipelineSortField[] = ['date', 'patient', 'status', 'leadRef', 'bd', 'followUpDate']
   const sortBy = allowedSort.includes(sortRaw as PipelineSortField)
     ? (sortRaw as PipelineSortField)
     : 'date'
@@ -103,15 +192,6 @@ function parsePipelineColumnFilters(raw: string | null): PipelineServerColumnFil
     const parsed = JSON.parse(raw)
     if (!Array.isArray(parsed)) return []
 
-    const allowedFields = new Set<PipelineServerColumnFilterField>([
-      'assignDate',
-      'leadDate',
-      'followUpDate',
-      'surgeryDate',
-      'createDate',
-      'modifyDate',
-    ])
-
     return parsed.flatMap((item) => {
       if (!item || typeof item !== 'object') return []
 
@@ -119,25 +199,54 @@ function parsePipelineColumnFilters(raw: string | null): PipelineServerColumnFil
       const operator = (item as { operator?: unknown }).operator
       const value = (item as { value?: unknown }).value
 
-      if (
-        typeof field !== 'string' ||
-        !allowedFields.has(field as PipelineServerColumnFilterField) ||
-        operator !== 'between' ||
-        !Array.isArray(value) ||
-        value.length !== 2 ||
-        typeof value[0] !== 'string' ||
-        typeof value[1] !== 'string'
-      ) {
+      if (typeof field !== 'string') {
         return []
       }
 
-      return [
-        {
-          field: field as PipelineServerColumnFilterField,
-          operator: 'between' as const,
-          value: [value[0], value[1]],
-        },
-      ]
+      if (PIPELINE_DATE_COLUMN_FILTER_FIELDS.has(field as PipelineDateColumnFilterField)) {
+        if (
+          operator !== 'between' ||
+          !Array.isArray(value) ||
+          value.length !== 2 ||
+          typeof value[0] !== 'string' ||
+          typeof value[1] !== 'string'
+        ) {
+          return []
+        }
+
+        return [
+          {
+            field: field as PipelineDateColumnFilterField,
+            operator: 'between' as const,
+            value: [value[0], value[1]],
+          },
+        ]
+      }
+
+      if (PIPELINE_MULTI_COLUMN_FILTER_FIELDS.has(field as PipelineMultiColumnFilterField)) {
+        if (operator !== 'in' || !Array.isArray(value)) {
+          return []
+        }
+
+        const cleanedValues = value
+          .filter((entry): entry is string => typeof entry === 'string')
+          .map((entry) => entry.trim())
+          .filter((entry) => entry.length > 0)
+
+        if (cleanedValues.length === 0) {
+          return []
+        }
+
+        return [
+          {
+            field: field as PipelineMultiColumnFilterField,
+            operator: 'in' as const,
+            value: cleanedValues,
+          },
+        ]
+      }
+
+      return []
     })
   } catch {
     return []
@@ -398,6 +507,10 @@ function buildPipelineColumnFiltersWhere(
   const and: Prisma.LeadWhereInput[] = []
 
   for (const filter of filters) {
+    if (filter.operator !== 'between') {
+      continue
+    }
+
     const from = parseDateOnlyBoundary(filter.value[0], false)
     const to = parseDateOnlyBoundary(filter.value[1] || filter.value[0], true)
 
@@ -441,6 +554,10 @@ function buildPipelineColumnFiltersWhere(
   return and.length === 1 ? and[0] : { AND: and }
 }
 
+export function hasPostQueryPipelineColumnFilters(filters: PipelineServerColumnFilter[]) {
+  return filters.some((filter) => filter.operator === 'in')
+}
+
 export function pipelineOrderBy(
   sortBy: PipelineSortField,
   sortDir: PipelineSortDir,
@@ -455,6 +572,8 @@ export function pipelineOrderBy(
       return [{ leadRef: dir }, { id: dir }]
     case 'bd':
       return [{ bd: { name: dir } }, { id: dir }]
+    case 'followUpDate':
+      return [{ followUpDate: { sort: dir, nulls: 'last' } }, { id: dir }]
     case 'date':
     default:
       return [{ leadEntryDate: { sort: dir, nulls: 'last' } }, { createdDate: dir }, { id: dir }]
@@ -514,6 +633,7 @@ export const pipelineTableSelect = {
   modeOfPayment: true,
   hospitalName: true,
   remarks: true,
+  ipdPotentialDate: true,
   leadRemarkEntries: {
     select: {
       id: true,
@@ -552,3 +672,157 @@ export const pipelineTableSelect = {
     },
   },
 } satisfies Prisma.LeadSelect
+
+type PipelineSelectedLead = Prisma.LeadGetPayload<{ select: typeof pipelineTableSelect }>
+
+function formatPipelineTableDate(value: unknown) {
+  if (!value) return '—'
+  const parsed = new Date(String(value))
+  return Number.isNaN(parsed.getTime()) ? String(value) : format(parsed, 'dd MMM yyyy')
+}
+
+function formatPipelineMonthCell(value: unknown) {
+  if (!value) return '—'
+  if (typeof value === 'string') return value.trim() || '—'
+  return formatPipelineTableDate(value)
+}
+
+function normalizePipelineText(value: unknown, fallback: string) {
+  if (typeof value !== 'string') return fallback
+  const trimmed = value.trim()
+  return (trimmed || fallback).replace(/\s+/g, ' ')
+}
+
+function stripRemarkMetadataPrefix(value: string) {
+  return value.replace(
+    /^\s*.+?\s+on\s+\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}:\s*/i,
+    '',
+  )
+}
+
+function getPipelineLeadLastRemarksText(lead: PipelineSelectedLead) {
+  const latestRemarkContent =
+    typeof lead.leadRemarkEntries?.[0]?.content === 'string' && lead.leadRemarkEntries[0].content.trim().length > 0
+      ? lead.leadRemarkEntries[0].content
+      : typeof lead.remarks === 'string'
+        ? lead.remarks
+        : null
+
+  if (latestRemarkContent == null) return '—'
+  const trimmed = stripRemarkMetadataPrefix(latestRemarkContent.trim()).trim()
+  return trimmed.length > 0 ? trimmed : '—'
+}
+
+function getPipelineLeadPlanningTreatmentText(lead: PipelineSelectedLead) {
+  if (!lead.ipdPotentialDate) return '—'
+  const parsed = new Date(String(lead.ipdPotentialDate))
+  return Number.isNaN(parsed.getTime()) ? String(lead.ipdPotentialDate) : format(parsed, 'dd MMM yyyy')
+}
+
+function getPipelineLeadTeamLeadText(lead: PipelineSelectedLead) {
+  return (
+    (typeof lead.plRecord?.managerName === 'string' && lead.plRecord.managerName.trim()) ||
+    (lead.teamLeadId != null ? String(lead.teamLeadId) : '—')
+  )
+}
+
+function getPipelineLeadStageLabel(lead: PipelineSelectedLead) {
+  if (!lead.caseStage) return '—'
+
+  if (lead.caseStage === CaseStage.CASH_IPD_PENDING) {
+    if (hasLeadOpdDone(lead)) {
+      return 'OPD Done'
+    }
+
+    return hasLeadOpdScheduled(lead) ? 'OPD Schedule' : 'OPD Schedule'
+  }
+
+  return getCaseStageBadgeConfig(String(lead.caseStage)).label
+}
+
+function getPipelineLeadColumnFilterValue(
+  lead: PipelineSelectedLead,
+  columnId: PipelineMultiColumnFilterField,
+): string {
+  const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
+  const preferredLocation = resolveLeadCity(lead) ?? normalizePipelineText(lead.circle, '—')
+
+  switch (columnId) {
+    case 'leadRef':
+      return typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
+    case 'patient':
+      return typeof lead.patientName === 'string' ? lead.patientName : '—'
+    case 'month':
+      return formatPipelineMonthCell(lead.month)
+    case 'age':
+      return lead.age != null ? String(lead.age) : '—'
+    case 'sex':
+      return normalizePipelineText(lead.sex, '—')
+    case 'circle':
+      return normalizePipelineText(lead.circle, 'Unknown')
+    case 'city':
+      return resolveLeadCity(lead) ?? '—'
+    case 'category':
+      return normalizePipelineText(lead.category, '—')
+    case 'treatment':
+      return normalizePipelineText(lead.treatment, '—')
+    case 'planningTreatment':
+      return getPipelineLeadPlanningTreatmentText(lead)
+    case 'profession':
+      return normalizePipelineText(lead.profession, '—')
+    case 'tl':
+      return getPipelineLeadTeamLeadText(lead)
+    case 'hospital':
+      return hospital || '—'
+    case 'doctor':
+      return doctor || '—'
+    case 'status':
+      return normalizeLeadStatus(lead.status)
+    case 'stage':
+      return getPipelineLeadStageLabel(lead)
+    case 'mop':
+      return normalizePipelineText(normalizeModeOfPaymentLabel(lead.modeOfPayment), '—')
+    case 'lastRemarks':
+      return getPipelineLeadLastRemarksText(lead)
+    case 'subStatus':
+      return lead.subStatus != null ? String(lead.subStatus) : '—'
+    case 'healthInsurance':
+      return normalizePipelineText(lead.insuranceName, '—')
+    case 'preferredLocation':
+      return preferredLocation
+    case 'source':
+      return normalizePipelineText(lead.source, '—')
+    case 'leadSource':
+      return resolveLeadSourceDisplay(lead)
+    case 'modifyBy':
+      return lead.updatedBy?.name ?? '—'
+    case 'dupCount':
+      return lead.duplCount != null ? String(lead.duplCount) : '0'
+    case 'recency':
+      return getLeadAgeInfo(lead).label
+    case 'bd':
+      return lead.bd?.name ?? '—'
+    default:
+      return '—'
+  }
+}
+
+export function applyPipelineColumnFilters(
+  leads: PipelineSelectedLead[],
+  filters: PipelineServerColumnFilter[],
+) {
+  const multiFilters = filters.filter(
+    (filter): filter is Extract<PipelineServerColumnFilter, { operator: 'in' }> =>
+      filter.operator === 'in',
+  )
+
+  if (multiFilters.length === 0) {
+    return leads
+  }
+
+  return leads.filter((lead) =>
+    multiFilters.every((filter) =>
+      filter.value.includes(getPipelineLeadColumnFilterValue(lead, filter.field)),
+    ),
+  )
+}

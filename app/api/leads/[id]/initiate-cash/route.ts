@@ -11,6 +11,10 @@ import {
   DoctorAvailabilityError,
   normalizeDoctorName,
 } from '@/lib/doctor-availability'
+import {
+  normalizeModeOfPaymentKey,
+  normalizeModeOfPaymentStorageValue,
+} from '@/lib/mode-of-payment'
 
 const initiateCashSchema = z.object({
   admissionDate: z.string(),
@@ -80,7 +84,7 @@ function buildCashRemarks(
   data: z.infer<typeof initiateCashSchema>,
   previous: string | null | undefined,
 ) {
-  const emiBlock = data.modeOfPayment === 'EMI'
+  const emiBlock = normalizeModeOfPaymentKey(data.modeOfPayment) === 'emi'
     ? `EMI Amount: ${data.emiAmount}\n` +
       `Processing Fee: ${data.processingFee}\n` +
       `GST: ${data.gst}\n` +
@@ -210,7 +214,7 @@ export async function POST(
           surgeonType: validatedData.surgeonType,
           attendantName: validatedData.alternateContactName,
           alternateNumber: validatedData.alternateContactNumber,
-          modeOfPayment: validatedData.modeOfPayment,
+          modeOfPayment: normalizeModeOfPaymentStorageValue(validatedData.modeOfPayment),
           billAmount: validatedData.finalBillAmount,
           settledTotal: validatedData.approvedAmount,
           collectedByMediend: validatedData.collectedByMediend ?? 0,
@@ -364,7 +368,7 @@ export async function PATCH(
           surgeonType: validatedData.surgeonType,
           attendantName: validatedData.alternateContactName,
           alternateNumber: validatedData.alternateContactNumber,
-          modeOfPayment: validatedData.modeOfPayment,
+          modeOfPayment: normalizeModeOfPaymentStorageValue(validatedData.modeOfPayment),
           billAmount: validatedData.finalBillAmount,
           settledTotal: validatedData.approvedAmount,
           collectedByMediend: validatedData.collectedByMediend ?? 0,

@@ -10,6 +10,7 @@ import {
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { FlowType, Prisma, PipelineStage, CaseStage } from '@/generated/prisma/client'
 import { getCampaignCircleNames, getCampaignForWebhook } from '@/lib/crm-campaigns'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { last10DigitsFromStored } from '@/lib/phone-search'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
@@ -741,6 +742,7 @@ export async function GET(request: NextRequest) {
         remarks: isPipelineView ? getVisibleLeadRemarksFallbackContent(lead, lead.remarks, user.role) : lead.remarks,
         status: mapStatusCode(lead.status),
         source: lead.source ? mapSourceCode(lead.source) : lead.source,
+        modeOfPayment: normalizeModeOfPaymentLabel(lead.modeOfPayment),
       }
       delete (base as Record<string, unknown>).leadRemarkEntries
       if (isPipelineView) {

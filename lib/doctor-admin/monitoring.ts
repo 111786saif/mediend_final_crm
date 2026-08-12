@@ -1,5 +1,6 @@
 import { CaseStage, IpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
 import { hasLeadOpdDone } from '@/lib/lead-opd-workflow'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { prisma } from '@/lib/prisma'
 
 const monitoringLeadSelect = {
@@ -364,7 +365,7 @@ function mapPipelineCard(
     doctorName: getDoctorName(lead),
     hospitalName: getHospitalName(lead),
     date,
-    paymentType: lead.modeOfPayment,
+    paymentType: normalizeModeOfPaymentLabel(lead.modeOfPayment),
     followUpDate: lead.followUpDate,
     status: lead.status,
     remarks:

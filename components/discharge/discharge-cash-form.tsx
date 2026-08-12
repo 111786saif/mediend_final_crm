@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { apiPost } from '@/lib/api-client'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { toast } from 'sonner'
 import { FileText, X, ChevronDown, ChevronUp, User, Building2, Calendar, Receipt, Banknote } from 'lucide-react'
 
@@ -218,7 +219,7 @@ export function DischargeCashForm({
           <div>
             <Label>Mode of Payment</Label>
             <div className="p-2 bg-muted rounded-md text-sm font-medium">
-              {modeOfPayment || '—'}
+              {normalizeModeOfPaymentLabel(modeOfPayment) || '—'}
             </div>
           </div>
         </div>

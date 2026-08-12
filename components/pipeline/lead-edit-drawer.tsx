@@ -400,6 +400,12 @@ export function LeadEditDrawer({
   const followUpDateChanged = effectiveFollowUpDate !== currentFollowUpDate
   const modeOfPaymentChanged = effectiveModeOfPayment !== currentModeOfPayment
   const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
+  const shouldValidatePastFollowUpDate =
+    Boolean(effectiveFollowUpDate) &&
+    (
+      followUpDateChanged ||
+      (statusChanged && statusRequiresFollowUpDate)
+    )
   const statusRequiresAgeSex = isStatusRequiringAgeSex(effectiveLeadStatus)
   const statusRequiresCity = isStatusRequiringCity(effectiveLeadStatus)
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
@@ -562,7 +568,7 @@ export function LeadEditDrawer({
       return
     }
 
-    if (effectiveFollowUpDate && effectiveFollowUpDate < todayDateInputValue) {
+    if (shouldValidatePastFollowUpDate && effectiveFollowUpDate < todayDateInputValue) {
       toast.error('Follow-up date cannot be older than today')
       return
     }

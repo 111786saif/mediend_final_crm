@@ -24,6 +24,10 @@ import {
   isStatusRequiringModeOfPayment,
 } from '@/lib/lead-status-rules'
 import {
+  normalizeModeOfPaymentLabel,
+  normalizeModeOfPaymentStorageValue,
+} from '@/lib/mode-of-payment'
+import {
   buildLeadOwnershipTransferUpdate,
   canUserAddLeadRemarks,
   canUserEditLeadProfile,
@@ -430,6 +434,7 @@ export async function GET(
       ...fullLead,
       status: mapStatusCode(fullLead.status),
       source: fullLead.source ? mapSourceCode(fullLead.source) : fullLead.source,
+      modeOfPayment: normalizeModeOfPaymentLabel(fullLead.modeOfPayment),
       city: resolveLeadCity(fullLead),
       phoneNumber: canViewPhone ? fullLead.phoneNumber : (fullLead.phoneNumber ? maskPhoneNumber(fullLead.phoneNumber) : null),
       alternateNumber: canViewPhone ? fullLead.alternateNumber : (fullLead.alternateNumber ? maskPhoneNumber(fullLead.alternateNumber) : null),
@@ -671,21 +676,12 @@ export async function PATCH(
     ) {
       const nextModeOfPayment =
         body.modeOfPayment !== undefined
-          ? typeof body.modeOfPayment === 'string'
-            ? body.modeOfPayment.trim() || null
-            : body.modeOfPayment
-          : lead.modeOfPayment
+          ? normalizeModeOfPaymentLabel(body.modeOfPayment)
+          : normalizeModeOfPaymentLabel(lead.modeOfPayment)
 
       if (typeof nextModeOfPayment !== 'string' || nextModeOfPayment.trim().length === 0) {
         return errorResponse('Mode of payment is required for this status', 400)
       }
-    }
-
-    if (churnStatusTriggered && assigneeChanged) {
-      return errorResponse(
-        'Junk and Churned leads are reassigned automatically. Remove the manual assignee before saving.',
-        400
-      )
     }
 
     if (
@@ -755,7 +751,6 @@ export async function PATCH(
       'alternateNumber',
       'whatsapp',
       'attendantName',
-      'bdId',
       'circle',
       'category',
       'treatment',
@@ -822,6 +817,8 @@ export async function PATCH(
           nextValue = body[field] ? new Date(String(body[field])) : null
         } else if (field === 'sex' && typeof body[field] === 'string') {
           nextValue = normalizeLeadSexValue(body[field]) || body[field]
+        } else if (field === 'modeOfPayment') {
+          nextValue = normalizeModeOfPaymentStorageValue(body[field])
         } else if (
           (field === 'patientName' ||
             field === 'profession' ||
@@ -864,9 +861,9 @@ export async function PATCH(
       | Awaited<ReturnType<typeof planChurnLeadReassignment>>
       | null = null
 
-    if (churnStatusTriggered) {
+    if (churnStatusTriggered && !assigneeChanged) {
       try {
-      churnAutomationResult = await planChurnLeadReassignment(lead.bdId)
+        churnAutomationResult = await planChurnLeadReassignment(lead.bdId)
       } catch (error) {
         const message =
           error instanceof Error
@@ -874,15 +871,17 @@ export async function PATCH(
             : 'This lead could not be auto-reassigned for the selected status.'
         return errorResponse(message, 409)
       }
-      updateData.status = churnAutomationResult.nextStatus
-      updateData.followUpDate = churnAutomationResult.followUpDate
-      Object.assign(
-        updateData,
-        buildLeadOwnershipTransferUpdate(
-          churnAutomationResult.assignee.userId,
-          churnAutomationResult.assignedAt
+      if (churnAutomationResult) {
+        updateData.status = churnAutomationResult.nextStatus
+        updateData.followUpDate = churnAutomationResult.followUpDate
+        Object.assign(
+          updateData,
+          buildLeadOwnershipTransferUpdate(
+            churnAutomationResult.assignee.userId,
+            churnAutomationResult.assignedAt
+          )
         )
-      )
+      }
     }
 
     // Handle BD reassignment
@@ -1235,6 +1234,7 @@ export async function PATCH(
     const mapped = mappedBase
       ? {
           ...mappedBase,
+          modeOfPayment: normalizeModeOfPaymentLabel(mappedBase.modeOfPayment),
           city:
             body.city !== undefined
               ? typeof body.city === 'string'

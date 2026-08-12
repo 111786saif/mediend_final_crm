@@ -3,6 +3,7 @@ import { Label } from '@/components/ui/label'
 import { format } from 'date-fns'
 import { Building2, Calendar, MapPin, Shield, User, Stethoscope, Wallet } from 'lucide-react'
 import { getIpdStatusLabel } from '@/lib/ipd-status-labels'
+import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 
 /** Minimal lead shape for displaying form data on the card (optional). */
 interface LeadForCard {
@@ -326,7 +327,7 @@ export function IPDDetailsCard({ admissionRecord, lead }: IPDDetailsCardProps) {
         {/* Payment & Billing (cash flow) */}
         {lead && isCash && (
           <Section icon={Wallet} iconClassName="text-green-600" title="Payment & Billing" hasContent={hasCashBilling}>
-            <Field label="Mode of Payment" value={lead.modeOfPayment} />
+            <Field label="Mode of Payment" value={normalizeModeOfPaymentLabel(lead.modeOfPayment)} />
             <Field label="Approved / Package" value={fmtCurr(approvedAmount)} />
             <Field label="Final Bill Amount" value={fmtCurr(finalBillAmount)} />
             <Field label="Cash / Deduction Collected" value={fmtCurr(collectedAmount)} />
