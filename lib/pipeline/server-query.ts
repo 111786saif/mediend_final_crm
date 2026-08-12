@@ -649,6 +649,8 @@ export const pipelineTableSelect = {
   leadRef: true,
   openedInCrmAt: true,
   patientName: true,
+  phoneNumber: true,
+  alternateNumber: true,
   age: true,
   sex: true,
   treatment: true,
