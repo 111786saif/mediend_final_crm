@@ -717,6 +717,7 @@ export async function copyLeadBundle(
           await tx.preAuthorization.create({
             data: {
               ...preAuthRest,
+              kypSubmissionId: kyp.id,
               preAuthRaisedById: remapUserId(preAuthRaisedById, userMap, fallbackUserId),
               handledById: remapUserId(handledById, userMap, fallbackUserId),
               heldById: remapUserId(heldById, userMap, fallbackUserId),
