@@ -117,6 +117,67 @@ async function sourceOptional<T>(fn: () => Promise<T>, fallback: T): Promise<T> 
   }
 }
 
+const leadColumnCache = new WeakMap<WorkspacePrisma, Set<string>>()
+
+async function getLeadColumns(db: WorkspacePrisma): Promise<Set<string>> {
+  const cached = leadColumnCache.get(db)
+  if (cached) return cached
+
+  const rows = await db.$queryRaw<Array<{ column_name: string }>>`
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'Lead'
+  `
+  const cols = new Set(rows.map((r) => r.column_name))
+  leadColumnCache.set(db, cols)
+  return cols
+}
+
+/** Fetch lead row from old DB via raw SQL (avoids Prisma selecting columns missing on old schema). */
+async function fetchSourceLeadRow(
+  source: WorkspacePrisma,
+  leadRef: string
+): Promise<{ row: Record<string, unknown>; id: string } | null> {
+  const rows = await source.$queryRaw<Array<Record<string, unknown>>>`
+    SELECT * FROM "Lead" WHERE "leadRef" = ${leadRef} LIMIT 1
+  `
+  const row = rows[0]
+  if (!row || typeof row.id !== 'string') return null
+  return { row, id: row.id }
+}
+
+async function buildLeadUpdateFromSourceRow(
+  source: WorkspacePrisma,
+  target: WorkspacePrisma,
+  row: Record<string, unknown>,
+  userMap: Map<string, string>,
+  fallbackUserId: string
+): Promise<Prisma.LeadUpdateInput> {
+  const [sourceCols, targetCols] = await Promise.all([getLeadColumns(source), getLeadColumns(target)])
+  const skip = new Set(['id', 'leadRef'])
+  const data: Record<string, unknown> = {}
+
+  for (const [key, value] of Object.entries(row)) {
+    if (skip.has(key)) continue
+    if (!sourceCols.has(key) || !targetCols.has(key)) continue
+    data[key] = value
+  }
+
+  if (typeof data.treatmentMasterId === 'string') {
+    const exists = await target.treatmentMaster.findUnique({
+      where: { id: data.treatmentMasterId },
+      select: { id: true },
+    })
+    if (!exists) data.treatmentMasterId = null
+  }
+
+  data.bdId = remapUserId(String(row.bdId ?? ''), userMap, fallbackUserId)
+  data.createdById = remapUserId(String(row.createdById ?? ''), userMap, fallbackUserId)
+  data.updatedById = remapUserId(String(row.updatedById ?? ''), userMap, fallbackUserId)
+
+  return data as Prisma.LeadUpdateInput
+}
+
 /** Lead refs with activity in [from, toExclusive) on source DB.
  *  Primary signal: Lead.updatedDate (last time the lead row changed).
  *  Also checks child tables that exist on the old schema (LeadRemark, stage history, KYP, compliance). */
@@ -277,29 +338,22 @@ export async function copyLeadBundle(
   userMap: Map<string, string>,
   fallbackUserId: string
 ): Promise<'synced' | 'skipped'> {
-  const sourceLead = await source.lead.findUnique({ where: { leadRef } })
-  if (!sourceLead) return 'skipped'
+  const sourceLeadData = await fetchSourceLeadRow(source, leadRef)
+  if (!sourceLeadData) return 'skipped'
 
   const targetLead = await target.lead.findUnique({ where: { leadRef } })
   if (!targetLead) return 'skipped'
 
-  const sourceLeadId = sourceLead.id
+  const sourceLeadId = sourceLeadData.id
   const targetLeadId = targetLead.id
 
-  const treatmentMasterId =
-    sourceLead.treatmentMasterId &&
-    (await target.treatmentMaster.findUnique({ where: { id: sourceLead.treatmentMasterId }, select: { id: true } }))
-      ? sourceLead.treatmentMasterId
-      : null
-
-  const { id: _sid, leadRef: _ref, ...leadScalars } = sourceLead
-  const leadUpdate: Prisma.LeadUpdateInput = {
-    ...leadScalars,
-    treatmentMasterId,
-    bdId: remapUserId(sourceLead.bdId, userMap, fallbackUserId)!,
-    createdById: remapUserId(sourceLead.createdById, userMap, fallbackUserId)!,
-    updatedById: remapUserId(sourceLead.updatedById, userMap, fallbackUserId)!,
-  }
+  const leadUpdate = await buildLeadUpdateFromSourceRow(
+    source,
+    target,
+    sourceLeadData.row,
+    userMap,
+    fallbackUserId
+  )
 
   await target.$transaction(
     async (tx) => {
