@@ -6,6 +6,7 @@ import { BulkLeadReassignDialog } from '@/components/pipeline/bulk-lead-reassign
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { LeadEditDrawer } from '@/components/pipeline/lead-edit-drawer'
 import { LeadAgeBadge } from '@/components/pipeline/lead-age-badge'
+import { ManualLeadCreateDialog } from '@/components/pipeline/manual-lead-create-dialog'
 import { PipelineStatusCards } from '@/components/pipeline/pipeline-status-cards'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -73,6 +74,7 @@ import {
   Menu,
   Pencil,
   PhoneCall,
+  Plus,
   Search,
   SlidersHorizontal,
 } from 'lucide-react'
@@ -578,6 +580,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
   const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
   const [bulkReassignOpen, setBulkReassignOpen] = useState(false)
+  const [manualLeadCreateOpen, setManualLeadCreateOpen] = useState(false)
   const [activeBulkReassignJobId, setActiveBulkReassignJobId] = useState<string | null>(null)
   const [handledBulkReassignTerminalKey, setHandledBulkReassignTerminalKey] = useState<string | null>(null)
   const [optimisticallyOpenedLeadIds, setOptimisticallyOpenedLeadIds] = useState<string[]>([])
@@ -590,6 +593,14 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const debouncedSearch = useDebouncedValue(searchInput, 300)
   const isBulkReassignAllowedRole =
     user?.role !== 'BD' && user?.role !== 'USER'
+  const canCreateManualLead = new Set([
+    'BD',
+    'TEAM_LEAD',
+    'ASSISTANT_CATEGORY_MANAGER',
+    'CATEGORY_MANAGER',
+    'SALES_HEAD',
+    'EXECUTIVE_ASSISTANT',
+  ]).has(String(user?.role ?? ''))
 
   const availableColumns = useMemo(() => getPipelineColumnDefinitions(variant), [variant])
   const { data: bulkReassignOptions } = useQuery<BulkLeadReassignOptionsResponse>({
@@ -1254,6 +1265,18 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
+                    {canCreateManualLead ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="gap-2"
+                        onClick={() => setManualLeadCreateOpen(true)}
+                      >
+                        <Plus className="h-4 w-4" />
+                        Create manual lead
+                      </Button>
+                    ) : null}
                     {showBulkReassign ? (
                       <>
                         <Button
@@ -1582,6 +1605,15 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           assignableUsers={bulkReassignOptions?.assignableUsers ?? []}
           isPending={bulkReassignMutation.isPending}
           onSubmit={(payload) => bulkReassignMutation.mutateAsync(payload)}
+        />
+        <ManualLeadCreateDialog
+          currentUserId={user?.id ?? null}
+          open={manualLeadCreateOpen}
+          onOpenChange={setManualLeadCreateOpen}
+          onCreated={async (lead) => {
+            await queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+            setEditingLeadId(lead.id)
+          }}
         />
       </div>
     </AuthenticatedLayout>

@@ -56,6 +56,7 @@ import {
   CRM_LEAD_STATUS_OPTIONS,
   CRM_MODE_OF_PAYMENT_OPTIONS,
 } from '@/lib/lead-status-options'
+import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import {
   MANUAL_MYSQL_LEAD_FIELDS,
   MANUAL_MYSQL_LEAD_SECTION_ORDER,
@@ -649,25 +650,6 @@ export function CrmIncomingLeadsPage() {
   const selectedMonth = month === ALL_MONTHS_VALUE ? null : Number.parseInt(month, 10) || initialMonthYear.month
   const selectedYear = Number.parseInt(year, 10) || initialMonthYear.year
 
-  const { data, isLoading, error, refetch, isFetching } = useQuery<IncomingLeadPageData, Error>({
-    queryKey: ['crm-incoming-leads', selectedMonth, selectedYear],
-    queryFn: () =>
-      apiGet<IncomingLeadPageData>(
-        selectedMonth === null
-          ? '/api/crm/incoming-leads'
-          : `/api/crm/incoming-leads?month=${selectedMonth}&year=${selectedYear}`
-      ),
-    retry: false,
-    enabled: hasAccess,
-  })
-
-  const manualAssignOptionsQuery = useQuery<IncomingLeadManualAssignOptions, Error>({
-    queryKey: ['crm-incoming-leads-manual-assign-options'],
-    queryFn: () => apiGet<IncomingLeadManualAssignOptions>('/api/crm/incoming-leads/manual-assign'),
-    retry: false,
-    enabled: hasAccess && canManuallyAssignFailedLeads,
-  })
-
   const incomingLeadEditGroups = useMemo(
     () =>
       MANUAL_MYSQL_LEAD_SECTION_ORDER.map((section) => ({
@@ -702,6 +684,13 @@ export function CrmIncomingLeadsPage() {
         : (availableIncomingLeadColumns[0]?.id ?? searchColumn),
     [availableIncomingLeadColumns, searchColumn]
   )
+  const serverPhoneSearch = useMemo(
+    () =>
+      effectiveSearchColumn === 'normalizedPhone'
+        ? parsePhoneSearchQuery(searchValue)
+        : null,
+    [effectiveSearchColumn, searchValue]
+  )
 
   const effectiveSortColumn = useMemo<IncomingLeadColumn['id']>(
     () =>
@@ -710,6 +699,32 @@ export function CrmIncomingLeadsPage() {
         : (availableIncomingLeadColumns[0]?.id ?? sortColumn),
     [availableIncomingLeadColumns, sortColumn]
   )
+
+  const { data, isLoading, error, refetch, isFetching } = useQuery<IncomingLeadPageData, Error>({
+    queryKey: ['crm-incoming-leads', selectedMonth, selectedYear, effectiveSearchColumn, serverPhoneSearch?.last10 ?? ''],
+    queryFn: () => {
+      const params = new URLSearchParams()
+      if (selectedMonth !== null) {
+        params.set('month', String(selectedMonth))
+        params.set('year', String(selectedYear))
+      }
+      if (serverPhoneSearch && effectiveSearchColumn === 'normalizedPhone') {
+        params.set('searchColumn', 'normalizedPhone')
+        params.set('searchValue', searchValue.trim())
+      }
+      const query = params.toString()
+      return apiGet<IncomingLeadPageData>(query ? `/api/crm/incoming-leads?${query}` : '/api/crm/incoming-leads')
+    },
+    retry: false,
+    enabled: hasAccess,
+  })
+
+  const manualAssignOptionsQuery = useQuery<IncomingLeadManualAssignOptions, Error>({
+    queryKey: ['crm-incoming-leads-manual-assign-options'],
+    queryFn: () => apiGet<IncomingLeadManualAssignOptions>('/api/crm/incoming-leads/manual-assign'),
+    retry: false,
+    enabled: hasAccess && canManuallyAssignFailedLeads,
+  })
 
   const incomingLeadCategoryOptions = useMemo(
     () => (data?.masters.treatmentCategories ?? []).filter((item) => item.isActive !== false),
@@ -846,6 +861,10 @@ export function CrmIncomingLeadsPage() {
 
       if (!normalizedSearch) return true
 
+      if (effectiveSearchColumn === 'normalizedPhone' && serverPhoneSearch) {
+        return true
+      }
+
       const rawValue = String(row[effectiveSearchColumn] ?? '')
       if (selectedSearchColumn?.type === 'date') {
         const dateOnlyValue = getDateOnlyValue(rawValue)
@@ -883,6 +902,7 @@ export function CrmIncomingLeadsPage() {
     visibleColumnDefinitions,
     canManuallyAssignFailedLeads,
     availableIncomingLeadColumns,
+    serverPhoneSearch,
   ])
 
   const sortedRows = useMemo(() => {

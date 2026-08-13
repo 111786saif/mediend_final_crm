@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { apiDelete, apiGet, apiPost } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
-import { Loader2, Trash2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 type LeadRemarkHistoryItem = {
@@ -56,7 +56,7 @@ export function LeadRemarksDrawer({
 
   const canAddRemarks = data?.canAddRemarks ?? data?.canEditRemarks ?? false
   const trimmedDraft = remarksDraft.trim()
-  const canSave = trimmedDraft.length > 0 && trimmedDraft.length <= 4000
+  const canSave = trimmedDraft.length > 0
 
   async function handleSave() {
     if (!leadId || !canSave) return
@@ -115,7 +115,6 @@ export function LeadRemarksDrawer({
                       ? 'Each save adds a new remark entry to the lead history.'
                       : 'Your role or current CRM settings cannot add remarks for this lead.'}
                   </span>
-                  <span>{remarksDraft.length}/4000</span>
                 </div>
               </div>
 
