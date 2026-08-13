@@ -12,7 +12,7 @@ export function createSourcePrisma(): WorkspacePrisma {
     connectionString: url,
     max: 2,
     idleTimeoutMillis: 10_000,
-    connectionTimeoutMillis: 15_000,
+    connectionTimeoutMillis: 60_000,
     allowExitOnIdle: true,
   })
   return new PrismaClient({ adapter, log: ['error'] })
