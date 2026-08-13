@@ -99,20 +99,25 @@ export function remapUserId(
   return userMap.get(userId) ?? fallbackUserId
 }
 
-function isMissingTableError(e: unknown): boolean {
+function isMissingSchemaError(e: unknown): boolean {
   if (e && typeof e === 'object' && 'code' in e) {
     const code = String((e as { code: string }).code)
-    return code === 'P2010' || code === 'P2021'
+    if (code === 'P2010' || code === 'P2021' || code === 'P2022') return true
+  }
+  if (e && typeof e === 'object' && 'message' in e) {
+    const msg = String((e as { message: string }).message)
+    if (/does not exist in the current database/i.test(msg)) return true
+    if (/relation .* does not exist/i.test(msg)) return true
   }
   return false
 }
 
-/** Run a source DB read; return fallback if the table does not exist on old schema. */
+/** Run a source DB read; return fallback if table/column missing on old schema. */
 async function sourceOptional<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await fn()
   } catch (e) {
-    if (isMissingTableError(e)) return fallback
+    if (isMissingSchemaError(e)) return fallback
     throw e
   }
 }
@@ -155,11 +160,34 @@ async function buildLeadUpdateFromSourceRow(
 ): Promise<Prisma.LeadUpdateInput> {
   const [sourceCols, targetCols] = await Promise.all([getLeadColumns(source), getLeadColumns(target)])
   const skip = new Set(['id', 'leadRef'])
+  /** Old DB may store these as integer; new schema expects string. */
+  const stringFields = new Set([
+    'subStatus',
+    'modeOfPayment',
+    'remarksId',
+    'bdeName',
+    'waFormat',
+    'refId',
+    'adId',
+    'campaignId',
+    'formId',
+    'opdSurgeryRemarkCode',
+    'opdReasonNoSurgeryCode',
+    'opdFollowUpReasonCode',
+  ])
   const data: Record<string, unknown> = {}
 
   for (const [key, value] of Object.entries(row)) {
     if (skip.has(key)) continue
     if (!sourceCols.has(key) || !targetCols.has(key)) continue
+    if (value === null || value === undefined) {
+      data[key] = value
+      continue
+    }
+    if (stringFields.has(key) && (typeof value === 'number' || typeof value === 'bigint')) {
+      data[key] = String(value)
+      continue
+    }
     data[key] = value
   }
 
@@ -556,7 +584,10 @@ export async function copyLeadBundle(
         }
       }
 
-      const insuranceCase = await source.insuranceCase.findUnique({ where: { leadId: sourceLeadId } })
+      const insuranceCase = await sourceOptional(
+        () => source.insuranceCase.findUnique({ where: { leadId: sourceLeadId } }),
+        null
+      )
       if (insuranceCase) {
         const { leadId: _l, handledById, ...rest } = insuranceCase
         await tx.insuranceCase.create({
@@ -568,7 +599,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const initiateForm = await source.insuranceInitiateForm.findUnique({ where: { leadId: sourceLeadId } })
+      const initiateForm = await sourceOptional(
+        () => source.insuranceInitiateForm.findUnique({ where: { leadId: sourceLeadId } }),
+        null
+      )
       if (initiateForm) {
         const { leadId: _l, createdById, ...rest } = initiateForm
         await tx.insuranceInitiateForm.create({
@@ -580,10 +614,14 @@ export async function copyLeadBundle(
         })
       }
 
-      const admission = await source.admissionRecord.findUnique({
-        where: { leadId: sourceLeadId },
-        include: { implantUsages: true, prescriptionImages: true },
-      })
+      const admission = await sourceOptional(
+        () =>
+          source.admissionRecord.findUnique({
+            where: { leadId: sourceLeadId },
+            include: { implantUsages: true, prescriptionImages: true },
+          }),
+        null
+      )
       if (admission) {
         const { implantUsages, prescriptionImages, leadId: _l, initiatedById, ...rest } = admission
         await tx.admissionRecord.create({
@@ -605,25 +643,37 @@ export async function copyLeadBundle(
         }
       }
 
-      const discharge = await source.dischargeSheet.findUnique({ where: { leadId: sourceLeadId } })
+      const discharge = await sourceOptional(
+        () => source.dischargeSheet.findUnique({ where: { leadId: sourceLeadId } }),
+        null
+      )
       if (discharge) {
         const { leadId: _l, ...rest } = discharge
         await tx.dischargeSheet.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const pl = await source.pLRecord.findUnique({ where: { leadId: sourceLeadId } })
+      const pl = await sourceOptional(
+        () => source.pLRecord.findUnique({ where: { leadId: sourceLeadId } }),
+        null
+      )
       if (pl) {
         const { leadId: _l, ...rest } = pl
         await tx.pLRecord.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const outstanding = await source.outstandingCase.findUnique({ where: { leadId: sourceLeadId } })
+      const outstanding = await sourceOptional(
+        () => source.outstandingCase.findUnique({ where: { leadId: sourceLeadId } }),
+        null
+      )
       if (outstanding) {
         const { leadId: _l, ...rest } = outstanding
         await tx.outstandingCase.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const compliance = await source.complianceCall.findUnique({ where: { leadId: sourceLeadId } })
+      const compliance = await sourceOptional(
+        () => source.complianceCall.findUnique({ where: { leadId: sourceLeadId } }),
+        null
+      )
       if (compliance) {
         const { leadId: _l, calledByUserId, ...rest } = compliance
         await tx.complianceCall.create({
@@ -635,17 +685,24 @@ export async function copyLeadBundle(
         })
       }
 
-      const opdImages = await source.leadOpdPrescriptionImage.findMany({ where: { leadId: sourceLeadId } })
+      const opdImages = await sourceOptional(
+        () => source.leadOpdPrescriptionImage.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (opdImages.length) {
         await tx.leadOpdPrescriptionImage.createMany({
           data: opdImages.map(({ id, leadId: _l, ...r }) => ({ id, leadId: targetLeadId, ...r })),
         })
       }
 
-      const opdApps = await source.leadOpdAppointment.findMany({
-        where: { leadId: sourceLeadId },
-        include: { prescriptionImages: true },
-      })
+      const opdApps = await sourceOptional(
+        () =>
+          source.leadOpdAppointment.findMany({
+            where: { leadId: sourceLeadId },
+            include: { prescriptionImages: true },
+          }),
+        []
+      )
       for (const app of opdApps) {
         const { prescriptionImages, leadId: _l, createdById, updatedById, ...rest } = app
         await tx.leadOpdAppointment.create({
@@ -663,7 +720,10 @@ export async function copyLeadBundle(
         }
       }
 
-      const installments = await source.paymentInstallment.findMany({ where: { leadId: sourceLeadId } })
+      const installments = await sourceOptional(
+        () => source.paymentInstallment.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (installments.length) {
         await tx.paymentInstallment.createMany({
           data: installments.map(({ id, leadId: _l, recordedById, ...r }) => ({
@@ -675,10 +735,14 @@ export async function copyLeadBundle(
         })
       }
 
-      const invoices = await source.invoiceRequest.findMany({
-        where: { leadId: sourceLeadId },
-        include: { activityLogs: true },
-      })
+      const invoices = await sourceOptional(
+        () =>
+          source.invoiceRequest.findMany({
+            where: { leadId: sourceLeadId },
+            include: { activityLogs: true },
+          }),
+        []
+      )
       for (const inv of invoices) {
         const { activityLogs, leadId: _l, requestedById, reviewedById, ...rest } = inv
         await tx.invoiceRequest.create({
@@ -701,10 +765,14 @@ export async function copyLeadBundle(
         }
       }
 
-      const payoffs = await source.doctorPayoffRequest.findMany({
-        where: { leadId: sourceLeadId },
-        include: { activityLogs: true },
-      })
+      const payoffs = await sourceOptional(
+        () =>
+          source.doctorPayoffRequest.findMany({
+            where: { leadId: sourceLeadId },
+            include: { activityLogs: true },
+          }),
+        []
+      )
       for (const p of payoffs) {
         const { activityLogs, leadId: _l, requestedById, reviewedById, ...rest } = p
         await tx.doctorPayoffRequest.create({
@@ -727,7 +795,10 @@ export async function copyLeadBundle(
         }
       }
 
-      const qrLogs = await source.leadQrCallAuditLog.findMany({ where: { leadId: sourceLeadId } })
+      const qrLogs = await sourceOptional(
+        () => source.leadQrCallAuditLog.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (qrLogs.length) {
         await tx.leadQrCallAuditLog.createMany({
           data: qrLogs.map(({ id, leadId: _l, userId, ...r }) => ({
@@ -739,7 +810,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const qrLinks = await source.leadQrPublicLink.findMany({ where: { leadId: sourceLeadId } })
+      const qrLinks = await sourceOptional(
+        () => source.leadQrPublicLink.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (qrLinks.length) {
         await tx.leadQrPublicLink.createMany({
           data: qrLinks.map(({ id, leadId: _l, actorUserId, ...r }) => ({
@@ -751,7 +825,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const previewLogs = await source.crmAssignmentPreviewLog.findMany({ where: { leadId: sourceLeadId } })
+      const previewLogs = await sourceOptional(
+        () => source.crmAssignmentPreviewLog.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (previewLogs.length) {
         await tx.crmAssignmentPreviewLog.createMany({
           data: previewLogs.map(({ id, leadId: _l, ...r }) => ({ id, leadId: targetLeadId, ...r })),
