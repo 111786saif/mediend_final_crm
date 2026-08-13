@@ -269,6 +269,26 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/sync-mysql-leads.ts"]
 
+  # Delta sync from old workspace Postgres (SOURCE_DATABASE_URL) → local Postgres
+  # Requires SOURCE_DATABASE_URL in .env pointing at old server (93.127.195.235) or tunnel
+  #   docker compose --profile tools run --rm sync-old-workspace-leads -- --dry-run
+  #   docker compose --profile tools run --rm sync-old-workspace-leads -- --commit --from 2026-08-08 --to 2026-08-13
+  sync-old-workspace-leads:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/sync-leads-from-old-workspace.ts"]
+
   # One-off: backfill numeric source/campaign names with resolved strings
   # Usage: docker compose --profile tools run --rm backfill-sources
   backfill-sources:
