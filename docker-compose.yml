@@ -287,7 +287,7 @@ services:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@127.0.0.1:5432/mediend_crm
     profiles:
       - tools
-    entrypoint: ["bun", "run", "scripts/sync-leads-from-old-workspace.ts"]
+    entrypoint: ["bun", "scripts/sync-leads-from-old-workspace.ts"]
 
   # One-off: backfill numeric source/campaign names with resolved strings
   # Usage: docker compose --profile tools run --rm backfill-sources
