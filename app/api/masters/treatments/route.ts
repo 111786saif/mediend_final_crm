@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasEffectivePermission } from '@/lib/rbac-new'
 import { successResponse, errorResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
   const sp = request.nextUrl.searchParams
   const search = sp.get('search')?.trim() || ''
   const includeInactive =
-    sp.get('includeInactive') === 'true' && hasPermission(user, 'masters:read')
+    sp.get('includeInactive') === 'true' && (await hasEffectivePermission(user, 'masters:read'))
   const category = sp.get('category')?.trim() || ''
 
   const where: Prisma.TreatmentMasterWhereInput = {}
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const user = getSessionFromRequest(request)
   if (!user) return unauthorizedResponse()
-  if (!hasPermission(user, 'masters:write')) return forbiddenResponse()
+  if (!(await hasEffectivePermission(user, 'masters:write'))) return forbiddenResponse()
 
   let body: unknown
   try {

@@ -130,11 +130,12 @@ export function TeamDetailView({
     ? (data?.members ?? []).reduce((sum, m) => sum + (m.ipdOlder ?? 0), 0)
     : (bdDetailData?.ipdOlder ?? 0)
 
-  const sumPastPeriod = totalCurrent + totalPrev + totalPrev2 + totalPrev3
+  const sumPastPeriod = totalCurrent + totalPrev + totalPrev2 + totalPrev3 + totalOlder
   const ptCurrent = sumPastPeriod > 0 ? (totalCurrent / sumPastPeriod) * 100 : 0
   const ptPrev = sumPastPeriod > 0 ? (totalPrev / sumPastPeriod) * 100 : 0
   const ptPrev2 = sumPastPeriod > 0 ? (totalPrev2 / sumPastPeriod) * 100 : 0
   const ptPrev3 = sumPastPeriod > 0 ? (totalPrev3 / sumPastPeriod) * 100 : 0
+  const ptOlder = sumPastPeriod > 0 ? (totalOlder / sumPastPeriod) * 100 : 0
 
   const columns = useMemo<ColumnDef<TeamDetail['members'][number]>[]>(() => [
     {
@@ -404,7 +405,7 @@ export function TeamDetailView({
             <div className="w-32 h-32 rounded-full border-[14px] border-muted relative flex items-center justify-center shadow-inner mt-2 shrink-0">
               <div className="text-center">
                 <span className="block text-2xl font-extrabold text-foreground tracking-tight leading-none">{sumPastPeriod}</span>
-                <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5 block">IPD (4M)</span>
+                <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5 block">Total IPD</span>
               </div>
             </div>
             <div className="space-y-1.5 w-full bg-muted/35 p-2.5 rounded-xl border border-border/50">
@@ -413,11 +414,12 @@ export function TeamDetailView({
                 { monthName: headers.prev, color: 'bg-blue-500', pt: ptPrev, tot: totalPrev },
                 { monthName: headers.prev2, color: 'bg-teal-500', pt: ptPrev2, tot: totalPrev2 },
                 { monthName: headers.prev3, color: 'bg-emerald-500', pt: ptPrev3, tot: totalPrev3 },
+                { monthName: 'Older Months', color: 'bg-slate-500', pt: ptOlder, tot: totalOlder },
               ].map((p, i) => (
                 <div key={i} className="flex justify-between items-center text-[10px]">
                   <div className="flex items-center gap-1.5">
                     <div className={`w-2.5 h-2.5 rounded ${p.color}`}></div>
-                    <span className="text-muted-foreground font-semibold uppercase tracking-wider">{formatMonthName(p.monthName)}</span>
+                    <span className="text-muted-foreground font-semibold uppercase tracking-wider">{p.monthName === 'Older Months' ? 'Older Months' : formatMonthName(p.monthName)}</span>
                   </div>
                   <span className="text-foreground font-bold">{p.pt.toFixed(0)}% <span className="text-muted-foreground font-medium ml-1">({p.tot})</span></span>
                 </div>

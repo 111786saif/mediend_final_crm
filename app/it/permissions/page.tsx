@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch, apiDelete } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 import { Shield, ArrowLeft, Lock, Building2, Search, AlertCircle, Users } from 'lucide-react'
 import { toast } from 'sonner'
@@ -91,7 +92,8 @@ export default function ITPermissionsPage() {
   const [isSaving, setIsSaving] = useState(false)
 
   // Gate administrative access
-  const canAccess = user && hasPermission(user, 'it:permissions')
+  const { hasAccess } = usePermissions()
+  const canAccess = user && (hasAccess('main.it_permissions') || hasPermission(user, 'it:permissions'))
 
   // Debouncing search field to avoid unnecessary query requests
   useEffect(() => {

@@ -4,6 +4,8 @@ import { buildEffectiveOpdEntries, type EffectiveOpdEntry } from '@/lib/lead-opd
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 import { canAccessSalesOpdMonitoring } from '@/lib/opd-monitoring-access'
+import { resolvePermission, levelSatisfies } from '@/lib/rbac-new'
+import { PermissionLevel } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 
 const opdMonitoringLeadSelect = {
@@ -249,8 +251,17 @@ function matchesDoctorName(item: MonitoringAppointment, doctorName?: string) {
   return normalizeText(item.doctorName) === normalizeText(doctorName)
 }
 
+async function canAccessEffectiveSalesOpdMonitoring(user: { id: string; role: string } | null | undefined): Promise<boolean> {
+  if (!user) return false
+  const perm = await resolvePermission(user.id, 'sales.opd_monitoring')
+  if (levelSatisfies(perm.level, PermissionLevel.READ)) return true
+  const parentPerm = await resolvePermission(user.id, 'sales')
+  if (levelSatisfies(parentPerm.level, PermissionLevel.READ)) return true
+  return canAccessSalesOpdMonitoring(user.role)
+}
+
 async function fetchScopedMonitoringAppointments(user: SessionUser) {
-  if (!canAccessSalesOpdMonitoring(user.role)) {
+  if (!(await canAccessEffectiveSalesOpdMonitoring(user))) {
     throw new SalesOpdMonitoringError('Forbidden', 403)
   }
 

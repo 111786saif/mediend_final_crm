@@ -54,6 +54,7 @@ import {
 import { apiGet, apiPost } from '@/lib/api-client'
 import { formatPlDate, formatPlMonth, formatPlRupee } from '@/lib/pl/resolve-pl-row'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions, PermissionLevel } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 import {
   useCreatePlInvoiceRequest,
@@ -115,7 +116,8 @@ export default function HospitalDetailPage() {
   const search = useSearchParams()
   const router = useRouter()
   const { user } = useAuth()
-  const canRequestInvoice = user ? hasPermission(user, 'pl:write') : false
+  const { hasAccess } = usePermissions()
+  const canRequestInvoice = user ? (hasAccess('insurance_pl.pl_ledger', PermissionLevel.READ_WRITE) || hasPermission(user, 'pl:write')) : false
   const canRecordPayment = canRequestInvoice
 
   const rawName = params.name as string

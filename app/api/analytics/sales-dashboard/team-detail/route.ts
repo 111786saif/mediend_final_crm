@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
-    if (!canAccessSalesDashboard(user)) {
+    if (!(await canAccessSalesDashboard(user))) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -127,7 +127,8 @@ export async function GET(request: NextRequest) {
         WHERE l."bdId" = ANY(${allUserIds})
           AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
                OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND COALESCE(l."surgeryDate", ar."surgeryDate") IS NOT NULL))
-          AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
+          AND COALESCE(l."surgeryDate", ar."surgeryDate") >= ${start}
+          AND COALESCE(l."surgeryDate", ar."surgeryDate") <= ${end}
         GROUP BY 1, u.id, u.name
         ORDER BY 1, u.name
       `,
@@ -158,7 +159,7 @@ export async function GET(request: NextRequest) {
       else if (r.month === prevMonthKey) trend.prev = c
       else if (r.month === prev2MonthKey) trend.prev2 = c
       else if (r.month === prev3MonthKey) trend.prev3 = c
-      else if (r.month < currentMonthKey) trend.older += c
+      else trend.older += c
     }
 
     // Build backward-compatible monthWise object

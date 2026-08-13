@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { DoctorPayoffRequestStatus, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission, hasPlOrFinanceRead } from '@/lib/rbac'
+import { hasEffectivePlOrFinanceRead, hasEffectivePlOrFinanceWrite } from '@/lib/rbac-new'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import {
   doctorPayoffInclude,
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPlOrFinanceRead(user)) return errorResponse('Forbidden', 403)
+    if (!(await hasEffectivePlOrFinanceRead(user))) return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
     const statusParam = searchParams.get('status') ?? 'PENDING'
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Finance module sees all; PL callers on doctor page may filter by doctorName
-    if (!hasPermission(user, 'finance:read') && !doctorName) {
+    if (!(await hasEffectivePlOrFinanceRead(user)) && !doctorName) {
       where.requestedById = user.id
     }
 
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
     // Creating a payoff request is a PL outstanding action; Finance only uploads/approves
-    if (!hasPermission(user, 'pl:write')) {
+    if (!(await hasEffectivePlOrFinanceWrite(user))) {
       return errorResponse('Forbidden', 403)
     }
 

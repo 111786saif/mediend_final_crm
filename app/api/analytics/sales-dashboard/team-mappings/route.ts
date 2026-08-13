@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
 
-    if (!canAccessSalesDashboard(user)) {
+    if (!(await canAccessSalesDashboard(user))) {
       return errorResponse('Forbidden', 403)
     }
 

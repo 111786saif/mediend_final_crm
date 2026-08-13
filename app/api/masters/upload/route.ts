@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasEffectivePermission } from '@/lib/rbac-new'
 import { errorResponse, successResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-utils'
 import { uploadFileToS3 } from '@/lib/s3-client'
 import { KYP_UPLOAD_MAX_BYTES } from '@/lib/upload-limits'
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'masters:write')) return forbiddenResponse()
+    if (!(await hasEffectivePermission(user, 'masters:write'))) return forbiddenResponse()
 
     const formData = await request.formData()
     const file = formData.get('file') as File | null

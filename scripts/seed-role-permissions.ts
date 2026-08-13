@@ -75,7 +75,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'finance.md_team_approvals',
     'hrm.recruitment',
     ...MYHRMS, 'myhrms.ask_md_approval',
-    'main.incentive', 'sales.dm_dashboard', 'sales.campaign_cpl', 'sales.ea_pipeline',
+    'main.incentive', 'sales.sales_dashboard', 'sales.campaign_cpl', 'sales.ea_pipeline',
     'sales.case_tracker', 'sales.opd_monitoring', 'sales.pending_surgery',
     'sales.sales_head_targets', 'sales.sales_pnl',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger',

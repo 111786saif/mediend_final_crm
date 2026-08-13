@@ -2,6 +2,7 @@
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions } from '@/hooks/use-permissions'
 import { useParams, useRouter } from 'next/navigation'
 import { ChatList } from '@/components/chat/chat-list'
 import { ChatInterface } from '@/components/chat/chat-interface'
@@ -31,9 +32,11 @@ interface Lead {
 
 export default function ChatPage() {
   const { user } = useAuth()
+  const { hasAccess } = usePermissions()
   const params = useParams()
   const router = useRouter()
   const leadId = params.leadId as string | undefined
+  const allowed = !!(user && (hasAccess('main.chat') || canAccessChat(user)))
 
   const { data: lead, isLoading } = useQuery<Lead>({
     queryKey: ['lead', leadId],
@@ -51,7 +54,7 @@ export default function ChatPage() {
     )
   }
 
-  if (!canAccessChat(user)) {
+  if (!allowed) {
     return (
       <AuthenticatedLayout>
         <div className="flex items-center justify-center min-h-[400px]">
