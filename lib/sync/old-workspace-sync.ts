@@ -1,4 +1,5 @@
 import { PrismaClient, type Prisma, UserRole } from '@/generated/prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 export type WorkspacePrisma = PrismaClient
 
@@ -7,7 +8,14 @@ export function createSourcePrisma(): WorkspacePrisma {
   if (!url) {
     throw new Error('SOURCE_DATABASE_URL is required (old workspace Postgres connection string)')
   }
-  return new PrismaClient({ datasources: { db: { url } } })
+  const adapter = new PrismaPg({
+    connectionString: url,
+    max: 2,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 15_000,
+    allowExitOnIdle: true,
+  })
+  return new PrismaClient({ adapter, log: ['error'] })
 }
 
 /** Parse YYYY-MM-DD as IST midnight → UTC Date. */
