@@ -15,7 +15,128 @@ export function createSourcePrisma(): WorkspacePrisma {
     connectionTimeoutMillis: 60_000,
     allowExitOnIdle: true,
   })
-  return new PrismaClient({ adapter, log: ['error'] })
+  return new PrismaClient({ adapter })
+}
+
+/** Tracks which source tables/models exist; avoids Prisma error spam on old schema. */
+export class SourceSchemaGuard {
+  private blocked = new Set<string>()
+
+  private constructor(private tables: Set<string>) {}
+
+  private static readonly OPTIONAL_MODELS: Array<[string, string]> = [
+    ['leadRemark', 'LeadRemark'],
+    ['leadRemarkEntry', 'LeadRemarkEntry'],
+    ['callNote', 'CallNote'],
+    ['leadStageEvent', 'LeadStageEvent'],
+    ['caseStageHistory', 'CaseStageHistory'],
+    ['workflowResetLog', 'WorkflowResetLog'],
+    ['caseChatMessage', 'CaseChatMessage'],
+    ['chatReadReceipt', 'ChatReadReceipt'],
+    ['kypSubmission', 'KYPSubmission'],
+    ['insuranceCase', 'InsuranceCase'],
+    ['insuranceInitiateForm', 'InsuranceInitiateForm'],
+    ['admissionRecord', 'AdmissionRecord'],
+    ['dischargeSheet', 'DischargeSheet'],
+    ['pLRecord', 'PLRecord'],
+    ['outstandingCase', 'OutstandingCase'],
+    ['complianceCall', 'ComplianceCall'],
+    ['leadOpdPrescriptionImage', 'LeadOpdPrescriptionImage'],
+    ['leadOpdAppointment', 'LeadOpdAppointment'],
+    ['paymentInstallment', 'PaymentInstallment'],
+    ['invoiceRequest', 'InvoiceRequest'],
+    ['doctorPayoffRequest', 'DoctorPayoffRequest'],
+    ['leadQrCallAuditLog', 'LeadQrCallAuditLog'],
+    ['leadQrPublicLink', 'LeadQrPublicLink'],
+    ['crmAssignmentPreviewLog', 'CrmAssignmentPreviewLog'],
+  ]
+
+  static async load(source: WorkspacePrisma): Promise<SourceSchemaGuard> {
+    const rows = await source.$queryRaw<Array<{ table_name: string }>>`
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
+    `
+    const guard = new SourceSchemaGuard(new Set(rows.map((r) => r.table_name)))
+
+    for (const [key, table] of SourceSchemaGuard.OPTIONAL_MODELS) {
+      if (!guard.tables.has(table)) guard.blocked.add(key)
+    }
+
+    // One-time probes for tables that exist but have column drift vs current Prisma schema.
+    await guard.probe(source, [
+      [
+        'kypSubmission',
+        'KYPSubmission',
+        () =>
+          source.kYPSubmission.findFirst({
+            include: {
+              preAuthData: {
+                include: {
+                  suggestedHospitals: { take: 1 },
+                  queries: { take: 1 },
+                  pdfVersions: { take: 1 },
+                },
+              },
+            },
+          }),
+      ],
+      [
+        'admissionRecord',
+        'AdmissionRecord',
+        () =>
+          source.admissionRecord.findFirst({
+            include: {
+              implantUsages: { take: 1 },
+              prescriptionImages: { take: 1 },
+            },
+          }),
+      ],
+      ['complianceCall', 'ComplianceCall', () => source.complianceCall.findFirst()],
+      ['paymentInstallment', 'PaymentInstallment', () => source.paymentInstallment.findFirst()],
+    ])
+
+    return guard
+  }
+
+  logSummary(): void {
+    const skipped = [...this.blocked].sort()
+    if (skipped.length === 0) return
+    console.log(`⏭ Source schema: skipping ${skipped.length} model(s) — ${skipped.join(', ')}`)
+  }
+
+  private async probe(
+    source: WorkspacePrisma,
+    probes: Array<[string, string, () => Promise<unknown>]>
+  ): Promise<void> {
+    for (const [key, table, fn] of probes) {
+      if (!this.tables.has(table)) {
+        this.blocked.add(key)
+        continue
+      }
+      try {
+        await fn()
+      } catch (e) {
+        if (isMissingSchemaError(e)) this.blocked.add(key)
+      }
+    }
+  }
+
+  async optional<T>(key: string, table: string, fn: () => Promise<T>, fallback: T): Promise<T> {
+    if (this.blocked.has(key) || !this.tables.has(table)) {
+      if (!this.tables.has(table)) this.blocked.add(key)
+      return fallback
+    }
+    try {
+      return await fn()
+    } catch (e) {
+      if (isMissingSchemaError(e)) {
+        this.blocked.add(key)
+        return fallback
+      }
+      throw e
+    }
+  }
 }
 
 /** Parse YYYY-MM-DD as IST midnight → UTC Date. */
@@ -113,13 +234,14 @@ function isMissingSchemaError(e: unknown): boolean {
 }
 
 /** Run a source DB read; return fallback if table/column missing on old schema. */
-async function sourceOptional<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
-  try {
-    return await fn()
-  } catch (e) {
-    if (isMissingSchemaError(e)) return fallback
-    throw e
-  }
+async function sourceOptional<T>(
+  schema: SourceSchemaGuard,
+  key: string,
+  table: string,
+  fn: () => Promise<T>,
+  fallback: T
+): Promise<T> {
+  return schema.optional(key, table, fn, fallback)
 }
 
 const leadColumnCache = new WeakMap<WorkspacePrisma, Set<string>>()
@@ -213,7 +335,8 @@ export async function findLeadRefsInRange(
   source: WorkspacePrisma,
   from: Date,
   toExclusive: Date,
-  leadRefFilter: string[] | null
+  leadRefFilter: string[] | null,
+  schema: SourceSchemaGuard
 ): Promise<string[]> {
   if (leadRefFilter?.length) return [...new Set(leadRefFilter)]
 
@@ -231,6 +354,9 @@ export async function findLeadRefsInRange(
 
   // Legacy MySQL-synced remarks (exists on old workspace)
   const remarks = await sourceOptional(
+    schema,
+    'leadRemark',
+    'LeadRemark',
     () =>
       source.leadRemark.findMany({
         where: { updateDate: dateRange },
@@ -243,6 +369,9 @@ export async function findLeadRefsInRange(
 
   // Workflow stage changes
   const stageHistory = await sourceOptional(
+    schema,
+    'caseStageHistory',
+    'CaseStageHistory',
     () =>
       source.caseStageHistory.findMany({
         where: { changedAt: dateRange },
@@ -253,6 +382,9 @@ export async function findLeadRefsInRange(
   add(stageHistory.map((h) => h.lead.leadRef))
 
   const pipelineEvents = await sourceOptional(
+    schema,
+    'leadStageEvent',
+    'LeadStageEvent',
     () =>
       source.leadStageEvent.findMany({
         where: { changedAt: dateRange },
@@ -264,6 +396,9 @@ export async function findLeadRefsInRange(
 
   // Insurance / compliance activity
   const kypUpdates = await sourceOptional(
+    schema,
+    'kypSubmission',
+    'KYPSubmission',
     () =>
       source.kYPSubmission.findMany({
         where: { OR: [{ updatedAt: dateRange }, { submittedAt: dateRange }] },
@@ -274,6 +409,9 @@ export async function findLeadRefsInRange(
   add(kypUpdates.map((k) => k.lead.leadRef))
 
   const complianceUpdates = await sourceOptional(
+    schema,
+    'complianceCall',
+    'ComplianceCall',
     () =>
       source.complianceCall.findMany({
         where: { OR: [{ updatedAt: dateRange }, { createdAt: dateRange }] },
@@ -364,7 +502,8 @@ export async function copyLeadBundle(
   target: WorkspacePrisma,
   leadRef: string,
   userMap: Map<string, string>,
-  fallbackUserId: string
+  fallbackUserId: string,
+  schema: SourceSchemaGuard
 ): Promise<'synced' | 'skipped'> {
   const sourceLeadData = await fetchSourceLeadRow(source, leadRef)
   if (!sourceLeadData) return 'skipped'
@@ -394,6 +533,9 @@ export async function copyLeadBundle(
 
       // Legacy MySQL remarks (keyed by leadRef)
       const remarks = await sourceOptional(
+        schema,
+        'leadRemark',
+        'LeadRemark',
         () => source.leadRemark.findMany({ where: { leadRef } }),
         []
       )
@@ -405,6 +547,9 @@ export async function copyLeadBundle(
       }
 
       const remarkEntries = await sourceOptional(
+        schema,
+        'leadRemarkEntry',
+        'LeadRemarkEntry',
         () => source.leadRemarkEntry.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -420,6 +565,9 @@ export async function copyLeadBundle(
       }
 
       const callNotes = await sourceOptional(
+        schema,
+        'callNote',
+        'CallNote',
         () => source.callNote.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -435,6 +583,9 @@ export async function copyLeadBundle(
       }
 
       const stageEvents = await sourceOptional(
+        schema,
+        'leadStageEvent',
+        'LeadStageEvent',
         () => source.leadStageEvent.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -450,6 +601,9 @@ export async function copyLeadBundle(
       }
 
       const caseHistory = await sourceOptional(
+        schema,
+        'caseStageHistory',
+        'CaseStageHistory',
         () => source.caseStageHistory.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -465,6 +619,9 @@ export async function copyLeadBundle(
       }
 
       const resetLogs = await sourceOptional(
+        schema,
+        'workflowResetLog',
+        'WorkflowResetLog',
         () => source.workflowResetLog.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -480,6 +637,9 @@ export async function copyLeadBundle(
       }
 
       const chatMessages = await sourceOptional(
+        schema,
+        'caseChatMessage',
+        'CaseChatMessage',
         () => source.caseChatMessage.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -495,6 +655,9 @@ export async function copyLeadBundle(
       }
 
       const readReceipts = await sourceOptional(
+        schema,
+        'chatReadReceipt',
+        'ChatReadReceipt',
         () => source.chatReadReceipt.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -510,6 +673,9 @@ export async function copyLeadBundle(
       }
 
       const kyp = await sourceOptional(
+        schema,
+        'kypSubmission',
+        'KYPSubmission',
         () =>
           source.kYPSubmission.findUnique({
             where: { leadId: sourceLeadId },
@@ -585,6 +751,9 @@ export async function copyLeadBundle(
       }
 
       const insuranceCase = await sourceOptional(
+        schema,
+        'insuranceCase',
+        'InsuranceCase',
         () => source.insuranceCase.findUnique({ where: { leadId: sourceLeadId } }),
         null
       )
@@ -600,6 +769,9 @@ export async function copyLeadBundle(
       }
 
       const initiateForm = await sourceOptional(
+        schema,
+        'insuranceInitiateForm',
+        'InsuranceInitiateForm',
         () => source.insuranceInitiateForm.findUnique({ where: { leadId: sourceLeadId } }),
         null
       )
@@ -615,6 +787,9 @@ export async function copyLeadBundle(
       }
 
       const admission = await sourceOptional(
+        schema,
+        'admissionRecord',
+        'AdmissionRecord',
         () =>
           source.admissionRecord.findUnique({
             where: { leadId: sourceLeadId },
@@ -644,6 +819,9 @@ export async function copyLeadBundle(
       }
 
       const discharge = await sourceOptional(
+        schema,
+        'dischargeSheet',
+        'DischargeSheet',
         () => source.dischargeSheet.findUnique({ where: { leadId: sourceLeadId } }),
         null
       )
@@ -653,6 +831,9 @@ export async function copyLeadBundle(
       }
 
       const pl = await sourceOptional(
+        schema,
+        'pLRecord',
+        'PLRecord',
         () => source.pLRecord.findUnique({ where: { leadId: sourceLeadId } }),
         null
       )
@@ -662,6 +843,9 @@ export async function copyLeadBundle(
       }
 
       const outstanding = await sourceOptional(
+        schema,
+        'outstandingCase',
+        'OutstandingCase',
         () => source.outstandingCase.findUnique({ where: { leadId: sourceLeadId } }),
         null
       )
@@ -671,6 +855,9 @@ export async function copyLeadBundle(
       }
 
       const compliance = await sourceOptional(
+        schema,
+        'complianceCall',
+        'ComplianceCall',
         () => source.complianceCall.findUnique({ where: { leadId: sourceLeadId } }),
         null
       )
@@ -686,6 +873,9 @@ export async function copyLeadBundle(
       }
 
       const opdImages = await sourceOptional(
+        schema,
+        'leadOpdPrescriptionImage',
+        'LeadOpdPrescriptionImage',
         () => source.leadOpdPrescriptionImage.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -696,6 +886,9 @@ export async function copyLeadBundle(
       }
 
       const opdApps = await sourceOptional(
+        schema,
+        'leadOpdAppointment',
+        'LeadOpdAppointment',
         () =>
           source.leadOpdAppointment.findMany({
             where: { leadId: sourceLeadId },
@@ -721,6 +914,9 @@ export async function copyLeadBundle(
       }
 
       const installments = await sourceOptional(
+        schema,
+        'paymentInstallment',
+        'PaymentInstallment',
         () => source.paymentInstallment.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -736,6 +932,9 @@ export async function copyLeadBundle(
       }
 
       const invoices = await sourceOptional(
+        schema,
+        'invoiceRequest',
+        'InvoiceRequest',
         () =>
           source.invoiceRequest.findMany({
             where: { leadId: sourceLeadId },
@@ -766,6 +965,9 @@ export async function copyLeadBundle(
       }
 
       const payoffs = await sourceOptional(
+        schema,
+        'doctorPayoffRequest',
+        'DoctorPayoffRequest',
         () =>
           source.doctorPayoffRequest.findMany({
             where: { leadId: sourceLeadId },
@@ -796,6 +998,9 @@ export async function copyLeadBundle(
       }
 
       const qrLogs = await sourceOptional(
+        schema,
+        'leadQrCallAuditLog',
+        'LeadQrCallAuditLog',
         () => source.leadQrCallAuditLog.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -811,6 +1016,9 @@ export async function copyLeadBundle(
       }
 
       const qrLinks = await sourceOptional(
+        schema,
+        'leadQrPublicLink',
+        'LeadQrPublicLink',
         () => source.leadQrPublicLink.findMany({ where: { leadId: sourceLeadId } }),
         []
       )
@@ -826,6 +1034,9 @@ export async function copyLeadBundle(
       }
 
       const previewLogs = await sourceOptional(
+        schema,
+        'crmAssignmentPreviewLog',
+        'CrmAssignmentPreviewLog',
         () => source.crmAssignmentPreviewLog.findMany({ where: { leadId: sourceLeadId } }),
         []
       )

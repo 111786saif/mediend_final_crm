@@ -29,6 +29,7 @@ import {
   findLeadRefsInRange,
   parseCliDates,
   parseLeadRefFilter,
+  SourceSchemaGuard,
 } from '@/lib/sync/old-workspace-sync'
 
 const argv = process.argv.slice(2)
@@ -50,10 +51,13 @@ async function main() {
     await source.$queryRaw`SELECT 1`
     console.log('✅ Source DB connected')
 
+    const sourceSchema = await SourceSchemaGuard.load(source)
+    sourceSchema.logSummary()
+
     const { map: userMap, fallbackUserId } = await buildUserIdMap(source, prisma)
     console.log(`✅ User map: ${userMap.size} emails matched (fallback admin: ${fallbackUserId})`)
 
-    const leadRefs = await findLeadRefsInRange(source, from, toExclusive, leadRefFilter)
+    const leadRefs = await findLeadRefsInRange(source, from, toExclusive, leadRefFilter, sourceSchema)
     console.log(`📋 Leads to sync: ${leadRefs.length}`)
 
     if (leadRefs.length === 0) {
@@ -86,7 +90,7 @@ async function main() {
     for (let i = 0; i < leadRefs.length; i++) {
       const leadRef = leadRefs[i]
       try {
-        const result = await copyLeadBundle(source, prisma, leadRef, userMap, fallbackUserId)
+        const result = await copyLeadBundle(source, prisma, leadRef, userMap, fallbackUserId, sourceSchema)
         if (result === 'synced') synced++
         else skipped++
       } catch (e) {
