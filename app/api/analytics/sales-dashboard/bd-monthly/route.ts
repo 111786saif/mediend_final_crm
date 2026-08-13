@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
-    if (!canAccessSalesDashboard(user)) {
+    if (!(await canAccessSalesDashboard(user))) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
       const surgeryDate = (lead as { surgeryDate?: Date | null }).surgeryDate
         ?? (lead as { admissionRecord?: { surgeryDate?: Date | null } | null }).admissionRecord?.surgeryDate
       if (!surgeryDate) continue
-      const d = new Date(surgeryDate as string)
+      const d = new Date(surgeryDate)
       const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
       const bdId = lead.bdId ?? 'unknown'
 

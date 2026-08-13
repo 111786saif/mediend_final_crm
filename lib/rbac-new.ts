@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { PermissionLevel, SubjectType } from '@/generated/prisma/client'
+import type { SessionUser } from './auth'
+import { hasPermission, type Permission } from './rbac'
 
 const PERMISSION_RANKS: Record<PermissionLevel, number> = {
   NONE: 0,
@@ -184,4 +186,118 @@ export async function loadScopedPermissionMap(
     console.error('Error loading scoped permission map:', error)
     return {}
   }
+}
+
+export const PERMISSION_TO_RESOURCE_MAP: Partial<Record<Permission, string>> = {
+  // Finance
+  'finance:read': 'finance',
+  'finance:write': 'finance',
+  'finance:payroll:read': 'finance.fin_payroll',
+  'finance:payroll:write': 'finance.fin_payroll',
+  'finance:approve': 'finance.fin_approvals',
+  'finance:masters:write': 'finance.master_seating_cost',
+
+  // HRMS / HRM
+  'hrms:read': 'hrm',
+  'hrms:write': 'hrm',
+  'hrms:attendance:read': 'hrm.attendance_normalizations',
+  'hrms:attendance:write': 'hrm.attendance_normalizations',
+  'hrms:leaves:read': 'hrm.attendance_normalizations',
+  'hrms:leaves:write': 'hrm.attendance_normalizations',
+  'hrms:employees:read': 'hrm.people_org',
+  'hrms:employees:write': 'hrm.people_org',
+  'hrms:recruitment:read': 'hrm.recruitment',
+  'hrms:recruitment:write': 'hrm.recruitment',
+
+  // P&L
+  'pnl:read': 'main.company_pnl',
+  'pnl:write': 'main.company_pnl',
+  'it:pnl:read': 'main.it_pnl',
+  'it:pnl:write': 'main.it_pnl',
+  'sales:pnl:read': 'sales.sales_pnl',
+  'loan-demat:read': 'main.loan_demat_revenue',
+  'loan-demat:write': 'main.loan_demat_revenue',
+
+  // Insurance & PL
+  'insurance:read': 'insurance_pl.insurance',
+  'insurance:write': 'insurance_pl.insurance',
+  'pl:read': 'insurance_pl.pl_ledger',
+  'pl:write': 'insurance_pl.pl_ledger',
+
+  // Incentives
+  'incentive:read': 'main.incentive',
+  'incentive:write': 'main.incentive',
+  'incentive:approve': 'main.incentive',
+  'incentive:pay': 'main.incentive',
+
+  // IT & Compliance
+  'it:permissions': 'main.it_permissions',
+  'compliance:read': 'main.compliance',
+  'compliance:write': 'main.compliance',
+
+  // Master Data
+  'masters:read': 'main.master_data',
+  'masters:write': 'main.master_data',
+
+  // Analytics & Sales
+  'analytics:read': 'sales.sales_dashboard',
+  'sales:read': 'sales',
+  'leads:read': 'sales.case_tracker',
+  'leads:write': 'sales.case_tracker',
+  'targets:read': 'sales.targets',
+  'targets:write': 'sales.targets',
+}
+
+/**
+ * Dynamic DB-backed permission check:
+ * 1. Checks dynamic Resource/PermissionAssignment in DB via resolvePermission()
+ * 2. Falls back to static role-based permissions in rolePermissions[user.role]
+ */
+export async function hasEffectivePermission(
+  user: SessionUser | null,
+  permission: Permission,
+  resourceKey?: string
+): Promise<boolean> {
+  if (!user) return false
+
+  const keyToCheck = resourceKey ?? PERMISSION_TO_RESOURCE_MAP[permission]
+  if (keyToCheck) {
+    const res = await resolvePermission(user.id, keyToCheck)
+    if (res.level !== PermissionLevel.NONE) {
+      const isWriteRequired = permission.includes(':write') || permission.includes(':approve') || permission.includes(':pay')
+      const reqLevel = isWriteRequired ? PermissionLevel.READ_WRITE : PermissionLevel.READ
+      return levelSatisfies(res.level, reqLevel)
+    }
+  }
+
+  return hasPermission(user, permission)
+}
+
+/** Outstanding / doctor / hospital list: shared by P&L, Insurance, and Finance modules */
+export async function hasEffectivePlOrFinanceRead(user: SessionUser | null): Promise<boolean> {
+  if (!user) return false
+  if (await hasEffectivePermission(user, 'pl:read', 'insurance_pl.pl_ledger')) return true
+  if (await hasEffectivePermission(user, 'finance:read', 'finance')) return true
+  if (await hasEffectivePermission(user, 'insurance:read', 'insurance_pl.insurance')) return true
+  if (await hasEffectivePermission(user, 'pl:read', 'insurance_pl.doctor_list')) return true
+  if (await hasEffectivePermission(user, 'pl:read', 'insurance_pl.hospital_list')) return true
+  if (await hasEffectivePermission(user, 'pl:read', 'insurance_pl.pl_outstanding')) return true
+  if (await hasEffectivePermission(user, 'finance:read', 'finance.fin_doctor_payoff')) return true
+  if (await hasEffectivePermission(user, 'finance:read', 'finance.fin_invoice_requests')) return true
+  if (await hasEffectivePermission(user, 'pnl:read', 'main.company_pnl')) return true
+  return false
+}
+
+export async function hasEffectivePlOrFinanceWrite(user: SessionUser | null): Promise<boolean> {
+  if (!user) return false
+  if (await hasEffectivePermission(user, 'pl:write', 'insurance_pl.pl_ledger')) return true
+  if (await hasEffectivePermission(user, 'finance:write', 'finance')) return true
+  if (await hasEffectivePermission(user, 'insurance:write', 'insurance_pl.insurance')) return true
+  if (await hasEffectivePermission(user, 'pl:write', 'insurance_pl.doctor_list')) return true
+  if (await hasEffectivePermission(user, 'pl:write', 'insurance_pl.hospital_list')) return true
+  if (await hasEffectivePermission(user, 'pl:write', 'insurance_pl.pl_outstanding')) return true
+  if (await hasEffectivePermission(user, 'finance:write', 'finance.fin_doctor_payoff')) return true
+  if (await hasEffectivePermission(user, 'finance:write', 'finance.fin_invoice_requests')) return true
+  if (await hasEffectivePermission(user, 'pnl:write', 'main.company_pnl')) return true
+  return false
 }

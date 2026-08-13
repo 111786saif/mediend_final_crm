@@ -13,6 +13,8 @@ import { Plus } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { Button } from '@/components/ui/button'
+import { usePermissions } from '@/hooks/use-permissions'
+import { useLeads } from '@/hooks/use-leads'
 import {
   useCalendarEvents,
   useCaseEvents,
@@ -160,7 +162,10 @@ export default function IpdCalendarPage() {
     setAgendaOpen(true)
   }
 
-  if (user && !ALLOWED_ROLES.includes(user.role)) {
+  const { hasAccess } = usePermissions()
+  const canAccess = !!(user && (hasAccess('sales.ipd_calendar') || ALLOWED_ROLES.includes(user.role)))
+
+  if (user && !canAccess) {
     return (
       <AuthenticatedLayout>
         <div className="flex items-center justify-center min-h-[400px]">

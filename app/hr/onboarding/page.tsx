@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions, PermissionLevel } from '@/hooks/use-permissions'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { hasPermission } from '@/lib/rbac'
 import { Button } from '@/components/ui/button'
@@ -186,7 +187,9 @@ export default function HROnboardingPage() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const isMobile = useIsMobile()
-  const canWrite = !!user && hasPermission(user, 'hrms:employees:write')
+  const { hasAccess } = usePermissions()
+  const canWrite = !!user && (hasAccess('hrm.onboarding', PermissionLevel.READ_WRITE) || hasPermission(user, 'hrms:employees:write'))
+  const canRead = !!user && (hasAccess('hrm.onboarding') || hasPermission(user, 'hrms:employees:read') || canWrite)
   const [reviewItem, setReviewItem] = useState<OnboardingItem | null>(null)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [statusFilter, setStatusFilter] = useState<'all' | 'PENDING_APPROVAL' | 'PENDING_PROFILE'>('all')
@@ -197,7 +200,7 @@ export default function HROnboardingPage() {
       const q = statusFilter === 'all' ? '' : `?status=${statusFilter}`
       return apiGet<OnboardingResponse>(`/api/hr/onboarding${q}`)
     },
-    enabled: !!user && (hasPermission(user, 'hrms:employees:read') || canWrite),
+    enabled: !!user && canRead,
   })
 
   const items = data?.items ?? []
@@ -236,7 +239,7 @@ export default function HROnboardingPage() {
     }
   }
 
-  if (!user || (!hasPermission(user, 'hrms:employees:read') && !canWrite)) {
+  if (!user || !canRead) {
     return (
       <div className="flex items-center justify-center py-16 text-muted-foreground">
         You do not have permission to view onboarding.

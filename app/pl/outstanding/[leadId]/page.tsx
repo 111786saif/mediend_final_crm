@@ -18,6 +18,7 @@ import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PaymentInstallmentsCard } from '@/components/pl/payment-installments-card'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions, PermissionLevel } from '@/hooks/use-permissions'
 import { hasPermission } from '@/lib/rbac'
 
 interface Lead {
@@ -53,7 +54,8 @@ export default function PLOutstandingEditPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { user } = useAuth()
-  const canWrite = user ? hasPermission(user, 'pl:write') : false
+  const { hasAccess } = usePermissions()
+  const canWrite = user ? (hasAccess('insurance_pl.pl_ledger', PermissionLevel.READ_WRITE) || hasPermission(user, 'pl:write')) : false
   const leadId = params.leadId as string
 
   const {

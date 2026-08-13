@@ -593,6 +593,7 @@ function TableCell({
   className,
   rowIndex,
   colIndex,
+  isHeader,
   ...props
 }: React.ComponentProps<"td"> & { rowIndex?: number; colIndex?: number; isHeader?: boolean }) {
   const context = React.useContext(TableFilterContext)

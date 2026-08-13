@@ -5,9 +5,9 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import {
-  canPayIncentives,
-  canReadIncentives,
-} from '@/lib/incentives/permissions'
+  canPayEffectiveIncentives,
+  canReadEffectiveIncentives,
+} from '@/lib/incentives/permissions-server'
 
 const bulkSchema = z.object({
   ids: z.array(z.string().min(1)).min(1),
@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!canReadIncentives(user)) return errorResponse('Forbidden', 403)
-    if (!canPayIncentives(user)) return errorResponse('Forbidden: cannot mark incentives as paid', 403)
+    if (!(await canReadEffectiveIncentives(user))) return errorResponse('Forbidden', 403)
+    if (!(await canPayEffectiveIncentives(user))) return errorResponse('Forbidden: cannot mark incentives as paid', 403)
 
     const body = await request.json()
     const parsed = bulkSchema.safeParse(body)

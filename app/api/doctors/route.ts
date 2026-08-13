@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPlOrFinanceRead } from '@/lib/rbac'
+import { hasEffectivePlOrFinanceRead } from '@/lib/rbac-new'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 type DoctorSummary = {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPlOrFinanceRead(user)) return errorResponse('Forbidden', 403)
+    if (!(await hasEffectivePlOrFinanceRead(user))) return errorResponse('Forbidden', 403)
 
     const url = new URL(request.url)
     const startDate = url.searchParams.get('startDate')

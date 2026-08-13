@@ -1,11 +1,30 @@
-import { UserRole } from '@/generated/prisma/client'
+import { UserRole, PermissionLevel } from '@/generated/prisma/client'
 import type { SessionUser } from '@/lib/auth'
 import { getSubtreeScopeUserIdsForRole, isManagerOf } from '@/lib/hierarchy'
 import { SALES_DASHBOARD_ROLES, isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
 import { prisma } from '@/lib/prisma'
+import { resolvePermission, levelSatisfies } from '@/lib/rbac-new'
 
-export function canAccessSalesDashboard(user: SessionUser | null): boolean {
+export async function canAccessSalesDashboard(user: SessionUser | null): Promise<boolean> {
   if (!user) return false
+
+  // 1. Dynamic individual/role assignment check from DB
+  const salesDashboardPerm = await resolvePermission(user.id, 'sales.sales_dashboard')
+  if (levelSatisfies(salesDashboardPerm.level, PermissionLevel.READ)) {
+    return true
+  }
+
+  const mdSalesPerm = await resolvePermission(user.id, 'sales.md_sales_dashboard')
+  if (levelSatisfies(mdSalesPerm.level, PermissionLevel.READ)) {
+    return true
+  }
+
+  const parentSalesPerm = await resolvePermission(user.id, 'sales')
+  if (levelSatisfies(parentSalesPerm.level, PermissionLevel.READ)) {
+    return true
+  }
+
+  // 2. Built-in Role Fallback
   return (SALES_DASHBOARD_ROLES as string[]).includes(user.role)
 }
 
@@ -45,7 +64,15 @@ export async function canViewManagerTeamDetail(
     where: { userId: user.id },
     select: { id: true },
   })
-  if (!viewerEmp) return false
+
+  // If the user has explicit DB permission on sales_dashboard and is not in sales hierarchy, allow viewing
+  if (!viewerEmp) {
+    const perm = await resolvePermission(user.id, 'sales.sales_dashboard')
+    if (levelSatisfies(perm.level, PermissionLevel.READ)) return true
+    const parentPerm = await resolvePermission(user.id, 'sales')
+    if (levelSatisfies(parentPerm.level, PermissionLevel.READ)) return true
+    return false
+  }
 
   if (
     user.role === UserRole.TEAM_LEAD ||
@@ -58,6 +85,10 @@ export async function canViewManagerTeamDetail(
     if (viewerEmp.id === managerEmployeeId) return true
     return isManagerOf(viewerEmp.id, managerEmployeeId)
   }
+
+  // If user has explicit DB permission, grant view
+  const explicitPerm = await resolvePermission(user.id, 'sales.sales_dashboard')
+  if (levelSatisfies(explicitPerm.level, PermissionLevel.READ)) return true
 
   return false
 }

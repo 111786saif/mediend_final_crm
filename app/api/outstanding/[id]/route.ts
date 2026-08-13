@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission, hasPlOrFinanceRead } from '@/lib/rbac'
+import { hasEffectivePlOrFinanceRead, hasEffectivePlOrFinanceWrite } from '@/lib/rbac-new'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 /** Light lead payload for P/L Outstanding detail — avoids /api/leads/[id] ownership gate. */
@@ -12,7 +12,7 @@ export async function GET(
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPlOrFinanceRead(user)) return errorResponse('Forbidden', 403)
+    if (!(await hasEffectivePlOrFinanceRead(user))) return errorResponse('Forbidden', 403)
 
     const { id } = await params
     const lead = await prisma.lead.findUnique({
@@ -25,33 +25,54 @@ export async function GET(
         hospitalName: true,
         treatment: true,
         category: true,
-        circle: true,
-        source: true,
-        billAmount: true,
-        surgeryDate: true,
-        bd: { select: { id: true, name: true } },
-        plRecord: true,
-        outstandingCase: {
+        caseStage: true,
+        dischargeSheet: {
           select: {
             id: true,
-            paymentReceived: true,
-            remark2: true,
+            surgeryDate: true,
+            totalFinalBill: true,
+            doctorCharges: true,
+            hospitalShareAmount: true,
+            mediendShareAmount: true,
+            finalApprovedAmount: true,
+            copayAmount: true,
+            deductionAmount: true,
+            discountAmount: true,
+            paymentType: true,
+            remarks: true,
+            settlementPart: true,
+            tdsAmount: true,
+            cashPaidByPatient: true,
+            cashOrDedPaid: true,
+            netSettlementAmount: true,
           },
         },
-        dischargeSheet: true,
+        plRecord: {
+          select: {
+            hospitalAmountPending: true,
+            doctorAmountPending: true,
+            hospitalPayoutStatus: true,
+            doctorPayoutStatus: true,
+          },
+        },
       },
     })
 
-    if (!lead) return errorResponse('Lead not found', 404)
+    if (!lead) {
+      return errorResponse('Lead not found', 404)
+    }
 
     return successResponse(lead)
   } catch (error) {
-    console.error('Error fetching outstanding record:', error)
-    return errorResponse('Failed to fetch outstanding record', 500)
+    console.error('Error fetching lead for PL outstanding:', error)
+    return errorResponse('Failed to fetch lead', 500)
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) {
@@ -59,7 +80,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     // PL outstanding writes are PL-only; Finance has read + invoice/document upload elsewhere
-    if (!hasPermission(user, 'pl:write')) {
+    if (!(await hasEffectivePlOrFinanceWrite(user))) {
       return errorResponse('Forbidden', 403)
     }
 

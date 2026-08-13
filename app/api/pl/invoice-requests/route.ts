@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { InvoiceRequestStatus, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasEffectivePlOrFinanceRead, hasEffectivePlOrFinanceWrite } from '@/lib/rbac-new'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { invoiceRequestInclude, mapInvoiceRequest } from '@/lib/finance/invoice-request/mapper'
 import { logInvoiceRequestActivity } from '@/lib/finance/invoice-request/activity'
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'pl:write')) return errorResponse('Forbidden', 403)
+    if (!(await hasEffectivePlOrFinanceWrite(user))) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
     const parsed = createSchema.safeParse(body)
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'pl:read')) return errorResponse('Forbidden', 403)
+    if (!(await hasEffectivePlOrFinanceRead(user))) return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
     const statusParam = searchParams.get('status')
