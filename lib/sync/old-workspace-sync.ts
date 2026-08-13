@@ -99,7 +99,27 @@ export function remapUserId(
   return userMap.get(userId) ?? fallbackUserId
 }
 
-/** Lead refs touched in [from, toExclusive) on source DB. */
+function isMissingTableError(e: unknown): boolean {
+  if (e && typeof e === 'object' && 'code' in e) {
+    const code = String((e as { code: string }).code)
+    return code === 'P2010' || code === 'P2021'
+  }
+  return false
+}
+
+/** Run a source DB read; return fallback if the table does not exist on old schema. */
+async function sourceOptional<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await fn()
+  } catch (e) {
+    if (isMissingTableError(e)) return fallback
+    throw e
+  }
+}
+
+/** Lead refs with activity in [from, toExclusive) on source DB.
+ *  Primary signal: Lead.updatedDate (last time the lead row changed).
+ *  Also checks child tables that exist on the old schema (LeadRemark, stage history, KYP, compliance). */
 export async function findLeadRefsInRange(
   source: WorkspacePrisma,
   from: Date,
@@ -108,57 +128,73 @@ export async function findLeadRefsInRange(
 ): Promise<string[]> {
   if (leadRefFilter?.length) return [...new Set(leadRefFilter)]
 
-  const rows = await source.$queryRaw<Array<{ leadRef: string }>>`
-    SELECT DISTINCT l."leadRef" AS "leadRef"
-    FROM "Lead" l
-    WHERE
-      (l."updatedDate" >= ${from} AND l."updatedDate" < ${toExclusive})
-      OR (l."leadEntryDate" >= ${from} AND l."leadEntryDate" < ${toExclusive})
-      OR (l."assignedDate" >= ${from} AND l."assignedDate" < ${toExclusive})
-      OR (l."conversionDate" >= ${from} AND l."conversionDate" < ${toExclusive})
-      OR (l."followUpDate" >= ${from} AND l."followUpDate" < ${toExclusive})
-      OR (l."createdDate" >= ${from} AND l."createdDate" < ${toExclusive})
-      OR EXISTS (
-        SELECT 1 FROM "CaseStageHistory" h
-        WHERE h."leadId" = l.id AND h."changedAt" >= ${from} AND h."changedAt" < ${toExclusive}
-      )
-      OR EXISTS (
-        SELECT 1 FROM "LeadStageEvent" e
-        WHERE e."leadId" = l.id AND e."changedAt" >= ${from} AND e."changedAt" < ${toExclusive}
-      )
-      OR EXISTS (
-        SELECT 1 FROM "LeadRemarkEntry" r
-        WHERE r."leadId" = l.id AND r."createdAt" >= ${from} AND r."createdAt" < ${toExclusive}
-      )
-      OR EXISTS (
-        SELECT 1 FROM "CallNote" c
-        WHERE c."leadId" = l.id AND c."createdAt" >= ${from} AND c."createdAt" < ${toExclusive}
-      )
-      OR EXISTS (
-        SELECT 1 FROM "CaseChatMessage" m
-        WHERE m."leadId" = l.id AND m."createdAt" >= ${from} AND m."createdAt" < ${toExclusive}
-      )
-      OR EXISTS (
-        SELECT 1 FROM "KYPSubmission" k
-        WHERE k."leadId" = l.id
-          AND (k."updatedAt" >= ${from} AND k."updatedAt" < ${toExclusive}
-            OR k."submittedAt" >= ${from} AND k."submittedAt" < ${toExclusive})
-      )
-      OR EXISTS (
-        SELECT 1 FROM "ComplianceCall" cc
-        WHERE cc."leadId" = l.id
-          AND (cc."updatedAt" >= ${from} AND cc."updatedAt" < ${toExclusive}
-            OR cc."createdAt" >= ${from} AND cc."createdAt" < ${toExclusive})
-      )
-      OR EXISTS (
-        SELECT 1 FROM "LeadRemark" lr
-        WHERE lr."leadRef" = l."leadRef"
-          AND lr."updateDate" >= ${from} AND lr."updateDate" < ${toExclusive}
-      )
-    ORDER BY l."leadRef"
-  `
+  const dateRange = { gte: from, lt: toExclusive }
+  const leadRefSet = new Set<string>()
 
-  return rows.map((r) => r.leadRef)
+  const add = (refs: string[]) => refs.forEach((r) => leadRefSet.add(r))
+
+  // Main activity column — updated whenever lead status/stage/fields change
+  const byUpdated = await source.lead.findMany({
+    where: { updatedDate: dateRange },
+    select: { leadRef: true },
+  })
+  add(byUpdated.map((l) => l.leadRef))
+
+  // Legacy MySQL-synced remarks (exists on old workspace)
+  const remarks = await sourceOptional(
+    () =>
+      source.leadRemark.findMany({
+        where: { updateDate: dateRange },
+        select: { leadRef: true },
+        distinct: ['leadRef'],
+      }),
+    []
+  )
+  add(remarks.map((r) => r.leadRef))
+
+  // Workflow stage changes
+  const stageHistory = await sourceOptional(
+    () =>
+      source.caseStageHistory.findMany({
+        where: { changedAt: dateRange },
+        select: { lead: { select: { leadRef: true } } },
+      }),
+    []
+  )
+  add(stageHistory.map((h) => h.lead.leadRef))
+
+  const pipelineEvents = await sourceOptional(
+    () =>
+      source.leadStageEvent.findMany({
+        where: { changedAt: dateRange },
+        select: { lead: { select: { leadRef: true } } },
+      }),
+    []
+  )
+  add(pipelineEvents.map((e) => e.lead.leadRef))
+
+  // Insurance / compliance activity
+  const kypUpdates = await sourceOptional(
+    () =>
+      source.kYPSubmission.findMany({
+        where: { OR: [{ updatedAt: dateRange }, { submittedAt: dateRange }] },
+        select: { lead: { select: { leadRef: true } } },
+      }),
+    []
+  )
+  add(kypUpdates.map((k) => k.lead.leadRef))
+
+  const complianceUpdates = await sourceOptional(
+    () =>
+      source.complianceCall.findMany({
+        where: { OR: [{ updatedAt: dateRange }, { createdAt: dateRange }] },
+        select: { lead: { select: { leadRef: true } } },
+      }),
+    []
+  )
+  add(complianceUpdates.map((c) => c.lead.leadRef))
+
+  return [...leadRefSet].sort()
 }
 
 /** Remove all lead-scoped rows on target before overwrite. */
@@ -275,7 +311,10 @@ export async function copyLeadBundle(
       })
 
       // Legacy MySQL remarks (keyed by leadRef)
-      const remarks = await source.leadRemark.findMany({ where: { leadRef } })
+      const remarks = await sourceOptional(
+        () => source.leadRemark.findMany({ where: { leadRef } }),
+        []
+      )
       if (remarks.length) {
         await tx.leadRemark.deleteMany({ where: { leadRef } })
         await tx.leadRemark.createMany({
@@ -283,7 +322,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const remarkEntries = await source.leadRemarkEntry.findMany({ where: { leadId: sourceLeadId } })
+      const remarkEntries = await sourceOptional(
+        () => source.leadRemarkEntry.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (remarkEntries.length) {
         await tx.leadRemarkEntry.createMany({
           data: remarkEntries.map(({ id, leadId: _l, createdById, ...r }) => ({
@@ -295,7 +337,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const callNotes = await source.callNote.findMany({ where: { leadId: sourceLeadId } })
+      const callNotes = await sourceOptional(
+        () => source.callNote.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (callNotes.length) {
         await tx.callNote.createMany({
           data: callNotes.map(({ id, leadId: _l, createdById, ...r }) => ({
@@ -307,7 +352,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const stageEvents = await source.leadStageEvent.findMany({ where: { leadId: sourceLeadId } })
+      const stageEvents = await sourceOptional(
+        () => source.leadStageEvent.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (stageEvents.length) {
         await tx.leadStageEvent.createMany({
           data: stageEvents.map(({ id, leadId: _l, changedById, ...r }) => ({
@@ -319,7 +367,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const caseHistory = await source.caseStageHistory.findMany({ where: { leadId: sourceLeadId } })
+      const caseHistory = await sourceOptional(
+        () => source.caseStageHistory.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (caseHistory.length) {
         await tx.caseStageHistory.createMany({
           data: caseHistory.map(({ id, leadId: _l, changedById, ...r }) => ({
@@ -331,7 +382,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const resetLogs = await source.workflowResetLog.findMany({ where: { leadId: sourceLeadId } })
+      const resetLogs = await sourceOptional(
+        () => source.workflowResetLog.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (resetLogs.length) {
         await tx.workflowResetLog.createMany({
           data: resetLogs.map(({ id, leadId: _l, resetById, ...r }) => ({
@@ -343,7 +397,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const chatMessages = await source.caseChatMessage.findMany({ where: { leadId: sourceLeadId } })
+      const chatMessages = await sourceOptional(
+        () => source.caseChatMessage.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (chatMessages.length) {
         await tx.caseChatMessage.createMany({
           data: chatMessages.map(({ id, leadId: _l, senderId, ...r }) => ({
@@ -355,7 +412,10 @@ export async function copyLeadBundle(
         })
       }
 
-      const readReceipts = await source.chatReadReceipt.findMany({ where: { leadId: sourceLeadId } })
+      const readReceipts = await sourceOptional(
+        () => source.chatReadReceipt.findMany({ where: { leadId: sourceLeadId } }),
+        []
+      )
       if (readReceipts.length) {
         await tx.chatReadReceipt.createMany({
           data: readReceipts.map(({ id, leadId: _l, userId, ...r }) => ({
@@ -367,18 +427,22 @@ export async function copyLeadBundle(
         })
       }
 
-      const kyp = await source.kYPSubmission.findUnique({
-        where: { leadId: sourceLeadId },
-        include: {
-          preAuthData: {
+      const kyp = await sourceOptional(
+        () =>
+          source.kYPSubmission.findUnique({
+            where: { leadId: sourceLeadId },
             include: {
-              suggestedHospitals: true,
-              queries: true,
-              pdfVersions: true,
+              preAuthData: {
+                include: {
+                  suggestedHospitals: true,
+                  queries: true,
+                  pdfVersions: true,
+                },
+              },
             },
-          },
-        },
-      })
+          }),
+        null
+      )
 
       if (kyp) {
         const { preAuthData, leadId: _l, submittedById, ...kypRest } = kyp
