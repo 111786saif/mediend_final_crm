@@ -48,18 +48,36 @@ export function parseLeadRefFilter(argv: string[]): string[] | null {
   return raw.split(',').map((s) => s.trim()).filter(Boolean)
 }
 
-/** Map source User.id → target User.id by email; fallback to admin. */
+/** Map source User.id → target User.id by email; fallback to first admin-like user. */
 export async function buildUserIdMap(
   source: WorkspacePrisma,
   target: WorkspacePrisma
 ): Promise<{ map: Map<string, string>; fallbackUserId: string }> {
-  const [sourceUsers, targetUsers, fallback] = await Promise.all([
+  const fallbackRoles: UserRole[] = [
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN,
+    UserRole.MD,
+    UserRole.CRM_ADMIN,
+  ]
+
+  const [sourceUsers, targetUsers] = await Promise.all([
     source.user.findMany({ select: { id: true, email: true } }),
     target.user.findMany({ select: { id: true, email: true } }),
-    target.user.findFirst({ where: { role: UserRole.ADMIN }, select: { id: true } }),
   ])
 
-  if (!fallback) throw new Error('No ADMIN user on target database')
+  let fallbackUserId: string | null = null
+  for (const role of fallbackRoles) {
+    const user = await target.user.findFirst({ where: { role }, select: { id: true } })
+    if (user) {
+      fallbackUserId = user.id
+      break
+    }
+  }
+  if (!fallbackUserId) {
+    const anyUser = await target.user.findFirst({ select: { id: true } })
+    if (!anyUser) throw new Error('No users found on target database — cannot map user IDs')
+    fallbackUserId = anyUser.id
+  }
 
   const targetByEmail = new Map(targetUsers.map((u) => [u.email.toLowerCase(), u.id]))
   const map = new Map<string, string>()
@@ -69,7 +87,7 @@ export async function buildUserIdMap(
     if (targetId) map.set(u.id, targetId)
   }
 
-  return { map, fallbackUserId: fallback.id }
+  return { map, fallbackUserId }
 }
 
 export function remapUserId(
