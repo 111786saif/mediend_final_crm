@@ -10,9 +10,10 @@ import { prisma } from '@/lib/prisma'
 import { loadLookupMaps, type LookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { mapMySQLLeadToPrismaWithoutOwner, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
 
-type AssignableBdContext = {
+type AssignableUserContext = {
   userId: string
   userName: string
+  userRole: UserRole
   managerUserId: string | null
   managerEmployeeId: string | null
   managerLeadId: number | null
@@ -118,11 +119,20 @@ function extractSaveMyLeadsFields(payload: unknown) {
   }
 }
 
-async function getAssignableBdContexts(userIds: string[]) {
+const MANUAL_ASSIGNABLE_USER_ROLES = [
+  UserRole.BD,
+  UserRole.TEAM_LEAD,
+  UserRole.CATEGORY_MANAGER,
+  UserRole.SALES_HEAD,
+  UserRole.EXECUTIVE_ASSISTANT,
+  UserRole.MD,
+] as const
+
+async function getAssignableUserContexts(userIds: string[]) {
   const users = await prisma.user.findMany({
     where: {
       id: { in: userIds },
-      role: UserRole.BD,
+      role: { in: [...MANUAL_ASSIGNABLE_USER_ROLES] },
       employee: {
         is: {
           status: EmployeeStatus.ACTIVE,
@@ -132,6 +142,7 @@ async function getAssignableBdContexts(userIds: string[]) {
     select: {
       id: true,
       name: true,
+      role: true,
       employee: {
         select: {
           id: true,
@@ -147,12 +158,13 @@ async function getAssignableBdContexts(userIds: string[]) {
     },
   })
 
-  return new Map<string, AssignableBdContext>(
+  return new Map<string, AssignableUserContext>(
     users.map((user) => [
       user.id,
       {
         userId: user.id,
         userName: user.name,
+        userRole: user.role,
         managerUserId: user.employee?.manager?.userId ?? null,
         managerEmployeeId: user.employee?.manager?.id ?? null,
         managerLeadId: user.employee?.manager?.bdNumber ?? null,
@@ -196,7 +208,7 @@ function getCampaignCircleNames(campaign: {
 
 async function reassignExistingLead(
   incomingLead: IncomingLeadForManualAssign,
-  bd: AssignableBdContext,
+  bd: AssignableUserContext,
   actor: ManualAssignActor
 ): Promise<ManualAssignResultItem> {
   if (!incomingLead.processedLeadId) {
@@ -283,7 +295,7 @@ async function reassignExistingLead(
 
 async function processManualAssignedMySQLLead(
   incomingLead: IncomingLeadForManualAssign,
-  bd: AssignableBdContext,
+  bd: AssignableUserContext,
   systemUserId: string,
   lookups: LookupMaps
 ): Promise<ManualAssignResultItem> {
@@ -434,7 +446,7 @@ async function processManualAssignedMySQLLead(
 
 async function processManualAssignedSaveMyLeadsLead(
   incomingLead: IncomingLeadForManualAssign,
-  bd: AssignableBdContext,
+  bd: AssignableUserContext,
   systemUserId: string
 ): Promise<ManualAssignResultItem> {
   const extracted = extractSaveMyLeadsFields(incomingLead.payload)
@@ -641,18 +653,18 @@ async function processManualAssignedSaveMyLeadsLead(
 
 export async function manuallyAssignIncomingLeads(
   incomingLeadIds: string[],
-  bdUserIds: string[],
+  assigneeUserIds: string[],
   actor: ManualAssignActor
 ): Promise<ManualAssignIncomingLeadsResult> {
   if (incomingLeadIds.length === 0) {
     throw new Error('Please select at least one incoming lead')
   }
 
-  if (bdUserIds.length === 0) {
-    throw new Error('Please select at least one BD')
+  if (assigneeUserIds.length === 0) {
+    throw new Error('Please select at least one assignee')
   }
 
-  const [incomingLeads, bdContexts, systemUserId] = await Promise.all([
+  const [incomingLeads, assigneeContexts, systemUserId] = await Promise.all([
     prisma.incomingLead.findMany({
       where: {
         id: { in: incomingLeadIds },
@@ -668,7 +680,7 @@ export async function manuallyAssignIncomingLeads(
         receivedAt: true,
       },
     }),
-    getAssignableBdContexts(bdUserIds),
+    getAssignableUserContexts(assigneeUserIds),
     getDefaultSystemUserId(),
   ])
 
@@ -676,12 +688,12 @@ export async function manuallyAssignIncomingLeads(
     throw new Error('One or more selected incoming leads could not be found')
   }
 
-  const orderedBdContexts = bdUserIds
-    .map((userId) => bdContexts.get(userId) ?? null)
-    .filter((value): value is AssignableBdContext => Boolean(value))
+  const orderedAssigneeContexts = assigneeUserIds
+    .map((userId) => assigneeContexts.get(userId) ?? null)
+    .filter((value): value is AssignableUserContext => Boolean(value))
 
-  if (orderedBdContexts.length === 0) {
-    throw new Error('No valid active BDs were selected')
+  if (orderedAssigneeContexts.length === 0) {
+    throw new Error('No valid active assignees were selected')
   }
 
   let mysqlLookupsPromise: Promise<LookupMaps> | null = null
@@ -695,7 +707,7 @@ export async function manuallyAssignIncomingLeads(
     .filter((value): value is IncomingLeadForManualAssign => Boolean(value))
 
   for (const [index, incomingLead] of orderedIncomingLeads.entries()) {
-    const bd = orderedBdContexts[index % orderedBdContexts.length]
+    const bd = orderedAssigneeContexts[index % orderedAssigneeContexts.length]
 
     if (incomingLead.processedLeadId) {
       const result = await reassignExistingLead(incomingLead, bd, actor)

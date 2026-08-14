@@ -3,6 +3,8 @@ import { mapCircleCode } from '@/lib/mysql-code-mappings'
 export type IncomingLeadSummary = {
   campaignId: string | null
   leadDate: string | null
+  category: string | null
+  treatment: string | null
   circle: string | null
   city: string | null
   patientName: string | null
@@ -126,7 +128,15 @@ export function extractIncomingLeadSummary(payload: unknown): IncomingLeadSummar
       campaignId: toNullableString(
         mysqlLead.campaign_id ?? mysqlLead.campaignId ?? mysqlLead['campaign id'],
       ),
-      leadDate: toNullableString(mysqlLead.Lead_Date ?? mysqlLead.leadDate ?? mysqlLead.lead_date),
+      leadDate: toNullableString(
+        mysqlLead.LeadEntryDate ??
+          mysqlLead.leadEntryDate ??
+          mysqlLead.Lead_Date ??
+          mysqlLead.leadDate ??
+          mysqlLead.lead_date,
+      ),
+      category: toNullableString(mysqlLead.Category ?? mysqlLead.category),
+      treatment: toNullableString(mysqlLead.Treatment ?? mysqlLead.treatment),
       circle: mapCircleCode(
         (mysqlLead.Circle ?? mysqlLead.circle) as string | number | null | undefined,
       ),
@@ -149,7 +159,15 @@ export function extractIncomingLeadSummary(payload: unknown): IncomingLeadSummar
     campaignId: toNullableString(
       record.campaignId ?? record['campaign id'] ?? record.campaign_id ?? record.campaign,
     ),
-    leadDate: toNullableString(record.Lead_Date ?? record.leadDate ?? record.lead_date),
+    leadDate: toNullableString(
+      record.LeadEntryDate ??
+        record.leadEntryDate ??
+        record.Lead_Date ??
+        record.leadDate ??
+        record.lead_date,
+    ),
+    category: toNullableString(record.Category ?? record.category),
+    treatment: toNullableString(record.Treatment ?? record.treatment),
     circle: mapCircleCode((record.Circle ?? record.circle) as string | number | null | undefined),
     city: toNullableString(record.city_option ?? record.city),
     patientName: toNullableString(record.name ?? record.patientName ?? record.patient_name),
@@ -176,7 +194,13 @@ export function extractIncomingLeadEditValues(
 
   return {
     Lead_Date: toEditableString(
-      getFirstMatchingField(sourceRecord, ['Lead_Date']),
+      getFirstMatchingField(sourceRecord, [
+        'LeadEntryDate',
+        'leadEntryDate',
+        'Lead_Date',
+        'leadDate',
+        'lead_date',
+      ]),
     ),
     Patient_Number: toEditableString(
       getFirstMatchingField(sourceRecord, [
@@ -264,7 +288,11 @@ export function updateIncomingLeadPayload(
 
   if (mysqlLead) {
     if (updates.Lead_Date !== undefined) {
-      setFirstMatchingField(mysqlLead, ['Lead_Date'], updates.Lead_Date ?? null)
+      setFirstMatchingField(
+        mysqlLead,
+        ['LeadEntryDate', 'leadEntryDate', 'leadDate', 'lead_date'],
+        updates.Lead_Date ?? null,
+      )
     }
     if (updates.Patient_Number !== undefined) {
       setFirstMatchingField(
@@ -394,7 +422,11 @@ export function updateIncomingLeadPayload(
     mutableTarget.mysqlLead = mysqlLead
   } else {
     if (updates.Lead_Date !== undefined) {
-      setFirstMatchingField(mutableTarget, ['Lead_Date'], updates.Lead_Date ?? null)
+      setFirstMatchingField(
+        mutableTarget,
+        ['LeadEntryDate', 'leadEntryDate', 'leadDate', 'lead_date', 'Lead_Date'],
+        updates.Lead_Date ?? null,
+      )
     }
     if (updates.Patient_Number !== undefined) {
       setFirstMatchingField(

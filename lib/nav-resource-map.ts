@@ -94,6 +94,7 @@ export const NAV_TITLE_TO_RESOURCE: Record<string, string> = {
 /** Role-specific resource keys for Pipeline / Targets / Sales Dashboard. */
 export function resolveNavResourceKey(title: string, role: string): string | null {
   if (title === 'Pipeline' || title === 'CRM') {
+    if (role === 'SUPER_ADMIN') return 'sales.ea_pipeline'
     if (role === 'BD') return 'sales.sales_pipeline'
     if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER' || role === 'CATEGORY_MANAGER') {
       return 'sales.team_lead_pipeline'
