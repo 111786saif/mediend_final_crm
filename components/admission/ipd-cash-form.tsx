@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,6 +24,22 @@ const DOCTOR_TYPES = [
   'Laparoscopy',
   'Urologist',
 ] as const
+
+const GENDER_OPTIONS = ['Male', 'Female', 'Other'] as const
+
+function normalizeGenderValue(value: string | null | undefined) {
+  const normalized = value?.trim().toLowerCase()
+  if (normalized === 'male') return 'Male'
+  if (normalized === 'female') return 'Female'
+  if (normalized === 'other' || normalized === 'others') return 'Other'
+  return ''
+}
+
+function formatIsoDateForInput(value: unknown) {
+  if (!value) return ''
+  const parsed = new Date(value as string)
+  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0]
+}
 
 export interface IPDCashFormProps {
   leadId: string
@@ -64,6 +80,67 @@ interface SectionProps {
   children: React.ReactNode
   collapsible?: boolean
   defaultOpen?: boolean
+}
+
+function buildInitialIpdCashFormData(input: {
+  patientName?: string
+  age?: number
+  sex?: string
+  alternateNumber?: string
+  attendantName?: string
+  attendantContactNo?: string
+  circle?: string
+  category?: string
+  treatment?: string
+  quantityGrade?: string
+  anesthesia?: string
+  surgeonName?: string
+  surgeonType?: string
+  hospitalName?: string
+  initialData?: Record<string, unknown> | null
+  isEditMode?: boolean
+}) {
+  const admission = input.isEditMode && input.initialData ? input.initialData : null
+
+  return {
+    patientName: input.patientName ?? '',
+    age: input.age != null ? String(input.age) : '',
+    sex: normalizeGenderValue(input.sex),
+    circle: input.circle ?? '',
+    alternateContactName: input.attendantName ?? '',
+    alternateContactNumber: input.alternateNumber ?? input.attendantContactNo ?? '',
+    category: input.category ?? '',
+    treatment: input.treatment ?? '',
+    quantityGrade: input.quantityGrade ?? '',
+    anesthesia: input.anesthesia ?? '',
+    surgeonName: input.surgeonName ?? '',
+    surgeonType: input.surgeonType ?? '',
+    hospitalName: input.hospitalName ?? '',
+    hospitalAddress: admission?.hospitalAddress != null ? String(admission.hospitalAddress) : '',
+    googleMapLocation: admission?.googleMapLocation != null ? String(admission.googleMapLocation) : '',
+    admissionDate: formatIsoDateForInput(admission?.admissionDate),
+    admissionTime: admission?.admissionTime != null ? String(admission.admissionTime) : '',
+    surgeryDate: formatIsoDateForInput(admission?.surgeryDate),
+    surgeryTime: admission?.surgeryTime != null ? String(admission.surgeryTime) : '',
+    modeOfPayment: admission?.modeOfPayment != null ? String(admission.modeOfPayment) : 'Cash',
+    approvedAmount: admission?.approvedAmount != null ? String(admission.approvedAmount) : '',
+    finalBillAmount: admission?.finalBillAmount != null ? String(admission.finalBillAmount) : '',
+    collectedAmount: admission?.collectedAmount != null ? String(admission.collectedAmount) : '',
+    collectedByMediend: admission?.collectedByMediend != null ? String(admission.collectedByMediend) : '',
+    collectedByHospital: admission?.collectedByHospital != null ? String(admission.collectedByHospital) : '',
+    emiAmount: admission?.emiAmount != null ? String(admission.emiAmount) : '',
+    processingFee: admission?.processingFee != null ? String(admission.processingFee) : '',
+    gst: admission?.gst != null ? String(admission.gst) : '',
+    subventionFee: admission?.subventionFee != null ? String(admission.subventionFee) : '',
+    finalEmiAmount: admission?.finalEmiAmount != null ? String(admission.finalEmiAmount) : '',
+    implantText: '',
+    implantAmount: '',
+    instrumentText: '',
+    instrumentAmount: '',
+    consumablesText: '',
+    consumablesAmount: '',
+    notes: admission?.notes != null ? String(admission.notes) : '',
+  }
 }
 
 function Section({ title, icon, color, children, collapsible = false, defaultOpen = true }: SectionProps) {
@@ -118,75 +195,29 @@ export function IPDCashForm({
   onSuccess,
   onCancel,
 }: IPDCashFormProps) {
-  const [formData, setFormData] = useState({
-    patientName: patientName || '',
-    age: age != null ? String(age) : '',
-    sex: sex || '',
-    circle: circle || '',
-    alternateContactName: attendantName || '',
-    alternateContactNumber: alternateNumber || attendantContactNo || '',
-    category: category || '',
-    treatment: treatment || '',
-    quantityGrade: quantityGrade || '',
-    anesthesia: anesthesia || '',
-    surgeonName: surgeonName || '',
-    surgeonType: surgeonType || '',
-    hospitalName: hospitalName || '',
-    hospitalAddress: '',
-    googleMapLocation: '',
-    admissionDate: '',
-    admissionTime: '',
-    surgeryDate: '',
-    surgeryTime: '',
-    modeOfPayment: 'Cash',
-    approvedAmount: '',
-    finalBillAmount: '',
-    collectedAmount: '',
-    collectedByMediend: '',
-    collectedByHospital: '',
-    emiAmount: '',
-    processingFee: '',
-    gst: '',
-    subventionFee: '',
-    finalEmiAmount: '',
-    implantText: '',
-    implantAmount: '',
-    instrumentText: '',
-    instrumentAmount: '',
-    consumablesText: '',
-    consumablesAmount: '',
-    notes: '',
-  })
+  const [formData, setFormData] = useState(() =>
+    buildInitialIpdCashFormData({
+      patientName,
+      age,
+      sex,
+      alternateNumber,
+      attendantName,
+      attendantContactNo,
+      circle,
+      category,
+      treatment,
+      quantityGrade,
+      anesthesia,
+      surgeonName,
+      surgeonType,
+      hospitalName,
+      initialData: initialData as Record<string, unknown> | null | undefined,
+      isEditMode,
+    })
+  )
 
   const [selectedTreatment, setSelectedTreatment] = useState<MasterItem | null>(null)
   const [atsAmount, setAtsAmount] = useState<number>(0)
-
-  // Pre-fill data if in edit mode
-  useEffect(() => {
-    if (initialData && isEditMode) {
-      setFormData(prev => ({
-        ...prev,
-        admissionDate: initialData.admissionDate ? new Date(initialData.admissionDate).toISOString().split('T')[0] : '',
-        admissionTime: initialData.admissionTime || '',
-        surgeryDate: initialData.surgeryDate ? new Date(initialData.surgeryDate).toISOString().split('T')[0] : '',
-        surgeryTime: initialData.surgeryTime || '',
-        hospitalAddress: initialData.hospitalAddress || '',
-        googleMapLocation: initialData.googleMapLocation || '',
-        modeOfPayment: initialData.modeOfPayment || prev.modeOfPayment,
-        approvedAmount: initialData.approvedAmount != null ? String(initialData.approvedAmount) : prev.approvedAmount,
-        finalBillAmount: initialData.finalBillAmount != null ? String(initialData.finalBillAmount) : prev.finalBillAmount,
-        collectedAmount: initialData.collectedAmount != null ? String(initialData.collectedAmount) : prev.collectedAmount,
-        emiAmount: initialData.emiAmount != null ? String(initialData.emiAmount) : prev.emiAmount,
-        processingFee: initialData.processingFee != null ? String(initialData.processingFee) : prev.processingFee,
-        gst: initialData.gst != null ? String(initialData.gst) : prev.gst,
-        subventionFee: initialData.subventionFee != null ? String(initialData.subventionFee) : prev.subventionFee,
-        finalEmiAmount: initialData.finalEmiAmount != null ? String(initialData.finalEmiAmount) : prev.finalEmiAmount,
-        notes: initialData.notes || '',
-        collectedByMediend: initialData.collectedByMediend != null ? String(initialData.collectedByMediend) : '',
-        collectedByHospital: initialData.collectedByHospital != null ? String(initialData.collectedByHospital) : '',
-      }))
-    }
-  }, [initialData, isEditMode])
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
@@ -216,6 +247,12 @@ export function IPDCashForm({
 
   const validate = () => {
     const e: Record<string, string> = {}
+    if (!formData.patientName.trim()) e.patientName = 'Required'
+    if (!formData.sex.trim()) e.sex = 'Required'
+    if (!formData.circle.trim()) e.circle = 'Required'
+    if (!formData.treatment.trim()) e.treatment = 'Required'
+    if (!formData.surgeonName.trim()) e.surgeonName = 'Required'
+    if (!formData.hospitalName.trim()) e.hospitalName = 'Required'
     if (!formData.admissionDate) e.admissionDate = 'Required'
     if (!formData.admissionTime.trim()) e.admissionTime = 'Required'
     if (!formData.surgeryDate) e.surgeryDate = 'Required'
@@ -328,15 +365,16 @@ export function IPDCashForm({
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3">
             <div>
-              <Label htmlFor="patientName">Patient Name</Label>
-              <Input
-                id="patientName"
-                value={formData.patientName}
-                onChange={(e) => set('patientName', e.target.value)}
-                placeholder="Patient name"
-                className="mt-1"
-              />
-            </div>
+                <Label htmlFor="patientName">Patient Name</Label>
+                <Input
+                  id="patientName"
+                  value={formData.patientName}
+                  onChange={(e) => set('patientName', e.target.value)}
+                  placeholder="Patient name"
+                  className={`mt-1 ${errors.patientName ? 'border-destructive' : ''}`}
+                />
+                {errors.patientName && <p className="text-xs text-destructive mt-1">{errors.patientName}</p>}
+              </div>
             <ReadOnlyField label="Patient ID / Ref" value={leadRef} />
             <div>
               <Label htmlFor="age">Age</Label>
@@ -351,17 +389,18 @@ export function IPDCashForm({
               />
             </div>
             <div>
-              <Label htmlFor="sex">Gender</Label>
+              <Label htmlFor="sex">Gender <span className="text-destructive">*</span></Label>
               <Select value={formData.sex} onValueChange={(v) => set('sex', v)}>
-                <SelectTrigger id="sex" className="mt-1">
+                <SelectTrigger id="sex" className={`mt-1 ${errors.sex ? 'border-destructive' : ''}`}>
                   <SelectValue placeholder="Select gender" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Male">Male</SelectItem>
-                  <SelectItem value="Female">Female</SelectItem>
-                  <SelectItem value="Others">Others</SelectItem>
+                  {GENDER_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+              {errors.sex && <p className="text-xs text-destructive mt-1">{errors.sex}</p>}
             </div>
           </div>
 
@@ -394,14 +433,15 @@ export function IPDCashForm({
 
           <div className="border-t pt-3">
             <div>
-              <Label htmlFor="circle">Circle</Label>
+              <Label htmlFor="circle">Circle <span className="text-destructive">*</span></Label>
               <Input
                 id="circle"
                 value={formData.circle}
                 onChange={(e) => set('circle', e.target.value)}
                 placeholder="Circle"
-                className="mt-1"
+                className={`mt-1 ${errors.circle ? 'border-destructive' : ''}`}
               />
+              {errors.circle && <p className="text-xs text-destructive mt-1">{errors.circle}</p>}
             </div>
           </div>
         </div>
@@ -428,7 +468,7 @@ export function IPDCashForm({
             <div className="col-span-2">
               <MasterCombobox
                 id="treatment"
-                label="Treatment"
+                label="Treatment Name *"
                 masterType="treatments"
                 value={formData.treatment}
                 onChange={(v) => set('treatment', v)}
@@ -444,7 +484,9 @@ export function IPDCashForm({
                   setAtsAmount(ats)
                 }}
                 placeholder="Select treatment"
+                className={errors.treatment ? 'border-destructive' : undefined}
               />
+              {errors.treatment && <p className="text-xs text-destructive mt-1">{errors.treatment}</p>}
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -482,12 +524,14 @@ export function IPDCashForm({
           <div>
             <MasterCombobox
               id="surgeonName"
-              label="Surgeon Name"
+              label="Surgeon Name *"
               masterType="doctors"
               value={formData.surgeonName}
               onChange={(v) => set('surgeonName', v)}
               placeholder="Search or type surgeon name"
+              className={errors.surgeonName ? 'border-destructive' : undefined}
             />
+            {errors.surgeonName && <p className="text-xs text-destructive mt-1">{errors.surgeonName}</p>}
           </div>
           <div>
             <Label htmlFor="surgeonType">Doctor Type</Label>
@@ -515,12 +559,14 @@ export function IPDCashForm({
           <div>
             <MasterCombobox
               id="hospitalName"
-              label="Hospital / Clinic Name"
+              label="Hospital / Clinic Name *"
               masterType="hospitals"
               value={formData.hospitalName}
               onChange={(v) => set('hospitalName', v)}
               placeholder="Search or type hospital name"
+              className={errors.hospitalName ? 'border-destructive' : undefined}
             />
+            {errors.hospitalName && <p className="text-xs text-destructive mt-1">{errors.hospitalName}</p>}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

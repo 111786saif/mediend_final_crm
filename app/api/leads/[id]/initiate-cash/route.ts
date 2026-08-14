@@ -17,26 +17,33 @@ import {
 } from '@/lib/mode-of-payment'
 
 const initiateCashSchema = z.object({
-  admissionDate: z.string(),
-  admissionTime: z.string(),
-  admittingHospital: z.string(),
+  admissionDate: z.string().min(1, 'Admission date is required'),
+  admissionTime: z.string().min(1, 'Admission time is required'),
+  admittingHospital: z.string().min(1, 'Hospital name is required'),
   hospitalAddress: z.string().nullish(),
   googleMapLocation: z.string().nullish(),
-  surgeryDate: z.string(),
-  surgeryTime: z.string(),
+  surgeryDate: z.string().min(1, 'Surgery date is required'),
+  surgeryTime: z.string().min(1, 'Surgery time is required'),
   instrument: z.string().nullish(),
   implantConsumables: z.string().nullish(),
   notes: z.string().nullish(),
   quantityGrade: z.string().nullish(),
   anesthesia: z.string().nullish(),
-  surgeonName: z.string().nullish(),
+  surgeonName: z.string().min(1, 'Surgeon name is required'),
   surgeonType: z.string().nullish(),
   alternateContactName: z.string().nullish(),
   alternateContactNumber: z.string().nullish(),
+  patientName: z.string().min(1, 'Patient name is required'),
+  age: z.number().nullish(),
+  sex: z.enum(['Male', 'Female', 'Other'], {
+    errorMap: () => ({ message: 'Gender is required' }),
+  }),
+  circle: z.string().min(1, 'Circle is required'),
+  category: z.string().nullish(),
 
   // Treatment & ATS
   treatmentId: z.string().nullish(),
-  treatmentName: z.string().nullish(),
+  treatmentName: z.string().min(1, 'Treatment name is required'),
   atsAmount: z.number().nullish(),
 
   // Cash specific fields
@@ -147,7 +154,9 @@ export async function POST(
       select: { id: true },
     })
 
-    const nextDoctorName = normalizeDoctorName(validatedData.surgeonName)
+    const nextDoctorName = normalizeDoctorName(
+      validatedData.surgeonName || lead.ipdDrName || lead.surgeonName
+    )
     await assertDoctorAvailableOnDate(
       prisma,
       nextDoctorName,
@@ -200,6 +209,11 @@ export async function POST(
       await tx.lead.update({
         where: { id },
         data: {
+          patientName: validatedData.patientName,
+          ...(validatedData.age != null ? { age: validatedData.age } : {}),
+          sex: validatedData.sex,
+          circle: validatedData.circle,
+          category: validatedData.category || null,
           treatmentMasterId: validatedData.treatmentId || null,
           treatment: validatedData.treatmentName || null,
           atsAmount: validatedData.atsAmount || null,
@@ -211,6 +225,7 @@ export async function POST(
           quantityGrade: validatedData.quantityGrade,
           anesthesia: validatedData.anesthesia,
           surgeonName: validatedData.surgeonName,
+          ipdDrName: validatedData.surgeonName,
           surgeonType: validatedData.surgeonType,
           attendantName: validatedData.alternateContactName,
           alternateNumber: validatedData.alternateContactNumber,
@@ -313,10 +328,9 @@ export async function PATCH(
       return errorResponse('Can only edit IPD Cash details before the case moves past approval', 400)
     }
 
-    const nextDoctorName =
-      validatedData.surgeonName !== undefined
-        ? normalizeDoctorName(validatedData.surgeonName)
-        : normalizeDoctorName(lead.surgeonName)
+    const nextDoctorName = normalizeDoctorName(
+      validatedData.surgeonName || lead.ipdDrName || lead.surgeonName
+    )
     await assertDoctorAvailableOnDate(
       prisma,
       nextDoctorName,
@@ -336,9 +350,23 @@ export async function PATCH(
     )
 
     await prisma.$transaction(async (tx) => {
-      await tx.admissionRecord.update({
+      await tx.admissionRecord.upsert({
         where: { leadId: id },
-        data: {
+        create: {
+          leadId: id,
+          admissionDate: new Date(validatedData.admissionDate),
+          admissionTime: validatedData.admissionTime,
+          admittingHospital: validatedData.admittingHospital,
+          hospitalAddress: validatedData.hospitalAddress,
+          googleMapLocation: validatedData.googleMapLocation,
+          surgeryDate: new Date(validatedData.surgeryDate),
+          surgeryTime: validatedData.surgeryTime,
+          instrument: validatedData.instrument,
+          implantConsumables: validatedData.implantConsumables,
+          notes: validatedData.notes,
+          initiatedById: user.id,
+        },
+        update: {
           admissionDate: new Date(validatedData.admissionDate),
           admissionTime: validatedData.admissionTime,
           admittingHospital: validatedData.admittingHospital,
@@ -355,6 +383,11 @@ export async function PATCH(
       await tx.lead.update({
         where: { id },
         data: {
+          patientName: validatedData.patientName,
+          ...(validatedData.age != null ? { age: validatedData.age } : {}),
+          sex: validatedData.sex,
+          circle: validatedData.circle,
+          category: validatedData.category || null,
           treatmentMasterId: validatedData.treatmentId || null,
           treatment: validatedData.treatmentName || null,
           atsAmount: validatedData.atsAmount || null,
@@ -365,6 +398,7 @@ export async function PATCH(
           quantityGrade: validatedData.quantityGrade,
           anesthesia: validatedData.anesthesia,
           surgeonName: validatedData.surgeonName,
+          ipdDrName: validatedData.surgeonName,
           surgeonType: validatedData.surgeonType,
           attendantName: validatedData.alternateContactName,
           alternateNumber: validatedData.alternateContactNumber,
