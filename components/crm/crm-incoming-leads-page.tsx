@@ -15,7 +15,14 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -152,6 +159,8 @@ type IncomingLeadRecord = {
   summary: {
     campaignId: string | null
     leadDate: string | null
+    category: string | null
+    treatment: string | null
     circle: string | null
     city: string | null
     patientName: string | null
@@ -168,6 +177,8 @@ type IncomingLeadRecord = {
     leadRef: string
     patientName: string
     phoneNumber: string
+    category: string | null
+    treatment: string | null
     assignedDate: string | null
     leadEntryDate: string | null
     followUpDate: string | null
@@ -771,8 +782,16 @@ export function CrmIncomingLeadsPage() {
         campaignName: incomingLead.campaign?.displayName ?? 'Unmapped campaign',
         campaignSource: mappedCampaign?.source.name ?? '—',
         leadSource: mappedCampaign?.leadSource.name ?? '—',
-        category: mappedCampaign?.category ?? '—',
-        treatment: mappedCampaign?.treatmentMaster?.name ?? '—',
+        category:
+          incomingLead.processedLead?.category ??
+          incomingLead.summary.category ??
+          mappedCampaign?.category ??
+          '—',
+        treatment:
+          incomingLead.processedLead?.treatment ??
+          incomingLead.summary.treatment ??
+          mappedCampaign?.treatmentMaster?.name ??
+          '—',
         circle: incomingLead.summary.circle ?? mappedCampaign?.circle.name ?? '—',
         city: incomingLead.summary.city ?? '—',
         patientName: incomingLead.summary.patientName ?? '—',
@@ -797,6 +816,10 @@ export function CrmIncomingLeadsPage() {
 
   const visibleColumnDefinitions = useMemo(
     () => availableIncomingLeadColumns.filter((column) => visibleColumns[column.id]),
+    [availableIncomingLeadColumns, visibleColumns]
+  )
+  const areAllIncomingLeadColumnsVisible = useMemo(
+    () => availableIncomingLeadColumns.every((column) => visibleColumns[column.id]),
     [availableIncomingLeadColumns, visibleColumns]
   )
 
@@ -1180,7 +1203,7 @@ export function CrmIncomingLeadsPage() {
   }
 
   const manualAssignMutation = useMutation({
-    mutationFn: (payload: { incomingLeadIds: string[]; bdUserIds: string[] }) =>
+    mutationFn: (payload: { incomingLeadIds: string[]; assigneeUserIds: string[] }) =>
       apiPost<IncomingLeadManualAssignResult>(
         '/api/crm/incoming-leads/manual-assign',
         payload
@@ -1891,6 +1914,21 @@ export function CrmIncomingLeadsPage() {
                       <DropdownMenuContent align="end" className="max-h-[360px] w-64 overflow-y-auto">
                         <DropdownMenuLabel>Visible columns</DropdownMenuLabel>
                         <DropdownMenuSeparator />
+                        <DropdownMenuCheckboxItem
+                          checked={areAllIncomingLeadColumnsVisible}
+                          onSelect={(event) => event.preventDefault()}
+                          onCheckedChange={(checked) => {
+                            const nextValue = checked === true
+                            setVisibleColumns(
+                              Object.fromEntries(
+                                availableIncomingLeadColumns.map((column) => [column.id, nextValue])
+                              ) as Record<IncomingLeadColumn['id'], boolean>
+                            )
+                          }}
+                        >
+                          Select all
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuSeparator />
                         {availableIncomingLeadColumns.map((column) => (
                           <DropdownMenuCheckboxItem
                             key={column.id}
@@ -2110,10 +2148,10 @@ export function CrmIncomingLeadsPage() {
         selectedLeads={selectedManualAssignLeads}
         assignableUsers={manualAssignOptionsQuery.data?.assignableUsers ?? []}
         isPending={manualAssignMutation.isPending}
-        onSubmit={async ({ leadIds, bdUserIds }) => {
+        onSubmit={async ({ leadIds, assigneeUserIds }) => {
           await manualAssignMutation.mutateAsync({
             incomingLeadIds: leadIds,
-            bdUserIds,
+            assigneeUserIds,
           })
         }}
       />

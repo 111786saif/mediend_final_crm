@@ -191,6 +191,21 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    if (effectiveRole === 'SUPER_ADMIN') {
+      for (const res of resources) {
+        if (
+          res.key === 'sales' ||
+          res.key === 'sales.ea_pipeline' ||
+          res.key.startsWith('sales.ea_pipeline.')
+        ) {
+          permissions[res.key] = {
+            level: PermissionLevel.FULL_ACCESS,
+            canGrant: true,
+          }
+        }
+      }
+    }
+
     return successResponse({ permissions })
   } catch (error) {
     console.error('Error fetching caller permissions map:', error)

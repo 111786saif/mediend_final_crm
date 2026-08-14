@@ -3,7 +3,7 @@ import type { JsonValue } from '@/generated/prisma/runtime/library'
 import type { SessionUser } from '@/lib/auth'
 import { logCrmActivity } from '@/lib/crm-activity'
 import {
-  buildLeadOwnershipTransferUpdateForAssigneeManager,
+  buildLeadOwnershipTransferUpdate,
   canUserRemoveLeadRemarks,
   canUserUpdateLeadStatus,
   canUserViewLeadOwner,
@@ -485,6 +485,9 @@ export async function processBulkLeadReassignCycle(
   const workflowFollowUpDate = workflowMetadata.followUpDate
     ? new Date(workflowMetadata.followUpDate)
     : null
+  const workflowModeOfPayment = workflowMetadata.modeOfPayment
+    ? normalizeModeOfPaymentStorageValue(workflowMetadata.modeOfPayment)
+    : null
 
   if (leadIds.length !== run.totalLeads || bdUserIds.length !== run.totalBds) {
     throw new Error('Bulk lead reassignment run has inconsistent stored data')
@@ -541,20 +544,32 @@ export async function processBulkLeadReassignCycle(
       bdUserIds.length - run.currentBdIndex,
       leadIds.length - run.currentLeadIndex
     )
-
-    for (let offset = 0; offset < assignmentsThisCycle; offset += 1) {
-      const leadIndex = run.currentLeadIndex + offset
-      const bdIndex = run.currentBdIndex + offset
-      const leadId = leadIds[leadIndex]
-      const nextOwnerUserId = bdUserIds[bdIndex]
-      const nextOwner = targetUserMap.get(nextOwnerUserId)
-
-      if (!nextOwner) {
-        throw new Error('A selected assignee is no longer available')
-      }
-
-      const lead = await prisma.lead.findUnique({
-        where: { id: leadId },
+    const cycleLeadIds = leadIds.slice(
+      run.currentLeadIndex,
+      run.currentLeadIndex + assignmentsThisCycle
+    )
+    const [assigneeEmployees, cycleLeads] = await Promise.all([
+      prisma.employee.findMany({
+        where: {
+          userId: {
+            in: bdUserIds,
+          },
+        },
+        select: {
+          userId: true,
+          manager: {
+            select: {
+              bdNumber: true,
+            },
+          },
+        },
+      }),
+      prisma.lead.findMany({
+        where: {
+          id: {
+            in: cycleLeadIds,
+          },
+        },
         select: {
           id: true,
           leadRef: true,
@@ -568,7 +583,25 @@ export async function processBulkLeadReassignCycle(
             },
           },
         },
-      })
+      }),
+    ])
+    const assigneeTeamLeadIdMap = new Map(
+      assigneeEmployees.map((entry) => [entry.userId, entry.manager?.bdNumber ?? null])
+    )
+    const cycleLeadMap = new Map(cycleLeads.map((lead) => [lead.id, lead]))
+
+    for (let offset = 0; offset < assignmentsThisCycle; offset += 1) {
+      const leadIndex = run.currentLeadIndex + offset
+      const bdIndex = run.currentBdIndex + offset
+      const leadId = leadIds[leadIndex]
+      const nextOwnerUserId = bdUserIds[bdIndex]
+      const nextOwner = targetUserMap.get(nextOwnerUserId)
+
+      if (!nextOwner) {
+        throw new Error('A selected assignee is no longer available')
+      }
+
+      const lead = cycleLeadMap.get(leadId)
 
       if (!lead) {
         throw new Error(`Lead ${leadId} could not be found during reassignment`)
@@ -576,49 +609,50 @@ export async function processBulkLeadReassignCycle(
 
       const assignedAt = new Date()
       const nextBdIndex = (bdIndex + 1) % bdUserIds.length
+      const leadUpdateData = {
+        updatedBy: {
+          connect: { id: run.actorUserId },
+        },
+        updatedDate: assignedAt,
+        ...buildLeadOwnershipTransferUpdate(nextOwnerUserId, assignedAt),
+        teamLeadId: assigneeTeamLeadIdMap.get(nextOwnerUserId) ?? null,
+        ...(workflowMetadata.leadStatus
+          ? { status: workflowMetadata.leadStatus }
+          : {}),
+        ...(workflowFollowUpDate ? { followUpDate: workflowFollowUpDate } : {}),
+        ...(workflowModeOfPayment ? { modeOfPayment: workflowModeOfPayment } : {}),
+        ...(run.subStatus != null ? { subStatus: run.subStatus } : {}),
+        ...(run.removePreviousRemarks
+          ? {
+              removeRemarks: true,
+              remarksClearedAt: assignedAt,
+            }
+          : {}),
+      }
 
-      await prisma.$transaction(async (tx) => {
-        await tx.lead.update({
+      await prisma.$transaction(
+        async (tx) => {
+          await tx.lead.update({
           where: { id: lead.id },
-          data: {
-            updatedBy: {
-              connect: { id: run!.actorUserId },
+          data: leadUpdateData,
+          })
+          await tx.bulkLeadReassignmentRun.update({
+            where: { id: runId },
+            data: {
+              processedCount: {
+                increment: 1,
+              },
+              currentLeadIndex: {
+                increment: 1,
+              },
+              currentBdIndex: nextBdIndex,
             },
-            updatedDate: assignedAt,
-            ...(await buildLeadOwnershipTransferUpdateForAssigneeManager(
-              nextOwnerUserId,
-              assignedAt,
-            )),
-            ...(workflowMetadata.leadStatus
-              ? { status: workflowMetadata.leadStatus }
-              : {}),
-            ...(workflowFollowUpDate ? { followUpDate: workflowFollowUpDate } : {}),
-            ...(workflowMetadata.modeOfPayment
-              ? { modeOfPayment: normalizeModeOfPaymentStorageValue(workflowMetadata.modeOfPayment) }
-              : {}),
-            ...(run!.subStatus != null ? { subStatus: run!.subStatus } : {}),
-            ...(run!.removePreviousRemarks
-              ? {
-                  removeRemarks: true,
-                  remarksClearedAt: assignedAt,
-                }
-              : {}),
-          },
-        })
-
-        await tx.bulkLeadReassignmentRun.update({
-          where: { id: runId },
-          data: {
-            processedCount: {
-              increment: 1,
-            },
-            currentLeadIndex: {
-              increment: 1,
-            },
-            currentBdIndex: nextBdIndex,
-          },
-        })
-      })
+          })
+        },
+        {
+          timeout: 30_000,
+        }
+      )
 
       const entityLabel = `${lead.leadRef} · ${lead.patientName}`
 

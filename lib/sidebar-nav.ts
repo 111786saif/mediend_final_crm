@@ -269,6 +269,7 @@ export const navItems: NavItem[] = [
     url: '/pipeline',
     icon: ClipboardList,
     roles: [
+      'SUPER_ADMIN',
       'BD',
       'TEAM_LEAD',
       'ASSISTANT_CATEGORY_MANAGER',
@@ -740,6 +741,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
       }
     }
     if (item.title === 'Pipeline' || item.title === 'CRM') {
+      if (role === 'SUPER_ADMIN') return { ...item, url: '/executive-assistant/pipeline' }
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }
       if (role === 'TEAM_LEAD' || role === 'ASSISTANT_CATEGORY_MANAGER') {
         return { ...item, url: '/team-lead/pipeline' }

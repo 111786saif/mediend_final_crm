@@ -1,17 +1,28 @@
 import { NextRequest } from 'next/server'
+import { EmployeeStatus, UserRole } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { manuallyAssignIncomingLeads } from '@/lib/incoming-leads/manual-assign'
-import { getBulkReassignableBdUsersForActor } from '@/lib/lead-ownership'
+import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 
 type ManualAssignBody = {
   incomingLeadIds?: unknown
+  assigneeUserIds?: unknown
   bdUserIds?: unknown
 }
 
 function isSuperAdmin(role: string | null | undefined) {
   return role === 'SUPER_ADMIN'
 }
+
+const INCOMING_LEAD_MANUAL_ASSIGNABLE_ROLES = [
+  UserRole.BD,
+  UserRole.EXECUTIVE_ASSISTANT,
+  UserRole.SALES_HEAD,
+  UserRole.CATEGORY_MANAGER,
+  UserRole.TEAM_LEAD,
+  UserRole.MD,
+] as const
 
 export async function GET() {
   const currentUser = await getSessionWithFreshUser()
@@ -23,7 +34,23 @@ export async function GET() {
     return errorResponse('Forbidden', 403)
   }
 
-  const assignableUsers = await getBulkReassignableBdUsersForActor(currentUser)
+  const assignableUsers = await prisma.user.findMany({
+    where: {
+      role: { in: [...INCOMING_LEAD_MANUAL_ASSIGNABLE_ROLES] },
+      employee: {
+        is: {
+          status: EmployeeStatus.ACTIVE,
+        },
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
+    orderBy: { name: 'asc' },
+  })
 
   return successResponse({
     canManualAssign: assignableUsers.length > 0,
@@ -48,13 +75,17 @@ export async function POST(request: NextRequest) {
           (value): value is string => typeof value === 'string' && value.trim().length > 0
         )
       : []
-    const bdUserIds = Array.isArray(body.bdUserIds)
+    const assigneeUserIds = Array.isArray(body.assigneeUserIds)
+      ? body.assigneeUserIds.filter(
+          (value): value is string => typeof value === 'string' && value.trim().length > 0
+        )
+      : Array.isArray(body.bdUserIds)
       ? body.bdUserIds.filter(
           (value): value is string => typeof value === 'string' && value.trim().length > 0
         )
       : []
 
-    const result = await manuallyAssignIncomingLeads(incomingLeadIds, bdUserIds, {
+    const result = await manuallyAssignIncomingLeads(incomingLeadIds, assigneeUserIds, {
       id: currentUser.id,
       name: currentUser.name,
       role: currentUser.role,

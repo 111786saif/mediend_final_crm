@@ -191,6 +191,11 @@ async function buildProcessedLeadUpdateData(params: {
     normalizeLeadText(matchedCampaign?.displayName) ??
     explicitLeadSource ??
     normalizeLeadText(mysqlMapped?.campaignName as string | null | undefined)
+  const nextLeadEntryDate = parseDate(editableValues.Lead_Date)
+  const currentAssignedDate =
+    mysqlMapped?.assignedDate instanceof Date ? mysqlMapped.assignedDate : null
+  const currentLeadEntryDate =
+    mysqlMapped?.leadEntryDate instanceof Date ? mysqlMapped.leadEntryDate : null
 
   return {
     updateData: {
@@ -239,11 +244,10 @@ async function buildProcessedLeadUpdateData(params: {
       source: finalSource,
       campaignName: finalLeadSource,
       campaignId: params.externalCampaignId,
-      assignedDate:
-        parseDate(editableValues.Lead_Date) ??
-        (mysqlMapped?.assignedDate instanceof Date ? mysqlMapped.assignedDate : null),
+      leadEntryDate: nextLeadEntryDate ?? currentLeadEntryDate,
       updatedById: params.currentUserId,
     },
+    assignmentDate: currentAssignedDate,
     routingCircle:
       explicitCircle ??
       normalizeLeadText(mysqlMapped?.circle as string | null | undefined) ??
@@ -281,6 +285,8 @@ async function buildResponsePayload(incomingLeadId: string, canViewPhone: boolea
             leadRef: true,
             patientName: true,
             phoneNumber: true,
+            category: true,
+            treatment: true,
             assignedDate: true,
             leadEntryDate: true,
             followUpDate: true,
@@ -333,6 +339,8 @@ async function buildResponsePayload(incomingLeadId: string, canViewPhone: boolea
           phoneNumber: canViewPhone
             ? processedLead.phoneNumber
             : maskPhoneNumber(processedLead.phoneNumber),
+          category: processedLead.category,
+          treatment: processedLead.treatment,
           assignedDate: processedLead.assignedDate,
           leadEntryDate: processedLead.leadEntryDate,
           followUpDate: processedLead.followUpDate,
@@ -477,7 +485,7 @@ export async function PATCH(
           externalCampaignId: nextCampaignId ?? undefined,
           city: processedLeadUpdate.routingCircle ?? null,
           category: processedLeadUpdate.routingCategory ?? null,
-          assignmentDate: processedLeadUpdate.updateData.assignedDate ?? new Date(),
+          assignmentDate: processedLeadUpdate.assignmentDate ?? new Date(),
         })
 
         if (!assignmentPreview.assignment) {

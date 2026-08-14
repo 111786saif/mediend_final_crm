@@ -99,6 +99,8 @@ export async function GET(request: NextRequest) {
               leadRef: true,
               patientName: true,
               phoneNumber: true,
+              category: true,
+              treatment: true,
               assignedDate: true,
               leadEntryDate: true,
               followUpDate: true,
@@ -217,6 +219,8 @@ export async function GET(request: NextRequest) {
                 phoneNumber: canViewPhone
                   ? processedLead.phoneNumber
                   : maskPhoneNumber(processedLead.phoneNumber),
+                category: processedLead.category,
+                treatment: processedLead.treatment,
                 assignedDate: processedLead.assignedDate,
                 leadEntryDate: processedLead.leadEntryDate,
                 followUpDate: processedLead.followUpDate,

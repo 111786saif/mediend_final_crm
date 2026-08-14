@@ -13,6 +13,8 @@ export default async function PipelineRedirectPage() {
   }
 
   switch (user.role) {
+    case 'SUPER_ADMIN':
+      redirect('/executive-assistant/pipeline')
     case 'BD':
     case 'ADMIN':
       redirect('/bd/pipeline')

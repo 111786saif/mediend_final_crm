@@ -53,18 +53,13 @@ export function IncomingLeadsManualAssignDialog({
   selectedLeads: SelectedIncomingLead[]
   assignableUsers: AssignableUser[]
   isPending: boolean
-  onSubmit: (payload: { leadIds: string[]; bdUserIds: string[] }) => Promise<unknown> | void
+  onSubmit: (payload: { leadIds: string[]; assigneeUserIds: string[] }) => Promise<unknown> | void
 }) {
-  const [selectedBdUserIds, setSelectedBdUserIds] = useState<string[]>([])
+  const [selectedAssigneeUserIds, setSelectedAssigneeUserIds] = useState<string[]>([])
   const [leadPickerOpen, setLeadPickerOpen] = useState(false)
   const [leadQuery, setLeadQuery] = useState('')
   const [bdPickerOpen, setBdPickerOpen] = useState(false)
   const [bdQuery, setBdQuery] = useState('')
-
-  const bdAssignableUsers = useMemo(
-    () => assignableUsers.filter((user) => user.role === 'BD'),
-    [assignableUsers]
-  )
 
   const selectedLeadSummary = useMemo(
     () =>
@@ -93,39 +88,39 @@ export function IncomingLeadsManualAssignDialog({
   const allDialogLeadsSelected =
     leadOptions.length > 0 && selectedLeadIds.length === leadOptions.length
 
-  const selectedBdUsers = useMemo(
+  const selectedAssigneeUsers = useMemo(
     () =>
-      selectedBdUserIds
-        .map((userId) => bdAssignableUsers.find((user) => user.id === userId))
+      selectedAssigneeUserIds
+        .map((userId) => assignableUsers.find((user) => user.id === userId))
         .filter((user): user is AssignableUser => Boolean(user)),
-    [bdAssignableUsers, selectedBdUserIds]
+    [assignableUsers, selectedAssigneeUserIds]
   )
 
   const filteredAssignableUsers = useMemo(() => {
     const query = bdQuery.trim().toLowerCase()
-    if (!query) return bdAssignableUsers
+    if (!query) return assignableUsers
 
-    return bdAssignableUsers.filter((user) => {
+    return assignableUsers.filter((user) => {
       const label = `${user.name} ${user.email} ${user.role}`.toLowerCase()
       return label.includes(query)
     })
-  }, [bdAssignableUsers, bdQuery])
+  }, [assignableUsers, bdQuery])
 
   const selectedBdButtonLabel = useMemo(() => {
-    if (selectedBdUsers.length === 0) return 'Select BDs'
-    if (selectedBdUsers.length === 1) return selectedBdUsers[0]?.name || '1 BD selected'
-    return `${selectedBdUsers.length} BDs selected`
-  }, [selectedBdUsers])
+    if (selectedAssigneeUsers.length === 0) return 'Select users'
+    if (selectedAssigneeUsers.length === 1) return selectedAssigneeUsers[0]?.name || '1 user selected'
+    return `${selectedAssigneeUsers.length} users selected`
+  }, [selectedAssigneeUsers])
 
   function toggleBd(userId: string, checked: boolean) {
     if (checked) {
-      setSelectedBdUserIds((current) =>
+      setSelectedAssigneeUserIds((current) =>
         current.includes(userId) ? current : [...current, userId]
       )
       return
     }
 
-    setSelectedBdUserIds((current) => current.filter((id) => id !== userId))
+    setSelectedAssigneeUserIds((current) => current.filter((id) => id !== userId))
   }
 
   function toggleLead(leadId: string, checked: boolean) {
@@ -142,14 +137,14 @@ export function IncomingLeadsManualAssignDialog({
   async function handleSubmit() {
     await onSubmit({
       leadIds: selectedLeadIds,
-      bdUserIds: selectedBdUserIds,
+      assigneeUserIds: selectedAssigneeUserIds,
     })
     handleOpenChange(false)
   }
 
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
-      setSelectedBdUserIds([])
+      setSelectedAssigneeUserIds([])
       setLeadPickerOpen(false)
       setLeadQuery('')
       setBdPickerOpen(false)
@@ -165,7 +160,7 @@ export function IncomingLeadsManualAssignDialog({
         <DialogHeader>
           <DialogTitle>Assign Failed Incoming Leads</DialogTitle>
           <DialogDescription>
-            Assign the selected failed incoming leads to one or more BDs. Selection order is used
+            Assign the selected failed incoming leads to one or more users. Selection order is used
             for round robin.
           </DialogDescription>
         </DialogHeader>
@@ -265,7 +260,7 @@ export function IncomingLeadsManualAssignDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="incoming-leads-manual-assign-bds">BDs</Label>
+            <Label htmlFor="incoming-leads-manual-assign-bds">Users</Label>
             <Popover open={bdPickerOpen} onOpenChange={setBdPickerOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -287,7 +282,7 @@ export function IncomingLeadsManualAssignDialog({
                   <Input
                     value={bdQuery}
                     onChange={(event) => setBdQuery(event.target.value)}
-                    placeholder="Search BD name or email"
+                    placeholder="Search user name or email"
                     className="h-8"
                   />
                 </div>
@@ -296,18 +291,18 @@ export function IncomingLeadsManualAssignDialog({
                     Selection order is used for round robin
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {selectedBdUserIds.length} selected
+                    {selectedAssigneeUserIds.length} selected
                   </span>
                 </div>
                 <ScrollArea className="h-[260px] overscroll-contain">
                   <div className="p-1">
                     {filteredAssignableUsers.length === 0 ? (
                       <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-                        No BDs found
+                        No users found
                       </p>
                     ) : (
                       filteredAssignableUsers.map((assignableUser) => {
-                        const checked = selectedBdUserIds.includes(assignableUser.id)
+                        const checked = selectedAssigneeUserIds.includes(assignableUser.id)
                         return (
                           <label
                             key={assignableUser.id}
@@ -342,9 +337,9 @@ export function IncomingLeadsManualAssignDialog({
               </PopoverContent>
             </Popover>
             <Textarea
-              value={selectedBdUsers.map((user, index) => `${index + 1}. ${user.name}`).join('\n')}
+              value={selectedAssigneeUsers.map((user, index) => `${index + 1}. ${user.name}`).join('\n')}
               readOnly
-              rows={Math.max(3, Math.min(6, selectedBdUsers.length || 3))}
+              rows={Math.max(3, Math.min(6, selectedAssigneeUsers.length || 3))}
               className="resize-none"
             />
           </div>
@@ -356,7 +351,7 @@ export function IncomingLeadsManualAssignDialog({
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={isPending || selectedBdUserIds.length === 0 || selectedLeadIds.length === 0}
+            disabled={isPending || selectedAssigneeUserIds.length === 0 || selectedLeadIds.length === 0}
           >
             {isPending ? (
               <>

@@ -322,7 +322,12 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:read',
     'main.cumulative_report',
   ],
-  SUPER_ADMIN: [],
+  SUPER_ADMIN: [
+    'leads:read',
+    'leads:write',
+    'leads:assign',
+    'analytics:read',
+  ],
   CRM_ADMIN: [],
   ADMIN: [
     'leads:read',
