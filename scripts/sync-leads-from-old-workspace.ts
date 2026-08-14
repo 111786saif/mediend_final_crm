@@ -24,17 +24,18 @@
 
 import 'dotenv/config'
 import pLimit from 'p-limit'
-import { prisma } from '@/lib/prisma'
 import {
   buildUserIdMap,
   copyLeadBundle,
   createSourcePrisma,
+  createTargetPrisma,
   filterLeadRefsMissingOnTarget,
   findLeadRefsInRange,
   loadTreatmentMasterIds,
   parseCliDates,
   parseLeadRefFilter,
   SourceSchemaGuard,
+  withTransientRetry,
 } from '@/lib/sync/old-workspace-sync'
 
 const argv = process.argv.slice(2)
@@ -45,10 +46,10 @@ const LEAD_ONLY = argv.includes('--lead-only')
 
 function parseConcurrency(): number {
   const idx = argv.indexOf('--concurrency')
-  if (idx === -1) return 6
+  if (idx === -1) return 4
   const n = Number.parseInt(argv[idx + 1] ?? '', 10)
-  if (!Number.isFinite(n) || n < 1) return 6
-  return Math.min(n, 16)
+  if (!Number.isFinite(n) || n < 1) return 4
+  return Math.min(n, 8)
 }
 
 function formatEta(seconds: number): string {
@@ -76,17 +77,20 @@ async function main() {
   console.log(`${'='.repeat(60)}\n`)
 
   const source = createSourcePrisma()
+  const target = createTargetPrisma()
 
   try {
     await source.$queryRaw`SELECT 1`
     console.log('✅ Source DB connected')
+    await target.$queryRaw`SELECT 1`
+    console.log('✅ Target DB connected')
 
     const sourceSchema = await SourceSchemaGuard.load(source)
     sourceSchema.logSummary()
 
     const [{ map: userMap, fallbackUserId }, treatmentMasterIds] = await Promise.all([
-      buildUserIdMap(source, prisma),
-      loadTreatmentMasterIds(prisma),
+      buildUserIdMap(source, target),
+      loadTreatmentMasterIds(target),
     ])
     console.log(`✅ User map: ${userMap.size} emails matched (fallback admin: ${fallbackUserId})`)
 
@@ -94,7 +98,7 @@ async function main() {
     let workRefs = leadRefs
 
     if (MISSING_ONLY) {
-      workRefs = await filterLeadRefsMissingOnTarget(prisma, leadRefs)
+      workRefs = await filterLeadRefsMissingOnTarget(target, leadRefs)
       console.log(`📋 Leads in range on old DB: ${leadRefs.length}`)
       console.log(`📋 Missing on target (will create): ${workRefs.length}`)
     } else {
@@ -121,7 +125,7 @@ async function main() {
       let missingOnTarget = 0
       for (let i = 0; i < leadRefs.length; i += 500) {
         const chunk = leadRefs.slice(i, i + 500)
-        const found = await prisma.lead.findMany({
+        const found = await target.lead.findMany({
           where: { leadRef: { in: chunk } },
           select: { leadRef: true },
         })
@@ -157,14 +161,16 @@ async function main() {
       workRefs.map((leadRef) =>
         limit(async () => {
           try {
-            const result = await copyLeadBundle(
-              source,
-              prisma,
-              leadRef,
-              userMap,
-              fallbackUserId,
-              sourceSchema,
-              bundleOptions
+            const result = await withTransientRetry(() =>
+              copyLeadBundle(
+                source,
+                target,
+                leadRef,
+                userMap,
+                fallbackUserId,
+                sourceSchema,
+                bundleOptions
+              )
             )
             if (result === 'synced') synced++
             else if (result === 'created') created++
@@ -191,7 +197,7 @@ async function main() {
     console.log(`\n✅ Done in ${totalSec}s — synced=${synced}, created=${created}, skipped=${skipped}, errors=${errors}`)
   } finally {
     await source.$disconnect()
-    await prisma.$disconnect()
+    await target.$disconnect()
   }
 }
 

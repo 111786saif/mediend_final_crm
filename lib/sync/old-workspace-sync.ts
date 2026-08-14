@@ -3,20 +3,67 @@ import { PrismaPg } from '@prisma/adapter-pg'
 
 export type WorkspacePrisma = PrismaClient
 
+function createPgAdapter(url: string, poolMax: number): PrismaPg {
+  return new PrismaPg({
+    connectionString: url,
+    max: poolMax,
+    idleTimeoutMillis: 60_000,
+    connectionTimeoutMillis: 60_000,
+    allowExitOnIdle: false,
+    keepAlive: true,
+  })
+}
+
 export function createSourcePrisma(): WorkspacePrisma {
   const url = process.env.SOURCE_DATABASE_URL
   if (!url) {
     throw new Error('SOURCE_DATABASE_URL is required (old workspace Postgres connection string)')
   }
-  const poolMax = Number(process.env.SOURCE_DB_POOL_MAX ?? 10)
-  const adapter = new PrismaPg({
-    connectionString: url,
-    max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 10,
-    idleTimeoutMillis: 10_000,
-    connectionTimeoutMillis: 60_000,
-    allowExitOnIdle: true,
+  const poolMax = Number(process.env.SOURCE_DB_POOL_MAX ?? 12)
+  return new PrismaClient({
+    adapter: createPgAdapter(url, Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 12),
   })
-  return new PrismaClient({ adapter })
+}
+
+/** Target DB client for bulk sync — uses a larger pool than the Next.js app default. */
+export function createTargetPrisma(): WorkspacePrisma {
+  const url = process.env.DATABASE_URL
+  if (!url) {
+    throw new Error('DATABASE_URL is required')
+  }
+  const poolMax = Number(process.env.DATABASE_POOL_MAX ?? 10)
+  return new PrismaClient({
+    adapter: createPgAdapter(url, Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 10),
+  })
+}
+
+function isTransientDbError(e: unknown): boolean {
+  if (!(e instanceof Error)) return false
+  const msg = e.message.toLowerCase()
+  return (
+    msg.includes('connection terminated') ||
+    msg.includes('econnreset') ||
+    msg.includes('timeout') ||
+    msg.includes('too many clients') ||
+    msg.includes('server closed the connection') ||
+    msg.includes('broken pipe') ||
+    msg.includes('connection reset')
+  )
+}
+
+/** Retry on dropped SSH tunnel / pool blips. */
+export async function withTransientRetry<T>(fn: () => Promise<T>, attempts = 4): Promise<T> {
+  let last: unknown
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn()
+    } catch (e) {
+      last = e
+      if (!isTransientDbError(e) || i === attempts - 1) throw e
+      await new Promise((r) => setTimeout(r, 1500 * (i + 1)))
+    }
+  }
+  throw last
 }
 
 /** Tracks which source tables/models exist; avoids Prisma error spam on old schema. */
