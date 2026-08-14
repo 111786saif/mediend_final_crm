@@ -38,11 +38,11 @@ const initiateSchema = z.object({
   // Overrides for Lead details
   quantityGrade: z.string().optional(),
   anesthesia: z.string().optional(),
-  surgeonName: z.string().optional(),
+  surgeonName: z.string().min(1, 'Surgeon name is required'),
   surgeonType: z.string().optional(),
   alternateContactName: z.string().optional(),
   alternateContactNumber: z.string().optional(),
-  patientName: z.string().optional(),
+  patientName: z.string().min(1, 'Patient name is required'),
   insuranceName: z.string().optional(),
   insuranceType: z.string().optional(),
   copay: z.string().optional(),
@@ -52,7 +52,11 @@ const initiateSchema = z.object({
   bdName: z.string().optional(),
   bdManagerName: z.string().optional(),
   age: z.union([z.string(), z.number()]).optional(),
-  sex: z.string().optional(),
+  sex: z.enum(['Male', 'Female', 'Other'], {
+    errorMap: () => ({ message: 'Gender is required' }),
+  }),
+  circle: z.string().min(1, 'Circle is required'),
+  treatmentName: z.string().min(1, 'Treatment name is required'),
 })
 
 export async function POST(
@@ -108,7 +112,9 @@ export async function POST(
       return errorResponse('Admission already initiated for this case', 400)
     }
 
-    const nextDoctorName = normalizeDoctorName(data.surgeonName)
+    const nextDoctorName = normalizeDoctorName(
+      data.surgeonName || lead.ipdDrName || lead.surgeonName
+    )
     await assertDoctorAvailableOnDate(
       prisma,
       nextDoctorName,
@@ -160,14 +166,16 @@ export async function POST(
         // Save overrides
         ...(data.quantityGrade ? { quantityGrade: data.quantityGrade } : {}),
         ...(data.anesthesia ? { anesthesia: data.anesthesia } : {}),
-        ...(data.surgeonName ? { ipdDrName: data.surgeonName } : {}),
+        ...(data.surgeonName ? { ipdDrName: data.surgeonName, surgeonName: data.surgeonName } : {}),
         ...(data.surgeonType ? { surgeonType: data.surgeonType } : {}),
         ...(data.alternateContactName ? { attendantName: data.alternateContactName } : {}),
         ...(data.alternateContactNumber ? { alternateNumber: data.alternateContactNumber } : {}),
-        ...(data.patientName ? { patientName: data.patientName } : {}),
+        patientName: data.patientName,
+        sex: data.sex,
+        circle: data.circle,
+        treatment: data.treatmentName,
         ...(data.insuranceName ? { insuranceName: data.insuranceName } : {}),
         ...(data.age ? { age: Number(data.age) } : {}),
-        ...(data.sex ? { sex: data.sex } : {}),
       },
     })
 
@@ -251,12 +259,9 @@ export async function PATCH(
       )
     }
 
-    const existingAdmission = await prisma.admissionRecord.findUnique({ where: { leadId } })
-    if (!existingAdmission) {
-      return errorResponse('No admission record to edit', 404)
-    }
-
-    const nextDoctorName = normalizeDoctorName(data.surgeonName || lead.ipdDrName || lead.surgeonName)
+    const nextDoctorName = normalizeDoctorName(
+      data.surgeonName || lead.ipdDrName || lead.surgeonName
+    )
     await assertDoctorAvailableOnDate(
       prisma,
       nextDoctorName,
@@ -270,17 +275,30 @@ export async function PATCH(
       'Selected doctor is on approved leave for this date.'
     )
 
-    await prisma.admissionRecord.update({
+    await prisma.admissionRecord.upsert({
       where: { leadId },
-      data: {
+      create: {
+        leadId,
         admissionDate: new Date(data.admissionDate),
         admissionTime: data.admissionTime,
         admittingHospital: data.admittingHospital,
         surgeryDate: new Date(data.surgeryDate),
         surgeryTime: data.surgeryTime,
         tpa: data.tpa,
-        // Only overwrite optional fields that were actually provided, so a
-        // partial edit (e.g. just the dates) never wipes existing values.
+        ...(data.hospitalAddress?.trim() ? { hospitalAddress: data.hospitalAddress.trim() } : {}),
+        ...(data.googleMapLocation?.trim() ? { googleMapLocation: data.googleMapLocation.trim() } : {}),
+        ...(data.instrument?.trim() ? { instrument: data.instrument.trim() } : {}),
+        ...(data.implantConsumables?.trim() ? { implantConsumables: data.implantConsumables.trim() } : {}),
+        ...(data.notes?.trim() ? { notes: data.notes.trim() } : {}),
+        initiatedById: user.id,
+      },
+      update: {
+        admissionDate: new Date(data.admissionDate),
+        admissionTime: data.admissionTime,
+        admittingHospital: data.admittingHospital,
+        surgeryDate: new Date(data.surgeryDate),
+        surgeryTime: data.surgeryTime,
+        tpa: data.tpa,
         ...(data.hospitalAddress?.trim() ? { hospitalAddress: data.hospitalAddress.trim() } : {}),
         ...(data.googleMapLocation?.trim() ? { googleMapLocation: data.googleMapLocation.trim() } : {}),
         ...(data.instrument?.trim() ? { instrument: data.instrument.trim() } : {}),
@@ -296,14 +314,16 @@ export async function PATCH(
         ipdAdmissionDate: new Date(data.admissionDate),
         ...(data.quantityGrade ? { quantityGrade: data.quantityGrade } : {}),
         ...(data.anesthesia ? { anesthesia: data.anesthesia } : {}),
-        ...(data.surgeonName ? { ipdDrName: data.surgeonName } : {}),
+        ...(data.surgeonName ? { ipdDrName: data.surgeonName, surgeonName: data.surgeonName } : {}),
         ...(data.surgeonType ? { surgeonType: data.surgeonType } : {}),
         ...(data.alternateContactName ? { attendantName: data.alternateContactName } : {}),
         ...(data.alternateContactNumber ? { alternateNumber: data.alternateContactNumber } : {}),
-        ...(data.patientName ? { patientName: data.patientName } : {}),
+        patientName: data.patientName,
+        sex: data.sex,
+        circle: data.circle,
+        treatment: data.treatmentName,
         ...(data.insuranceName ? { insuranceName: data.insuranceName } : {}),
         ...(data.age ? { age: Number(data.age) } : {}),
-        ...(data.sex ? { sex: data.sex } : {}),
       },
     })
 

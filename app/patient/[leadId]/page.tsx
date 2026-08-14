@@ -2794,6 +2794,7 @@ export default function PatientDetailsPage() {
             </DialogHeader>
             {lead && (
               <IPDDetailsForm
+                key={`ipd-details-${leadId}-${admitEditMode ? 'edit' : 'create'}-${showAdmitModal ? 'open' : 'closed'}-${lead.admissionRecord?.id ?? 'none'}-${lead.updatedDate ?? 'na'}`}
                 leadId={leadId}
                 patientName={lead.patientName}
                 leadRef={lead.leadRef}
@@ -2845,6 +2846,7 @@ export default function PatientDetailsPage() {
             </DialogHeader>
             {lead && (
               <IPDCashForm
+                key={`ipd-cash-${leadId}-${showIPDCashModal ? 'open' : 'closed'}-${lead.admissionRecord?.id ?? 'none'}-${lead.updatedDate ?? 'na'}`}
                 leadId={leadId}
                 patientName={lead.patientName}
                 leadRef={lead.leadRef}

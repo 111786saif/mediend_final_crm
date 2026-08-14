@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,6 +23,22 @@ const DOCTOR_TYPES = [
   'Laparoscopy',
   'Urologist',
 ] as const
+
+const GENDER_OPTIONS = ['Male', 'Female', 'Other'] as const
+
+function normalizeGenderValue(value: string | null | undefined) {
+  const normalized = value?.trim().toLowerCase()
+  if (normalized === 'male') return 'Male'
+  if (normalized === 'female') return 'Female'
+  if (normalized === 'other' || normalized === 'others') return 'Other'
+  return ''
+}
+
+function formatIsoDateForInput(value: unknown) {
+  if (!value) return ''
+  const parsed = new Date(value as string)
+  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0]
+}
 
 export interface IPDDetailsFormProps {
   leadId: string
@@ -72,6 +88,76 @@ interface SectionProps {
   children: React.ReactNode
   collapsible?: boolean
   defaultOpen?: boolean
+}
+
+function buildInitialIpdDetailsFormData(input: {
+  patientName?: string
+  leadRef?: string
+  age?: number
+  sex?: string
+  alternateNumber?: string
+  attendantName?: string
+  circle?: string
+  treatment?: string
+  quantityGrade?: string
+  anesthesia?: string
+  surgeonName?: string
+  surgeonType?: string
+  hospitalName?: string
+  insuranceName?: string
+  insuranceType?: string
+  tpa?: string
+  sumInsured?: string | number
+  copay?: string | number
+  capping?: string | number
+  roomType?: string
+  bdName?: string
+  bdManagerName?: string
+  isEditMode?: boolean
+  initialData?: Record<string, unknown> | null
+}) {
+  const admission = input.isEditMode && input.initialData ? input.initialData : null
+
+  return {
+    patientName: input.patientName ?? '',
+    leadRef: input.leadRef ?? '',
+    age: input.age != null ? String(input.age) : '',
+    sex: normalizeGenderValue(input.sex),
+    circle: input.circle ?? '',
+    alternateContactName: input.attendantName ?? '',
+    alternateContactNumber: input.alternateNumber ?? '',
+    treatment: input.treatment ?? '',
+    quantityGrade: input.quantityGrade ?? '',
+    anesthesia: input.anesthesia ?? '',
+    surgeonName: input.surgeonName ?? '',
+    surgeonType: input.surgeonType ?? '',
+    hospitalName: input.hospitalName ?? '',
+    hospitalAddress: admission?.hospitalAddress != null ? String(admission.hospitalAddress) : '',
+    googleMapLocation: admission?.googleMapLocation != null ? String(admission.googleMapLocation) : '',
+    insuranceType: input.insuranceType ?? '',
+    insuranceName: input.insuranceName ?? '',
+    copay: input.copay != null ? String(input.copay) : '',
+    sumInsured: input.sumInsured != null ? String(input.sumInsured) : '',
+    roomType: input.roomType ?? '',
+    capping: input.capping != null ? String(input.capping) : '',
+    tpa:
+      admission?.tpa != null && String(admission.tpa).trim().length > 0
+        ? String(admission.tpa)
+        : (input.tpa ?? ''),
+    bdName: input.bdName ?? '',
+    bdManagerName: input.bdManagerName ?? '',
+    admissionDate: formatIsoDateForInput(admission?.admissionDate),
+    admissionTime: admission?.admissionTime != null ? String(admission.admissionTime) : '',
+    surgeryDate: formatIsoDateForInput(admission?.surgeryDate),
+    surgeryTime: admission?.surgeryTime != null ? String(admission.surgeryTime) : '',
+    implantText: '',
+    implantAmount: '',
+    instrumentText: '',
+    instrumentAmount: '',
+    consumablesText: '',
+    consumablesAmount: '',
+    notes: admission?.notes != null ? String(admission.notes) : '',
+  }
 }
 
 function Section({ title, icon, color, children, collapsible = false, defaultOpen = true }: SectionProps) {
@@ -125,80 +211,49 @@ export function IPDDetailsForm({
   onSuccess,
   onCancel,
 }: IPDDetailsFormProps) {
-  const [formData, setFormData] = useState({
-    // Patient info (prefilled, editable)
-    patientName: patientName,
-    leadRef: leadRef,
-    age: age != null ? String(age) : '',
-    sex: sex,
-    circle: circle,
-    // Alternate contact (editable)
-    alternateContactName: attendantName,
-    alternateContactNumber: alternateNumber,
-    // Treatment (prefilled, editable)
-    treatment: treatment,
-    quantityGrade: quantityGrade,
-    anesthesia: anesthesia,
-    // Surgeon (prefilled, editable)
-    surgeonName: surgeonName,
-    surgeonType: surgeonType,
-    // Hospital (prefilled, editable)
-    hospitalName: hospitalName,
-    hospitalAddress: '',
-    googleMapLocation: '',
-    // Insurance (prefilled, editable)
-    insuranceType: insuranceType,
-    insuranceName: insuranceName,
-    copay: copay != null ? String(copay) : '',
-    sumInsured: sumInsured != null ? String(sumInsured) : '',
-    roomType: roomType,
-    capping: capping != null ? String(capping) : '',
-    tpa: tpaProp,
-    // BD info (prefilled, editable)
-    bdName: bdName,
-    bdManagerName: bdManagerName,
-    // Admission & Surgery timeline
-    admissionDate: '',
-    admissionTime: '',
-    surgeryDate: '',
-    surgeryTime: '',
-    // Implants & Consumables
-    implantText: '',
-    implantAmount: '',
-    instrumentText: '',
-    instrumentAmount: '',
-    consumablesText: '',
-    consumablesAmount: '',
-    notes: '',
-  })
+  const [formData, setFormData] = useState(() =>
+    buildInitialIpdDetailsFormData({
+      patientName,
+      leadRef,
+      age,
+      sex,
+      alternateNumber,
+      attendantName,
+      circle,
+      treatment,
+      quantityGrade,
+      anesthesia,
+      surgeonName,
+      surgeonType,
+      hospitalName,
+      insuranceName,
+      insuranceType,
+      tpa: tpaProp,
+      sumInsured,
+      copay,
+      capping,
+      roomType,
+      bdName,
+      bdManagerName,
+      isEditMode,
+      initialData: initialData as Record<string, unknown> | null | undefined,
+    })
+  )
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
-
-  // Prefill admission-specific fields when editing an existing record.
-  useEffect(() => {
-    if (!initialData || !isEditMode) return
-    const d = initialData as Record<string, unknown>
-    const dateStr = (v: unknown) => (v ? new Date(v as string).toISOString().split('T')[0] : '')
-    const str = (v: unknown) => (v != null ? String(v) : '')
-    setFormData(prev => ({
-      ...prev,
-      admissionDate: dateStr(d.admissionDate) || prev.admissionDate,
-      admissionTime: str(d.admissionTime) || prev.admissionTime,
-      surgeryDate: dateStr(d.surgeryDate) || prev.surgeryDate,
-      surgeryTime: str(d.surgeryTime) || prev.surgeryTime,
-      tpa: str(d.tpa) || prev.tpa,
-      hospitalAddress: str(d.hospitalAddress) || prev.hospitalAddress,
-      googleMapLocation: str(d.googleMapLocation) || prev.googleMapLocation,
-      notes: str(d.notes) || prev.notes,
-    }))
-  }, [initialData, isEditMode])
 
   const set = (key: string, value: string) =>
     setFormData((prev) => ({ ...prev, [key]: value }))
 
   const validate = () => {
     const e: Record<string, string> = {}
+    if (!formData.patientName.trim()) e.patientName = 'Required'
+    if (!formData.sex.trim()) e.sex = 'Required'
+    if (!formData.circle.trim()) e.circle = 'Required'
+    if (!formData.treatment.trim()) e.treatment = 'Required'
+    if (!formData.surgeonName.trim()) e.surgeonName = 'Required'
+    if (!formData.hospitalName.trim()) e.hospitalName = 'Required'
     if (!formData.admissionDate) e.admissionDate = 'Required'
     if (!formData.admissionTime.trim()) e.admissionTime = 'Required'
     if (!formData.surgeryDate) e.surgeryDate = 'Required'
@@ -243,6 +298,8 @@ export function IPDDetailsForm({
         notes: formData.notes.trim() || undefined,
         quantityGrade: formData.quantityGrade.trim() || undefined,
         anesthesia: formData.anesthesia.trim() || undefined,
+        treatmentName: formData.treatment.trim(),
+        circle: formData.circle.trim(),
         surgeonName: formData.surgeonName.trim() || undefined,
         surgeonType: formData.surgeonType.trim() || undefined,
         alternateContactName: formData.alternateContactName.trim() || undefined,
@@ -283,8 +340,15 @@ export function IPDDetailsForm({
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <Label htmlFor="patientName">Patient Name</Label>
-              <Input id="patientName" value={formData.patientName} onChange={(e) => set('patientName', e.target.value)} placeholder="Patient name" className="mt-1" />
+              <Label htmlFor="patientName">Patient Name <span className="text-destructive">*</span></Label>
+              <Input
+                id="patientName"
+                value={formData.patientName}
+                onChange={(e) => set('patientName', e.target.value)}
+                placeholder="Patient name"
+                className={`mt-1 ${errors.patientName ? 'border-destructive' : ''}`}
+              />
+              {errors.patientName && <p className="text-xs text-destructive mt-1">{errors.patientName}</p>}
             </div>
             <div>
               <Label htmlFor="leadRef">Patient ID / Ref</Label>
@@ -295,8 +359,18 @@ export function IPDDetailsForm({
               <Input id="age" value={formData.age} onChange={(e) => set('age', e.target.value)} placeholder="Age" className="mt-1" type="number" />
             </div>
             <div>
-              <Label htmlFor="sex">Gender</Label>
-              <Input id="sex" value={formData.sex} onChange={(e) => set('sex', e.target.value)} placeholder="Gender" className="mt-1" />
+              <Label htmlFor="sex">Gender <span className="text-destructive">*</span></Label>
+              <Select value={formData.sex} onValueChange={(v) => set('sex', v)}>
+                <SelectTrigger id="sex" className={`mt-1 ${errors.sex ? 'border-destructive' : ''}`}>
+                  <SelectValue placeholder="Select gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  {GENDER_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.sex && <p className="text-xs text-destructive mt-1">{errors.sex}</p>}
             </div>
           </div>
 
@@ -317,8 +391,15 @@ export function IPDDetailsForm({
 
           <div className="border-t pt-3">
             <div>
-              <Label htmlFor="circle">Circle</Label>
-              <Input id="circle" value={formData.circle} onChange={(e) => set('circle', e.target.value)} placeholder="Circle" className="mt-1" />
+              <Label htmlFor="circle">Circle <span className="text-destructive">*</span></Label>
+              <Input
+                id="circle"
+                value={formData.circle}
+                onChange={(e) => set('circle', e.target.value)}
+                placeholder="Circle"
+                className={`mt-1 ${errors.circle ? 'border-destructive' : ''}`}
+              />
+              {errors.circle && <p className="text-xs text-destructive mt-1">{errors.circle}</p>}
             </div>
           </div>
         </div>
@@ -333,8 +414,15 @@ export function IPDDetailsForm({
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="treatment">Treatment Name</Label>
-              <Input id="treatment" value={formData.treatment} onChange={(e) => set('treatment', e.target.value)} placeholder="Treatment name" className="mt-1" />
+              <Label htmlFor="treatment">Treatment Name <span className="text-destructive">*</span></Label>
+              <Input
+                id="treatment"
+                value={formData.treatment}
+                onChange={(e) => set('treatment', e.target.value)}
+                placeholder="Treatment name"
+                className={`mt-1 ${errors.treatment ? 'border-destructive' : ''}`}
+              />
+              {errors.treatment && <p className="text-xs text-destructive mt-1">{errors.treatment}</p>}
             </div>
             <div>
               <Label htmlFor="quantityGrade">Quantity / Grade</Label>
@@ -351,10 +439,10 @@ export function IPDDetailsForm({
                 id="anesthesia"
                 label="Type of Anaesthesia"
                 masterType="anesthesia"
-                value={formData.anesthesia}
-                onChange={(v) => set('anesthesia', v)}
-                placeholder="Search anaesthesia type"
-                restrictToSuggestions
+              value={formData.anesthesia}
+              onChange={(v) => set('anesthesia', v)}
+              placeholder="Search anaesthesia type"
+              allowFreeText={false}
               />
             </div>
           </div>
@@ -369,16 +457,17 @@ export function IPDDetailsForm({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="surgeonName">Surgeon Name</Label>
+            <Label htmlFor="surgeonName">Surgeon Name <span className="text-destructive">*</span></Label>
             <MasterCombobox
               id="surgeonName"
               masterType="doctors"
               value={formData.surgeonName}
               onChange={(v) => set('surgeonName', v)}
               placeholder="Search surgeon name"
-              className="mt-1"
-              restrictToSuggestions
+              className={`mt-1 ${errors.surgeonName ? 'border-destructive' : ''}`}
+              allowFreeText={false}
             />
+            {errors.surgeonName && <p className="text-xs text-destructive mt-1">{errors.surgeonName}</p>}
           </div>
           <div>
             <Label htmlFor="surgeonType">Doctor Type</Label>
@@ -406,17 +495,19 @@ export function IPDDetailsForm({
           <div>
             <MasterCombobox
               id="hospitalName"
-              label="Hospital / Clinic Name"
+              label="Hospital / Clinic Name *"
               masterType="hospitals"
               value={formData.hospitalName}
               onChange={(v) => set('hospitalName', v)}
               placeholder="Search hospital name"
-              restrictToSuggestions
+              className={errors.hospitalName ? 'border-destructive' : undefined}
+              allowFreeText={false}
               onItemSelect={(item) => {
                 if (item.address && !formData.hospitalAddress) set('hospitalAddress', item.address)
                 if (item.googleMapLink && !formData.googleMapLocation) set('googleMapLocation', item.googleMapLink)
               }}
             />
+            {errors.hospitalName && <p className="text-xs text-destructive mt-1">{errors.hospitalName}</p>}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

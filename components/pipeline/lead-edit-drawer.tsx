@@ -22,6 +22,7 @@ import {
   formatLeadAssigneeName,
   formatLeadAssigneeRoleLabel,
 } from '@/lib/lead-assignee-display'
+import { maskPhoneNumber } from '@/lib/phone-utils'
 import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { KnowlarityCallRecordingsCard } from '@/components/telephony/knowlarity-call-recordings-card'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
@@ -66,16 +67,7 @@ function formatDisplayValue(value: unknown, fallback = '—') {
 
 function formatMaskedPhone(value: unknown, fallback = '—') {
   if (typeof value !== 'string') return fallback
-  const trimmed = value.trim()
-  if (!trimmed) return fallback
-
-  const visiblePrefixLength = trimmed.length > 6 ? 2 : 0
-  const visibleSuffixLength = Math.min(4, trimmed.length)
-  const prefix = visiblePrefixLength > 0 ? trimmed.slice(0, visiblePrefixLength) : ''
-  const suffix = trimmed.slice(-visibleSuffixLength)
-  const maskLength = Math.max(trimmed.length - prefix.length - suffix.length, 0)
-  const masked = `${prefix}${'*'.repeat(maskLength)}${suffix}`
-  return masked || fallback
+  return maskPhoneNumber(value)
 }
 
 function toDateInputValue(value: string | null | undefined) {
@@ -366,15 +358,7 @@ export function LeadEditDrawer({
   const currentModeOfPayment = lead?.modeOfPayment ?? ''
   const remarkHistory = remarksData?.remarks ?? []
   const previousRemark = remarksData?.latestRemark ?? null
-  const mergedRemarkHistory = [...remarkHistory]
-    .sort((leftRemark, rightRemark) => {
-      const leftTime = new Date(leftRemark.createdAt).getTime()
-      const rightTime = new Date(rightRemark.createdAt).getTime()
-      return leftTime - rightTime
-    })
-    .map((remark) => remark.content.trim())
-    .filter((remarkContent) => remarkContent.length > 0)
-    .join('\n')
+  const latestRemarkContent = previousRemark?.content.trim() ?? ''
   const olderRemarks = previousRemark
     ? remarkHistory.filter((remark) => remark.id !== previousRemark.id)
     : remarkHistory
@@ -384,15 +368,15 @@ export function LeadEditDrawer({
   const assignmentHistory = activityData?.assignmentHistory ?? []
   const hasLiveRemarkDraft =
     statusChangeRemarkDraftState.leadId === leadId &&
-    statusChangeRemarkDraftState.baseValue === mergedRemarkHistory
+    statusChangeRemarkDraftState.baseValue === latestRemarkContent
   const statusChangeRemarkDraft = hasLiveRemarkDraft
-    ? statusChangeRemarkDraftState.value ?? mergedRemarkHistory
-    : mergedRemarkHistory
+    ? statusChangeRemarkDraftState.value ?? latestRemarkContent
+    : latestRemarkContent
   const trimmedStatusChangeRemark = statusChangeRemarkDraft.trim()
   const remarkDirty =
     hasLiveRemarkDraft &&
     statusChangeRemarkDraftState.value !== null &&
-    statusChangeRemarkDraftState.value !== mergedRemarkHistory
+    statusChangeRemarkDraftState.value !== latestRemarkContent
   const showAllRemarks = Boolean(leadId) && expandedRemarksLeadId === leadId
 
   const statusChanged = effectiveLeadStatus !== currentStatus
@@ -1015,7 +999,7 @@ export function LeadEditDrawer({
                       onChange={(e) =>
                         setStatusChangeRemarkDraftState({
                           leadId,
-                          baseValue: mergedRemarkHistory,
+                          baseValue: latestRemarkContent,
                           value: e.target.value,
                         })
                       }
