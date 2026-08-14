@@ -3,19 +3,188 @@ import { PrismaPg } from '@prisma/adapter-pg'
 
 export type WorkspacePrisma = PrismaClient
 
+function createPgAdapter(url: string, poolMax: number): PrismaPg {
+  return new PrismaPg({
+    connectionString: url,
+    max: poolMax,
+    idleTimeoutMillis: 60_000,
+    connectionTimeoutMillis: 60_000,
+    allowExitOnIdle: false,
+    keepAlive: true,
+  })
+}
+
 export function createSourcePrisma(): WorkspacePrisma {
   const url = process.env.SOURCE_DATABASE_URL
   if (!url) {
     throw new Error('SOURCE_DATABASE_URL is required (old workspace Postgres connection string)')
   }
-  const adapter = new PrismaPg({
-    connectionString: url,
-    max: 2,
-    idleTimeoutMillis: 10_000,
-    connectionTimeoutMillis: 60_000,
-    allowExitOnIdle: true,
+  const poolMax = Number(process.env.SOURCE_DB_POOL_MAX ?? 12)
+  return new PrismaClient({
+    adapter: createPgAdapter(url, Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 12),
   })
-  return new PrismaClient({ adapter, log: ['error'] })
+}
+
+/** Target DB client for bulk sync — uses a larger pool than the Next.js app default. */
+export function createTargetPrisma(): WorkspacePrisma {
+  const url = process.env.DATABASE_URL
+  if (!url) {
+    throw new Error('DATABASE_URL is required')
+  }
+  const poolMax = Number(process.env.DATABASE_POOL_MAX ?? 10)
+  return new PrismaClient({
+    adapter: createPgAdapter(url, Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 10),
+  })
+}
+
+function isTransientDbError(e: unknown): boolean {
+  if (!(e instanceof Error)) return false
+  const msg = e.message.toLowerCase()
+  return (
+    msg.includes('connection terminated') ||
+    msg.includes('econnreset') ||
+    msg.includes('timeout') ||
+    msg.includes('too many clients') ||
+    msg.includes('server closed the connection') ||
+    msg.includes('broken pipe') ||
+    msg.includes('connection reset')
+  )
+}
+
+/** Retry on dropped SSH tunnel / pool blips. */
+export async function withTransientRetry<T>(fn: () => Promise<T>, attempts = 4): Promise<T> {
+  let last: unknown
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn()
+    } catch (e) {
+      last = e
+      if (!isTransientDbError(e) || i === attempts - 1) throw e
+      await new Promise((r) => setTimeout(r, 1500 * (i + 1)))
+    }
+  }
+  throw last
+}
+
+/** Tracks which source tables/models exist; avoids Prisma error spam on old schema. */
+export class SourceSchemaGuard {
+  private blocked = new Set<string>()
+
+  private constructor(private tables: Set<string>) {}
+
+  private static readonly OPTIONAL_MODELS: Array<[string, string]> = [
+    ['leadRemark', 'LeadRemark'],
+    ['leadRemarkEntry', 'LeadRemarkEntry'],
+    ['callNote', 'CallNote'],
+    ['leadStageEvent', 'LeadStageEvent'],
+    ['caseStageHistory', 'CaseStageHistory'],
+    ['workflowResetLog', 'WorkflowResetLog'],
+    ['caseChatMessage', 'CaseChatMessage'],
+    ['chatReadReceipt', 'ChatReadReceipt'],
+    ['kypSubmission', 'KYPSubmission'],
+    ['insuranceCase', 'InsuranceCase'],
+    ['insuranceInitiateForm', 'InsuranceInitiateForm'],
+    ['admissionRecord', 'AdmissionRecord'],
+    ['dischargeSheet', 'DischargeSheet'],
+    ['pLRecord', 'PLRecord'],
+    ['outstandingCase', 'OutstandingCase'],
+    ['complianceCall', 'ComplianceCall'],
+    ['leadOpdPrescriptionImage', 'LeadOpdPrescriptionImage'],
+    ['leadOpdAppointment', 'LeadOpdAppointment'],
+    ['paymentInstallment', 'PaymentInstallment'],
+    ['invoiceRequest', 'InvoiceRequest'],
+    ['doctorPayoffRequest', 'DoctorPayoffRequest'],
+    ['leadQrCallAuditLog', 'LeadQrCallAuditLog'],
+    ['leadQrPublicLink', 'LeadQrPublicLink'],
+    ['crmAssignmentPreviewLog', 'CrmAssignmentPreviewLog'],
+  ]
+
+  static async load(source: WorkspacePrisma): Promise<SourceSchemaGuard> {
+    const rows = await source.$queryRaw<Array<{ table_name: string }>>`
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
+    `
+    const guard = new SourceSchemaGuard(new Set(rows.map((r) => r.table_name)))
+
+    for (const [key, table] of SourceSchemaGuard.OPTIONAL_MODELS) {
+      if (!guard.tables.has(table)) guard.blocked.add(key)
+    }
+
+    // One-time probes for tables that exist but have column drift vs current Prisma schema.
+    await guard.probe(source, [
+      [
+        'kypSubmission',
+        'KYPSubmission',
+        () =>
+          source.kYPSubmission.findFirst({
+            include: {
+              preAuthData: {
+                include: {
+                  suggestedHospitals: { take: 1 },
+                  queries: { take: 1 },
+                  pdfVersions: { take: 1 },
+                },
+              },
+            },
+          }),
+      ],
+      [
+        'admissionRecord',
+        'AdmissionRecord',
+        () =>
+          source.admissionRecord.findFirst({
+            include: {
+              implantUsages: { take: 1 },
+              prescriptionImages: { take: 1 },
+            },
+          }),
+      ],
+      ['complianceCall', 'ComplianceCall', () => source.complianceCall.findFirst()],
+      ['paymentInstallment', 'PaymentInstallment', () => source.paymentInstallment.findFirst()],
+    ])
+
+    return guard
+  }
+
+  logSummary(): void {
+    const skipped = [...this.blocked].sort()
+    if (skipped.length === 0) return
+    console.log(`⏭ Source schema: skipping ${skipped.length} model(s) — ${skipped.join(', ')}`)
+  }
+
+  private async probe(
+    source: WorkspacePrisma,
+    probes: Array<[string, string, () => Promise<unknown>]>
+  ): Promise<void> {
+    for (const [key, table, fn] of probes) {
+      if (!this.tables.has(table)) {
+        this.blocked.add(key)
+        continue
+      }
+      try {
+        await fn()
+      } catch (e) {
+        if (isMissingSchemaError(e)) this.blocked.add(key)
+      }
+    }
+  }
+
+  async optional<T>(key: string, table: string, fn: () => Promise<T>, fallback: T): Promise<T> {
+    if (this.blocked.has(key) || !this.tables.has(table)) {
+      if (!this.tables.has(table)) this.blocked.add(key)
+      return fallback
+    }
+    try {
+      return await fn()
+    } catch (e) {
+      if (isMissingSchemaError(e)) {
+        this.blocked.add(key)
+        return fallback
+      }
+      throw e
+    }
+  }
 }
 
 /** Parse YYYY-MM-DD as IST midnight → UTC Date. */
@@ -99,22 +268,160 @@ export function remapUserId(
   return userMap.get(userId) ?? fallbackUserId
 }
 
-function isMissingTableError(e: unknown): boolean {
+function isMissingSchemaError(e: unknown): boolean {
   if (e && typeof e === 'object' && 'code' in e) {
     const code = String((e as { code: string }).code)
-    return code === 'P2010' || code === 'P2021'
+    if (code === 'P2010' || code === 'P2021' || code === 'P2022') return true
+  }
+  if (e && typeof e === 'object' && 'message' in e) {
+    const msg = String((e as { message: string }).message)
+    if (/does not exist in the current database/i.test(msg)) return true
+    if (/relation .* does not exist/i.test(msg)) return true
   }
   return false
 }
 
-/** Run a source DB read; return fallback if the table does not exist on old schema. */
-async function sourceOptional<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
-  try {
-    return await fn()
-  } catch (e) {
-    if (isMissingTableError(e)) return fallback
-    throw e
+/** Run a source DB read; return fallback if table/column missing on old schema. */
+async function sourceOptional<T>(
+  schema: SourceSchemaGuard,
+  key: string,
+  table: string,
+  fn: () => Promise<T>,
+  fallback: T
+): Promise<T> {
+  return schema.optional(key, table, fn, fallback)
+}
+
+const leadColumnCache = new WeakMap<WorkspacePrisma, Set<string>>()
+
+async function getLeadColumns(db: WorkspacePrisma): Promise<Set<string>> {
+  const cached = leadColumnCache.get(db)
+  if (cached) return cached
+
+  const rows = await db.$queryRaw<Array<{ column_name: string }>>`
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'Lead'
+  `
+  const cols = new Set(rows.map((r) => r.column_name))
+  leadColumnCache.set(db, cols)
+  return cols
+}
+
+/** Fetch lead row from old DB via raw SQL (avoids Prisma selecting columns missing on old schema). */
+async function fetchSourceLeadRow(
+  source: WorkspacePrisma,
+  leadRef: string
+): Promise<{ row: Record<string, unknown>; id: string } | null> {
+  const rows = await source.$queryRaw<Array<Record<string, unknown>>>`
+    SELECT * FROM "Lead" WHERE "leadRef" = ${leadRef} LIMIT 1
+  `
+  const row = rows[0]
+  if (!row || typeof row.id !== 'string') return null
+  return { row, id: row.id }
+}
+
+async function buildLeadFieldsFromSourceRow(
+  source: WorkspacePrisma,
+  target: WorkspacePrisma,
+  row: Record<string, unknown>,
+  userMap: Map<string, string>,
+  fallbackUserId: string,
+  treatmentMasterIds?: Set<string>
+): Promise<Record<string, unknown>> {
+  const [sourceCols, targetCols] = await Promise.all([getLeadColumns(source), getLeadColumns(target)])
+  const skip = new Set(['id', 'leadRef'])
+  /** Old DB may store these as integer; new schema expects string. */
+  const stringFields = new Set([
+    'subStatus',
+    'modeOfPayment',
+    'remarksId',
+    'bdeName',
+    'waFormat',
+    'refId',
+    'adId',
+    'campaignId',
+    'formId',
+    'opdSurgeryRemarkCode',
+    'opdReasonNoSurgeryCode',
+    'opdFollowUpReasonCode',
+  ])
+  const data: Record<string, unknown> = {}
+
+  for (const [key, value] of Object.entries(row)) {
+    if (skip.has(key)) continue
+    if (!sourceCols.has(key) || !targetCols.has(key)) continue
+    if (value === null || value === undefined) {
+      data[key] = value
+      continue
+    }
+    if (stringFields.has(key) && (typeof value === 'number' || typeof value === 'bigint')) {
+      data[key] = String(value)
+      continue
+    }
+    data[key] = value
   }
+
+  if (typeof data.treatmentMasterId === 'string') {
+    if (treatmentMasterIds) {
+      if (!treatmentMasterIds.has(data.treatmentMasterId)) data.treatmentMasterId = null
+    } else {
+      const exists = await target.treatmentMaster.findUnique({
+        where: { id: data.treatmentMasterId },
+        select: { id: true },
+      })
+      if (!exists) data.treatmentMasterId = null
+    }
+  }
+
+  data.bdId = remapUserId(String(row.bdId ?? ''), userMap, fallbackUserId)
+  data.createdById = remapUserId(String(row.createdById ?? ''), userMap, fallbackUserId)
+  data.updatedById = remapUserId(String(row.updatedById ?? ''), userMap, fallbackUserId)
+
+  return data
+}
+
+async function buildLeadUpdateFromSourceRow(
+  source: WorkspacePrisma,
+  target: WorkspacePrisma,
+  row: Record<string, unknown>,
+  userMap: Map<string, string>,
+  fallbackUserId: string,
+  treatmentMasterIds?: Set<string>
+): Promise<Prisma.LeadUpdateInput> {
+  return (await buildLeadFieldsFromSourceRow(
+    source,
+    target,
+    row,
+    userMap,
+    fallbackUserId,
+    treatmentMasterIds
+  )) as Prisma.LeadUpdateInput
+}
+
+async function buildLeadCreateFromSourceRow(
+  source: WorkspacePrisma,
+  target: WorkspacePrisma,
+  row: Record<string, unknown>,
+  leadRef: string,
+  leadId: string,
+  userMap: Map<string, string>,
+  fallbackUserId: string,
+  treatmentMasterIds?: Set<string>
+): Promise<Prisma.LeadCreateInput> {
+  const data = await buildLeadFieldsFromSourceRow(
+    source,
+    target,
+    row,
+    userMap,
+    fallbackUserId,
+    treatmentMasterIds
+  )
+  return {
+    id: leadId,
+    leadRef,
+    ...data,
+  } as Prisma.LeadCreateInput
 }
 
 /** Lead refs with activity in [from, toExclusive) on source DB.
@@ -124,7 +431,8 @@ export async function findLeadRefsInRange(
   source: WorkspacePrisma,
   from: Date,
   toExclusive: Date,
-  leadRefFilter: string[] | null
+  leadRefFilter: string[] | null,
+  schema: SourceSchemaGuard
 ): Promise<string[]> {
   if (leadRefFilter?.length) return [...new Set(leadRefFilter)]
 
@@ -142,6 +450,9 @@ export async function findLeadRefsInRange(
 
   // Legacy MySQL-synced remarks (exists on old workspace)
   const remarks = await sourceOptional(
+    schema,
+    'leadRemark',
+    'LeadRemark',
     () =>
       source.leadRemark.findMany({
         where: { updateDate: dateRange },
@@ -154,6 +465,9 @@ export async function findLeadRefsInRange(
 
   // Workflow stage changes
   const stageHistory = await sourceOptional(
+    schema,
+    'caseStageHistory',
+    'CaseStageHistory',
     () =>
       source.caseStageHistory.findMany({
         where: { changedAt: dateRange },
@@ -164,6 +478,9 @@ export async function findLeadRefsInRange(
   add(stageHistory.map((h) => h.lead.leadRef))
 
   const pipelineEvents = await sourceOptional(
+    schema,
+    'leadStageEvent',
+    'LeadStageEvent',
     () =>
       source.leadStageEvent.findMany({
         where: { changedAt: dateRange },
@@ -175,6 +492,9 @@ export async function findLeadRefsInRange(
 
   // Insurance / compliance activity
   const kypUpdates = await sourceOptional(
+    schema,
+    'kypSubmission',
+    'KYPSubmission',
     () =>
       source.kYPSubmission.findMany({
         where: { OR: [{ updatedAt: dateRange }, { submittedAt: dateRange }] },
@@ -185,6 +505,9 @@ export async function findLeadRefsInRange(
   add(kypUpdates.map((k) => k.lead.leadRef))
 
   const complianceUpdates = await sourceOptional(
+    schema,
+    'complianceCall',
+    'ComplianceCall',
     () =>
       source.complianceCall.findMany({
         where: { OR: [{ updatedAt: dateRange }, { createdAt: dateRange }] },
@@ -195,6 +518,26 @@ export async function findLeadRefsInRange(
   add(complianceUpdates.map((c) => c.lead.leadRef))
 
   return [...leadRefSet].sort()
+}
+
+/** Return leadRefs from the list that do not exist on the target database. */
+export async function filterLeadRefsMissingOnTarget(
+  target: WorkspacePrisma,
+  leadRefs: string[]
+): Promise<string[]> {
+  if (leadRefs.length === 0) return []
+
+  const onTarget = new Set<string>()
+  for (let i = 0; i < leadRefs.length; i += 500) {
+    const chunk = leadRefs.slice(i, i + 500)
+    const found = await target.lead.findMany({
+      where: { leadRef: { in: chunk } },
+      select: { leadRef: true },
+    })
+    for (const row of found) onTarget.add(row.leadRef)
+  }
+
+  return leadRefs.filter((ref) => !onTarget.has(ref))
 }
 
 /** Remove all lead-scoped rows on target before overwrite. */
@@ -270,51 +613,338 @@ export async function deleteTargetLeadBundle(tx: Prisma.TransactionClient, targe
   await tx.crmAssignmentPreviewLog.deleteMany({ where: { leadId: targetLeadId } })
 }
 
+export type CopyLeadBundleOptions = {
+  /** Insert leads that exist on old DB but not on target (default: skip them). */
+  createMissing?: boolean
+  /** Only sync Lead row fields — skip child tables (much faster). */
+  leadOnly?: boolean
+  treatmentMasterIds?: Set<string>
+}
+
+/** Cache valid treatment master IDs once per sync run. */
+export async function loadTreatmentMasterIds(target: WorkspacePrisma): Promise<Set<string>> {
+  const rows = await target.treatmentMaster.findMany({ select: { id: true } })
+  return new Set(rows.map((r) => r.id))
+}
+
+/** Read all source-side child rows in parallel (outside target transaction). */
+async function fetchSourceLeadBundle(
+  source: WorkspacePrisma,
+  schema: SourceSchemaGuard,
+  leadRef: string,
+  sourceLeadId: string
+) {
+  const [
+    remarks,
+    remarkEntries,
+    callNotes,
+    stageEvents,
+    caseHistory,
+    resetLogs,
+    chatMessages,
+    readReceipts,
+    kyp,
+    insuranceCase,
+    initiateForm,
+    admission,
+    discharge,
+    pl,
+    outstanding,
+    compliance,
+    opdImages,
+    opdApps,
+    installments,
+    invoices,
+    payoffs,
+    qrLogs,
+    qrLinks,
+    previewLogs,
+  ] = await Promise.all([
+    sourceOptional(schema, 'leadRemark', 'LeadRemark', () => source.leadRemark.findMany({ where: { leadRef } }), []),
+    sourceOptional(
+      schema,
+      'leadRemarkEntry',
+      'LeadRemarkEntry',
+      () => source.leadRemarkEntry.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(schema, 'callNote', 'CallNote', () => source.callNote.findMany({ where: { leadId: sourceLeadId } }), []),
+    sourceOptional(
+      schema,
+      'leadStageEvent',
+      'LeadStageEvent',
+      () => source.leadStageEvent.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'caseStageHistory',
+      'CaseStageHistory',
+      () => source.caseStageHistory.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'workflowResetLog',
+      'WorkflowResetLog',
+      () => source.workflowResetLog.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'caseChatMessage',
+      'CaseChatMessage',
+      () => source.caseChatMessage.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'chatReadReceipt',
+      'ChatReadReceipt',
+      () => source.chatReadReceipt.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'kypSubmission',
+      'KYPSubmission',
+      () =>
+        source.kYPSubmission.findUnique({
+          where: { leadId: sourceLeadId },
+          include: {
+            preAuthData: {
+              include: { suggestedHospitals: true, queries: true, pdfVersions: true },
+            },
+          },
+        }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'insuranceCase',
+      'InsuranceCase',
+      () => source.insuranceCase.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'insuranceInitiateForm',
+      'InsuranceInitiateForm',
+      () => source.insuranceInitiateForm.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'admissionRecord',
+      'AdmissionRecord',
+      () =>
+        source.admissionRecord.findUnique({
+          where: { leadId: sourceLeadId },
+          include: { implantUsages: true, prescriptionImages: true },
+        }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'dischargeSheet',
+      'DischargeSheet',
+      () => source.dischargeSheet.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(schema, 'pLRecord', 'PLRecord', () => source.pLRecord.findUnique({ where: { leadId: sourceLeadId } }), null),
+    sourceOptional(
+      schema,
+      'outstandingCase',
+      'OutstandingCase',
+      () => source.outstandingCase.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'complianceCall',
+      'ComplianceCall',
+      () => source.complianceCall.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'leadOpdPrescriptionImage',
+      'LeadOpdPrescriptionImage',
+      () => source.leadOpdPrescriptionImage.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'leadOpdAppointment',
+      'LeadOpdAppointment',
+      () =>
+        source.leadOpdAppointment.findMany({
+          where: { leadId: sourceLeadId },
+          include: { prescriptionImages: true },
+        }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'paymentInstallment',
+      'PaymentInstallment',
+      () => source.paymentInstallment.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'invoiceRequest',
+      'InvoiceRequest',
+      () =>
+        source.invoiceRequest.findMany({
+          where: { leadId: sourceLeadId },
+          include: { activityLogs: true },
+        }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'doctorPayoffRequest',
+      'DoctorPayoffRequest',
+      () =>
+        source.doctorPayoffRequest.findMany({
+          where: { leadId: sourceLeadId },
+          include: { activityLogs: true },
+        }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'leadQrCallAuditLog',
+      'LeadQrCallAuditLog',
+      () => source.leadQrCallAuditLog.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'leadQrPublicLink',
+      'LeadQrPublicLink',
+      () => source.leadQrPublicLink.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'crmAssignmentPreviewLog',
+      'CrmAssignmentPreviewLog',
+      () => source.crmAssignmentPreviewLog.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+  ])
+
+  return {
+    remarks,
+    remarkEntries,
+    callNotes,
+    stageEvents,
+    caseHistory,
+    resetLogs,
+    chatMessages,
+    readReceipts,
+    kyp,
+    insuranceCase,
+    initiateForm,
+    admission,
+    discharge,
+    pl,
+    outstanding,
+    compliance,
+    opdImages,
+    opdApps,
+    installments,
+    invoices,
+    payoffs,
+    qrLogs,
+    qrLinks,
+    previewLogs,
+  }
+}
+
 export async function copyLeadBundle(
   source: WorkspacePrisma,
   target: WorkspacePrisma,
   leadRef: string,
   userMap: Map<string, string>,
-  fallbackUserId: string
-): Promise<'synced' | 'skipped'> {
-  const sourceLead = await source.lead.findUnique({ where: { leadRef } })
-  if (!sourceLead) return 'skipped'
+  fallbackUserId: string,
+  schema: SourceSchemaGuard,
+  options: CopyLeadBundleOptions = {}
+): Promise<'synced' | 'created' | 'skipped'> {
+  const sourceLeadData = await fetchSourceLeadRow(source, leadRef)
+  if (!sourceLeadData) return 'skipped'
 
   const targetLead = await target.lead.findUnique({ where: { leadRef } })
-  if (!targetLead) return 'skipped'
+  const isCreate = !targetLead
+  if (isCreate && !options.createMissing) return 'skipped'
 
-  const sourceLeadId = sourceLead.id
-  const targetLeadId = targetLead.id
+  const sourceLeadId = sourceLeadData.id
+  const targetLeadId = isCreate ? sourceLeadData.id : targetLead!.id
+  const tmIds = options.treatmentMasterIds
 
-  const treatmentMasterId =
-    sourceLead.treatmentMasterId &&
-    (await target.treatmentMaster.findUnique({ where: { id: sourceLead.treatmentMasterId }, select: { id: true } }))
-      ? sourceLead.treatmentMasterId
-      : null
-
-  const { id: _sid, leadRef: _ref, ...leadScalars } = sourceLead
-  const leadUpdate: Prisma.LeadUpdateInput = {
-    ...leadScalars,
-    treatmentMasterId,
-    bdId: remapUserId(sourceLead.bdId, userMap, fallbackUserId)!,
-    createdById: remapUserId(sourceLead.createdById, userMap, fallbackUserId)!,
-    updatedById: remapUserId(sourceLead.updatedById, userMap, fallbackUserId)!,
-  }
+  const [bundle, leadCreate, leadUpdate] = await Promise.all([
+    options.leadOnly ? Promise.resolve(null) : fetchSourceLeadBundle(source, schema, leadRef, sourceLeadId),
+    isCreate
+      ? buildLeadCreateFromSourceRow(
+          source,
+          target,
+          sourceLeadData.row,
+          leadRef,
+          sourceLeadData.id,
+          userMap,
+          fallbackUserId,
+          tmIds
+        )
+      : Promise.resolve(null),
+    !isCreate
+      ? buildLeadUpdateFromSourceRow(source, target, sourceLeadData.row, userMap, fallbackUserId, tmIds)
+      : Promise.resolve(null),
+  ])
 
   await target.$transaction(
     async (tx) => {
-      await deleteTargetLeadBundle(tx, targetLeadId)
+      if (isCreate) {
+        await tx.lead.create({ data: leadCreate! })
+      } else {
+        if (!options.leadOnly) await deleteTargetLeadBundle(tx, targetLeadId)
+        await tx.lead.update({
+          where: { id: targetLeadId },
+          data: leadUpdate!,
+        })
+      }
 
-      await tx.lead.update({
-        where: { id: targetLeadId },
-        data: leadUpdate as Prisma.LeadUpdateInput,
-      })
+      if (options.leadOnly || !bundle) return
+
+      const {
+        remarks,
+        remarkEntries,
+        callNotes,
+        stageEvents,
+        caseHistory,
+        resetLogs,
+        chatMessages,
+        readReceipts,
+        kyp,
+        insuranceCase,
+        initiateForm,
+        admission,
+        discharge,
+        pl,
+        outstanding,
+        compliance,
+        opdImages,
+        opdApps,
+        installments,
+        invoices,
+        payoffs,
+        qrLogs,
+        qrLinks,
+        previewLogs,
+      } = bundle
 
       // Legacy MySQL remarks (keyed by leadRef)
-      const remarks = await sourceOptional(
-        () => source.leadRemark.findMany({ where: { leadRef } }),
-        []
-      )
       if (remarks.length) {
         await tx.leadRemark.deleteMany({ where: { leadRef } })
         await tx.leadRemark.createMany({
@@ -322,10 +952,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const remarkEntries = await sourceOptional(
-        () => source.leadRemarkEntry.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (remarkEntries.length) {
         await tx.leadRemarkEntry.createMany({
           data: remarkEntries.map(({ id, leadId: _l, createdById, ...r }) => ({
@@ -337,10 +963,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const callNotes = await sourceOptional(
-        () => source.callNote.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (callNotes.length) {
         await tx.callNote.createMany({
           data: callNotes.map(({ id, leadId: _l, createdById, ...r }) => ({
@@ -352,10 +974,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const stageEvents = await sourceOptional(
-        () => source.leadStageEvent.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (stageEvents.length) {
         await tx.leadStageEvent.createMany({
           data: stageEvents.map(({ id, leadId: _l, changedById, ...r }) => ({
@@ -367,10 +985,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const caseHistory = await sourceOptional(
-        () => source.caseStageHistory.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (caseHistory.length) {
         await tx.caseStageHistory.createMany({
           data: caseHistory.map(({ id, leadId: _l, changedById, ...r }) => ({
@@ -382,10 +996,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const resetLogs = await sourceOptional(
-        () => source.workflowResetLog.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (resetLogs.length) {
         await tx.workflowResetLog.createMany({
           data: resetLogs.map(({ id, leadId: _l, resetById, ...r }) => ({
@@ -397,10 +1007,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const chatMessages = await sourceOptional(
-        () => source.caseChatMessage.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (chatMessages.length) {
         await tx.caseChatMessage.createMany({
           data: chatMessages.map(({ id, leadId: _l, senderId, ...r }) => ({
@@ -412,10 +1018,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const readReceipts = await sourceOptional(
-        () => source.chatReadReceipt.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (readReceipts.length) {
         await tx.chatReadReceipt.createMany({
           data: readReceipts.map(({ id, leadId: _l, userId, ...r }) => ({
@@ -426,23 +1028,6 @@ export async function copyLeadBundle(
           })),
         })
       }
-
-      const kyp = await sourceOptional(
-        () =>
-          source.kYPSubmission.findUnique({
-            where: { leadId: sourceLeadId },
-            include: {
-              preAuthData: {
-                include: {
-                  suggestedHospitals: true,
-                  queries: true,
-                  pdfVersions: true,
-                },
-              },
-            },
-          }),
-        null
-      )
 
       if (kyp) {
         const { preAuthData, leadId: _l, submittedById, ...kypRest } = kyp
@@ -469,6 +1054,7 @@ export async function copyLeadBundle(
           await tx.preAuthorization.create({
             data: {
               ...preAuthRest,
+              kypSubmissionId: kyp.id,
               preAuthRaisedById: remapUserId(preAuthRaisedById, userMap, fallbackUserId),
               handledById: remapUserId(handledById, userMap, fallbackUserId),
               heldById: remapUserId(heldById, userMap, fallbackUserId),
@@ -476,7 +1062,21 @@ export async function copyLeadBundle(
           })
 
           if (suggestedHospitals.length) {
-            await tx.hospitalSuggestion.createMany({ data: suggestedHospitals.map(({ id, preAuthId: _p, ...h }) => ({ id, preAuthId: preAuthData.id, ...h })) })
+            const seen = new Set<string>()
+            const hospitalRows = suggestedHospitals
+              .filter((h) => {
+                const key = h.id || `${h.hospitalName}|${h.suggestedDoctor ?? ''}`
+                if (seen.has(key)) return false
+                seen.add(key)
+                return true
+              })
+              .map(({ id: _id, preAuthId: _p, ...h }) => ({
+                preAuthId: preAuthData.id,
+                ...h,
+              }))
+            if (hospitalRows.length) {
+              await tx.hospitalSuggestion.createMany({ data: hospitalRows })
+            }
           }
           if (queries.length) {
             await tx.insuranceQuery.createMany({
@@ -502,7 +1102,6 @@ export async function copyLeadBundle(
         }
       }
 
-      const insuranceCase = await source.insuranceCase.findUnique({ where: { leadId: sourceLeadId } })
       if (insuranceCase) {
         const { leadId: _l, handledById, ...rest } = insuranceCase
         await tx.insuranceCase.create({
@@ -514,7 +1113,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const initiateForm = await source.insuranceInitiateForm.findUnique({ where: { leadId: sourceLeadId } })
       if (initiateForm) {
         const { leadId: _l, createdById, ...rest } = initiateForm
         await tx.insuranceInitiateForm.create({
@@ -526,10 +1124,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const admission = await source.admissionRecord.findUnique({
-        where: { leadId: sourceLeadId },
-        include: { implantUsages: true, prescriptionImages: true },
-      })
       if (admission) {
         const { implantUsages, prescriptionImages, leadId: _l, initiatedById, ...rest } = admission
         await tx.admissionRecord.create({
@@ -551,25 +1145,21 @@ export async function copyLeadBundle(
         }
       }
 
-      const discharge = await source.dischargeSheet.findUnique({ where: { leadId: sourceLeadId } })
       if (discharge) {
         const { leadId: _l, ...rest } = discharge
         await tx.dischargeSheet.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const pl = await source.pLRecord.findUnique({ where: { leadId: sourceLeadId } })
       if (pl) {
         const { leadId: _l, ...rest } = pl
         await tx.pLRecord.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const outstanding = await source.outstandingCase.findUnique({ where: { leadId: sourceLeadId } })
       if (outstanding) {
         const { leadId: _l, ...rest } = outstanding
         await tx.outstandingCase.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const compliance = await source.complianceCall.findUnique({ where: { leadId: sourceLeadId } })
       if (compliance) {
         const { leadId: _l, calledByUserId, ...rest } = compliance
         await tx.complianceCall.create({
@@ -581,17 +1171,12 @@ export async function copyLeadBundle(
         })
       }
 
-      const opdImages = await source.leadOpdPrescriptionImage.findMany({ where: { leadId: sourceLeadId } })
       if (opdImages.length) {
         await tx.leadOpdPrescriptionImage.createMany({
           data: opdImages.map(({ id, leadId: _l, ...r }) => ({ id, leadId: targetLeadId, ...r })),
         })
       }
 
-      const opdApps = await source.leadOpdAppointment.findMany({
-        where: { leadId: sourceLeadId },
-        include: { prescriptionImages: true },
-      })
       for (const app of opdApps) {
         const { prescriptionImages, leadId: _l, createdById, updatedById, ...rest } = app
         await tx.leadOpdAppointment.create({
@@ -609,7 +1194,6 @@ export async function copyLeadBundle(
         }
       }
 
-      const installments = await source.paymentInstallment.findMany({ where: { leadId: sourceLeadId } })
       if (installments.length) {
         await tx.paymentInstallment.createMany({
           data: installments.map(({ id, leadId: _l, recordedById, ...r }) => ({
@@ -621,10 +1205,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const invoices = await source.invoiceRequest.findMany({
-        where: { leadId: sourceLeadId },
-        include: { activityLogs: true },
-      })
       for (const inv of invoices) {
         const { activityLogs, leadId: _l, requestedById, reviewedById, ...rest } = inv
         await tx.invoiceRequest.create({
@@ -647,10 +1227,6 @@ export async function copyLeadBundle(
         }
       }
 
-      const payoffs = await source.doctorPayoffRequest.findMany({
-        where: { leadId: sourceLeadId },
-        include: { activityLogs: true },
-      })
       for (const p of payoffs) {
         const { activityLogs, leadId: _l, requestedById, reviewedById, ...rest } = p
         await tx.doctorPayoffRequest.create({
@@ -673,7 +1249,6 @@ export async function copyLeadBundle(
         }
       }
 
-      const qrLogs = await source.leadQrCallAuditLog.findMany({ where: { leadId: sourceLeadId } })
       if (qrLogs.length) {
         await tx.leadQrCallAuditLog.createMany({
           data: qrLogs.map(({ id, leadId: _l, userId, ...r }) => ({
@@ -685,7 +1260,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const qrLinks = await source.leadQrPublicLink.findMany({ where: { leadId: sourceLeadId } })
       if (qrLinks.length) {
         await tx.leadQrPublicLink.createMany({
           data: qrLinks.map(({ id, leadId: _l, actorUserId, ...r }) => ({
@@ -697,7 +1271,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const previewLogs = await source.crmAssignmentPreviewLog.findMany({ where: { leadId: sourceLeadId } })
       if (previewLogs.length) {
         await tx.crmAssignmentPreviewLog.createMany({
           data: previewLogs.map(({ id, leadId: _l, ...r }) => ({ id, leadId: targetLeadId, ...r })),
@@ -707,5 +1280,5 @@ export async function copyLeadBundle(
     { timeout: 120_000 }
   )
 
-  return 'synced'
+  return isCreate ? 'created' : 'synced'
 }
