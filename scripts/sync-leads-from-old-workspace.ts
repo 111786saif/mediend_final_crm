@@ -11,7 +11,7 @@
  * Usage:
  *   bun run scripts/sync-leads-from-old-workspace.ts --dry-run
  *   bun run scripts/sync-leads-from-old-workspace.ts --from 2026-08-08 --to 2026-08-13
- *   bun run scripts/sync-leads-from-old-workspace.ts --commit --from 2026-08-08 --to 2026-08-13
+ *   bun run scripts/sync-leads-from-old-workspace.ts --commit --create-missing --from 2026-08-08 --to 2026-08-13
  *   bun run scripts/sync-leads-from-old-workspace.ts --commit --lead-ref 118454,118500
  *
  * Docker (on prod server):
@@ -34,6 +34,7 @@ import {
 
 const argv = process.argv.slice(2)
 const DRY_RUN = argv.includes('--dry-run') || !argv.includes('--commit')
+const CREATE_MISSING = argv.includes('--create-missing')
 
 async function main() {
   const { from, toExclusive } = parseCliDates(argv)
@@ -43,6 +44,7 @@ async function main() {
   console.log(`Old workspace → new workspace lead sync`)
   console.log(`Range (IST): ${from.toISOString().slice(0, 10)} → ${new Date(toExclusive.getTime() - 1).toISOString().slice(0, 10)} inclusive`)
   console.log(`Mode: ${DRY_RUN ? 'DRY RUN (pass --commit to write)' : 'COMMIT'}`)
+  console.log(`Create missing on target: ${CREATE_MISSING ? 'YES' : 'NO (pass --create-missing)'}`)
   console.log(`${'='.repeat(60)}\n`)
 
   const source = createSourcePrisma()
@@ -77,21 +79,30 @@ async function main() {
         else missingOnTarget++
       }
       console.log(`\nDry-run summary:`)
-      console.log(`   On target: ${foundOnTarget}`)
-      console.log(`   Missing on target (will skip): ${missingOnTarget}`)
-      console.log(`\nRe-run with --commit to overwrite ${foundOnTarget} lead(s).`)
+      console.log(`   On target (will update): ${foundOnTarget}`)
+      console.log(`   Missing on target: ${missingOnTarget}`)
+      if (CREATE_MISSING) {
+        console.log(`   Would create ${missingOnTarget} new lead(s) + update ${foundOnTarget}`)
+      } else {
+        console.log(`\nRe-run with --commit to overwrite ${foundOnTarget} lead(s).`)
+        console.log(`   Add --create-missing to also insert the ${missingOnTarget} missing lead(s).`)
+      }
       return
     }
 
     let synced = 0
+    let created = 0
     let skipped = 0
     let errors = 0
 
     for (let i = 0; i < leadRefs.length; i++) {
       const leadRef = leadRefs[i]
       try {
-        const result = await copyLeadBundle(source, prisma, leadRef, userMap, fallbackUserId, sourceSchema)
+        const result = await copyLeadBundle(source, prisma, leadRef, userMap, fallbackUserId, sourceSchema, {
+          createMissing: CREATE_MISSING,
+        })
         if (result === 'synced') synced++
+        else if (result === 'created') created++
         else skipped++
       } catch (e) {
         errors++
@@ -99,11 +110,13 @@ async function main() {
       }
 
       if ((i + 1) % 25 === 0 || i + 1 === leadRefs.length) {
-        console.log(`   Progress: ${i + 1}/${leadRefs.length} (synced=${synced}, skipped=${skipped}, errors=${errors})`)
+        console.log(
+          `   Progress: ${i + 1}/${leadRefs.length} (synced=${synced}, created=${created}, skipped=${skipped}, errors=${errors})`
+        )
       }
     }
 
-    console.log(`\n✅ Done — synced=${synced}, skipped=${skipped}, errors=${errors}`)
+    console.log(`\n✅ Done — synced=${synced}, created=${created}, skipped=${skipped}, errors=${errors}`)
   } finally {
     await source.$disconnect()
     await prisma.$disconnect()

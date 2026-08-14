@@ -273,13 +273,13 @@ async function fetchSourceLeadRow(
   return { row, id: row.id }
 }
 
-async function buildLeadUpdateFromSourceRow(
+async function buildLeadFieldsFromSourceRow(
   source: WorkspacePrisma,
   target: WorkspacePrisma,
   row: Record<string, unknown>,
   userMap: Map<string, string>,
   fallbackUserId: string
-): Promise<Prisma.LeadUpdateInput> {
+): Promise<Record<string, unknown>> {
   const [sourceCols, targetCols] = await Promise.all([getLeadColumns(source), getLeadColumns(target)])
   const skip = new Set(['id', 'leadRef'])
   /** Old DB may store these as integer; new schema expects string. */
@@ -325,7 +325,40 @@ async function buildLeadUpdateFromSourceRow(
   data.createdById = remapUserId(String(row.createdById ?? ''), userMap, fallbackUserId)
   data.updatedById = remapUserId(String(row.updatedById ?? ''), userMap, fallbackUserId)
 
-  return data as Prisma.LeadUpdateInput
+  return data
+}
+
+async function buildLeadUpdateFromSourceRow(
+  source: WorkspacePrisma,
+  target: WorkspacePrisma,
+  row: Record<string, unknown>,
+  userMap: Map<string, string>,
+  fallbackUserId: string
+): Promise<Prisma.LeadUpdateInput> {
+  return (await buildLeadFieldsFromSourceRow(
+    source,
+    target,
+    row,
+    userMap,
+    fallbackUserId
+  )) as Prisma.LeadUpdateInput
+}
+
+async function buildLeadCreateFromSourceRow(
+  source: WorkspacePrisma,
+  target: WorkspacePrisma,
+  row: Record<string, unknown>,
+  leadRef: string,
+  leadId: string,
+  userMap: Map<string, string>,
+  fallbackUserId: string
+): Promise<Prisma.LeadCreateInput> {
+  const data = await buildLeadFieldsFromSourceRow(source, target, row, userMap, fallbackUserId)
+  return {
+    id: leadId,
+    leadRef,
+    ...data,
+  } as Prisma.LeadCreateInput
 }
 
 /** Lead refs with activity in [from, toExclusive) on source DB.
@@ -497,39 +530,58 @@ export async function deleteTargetLeadBundle(tx: Prisma.TransactionClient, targe
   await tx.crmAssignmentPreviewLog.deleteMany({ where: { leadId: targetLeadId } })
 }
 
+export type CopyLeadBundleOptions = {
+  /** Insert leads that exist on old DB but not on target (default: skip them). */
+  createMissing?: boolean
+}
+
 export async function copyLeadBundle(
   source: WorkspacePrisma,
   target: WorkspacePrisma,
   leadRef: string,
   userMap: Map<string, string>,
   fallbackUserId: string,
-  schema: SourceSchemaGuard
-): Promise<'synced' | 'skipped'> {
+  schema: SourceSchemaGuard,
+  options: CopyLeadBundleOptions = {}
+): Promise<'synced' | 'created' | 'skipped'> {
   const sourceLeadData = await fetchSourceLeadRow(source, leadRef)
   if (!sourceLeadData) return 'skipped'
 
   const targetLead = await target.lead.findUnique({ where: { leadRef } })
-  if (!targetLead) return 'skipped'
+  const isCreate = !targetLead
+  if (isCreate && !options.createMissing) return 'skipped'
 
   const sourceLeadId = sourceLeadData.id
-  const targetLeadId = targetLead.id
-
-  const leadUpdate = await buildLeadUpdateFromSourceRow(
-    source,
-    target,
-    sourceLeadData.row,
-    userMap,
-    fallbackUserId
-  )
+  const targetLeadId = isCreate ? sourceLeadData.id : targetLead!.id
 
   await target.$transaction(
     async (tx) => {
-      await deleteTargetLeadBundle(tx, targetLeadId)
+      if (isCreate) {
+        const leadCreate = await buildLeadCreateFromSourceRow(
+          source,
+          target,
+          sourceLeadData.row,
+          leadRef,
+          sourceLeadData.id,
+          userMap,
+          fallbackUserId
+        )
+        await tx.lead.create({ data: leadCreate })
+      } else {
+        await deleteTargetLeadBundle(tx, targetLeadId)
 
-      await tx.lead.update({
-        where: { id: targetLeadId },
-        data: leadUpdate as Prisma.LeadUpdateInput,
-      })
+        const leadUpdate = await buildLeadUpdateFromSourceRow(
+          source,
+          target,
+          sourceLeadData.row,
+          userMap,
+          fallbackUserId
+        )
+        await tx.lead.update({
+          where: { id: targetLeadId },
+          data: leadUpdate,
+        })
+      }
 
       // Legacy MySQL remarks (keyed by leadRef)
       const remarks = await sourceOptional(
@@ -1064,5 +1116,5 @@ export async function copyLeadBundle(
     { timeout: 120_000 }
   )
 
-  return 'synced'
+  return isCreate ? 'created' : 'synced'
 }
