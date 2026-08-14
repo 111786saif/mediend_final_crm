@@ -8,9 +8,10 @@ export function createSourcePrisma(): WorkspacePrisma {
   if (!url) {
     throw new Error('SOURCE_DATABASE_URL is required (old workspace Postgres connection string)')
   }
+  const poolMax = Number(process.env.SOURCE_DB_POOL_MAX ?? 10)
   const adapter = new PrismaPg({
     connectionString: url,
-    max: 2,
+    max: Number.isFinite(poolMax) && poolMax > 0 ? poolMax : 10,
     idleTimeoutMillis: 10_000,
     connectionTimeoutMillis: 60_000,
     allowExitOnIdle: true,
@@ -278,7 +279,8 @@ async function buildLeadFieldsFromSourceRow(
   target: WorkspacePrisma,
   row: Record<string, unknown>,
   userMap: Map<string, string>,
-  fallbackUserId: string
+  fallbackUserId: string,
+  treatmentMasterIds?: Set<string>
 ): Promise<Record<string, unknown>> {
   const [sourceCols, targetCols] = await Promise.all([getLeadColumns(source), getLeadColumns(target)])
   const skip = new Set(['id', 'leadRef'])
@@ -314,11 +316,15 @@ async function buildLeadFieldsFromSourceRow(
   }
 
   if (typeof data.treatmentMasterId === 'string') {
-    const exists = await target.treatmentMaster.findUnique({
-      where: { id: data.treatmentMasterId },
-      select: { id: true },
-    })
-    if (!exists) data.treatmentMasterId = null
+    if (treatmentMasterIds) {
+      if (!treatmentMasterIds.has(data.treatmentMasterId)) data.treatmentMasterId = null
+    } else {
+      const exists = await target.treatmentMaster.findUnique({
+        where: { id: data.treatmentMasterId },
+        select: { id: true },
+      })
+      if (!exists) data.treatmentMasterId = null
+    }
   }
 
   data.bdId = remapUserId(String(row.bdId ?? ''), userMap, fallbackUserId)
@@ -333,14 +339,16 @@ async function buildLeadUpdateFromSourceRow(
   target: WorkspacePrisma,
   row: Record<string, unknown>,
   userMap: Map<string, string>,
-  fallbackUserId: string
+  fallbackUserId: string,
+  treatmentMasterIds?: Set<string>
 ): Promise<Prisma.LeadUpdateInput> {
   return (await buildLeadFieldsFromSourceRow(
     source,
     target,
     row,
     userMap,
-    fallbackUserId
+    fallbackUserId,
+    treatmentMasterIds
   )) as Prisma.LeadUpdateInput
 }
 
@@ -351,9 +359,17 @@ async function buildLeadCreateFromSourceRow(
   leadRef: string,
   leadId: string,
   userMap: Map<string, string>,
-  fallbackUserId: string
+  fallbackUserId: string,
+  treatmentMasterIds?: Set<string>
 ): Promise<Prisma.LeadCreateInput> {
-  const data = await buildLeadFieldsFromSourceRow(source, target, row, userMap, fallbackUserId)
+  const data = await buildLeadFieldsFromSourceRow(
+    source,
+    target,
+    row,
+    userMap,
+    fallbackUserId,
+    treatmentMasterIds
+  )
   return {
     id: leadId,
     leadRef,
@@ -533,6 +549,252 @@ export async function deleteTargetLeadBundle(tx: Prisma.TransactionClient, targe
 export type CopyLeadBundleOptions = {
   /** Insert leads that exist on old DB but not on target (default: skip them). */
   createMissing?: boolean
+  /** Only sync Lead row fields — skip child tables (much faster). */
+  leadOnly?: boolean
+  treatmentMasterIds?: Set<string>
+}
+
+/** Cache valid treatment master IDs once per sync run. */
+export async function loadTreatmentMasterIds(target: WorkspacePrisma): Promise<Set<string>> {
+  const rows = await target.treatmentMaster.findMany({ select: { id: true } })
+  return new Set(rows.map((r) => r.id))
+}
+
+/** Read all source-side child rows in parallel (outside target transaction). */
+async function fetchSourceLeadBundle(
+  source: WorkspacePrisma,
+  schema: SourceSchemaGuard,
+  leadRef: string,
+  sourceLeadId: string
+) {
+  const [
+    remarks,
+    remarkEntries,
+    callNotes,
+    stageEvents,
+    caseHistory,
+    resetLogs,
+    chatMessages,
+    readReceipts,
+    kyp,
+    insuranceCase,
+    initiateForm,
+    admission,
+    discharge,
+    pl,
+    outstanding,
+    compliance,
+    opdImages,
+    opdApps,
+    installments,
+    invoices,
+    payoffs,
+    qrLogs,
+    qrLinks,
+    previewLogs,
+  ] = await Promise.all([
+    sourceOptional(schema, 'leadRemark', 'LeadRemark', () => source.leadRemark.findMany({ where: { leadRef } }), []),
+    sourceOptional(
+      schema,
+      'leadRemarkEntry',
+      'LeadRemarkEntry',
+      () => source.leadRemarkEntry.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(schema, 'callNote', 'CallNote', () => source.callNote.findMany({ where: { leadId: sourceLeadId } }), []),
+    sourceOptional(
+      schema,
+      'leadStageEvent',
+      'LeadStageEvent',
+      () => source.leadStageEvent.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'caseStageHistory',
+      'CaseStageHistory',
+      () => source.caseStageHistory.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'workflowResetLog',
+      'WorkflowResetLog',
+      () => source.workflowResetLog.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'caseChatMessage',
+      'CaseChatMessage',
+      () => source.caseChatMessage.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'chatReadReceipt',
+      'ChatReadReceipt',
+      () => source.chatReadReceipt.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'kypSubmission',
+      'KYPSubmission',
+      () =>
+        source.kYPSubmission.findUnique({
+          where: { leadId: sourceLeadId },
+          include: {
+            preAuthData: {
+              include: { suggestedHospitals: true, queries: true, pdfVersions: true },
+            },
+          },
+        }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'insuranceCase',
+      'InsuranceCase',
+      () => source.insuranceCase.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'insuranceInitiateForm',
+      'InsuranceInitiateForm',
+      () => source.insuranceInitiateForm.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'admissionRecord',
+      'AdmissionRecord',
+      () =>
+        source.admissionRecord.findUnique({
+          where: { leadId: sourceLeadId },
+          include: { implantUsages: true, prescriptionImages: true },
+        }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'dischargeSheet',
+      'DischargeSheet',
+      () => source.dischargeSheet.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(schema, 'pLRecord', 'PLRecord', () => source.pLRecord.findUnique({ where: { leadId: sourceLeadId } }), null),
+    sourceOptional(
+      schema,
+      'outstandingCase',
+      'OutstandingCase',
+      () => source.outstandingCase.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'complianceCall',
+      'ComplianceCall',
+      () => source.complianceCall.findUnique({ where: { leadId: sourceLeadId } }),
+      null
+    ),
+    sourceOptional(
+      schema,
+      'leadOpdPrescriptionImage',
+      'LeadOpdPrescriptionImage',
+      () => source.leadOpdPrescriptionImage.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'leadOpdAppointment',
+      'LeadOpdAppointment',
+      () =>
+        source.leadOpdAppointment.findMany({
+          where: { leadId: sourceLeadId },
+          include: { prescriptionImages: true },
+        }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'paymentInstallment',
+      'PaymentInstallment',
+      () => source.paymentInstallment.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'invoiceRequest',
+      'InvoiceRequest',
+      () =>
+        source.invoiceRequest.findMany({
+          where: { leadId: sourceLeadId },
+          include: { activityLogs: true },
+        }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'doctorPayoffRequest',
+      'DoctorPayoffRequest',
+      () =>
+        source.doctorPayoffRequest.findMany({
+          where: { leadId: sourceLeadId },
+          include: { activityLogs: true },
+        }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'leadQrCallAuditLog',
+      'LeadQrCallAuditLog',
+      () => source.leadQrCallAuditLog.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'leadQrPublicLink',
+      'LeadQrPublicLink',
+      () => source.leadQrPublicLink.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+    sourceOptional(
+      schema,
+      'crmAssignmentPreviewLog',
+      'CrmAssignmentPreviewLog',
+      () => source.crmAssignmentPreviewLog.findMany({ where: { leadId: sourceLeadId } }),
+      []
+    ),
+  ])
+
+  return {
+    remarks,
+    remarkEntries,
+    callNotes,
+    stageEvents,
+    caseHistory,
+    resetLogs,
+    chatMessages,
+    readReceipts,
+    kyp,
+    insuranceCase,
+    initiateForm,
+    admission,
+    discharge,
+    pl,
+    outstanding,
+    compliance,
+    opdImages,
+    opdApps,
+    installments,
+    invoices,
+    payoffs,
+    qrLogs,
+    qrLinks,
+    previewLogs,
+  }
 }
 
 export async function copyLeadBundle(
@@ -553,44 +815,69 @@ export async function copyLeadBundle(
 
   const sourceLeadId = sourceLeadData.id
   const targetLeadId = isCreate ? sourceLeadData.id : targetLead!.id
+  const tmIds = options.treatmentMasterIds
 
-  await target.$transaction(
-    async (tx) => {
-      if (isCreate) {
-        const leadCreate = await buildLeadCreateFromSourceRow(
+  const [bundle, leadCreate, leadUpdate] = await Promise.all([
+    options.leadOnly ? Promise.resolve(null) : fetchSourceLeadBundle(source, schema, leadRef, sourceLeadId),
+    isCreate
+      ? buildLeadCreateFromSourceRow(
           source,
           target,
           sourceLeadData.row,
           leadRef,
           sourceLeadData.id,
           userMap,
-          fallbackUserId
+          fallbackUserId,
+          tmIds
         )
-        await tx.lead.create({ data: leadCreate })
-      } else {
-        await deleteTargetLeadBundle(tx, targetLeadId)
+      : Promise.resolve(null),
+    !isCreate
+      ? buildLeadUpdateFromSourceRow(source, target, sourceLeadData.row, userMap, fallbackUserId, tmIds)
+      : Promise.resolve(null),
+  ])
 
-        const leadUpdate = await buildLeadUpdateFromSourceRow(
-          source,
-          target,
-          sourceLeadData.row,
-          userMap,
-          fallbackUserId
-        )
+  await target.$transaction(
+    async (tx) => {
+      if (isCreate) {
+        await tx.lead.create({ data: leadCreate! })
+      } else {
+        if (!options.leadOnly) await deleteTargetLeadBundle(tx, targetLeadId)
         await tx.lead.update({
           where: { id: targetLeadId },
-          data: leadUpdate,
+          data: leadUpdate!,
         })
       }
 
+      if (options.leadOnly || !bundle) return
+
+      const {
+        remarks,
+        remarkEntries,
+        callNotes,
+        stageEvents,
+        caseHistory,
+        resetLogs,
+        chatMessages,
+        readReceipts,
+        kyp,
+        insuranceCase,
+        initiateForm,
+        admission,
+        discharge,
+        pl,
+        outstanding,
+        compliance,
+        opdImages,
+        opdApps,
+        installments,
+        invoices,
+        payoffs,
+        qrLogs,
+        qrLinks,
+        previewLogs,
+      } = bundle
+
       // Legacy MySQL remarks (keyed by leadRef)
-      const remarks = await sourceOptional(
-        schema,
-        'leadRemark',
-        'LeadRemark',
-        () => source.leadRemark.findMany({ where: { leadRef } }),
-        []
-      )
       if (remarks.length) {
         await tx.leadRemark.deleteMany({ where: { leadRef } })
         await tx.leadRemark.createMany({
@@ -598,13 +885,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const remarkEntries = await sourceOptional(
-        schema,
-        'leadRemarkEntry',
-        'LeadRemarkEntry',
-        () => source.leadRemarkEntry.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (remarkEntries.length) {
         await tx.leadRemarkEntry.createMany({
           data: remarkEntries.map(({ id, leadId: _l, createdById, ...r }) => ({
@@ -616,13 +896,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const callNotes = await sourceOptional(
-        schema,
-        'callNote',
-        'CallNote',
-        () => source.callNote.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (callNotes.length) {
         await tx.callNote.createMany({
           data: callNotes.map(({ id, leadId: _l, createdById, ...r }) => ({
@@ -634,13 +907,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const stageEvents = await sourceOptional(
-        schema,
-        'leadStageEvent',
-        'LeadStageEvent',
-        () => source.leadStageEvent.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (stageEvents.length) {
         await tx.leadStageEvent.createMany({
           data: stageEvents.map(({ id, leadId: _l, changedById, ...r }) => ({
@@ -652,13 +918,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const caseHistory = await sourceOptional(
-        schema,
-        'caseStageHistory',
-        'CaseStageHistory',
-        () => source.caseStageHistory.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (caseHistory.length) {
         await tx.caseStageHistory.createMany({
           data: caseHistory.map(({ id, leadId: _l, changedById, ...r }) => ({
@@ -670,13 +929,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const resetLogs = await sourceOptional(
-        schema,
-        'workflowResetLog',
-        'WorkflowResetLog',
-        () => source.workflowResetLog.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (resetLogs.length) {
         await tx.workflowResetLog.createMany({
           data: resetLogs.map(({ id, leadId: _l, resetById, ...r }) => ({
@@ -688,13 +940,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const chatMessages = await sourceOptional(
-        schema,
-        'caseChatMessage',
-        'CaseChatMessage',
-        () => source.caseChatMessage.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (chatMessages.length) {
         await tx.caseChatMessage.createMany({
           data: chatMessages.map(({ id, leadId: _l, senderId, ...r }) => ({
@@ -706,13 +951,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const readReceipts = await sourceOptional(
-        schema,
-        'chatReadReceipt',
-        'ChatReadReceipt',
-        () => source.chatReadReceipt.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (readReceipts.length) {
         await tx.chatReadReceipt.createMany({
           data: readReceipts.map(({ id, leadId: _l, userId, ...r }) => ({
@@ -723,26 +961,6 @@ export async function copyLeadBundle(
           })),
         })
       }
-
-      const kyp = await sourceOptional(
-        schema,
-        'kypSubmission',
-        'KYPSubmission',
-        () =>
-          source.kYPSubmission.findUnique({
-            where: { leadId: sourceLeadId },
-            include: {
-              preAuthData: {
-                include: {
-                  suggestedHospitals: true,
-                  queries: true,
-                  pdfVersions: true,
-                },
-              },
-            },
-          }),
-        null
-      )
 
       if (kyp) {
         const { preAuthData, leadId: _l, submittedById, ...kypRest } = kyp
@@ -817,13 +1035,6 @@ export async function copyLeadBundle(
         }
       }
 
-      const insuranceCase = await sourceOptional(
-        schema,
-        'insuranceCase',
-        'InsuranceCase',
-        () => source.insuranceCase.findUnique({ where: { leadId: sourceLeadId } }),
-        null
-      )
       if (insuranceCase) {
         const { leadId: _l, handledById, ...rest } = insuranceCase
         await tx.insuranceCase.create({
@@ -835,13 +1046,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const initiateForm = await sourceOptional(
-        schema,
-        'insuranceInitiateForm',
-        'InsuranceInitiateForm',
-        () => source.insuranceInitiateForm.findUnique({ where: { leadId: sourceLeadId } }),
-        null
-      )
       if (initiateForm) {
         const { leadId: _l, createdById, ...rest } = initiateForm
         await tx.insuranceInitiateForm.create({
@@ -853,17 +1057,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const admission = await sourceOptional(
-        schema,
-        'admissionRecord',
-        'AdmissionRecord',
-        () =>
-          source.admissionRecord.findUnique({
-            where: { leadId: sourceLeadId },
-            include: { implantUsages: true, prescriptionImages: true },
-          }),
-        null
-      )
       if (admission) {
         const { implantUsages, prescriptionImages, leadId: _l, initiatedById, ...rest } = admission
         await tx.admissionRecord.create({
@@ -885,49 +1078,21 @@ export async function copyLeadBundle(
         }
       }
 
-      const discharge = await sourceOptional(
-        schema,
-        'dischargeSheet',
-        'DischargeSheet',
-        () => source.dischargeSheet.findUnique({ where: { leadId: sourceLeadId } }),
-        null
-      )
       if (discharge) {
         const { leadId: _l, ...rest } = discharge
         await tx.dischargeSheet.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const pl = await sourceOptional(
-        schema,
-        'pLRecord',
-        'PLRecord',
-        () => source.pLRecord.findUnique({ where: { leadId: sourceLeadId } }),
-        null
-      )
       if (pl) {
         const { leadId: _l, ...rest } = pl
         await tx.pLRecord.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const outstanding = await sourceOptional(
-        schema,
-        'outstandingCase',
-        'OutstandingCase',
-        () => source.outstandingCase.findUnique({ where: { leadId: sourceLeadId } }),
-        null
-      )
       if (outstanding) {
         const { leadId: _l, ...rest } = outstanding
         await tx.outstandingCase.create({ data: { ...rest, leadId: targetLeadId } })
       }
 
-      const compliance = await sourceOptional(
-        schema,
-        'complianceCall',
-        'ComplianceCall',
-        () => source.complianceCall.findUnique({ where: { leadId: sourceLeadId } }),
-        null
-      )
       if (compliance) {
         const { leadId: _l, calledByUserId, ...rest } = compliance
         await tx.complianceCall.create({
@@ -939,30 +1104,12 @@ export async function copyLeadBundle(
         })
       }
 
-      const opdImages = await sourceOptional(
-        schema,
-        'leadOpdPrescriptionImage',
-        'LeadOpdPrescriptionImage',
-        () => source.leadOpdPrescriptionImage.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (opdImages.length) {
         await tx.leadOpdPrescriptionImage.createMany({
           data: opdImages.map(({ id, leadId: _l, ...r }) => ({ id, leadId: targetLeadId, ...r })),
         })
       }
 
-      const opdApps = await sourceOptional(
-        schema,
-        'leadOpdAppointment',
-        'LeadOpdAppointment',
-        () =>
-          source.leadOpdAppointment.findMany({
-            where: { leadId: sourceLeadId },
-            include: { prescriptionImages: true },
-          }),
-        []
-      )
       for (const app of opdApps) {
         const { prescriptionImages, leadId: _l, createdById, updatedById, ...rest } = app
         await tx.leadOpdAppointment.create({
@@ -980,13 +1127,6 @@ export async function copyLeadBundle(
         }
       }
 
-      const installments = await sourceOptional(
-        schema,
-        'paymentInstallment',
-        'PaymentInstallment',
-        () => source.paymentInstallment.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (installments.length) {
         await tx.paymentInstallment.createMany({
           data: installments.map(({ id, leadId: _l, recordedById, ...r }) => ({
@@ -998,17 +1138,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const invoices = await sourceOptional(
-        schema,
-        'invoiceRequest',
-        'InvoiceRequest',
-        () =>
-          source.invoiceRequest.findMany({
-            where: { leadId: sourceLeadId },
-            include: { activityLogs: true },
-          }),
-        []
-      )
       for (const inv of invoices) {
         const { activityLogs, leadId: _l, requestedById, reviewedById, ...rest } = inv
         await tx.invoiceRequest.create({
@@ -1031,17 +1160,6 @@ export async function copyLeadBundle(
         }
       }
 
-      const payoffs = await sourceOptional(
-        schema,
-        'doctorPayoffRequest',
-        'DoctorPayoffRequest',
-        () =>
-          source.doctorPayoffRequest.findMany({
-            where: { leadId: sourceLeadId },
-            include: { activityLogs: true },
-          }),
-        []
-      )
       for (const p of payoffs) {
         const { activityLogs, leadId: _l, requestedById, reviewedById, ...rest } = p
         await tx.doctorPayoffRequest.create({
@@ -1064,13 +1182,6 @@ export async function copyLeadBundle(
         }
       }
 
-      const qrLogs = await sourceOptional(
-        schema,
-        'leadQrCallAuditLog',
-        'LeadQrCallAuditLog',
-        () => source.leadQrCallAuditLog.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (qrLogs.length) {
         await tx.leadQrCallAuditLog.createMany({
           data: qrLogs.map(({ id, leadId: _l, userId, ...r }) => ({
@@ -1082,13 +1193,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const qrLinks = await sourceOptional(
-        schema,
-        'leadQrPublicLink',
-        'LeadQrPublicLink',
-        () => source.leadQrPublicLink.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (qrLinks.length) {
         await tx.leadQrPublicLink.createMany({
           data: qrLinks.map(({ id, leadId: _l, actorUserId, ...r }) => ({
@@ -1100,13 +1204,6 @@ export async function copyLeadBundle(
         })
       }
 
-      const previewLogs = await sourceOptional(
-        schema,
-        'crmAssignmentPreviewLog',
-        'CrmAssignmentPreviewLog',
-        () => source.crmAssignmentPreviewLog.findMany({ where: { leadId: sourceLeadId } }),
-        []
-      )
       if (previewLogs.length) {
         await tx.crmAssignmentPreviewLog.createMany({
           data: previewLogs.map(({ id, leadId: _l, ...r }) => ({ id, leadId: targetLeadId, ...r })),
