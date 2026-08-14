@@ -11,7 +11,8 @@ const querySchema = z.object({
   entityType: z.string().trim().optional(),
   action: z.string().trim().optional(),
   search: z.string().trim().optional(),
-  limit: z.coerce.number().int().min(1).max(200).optional(),
+  page: z.coerce.number().int().min(1).optional(),
+  pageSize: z.coerce.number().int().min(10).max(200).optional(),
 })
 
 export async function GET(request: NextRequest) {
@@ -33,46 +34,53 @@ export async function GET(request: NextRequest) {
       entityType: searchParams.get('entityType') ?? undefined,
       action: searchParams.get('action') ?? undefined,
       search: searchParams.get('search') ?? undefined,
-      limit: searchParams.get('limit') ?? undefined,
+      page: searchParams.get('page') ?? undefined,
+      pageSize: searchParams.get('pageSize') ?? undefined,
     })
 
     if (!parsed.success) {
       return errorResponse(parsed.error.message, 400)
     }
 
-    const { entityType, action, search, limit } = parsed.data
-
-    const logs = await prisma.crmActivityLog.findMany({
-      where: {
-        entityType: {
-          in: [...LEAD_ACTIVITY_ENTITY_TYPES],
-        },
-        ...(entityType && entityType !== 'all' ? { entityType } : {}),
-        ...(action && action !== 'all' ? { action } : {}),
-        ...(search
-          ? {
-              OR: [
-                { summary: { contains: search, mode: 'insensitive' } },
-                { entityLabel: { contains: search, mode: 'insensitive' } },
-                { action: { contains: search, mode: 'insensitive' } },
-                { actorUser: { is: { name: { contains: search, mode: 'insensitive' } } } },
-                { actorUser: { is: { email: { contains: search, mode: 'insensitive' } } } },
-              ],
-            }
-          : {}),
+    const { entityType, action, search, page = 1, pageSize = 50 } = parsed.data
+    const where = {
+      entityType: {
+        in: [...LEAD_ACTIVITY_ENTITY_TYPES],
       },
-      include: {
-        actorUser: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+      ...(entityType && entityType !== 'all' ? { entityType } : {}),
+      ...(action && action !== 'all' ? { action } : {}),
+      ...(search
+        ? {
+            OR: [
+              { summary: { contains: search, mode: 'insensitive' as const } },
+              { entityLabel: { contains: search, mode: 'insensitive' as const } },
+              { action: { contains: search, mode: 'insensitive' as const } },
+              { actorUser: { is: { name: { contains: search, mode: 'insensitive' as const } } } },
+              { actorUser: { is: { email: { contains: search, mode: 'insensitive' as const } } } },
+            ],
+          }
+        : {}),
+    }
+    const skip = (page - 1) * pageSize
+
+    const [total, logs] = await Promise.all([
+      prisma.crmActivityLog.count({ where }),
+      prisma.crmActivityLog.findMany({
+        where,
+        include: {
+          actorUser: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
           },
         },
-      },
-      orderBy: { createdAt: 'desc' },
-      take: limit ?? 100,
-    })
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: pageSize,
+      }),
+    ])
 
     const [entityTypes, actions] = await Promise.all([
       prisma.crmActivityLog.findMany({
@@ -99,6 +107,12 @@ export async function GET(request: NextRequest) {
 
     return successResponse({
       logs,
+      pagination: {
+        page,
+        pageSize,
+        total,
+        totalPages: Math.max(1, Math.ceil(total / pageSize)),
+      },
       filters: {
         entityTypes: entityTypes.map((item) => item.entityType),
         actions: actions.map((item) => item.action),
