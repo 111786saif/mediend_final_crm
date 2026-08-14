@@ -473,6 +473,26 @@ export async function findLeadRefsInRange(
   return [...leadRefSet].sort()
 }
 
+/** Return leadRefs from the list that do not exist on the target database. */
+export async function filterLeadRefsMissingOnTarget(
+  target: WorkspacePrisma,
+  leadRefs: string[]
+): Promise<string[]> {
+  if (leadRefs.length === 0) return []
+
+  const onTarget = new Set<string>()
+  for (let i = 0; i < leadRefs.length; i += 500) {
+    const chunk = leadRefs.slice(i, i + 500)
+    const found = await target.lead.findMany({
+      where: { leadRef: { in: chunk } },
+      select: { leadRef: true },
+    })
+    for (const row of found) onTarget.add(row.leadRef)
+  }
+
+  return leadRefs.filter((ref) => !onTarget.has(ref))
+}
+
 /** Remove all lead-scoped rows on target before overwrite. */
 export async function deleteTargetLeadBundle(tx: Prisma.TransactionClient, targetLeadId: string) {
   const kyp = await tx.kYPSubmission.findUnique({

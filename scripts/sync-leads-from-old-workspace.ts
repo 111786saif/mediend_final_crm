@@ -12,6 +12,7 @@
  *   bun run scripts/sync-leads-from-old-workspace.ts --dry-run
  *   bun run scripts/sync-leads-from-old-workspace.ts --from 2026-08-08 --to 2026-08-13
  *   bun run scripts/sync-leads-from-old-workspace.ts --commit --create-missing --from 2026-08-08 --to 2026-08-13
+ *   bun run scripts/sync-leads-from-old-workspace.ts --commit --missing-only --from 2026-08-08 --to 2026-08-14
  *   bun run scripts/sync-leads-from-old-workspace.ts --commit --lead-only --concurrency 8
  *   bun run scripts/sync-leads-from-old-workspace.ts --commit --lead-ref 118454,118500
  *
@@ -28,6 +29,7 @@ import {
   buildUserIdMap,
   copyLeadBundle,
   createSourcePrisma,
+  filterLeadRefsMissingOnTarget,
   findLeadRefsInRange,
   loadTreatmentMasterIds,
   parseCliDates,
@@ -38,6 +40,7 @@ import {
 const argv = process.argv.slice(2)
 const DRY_RUN = argv.includes('--dry-run') || !argv.includes('--commit')
 const CREATE_MISSING = argv.includes('--create-missing')
+const MISSING_ONLY = argv.includes('--missing-only')
 const LEAD_ONLY = argv.includes('--lead-only')
 
 function parseConcurrency(): number {
@@ -64,7 +67,10 @@ async function main() {
   console.log(`Old workspace → new workspace lead sync`)
   console.log(`Range (IST): ${from.toISOString().slice(0, 10)} → ${new Date(toExclusive.getTime() - 1).toISOString().slice(0, 10)} inclusive`)
   console.log(`Mode: ${DRY_RUN ? 'DRY RUN (pass --commit to write)' : 'COMMIT'}`)
-  console.log(`Create missing on target: ${CREATE_MISSING ? 'YES' : 'NO (pass --create-missing)'}`)
+  if (MISSING_ONLY) {
+    console.log(`Scope: MISSING ONLY — create full bundles for leads not on target`)
+  }
+  console.log(`Create missing on target: ${CREATE_MISSING || MISSING_ONLY ? 'YES' : 'NO (pass --create-missing or --missing-only)'}`)
   console.log(`Lead fields only (skip child tables): ${LEAD_ONLY ? 'YES' : 'NO (pass --lead-only for speed)'}`)
   console.log(`Parallel workers: ${concurrency}`)
   console.log(`${'='.repeat(60)}\n`)
@@ -85,17 +91,32 @@ async function main() {
     console.log(`✅ User map: ${userMap.size} emails matched (fallback admin: ${fallbackUserId})`)
 
     const leadRefs = await findLeadRefsInRange(source, from, toExclusive, leadRefFilter, sourceSchema)
-    console.log(`📋 Leads to sync: ${leadRefs.length}`)
+    let workRefs = leadRefs
 
-    if (leadRefs.length === 0) {
+    if (MISSING_ONLY) {
+      workRefs = await filterLeadRefsMissingOnTarget(prisma, leadRefs)
+      console.log(`📋 Leads in range on old DB: ${leadRefs.length}`)
+      console.log(`📋 Missing on target (will create): ${workRefs.length}`)
+    } else {
+      console.log(`📋 Leads to sync: ${leadRefs.length}`)
+    }
+
+    if (workRefs.length === 0) {
       console.log('Nothing to do.')
       return
     }
 
-    const preview = leadRefs.slice(0, 20)
-    console.log(`   Sample leadRefs: ${preview.join(', ')}${leadRefs.length > 20 ? '…' : ''}`)
+    const preview = workRefs.slice(0, 20)
+    console.log(`   Sample leadRefs: ${preview.join(', ')}${workRefs.length > 20 ? '…' : ''}`)
 
     if (DRY_RUN) {
+      if (MISSING_ONLY) {
+        console.log(`\nDry-run summary:`)
+        console.log(`   Would create ${workRefs.length} lead(s) with full child data`)
+        console.log(`   Re-run with --commit --missing-only to write`)
+        return
+      }
+
       let foundOnTarget = 0
       let missingOnTarget = 0
       for (let i = 0; i < leadRefs.length; i += 500) {
@@ -114,7 +135,7 @@ async function main() {
         console.log(`   Would create ${missingOnTarget} new lead(s) + update ${foundOnTarget}`)
       } else {
         console.log(`\nRe-run with --commit to overwrite ${foundOnTarget} lead(s).`)
-        console.log(`   Add --create-missing to also insert the ${missingOnTarget} missing lead(s).`)
+        console.log(`   Add --create-missing or --missing-only to insert the ${missingOnTarget} missing lead(s).`)
       }
       return
     }
@@ -127,13 +148,13 @@ async function main() {
     const startedAt = Date.now()
     const limit = pLimit(concurrency)
     const bundleOptions = {
-      createMissing: CREATE_MISSING,
+      createMissing: CREATE_MISSING || MISSING_ONLY,
       leadOnly: LEAD_ONLY,
       treatmentMasterIds,
     }
 
     await Promise.all(
-      leadRefs.map((leadRef) =>
+      workRefs.map((leadRef) =>
         limit(async () => {
           try {
             const result = await copyLeadBundle(
@@ -153,12 +174,12 @@ async function main() {
             console.error(`❌ leadRef ${leadRef}:`, e instanceof Error ? e.message : e)
           } finally {
             completed++
-            if (completed % 25 === 0 || completed === leadRefs.length) {
+            if (completed % 25 === 0 || completed === workRefs.length) {
               const elapsedSec = (Date.now() - startedAt) / 1000
               const rate = completed / Math.max(elapsedSec, 0.001)
-              const remainingSec = (leadRefs.length - completed) / Math.max(rate, 0.001)
+              const remainingSec = (workRefs.length - completed) / Math.max(rate, 0.001)
               console.log(
-                `   Progress: ${completed}/${leadRefs.length} (synced=${synced}, created=${created}, skipped=${skipped}, errors=${errors}) ~${formatEta(remainingSec)} left`
+                `   Progress: ${completed}/${workRefs.length} (synced=${synced}, created=${created}, skipped=${skipped}, errors=${errors}) ~${formatEta(remainingSec)} left`
               )
             }
           }
