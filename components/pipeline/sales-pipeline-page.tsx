@@ -786,9 +786,9 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         column.id,
         isPipelineDateFilterColumn(column.id)
           ? []
-          : uniqueSorted(
-              data?.facets.columnFacets?.[column.id as PipelineMultiColumnFilterField] ??
-                rawPageLeads.map((lead) => getPipelineColumnFilterValue(lead, column.id))
+          : mergeUniqueSortedLists(
+              data?.facets.columnFacets?.[column.id as PipelineMultiColumnFilterField] ?? [],
+              rawPageLeads.map((lead) => getPipelineColumnFilterValue(lead, column.id))
             ),
       ])
     ) as Record<PipelineColumnId, string[]>
@@ -816,10 +816,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
     options.month = [...PIPELINE_MONTH_FILTER_OPTIONS]
     options.circle = mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
-    options.bd = mergeUniqueSortedLists(
-      (data?.facets.bds ?? []).map((item) => item.name),
-      options.bd
-    )
     options.mop = mergeUniqueSortedLists(PIPELINE_MOP_FILTER_OPTIONS, options.mop)
     options.recency = mergeUniqueSortedLists(PIPELINE_RECENCY_FILTER_OPTIONS, options.recency)
     options.stage = mergeUniqueSortedLists(PIPELINE_STAGE_FILTER_OPTIONS, options.stage)
@@ -828,7 +824,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     return options
   }, [
     availableColumns,
-    data?.facets.bds,
     data?.facets.columnFacets,
     data?.facets.circles,
     rawPageLeads,

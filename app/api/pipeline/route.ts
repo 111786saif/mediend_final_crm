@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
       take: 300,
       orderBy: { name: 'asc' },
     })
-    const { bds, teamLeads } = await loadPipelineApplicableUserFilters(user)
+    const { bds, bdOwners, teamLeads } = await loadPipelineApplicableUserFilters(user)
     const campaignAgg = await loadCampaignTree(facetWhere, params.groupBy)
     const total = await prisma.lead.count({ where: listWhere })
     const leads: PipelineSelectedLead[] = await prisma.lead.findMany({
@@ -147,7 +147,7 @@ export async function GET(request: NextRequest) {
         bds,
         columnFacets: {
           tl: teamLeads,
-          bd: bds.map((item) => item.name),
+          bd: bdOwners,
           source: sources,
           leadSource: leadSources,
         },
@@ -219,10 +219,30 @@ async function loadPipelineApplicableUserFilters(user: {
   name: string
   role: UserRole | string
 }) {
+  const BD_OWNER_FILTERABLE_ROLES = new Set<UserRole>([
+    UserRole.BD,
+    UserRole.TEAM_LEAD,
+    UserRole.CATEGORY_MANAGER,
+    UserRole.SALES_HEAD,
+    UserRole.EXECUTIVE_ASSISTANT,
+  ])
+
+  const addOwnerOption = (
+    ownerMap: Map<string, { id: string; name: string }>,
+    candidate: { id: string; name: string; role: UserRole | string }
+  ) => {
+    if (!BD_OWNER_FILTERABLE_ROLES.has(candidate.role as UserRole)) return
+    ownerMap.set(candidate.id, {
+      id: candidate.id,
+      name: candidate.name,
+    })
+  }
+
   if (user.role === UserRole.BD) {
     const teamLead = await resolveTeamLeadForLeadOwner(user.id)
     return {
       bds: [{ id: user.id, name: user.name }],
+      bdOwners: [user.name],
       teamLeads: teamLead?.name ? [teamLead.name] : [],
     }
   }
@@ -237,7 +257,14 @@ async function loadPipelineApplicableUserFilters(user: {
     const employee = await getEmployeeByUserId(user.id)
     const subordinates = employee ? await getSubordinates(employee.id, true) : []
     const bdMap = new Map<string, { id: string; name: string }>()
+    const ownerMap = new Map<string, { id: string; name: string }>()
     const teamLeadNames = new Set<string>()
+
+    addOwnerOption(ownerMap, {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+    })
 
     if (TEAM_UNIT_ROLES.includes(user.role as UserRole)) {
       teamLeadNames.add(user.name)
@@ -253,6 +280,12 @@ async function loadPipelineApplicableUserFilters(user: {
         })
       }
 
+      addOwnerOption(ownerMap, {
+        id: subordinate.user.id,
+        name: subordinate.user.name,
+        role: subordinate.user.role,
+      })
+
       if (TEAM_UNIT_ROLES.includes(subordinate.user.role as UserRole)) {
         teamLeadNames.add(subordinate.user.name)
       }
@@ -260,11 +293,14 @@ async function loadPipelineApplicableUserFilters(user: {
 
     return {
       bds: [...bdMap.values()].sort((left, right) => left.name.localeCompare(right.name)),
+      bdOwners: [...ownerMap.values()]
+        .map((item) => item.name)
+        .sort((left, right) => left.localeCompare(right)),
       teamLeads: [...teamLeadNames].sort((left, right) => left.localeCompare(right)),
     }
   }
 
-  const [allBds, allTeamLeads] = await Promise.all([
+  const [allBds, allTeamLeads, allBdOwners] = await Promise.all([
     prisma.user.findMany({
       where: {
         role: UserRole.BD,
@@ -294,10 +330,25 @@ async function loadPipelineApplicableUserFilters(user: {
       },
       orderBy: { name: 'asc' },
     }),
+    prisma.user.findMany({
+      where: {
+        role: { in: [...BD_OWNER_FILTERABLE_ROLES] },
+        employee: {
+          is: {
+            status: EmployeeStatus.ACTIVE,
+          },
+        },
+      },
+      select: {
+        name: true,
+      },
+      orderBy: { name: 'asc' },
+    }),
   ])
 
   return {
     bds: allBds,
+    bdOwners: allBdOwners.map((item) => item.name),
     teamLeads: allTeamLeads.map((item) => item.name),
   }
 }

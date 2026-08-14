@@ -67,6 +67,19 @@ function normalizeComparableText(value: string | null | undefined) {
   return value?.trim().toLowerCase() ?? ''
 }
 
+function mergeIncomingLeadErrorMessages(...messages: Array<string | null | undefined>) {
+  const uniqueMessages: string[] = []
+
+  for (const message of messages) {
+    const normalized = message?.trim()
+    if (!normalized) continue
+    if (uniqueMessages.includes(normalized)) continue
+    uniqueMessages.push(normalized)
+  }
+
+  return uniqueMessages.length > 0 ? uniqueMessages.join(' | ') : null
+}
+
 function parseDate(value: string | null | undefined) {
   return parseFlexibleDateInput(value)
 }
@@ -391,6 +404,7 @@ export async function PATCH(
         source: true,
         payload: true,
         externalCampaignId: true,
+        errorMessage: true,
         normalizedPhone: true,
         processedLeadId: true,
         selectedTeamLeadUserId: true,
@@ -488,22 +502,27 @@ export async function PATCH(
           assignmentDate: processedLeadUpdate.assignmentDate ?? new Date(),
         })
 
-        if (!assignmentPreview.assignment) {
-          throw new Error(
-            assignmentPreview.explanation ||
-              'No valid CRM assignment was found for the updated campaign/circle.'
+        // Allow campaign/circle edits to persist even when the new routing
+        // configuration is missing or inactive. In that case we keep the
+        // current assignee unchanged instead of blocking the edit.
+        if (assignmentPreview.assignment) {
+          processedLeadUpdate.updateData.bdId = assignmentPreview.assignment.bd.userId
+          processedLeadUpdate.updateData.bdeName = assignmentPreview.assignment.bd.name
+          processedLeadUpdate.updateData.teamLeadId =
+            await getLeadTeamLeadIdForAssigneeManager(assignmentPreview.assignment.bd.userId)
+          incomingLeadUpdateData.selectedTeamLeadUserId =
+            assignmentPreview.assignment.teamLead.userId
+          incomingLeadUpdateData.selectedTeamLeadEmployeeId =
+            assignmentPreview.assignment.teamLead.employeeId
+          incomingLeadUpdateData.selectedBdUserId = assignmentPreview.assignment.bd.userId
+        } else {
+          incomingLeadUpdateData.errorMessage = mergeIncomingLeadErrorMessages(
+            existing.errorMessage,
+            assignmentPreview.explanation
+              ? `Routing note: ${assignmentPreview.explanation}`
+              : 'Routing note: No valid CRM assignment was found for the updated campaign/circle.'
           )
         }
-
-        processedLeadUpdate.updateData.bdId = assignmentPreview.assignment.bd.userId
-        processedLeadUpdate.updateData.bdeName = assignmentPreview.assignment.bd.name
-        processedLeadUpdate.updateData.teamLeadId =
-          await getLeadTeamLeadIdForAssigneeManager(assignmentPreview.assignment.bd.userId)
-        incomingLeadUpdateData.selectedTeamLeadUserId =
-          assignmentPreview.assignment.teamLead.userId
-        incomingLeadUpdateData.selectedTeamLeadEmployeeId =
-          assignmentPreview.assignment.teamLead.employeeId
-        incomingLeadUpdateData.selectedBdUserId = assignmentPreview.assignment.bd.userId
       }
 
       processedLeadUpdateData = processedLeadUpdate.updateData
@@ -524,25 +543,62 @@ export async function PATCH(
     })
 
     if (shouldAttemptReprocess) {
+      const previousErrorMessage = existing.errorMessage
+      let reprocessErrorMessage: string | null = null
+
       if (existing.source === 'mysql' || existing.source === 'manual_mysql') {
-        const queueDeps = {
-          systemUserId: await getDefaultMySQLSystemUserId(),
-          lookups: await loadLookupMaps(),
-          bdMap: await fetchBDUsersMap(),
+        try {
+          const queueDeps = {
+            systemUserId: await getDefaultMySQLSystemUserId(),
+            lookups: await loadLookupMaps(),
+            bdMap: await fetchBDUsersMap(),
+          }
+
+          await processMySQLIncomingLead(existing.id, queueDeps)
+        } catch (error) {
+          reprocessErrorMessage =
+            error instanceof Error ? error.message : 'Failed to reprocess incoming lead'
+          console.error('Error reprocessing CRM incoming lead after edit:', error)
         }
-
-        await processMySQLIncomingLead(existing.id, queueDeps)
       } else if (existing.source === 'savemyleads') {
-        const extracted = extractSaveMyLeadsFields(nextPayload)
+        try {
+          const extracted = extractSaveMyLeadsFields(nextPayload)
 
-        if (extracted.campaignId && extracted.patientName && extracted.phone) {
-          await processSaveMyLeadsIncomingLead({
-            incomingLeadId: existing.id,
-            externalCampaignId: extracted.campaignId,
-            patientName: extracted.patientName,
-            phone: extracted.phone,
-            email: extracted.email,
-            receivedAt: existing.receivedAt,
+          if (extracted.campaignId && extracted.patientName && extracted.phone) {
+            await processSaveMyLeadsIncomingLead({
+              incomingLeadId: existing.id,
+              externalCampaignId: extracted.campaignId,
+              patientName: extracted.patientName,
+              phone: extracted.phone,
+              email: extracted.email,
+              receivedAt: existing.receivedAt,
+            })
+          }
+        } catch (error) {
+          reprocessErrorMessage =
+            error instanceof Error ? error.message : 'Failed to reprocess incoming lead'
+          console.error('Error reprocessing SaveMyLeads incoming lead after edit:', error)
+        }
+      }
+
+      if (previousErrorMessage) {
+        const refreshedIncomingLead = await prisma.incomingLead.findUnique({
+          where: { id: existing.id },
+          select: { errorMessage: true },
+        })
+
+        const mergedErrorMessage = mergeIncomingLeadErrorMessages(
+          previousErrorMessage,
+          refreshedIncomingLead?.errorMessage,
+          reprocessErrorMessage
+        )
+
+        if (mergedErrorMessage !== (refreshedIncomingLead?.errorMessage ?? null)) {
+          await prisma.incomingLead.update({
+            where: { id: existing.id },
+            data: {
+              errorMessage: mergedErrorMessage,
+            },
           })
         }
       }

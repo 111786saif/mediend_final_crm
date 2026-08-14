@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Activity, AlertTriangle, RefreshCw } from 'lucide-react'
+import { Activity, AlertTriangle, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -56,11 +56,19 @@ type ActivityLogRow = {
 
 type ActivityResponse = {
   logs: ActivityLogRow[]
+  pagination: {
+    page: number
+    pageSize: number
+    total: number
+    totalPages: number
+  }
   filters: {
     entityTypes: string[]
     actions: string[]
   }
 }
+
+const PAGE_SIZE_OPTIONS = [25, 50, 100, 200] as const
 
 function formatDateTime(value: string) {
   const date = new Date(value)
@@ -78,15 +86,18 @@ export default function CrmActivityPage() {
   const [entityType, setEntityType] = useState('all')
   const [action, setAction] = useState('all')
   const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState('50')
 
   const queryString = useMemo(() => {
     const params = new URLSearchParams()
     if (entityType !== 'all') params.set('entityType', entityType)
     if (action !== 'all') params.set('action', action)
     if (search.trim()) params.set('search', search.trim())
-    params.set('limit', '100')
+    params.set('page', String(page))
+    params.set('pageSize', pageSize)
     return params.toString()
-  }, [action, entityType, search])
+  }, [action, entityType, page, pageSize, search])
 
   const { data, isLoading, error, refetch, isFetching } = useQuery<ActivityResponse, Error>({
     queryKey: ['crm-activity', queryString],
@@ -95,6 +106,13 @@ export default function CrmActivityPage() {
   })
 
   const logs = data?.logs ?? []
+  const pagination = data?.pagination
+  const total = pagination?.total ?? 0
+  const totalPages = pagination?.totalPages ?? 1
+  const currentPage = pagination?.page ?? page
+  const currentPageSize = pagination?.pageSize ?? Number(pageSize)
+  const rangeStart = total === 0 ? 0 : (currentPage - 1) * currentPageSize + 1
+  const rangeEnd = total === 0 ? 0 : Math.min(currentPage * currentPageSize, total)
 
   return (
     <ProtectedRoute>
@@ -124,10 +142,19 @@ export default function CrmActivityPage() {
           <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             <Input
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) => {
+                setSearch(event.target.value)
+                setPage(1)
+              }}
               placeholder="Search summary, actor, entity..."
             />
-            <Select value={entityType} onValueChange={setEntityType}>
+            <Select
+              value={entityType}
+              onValueChange={(value) => {
+                setEntityType(value)
+                setPage(1)
+              }}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="All entity types" />
               </SelectTrigger>
@@ -140,7 +167,13 @@ export default function CrmActivityPage() {
                 ))}
               </SelectContent>
             </Select>
-            <Select value={action} onValueChange={setAction}>
+            <Select
+              value={action}
+              onValueChange={(value) => {
+                setAction(value)
+                setPage(1)
+              }}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="All actions" />
               </SelectTrigger>
@@ -172,7 +205,11 @@ export default function CrmActivityPage() {
           <Card>
             <CardHeader>
               <CardTitle>Recent activity</CardTitle>
-              <CardDescription>Showing the latest 100 lead-related CRM events.</CardDescription>
+              <CardDescription>
+                {total > 0
+                  ? `Showing ${rangeStart}-${rangeEnd} of ${total} lead-related CRM events.`
+                  : 'Showing all matching lead-related CRM events.'}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="rounded-xl border">
@@ -250,6 +287,52 @@ export default function CrmActivityPage() {
                     )}
                   </TableBody>
                 </Table>
+              </div>
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-muted-foreground">
+                  {total > 0 ? `Showing ${rangeStart}-${rangeEnd} of ${total}` : 'No results'}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Select
+                    value={String(currentPageSize)}
+                    onValueChange={(value) => {
+                      setPageSize(value)
+                      setPage(1)
+                    }}
+                  >
+                    <SelectTrigger className="h-8 w-[110px] text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PAGE_SIZE_OPTIONS.map((size) => (
+                        <SelectItem key={size} value={String(size)}>
+                          {size} / page
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage((current) => Math.max(1, current - 1))}
+                    disabled={currentPage <= 1 || isLoading}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Prev
+                  </Button>
+                  <span className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+                    disabled={currentPage >= totalPages || isLoading}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
