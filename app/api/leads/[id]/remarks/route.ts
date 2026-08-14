@@ -255,10 +255,6 @@ export async function POST(
       return errorResponse('Remark content is required', 400)
     }
 
-    if (content.length > 4000) {
-      return errorResponse('Remark must be 4000 characters or less', 400)
-    }
-
     const remark = await prisma.leadRemarkEntry.create({
       data: {
         leadId: lead.id,

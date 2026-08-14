@@ -617,10 +617,6 @@ export async function PATCH(
       return errorResponse('Remark is required when changing lead status', 400)
     }
 
-    if (effectiveStatusChangeRemark.length > 4000) {
-      return errorResponse('Remark must be 4000 characters or less', 400)
-    }
-
     const nextFollowUpDate = parsedFollowUpDateInput.provided
       ? parsedFollowUpDateInput.value
       : lead.followUpDate

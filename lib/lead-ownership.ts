@@ -49,6 +49,15 @@ const SALES_ASSIGNABLE_ROLES = new Set<UserRole>([
   'SALES_HEAD',
 ])
 
+const MANUAL_LEAD_ASSIGNABLE_ROLES = new Set<UserRole>([
+  UserRole.BD,
+  UserRole.TEAM_LEAD,
+  UserRole.CATEGORY_MANAGER,
+  UserRole.ASSISTANT_CATEGORY_MANAGER,
+  UserRole.SALES_HEAD,
+  UserRole.EXECUTIVE_ASSISTANT,
+])
+
 const HIERARCHY_ASSIGNABLE_ROLE_SCOPE: Partial<Record<UserRole, UserRole[]>> = {
   EXECUTIVE_ASSISTANT: [
     UserRole.SALES_HEAD,
@@ -346,6 +355,56 @@ export async function getBulkReassignableLeadUsersForActor(
   user: SessionUser
 ): Promise<AssignableLeadUser[]> {
   return getAssignableLeadUsersForActor(user)
+}
+
+export async function getManualLeadAssignableUsersForActor(
+  user: SessionUser
+): Promise<AssignableLeadUser[]> {
+  if (!MANUAL_LEAD_ASSIGNABLE_ROLES.has(user.role)) {
+    return []
+  }
+
+  if (user.role === 'BD') {
+    return [
+      {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    ]
+  }
+
+  const allowedRoles = new Set(HIERARCHY_ASSIGNABLE_ROLE_SCOPE[user.role] ?? [])
+  const employee = await getEmployeeByUserId(user.id)
+  const subordinates = employee ? await getSubordinates(employee.id, true) : []
+  const assignableUsers = new Map<string, AssignableLeadUser>()
+
+  assignableUsers.set(user.id, {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  })
+
+  for (const subordinate of subordinates) {
+    if (subordinate.status !== EmployeeStatus.ACTIVE) continue
+    if (!allowedRoles.has(subordinate.user.role)) continue
+    if (!MANUAL_LEAD_ASSIGNABLE_ROLES.has(subordinate.user.role)) continue
+
+    assignableUsers.set(subordinate.user.id, {
+      id: subordinate.user.id,
+      name: subordinate.user.name,
+      email: subordinate.user.email,
+      role: subordinate.user.role,
+    })
+  }
+
+  return Array.from(assignableUsers.values()).sort((left, right) =>
+    formatLeadAssigneeName(left.name, left.email).localeCompare(
+      formatLeadAssigneeName(right.name, right.email),
+    )
+  )
 }
 
 export async function getBulkReassignableBdUsersForActor(
