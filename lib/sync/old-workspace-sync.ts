@@ -725,7 +725,21 @@ export async function copyLeadBundle(
           })
 
           if (suggestedHospitals.length) {
-            await tx.hospitalSuggestion.createMany({ data: suggestedHospitals.map(({ id, preAuthId: _p, ...h }) => ({ id, preAuthId: preAuthData.id, ...h })) })
+            const seen = new Set<string>()
+            const hospitalRows = suggestedHospitals
+              .filter((h) => {
+                const key = h.id || `${h.hospitalName}|${h.suggestedDoctor ?? ''}`
+                if (seen.has(key)) return false
+                seen.add(key)
+                return true
+              })
+              .map(({ id: _id, preAuthId: _p, ...h }) => ({
+                preAuthId: preAuthData.id,
+                ...h,
+              }))
+            if (hospitalRows.length) {
+              await tx.hospitalSuggestion.createMany({ data: hospitalRows })
+            }
           }
           if (queries.length) {
             await tx.insuranceQuery.createMany({
