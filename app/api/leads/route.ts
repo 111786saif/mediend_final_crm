@@ -710,7 +710,7 @@ export async function GET(request: NextRequest) {
           ...(maxLimit ? { take: maxLimit } : {}),
         })
 
-    let accessibleLeads = leads
+    let accessibleLeads: any[] = leads
 
     if (phoneLast10) {
       accessibleLeads = accessibleLeads.filter((lead) => {

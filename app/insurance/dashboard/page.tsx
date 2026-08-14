@@ -947,19 +947,19 @@ export default function InsuranceDashboardPage() {
             </CardHeader>
             <CardContent className="p-0">
               <InsurancePatientTable
-                leads={filteredLeads}
-                kpiLeads={scopedLeads}
-                onFilteredLeadsChange={handleTableFilteredLeadsChange}
+                leads={filteredLeads as any}
+                kpiLeads={scopedLeads as any}
+                onFilteredLeadsChange={handleTableFilteredLeadsChange as any}
                 isLoading={isLoading}
                 emptyMessage={error ? `Error loading leads: ${error instanceof Error ? error.message : 'Unknown error'}` : 'No cases found'}
                 onRowClick={(lead) => router.push(appendReturnTo(`/patient/${lead.id}`, INSURANCE_LIST_RETURN))}
                 renderActions={(lead) => {
-                  const tier = getPriorityTier(lead as LeadWithStage)
+                  const tier = getPriorityTier(lead as any)
                   const isSuggestionPending = tier === 3
-                  const isMarkUrgent = needsMarkDischarged(lead as LeadWithStage)
-                  const isFillUrgent = needsSheetFilled(lead as LeadWithStage)
+                  const isMarkUrgent = needsMarkDischarged(lead as any)
+                  const isFillUrgent = needsSheetFilled(lead as any)
                   const isInitialFormUrgent = tier === 2
-                  const record = lead as LeadWithStage
+                  const record = lead as any
 
                   return (
                     <>

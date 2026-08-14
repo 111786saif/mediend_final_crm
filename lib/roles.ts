@@ -22,6 +22,7 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   CRM_ADMIN: 'CRM Admin',
   USER: 'User (HRMS Only)',
   TESTER: 'Tester',
+  ACCESS_MATRIX: 'Access Matrix',
 }
 
 export function isUserRole(value: string): value is UserRole {
