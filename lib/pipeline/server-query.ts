@@ -92,14 +92,16 @@ const PIPELINE_DATE_COLUMN_FILTER_FIELDS = new Set<PipelineDateColumnFilterField
 
 const PIPELINE_MULTI_COLUMN_FILTER_FIELDS = new Set<PipelineMultiColumnFilterField>([
   'month',
-  'age',
-  'sex',
   'circle',
   'category',
   'treatment',
+  'tl',
   'status',
   'stage',
   'mop',
+  'source',
+  'leadSource',
+  'bd',
 ])
 
 export interface PipelineQueryParams {
@@ -590,51 +592,88 @@ function buildExactInsensitiveStringWhere(
   } as Prisma.LeadWhereInput
 }
 
-function buildAgeFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
-  const ages = [...new Set(
-    values
-      .map((value) => Number.parseInt(value, 10))
-      .filter((value) => Number.isInteger(value) && value >= 0 && value <= 120),
-  )]
+function buildExactInsensitiveNameRelationWhere(
+  relation: 'bd' | 'updatedBy',
+  values: string[],
+): Prisma.LeadWhereInput | undefined {
+  const normalizedValues = [...new Set(values.map((value) => value.trim()).filter((value) => value.length > 0))]
+  if (normalizedValues.length === 0) return undefined
 
-  if (ages.length === 0) return undefined
-  return { age: { in: ages } }
+  return {
+    OR: normalizedValues.map((value) => ({
+      [relation]: {
+        is: {
+          name: { equals: value, mode: 'insensitive' },
+        },
+      },
+    })),
+  } as Prisma.LeadWhereInput
 }
 
-function buildSexFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
-  const normalizedValues = [...new Set(values.map((value) => normalizePipelineSexValue(value)))]
-  const or: Prisma.LeadWhereInput[] = []
+function buildTeamLeadFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const normalizedValues = [...new Set(values.map((value) => value.trim()).filter((value) => value.length > 0))]
+  if (normalizedValues.length === 0) return undefined
 
-  for (const value of normalizedValues) {
-    if (value === 'Male') {
-      or.push({ OR: [{ sex: { equals: 'Male', mode: 'insensitive' } }, { sex: { equals: 'M', mode: 'insensitive' } }] })
-      continue
-    }
-
-    if (value === 'Female') {
-      or.push({ OR: [{ sex: { equals: 'Female', mode: 'insensitive' } }, { sex: { equals: 'F', mode: 'insensitive' } }] })
-      continue
-    }
-
-    if (value === 'Not Specified') {
-      or.push({
-        OR: [
-          { sex: { equals: 'Not Specified', mode: 'insensitive' } },
-          { sex: { equals: 'Not_Specified', mode: 'insensitive' } },
-          { sex: { equals: 'Unknown', mode: 'insensitive' } },
-          { sex: { equals: 'Unspecified', mode: 'insensitive' } },
-          { sex: { equals: 'N/A', mode: 'insensitive' } },
-          { sex: { equals: 'NA', mode: 'insensitive' } },
-          { sex: { equals: 'Other', mode: 'insensitive' } },
-          { sex: { equals: 'O', mode: 'insensitive' } },
-          { sex: '' },
-        ],
-      })
-    }
+  return {
+    OR: normalizedValues.flatMap((value) => [
+      {
+        bd: {
+          is: {
+            role: { in: ['TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER'] },
+            name: { equals: value, mode: 'insensitive' },
+          },
+        },
+      },
+      {
+        bd: {
+          is: {
+            employee: {
+              is: {
+                manager: {
+                  is: {
+                    user: {
+                      is: {
+                        role: { in: ['TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER'] },
+                        name: { equals: value, mode: 'insensitive' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        plRecord: {
+          is: {
+            managerName: { equals: value, mode: 'insensitive' },
+          },
+        },
+      },
+    ]),
   }
+}
 
-  if (or.length === 0) return undefined
-  return or.length === 1 ? or[0] : { OR: or }
+function buildLeadSourceFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const normalizedValues = [...new Set(values.map((value) => value.trim()).filter((value) => value.length > 0))]
+  if (normalizedValues.length === 0) return undefined
+
+  return {
+    OR: normalizedValues.flatMap((value) => {
+      const parsedNumeric = Number.parseInt(value, 10)
+      const conditions: Prisma.LeadWhereInput[] = [
+        { campaignName: { equals: value, mode: 'insensitive' } },
+        { source: { equals: value, mode: 'insensitive' } },
+      ]
+
+      if (!Number.isNaN(parsedNumeric)) {
+        conditions.push({ leadSource: parsedNumeric })
+      }
+
+      return conditions
+    }),
+  }
 }
 
 const PIPELINE_STATUS_FILTER_VARIANTS: Record<string, string[]> = {
@@ -918,22 +957,26 @@ function buildPipelineMultiSelectWhere(
   switch (field) {
     case 'month':
       return buildExactInsensitiveStringWhere('month', values)
-    case 'age':
-      return buildAgeFilterWhere(values)
-    case 'sex':
-      return buildSexFilterWhere(values)
     case 'circle':
       return buildExactInsensitiveStringWhere('circle', values)
     case 'category':
       return buildExactInsensitiveStringWhere('category', values)
     case 'treatment':
       return buildExactInsensitiveStringWhere('treatment', values)
+    case 'tl':
+      return buildTeamLeadFilterWhere(values)
     case 'status':
       return buildStatusFilterWhere(values)
     case 'stage':
       return buildStageFilterWhere(values)
     case 'mop':
       return buildModeOfPaymentFilterWhere(values)
+    case 'source':
+      return buildExactInsensitiveStringWhere('source', values)
+    case 'leadSource':
+      return buildLeadSourceFilterWhere(values)
+    case 'bd':
+      return buildExactInsensitiveNameRelationWhere('bd', values)
     default:
       return undefined
   }

@@ -166,8 +166,6 @@ function normalizedText(value: unknown, fallback: string): string {
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500]
 
-const PIPELINE_AGE_FILTER_OPTIONS = Array.from({ length: 121 }, (_, index) => String(index))
-const PIPELINE_SEX_FILTER_OPTIONS = ['Male', 'Female', 'Not Specified']
 const PIPELINE_STATUS_FILTER_OPTIONS = Array.from(
   new Set([
     ...CRM_LEAD_STATUS_OPTIONS,
@@ -286,15 +284,17 @@ const PIPELINE_SERVER_FILTER_COLUMNS = new Set<PipelineColumnId>([
   'assignDate',
   'leadDate',
   'month',
-  'age',
-  'sex',
   'circle',
   'category',
   'treatment',
+  'tl',
+  'bd',
   'status',
   'followUpDate',
   'stage',
   'mop',
+  'source',
+  'leadSource',
   'surgeryDate',
   'createDate',
   'modifyDate',
@@ -814,8 +814,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     options.hospital = mergeUniqueSortedLists(hospitalMasterOptions, options.hospital)
     options.doctor = mergeUniqueSortedLists(doctorMasterOptions, options.doctor)
     options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
-    options.age = PIPELINE_AGE_FILTER_OPTIONS
-    options.sex = PIPELINE_SEX_FILTER_OPTIONS
     options.month = [...PIPELINE_MONTH_FILTER_OPTIONS]
     options.circle = mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
     options.bd = mergeUniqueSortedLists(
@@ -1413,15 +1411,15 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             />
                           )}
                           {isColumnVisible('month') && <HeaderCell label="Month" {...getHeaderFilterProps('month')} />}
-                          {isColumnVisible('age') && <HeaderCell label="Age" {...getHeaderFilterProps('age')} />}
-                          {isColumnVisible('sex') && <HeaderCell label="Sex" {...getHeaderFilterProps('sex')} />}
+                          {isColumnVisible('age') && <HeaderCell label="Age" />}
+                          {isColumnVisible('sex') && <HeaderCell label="Sex" />}
                           {isColumnVisible('circle') && (
                             <HeaderCell
                               label="Circle"
                               {...getHeaderFilterProps('circle')}
                             />
                           )}
-                          {isColumnVisible('city') && <HeaderCell label="City" {...getHeaderFilterProps('city')} />}
+                          {isColumnVisible('city') && <HeaderCell label="City" />}
                           {isColumnVisible('category') && (
                             <HeaderCell
                               label="Category"
@@ -1438,9 +1436,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           {isColumnVisible('bd') && (
                             <HeaderCell
                               label="BDM"
-                              sortField="bd"
-                              state={state}
-                              onSort={handleSort}
                               {...getHeaderFilterProps('bd')}
                             />
                           )}
@@ -1448,9 +1443,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           {isColumnVisible('status') && (
                             <HeaderCell
                               label="Status"
-                              sortField="status"
-                              state={state}
-                              onSort={handleSort}
                               {...getHeaderFilterProps('status')}
                             />
                           )}
@@ -1466,7 +1458,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           {isColumnVisible('mop') && <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />}
                           {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />}
                           {isColumnVisible('planningTreatment') && <HeaderCell label="Planning Treatment" {...getHeaderFilterProps('planningTreatment')} />}
-                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" {...getHeaderFilterProps('subStatus')} />}
+                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" />}
                           {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" {...getHeaderFilterProps('healthInsurance')} />}
                           {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" {...getHeaderFilterProps('preferredLocation')} />}
                           {isColumnVisible('profession') && <HeaderCell label="Profession" {...getHeaderFilterProps('profession')} />}

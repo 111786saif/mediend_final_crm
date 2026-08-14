@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server'
-import { Prisma } from '@/generated/prisma/client'
+import { EmployeeStatus, Prisma, UserRole } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { getEmployeeByUserId, getSubordinates, resolveTeamLeadForLeadOwner } from '@/lib/hierarchy'
 import {
   getVisibleLatestLeadRemark,
   getVisibleLeadRemarksFallbackContent,
@@ -11,6 +12,7 @@ import {
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
+import { TEAM_UNIT_ROLES } from '@/lib/sales-hierarchy-roles'
 import {
   buildPipelineFiltersWhere,
   buildPipelineRoleWhere,
@@ -61,14 +63,19 @@ export async function GET(request: NextRequest) {
       take: 200,
       orderBy: { circle: 'asc' },
     })
-    // bdId is required on Lead — do not use `{ not: null }` (Prisma rejects it).
-    const bdRows = await prisma.lead.findMany({
-      where: facetWhere,
-      select: { bdId: true, bd: { select: { id: true, name: true } } },
-      distinct: ['bdId'],
+    const sourceRows = await prisma.crmCampaignSource.findMany({
+      where: { isActive: true },
+      select: { name: true },
       take: 300,
-      orderBy: { bdId: 'asc' },
+      orderBy: { name: 'asc' },
     })
+    const leadSourceRows = await prisma.crmCampaignLeadSource.findMany({
+      where: { isActive: true },
+      select: { name: true },
+      take: 300,
+      orderBy: { name: 'asc' },
+    })
+    const { bds, teamLeads } = await loadPipelineApplicableUserFilters(user)
     const campaignAgg = await loadCampaignTree(facetWhere, params.groupBy)
     const total = await prisma.lead.count({ where: listWhere })
     const leads: PipelineSelectedLead[] = await prisma.lead.findMany({
@@ -96,10 +103,15 @@ export async function GET(request: NextRequest) {
       ),
     ].sort((a, b) => a.localeCompare(b))
 
-    const bds = bdRows
-      .filter((r) => r.bd?.id && r.bd.name)
-      .map((r) => ({ id: r.bd!.id, name: r.bd!.name }))
-      .sort((a, b) => a.name.localeCompare(b.name))
+    const sources = sourceRows
+      .map((row) => row.name.trim())
+      .filter((value) => value.length > 0)
+      .sort((left, right) => left.localeCompare(right))
+
+    const leadSources = leadSourceRows
+      .map((row) => row.name.trim())
+      .filter((value) => value.length > 0)
+      .sort((left, right) => left.localeCompare(right))
 
     const mappedLeads = leads.map((lead) => {
       const latestRemark = getVisibleLatestLeadRemark(lead, lead.leadRemarkEntries, user.role) ?? null
@@ -133,7 +145,12 @@ export async function GET(request: NextRequest) {
         categories,
         circles,
         bds,
-        columnFacets: {},
+        columnFacets: {
+          tl: teamLeads,
+          bd: bds.map((item) => item.name),
+          source: sources,
+          leadSource: leadSources,
+        },
       },
       campaignTree: campaignAgg,
       sortBy: params.sortBy,
@@ -195,4 +212,92 @@ function normalizeLabel(value: string | null | undefined, fallback: string): str
   if (typeof value !== 'string') return fallback
   const trimmed = value.trim().replace(/\s+/g, ' ')
   return trimmed || fallback
+}
+
+async function loadPipelineApplicableUserFilters(user: {
+  id: string
+  name: string
+  role: UserRole | string
+}) {
+  if (user.role === UserRole.BD) {
+    const teamLead = await resolveTeamLeadForLeadOwner(user.id)
+    return {
+      bds: [{ id: user.id, name: user.name }],
+      teamLeads: teamLead?.name ? [teamLead.name] : [],
+    }
+  }
+
+  if (
+    user.role === UserRole.TEAM_LEAD ||
+    user.role === UserRole.ASSISTANT_CATEGORY_MANAGER ||
+    user.role === UserRole.CATEGORY_MANAGER ||
+    user.role === UserRole.SALES_HEAD ||
+    user.role === UserRole.EXECUTIVE_ASSISTANT
+  ) {
+    const employee = await getEmployeeByUserId(user.id)
+    const subordinates = employee ? await getSubordinates(employee.id, true) : []
+    const bdMap = new Map<string, { id: string; name: string }>()
+    const teamLeadNames = new Set<string>()
+
+    if (TEAM_UNIT_ROLES.includes(user.role as UserRole)) {
+      teamLeadNames.add(user.name)
+    }
+
+    for (const subordinate of subordinates) {
+      if (subordinate.status !== EmployeeStatus.ACTIVE) continue
+
+      if (subordinate.user.role === UserRole.BD) {
+        bdMap.set(subordinate.user.id, {
+          id: subordinate.user.id,
+          name: subordinate.user.name,
+        })
+      }
+
+      if (TEAM_UNIT_ROLES.includes(subordinate.user.role as UserRole)) {
+        teamLeadNames.add(subordinate.user.name)
+      }
+    }
+
+    return {
+      bds: [...bdMap.values()].sort((left, right) => left.name.localeCompare(right.name)),
+      teamLeads: [...teamLeadNames].sort((left, right) => left.localeCompare(right)),
+    }
+  }
+
+  const [allBds, allTeamLeads] = await Promise.all([
+    prisma.user.findMany({
+      where: {
+        role: UserRole.BD,
+        employee: {
+          is: {
+            status: EmployeeStatus.ACTIVE,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: { name: 'asc' },
+    }),
+    prisma.user.findMany({
+      where: {
+        role: { in: TEAM_UNIT_ROLES },
+        employee: {
+          is: {
+            status: EmployeeStatus.ACTIVE,
+          },
+        },
+      },
+      select: {
+        name: true,
+      },
+      orderBy: { name: 'asc' },
+    }),
+  ])
+
+  return {
+    bds: allBds,
+    teamLeads: allTeamLeads.map((item) => item.name),
+  }
 }
