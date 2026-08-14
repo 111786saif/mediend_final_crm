@@ -10,10 +10,12 @@
  *   bun run scripts/import-leads-followup-mop-csv.ts --dry-run
  *   bun run scripts/import-leads-followup-mop-csv.ts
  *   bun run scripts/import-leads-followup-mop-csv.ts --csv ../leads_export.csv --overwrite
+ *   bun run scripts/import-leads-followup-mop-csv.ts --follow-up-only --overwrite
  *
  * Docker (on server — copy CSV to data/leads_export.csv first):
  *   docker compose --profile tools run --rm import-leads-followup-mop -- --dry-run
  *   docker compose --profile tools run --rm import-leads-followup-mop
+ *   docker compose --profile tools run --rm import-leads-followup-mop -- --follow-up-only --overwrite
  */
 
 import 'dotenv/config'
@@ -24,6 +26,7 @@ import { normalizeModeOfPaymentStorageValue } from '@/lib/mode-of-payment'
 
 const DRY_RUN = process.argv.includes('--dry-run')
 const OVERWRITE = process.argv.includes('--overwrite')
+const FOLLOW_UP_ONLY = process.argv.includes('--follow-up-only')
 const BATCH_SIZE = 500
 
 function resolveCsvPath(): string {
@@ -131,7 +134,9 @@ function modeOfPaymentEqual(left: string | null | undefined, right: string | nul
 
 async function importLeadFollowupMopCsv() {
   console.log(`CSV: ${CSV_PATH}`)
-  console.log(`Mode: ${DRY_RUN ? 'DRY RUN' : 'APPLY'}${OVERWRITE ? ' (overwrite existing values)' : ' (fill missing only)'}`)
+  console.log(
+    `Mode: ${DRY_RUN ? 'DRY RUN' : 'APPLY'}${OVERWRITE ? ' (overwrite existing values)' : ' (fill missing only)'}${FOLLOW_UP_ONLY ? ' [follow-up date only]' : ''}`
+  )
 
   const { rows, skippedMalformedLines, skippedEmptyLines } = readCsvRows()
   console.log(`Parsed ${rows.length} CSV rows with follow-up date and/or mode of payment`)
@@ -196,7 +201,7 @@ async function importLeadFollowupMopCsv() {
         }
       }
 
-      if (row.modeOfPayment) {
+      if (!FOLLOW_UP_ONLY && row.modeOfPayment) {
         if (!OVERWRITE && lead.modeOfPayment && lead.modeOfPayment.trim().length > 0) {
           stats.skippedExistingModeOfPayment += 1
         } else if (!modeOfPaymentEqual(lead.modeOfPayment, row.modeOfPayment)) {
