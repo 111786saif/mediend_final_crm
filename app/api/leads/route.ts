@@ -668,6 +668,8 @@ export async function GET(request: NextRequest) {
           hospitalShareAmount: true,
           dischargeSummaryUrl: true,
           finalBillUrl: true,
+          finalApprovedUrl: true,
+          deductionReceiptUrl: true,
           settlementLetterUrl: true,
           otNotesUrl: true,
           remarks: true,

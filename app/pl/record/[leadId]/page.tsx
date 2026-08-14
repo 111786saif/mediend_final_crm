@@ -410,20 +410,20 @@ export default function PLRecordEditPage() {
               asChild
               className="text-teal-800 hover:bg-teal-100 dark:text-teal-200 dark:hover:bg-teal-950/40"
             >
-              <Link href="/pl/dashboard" aria-label="Back to P/L ledger">
+              <Link href="/pl/dashboard" aria-label="Back to P&L ledger">
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <div className="flex-1">
               <nav className="text-sm text-muted-foreground">
                 <Link href="/pl/dashboard" className="font-medium text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100">
-                  P/L Ledger
+                  P&L Ledger
                 </Link>
                 <span className="mx-2">/</span>
-                <span className="text-foreground">Edit P/L — {record.leadRef ?? record.id}</span>
+                <span className="text-foreground">Edit P&L — {record.leadRef ?? record.id}</span>
               </nav>
               <h1 className="text-2xl font-bold mt-0.5 bg-gradient-to-r from-teal-800 to-indigo-800 bg-clip-text text-transparent dark:from-teal-200 dark:to-indigo-200">
-                Edit P/L record
+                Edit P&L record
               </h1>
             </div>
             <Badge
@@ -443,7 +443,7 @@ export default function PLRecordEditPage() {
           {hasBdNotes && (
             <Card className="overflow-hidden border-amber-200/50 shadow-md dark:border-amber-800/40">
               <CardHeader className="border-b bg-gradient-to-r from-amber-500/10 to-yellow-500/10 pb-2">
-                <CardTitle className="text-sm text-amber-950 dark:text-amber-100">BD Notes for PL Head</CardTitle>
+                <CardTitle className="text-sm text-amber-950 dark:text-amber-100">BD Notes for P&L Head</CardTitle>
               </CardHeader>
               <CardContent className="pt-3 text-sm space-y-3">
                 {bdNotes && (

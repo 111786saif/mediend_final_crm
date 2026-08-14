@@ -9,7 +9,7 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   TEAM_LEAD: 'Team Lead',
   BD: 'BD',
   INSURANCE_HEAD: 'Insurance Head',
-  PL_HEAD: 'P/L Head',
+  PL_HEAD: 'P&L Head',
   OUTSTANDING_HEAD: 'Outstanding Head',
   HR_HEAD: 'HR Head',
   FINANCE_HEAD: 'Finance Head',

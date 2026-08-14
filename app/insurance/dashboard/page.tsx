@@ -513,7 +513,7 @@ export default function InsuranceDashboardPage() {
     'admitted': 'IPD / Admitted',
     'to-mark-discharged': 'To Mark Discharged — confirm discharge date',
     'to-fill-sheet': 'To Fill Sheet — discharged, sheet pending',
-    'sheet-filled': 'Discharge Sheets Filled — finalized & moved to PL',
+    'sheet-filled': 'Discharge Sheets Filled — finalized & moved to P&L',
     'all-patients': 'All Patients',
   }
 
@@ -583,7 +583,7 @@ export default function InsuranceDashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">{stats.sheetFilled}</div>
-                  <p className="text-xs text-gray-500 mt-1">Finalized & sent to PL</p>
+                  <p className="text-xs text-gray-500 mt-1">Finalized & sent to P&L</p>
                 </CardContent>
               </Card>
               <Card className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950 dark:to-blue-950 border-indigo-200 dark:border-indigo-800 border-2">

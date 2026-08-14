@@ -28,7 +28,7 @@ const ROLES = [
   { value: 'FINANCE_HEAD', label: 'Finance Head' },
   { value: 'SALES_HEAD', label: 'Sales Head' },
   { value: 'INSURANCE_HEAD', label: 'Insurance Head' },
-  { value: 'PL_HEAD', label: 'PL Head' },
+  { value: 'PL_HEAD', label: 'P&L Head' },
   { value: 'OUTSTANDING_HEAD', label: 'Outstanding Head' },
   { value: 'DIGITAL_MARKETING_HEAD', label: 'Digital Marketing Head' },
   { value: 'CATEGORY_MANAGER', label: 'Category Manager' },

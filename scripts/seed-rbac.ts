@@ -16,7 +16,7 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'hrm', label: 'Human Resource Management', type: 'MODULE', parentKey: null, sortOrder: 2 },
   { key: 'myhrms', label: 'My HRMS Portal', type: 'MODULE', parentKey: null, sortOrder: 3 },
   { key: 'sales', label: 'Sales & Marketing', type: 'MODULE', parentKey: null, sortOrder: 4 },
-  { key: 'insurance_pl', label: 'Outstanding & P/L', type: 'MODULE', parentKey: null, sortOrder: 5 },
+  { key: 'insurance_pl', label: 'Outstanding & P&L', type: 'MODULE', parentKey: null, sortOrder: 5 },
   { key: 'finance', label: 'Finance & Accounts', type: 'MODULE', parentKey: null, sortOrder: 6 },
   { key: 'actions', label: 'System Actions', type: 'MODULE', parentKey: null, sortOrder: 7 },
   { key: 'crm', label: 'CRM', type: 'MODULE', parentKey: null, sortOrder: 8 },
@@ -92,9 +92,9 @@ const resourcesToSeed: ResourceSeedItem[] = [
   // Under insurance_pl
   { key: 'insurance_pl.insurance', label: 'Insurance', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 1 },
   { key: 'insurance_pl.cash_cases', label: 'Cash Cases', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 2 },
-  { key: 'insurance_pl.pl_ledger', label: 'P/L Ledger', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 3 },
-  { key: 'insurance_pl.pl_surgery', label: 'P/L Surgery', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 4 },
-  { key: 'insurance_pl.pl_outstanding', label: 'P/L Outstanding', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 5 },
+  { key: 'insurance_pl.pl_ledger', label: 'P&L Ledger', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 3 },
+  { key: 'insurance_pl.pl_surgery', label: 'P&L Surgery', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 4 },
+  { key: 'insurance_pl.pl_outstanding', label: 'P&L Outstanding', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 5 },
   { key: 'insurance_pl.doctor_list', label: 'Doctor List', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 6 },
   { key: 'insurance_pl.hospital_list', label: 'Hospital List', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 7 },
 
@@ -320,12 +320,12 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'sales.team_lead_pipeline.table.lead.column.actions', label: 'Actions Column', type: 'ENTITY', parentKey: 'sales.team_lead_pipeline.table', sortOrder: 12 },
 
   // --- MODULE 5: INSURANCE & P/L ---
-  { key: 'insurance_pl.pl_surgery.analytics', label: 'PL Surgery Analytics Section', type: 'SECTION', parentKey: 'insurance_pl.pl_surgery', sortOrder: 1 },
+  { key: 'insurance_pl.pl_surgery.analytics', label: 'P&L Surgery Analytics Section', type: 'SECTION', parentKey: 'insurance_pl.pl_surgery', sortOrder: 1 },
   { key: 'insurance_pl.pl_surgery.analytics.total_surgeries_card', label: 'Total Surgeries Card', type: 'ENTITY', parentKey: 'insurance_pl.pl_surgery.analytics', sortOrder: 1 },
   { key: 'insurance_pl.pl_surgery.analytics.revenue_card', label: 'Revenue Card', type: 'ENTITY', parentKey: 'insurance_pl.pl_surgery.analytics', sortOrder: 2 },
   { key: 'insurance_pl.pl_surgery.analytics.avg_margin_card', label: 'Average Margin Card', type: 'ENTITY', parentKey: 'insurance_pl.pl_surgery.analytics', sortOrder: 3 },
 
-  { key: 'insurance_pl.pl_surgery.table', label: 'PL Surgery Table Section', type: 'SECTION', parentKey: 'insurance_pl.pl_surgery', sortOrder: 2 },
+  { key: 'insurance_pl.pl_surgery.table', label: 'P&L Surgery Table Section', type: 'SECTION', parentKey: 'insurance_pl.pl_surgery', sortOrder: 2 },
   { key: 'insurance_pl.pl_surgery.table.dischargeSheet.column.bd', label: 'BD Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_surgery.table', sortOrder: 1 },
   { key: 'insurance_pl.pl_surgery.table.dischargeSheet.column.team_leader', label: 'Team Leader Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_surgery.table', sortOrder: 2 },
   { key: 'insurance_pl.pl_surgery.table.dischargeSheet.column.surgeries', label: 'Surgeries Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_surgery.table', sortOrder: 3 },
@@ -348,11 +348,11 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'insurance_pl.cash_cases.table.lead.column.cash_amount', label: 'Cash Amount Column', type: 'ENTITY', parentKey: 'insurance_pl.cash_cases.table', sortOrder: 2 },
   { key: 'insurance_pl.cash_cases.table.lead.column.received_status', label: 'Received Status Column', type: 'ENTITY', parentKey: 'insurance_pl.cash_cases.table', sortOrder: 3 },
 
-  { key: 'insurance_pl.pl_ledger.analytics', label: 'PL Ledger Analytics', type: 'SECTION', parentKey: 'insurance_pl.pl_ledger', sortOrder: 1 },
+  { key: 'insurance_pl.pl_ledger.analytics', label: 'P&L Ledger Analytics', type: 'SECTION', parentKey: 'insurance_pl.pl_ledger', sortOrder: 1 },
   { key: 'insurance_pl.pl_ledger.analytics.total_revenue', label: 'Total Revenue Card', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.analytics', sortOrder: 1 },
   { key: 'insurance_pl.pl_ledger.analytics.total_margin', label: 'Total Margin Card', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.analytics', sortOrder: 2 },
 
-  { key: 'insurance_pl.pl_ledger.table', label: 'PL Ledger Table Section', type: 'SECTION', parentKey: 'insurance_pl.pl_ledger', sortOrder: 2 },
+  { key: 'insurance_pl.pl_ledger.table', label: 'P&L Ledger Table Section', type: 'SECTION', parentKey: 'insurance_pl.pl_ledger', sortOrder: 2 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.actions', label: 'Actions Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 1 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.month', label: 'Month Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 2 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.lead_received', label: 'Lead Received Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 3 },
@@ -367,7 +367,7 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.admission_date', label: 'Admission Date Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 12 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.surgery_date', label: 'Surgery Date Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 13 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.payment_type', label: 'Payment Type Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 14 },
-  { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.outstanding_status', label: 'PL Status Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 15 },
+  { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.outstanding_status', label: 'P&L Status Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 15 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.status', label: 'Status Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 16 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.total_bill', label: 'Total Bill Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 17 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.approved_amount', label: 'Approved Amount Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 18 },
@@ -397,11 +397,11 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.doc_payout', label: 'Doctor Payout Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 42 },
   { key: 'insurance_pl.pl_ledger.table.dischargeSheet.column.invoice', label: 'Invoice Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_ledger.table', sortOrder: 43 },
 
-  { key: 'insurance_pl.pl_outstanding.analytics', label: 'PL Outstanding Analytics', type: 'SECTION', parentKey: 'insurance_pl.pl_outstanding', sortOrder: 1 },
+  { key: 'insurance_pl.pl_outstanding.analytics', label: 'P&L Outstanding Analytics', type: 'SECTION', parentKey: 'insurance_pl.pl_outstanding', sortOrder: 1 },
   { key: 'insurance_pl.pl_outstanding.analytics.total_outstanding', label: 'Total Outstanding Card', type: 'ENTITY', parentKey: 'insurance_pl.pl_outstanding.analytics', sortOrder: 1 },
   { key: 'insurance_pl.pl_outstanding.analytics.overdue_cases', label: 'Overdue Cases Card', type: 'ENTITY', parentKey: 'insurance_pl.pl_outstanding.analytics', sortOrder: 2 },
 
-  { key: 'insurance_pl.pl_outstanding.table', label: 'PL Outstanding Table Section', type: 'SECTION', parentKey: 'insurance_pl.pl_outstanding', sortOrder: 2 },
+  { key: 'insurance_pl.pl_outstanding.table', label: 'P&L Outstanding Table Section', type: 'SECTION', parentKey: 'insurance_pl.pl_outstanding', sortOrder: 2 },
   { key: 'insurance_pl.pl_outstanding.table.dischargeSheet.column.lead_ref', label: 'Lead Ref Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_outstanding.table', sortOrder: 1 },
   { key: 'insurance_pl.pl_outstanding.table.dischargeSheet.column.actions', label: 'Actions Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_outstanding.table', sortOrder: 2 },
   { key: 'insurance_pl.pl_outstanding.table.dischargeSheet.column.month', label: 'Month Column', type: 'ENTITY', parentKey: 'insurance_pl.pl_outstanding.table', sortOrder: 3 },
