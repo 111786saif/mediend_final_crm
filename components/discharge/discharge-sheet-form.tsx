@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { apiPost } from '@/lib/api-client'
 import { toast } from 'sonner'
-import { ChevronDown, ChevronUp, File, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, File, X, RotateCcw } from 'lucide-react'
 
 interface DischargeSheetFormProps {
   leadId: string
@@ -241,6 +241,40 @@ export function DischargeSheetForm({
     }
   }
 
+  const handleReset = () => {
+    setFormData({
+      dischargeDate: '',
+      finalAmount: '',
+      roomRentAmount: '',
+      pharmacyAmount: '',
+      investigationAmount: '',
+      consumablesAmount: '',
+      implantsAmount: '',
+      instrumentsAmount: '',
+      staplerCharges: '',
+      anesthesiaAmount: '',
+      packageAmount: '',
+      finalApprovedAmount: '',
+      copayAmount: '',
+      otherDeduction: '',
+      collectedByHospital: '',
+      collectedByMediend: '',
+      discountAmount: '',
+      axisTariffDeduction: '',
+      axisTariffDeductionPaid: '',
+      remarks: '',
+    })
+    setFiles({
+      dischargeSummary: null,
+      otNotes: null,
+      finalApproved: null,
+      deductionReceipt: null,
+      finalBill: null,
+    })
+    setErrors({})
+    toast.success('Form fields reset to empty')
+  }
+
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }))
   }
@@ -250,6 +284,20 @@ export function DischargeSheetForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="flex items-center justify-between border-b pb-3">
+        <h2 className="text-sm font-semibold text-foreground">Discharge Sheet Form</h2>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleReset}
+          className="gap-1.5 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20 hover:border-destructive"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+          Reset Fields
+        </Button>
+      </div>
+
       {/* Patient & Discharge Info */}
       <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
         <h3 className="font-semibold mb-3">Discharge Information</h3>
