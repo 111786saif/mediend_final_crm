@@ -5,6 +5,7 @@ import { extractIncomingLeadSummary } from '@/lib/crm-incoming-leads'
 import { getBusinessMonthRange, getBusinessMonthYear, getCampaignManagementPageData } from '@/lib/crm-campaigns'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
+import { last10DigitsFromStored, parsePhoneSearchQuery } from '@/lib/phone-search'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
@@ -12,6 +13,8 @@ import { getSessionWithFreshUser } from '@/lib/session'
 const querySchema = z.object({
   month: z.coerce.number().int().min(1).max(12).optional(),
   year: z.coerce.number().int().min(2000).max(2100).optional(),
+  searchColumn: z.string().trim().optional(),
+  searchValue: z.string().trim().optional(),
 })
 
 export async function GET(request: NextRequest) {
@@ -43,6 +46,8 @@ export async function GET(request: NextRequest) {
     const parsed = querySchema.safeParse({
       month: searchParams.get('month') ?? undefined,
       year: searchParams.get('year') ?? undefined,
+      searchColumn: searchParams.get('searchColumn') ?? undefined,
+      searchValue: searchParams.get('searchValue') ?? undefined,
     })
 
     if (!parsed.success) {
@@ -123,6 +128,10 @@ export async function GET(request: NextRequest) {
         ? new Set(hierarchyScopedUserIds)
         : null
     const canViewPhone = String(currentUser.role) === 'ADMIN'
+    const phoneSearch =
+      parsed.data.searchColumn === 'normalizedPhone' && parsed.data.searchValue
+        ? parsePhoneSearchQuery(parsed.data.searchValue)
+        : null
     const filteredIncomingLeads =
       visibleScopeUserIds === null
         ? incomingLeads
@@ -141,13 +150,28 @@ export async function GET(request: NextRequest) {
                 : false)
             )
           })
+    const searchedIncomingLeads =
+      phoneSearch == null
+        ? filteredIncomingLeads
+        : filteredIncomingLeads.filter((incomingLead) => {
+            const processedLead = incomingLead.processedLeadId
+              ? processedLeadById.get(incomingLead.processedLeadId)
+              : undefined
+            const summary = extractIncomingLeadSummary(incomingLead.payload)
+
+            return (
+              incomingLead.normalizedPhone === phoneSearch.last10 ||
+              last10DigitsFromStored(summary.phone) === phoneSearch.last10 ||
+              last10DigitsFromStored(processedLead?.phoneNumber) === phoneSearch.last10
+            )
+          })
 
     return successResponse({
       month: hasExplicitMonthFilter ? month : null,
       year: hasExplicitMonthFilter ? year : null,
       masters: campaignData.masters,
       campaigns: campaignData.campaigns,
-      incomingLeads: filteredIncomingLeads.map((incomingLead) => {
+      incomingLeads: searchedIncomingLeads.map((incomingLead) => {
         const summary = extractIncomingLeadSummary(incomingLead.payload)
         const campaign = incomingLead.externalCampaignId
           ? campaignByExternalId.get(incomingLead.externalCampaignId)
