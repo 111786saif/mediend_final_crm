@@ -15,6 +15,11 @@ const ALLOWED_NEW_CARD_DETAIL_STAGES: CaseStage[] = [
   CaseStage.KYP_BASIC_PENDING,
 ]
 
+const ALLOWED_CARD_DETAIL_EDIT_STAGES: CaseStage[] = [
+  ...ALLOWED_NEW_CARD_DETAIL_STAGES,
+  CaseStage.KYP_BASIC_COMPLETE,
+]
+
 const submitKYPSchema = z.object({
   leadId: z.string(),
   patientName: z.string().optional(),
@@ -100,7 +105,7 @@ export async function POST(request: NextRequest) {
       include: { lead: { select: { caseStage: true } } },
     })
 
-    if (!existingKYP && !ALLOWED_NEW_CARD_DETAIL_STAGES.includes(lead.caseStage)) {
+    if (!ALLOWED_CARD_DETAIL_EDIT_STAGES.includes(lead.caseStage)) {
       return errorResponse(
         'Card details can only be submitted while the case is in a new, OPD scheduled, OPD done, or card details pending stage',
         400
@@ -160,19 +165,15 @@ export async function POST(request: NextRequest) {
       },
     } as const
 
-    if (existingKYP) {
-      if (existingKYP.lead.caseStage !== CaseStage.KYP_BASIC_COMPLETE) {
-        return errorResponse(
-          'Card details cannot be changed after hospitals have been suggested',
-          400
-        )
-      }
+    const isCardDetailsEditMode = lead.caseStage === CaseStage.KYP_BASIC_COMPLETE
 
+    if (existingKYP) {
       const kypSubmission = await prisma.kYPSubmission.update({
         where: { id: existingKYP.id },
         data: {
           ...kypDataPayload,
           patientConsent: data.patientConsent ?? existingKYP.patientConsent,
+          submittedById: user.id,
         },
         include: kypInclude,
       })
@@ -182,17 +183,60 @@ export async function POST(request: NextRequest) {
         data: leadUpdateFromForm,
       })
 
-      await prisma.caseStageHistory.create({
+      if (isCardDetailsEditMode) {
+        await prisma.caseStageHistory.create({
+          data: {
+            leadId: data.leadId,
+            fromStage: CaseStage.KYP_BASIC_COMPLETE,
+            toStage: CaseStage.KYP_BASIC_COMPLETE,
+            changedById: user.id,
+            note: 'Card Details updated',
+          },
+        })
+
+        return successResponse(kypSubmission, 'Card Details updated')
+      }
+
+      const targetStage = CaseStage.KYP_BASIC_COMPLETE
+      const previousStage = lead.caseStage
+      await prisma.lead.update({
+        where: { id: data.leadId },
         data: {
-          leadId: data.leadId,
-          fromStage: CaseStage.KYP_BASIC_COMPLETE,
-          toStage: CaseStage.KYP_BASIC_COMPLETE,
-          changedById: user.id,
-          note: 'Card Details updated',
+          caseStage: targetStage,
+          ...leadUpdateFromForm,
         },
       })
 
-      return successResponse(kypSubmission, 'Card Details updated')
+      await prisma.caseStageHistory.create({
+        data: {
+          leadId: data.leadId,
+          fromStage: previousStage,
+          toStage: targetStage,
+          changedById: user.id,
+          note: 'Card Details submitted',
+        },
+      })
+
+      await postCaseChatSystemMessage(data.leadId, 'BD submitted Card Details.')
+
+      const insuranceUsers = await prisma.user.findMany({
+        where: {
+          role: 'INSURANCE_HEAD',
+        },
+      })
+
+      await prisma.notification.createMany({
+        data: insuranceUsers.map((insuranceUser) => ({
+          userId: insuranceUser.id,
+          type: 'KYP_SUBMITTED',
+          title: 'New KYP Submission',
+          message: `New KYP submission for ${lead.patientName} (${lead.leadRef})`,
+          link: `/insurance/dashboard?kyp=${kypSubmission.id}`,
+          relatedId: kypSubmission.id,
+        })),
+      })
+
+      return successResponse(kypSubmission, 'KYP submitted successfully')
     }
 
     // Create KYP submission (assert payload so builds stay valid if TS cache lags `prisma generate`)
