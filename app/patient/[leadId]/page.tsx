@@ -19,7 +19,7 @@ import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, ArrowRight, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -29,6 +29,7 @@ import { ResetStepperDialog } from '@/components/case/reset-stepper-dialog'
 import { StageProgress } from '@/components/case/stage-progress'
 import { Field, Section } from '@/components/patient/details-section'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { ConfirmActionDialog } from '@/components/ui/confirm-action-dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { CaseStage, FlowType, LeadOpdPhase, LeadOpdStatus } from '@/generated/prisma/enums'
@@ -418,6 +419,12 @@ interface KYPSubmission {
     approvalStatus?: string | null
     approvalNotes?: string | null
     rejectionReason?: string | null
+    holdReason?: string | null
+    heldAt?: string | null
+    heldBy?: {
+      id: string
+      name: string
+    } | null
     handledBy?: {
       id: string
       name: string
@@ -607,6 +614,55 @@ export default function PatientDetailsPage() {
   const [markLostDetail, setMarkLostDetail] = useState('')
   const [markLostSubmitting, setMarkLostSubmitting] = useState(false)
   const [switchingMode, setSwitchingMode] = useState(false)
+  const [showConvertCashDialog, setShowConvertCashDialog] = useState(false)
+  const [showRevertToInsuranceDialog, setShowRevertToInsuranceDialog] = useState(false)
+
+  const handleRevertToInsurance = async () => {
+    setSwitchingMode(true)
+    setShowRevertToInsuranceDialog(false)
+    try {
+      const targetStage = lead?.kypSubmission
+        ? CaseStage.KYP_BASIC_COMPLETE
+        : hasLeadOpdDone(lead as any)
+          ? CaseStage.OPD_DONE
+          : hasLeadOpdScheduled(lead as any)
+            ? CaseStage.OPD_SCHEDULED
+            : CaseStage.NEW_LEAD
+      await apiPatch(`/api/leads/${leadId}`, {
+        flowType: FlowType.INSURANCE,
+        caseStage: targetStage,
+        stageChangeNote: 'Reverted to Insurance Flow'
+      })
+      toast.success('Reverted to Insurance Flow')
+      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+    } catch {
+      toast.error('Failed to revert mode')
+    } finally {
+      setSwitchingMode(false)
+    }
+  }
+
+  const handleConvertToCash = async () => {
+    setSwitchingMode(true)
+    setShowConvertCashDialog(false)
+    try {
+      await apiPatch(`/api/leads/${leadId}`, {
+        flowType: FlowType.CASH,
+        caseStage: hasLeadOpdDone(lead as any)
+          ? CaseStage.CASH_OPD_DONE
+          : hasLeadOpdScheduled(lead as any)
+            ? CaseStage.CASH_OPD_SCHEDULED
+            : CaseStage.CASH_IPD_PENDING,
+        stageChangeNote: 'Converted from Insurance to Cash'
+      })
+      toast.success('Converted to Cash Mode')
+      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+    } catch {
+      toast.error('Failed to convert mode')
+    } finally {
+      setSwitchingMode(false)
+    }
+  }
   const [markingOpdId, setMarkingOpdId] = useState<string | null>(null)
   const [postponeTargetOpd, setPostponeTargetOpd] = useState<EffectiveOpdEntry | null>(null)
   const [postponeDateInput, setPostponeDateInput] = useState('')
@@ -1719,39 +1775,24 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
 
+                {/* Convert Cashless (Insurance) Case to Cash Case */}
+                {canStartCash && lead.flowType !== FlowType.CASH && (
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 border-green-600 text-green-700 hover:bg-green-50 dark:hover:bg-green-950/20 dark:border-green-200 text-green-400 dark:text-green-300"
+                    disabled={switchingMode}
+                    onClick={() => setShowConvertCashDialog(true)}
+                  >
+                    <ArrowRight className="h-4 w-4" /> Convert to Cash
+                  </Button>
+                )}
+
                 {canRevertCash && (
                   <Button
                     variant="outline"
                     className="flex items-center gap-2 border-amber-300 text-amber-700 hover:bg-amber-50"
                     disabled={switchingMode}
-                    onClick={async () => {
-                      if (!confirm('Switch back to Insurance Flow?')) return
-                      setSwitchingMode(true)
-                      try {
-                        // Revert to previous stage logic is complex, for now revert to NEW_LEAD or KYP_BASIC_COMPLETE?
-                        // Or just set flowType to INSURANCE and let stage be what it was?
-                        // Ideally we should track previous stage.
-                        // For simplicity, let's set to KYP_BASIC_COMPLETE if kyp exists, else NEW_LEAD.
-                        const targetStage = lead.kypSubmission
-                          ? CaseStage.KYP_BASIC_COMPLETE
-                          : hasDoneOpd
-                            ? CaseStage.OPD_DONE
-                            : hasScheduledOpd
-                              ? CaseStage.OPD_SCHEDULED
-                              : CaseStage.NEW_LEAD
-                        await apiPatch(`/api/leads/${leadId}`, {
-                          flowType: FlowType.INSURANCE,
-                          caseStage: targetStage,
-                          stageChangeNote: 'Reverted to Insurance Flow'
-                        })
-                        toast.success('Reverted to Insurance Flow')
-                        queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
-                      } catch {
-                        toast.error('Failed to revert mode')
-                      } finally {
-                        setSwitchingMode(false)
-                      }
-                    }}
+                    onClick={() => setShowRevertToInsuranceDialog(true)}
                   >
                     {switchingMode ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                     Switch to Insurance Flow
@@ -2598,12 +2639,25 @@ export default function PatientDetailsPage() {
                   icon={FileText}
                   iconClassName="text-gray-600"
                   title="Remarks & Notes"
-                  hasContent={!!(pre.diseaseDescription || pre.approvalNotes || pre.rejectionReason)}
+                  hasContent={!!(pre.diseaseDescription || pre.approvalNotes || pre.rejectionReason || pre.holdReason)}
                 >
                   {pre.diseaseDescription && (
                     <div className="col-span-2 sm:col-span-3 md:col-span-4">
                       <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold mb-1">Disease Description (from BD)</p>
                       <p className="text-sm bg-card p-3 rounded-lg border">{pre.diseaseDescription}</p>
+                    </div>
+                  )}
+                  {pre.holdReason && (
+                    <div className="col-span-2 sm:col-span-3 md:col-span-4">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold mb-1">Hold Remark</p>
+                      <p className="text-sm p-3 rounded-lg border italic bg-orange-50 border-orange-200 text-orange-800 dark:bg-orange-950/10 dark:border-orange-900/20 dark:text-orange-300">
+                        &quot;{pre.holdReason}&quot;
+                        {pre.heldBy?.name && (
+                          <span className="block mt-1 text-xs not-italic text-muted-foreground">
+                            Held by {pre.heldBy.name}{pre.heldAt ? ` on ${format(new Date(pre.heldAt), 'dd MMM yyyy, h:mm a')}` : ''}
+                          </span>
+                        )}
+                      </p>
                     </div>
                   )}
                   {(pre.approvalNotes || pre.rejectionReason) && (
@@ -3054,6 +3108,24 @@ export default function PatientDetailsPage() {
             </div>
           </DialogContent>
         </Dialog>
+        <ConfirmActionDialog
+          open={showConvertCashDialog}
+          onOpenChange={setShowConvertCashDialog}
+          title="Convert to Cash Mode?"
+          description="This will change the workflow of this lead from Insurance to Cash. This action will update the case stage accordingly. Do you want to proceed?"
+          onConfirm={handleConvertToCash}
+          confirmClassName="bg-green-600 hover:bg-green-700 text-white"
+        />
+
+        <ConfirmActionDialog
+          open={showRevertToInsuranceDialog}
+          onOpenChange={setShowRevertToInsuranceDialog}
+          title="Switch to Insurance Flow?"
+          description="This will revert the lead back to the Insurance flow and update the case stage accordingly. Do you want to proceed?"
+          onConfirm={handleRevertToInsurance}
+          confirmClassName="bg-amber-600 hover:bg-amber-700 text-white"
+        />
+
         <LeadEditDrawer
           key={leadId}
           leadId={leadId}

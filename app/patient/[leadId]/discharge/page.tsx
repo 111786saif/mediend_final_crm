@@ -35,8 +35,12 @@ interface LeadShape {
   id: string
   caseStage: string
   patientName?: string | null
+  surgeryDate?: string | null
   insuranceInitiateForm?: { id: string } | null
-  admissionRecord?: { ipdDischargeDate?: string | null } | null
+  admissionRecord?: { 
+    ipdDischargeDate?: string | null
+    surgeryDate?: string | null
+  } | null
   [key: string]: unknown
 }
 
@@ -82,6 +86,14 @@ export default function DischargeSheetPage() {
     ? new Date(dischargeSheet.dischargeDate).toISOString().slice(0, 10)
     : lead?.admissionRecord?.ipdDischargeDate
     ? lead.admissionRecord.ipdDischargeDate.slice(0, 10)
+    : undefined
+
+  const initialSurgeryDate = dischargeSheet?.surgeryDate
+    ? new Date(dischargeSheet.surgeryDate as string).toISOString().slice(0, 10)
+    : lead?.surgeryDate
+    ? new Date(lead.surgeryDate as string).toISOString().slice(0, 10)
+    : lead?.admissionRecord?.surgeryDate
+    ? new Date(lead.admissionRecord.surgeryDate as string).toISOString().slice(0, 10)
     : undefined
 
   // Hospital + doctor chosen after pre-auth approval (single source of truth).
@@ -133,6 +145,7 @@ export default function DischargeSheetPage() {
           <DischargeSheetForm
             leadId={leadId}
             patientName={patientName}
+            surgeryDate={initialSurgeryDate}
             hospital={resolvedHospital ?? ''}
             doctorName={resolvedDoctor ?? ''}
             initialDischargeDate={initialDischargeDate}

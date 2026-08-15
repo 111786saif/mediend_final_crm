@@ -83,6 +83,7 @@ const inr = (n: number) => `₹${n.toLocaleString('en-IN', { maximumFractionDigi
 export function DischargeSheetForm({
   leadId,
   patientName = '',
+  surgeryDate = '',
   hospital = '',
   doctorName = '',
   initialDischargeDate = '',
@@ -98,6 +99,7 @@ export function DischargeSheetForm({
 
   const [formData, setFormData] = useState({
     dischargeDate: initialDischargeDate,
+    surgeryDate: surgeryDate,
     finalAmount: '', // top anchor — Other Charges balances the breakup to this
     // Bill Breakup
     roomRentAmount: '',
@@ -199,6 +201,7 @@ export function DischargeSheetForm({
       await apiPost('/api/discharge-sheet', {
         leadId,
         dischargeDate: formData.dischargeDate,
+        surgeryDate: formData.surgeryDate || undefined,
         finalAmount: bill.finalBill,
         dischargeSummaryUrl: files.dischargeSummary?.url,
         otNotesUrl: files.otNotes?.url,
@@ -244,6 +247,7 @@ export function DischargeSheetForm({
   const handleReset = () => {
     setFormData({
       dischargeDate: '',
+      surgeryDate: '',
       finalAmount: '',
       roomRentAmount: '',
       pharmacyAmount: '',
@@ -313,6 +317,15 @@ export function DischargeSheetForm({
           <div>
             <Label>Doctor Name</Label>
             <p className="text-sm font-medium">{doctorName || '—'}</p>
+          </div>
+          <div>
+            <Label htmlFor="surgeryDate">Surgery Date</Label>
+            <Input
+              id="surgeryDate"
+              type="date"
+              value={formData.surgeryDate}
+              onChange={(e) => setFormData({ ...formData, surgeryDate: e.target.value })}
+            />
           </div>
           <div>
             <Label htmlFor="dischargeDate">Discharge Date *</Label>
