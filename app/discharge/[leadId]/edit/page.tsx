@@ -8,7 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Loader2, Save } from 'lucide-react'
+import { ArrowLeft, Loader2, Save, RotateCcw, User, FileText, Receipt, Percent, Calculator, MessageSquare } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useFileUpload } from '@/hooks/use-file-upload'
+import { DischargeFileUploadField } from '@/components/discharge/discharge-file-upload-field'
 
 interface DischargeSheet {
   id: string
@@ -65,6 +68,7 @@ interface DischargeSheet {
   otherChargesAmount?: number | null
   totalFinalBill?: number | null
   finalApprovedAmount?: number | null
+  finalAmount?: number | null
   copayAmount?: number | null
   collectedByHospital?: number | null
   collectedByMediend?: number | null
@@ -80,43 +84,151 @@ interface DischargeSheet {
   netSettlementAmount?: number | null
 }
 
-function InputField({ label, value, onChange, type = 'text' }: { label: string; value: string | number | null | undefined; onChange?: (v: string) => void; type?: string }) {
+function InputField({
+  label,
+  value,
+  onChange,
+  type = 'text',
+  placeholder = '',
+}: {
+  label: string
+  value: string | number | null | undefined
+  onChange?: (v: string) => void
+  type?: string
+  placeholder?: string
+}) {
   return (
-    <div className="space-y-1">
-      <Label className="text-xs">{label}</Label>
+    <div className="space-y-1.5 group">
+      <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider transition-colors group-focus-within:text-primary">
+        {label}
+      </Label>
       <Input
         type={type}
         value={value ?? ''}
         onChange={(e) => onChange?.(e.target.value)}
-        className="h-8 text-sm"
+        placeholder={placeholder}
+        className="h-9 text-xs bg-muted/20 dark:bg-muted/10 border-input hover:border-accent-foreground/20 focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
       />
     </div>
   )
 }
 
-function DateField({ label, value, onChange }: { label: string; value: string | null | undefined; onChange?: (v: string) => void }) {
+function DateField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: string | null | undefined
+  onChange?: (v: string) => void
+}) {
   const dateValue = value ? new Date(value).toISOString().split('T')[0] : ''
   return (
-    <div className="space-y-1">
-      <Label className="text-xs">{label}</Label>
+    <div className="space-y-1.5 group">
+      <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider transition-colors group-focus-within:text-primary">
+        {label}
+      </Label>
       <Input
         type="date"
         value={dateValue}
         onChange={(e) => onChange?.(e.target.value)}
-        className="h-8 text-sm"
+        className="h-9 text-xs bg-muted/20 dark:bg-muted/10 border-input hover:border-accent-foreground/20 focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all duration-200"
       />
     </div>
   )
 }
+
 
 export default function EditDischargeSheetPage() {
   const router = useRouter()
   const params = useParams()
   const leadId = params.leadId as string
 
+  const queryClient = useQueryClient()
+  const { uploadFile, uploading: isUploadingFile } = useFileUpload()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [sheet, setSheet] = useState<DischargeSheet | null>(null)
+
+  const handleReset = () => {
+    if (!sheet) return
+    setSheet({
+      id: sheet.id,
+      patientName: sheet.patientName || null,
+      patientPhone: sheet.patientPhone || null,
+      hospitalName: sheet.hospitalName || null,
+      doctorName: sheet.doctorName || null,
+      treatment: sheet.treatment || null,
+      category: sheet.category || null,
+      circle: sheet.circle || null,
+      bdmName: sheet.bdmName || null,
+      managerName: sheet.managerName || null,
+      admissionDate: null,
+      surgeryDate: null,
+      dischargeDate: null,
+      status: null,
+      paymentType: null,
+      approvedOrCash: null,
+      paymentCollectedAt: null,
+      totalAmount: null,
+      billAmount: null,
+      cashPaidByPatient: null,
+      cashOrDedPaid: null,
+      referralAmount: null,
+      cabCharges: null,
+      implantCost: null,
+      instrumentsCost: null,
+      dcCharges: null,
+      doctorCharges: null,
+      hospitalSharePct: null,
+      hospitalShareAmount: null,
+      mediendSharePct: null,
+      mediendShareAmount: null,
+      mediendNetProfit: null,
+      remarks: null,
+      tentativeAmount: null,
+      copayPct: null,
+      dischargeSummaryUrl: null,
+      otNotesUrl: null,
+      codesCount: null,
+      finalBillUrl: null,
+      finalApprovedUrl: null,
+      deductionReceiptUrl: null,
+      settlementLetterUrl: null,
+      roomRentAmount: null,
+      pharmacyAmount: null,
+      investigationAmount: null,
+      consumablesAmount: null,
+      implantsAmount: null,
+      instrumentsAmount: null,
+      anesthesiaAmount: null,
+      otherChargesAmount: null,
+      totalFinalBill: null,
+      finalApprovedAmount: null,
+      finalAmount: null,
+      copayAmount: null,
+      collectedByHospital: null,
+      collectedByMediend: null,
+      axisTariffDeduction: null,
+      axisTariffDeductionPaid: null,
+      actualFinalAmount: null,
+      deductionAmount: null,
+      discountAmount: null,
+      waivedOffAmount: null,
+      settlementPart: null,
+      tdsAmount: null,
+      otherDeduction: null,
+      netSettlementAmount: null,
+    })
+    toast.success('Form fields reset to empty')
+  }
+
+  const handleFileUpload = async (field: keyof DischargeSheet, file: File) => {
+    const result = await uploadFile(file)
+    if (result) {
+      updateField(field, result.url)
+    }
+  }
 
   useEffect(() => {
     async function fetchSheet() {
@@ -159,6 +271,8 @@ export default function EditDischargeSheetPage() {
     setSaving(true)
     try {
       await apiPatch(`/api/discharge-sheet/${sheet.id}`, stripNulls(sheet as unknown as Record<string, unknown>))
+      await queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+      await queryClient.invalidateQueries({ queryKey: ['lead-discharge-info', leadId] })
       toast.success('Discharge sheet updated')
       const isCash = sheet.paymentType === 'CASH' || sheet.approvedOrCash === 'CASH'
       router.push(`/patient/${leadId}/${isCash ? 'discharge-cash' : 'discharge'}`)
@@ -186,8 +300,8 @@ export default function EditDischargeSheetPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
-      <div className="mx-auto max-w-5xl space-y-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-background p-4 md:p-6">
+      <div className="mx-auto max-w-7xl space-y-4">
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -202,17 +316,30 @@ export default function EditDischargeSheetPage() {
             Back
           </Button>
           <h1 className="flex-1 text-lg font-semibold">Edit Discharge Sheet</h1>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleReset}
+            className="gap-1.5 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20 hover:border-destructive mr-2"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reset Fields
+          </Button>
           <Button onClick={handleSave} disabled={saving} size="sm" className="gap-1">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {saving ? 'Saving...' : 'Save'}
           </Button>
         </div>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Basic Information</CardTitle>
+        <Card className="overflow-hidden border-muted-foreground/10 shadow-sm hover:shadow-md transition-all duration-300">
+          <CardHeader className="border-b bg-muted/10 pb-3.5 pl-5">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-foreground">
+              <User className="h-4 w-4 text-primary shrink-0" />
+              Basic Information
+            </CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <CardContent className="p-5 grid grid-cols-1 gap-4 md:grid-cols-3">
             <InputField label="Patient Name" value={sheet.patientName} onChange={(v) => updateField('patientName', v)} />
             <InputField label="Patient Phone" value={sheet.patientPhone} onChange={(v) => updateField('patientPhone', v)} />
             <InputField label="Hospital" value={sheet.hospitalName} onChange={(v) => updateField('hospitalName', v)} />
@@ -232,11 +359,14 @@ export default function EditDischargeSheetPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Bill Breakup</CardTitle>
+        <Card className="overflow-hidden border-muted-foreground/10 shadow-sm hover:shadow-md transition-all duration-300">
+          <CardHeader className="border-b bg-muted/10 pb-3.5 pl-5">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-foreground">
+              <Receipt className="h-4 w-4 text-primary shrink-0" />
+              Bill Breakup
+            </CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-4">
+          <CardContent className="p-5 grid grid-cols-1 gap-4 md:grid-cols-4">
             <InputField label="Room Rent" value={sheet.roomRentAmount} onChange={(v) => updateField('roomRentAmount', parseFloat(v) || null)} type="number" />
             <InputField label="Pharmacy" value={sheet.pharmacyAmount} onChange={(v) => updateField('pharmacyAmount', parseFloat(v) || null)} type="number" />
             <InputField label="Investigation" value={sheet.investigationAmount} onChange={(v) => updateField('investigationAmount', parseFloat(v) || null)} type="number" />
@@ -250,11 +380,14 @@ export default function EditDischargeSheetPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Deductions & Settlement</CardTitle>
+        <Card className="overflow-hidden border-muted-foreground/10 shadow-sm hover:shadow-md transition-all duration-300">
+          <CardHeader className="border-b bg-muted/10 pb-3.5 pl-5">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-foreground">
+              <Percent className="h-4 w-4 text-primary shrink-0" />
+              Deductions & Settlement
+            </CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-4">
+          <CardContent className="p-5 grid grid-cols-1 gap-4 md:grid-cols-4">
             <InputField label="Copay %" value={sheet.copayPct} onChange={(v) => updateField('copayPct', parseFloat(v) || null)} type="number" />
             <InputField label="Copay Amount" value={sheet.copayAmount} onChange={(v) => updateField('copayAmount', parseFloat(v) || null)} type="number" />
             <InputField label="Other Deduction" value={sheet.otherDeduction} onChange={(v) => updateField('otherDeduction', parseFloat(v) || null)} type="number" />
@@ -273,11 +406,14 @@ export default function EditDischargeSheetPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Financial Summary</CardTitle>
+        <Card className="overflow-hidden border-muted-foreground/10 shadow-sm hover:shadow-md transition-all duration-300">
+          <CardHeader className="border-b bg-muted/10 pb-3.5 pl-5">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-foreground">
+              <Calculator className="h-4 w-4 text-primary shrink-0" />
+              Financial Summary
+            </CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-4">
+          <CardContent className="p-5 grid grid-cols-1 gap-4 md:grid-cols-4">
             <InputField label="Total Amount" value={sheet.totalAmount} onChange={(v) => updateField('totalAmount', parseFloat(v) || null)} type="number" />
             <InputField label="Bill Amount" value={sheet.billAmount} onChange={(v) => updateField('billAmount', parseFloat(v) || null)} type="number" />
             <InputField label="Cash Paid by Patient" value={sheet.cashPaidByPatient} onChange={(v) => updateField('cashPaidByPatient', parseFloat(v) || null)} type="number" />
@@ -297,11 +433,73 @@ export default function EditDischargeSheetPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Remarks</CardTitle>
+        <Card className="overflow-hidden border-muted-foreground/10 shadow-sm hover:shadow-md transition-all duration-300">
+          <CardHeader className="border-b bg-muted/10 pb-3.5 pl-5">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-foreground">
+              <FileText className="h-4 w-4 text-primary shrink-0" />
+              Documents
+            </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <DischargeFileUploadField
+              label="Discharge Summary"
+              url={sheet.dischargeSummaryUrl}
+              uploading={isUploadingFile}
+              onPick={(file) => handleFileUpload('dischargeSummaryUrl', file)}
+              onClear={() => updateField('dischargeSummaryUrl', null)}
+            />
+            <DischargeFileUploadField
+              label="Final Bill"
+              url={sheet.finalBillUrl}
+              uploading={isUploadingFile}
+              onPick={(file) => handleFileUpload('finalBillUrl', file)}
+              onClear={() => updateField('finalBillUrl', null)}
+            />
+            <DischargeFileUploadField
+              label="Approved Letter"
+              url={sheet.finalApprovedUrl}
+              uploading={isUploadingFile}
+              onPick={(file) => handleFileUpload('finalApprovedUrl', file)}
+              onClear={() => updateField('finalApprovedUrl', null)}
+            />
+            <DischargeFileUploadField
+              label="OT Notes"
+              url={sheet.otNotesUrl}
+              uploading={isUploadingFile}
+              onPick={(file) => handleFileUpload('otNotesUrl', file)}
+              onClear={() => updateField('otNotesUrl', null)}
+            />
+            <DischargeFileUploadField
+              label="Deduction Receipt"
+              url={sheet.deductionReceiptUrl}
+              uploading={isUploadingFile}
+              onPick={(file) => handleFileUpload('deductionReceiptUrl', file)}
+              onClear={() => updateField('deductionReceiptUrl', null)}
+            />
+            <DischargeFileUploadField
+              label="Settlement Letter"
+              url={sheet.settlementLetterUrl}
+              uploading={isUploadingFile}
+              onPick={(file) => handleFileUpload('settlementLetterUrl', file)}
+              onClear={() => updateField('settlementLetterUrl', null)}
+            />
+            <InputField
+              label="Codes Count"
+              value={sheet.codesCount}
+              onChange={(v) => updateField('codesCount', parseInt(v) || null)}
+              type="number"
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden border-muted-foreground/10 shadow-sm hover:shadow-md transition-all duration-300">
+          <CardHeader className="border-b bg-muted/10 pb-3.5 pl-5">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-foreground">
+              <MessageSquare className="h-4 w-4 text-primary shrink-0" />
+              Remarks
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-5">
             <InputField label="Remarks" value={sheet.remarks} onChange={(v) => updateField('remarks', v || null)} />
           </CardContent>
         </Card>

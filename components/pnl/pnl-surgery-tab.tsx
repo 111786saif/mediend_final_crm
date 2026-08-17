@@ -85,7 +85,7 @@ export function PnlSurgeryTab({
           <CardContent>
             <div className="text-2xl font-bold">{pnl.salesSurgeryCount ?? pnl.surgeryCount}</div>
             {pnl.salesSurgeryCount != null && pnl.salesSurgeryCount !== pnl.surgeryCount && (
-              <p className="text-xs text-muted-foreground">{pnl.surgeryCount} with PL records</p>
+              <p className="text-xs text-muted-foreground">{pnl.surgeryCount} with P&L records</p>
             )}
           </CardContent>
         </Card>

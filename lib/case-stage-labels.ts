@@ -21,7 +21,7 @@ export const CASE_STAGE_CONFIG: Record<CaseStage, { className: string; label: st
   [CaseStage.ADMITTED]: { className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300', label: 'IPD Marked' },
   [CaseStage.DISCHARGED]: { className: 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300', label: 'Discharged' },
   [CaseStage.IPD_DONE]: { className: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200', label: 'IPD Done — Awaiting Discharge Sheet' },
-  [CaseStage.PL_PENDING]: { className: 'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300', label: 'PL Pending' },
+  [CaseStage.PL_PENDING]: { className: 'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300', label: 'P&L Pending' },
   [CaseStage.OUTSTANDING]: { className: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300', label: 'Outstanding' },
   [CaseStage.CASH_IPD_PENDING]: { className: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300', label: 'Cash IPD Pending' },
   [CaseStage.CASH_OPD_SCHEDULED]: { className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300', label: 'Cash OPD Scheduled' },

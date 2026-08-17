@@ -8,7 +8,7 @@ export const RESOURCE_MAP = {
   "hrm": { label: "Human Resource Management", component: "HrmGroup" },
   "myhrms": { label: "My HRMS Portal", component: "MyHrmsGroup" },
   "sales": { label: "Sales & Marketing", component: "SalesGroup" },
-  "insurance_pl": { label: "Outstanding & P/L", component: "InsurancePlGroup" },
+  "insurance_pl": { label: "Outstanding & P&L", component: "InsurancePlGroup" },
   "finance": { label: "Finance & Accounts", component: "FinanceGroup" },
   "actions": { label: "System Actions", component: "SystemActionsGroup" },
   "crm": { label: "CRM", component: "CrmGroup" },
@@ -341,12 +341,12 @@ export const RESOURCE_MAP = {
   "sales.opd_monitoring.table.lead.column.bd": { label: "Table Column: BD", component: "OpdBdColumn" },
 
   // --- MODULE 5: INSURANCE & P/L ---
-  "insurance_pl.pl_surgery.analytics": { label: "PL Surgery Analytics Section", component: "PLSurgeryAnalytics" },
+  "insurance_pl.pl_surgery.analytics": { label: "P&L Surgery Analytics Section", component: "PLSurgeryAnalytics" },
   "insurance_pl.pl_surgery.analytics.total_surgeries_card": { label: "Total Surgeries Card", component: "TotalSurgeriesCard" },
   "insurance_pl.pl_surgery.analytics.revenue_card": { label: "Revenue Card", component: "RevenueCard" },
   "insurance_pl.pl_surgery.analytics.avg_margin_card": { label: "Average Margin Card", component: "AverageMarginCard" },
 
-  "insurance_pl.pl_surgery.table": { label: "PL Surgery Table Section", component: "PLSurgeryTable" },
+  "insurance_pl.pl_surgery.table": { label: "P&L Surgery Table Section", component: "PLSurgeryTable" },
   "insurance_pl.pl_surgery.table.dischargeSheet.column.bd": { label: "Table Column: BD", component: "BdColumn" },
   "insurance_pl.pl_surgery.table.dischargeSheet.column.team_leader": { label: "Table Column: Team Leader", component: "TeamLeaderColumn" },
   "insurance_pl.pl_surgery.table.dischargeSheet.column.surgeries": { label: "Table Column: Surgeries", component: "SurgeriesColumn" },
@@ -369,11 +369,11 @@ export const RESOURCE_MAP = {
   "insurance_pl.cash_cases.table.lead.column.cash_amount": { label: "Table Column: Cash Amount", component: "CashAmountColumn" },
   "insurance_pl.cash_cases.table.lead.column.received_status": { label: "Table Column: Received Status", component: "CashReceivedColumn" },
 
-  "insurance_pl.pl_ledger.analytics": { label: "PL Ledger Analytics", component: "PLLedgerAnalytics" },
+  "insurance_pl.pl_ledger.analytics": { label: "P&L Ledger Analytics", component: "PLLedgerAnalytics" },
   "insurance_pl.pl_ledger.analytics.total_revenue": { label: "Total Revenue Card", component: "TotalRevenueCard" },
   "insurance_pl.pl_ledger.analytics.total_margin": { label: "Total Margin Card", component: "TotalMarginCard" },
 
-  "insurance_pl.pl_ledger.table": { label: "PL Ledger Table Section", component: "PLLedgerTable" },
+  "insurance_pl.pl_ledger.table": { label: "P&L Ledger Table Section", component: "PLLedgerTable" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.actions": { label: "Table Column: Actions", component: "LedgerActionsColumn" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.month": { label: "Table Column: Month", component: "LedgerMonthColumn" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.lead_received": { label: "Table Column: Lead Received", component: "LedgerLeadReceivedColumn" },
@@ -388,7 +388,7 @@ export const RESOURCE_MAP = {
   "insurance_pl.pl_ledger.table.dischargeSheet.column.admission_date": { label: "Table Column: Admission Date", component: "LedgerAdmissionDateColumn" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.surgery_date": { label: "Table Column: Surgery Date", component: "LedgerSurgeryDateColumn" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.payment_type": { label: "Table Column: Payment Type", component: "LedgerPaymentTypeColumn" },
-  "insurance_pl.pl_ledger.table.dischargeSheet.column.outstanding_status": { label: "Table Column: PL Status", component: "LedgerOutstandingStatusColumn" },
+  "insurance_pl.pl_ledger.table.dischargeSheet.column.outstanding_status": { label: "Table Column: P&L Status", component: "LedgerOutstandingStatusColumn" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.status": { label: "Table Column: Status", component: "LedgerStatusColumn" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.total_bill": { label: "Table Column: Total Bill", component: "LedgerTotalBillColumn" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.approved_amount": { label: "Table Column: Approved Amount", component: "LedgerApprovedAmountColumn" },
@@ -418,11 +418,11 @@ export const RESOURCE_MAP = {
   "insurance_pl.pl_ledger.table.dischargeSheet.column.doc_payout": { label: "Table Column: Doctor Payout", component: "LedgerDocPayoutColumn" },
   "insurance_pl.pl_ledger.table.dischargeSheet.column.invoice": { label: "Table Column: Invoice", component: "LedgerInvoiceColumn" },
 
-  "insurance_pl.pl_outstanding.analytics": { label: "PL Outstanding Analytics", component: "PLOutstandingAnalytics" },
+  "insurance_pl.pl_outstanding.analytics": { label: "P&L Outstanding Analytics", component: "PLOutstandingAnalytics" },
   "insurance_pl.pl_outstanding.analytics.total_outstanding": { label: "Total Outstanding Card", component: "TotalOutstandingCard" },
   "insurance_pl.pl_outstanding.analytics.overdue_cases": { label: "Overdue Cases Card", component: "OverdueCasesCard" },
 
-  "insurance_pl.pl_outstanding.table": { label: "PL Outstanding Table Section", component: "PLOutstandingTable" },
+  "insurance_pl.pl_outstanding.table": { label: "P&L Outstanding Table Section", component: "PLOutstandingTable" },
   "insurance_pl.pl_outstanding.table.dischargeSheet.column.lead_ref": { label: "Table Column: Lead Ref", component: "OutLeadRefColumn" },
   "insurance_pl.pl_outstanding.table.dischargeSheet.column.actions": { label: "Table Column: Actions", component: "OutActionsColumn" },
   "insurance_pl.pl_outstanding.table.dischargeSheet.column.month": { label: "Table Column: Month", component: "OutMonthColumn" },

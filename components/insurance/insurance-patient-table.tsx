@@ -17,6 +17,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  TableFooter,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table'
 import { apiGet } from '@/lib/api-client'
 import {
   getDischargeSheetFillStatus,
@@ -166,6 +171,7 @@ function applyInsuranceTableFilters(
   filters: {
     tableMonthFilter: string[]
     bdFilter: string[]
+    managerFilter: string[]
     hospitalFilter: string[]
     doctorFilter: string[]
     categoryFilter: string[]
@@ -194,6 +200,7 @@ function applyInsuranceTableFilters(
     }
 
     if (filters.bdFilter.length > 0 && (!resolved.bdm || !filters.bdFilter.includes(resolved.bdm))) return false
+    if (filters.managerFilter.length > 0 && (!resolved.manager || !filters.managerFilter.includes(resolved.manager))) return false
     if (filters.hospitalFilter.length > 0 && (!resolved.hospital || !filters.hospitalFilter.includes(resolved.hospital))) {
       return false
     }
@@ -250,6 +257,7 @@ export function InsurancePatientTable({
   const [visibleCols, setVisibleCols] = useState<Record<string, boolean>>(DEFAULT_COLS)
   const [tableMonthFilter, setTableMonthFilter] = useState<string[]>([])
   const [bdFilter, setBdFilter] = useState<string[]>([])
+  const [managerFilter, setManagerFilter] = useState<string[]>([])
   const [hospitalFilter, setHospitalFilter] = useState<string[]>([])
   const [doctorFilter, setDoctorFilter] = useState<string[]>([])
   const [categoryFilter, setCategoryFilter] = useState<string[]>([])
@@ -308,6 +316,7 @@ export function InsurancePatientTable({
     const find = (field: string) => filters.find((f) => f.field === field)
     return {
       bds: find('bdm')?.options || [],
+      managers: find('manager')?.options || [],
       hospitals: find('hospital')?.options || [],
       doctors: find('doctor')?.options || [],
       categories: find('category')?.options || [],
@@ -342,6 +351,7 @@ export function InsurancePatientTable({
     return applyInsuranceTableFilters(leads, {
       tableMonthFilter,
       bdFilter,
+      managerFilter,
       hospitalFilter,
       doctorFilter,
       categoryFilter,
@@ -361,6 +371,7 @@ export function InsurancePatientTable({
     leads,
     tableMonthFilter,
     bdFilter,
+    managerFilter,
     hospitalFilter,
     doctorFilter,
     categoryFilter,
@@ -382,6 +393,7 @@ export function InsurancePatientTable({
     return applyInsuranceTableFilters(source, {
       tableMonthFilter,
       bdFilter,
+      managerFilter,
       hospitalFilter,
       doctorFilter,
       categoryFilter,
@@ -402,6 +414,7 @@ export function InsurancePatientTable({
     leads,
     tableMonthFilter,
     bdFilter,
+    managerFilter,
     hospitalFilter,
     doctorFilter,
     categoryFilter,
@@ -479,7 +492,12 @@ export function InsurancePatientTable({
       },
       {
         id: 'manager',
-        header: 'Manager',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Manager</span>
+            <ColumnFilter options={filterOptions.managers} value={managerFilter} onChange={setManagerFilter} type="multiSelect" />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row).manager,
         cell: ({ getValue }) => (getValue() as string) || '—',
       },
@@ -695,6 +713,7 @@ export function InsurancePatientTable({
       filterOptions,
       tableMonthFilter,
       bdFilter,
+      managerFilter,
       hospitalFilter,
       doctorFilter,
       categoryFilter,
@@ -722,6 +741,61 @@ export function InsurancePatientTable({
     }
     return vis
   }, [visibleCols])
+
+  // ── Totals for numerical columns ─────────────────────────────────────────
+  const NUMERIC_COLUMN_IDS = ['totalBill', 'approvedAmount', 'deductionTotal', 'deductionPatient', 'deductionWaived', 'amountPaid'] as const
+
+  const totals = useMemo(() => {
+    const sums: Record<string, number> = {
+      totalBill: 0,
+      approvedAmount: 0,
+      deductionTotal: 0,
+      deductionPatient: 0,
+      deductionWaived: 0,
+      amountPaid: 0,
+    }
+    for (const row of filteredLeads) {
+      const res = resolvePlRow(row)
+      if (res.totalBill != null) sums.totalBill += res.totalBill
+      if (res.approvedAmount != null) sums.approvedAmount += res.approvedAmount
+      if (res.deductionTotal != null) sums.deductionTotal += res.deductionTotal
+      if (res.deductionPaidByPatient != null) sums.deductionPatient += res.deductionPaidByPatient
+      if (res.deductionWaived != null) sums.deductionWaived += res.deductionWaived
+      const amountPaid = (res.approvedAmount ?? 0) + (res.deductionPaidByPatient ?? 0)
+      if (amountPaid) sums.amountPaid += amountPaid
+    }
+    return sums
+  }, [filteredLeads])
+
+  // Build ordered list of visible column IDs to align footer cells correctly
+  const ALL_COL_IDS = ['leadRef', ...INSURANCE_TABLE_COLUMNS.map(c => c.id)]
+  const visibleColIds = ALL_COL_IDS.filter(id => columnVisibility[id] !== false)
+
+  const totalsFooter = filteredLeads.length > 0 ? (
+    <TableFooter className="bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-900 border-t-2 border-border">
+      <TableRow className="hover:bg-transparent">
+        {visibleColIds.map((colId, idx) => {
+          const isNumeric = (NUMERIC_COLUMN_IDS as readonly string[]).includes(colId)
+          // Show "Total" label in the first cell
+          if (idx === 0) {
+            return (
+              <TableCell key={colId} className="px-4 py-3 text-sm font-bold text-foreground whitespace-nowrap">
+                Total ({filteredLeads.length})
+              </TableCell>
+            )
+          }
+          if (isNumeric) {
+            return (
+              <TableCell key={colId} className="px-4 py-3 text-sm font-bold text-foreground whitespace-nowrap">
+                {formatPlRupee(totals[colId] || null)}
+              </TableCell>
+            )
+          }
+          return <TableCell key={colId} className="px-4 py-3" />
+        })}
+      </TableRow>
+    </TableFooter>
+  ) : undefined
 
   return (
     <div className="space-y-3">
@@ -765,6 +839,7 @@ export function InsurancePatientTable({
           }
           persistCols(merged)
         }}
+        footer={totalsFooter}
       />
     </div>
   )

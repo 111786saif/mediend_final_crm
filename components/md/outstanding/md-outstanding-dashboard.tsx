@@ -175,7 +175,7 @@ export function MDOutstandingDashboard() {
         <div>
           <h1 className="text-xl font-semibold">MD Outstanding</h1>
           <p className="text-xs text-muted-foreground">
-            Payout statuses and pending amounts across the P/L pipeline
+            Payout statuses and pending amounts across the P&L pipeline
           </p>
         </div>
       </header>

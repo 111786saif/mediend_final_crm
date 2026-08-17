@@ -364,6 +364,23 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    // Sync surgeryDate to Lead and AdmissionRecord (if it exists)
+    await prisma.lead.update({
+      where: { id: data.leadId },
+      data: { surgeryDate: dischargeSheet.surgeryDate },
+    })
+
+    const admission = await prisma.admissionRecord.findUnique({
+      where: { leadId: data.leadId },
+      select: { id: true },
+    })
+    if (admission) {
+      await prisma.admissionRecord.update({
+        where: { leadId: data.leadId },
+        data: { surgeryDate: dischargeSheet.surgeryDate },
+      })
+    }
+
     // Legacy path: if a lead skipped the mark step, advance the stage now.
     if (lead.caseStage === CaseStage.IPD_DONE) {
       await prisma.lead.update({

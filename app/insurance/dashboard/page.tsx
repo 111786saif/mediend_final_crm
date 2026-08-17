@@ -513,7 +513,7 @@ export default function InsuranceDashboardPage() {
     'admitted': 'IPD / Admitted',
     'to-mark-discharged': 'To Mark Discharged — confirm discharge date',
     'to-fill-sheet': 'To Fill Sheet — discharged, sheet pending',
-    'sheet-filled': 'Discharge Sheets Filled — finalized & moved to PL',
+    'sheet-filled': 'Discharge Sheets Filled — finalized & moved to P&L',
     'all-patients': 'All Patients',
   }
 
@@ -583,7 +583,7 @@ export default function InsuranceDashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">{stats.sheetFilled}</div>
-                  <p className="text-xs text-gray-500 mt-1">Finalized & sent to PL</p>
+                  <p className="text-xs text-gray-500 mt-1">Finalized & sent to P&L</p>
                 </CardContent>
               </Card>
               <Card className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950 dark:to-blue-950 border-indigo-200 dark:border-indigo-800 border-2">
@@ -947,19 +947,19 @@ export default function InsuranceDashboardPage() {
             </CardHeader>
             <CardContent className="p-0">
               <InsurancePatientTable
-                leads={filteredLeads}
-                kpiLeads={scopedLeads}
-                onFilteredLeadsChange={handleTableFilteredLeadsChange}
+                leads={filteredLeads as any}
+                kpiLeads={scopedLeads as any}
+                onFilteredLeadsChange={handleTableFilteredLeadsChange as any}
                 isLoading={isLoading}
                 emptyMessage={error ? `Error loading leads: ${error instanceof Error ? error.message : 'Unknown error'}` : 'No cases found'}
                 onRowClick={(lead) => router.push(appendReturnTo(`/patient/${lead.id}`, INSURANCE_LIST_RETURN))}
                 renderActions={(lead) => {
-                  const tier = getPriorityTier(lead as LeadWithStage)
+                  const tier = getPriorityTier(lead as any)
                   const isSuggestionPending = tier === 3
-                  const isMarkUrgent = needsMarkDischarged(lead as LeadWithStage)
-                  const isFillUrgent = needsSheetFilled(lead as LeadWithStage)
+                  const isMarkUrgent = needsMarkDischarged(lead as any)
+                  const isFillUrgent = needsSheetFilled(lead as any)
                   const isInitialFormUrgent = tier === 2
-                  const record = lead as LeadWithStage
+                  const record = lead as any
 
                   return (
                     <>

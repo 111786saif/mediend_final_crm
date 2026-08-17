@@ -5,7 +5,7 @@ import { SubSection, APITable, Card, Callout, PipelineCard } from '../components
 
 export const plSections = {
   'pl-dashboard': {
-    title: 'PL Dashboard',
+    title: 'P&L Dashboard',
     Component: () => (
       <>
         <p className='text-gray-700 dark:text-gray-300 mb-6'>The P&L Dashboard shows all discharged cases with pipeline stage PL or COMPLETED. KPIs include total profit, average ticket size, and pending payout counts. Each row links to the PL Record edit page.</p>
@@ -58,7 +58,7 @@ export const plSections = {
   },
 
   'pl-record': {
-    title: 'PL Record Entry',
+    title: 'P&L Record Entry',
     Component: () => (
       <>
         <p className='text-gray-700 dark:text-gray-300 mb-6'>PLRecord tracks per-case profit, payout statuses, and revenue splits. Auto-created when discharge sheet is finalized. Editable at <code className='text-xs bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded'>/pl/record/[leadId]</code> via PATCH /api/leads/[id] with plRecord data.</p>

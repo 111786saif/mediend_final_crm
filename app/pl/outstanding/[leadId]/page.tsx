@@ -170,7 +170,7 @@ export default function PLOutstandingEditPage() {
                   Retry
                 </Button>
                 <Button variant="outline" asChild>
-                  <Link href="/pl/outstanding">Back to P/L Outstanding</Link>
+                  <Link href="/pl/outstanding">Back to P&L Outstanding</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -192,7 +192,7 @@ export default function PLOutstandingEditPage() {
               </CardHeader>
               <CardContent>
                 <Button variant="outline" asChild>
-                  <Link href="/pl/outstanding">Back to P/L Outstanding</Link>
+                  <Link href="/pl/outstanding">Back to P&L Outstanding</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -220,7 +220,7 @@ export default function PLOutstandingEditPage() {
             <div>
               <nav className="text-sm text-muted-foreground">
                 <Link href="/pl/outstanding" className="font-medium text-violet-700 hover:text-violet-900 dark:text-violet-300 dark:hover:text-violet-100">
-                  P/L Outstanding
+                  P&L Outstanding
                 </Link>
                 <span className="mx-2">/</span>
                 <span className="text-foreground">

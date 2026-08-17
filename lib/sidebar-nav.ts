@@ -412,19 +412,19 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    title: 'P/L Ledger',
+    title: 'P&L Ledger',
     url: '/pl/dashboard',
     icon: DollarSign,
     permission: 'pl:read',
   },
   {
-    title: 'P/L Surgery',
+    title: 'P&L Surgery',
     url: '/pl/surgery-dashboard',
     icon: BarChart3,
     permission: 'pl:read',
   },
   {
-    title: 'P/L Outstanding',
+    title: 'P&L Outstanding',
     url: '/pl/outstanding',
     icon: CreditCard,
     permission: 'pl:read',

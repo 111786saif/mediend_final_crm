@@ -62,11 +62,11 @@ const sections: DocSection[] = [
   },
   {
     id: 'pl',
-    label: 'PL (Profit & Loss)',
+    label: 'P&L (Profit & Loss)',
     icon: <TrendingUp className="h-4 w-4" />,
     children: [
-      { id: 'pl-dashboard', label: 'PL Dashboard' },
-      { id: 'pl-record', label: 'PL Record Entry' },
+      { id: 'pl-dashboard', label: 'P&L Dashboard' },
+      { id: 'pl-record', label: 'P&L Record Entry' },
       { id: 'pl-surgery', label: 'Surgery P&L' },
     ],
   },

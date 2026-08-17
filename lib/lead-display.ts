@@ -107,7 +107,7 @@ export function resolveLeadHospitalDoctor(
 export function resolveLeadCity(lead: object | null | undefined): string | null {
   const rec = asRecord(lead) ?? {}
   const kyp = asRecord(rec.kypSubmission)
-  return firstNonEmpty(kyp?.location, rec.city)
+  return firstNonEmpty(kyp?.location, rec.circle, rec.city)
 }
 
 /**
