@@ -114,9 +114,7 @@ export async function POST(
     }
 
     const customerNumber = normalizeLeadQrPhone(auth.lead.phoneNumber ?? '')
-    const agentNumber = normalizeLeadQrPhone(
-      actor.knowlarityPhoneNumber ?? actor.phoneNumber ?? ''
-    )
+    const agentNumber = normalizeLeadQrPhone(actor.knowlarityPhoneNumber ?? '')
     const callerId = actor.knowlarityCallerId?.trim() || config.callerId
 
     if (!customerNumber) {
