@@ -108,7 +108,9 @@ function getCurrentCashStep(currentStage: CaseStage, extras: StepExtras): number
     case CaseStage.CASH_APPROVED:
       return 5
     case CaseStage.CASH_IPD_DONE:
-      return 6
+      // Once surgery is marked done, "IPD Done" should render as completed
+      // and the next active step becomes discharge.
+      return 7
     case CaseStage.CASH_DISCHARGED:
       return CASH_WORKFLOW_STEPS.length
     default: {
