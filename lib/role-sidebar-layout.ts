@@ -92,8 +92,8 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Meets',
       'Dashboard',
       'Finance Dashboard',
-      'P/L Ledger',
-      'P/L Outstanding',
+      'P&L Ledger',
+      'P&L Outstanding',
       'Doctor List',
       'Hospital List',
       'People & Org',
@@ -106,7 +106,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
       'Master Seating Cost',
       'Company P&L',
       'Targeted P&L',
-      'P/L',
+      'P&L',
       'IT P&L',
       'Loan & Demat Revenue',
     ],
@@ -114,7 +114,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
     finance: [...FINANCE_SECTION],
   },
 
-  /** Project Head — Sales / Insurance & P/L as collapsibles; OPD Monitoring under Sales */
+  /** Project Head — Sales / Insurance & P&L as collapsibles; OPD Monitoring under Sales */
   EXECUTIVE_ASSISTANT: {
     main: [
       'Home',
@@ -149,9 +149,9 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
     insurancePl: [
       'Insurance',
       'Cash Cases',
-      'P/L Ledger',
-      'P/L Surgery',
-      'P/L Outstanding',
+      'P&L Ledger',
+      'P&L Surgery',
+      'P&L Outstanding',
       'Doctor List',
       'Hospital List',
     ],
@@ -289,7 +289,7 @@ export const ROLE_SIDEBAR_LAYOUT: Record<string, RoleSidebarLayout> = {
 
 /** Alias titles used in layouts that map to a different navItems title. */
 export const NAV_TITLE_ALIASES: Record<string, string> = {
-  'P/L': 'MD P&L',
+  'P&L': 'MD P&L',
   'Team Approvals': 'Fin Team Approvals',
 }
 

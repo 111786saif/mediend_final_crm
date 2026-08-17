@@ -116,6 +116,120 @@ export default function PLOutstandingPage() {
   const [deductionPaidFilter, setDeductionPaidFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [waivedOffFilter, setWaivedOffFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [netProfitFilter, setNetProfitFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [page, setPage] = useState(1)
+
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => {
+    try {
+      const raw = window.sessionStorage.getItem('pl-outstanding-filters-v1')
+      if (raw) {
+        const saved = JSON.parse(raw)
+        if (saved.selectedMonths) setSelectedMonths(saved.selectedMonths)
+        if (saved.managerFilter) setManagerFilter(saved.managerFilter)
+        if (saved.bdmFilter) setBdmFilter(saved.bdmFilter)
+        if (saved.doctorFilter) setDoctorFilter(saved.doctorFilter)
+        if (saved.hospitalFilter) setHospitalFilter(saved.hospitalFilter)
+        if (saved.statusFilter) setStatusFilter(saved.statusFilter)
+        if (saved.hospitalTotalAmountFilter !== undefined) setHospitalTotalAmountFilter(saved.hospitalTotalAmountFilter)
+        if (saved.hospitalOutstandingAmountFilter !== undefined) setHospitalOutstandingAmountFilter(saved.hospitalOutstandingAmountFilter)
+        if (saved.doctorPayoutAmountFilter !== undefined) setDoctorPayoutAmountFilter(saved.doctorPayoutAmountFilter)
+        if (saved.doctorOutstandingAmountFilter !== undefined) setDoctorOutstandingAmountFilter(saved.doctorOutstandingAmountFilter)
+        if (saved.categoryFilter) setCategoryFilter(saved.categoryFilter)
+        if (saved.paymentTypeFilter) setPaymentTypeFilter(saved.paymentTypeFilter)
+        if (saved.mediendPayoutFilter) setMediendPayoutFilter(saved.mediendPayoutFilter)
+        if (saved.doctorPayoutFilter) setDoctorPayoutFilter(saved.doctorPayoutFilter)
+        if (saved.invoiceStatusFilter) setInvoiceStatusFilter(saved.invoiceStatusFilter)
+        if (saved.paymentReceivedFilter !== undefined) setPaymentReceivedFilter(saved.paymentReceivedFilter)
+        if (saved.leadRefFilter !== undefined) setLeadRefFilter(saved.leadRefFilter)
+        if (saved.patientFilter !== undefined) setPatientFilter(saved.patientFilter)
+        if (saved.treatmentFilter !== undefined) setTreatmentFilter(saved.treatmentFilter)
+        if (saved.leadReceivedFilter) setLeadReceivedFilter(saved.leadReceivedFilter)
+        if (saved.admissionDateFilter) setAdmissionDateFilter(saved.admissionDateFilter)
+        if (saved.surgeryDateFilter) setSurgeryDateFilter(saved.surgeryDateFilter)
+        if (saved.totalBillFilter !== undefined) setTotalBillFilter(saved.totalBillFilter)
+        if (saved.approvedAmountFilter !== undefined) setApprovedAmountFilter(saved.approvedAmountFilter)
+        if (saved.deductionTotalFilter !== undefined) setDeductionTotalFilter(saved.deductionTotalFilter)
+        if (saved.deductionPaidFilter !== undefined) setDeductionPaidFilter(saved.deductionPaidFilter)
+        if (saved.waivedOffFilter !== undefined) setWaivedOffFilter(saved.waivedOffFilter)
+        if (saved.netProfitFilter !== undefined) setNetProfitFilter(saved.netProfitFilter)
+        if (typeof saved.page === 'number') setPage(saved.page)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
+    try {
+      window.sessionStorage.setItem('pl-outstanding-filters-v1', JSON.stringify({
+        selectedMonths,
+        managerFilter,
+        bdmFilter,
+        doctorFilter,
+        hospitalFilter,
+        statusFilter,
+        hospitalTotalAmountFilter,
+        hospitalOutstandingAmountFilter,
+        doctorPayoutAmountFilter,
+        doctorOutstandingAmountFilter,
+        categoryFilter,
+        paymentTypeFilter,
+        mediendPayoutFilter,
+        doctorPayoutFilter,
+        invoiceStatusFilter,
+        paymentReceivedFilter,
+        leadRefFilter,
+        patientFilter,
+        treatmentFilter,
+        leadReceivedFilter,
+        admissionDateFilter,
+        surgeryDateFilter,
+        totalBillFilter,
+        approvedAmountFilter,
+        deductionTotalFilter,
+        deductionPaidFilter,
+        waivedOffFilter,
+        netProfitFilter,
+        page,
+      }))
+    } catch (e) {
+      console.error(e)
+    }
+  }, [
+    hydrated,
+    selectedMonths,
+    managerFilter,
+    bdmFilter,
+    doctorFilter,
+    hospitalFilter,
+    statusFilter,
+    hospitalTotalAmountFilter,
+    hospitalOutstandingAmountFilter,
+    doctorPayoutAmountFilter,
+    doctorOutstandingAmountFilter,
+    categoryFilter,
+    paymentTypeFilter,
+    mediendPayoutFilter,
+    doctorPayoutFilter,
+    invoiceStatusFilter,
+    paymentReceivedFilter,
+    leadRefFilter,
+    patientFilter,
+    treatmentFilter,
+    leadReceivedFilter,
+    admissionDateFilter,
+    surgeryDateFilter,
+    totalBillFilter,
+    approvedAmountFilter,
+    deductionTotalFilter,
+    deductionPaidFilter,
+    waivedOffFilter,
+    netProfitFilter,
+    page,
+  ])
 
   const { data: filterConfig } = useQuery<{
     filters: Array<{
@@ -249,9 +363,9 @@ export default function PLOutstandingPage() {
       const qs = params.toString()
       return await apiGet<Lead[]>(`/api/outstanding${qs ? `?${qs}` : ''}`)
     },
+    enabled: hydrated,
   })
 
-  const [page, setPage] = useState(1)
   const [sheetLeadId, setSheetLeadId] = useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
@@ -1011,10 +1125,10 @@ export default function PLOutstandingPage() {
                 <span className="inline-flex h-10 w-1.5 rounded-full bg-gradient-to-b from-amber-500 to-orange-600 shadow-sm" aria-hidden />
                 <div>
                   <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-800 via-orange-700 to-amber-900 bg-clip-text text-transparent dark:from-amber-200 dark:via-orange-200 dark:to-amber-100">
-                    P/L Outstanding
+                    P&L Outstanding
                   </h1>
                   <p className="text-muted-foreground mt-1">
-                    Cases moved to Outstanding from P/L Ledger — payout statuses and pending amounts
+                    Cases moved to Outstanding from P&L Ledger — payout statuses and pending amounts
                   </p>
                 </div>
               </div>

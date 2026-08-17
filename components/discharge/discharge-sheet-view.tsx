@@ -70,15 +70,17 @@ interface DischargeSheetViewProps {
 
 function DocCell({ label, url }: { label: string; url?: string | null }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-border last:border-0">
-      <span className="text-sm">{label}</span>
-      {url ? (
-        <Button variant="link" size="sm" className="h-auto p-0" onClick={() => window.open(url, '_blank')}>
-          View <ExternalLink className="ml-1 h-3 w-3" />
-        </Button>
-      ) : (
-        <span className="text-muted-foreground text-sm">—</span>
-      )}
+    <div className="grid grid-cols-2 items-center px-6 py-3.5 border-b border-border last:border-0">
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      <div className="text-sm">
+        {url ? (
+          <Button variant="link" size="sm" className="h-auto p-0 flex items-center gap-1 text-blue-600 hover:text-blue-700 font-semibold" onClick={() => window.open(url, '_blank')}>
+            View <ExternalLink className="h-3 w-3" />
+          </Button>
+        ) : (
+          <span className="text-muted-foreground font-normal">—</span>
+        )}
+      </div>
     </div>
   )
 }
@@ -87,9 +89,9 @@ const rupee = (n: number) => `₹${Number(n).toLocaleString('en-IN')}`
 
 function AmountRow({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
   return (
-    <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
-      <span className="text-sm">{label}</span>
-      <span className={`text-sm font-medium ${highlight ? 'text-green-600' : ''}`}>{rupee(value)}</span>
+    <div className="grid grid-cols-2 items-center px-6 py-3.5 border-b border-border last:border-0">
+      <span className="text-sm font-medium text-muted-foreground">{label}</span>
+      <span className={`text-sm font-semibold ${highlight ? 'text-amber-600 dark:text-amber-400' : 'text-foreground'}`}>{rupee(value)}</span>
     </div>
   )
 }
@@ -218,9 +220,9 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
         <CardContent className="space-y-0">
           <DocCell label="Discharge Summary" url={dischargeSheet.dischargeSummaryUrl} />
           <DocCell label="OT Notes" url={dischargeSheet.otNotesUrl} />
-          <div className="flex items-center justify-between py-2 border-b border-border last:border-0">
-            <span className="text-sm">Codes Count</span>
-            <span className="text-sm font-medium">{dischargeSheet.codesCount ?? '—'}</span>
+          <div className="grid grid-cols-2 items-center px-6 py-3.5 border-b border-border last:border-0">
+            <span className="text-sm font-medium text-muted-foreground">Codes Count</span>
+            <span className="text-sm font-semibold text-foreground">{dischargeSheet.codesCount ?? '—'}</span>
           </div>
         </CardContent>
       </Card>
@@ -232,7 +234,7 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
           <CardDescription>Head | Amount</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-b">
+          <div className="grid grid-cols-2 items-center px-6 py-3 bg-muted/50 font-bold text-xs tracking-wider uppercase text-muted-foreground border-b">
             <span>Head</span>
             <span>Amount</span>
           </div>
@@ -240,28 +242,28 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
             <AmountRow key={label} label={label} value={value} />
           ))}
           {otherChargesDisplay && (
-            <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
-              <span className="text-sm">Other Charges</span>
-              <span className="text-sm font-medium">{otherChargesDisplay}</span>
+            <div className="grid grid-cols-2 items-center px-6 py-3.5 border-b border-border last:border-0">
+              <span className="text-sm font-medium text-muted-foreground">Other Charges</span>
+              <span className="text-sm font-semibold text-foreground">{otherChargesDisplay}</span>
             </div>
           )}
           {dischargeSheet.packageAmount && (
-            <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
-              <span className="text-sm">Package Amount <span className="text-muted-foreground">(excluded from total)</span></span>
-              <span className="text-sm font-medium">{dischargeSheet.packageAmount}</span>
+            <div className="grid grid-cols-2 items-center px-6 py-3.5 border-b border-border last:border-0">
+              <span className="text-sm font-medium text-muted-foreground">Package Amount <span className="text-xs text-muted-foreground">(excluded from total)</span></span>
+              <span className="text-sm font-semibold text-foreground">{dischargeSheet.packageAmount}</span>
             </div>
           )}
           {dischargeSheet.staplerCharges && (
-            <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
-              <span className="text-sm">Stapler Charges</span>
-              <span className="text-sm font-medium">
+            <div className="grid grid-cols-2 items-center px-6 py-3.5 border-b border-border last:border-0">
+              <span className="text-sm font-medium text-muted-foreground">Stapler Charges</span>
+              <span className="text-sm font-semibold text-foreground">
                 {dischargeSheet.staplerCharges === 'INCLUDED' ? 'Included' : 'Open'}
               </span>
             </div>
           )}
-          <div className="grid grid-cols-2 gap-2 p-3 border-t bg-muted/30">
-            <span className="text-sm font-semibold">Total Final Bill</span>
-            <span className="text-sm font-semibold">{rupee(dischargeSheet.totalFinalBill ?? 0)}</span>
+          <div className="grid grid-cols-2 items-center px-6 py-4 border-t bg-muted/30">
+            <span className="text-sm font-bold text-foreground">Total Final Bill</span>
+            <span className="text-sm font-bold text-foreground">{rupee(dischargeSheet.totalFinalBill ?? 0)}</span>
           </div>
         </CardContent>
       </Card>
@@ -278,7 +280,7 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
           <DocCell label="Approval Letter" url={dischargeSheet.finalApprovedUrl} />
 
           {/* Deductions */}
-          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
+          <div className="grid grid-cols-2 items-center px-6 py-2.5 bg-muted/50 font-bold text-xs tracking-wider uppercase text-muted-foreground border-y">
             <span>Deductions</span>
             <span />
           </div>
@@ -287,7 +289,7 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
           <AmountRow label="Total Deductions" value={deductionTotal} />
 
           {/* Deductions Paid */}
-          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
+          <div className="grid grid-cols-2 items-center px-6 py-2.5 bg-muted/50 font-bold text-xs tracking-wider uppercase text-muted-foreground border-y">
             <span>Deductions Paid</span>
             <span />
           </div>
@@ -297,7 +299,7 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
           <DocCell label="Receipt" url={dischargeSheet.deductionReceiptUrl} />
 
           {/* Hospital Discount & Waive Off */}
-          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
+          <div className="grid grid-cols-2 items-center px-6 py-2.5 bg-muted/50 font-bold text-xs tracking-wider uppercase text-muted-foreground border-y">
             <span>Hospital Discount &amp; Waive Off</span>
             <span />
           </div>
@@ -305,7 +307,7 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
           <AmountRow label="Waive Off" value={dischargeSheet.waivedOffAmount ?? 0} />
 
           {/* Exxis Tarrif */}
-          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
+          <div className="grid grid-cols-2 items-center px-6 py-2.5 bg-muted/50 font-bold text-xs tracking-wider uppercase text-muted-foreground border-y">
             <span>Exxis Tarrif</span>
             <span />
           </div>
@@ -313,9 +315,9 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
           <AmountRow label="Deduction Paid" value={axisDedPaid} />
 
           {/* Actual Final Amount */}
-          <div className="grid grid-cols-2 gap-2 p-3 border-t bg-green-50 dark:bg-green-950">
-            <span className="text-sm font-semibold">Actual Final Amount</span>
-            <span className="text-sm font-semibold text-green-700 dark:text-green-400">{rupee(actualFinal)}</span>
+          <div className="grid grid-cols-2 items-center px-6 py-4 border-t bg-amber-50 dark:bg-amber-950/30 border-amber-200/40 dark:border-amber-900/40">
+            <span className="text-sm font-bold text-amber-900 dark:text-amber-200">Actual Final Amount</span>
+            <span className="text-sm font-extrabold text-amber-700 dark:text-amber-400">{rupee(actualFinal)}</span>
           </div>
 
           {/* Final Bill */}

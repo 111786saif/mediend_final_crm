@@ -233,6 +233,99 @@ export default function PLLedgerPage() {
   const [hospitalShareAmtFilter, setHospitalShareAmtFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [doctorChargesFilter, setDoctorChargesFilter] = useState<{ min: number | null; max: number | null } | null>(null)
   const [netProfitFilter, setNetProfitFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [selectedStage, setSelectedStage] = useState<string | null>(null)
+
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => {
+    try {
+      const raw = window.sessionStorage.getItem('pl-ledger-filters-v1')
+      if (raw) {
+        const saved = JSON.parse(raw)
+        if (saved.selectedMonths) setSelectedMonths(saved.selectedMonths)
+        if (saved.bdFilter) setBdFilter(saved.bdFilter)
+        if (saved.hospitalFilter) setHospitalFilter(saved.hospitalFilter)
+        if (saved.doctorFilter) setDoctorFilter(saved.doctorFilter)
+        if (saved.outstandingFilter) setOutstandingFilter(saved.outstandingFilter)
+        if (saved.categoryFilter) setCategoryFilter(saved.categoryFilter)
+        if (saved.circleFilter) setCircleFilter(saved.circleFilter)
+        if (saved.paymentTypeFilter) setPaymentTypeFilter(saved.paymentTypeFilter)
+        if (saved.hospPayoutFilter) setHospPayoutFilter(saved.hospPayoutFilter)
+        if (saved.docPayoutFilter) setDocPayoutFilter(saved.docPayoutFilter)
+        if (saved.invoiceFilter) setInvoiceFilter(saved.invoiceFilter)
+        if (saved.tableMonthFilter) setTableMonthFilter(saved.tableMonthFilter)
+        if (saved.treatmentFilter !== undefined) setTreatmentFilter(saved.treatmentFilter)
+        if (saved.patientFilter !== undefined) setPatientFilter(saved.patientFilter)
+        if (saved.admissionDateFilter) setAdmissionDateFilter(saved.admissionDateFilter)
+        if (saved.surgeryDateFilter) setSurgeryDateFilter(saved.surgeryDateFilter)
+        if (saved.totalBillFilter !== undefined) setTotalBillFilter(saved.totalBillFilter)
+        if (saved.approvedAmountFilter !== undefined) setApprovedAmountFilter(saved.approvedAmountFilter)
+        if (saved.hospitalShareAmtFilter !== undefined) setHospitalShareAmtFilter(saved.hospitalShareAmtFilter)
+        if (saved.doctorChargesFilter !== undefined) setDoctorChargesFilter(saved.doctorChargesFilter)
+        if (saved.netProfitFilter !== undefined) setNetProfitFilter(saved.netProfitFilter)
+        if (saved.selectedStage !== undefined) setSelectedStage(saved.selectedStage)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
+    try {
+      window.sessionStorage.setItem('pl-ledger-filters-v1', JSON.stringify({
+        selectedMonths,
+        bdFilter,
+        hospitalFilter,
+        doctorFilter,
+        outstandingFilter,
+        categoryFilter,
+        circleFilter,
+        paymentTypeFilter,
+        hospPayoutFilter,
+        docPayoutFilter,
+        invoiceFilter,
+        tableMonthFilter,
+        treatmentFilter,
+        patientFilter,
+        admissionDateFilter,
+        surgeryDateFilter,
+        totalBillFilter,
+        approvedAmountFilter,
+        hospitalShareAmtFilter,
+        doctorChargesFilter,
+        netProfitFilter,
+        selectedStage,
+      }))
+    } catch (e) {
+      console.error(e)
+    }
+  }, [
+    hydrated,
+    selectedMonths,
+    bdFilter,
+    hospitalFilter,
+    doctorFilter,
+    outstandingFilter,
+    categoryFilter,
+    circleFilter,
+    paymentTypeFilter,
+    hospPayoutFilter,
+    docPayoutFilter,
+    invoiceFilter,
+    tableMonthFilter,
+    treatmentFilter,
+    patientFilter,
+    admissionDateFilter,
+    surgeryDateFilter,
+    totalBillFilter,
+    approvedAmountFilter,
+    hospitalShareAmtFilter,
+    doctorChargesFilter,
+    netProfitFilter,
+    selectedStage,
+  ])
 
   const { data: filterConfig } = useQuery<{
     filters: Array<{
@@ -340,7 +433,7 @@ export default function PLLedgerPage() {
         },
       }))
     },
-    enabled: !!dateRange.startDate && !!dateRange.endDate,
+    enabled: hydrated && !!dateRange.startDate && !!dateRange.endDate,
   })
 
   const { data: pipelineStats } = useQuery<PipelineStats>({
@@ -349,7 +442,7 @@ export default function PLLedgerPage() {
       apiGet<PipelineStats>(
         `/api/analytics/pl-pipeline-stats?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`
       ),
-    enabled: !!dateRange.startDate && !!dateRange.endDate,
+    enabled: hydrated && !!dateRange.startDate && !!dateRange.endDate,
   })
 
   const totalProfit =
@@ -369,7 +462,6 @@ export default function PLLedgerPage() {
   const [patientDrawerTitle, setPatientDrawerTitle] = useState('')
   const [patientDrawerStage, setPatientDrawerStage] = useState('')
   const [patientDrawerDateField, setPatientDrawerDateField] = useState<'surgery' | 'admission' | 'discharge'>('surgery')
-  const [selectedStage, setSelectedStage] = useState<string | null>(null)
 
   const activeFilterCount =
     bdFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length +
@@ -532,7 +624,7 @@ export default function PLLedgerPage() {
         'Admission Date': resolved.admission ? resolved.admission.toLocaleDateString('en-IN') : '—',
         'Surgery Date': resolved.surgery ? resolved.surgery.toLocaleDateString('en-IN') : '—',
         'Payment Type': resolved.paymentType ?? '—',
-        'PL Status': pl?.outstandingStatus ?? 'NEW',
+        'P&L Status': pl?.outstandingStatus ?? 'NEW',
         'Status': resolved.status ?? '—',
         'Total Bill': resolved.totalBill ?? 0,
         'Approved Amount': resolved.approvedAmount ?? 0,
@@ -594,7 +686,7 @@ export default function PLLedgerPage() {
       import('xlsx').then((XLSX) => {
         const worksheet = XLSX.utils.json_to_sheet(dataToExport)
         const workbook = XLSX.utils.book_new()
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'PL Ledger')
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'P&L Ledger')
         XLSX.writeFile(workbook, `pl_ledger_${new Date().toISOString().split('T')[0]}.xlsx`)
       }).catch((err) => {
         toast.error('Failed to export to Excel: ' + err.message)
@@ -797,7 +889,7 @@ export default function PLLedgerPage() {
         id: 'outstandingStatus',
         header: () => (
           <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-            <span>PL Status</span>
+            <span>P&L Status</span>
             <ColumnFilter
               options={[
                 { label: 'New', value: 'NEW' },
@@ -1156,7 +1248,7 @@ export default function PLLedgerPage() {
               />
               <div>
                 <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-teal-800 via-cyan-800 to-indigo-800 bg-clip-text text-transparent dark:from-teal-200 dark:via-cyan-200 dark:to-indigo-200">
-                  P/L Ledger
+                  P&L Ledger
                 </h1>
                 <p className="text-muted-foreground mt-1">Profit &amp; loss entries by surgery date</p>
               </div>
@@ -1297,7 +1389,7 @@ export default function PLLedgerPage() {
                     ['admissionDate', 'Admission date'],
                     ['surgeryDate', 'Surgery date'],
                     ['paymentType', 'Payment type'],
-                    ['outstandingStatus', 'PL Status'],
+                    ['outstandingStatus', 'P&L Status'],
                     ['status', 'Status'],
                     ['totalBill', 'Total bill'],
                     ['approvedAmount', 'Approved amount'],
@@ -1679,8 +1771,8 @@ export default function PLLedgerPage() {
           <Card className="min-w-0 w-full overflow-hidden border-teal-200/50 shadow-lg dark:border-teal-800/40">
             <CardHeader className="flex flex-row items-center justify-between border-b bg-gradient-to-r from-teal-500/12 via-indigo-500/10 to-transparent pb-4">
               <div>
-                <CardTitle className="text-lg text-teal-950 dark:text-teal-100">P/L records</CardTitle>
-                <CardDescription className="mt-1">Click a row to edit. Filtered by surgery date (lead or P/L record).</CardDescription>
+                <CardTitle className="text-lg text-teal-950 dark:text-teal-100">P&L records</CardTitle>
+                <CardDescription className="mt-1">Click a row to edit. Filtered by surgery date (lead or P&L record).</CardDescription>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -1710,7 +1802,7 @@ export default function PLLedgerPage() {
                 columns={columns}
                 data={tableRecords ?? []}
                 isLoading={isLoading}
-                emptyMessage="No P/L records found"
+                emptyMessage="No P&L records found"
                 onRowClick={(record) => {
                   const plStatus = record.plRecord?.outstandingStatus || 'NEW'
                   if (plStatus === 'OUTSTANDING' && user?.role === 'PL_HEAD') {

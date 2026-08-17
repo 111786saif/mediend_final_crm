@@ -155,7 +155,7 @@ export function InvoiceRequestView() {
     if (!reviewRequest) return
     const pdfUrl = uploadedFile?.url ?? reviewRequest.invoicePdfUrl
     if (!pdfUrl) {
-      toast.error('No invoice file available. Ask P/L to upload or attach a file before approving.')
+      toast.error('No invoice file available. Ask P&L to upload or attach a file before approving.')
       return
     }
     try {
@@ -198,7 +198,7 @@ export function InvoiceRequestView() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Invoice Requests</h1>
         <p className="text-sm text-muted-foreground">
-          Review invoice requests from P/L. When P/L has uploaded an invoice, open the request to
+          Review invoice requests from P&L. When P&L has uploaded an invoice, open the request to
           preview it, add remarks, and verify or reject. You can also attach a replacement file if
           needed.
         </p>
@@ -357,7 +357,7 @@ export function InvoiceRequestView() {
 
               {reviewRequest.requestRemarks && (
                 <div>
-                  <p className="text-xs text-muted-foreground">P/L request remarks</p>
+                  <p className="text-xs text-muted-foreground">P&L request remarks</p>
                   <p className="mt-1 rounded-md border bg-muted/30 p-2">{reviewRequest.requestRemarks}</p>
                 </div>
               )}
@@ -383,7 +383,7 @@ export function InvoiceRequestView() {
                 reviewRequest.invoicePdfUrl &&
                 !uploadedFile && (
                   <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground">Invoice uploaded by P/L</p>
+                    <p className="text-xs text-muted-foreground">Invoice uploaded by P&L</p>
                     <InvoiceFilePreview
                       url={reviewRequest.invoicePdfUrl}
                       name={reviewRequest.invoicePdfName}
@@ -455,7 +455,7 @@ export function InvoiceRequestView() {
                           id="finance-remarks"
                           value={financeRemarks}
                           onChange={(e) => setFinanceRemarks(e.target.value)}
-                          placeholder="Add any notes for the P/L team"
+                          placeholder="Add any notes for the P&L team"
                           rows={3}
                         />
                       </div>

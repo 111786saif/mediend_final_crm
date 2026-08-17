@@ -313,7 +313,7 @@ export function PaymentVerificationView() {
               )}
               {active.leadId ? (
                 <Button variant="link" className="h-auto p-0" asChild>
-                  <Link href={`/pl/outstanding/${active.leadId}`}>Open P/L Outstanding case</Link>
+                  <Link href={`/pl/outstanding/${active.leadId}`}>Open P&L Outstanding case</Link>
                 </Button>
               ) : null}
             </div>

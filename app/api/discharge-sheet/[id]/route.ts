@@ -273,6 +273,32 @@ export async function PATCH(
       },
     })
 
+    // Sync surgeryDate to Lead, PLRecord and AdmissionRecord (if it exists)
+    if (data.surgeryDate !== undefined) {
+      const surgDate = data.surgeryDate ? new Date(data.surgeryDate) : null
+      
+      await prisma.lead.update({
+        where: { id: existing.leadId },
+        data: { surgeryDate: surgDate },
+      })
+
+      await prisma.pLRecord.updateMany({
+        where: { leadId: existing.leadId },
+        data: { surgeryDate: surgDate },
+      })
+
+      const admission = await prisma.admissionRecord.findUnique({
+        where: { leadId: existing.leadId },
+        select: { id: true },
+      })
+      if (admission) {
+        await prisma.admissionRecord.update({
+          where: { leadId: existing.leadId },
+          data: { surgeryDate: surgDate },
+        })
+      }
+    }
+
     return successResponse(updated, 'Discharge sheet updated successfully')
   } catch (error) {
     if (error instanceof z.ZodError) {

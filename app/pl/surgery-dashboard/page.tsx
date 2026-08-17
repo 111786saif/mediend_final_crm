@@ -379,7 +379,7 @@ export default function PLSurgeryDashboardPage() {
               />
               <div>
                 <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-800 via-violet-800 to-purple-800 bg-clip-text text-transparent dark:from-indigo-200 dark:via-violet-200 dark:to-purple-200">
-                  P/L Surgery dashboard
+                  P&L Surgery dashboard
                 </h1>
                 <p className="text-muted-foreground mt-1">
                   Team-wise surgery analytics (Mediend share minus Mediend-paid expenses)
@@ -388,7 +388,7 @@ export default function PLSurgeryDashboardPage() {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <Button variant="outline" size="sm" asChild>
-                <Link href="/pl/dashboard">P/L Ledger</Link>
+                <Link href="/pl/dashboard">P&L Ledger</Link>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -466,7 +466,7 @@ export default function PLSurgeryDashboardPage() {
                       </CardHeader>
                       <CardContent>
                         <div className="text-2xl font-bold tabular-nums text-violet-950 dark:text-violet-50">{data?.surgeryCount ?? 0}</div>
-                        <p className="text-xs text-violet-800/70 dark:text-violet-200/70 mt-1">With P/L record in range</p>
+                        <p className="text-xs text-violet-800/70 dark:text-violet-200/70 mt-1">With P&L record in range</p>
                       </CardContent>
                     </Card>
                     <Card className={cn('overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500', 'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card')}>

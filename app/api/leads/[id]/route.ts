@@ -659,7 +659,7 @@ export async function PATCH(
           ? typeof body.city === 'string'
             ? body.city.trim() || null
             : body.city
-          : currentLeadCity || lead.city
+          : currentLeadCity || lead.circle
 
       if (typeof nextCity !== 'string' || nextCity.trim().length === 0) {
         return errorResponse('City is required for this status', 400)
@@ -930,16 +930,29 @@ export async function PATCH(
         }
       }
 
-      if (body.surgeryDate !== undefined && lead.admissionRecord?.id) {
+      if (body.surgeryDate !== undefined) {
         const nextSurgeryDate = body.surgeryDate ? new Date(String(body.surgeryDate)) : null
-        await (tx as any).admissionRecord.update({
+        
+        if (lead.admissionRecord?.id) {
+          await (tx as any).admissionRecord.update({
+            where: { leadId: id },
+            data: {
+              surgeryDate: nextSurgeryDate,
+              ...(lead.admissionRecord.newSurgeryDate || lead.admissionRecord.ipdStatus === 'POSTPONED'
+                ? { newSurgeryDate: nextSurgeryDate }
+                : {}),
+            },
+          })
+        }
+
+        await (tx as any).dischargeSheet.updateMany({
           where: { leadId: id },
-          data: {
-            surgeryDate: nextSurgeryDate,
-            ...(lead.admissionRecord.newSurgeryDate || lead.admissionRecord.ipdStatus === 'POSTPONED'
-              ? { newSurgeryDate: nextSurgeryDate }
-              : {}),
-          },
+          data: { surgeryDate: nextSurgeryDate },
+        })
+
+        await (tx as any).pLRecord.updateMany({
+          where: { leadId: id },
+          data: { surgeryDate: nextSurgeryDate },
         })
       }
 

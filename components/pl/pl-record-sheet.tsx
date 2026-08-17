@@ -573,7 +573,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
               <div className="flex items-center justify-between">
                 <div>
                   <SheetTitle className="text-xl font-bold bg-gradient-to-r from-teal-800 to-indigo-800 bg-clip-text text-transparent dark:from-teal-200 dark:to-indigo-200">
-                    Edit P/L Record — {record.leadRef ?? record.id}
+                    Edit P&L Record — {record.leadRef ?? record.id}
                   </SheetTitle>
                   <SheetDescription>Profit &amp; loss entry details</SheetDescription>
                 </div>
@@ -595,7 +595,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
               {hasBdNotes && (
                 <Card className="overflow-hidden border-amber-200/50 shadow-md dark:border-amber-800/40">
                   <CardHeader className="border-b bg-gradient-to-r from-amber-500/10 to-yellow-500/10 pb-2">
-                    <CardTitle className="text-sm text-amber-950 dark:text-amber-100">BD Notes for PL Head</CardTitle>
+                    <CardTitle className="text-sm text-amber-950 dark:text-amber-100">BD Notes for P&L Head</CardTitle>
                   </CardHeader>
                   <CardContent className="pt-3 text-sm space-y-3">
                     {bdNotes && (

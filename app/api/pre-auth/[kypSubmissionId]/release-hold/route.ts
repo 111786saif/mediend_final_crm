@@ -6,6 +6,13 @@ import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { hasPermission } from '@/lib/rbac'
 import { CaseStage, PreAuthStatus } from '@/generated/prisma/client'
 
+// Release is allowed while pre-auth is raised OR during the hospital suggestion step
+const RELEASE_ALLOWED_STAGES: CaseStage[] = [
+  CaseStage.KYP_BASIC_COMPLETE,
+  CaseStage.HOSPITALS_SUGGESTED,
+  CaseStage.PREAUTH_RAISED,
+]
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ kypSubmissionId: string }> }
@@ -45,6 +52,13 @@ export async function POST(
       return errorResponse('Pre-authorization data not found', 400)
     }
 
+    if (!RELEASE_ALLOWED_STAGES.includes(kypSubmission.lead.caseStage)) {
+      return errorResponse(
+        `Cannot release hold. Current stage: ${kypSubmission.lead.caseStage}. Hold release is only available during the hospital suggestion step or while pre-auth is raised.`,
+        400
+      )
+    }
+
     if (kypSubmission.preAuthData.approvalStatus !== PreAuthStatus.ON_HOLD) {
       return errorResponse('Pre-auth is not currently on hold', 400)
     }
@@ -62,8 +76,8 @@ export async function POST(
     await prisma.caseStageHistory.create({
       data: {
         leadId: kypSubmission.lead.id,
-        fromStage: CaseStage.PREAUTH_RAISED,
-        toStage: CaseStage.PREAUTH_RAISED,
+        fromStage: kypSubmission.lead.caseStage,
+        toStage: kypSubmission.lead.caseStage,
         changedById: user.id,
         note: 'Pre-authorization hold released by Insurance',
       },

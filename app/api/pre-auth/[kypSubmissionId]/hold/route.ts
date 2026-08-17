@@ -11,6 +11,13 @@ const holdSchema = z.object({
   reason: z.string().min(1, 'Hold reason is required'),
 })
 
+// Hold is allowed while pre-auth is raised OR during the hospital suggestion step
+const HOLD_ALLOWED_STAGES: CaseStage[] = [
+  CaseStage.KYP_BASIC_COMPLETE,
+  CaseStage.HOSPITALS_SUGGESTED,
+  CaseStage.PREAUTH_RAISED,
+]
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ kypSubmissionId: string }> }
@@ -49,18 +56,15 @@ export async function POST(
     if (!kypSubmission) {
       return errorResponse('KYP submission not found', 404)
     }
-    if (!kypSubmission.preAuthData) {
-      return errorResponse('Pre-authorization data not found', 400)
-    }
 
-    if (kypSubmission.lead.caseStage !== CaseStage.PREAUTH_RAISED) {
+    if (!HOLD_ALLOWED_STAGES.includes(kypSubmission.lead.caseStage)) {
       return errorResponse(
-        `Cannot hold pre-auth. Current stage: ${kypSubmission.lead.caseStage}. Hold is only available while pre-auth is raised.`,
+        `Cannot hold pre-auth. Current stage: ${kypSubmission.lead.caseStage}. Hold is only available during the hospital suggestion step or while pre-auth is raised.`,
         400
       )
     }
 
-    const currentStatus = kypSubmission.preAuthData.approvalStatus
+    const currentStatus = kypSubmission.preAuthData?.approvalStatus
     if (
       currentStatus === PreAuthStatus.APPROVED ||
       currentStatus === PreAuthStatus.TEMP_APPROVED ||
@@ -72,9 +76,18 @@ export async function POST(
       )
     }
 
-    await prisma.preAuthorization.update({
+    // A PreAuthorization record may not exist yet at the hospital suggestion step.
+    // Upsert it so the hold state (reason, heldAt, heldById) is persisted.
+    const preAuth = await prisma.preAuthorization.upsert({
       where: { kypSubmissionId },
-      data: {
+      create: {
+        kypSubmissionId,
+        approvalStatus: PreAuthStatus.ON_HOLD,
+        holdReason: reason,
+        heldAt: new Date(),
+        heldById: user.id,
+      },
+      update: {
         approvalStatus: PreAuthStatus.ON_HOLD,
         holdReason: reason,
         heldAt: new Date(),
@@ -85,8 +98,8 @@ export async function POST(
     await prisma.caseStageHistory.create({
       data: {
         leadId: kypSubmission.lead.id,
-        fromStage: CaseStage.PREAUTH_RAISED,
-        toStage: CaseStage.PREAUTH_RAISED,
+        fromStage: kypSubmission.lead.caseStage,
+        toStage: kypSubmission.lead.caseStage,
         changedById: user.id,
         note: `Pre-authorization put on hold by Insurance. Reason: ${reason}`,
       },
@@ -105,7 +118,7 @@ export async function POST(
           title: 'Pre-Auth On Hold',
           message: `Insurance has put pre-auth on hold for ${kypSubmission.lead.patientName} (${kypSubmission.lead.leadRef}). Reason: ${reason}`,
           link: `/patient/${kypSubmission.lead.id}/pre-auth`,
-          relatedId: kypSubmission.preAuthData.id,
+          relatedId: preAuth.id,
         },
       })
     }
