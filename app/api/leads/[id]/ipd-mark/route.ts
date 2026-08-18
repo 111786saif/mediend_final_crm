@@ -28,13 +28,17 @@ async function persistIpdMarkPatientDetails(
   leadId: string,
   userId: string,
   patientName: string,
-  aadharDocumentUrl: string,
+  aadharDocumentUrl: string | null,
   aadharFiles: { name: string; url: string }[]
 ) {
   await prisma.lead.update({
     where: { id: leadId },
     data: { patientName: patientName.trim() },
   })
+
+  if (!aadharDocumentUrl) {
+    return
+  }
 
   const aadharPayload = {
     aadharFileUrl: aadharDocumentUrl,
@@ -116,10 +120,12 @@ export async function POST(
       if (!data.patientName?.trim()) {
         return errorResponse('Patient name is required when marking IPD', 400)
       }
+      const requireAadharDocument =
+        data.status === 'ADMITTED_DONE' || (data.status === 'IPD_DONE' && !isCashFlow)
       const primaryUrl =
         data.aadharDocumentUrl?.trim() ||
         data.aadharFiles?.find((f) => f.url.trim())?.url.trim()
-      if (!primaryUrl) {
+      if (requireAadharDocument && !primaryUrl) {
         return errorResponse('Aadhaar document upload is required when marking IPD', 400)
       }
     }
@@ -156,13 +162,9 @@ export async function POST(
             ? [{ name: 'Aadhaar', url: primaryUrl }]
             : []
       if (primaryUrl && data.patientName?.trim()) {
-        await persistIpdMarkPatientDetails(
-          leadId,
-          user.id,
-          data.patientName.trim(),
-          primaryUrl,
-          files
-        )
+        await persistIpdMarkPatientDetails(leadId, user.id, data.patientName.trim(), primaryUrl, files)
+      } else if (data.patientName?.trim()) {
+        await persistIpdMarkPatientDetails(leadId, user.id, data.patientName.trim(), null, [])
       }
     }
 

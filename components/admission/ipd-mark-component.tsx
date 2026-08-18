@@ -24,6 +24,7 @@ interface AadharFile {
 
 interface IPDMarkComponentProps {
   leadId: string
+  isCashFlow?: boolean
   currentStatus?: string
   statusHistory?: IPDStatusHistory[]
   defaultSurgeryDate?: string | null
@@ -46,6 +47,7 @@ function formatDateInput(value: string | Date | null | undefined): string {
 }
 
 function PatientDetailsFields({
+  aadharRequired,
   patientName,
   onPatientNameChange,
   aadharFiles,
@@ -54,6 +56,7 @@ function PatientDetailsFields({
   uploading,
   errors,
 }: {
+  aadharRequired: boolean
   patientName: string
   onPatientNameChange: (value: string) => void
   aadharFiles: AadharFile[]
@@ -78,7 +81,10 @@ function PatientDetailsFields({
         {errors.patientName && <p className="text-xs text-destructive mt-1">{errors.patientName}</p>}
       </div>
       <div>
-        <Label htmlFor="ipdAadharUpload">Aadhaar Document *</Label>
+        <Label htmlFor="ipdAadharUpload">
+          Aadhaar Document
+          {aadharRequired ? ' *' : ' (Optional)'}
+        </Label>
         <p className="text-xs text-muted-foreground mt-0.5 mb-1">Upload PDF or image (JPG, PNG).</p>
         <Input
           id="ipdAadharUpload"
@@ -126,6 +132,7 @@ function PatientDetailsFields({
 
 export function IPDMarkComponent({
   leadId,
+  isCashFlow = false,
   defaultSurgeryDate,
   defaultPatientName = '',
   existingAadharFiles = [],
@@ -179,6 +186,9 @@ export function IPDMarkComponent({
   ]
 
   const requiresPatientDetails = selectedStatus != null && PATIENT_DETAIL_STATUSES.has(selectedStatus)
+  const requiresAadharDocument =
+    selectedStatus === 'ADMITTED_DONE' ||
+    (selectedStatus === 'IPD_DONE' && !isCashFlow)
 
   const handleAadharUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -199,7 +209,7 @@ export function IPDMarkComponent({
 
     if (requiresPatientDetails) {
       if (!patientName.trim()) newErrors.patientName = 'Patient name is required'
-      if (aadharFiles.length === 0) {
+      if (requiresAadharDocument && aadharFiles.length === 0) {
         newErrors.aadharDocument = 'Aadhaar document upload is required'
       }
     }
@@ -261,10 +271,11 @@ export function IPDMarkComponent({
   const option = selectedStatus ? statusOptions.find((o) => o.value === selectedStatus) : null
 
   const patientDetailsBlock = requiresPatientDetails ? (
-    <PatientDetailsFields
-      patientName={patientName}
-      onPatientNameChange={setPatientName}
-      aadharFiles={aadharFiles}
+              <PatientDetailsFields
+                aadharRequired={requiresAadharDocument}
+                patientName={patientName}
+                onPatientNameChange={setPatientName}
+                aadharFiles={aadharFiles}
       onAadharUpload={handleAadharUpload}
       onRemoveAadhar={(index) => setAadharFiles((prev) => prev.filter((_, i) => i !== index))}
       uploading={uploading}
@@ -432,9 +443,11 @@ export function IPDMarkComponent({
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-4">Select IPD Status</h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          Choose the status to update. Admitted and Surgery Done require patient name and Aadhaar document.
-        </p>
+              <p className="text-sm text-muted-foreground mb-4">
+                {isCashFlow
+                  ? 'Choose the status to update. Admitted requires patient name and Aadhaar document. Surgery Done requires patient name; Aadhaar is optional.'
+                  : 'Choose the status to update. Admitted and Surgery Done require patient name and Aadhaar document.'}
+              </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {statusOptions.map((option) => {
             const Icon = option.icon

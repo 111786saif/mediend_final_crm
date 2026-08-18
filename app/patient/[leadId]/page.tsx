@@ -2955,6 +2955,7 @@ export default function PatientDetailsPage() {
             </DialogHeader>
             <IPDMarkComponent
               leadId={leadId}
+              isCashFlow={lead.flowType === FlowType.CASH}
               defaultPatientName={lead.patientName ?? ''}
               existingAadharFiles={
                 lead.kypSubmission?.aadharFiles && lead.kypSubmission.aadharFiles.length > 0
