@@ -39,13 +39,7 @@ import {
 
 const ALL_TYPES: CaseEventType[] = ['IPD', 'OPD']
 const ALL_STATUSES: CaseEventStatus[] = ['DONE', 'SCHEDULED', 'POSTPONED', 'CANCELLED']
-const ALLOWED_ROLES = [
-  'BD',
-  'TEAM_LEAD',
-  'ASSISTANT_CATEGORY_MANAGER',
-  'CATEGORY_MANAGER',
-  'SALES_HEAD',
-]
+
 // Roles that manage a team of BDs and get the multi-BD filter instead of
 // (or in addition to) the single-person calendar switcher.
 const TEAM_SCOPE_ROLES = ['TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER', 'SALES_HEAD']
@@ -163,7 +157,10 @@ export default function IpdCalendarPage() {
   }
 
   const { hasAccess } = usePermissions()
-  const canAccess = !!(user && (hasAccess('sales.ipd_calendar') || ALLOWED_ROLES.includes(user.role)))
+  const canAccess = !!(
+    user &&
+    (hasAccess('main.ipd_calendar') || hasAccess('sales.ipd_calendar'))
+  )
 
   if (user && !canAccess) {
     return (

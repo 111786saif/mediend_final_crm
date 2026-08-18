@@ -127,6 +127,7 @@ export const RESOURCE_MAP = {
   "actions.worklog_enforcement": { component: "WorklogEnforcementAction" },
   "actions.create_meet": { component: "CreateMeetAction" },
   "actions.cpl_access": { component: "CplAccessAction" },
+  "actions.reset_step": { label: "Reset Step Action", component: "ResetStepButton" },
 
   // Unified Database Column Registry Map
   "sales.case_tracker.table.lead.column.phoneNumber": { label: "Patient Phone Number", component: "PatientPhoneNumber" },

@@ -80,7 +80,6 @@ export const navItems: NavItem[] = [
     title: 'IPD/OPD Calendar',
     url: '/ipd-calendar',
     icon: Stethoscope,
-    roles: ['BD', 'TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER'],
   },
   {
     title: 'Meets',

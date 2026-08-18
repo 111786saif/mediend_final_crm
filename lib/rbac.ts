@@ -59,6 +59,8 @@ export type Permission =
   | 'compliance:read'
   | 'compliance:write'
   | 'main.cumulative_report'
+  | 'actions.reset_step'
+  | 'main.ipd_calendar'
 
 
 const rolePermissions: Record<UserRole, Permission[]> = {
@@ -97,6 +99,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'masters:write',
     'compliance:read',
     'main.cumulative_report',
+    'actions.reset_step',
+    'main.ipd_calendar',
   ],
   EXECUTIVE_ASSISTANT: [
     'analytics:read',
@@ -136,6 +140,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'incentive:approve',
     'incentive:pay',
     'main.cumulative_report',
+    'actions.reset_step',
+    'main.ipd_calendar',
   ],
   SALES_HEAD: [
     'leads:read',
@@ -158,6 +164,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'incentive:read',
     'incentive:write',
     'pl:read',
+    'actions.reset_step',
+    'main.ipd_calendar',
   ],
   // Mid-layer: hierarchy-scoped leads/analytics; can assign targets to own teams (like Sales Head, scoped).
   CATEGORY_MANAGER: [
@@ -170,6 +178,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
+    'actions.reset_step',
+    'main.ipd_calendar',
   ],
   // ACM is functionally identical to TEAM_LEAD (name only).
   ASSISTANT_CATEGORY_MANAGER: [
@@ -182,6 +192,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
+    'actions.reset_step',
+    'main.ipd_calendar',
   ],
   // Same lead pipeline permissions as BD; access is scoped by canAccessLead (own team / subordinates).
   TEAM_LEAD: [
@@ -194,6 +206,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
+    'actions.reset_step',
+    'main.ipd_calendar',
   ],
   BD: [
     'leads:read',
@@ -201,6 +215,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'leads:assign',
     'targets:read',
     'analytics:read',
+    'main.ipd_calendar',
   ],
   INSURANCE_HEAD: [
     'leads:read',
@@ -383,6 +398,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'incentive:write',
     'incentive:approve',
     'incentive:pay',
+    'actions.reset_step',
+    'main.ipd_calendar',
   ],
   USER: [
     'hrms:read',
@@ -435,6 +452,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'sales:pnl:read',
     'compliance:read',
     'compliance:write',
+    'actions.reset_step',
+    'main.ipd_calendar',
   ],
   ACCESS_MATRIX: [
     'it:permissions',

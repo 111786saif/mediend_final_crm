@@ -6,6 +6,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { canResetStepper } from '@/lib/case-permissions'
+import { hasFeaturePermission } from '@/lib/permissions'
 import { hasLeadOpdDone, hasLeadOpdScheduled } from '@/lib/lead-opd-workflow'
 import {
   buildWorkflowResetTimelineNote,
@@ -47,8 +48,9 @@ export async function GET(
       },
     })
     if (!lead) return errorResponse('Lead not found', 404)
-    if (!canResetStepper(user as any)) {
-      return errorResponse('Only Executive Assistant can reset the workflow stepper', 403)
+    const allowed = await hasFeaturePermission(user.id, 'reset_step', user.role)
+    if (!allowed) {
+      return errorResponse('You do not have permission to reset the workflow stepper', 403)
     }
 
     const extras: WorkflowStepExtras = {
@@ -130,8 +132,9 @@ export async function POST(
     })
 
     if (!lead) return errorResponse('Lead not found', 404)
-    if (!canResetStepper(user as any)) {
-      return errorResponse('Only Executive Assistant can reset the workflow stepper', 403)
+    const allowedToReset = await hasFeaturePermission(user.id, 'reset_step', user.role)
+    if (!allowedToReset) {
+      return errorResponse('You do not have permission to reset the workflow stepper', 403)
     }
 
     const extras: WorkflowStepExtras = {
@@ -338,12 +341,14 @@ export async function POST(
           : {}),
       }
       if (config.clearOpdSchedule) {
-        leadUpdate.status = config.resetLeadStatus
+        if (config.resetLeadStatus) {
+          leadUpdate.status = config.resetLeadStatus
+        }
         leadUpdate.opdScheduleDate = null
         leadUpdate.opdHospital = null
         leadUpdate.opdDrName = null
         leadUpdate.opdContactNo = null
-        leadUpdate.opdCharges = null
+        leadUpdate.opdCharges = 0
         leadUpdate.opdMeeting = null
       } else if (config.resetLeadStatus) {
         leadUpdate.status = config.resetLeadStatus

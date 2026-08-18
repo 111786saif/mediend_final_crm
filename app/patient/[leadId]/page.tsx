@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions } from '@/hooks/use-permissions'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
@@ -548,6 +549,7 @@ function getVisibleOpdDoctorRemarks(value: string | null | undefined) {
 
 export default function PatientDetailsPage() {
   const { user } = useAuth()
+  const { hasAccess, permissions } = usePermissions()
   const router = useRouter()
   const params = useParams()
   const searchParams = useSearchParams()
@@ -1577,7 +1579,7 @@ export default function PatientDetailsPage() {
                   </Badge>
                 )}
                 {user &&
-                  canResetStepper(user as any) &&
+                  canResetStepper(user as any, hasAccess, permissions) &&
                   lead.caseStage !== CaseStage.NEW_LEAD &&
                   !(
                     lead.flowType === FlowType.CASH &&

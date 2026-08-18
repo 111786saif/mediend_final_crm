@@ -136,6 +136,7 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'actions.worklog_enforcement', label: 'Worklog Enforcement', type: 'ENTITY', parentKey: 'actions', sortOrder: 3 },
   { key: 'actions.create_meet', label: 'Create Meet', type: 'ENTITY', parentKey: 'actions', sortOrder: 4 },
   { key: 'actions.cpl_access', label: 'Campaign CPL Access', type: 'ENTITY', parentKey: 'actions', sortOrder: 5 },
+  { key: 'actions.reset_step', label: 'Reset Step Action', type: 'ENTITY', parentKey: 'actions', sortOrder: 6 },
 
   // Unified Database Column Registry Map
   { key: 'sales.case_tracker.table.lead.column.phoneNumber', label: 'Patient Phone Number', type: 'ENTITY', parentKey: 'sales.case_tracker', sortOrder: 10 },

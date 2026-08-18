@@ -4,6 +4,7 @@ export const FEATURE_KEYS = {
   WORKLOG_ENFORCEMENT: 'worklog_enforcement',
   CREATE_MEET: 'create_meet',
   CPL_ACCESS: 'cpl_access',
+  RESET_STEP: 'reset_step',
 } as const
 
 export type FeatureKey = (typeof FEATURE_KEYS)[keyof typeof FEATURE_KEYS]
