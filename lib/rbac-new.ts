@@ -29,7 +29,8 @@ export function levelSatisfies(level: PermissionLevel, required: PermissionLevel
  */
 export async function resolvePermission(
   userId: string,
-  resourceKey: string
+  resourceKey: string,
+  sessionRole?: string
 ): Promise<{ level: PermissionLevel; canGrant: boolean }> {
   if (process.env.DISABLE_RBAC_LIMITS === 'true') {
     return { level: PermissionLevel.FULL_ACCESS, canGrant: true }
@@ -92,11 +93,13 @@ export async function resolvePermission(
       select: { role: true },
     })
 
-    if (user?.role) {
+    const effectiveRole = sessionRole || user?.role
+
+    if (effectiveRole) {
       const roleAssignment = await prisma.permissionAssignment.findFirst({
         where: {
           subjectType: SubjectType.ROLE,
-          role: user.role,
+          role: effectiveRole,
           resourceId: resource.id,
         },
         select: { permissionLevel: true, canGrant: true },
@@ -106,6 +109,33 @@ export async function resolvePermission(
         return {
           level: roleAssignment.permissionLevel,
           canGrant: roleAssignment.canGrant,
+        }
+      }
+
+      // Check parent resource assignment (e.g. 'actions' for 'actions.reset_step')
+      const parts = resourceKey.split('.')
+      while (parts.length > 1) {
+        parts.pop()
+        const parentKey = parts.join('.')
+        const parentRes = await prisma.resource.findUnique({
+          where: { key: parentKey, isActive: true },
+          select: { id: true },
+        })
+        if (parentRes) {
+          const parentAssignment = await prisma.permissionAssignment.findFirst({
+            where: {
+              subjectType: SubjectType.ROLE,
+              role: effectiveRole,
+              resourceId: parentRes.id,
+            },
+            select: { permissionLevel: true, canGrant: true },
+          })
+          if (parentAssignment && parentAssignment.permissionLevel !== PermissionLevel.NONE) {
+            return {
+              level: parentAssignment.permissionLevel,
+              canGrant: parentAssignment.canGrant,
+            }
+          }
         }
       }
     }
@@ -246,6 +276,10 @@ export const PERMISSION_TO_RESOURCE_MAP: Partial<Record<Permission, string>> = {
   'leads:write': 'sales.case_tracker',
   'targets:read': 'sales.targets',
   'targets:write': 'sales.targets',
+
+  // Actions
+  'actions.reset_step': 'actions.reset_step',
+  'main.ipd_calendar': 'main.ipd_calendar',
 }
 
 /**

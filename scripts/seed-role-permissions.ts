@@ -66,7 +66,7 @@ const roleAllowedSections: Record<string, string[]> = {
 
   /** Project Head — no finance module */
   EXECUTIVE_ASSISTANT: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets',
+    'main.home', 'main.tasks', 'main.calendar', 'main.ipd_calendar', 'main.meets',
     'main.master_data', 'main.doctor_admin', 'main.dept_targets',
     'main.chat', 'main.cumulative_report',
     'sales.blueprint_dashboard',
@@ -80,6 +80,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'sales.sales_head_targets', 'sales.sales_pnl',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger',
     'insurance_pl.pl_surgery', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
+    'actions.reset_step',
   ],
 
   IT_HEAD: [
@@ -118,6 +119,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     ...MYHRMS, 'myhrms.ask_md_approval', 'main.incentive',
     'crm.incoming_leads', 'crm.churn_rules',
+    'actions.reset_step',
   ],
 
   INSURANCE_HEAD: [
@@ -157,6 +159,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'sales.targets', 'sales.team_lead_pipeline', 'sales.opd_monitoring',
     ...MYHRMS, 'myhrms.ask_md_approval',
     'crm.incoming_leads',
+    'actions.reset_step',
   ],
 
   ASSISTANT_CATEGORY_MANAGER: [
@@ -165,6 +168,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'sales.targets', 'sales.team_lead_targets', 'sales.team_lead_pipeline', 'main.chat',
     'finance.fin_team_approvals', 'myhrms.ask_md_approval',
     ...MYHRMS,
+    'actions.reset_step',
   ],
 
   TEAM_LEAD: [
@@ -173,6 +177,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'sales.targets', 'sales.team_lead_targets', 'sales.team_lead_pipeline', 'main.chat',
     'finance.fin_team_approvals', 'myhrms.ask_md_approval',
     ...MYHRMS,
+    'actions.reset_step',
   ],
 
   BD: [

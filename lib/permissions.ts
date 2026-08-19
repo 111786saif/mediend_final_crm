@@ -27,13 +27,16 @@ async function isUserInMDTeamOrWatchlist(userId: string): Promise<boolean> {
  */
 export async function hasFeaturePermission(
   userId: string,
-  featureKey: string
+  featureKey: string,
+  sessionRole?: string
 ): Promise<boolean> {
   // Check database-backed PermissionAssignment table first
-  const resourceKey = `sidebar.actions.${featureKey}`
-  const effective = await resolvePermission(userId, resourceKey)
+  let effective = await resolvePermission(userId, `actions.${featureKey}`, sessionRole)
+  if (effective.level === PermissionLevel.NONE) {
+    effective = await resolvePermission(userId, `sidebar.actions.${featureKey}`, sessionRole)
+  }
   if (effective.level !== PermissionLevel.NONE) {
-    return levelSatisfies(effective.level, PermissionLevel.FULL_ACCESS)
+    return levelSatisfies(effective.level, PermissionLevel.READ)
   }
 
   // Fallback to legacy UserFeaturePermission table
@@ -50,18 +53,32 @@ export async function hasFeaturePermission(
     where: { id: userId },
     select: { role: true },
   })
-  if (!user) return false
+  if (!user && !sessionRole) return false
+
+  const effectiveRole = sessionRole || user?.role
 
   switch (featureKey) {
     case FEATURE_KEYS.MD_APPROVAL_REQUEST:
     case FEATURE_KEYS.CREATE_NOTICE: {
-      if (user.role === 'MD' || user.role === 'ADMIN') return true
+      if (effectiveRole === 'MD' || effectiveRole === 'ADMIN') return true
       return isUserInMDTeamOrWatchlist(userId)
     }
     case FEATURE_KEYS.CREATE_MEET: {
-      if (user.role === 'MD' || user.role === 'ADMIN') return true
+      if (effectiveRole === 'MD' || effectiveRole === 'ADMIN') return true
       const employee = await getEmployeeByUserId(userId)
       return employee?.manager?.user?.role === 'MD'
+    }
+    case FEATURE_KEYS.RESET_STEP: {
+      return (
+        effectiveRole === 'MD' ||
+        effectiveRole === 'ADMIN' ||
+        effectiveRole === 'EXECUTIVE_ASSISTANT' ||
+        effectiveRole === 'SALES_HEAD' ||
+        effectiveRole === 'CATEGORY_MANAGER' ||
+        effectiveRole === 'ASSISTANT_CATEGORY_MANAGER' ||
+        effectiveRole === 'TEAM_LEAD' ||
+        effectiveRole === 'TESTER'
+      )
     }
     default:
       return false
