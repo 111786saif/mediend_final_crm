@@ -73,6 +73,7 @@ export const ModelName = {
   Department: 'Department',
   DepartmentTeam: 'DepartmentTeam',
   Employee: 'Employee',
+  EmployeeProfileActivityLog: 'EmployeeProfileActivityLog',
   AttendanceLog: 'AttendanceLog',
   AttendanceNormalization: 'AttendanceNormalization',
   LeaveTypeMaster: 'LeaveTypeMaster',
@@ -778,6 +779,19 @@ export const EmployeeScalarFieldEnum = {
 } as const
 
 export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
+
+
+export const EmployeeProfileActivityLogScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  actorUserId: 'actorUserId',
+  action: 'action',
+  summary: 'summary',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type EmployeeProfileActivityLogScalarFieldEnum = (typeof EmployeeProfileActivityLogScalarFieldEnum)[keyof typeof EmployeeProfileActivityLogScalarFieldEnum]
 
 
 export const AttendanceLogScalarFieldEnum = {

@@ -581,6 +581,12 @@ export function NormalizationsTab() {
                     <TableCell className="tabular-nums text-sm font-mono">{formatPunchUtc(row.attendanceIn)}</TableCell>
                     <TableCell className="tabular-nums text-sm font-mono">{formatPunchUtc(row.attendanceOut)}</TableCell>
                     <TableCell>
+                      {row.type === 'EMPLOYEE_REQUEST' ? 'Employee request' : 'Manager applied'}
+                      {!row.attendanceIn && !row.attendanceOut && row.type === 'EMPLOYEE_REQUEST' ? (
+                        <span className="block text-xs text-muted-foreground">Absent · HR direct</span>
+                      ) : null}
+                    </TableCell>
+                    <TableCell>
                       {row.normalizeAs === 'HALF_DAY' ? 'Half Day' : row.normalizeAs === 'FULL_DAY' ? 'Full Day' : '—'}
                     </TableCell>
                     <TableCell>

@@ -37,6 +37,7 @@ import {
   Cell,
 } from 'recharts'
 import { HRDashboardRecruitmentStrip } from '@/components/hr/hr-dashboard-recruitment-strip'
+import { UpcomingBirthdayCard } from '@/components/upcoming-birthday-card'
 import { isActiveHeadcountEmployee } from '@/lib/hrms/headcount'
 
 const MONTHS = [
@@ -365,6 +366,8 @@ export function HRDashboard({
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{title}</h1>
         <p className="hidden sm:block text-muted-foreground text-sm mt-0.5">{description}</p>
       </div>
+
+      {audience === 'hr' && <UpcomingBirthdayCard />}
 
       {isLoading ? (
         <div className="grid gap-2.5 sm:gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">

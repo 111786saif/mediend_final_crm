@@ -9,6 +9,7 @@ import {
   groupAttendanceByDate,
   type DepartmentTiming,
 } from '@/lib/hrms/attendance-utils'
+import { Prisma } from '@/generated/prisma/client'
 import { employeeNotInMDManagedCohortWhere } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
@@ -26,39 +27,35 @@ export async function GET(request: NextRequest) {
     const fromDate = searchParams.get('fromDate')
     const toDate = searchParams.get('toDate')
 
-    const where: {
-      status?: 'PENDING' | 'APPROVED' | 'REJECTED'
-      date?: { gte?: Date; lte?: Date }
-      employee: ReturnType<typeof employeeNotInMDManagedCohortWhere>
-      OR: Array<Record<string, unknown>>
-    } = {
-      // MANAGER type: always HR-actionable.
-      // EMPLOYEE_REQUEST: only show to HR after manager has approved (managerApprovedAt set).
-      // For non-PENDING statuses, show all (approved/rejected history for both types).
-      OR:
-        status === 'PENDING'
-          ? [
-              { type: 'MANAGER' },
-              { type: 'EMPLOYEE_REQUEST', managerApprovedAt: { not: null } },
-            ]
-          : [{ type: 'MANAGER' }, { type: 'EMPLOYEE_REQUEST' }],
+    const where: Prisma.AttendanceNormalizationWhereInput = {
       employee: employeeNotInMDManagedCohortWhere(),
     }
 
-    if (status) {
+    if (status === 'PENDING') {
+      where.status = 'PENDING'
+      // Ready for HR: manager applied, or employee request after manager / skip-manager.
+      where.OR = [
+        { type: 'MANAGER' },
+        { type: 'EMPLOYEE_REQUEST', managerApprovedAt: { not: null } },
+      ]
+    } else if (status) {
       where.status = status
+      where.type = { in: ['MANAGER', 'EMPLOYEE_REQUEST'] }
+    } else {
+      where.type = { in: ['MANAGER', 'EMPLOYEE_REQUEST'] }
     }
 
     if (fromDate || toDate) {
-      where.date = {}
+      const dateFilter: Prisma.DateTimeFilter = {}
       if (fromDate) {
         const [y, m, d] = fromDate.split('-').map(Number)
-        where.date.gte = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0))
+        dateFilter.gte = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0))
       }
       if (toDate) {
         const [y, m, d] = toDate.split('-').map(Number)
-        where.date.lte = new Date(Date.UTC(y, m - 1, d, 23, 59, 59, 999))
+        dateFilter.lte = new Date(Date.UTC(y, m - 1, d, 23, 59, 59, 999))
       }
+      where.date = dateFilter
     }
 
     const list = await prisma.attendanceNormalization.findMany({

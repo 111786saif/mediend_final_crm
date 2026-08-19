@@ -335,6 +335,7 @@ export type UserWhereInput = {
   permissionSubjects?: Prisma.PermissionAssignmentListRelationFilter
   permissionsGranted?: Prisma.PermissionAssignmentListRelationFilter
   fnfCompletedForEmployees?: Prisma.EmployeeListRelationFilter
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogListRelationFilter
   onboardingApprovals?: Prisma.EmployeeListRelationFilter
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryListRelationFilter
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
@@ -479,6 +480,7 @@ export type UserOrderByWithRelationInput = {
   permissionSubjects?: Prisma.PermissionAssignmentOrderByRelationAggregateInput
   permissionsGranted?: Prisma.PermissionAssignmentOrderByRelationAggregateInput
   fnfCompletedForEmployees?: Prisma.EmployeeOrderByRelationAggregateInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogOrderByRelationAggregateInput
   onboardingApprovals?: Prisma.EmployeeOrderByRelationAggregateInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryOrderByRelationAggregateInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogOrderByRelationAggregateInput
@@ -626,6 +628,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   permissionSubjects?: Prisma.PermissionAssignmentListRelationFilter
   permissionsGranted?: Prisma.PermissionAssignmentListRelationFilter
   fnfCompletedForEmployees?: Prisma.EmployeeListRelationFilter
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogListRelationFilter
   onboardingApprovals?: Prisma.EmployeeListRelationFilter
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryListRelationFilter
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogListRelationFilter
@@ -812,6 +815,7 @@ export type UserCreateInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -956,6 +960,7 @@ export type UserUncheckedCreateInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -1100,6 +1105,7 @@ export type UserUpdateInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -1244,6 +1250,7 @@ export type UserUncheckedUpdateInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -1755,6 +1762,20 @@ export type UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFnfCompletedForEmployeesInput, Prisma.UserUpdateWithoutFnfCompletedForEmployeesInput>, Prisma.UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput>
+}
+
+export type UserCreateNestedOneWithoutEmployeeProfileActivityAsActorInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEmployeeProfileActivityAsActorInput, Prisma.UserUncheckedCreateWithoutEmployeeProfileActivityAsActorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmployeeProfileActivityAsActorInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutEmployeeProfileActivityAsActorNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEmployeeProfileActivityAsActorInput, Prisma.UserUncheckedCreateWithoutEmployeeProfileActivityAsActorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmployeeProfileActivityAsActorInput
+  upsert?: Prisma.UserUpsertWithoutEmployeeProfileActivityAsActorInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEmployeeProfileActivityAsActorInput, Prisma.UserUpdateWithoutEmployeeProfileActivityAsActorInput>, Prisma.UserUncheckedUpdateWithoutEmployeeProfileActivityAsActorInput>
 }
 
 export type UserCreateNestedOneWithoutApprovedLeavesInput = {
@@ -3368,6 +3389,7 @@ export type UserCreateWithoutStatusesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -3511,6 +3533,7 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -3670,6 +3693,7 @@ export type UserUpdateWithoutStatusesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -3813,6 +3837,7 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -3955,6 +3980,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -4098,6 +4124,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -4246,6 +4273,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -4389,6 +4417,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -4537,6 +4566,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -4680,6 +4710,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -4839,6 +4870,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -4982,6 +5014,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -5136,6 +5169,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -5279,6 +5313,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -5433,6 +5468,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -5576,6 +5612,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -5720,6 +5757,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -5863,6 +5901,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -6022,6 +6061,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -6165,6 +6205,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -6308,6 +6349,7 @@ export type UserCreateWithoutLeadRemarkEntriesAuthoredInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
@@ -6451,6 +6493,7 @@ export type UserUncheckedCreateWithoutLeadRemarkEntriesAuthoredInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
@@ -6610,6 +6653,7 @@ export type UserUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
@@ -6753,6 +6797,7 @@ export type UserUncheckedUpdateWithoutLeadRemarkEntriesAuthoredInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
@@ -6896,6 +6941,7 @@ export type UserCreateWithoutLeadQrCallAuditLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
@@ -7039,6 +7085,7 @@ export type UserUncheckedCreateWithoutLeadQrCallAuditLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
@@ -7198,6 +7245,7 @@ export type UserUpdateWithoutLeadQrCallAuditLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
@@ -7341,6 +7389,7 @@ export type UserUncheckedUpdateWithoutLeadQrCallAuditLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
@@ -7484,6 +7533,7 @@ export type UserCreateWithoutLeadQrPublicLinksInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -7627,6 +7677,7 @@ export type UserUncheckedCreateWithoutLeadQrPublicLinksInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -7786,6 +7837,7 @@ export type UserUpdateWithoutLeadQrPublicLinksInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -7929,6 +7981,7 @@ export type UserUncheckedUpdateWithoutLeadQrPublicLinksInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -8071,6 +8124,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -8214,6 +8268,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -8373,6 +8428,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -8516,6 +8572,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -8659,6 +8716,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -8802,6 +8860,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -8961,6 +9020,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -9104,6 +9164,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -9247,6 +9308,7 @@ export type UserCreateWithoutCreatedTierDefinitionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -9390,6 +9452,7 @@ export type UserUncheckedCreateWithoutCreatedTierDefinitionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -9549,6 +9612,7 @@ export type UserUpdateWithoutCreatedTierDefinitionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -9692,6 +9756,7 @@ export type UserUncheckedUpdateWithoutCreatedTierDefinitionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -9835,6 +9900,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -9978,6 +10044,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -10137,6 +10204,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -10280,6 +10348,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -10423,6 +10492,7 @@ export type UserCreateWithoutPlRecordsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -10566,6 +10636,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -10725,6 +10796,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -10868,6 +10940,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -11012,6 +11085,7 @@ export type UserCreateWithoutInvoiceRequestsSubmittedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -11155,6 +11229,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsSubmittedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -11303,6 +11378,7 @@ export type UserCreateWithoutInvoiceRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -11446,6 +11522,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -11605,6 +11682,7 @@ export type UserUpdateWithoutInvoiceRequestsSubmittedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -11748,6 +11826,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsSubmittedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -11902,6 +11981,7 @@ export type UserUpdateWithoutInvoiceRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -12045,6 +12125,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -12188,6 +12269,7 @@ export type UserCreateWithoutInvoiceRequestActivitiesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -12331,6 +12413,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestActivitiesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -12490,6 +12573,7 @@ export type UserUpdateWithoutInvoiceRequestActivitiesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -12633,6 +12717,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestActivitiesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -12776,6 +12861,7 @@ export type UserCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -12919,6 +13005,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsSubmittedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -13067,6 +13154,7 @@ export type UserCreateWithoutDoctorPayoffRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -13210,6 +13298,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -13369,6 +13458,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -13512,6 +13602,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsSubmittedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -13666,6 +13757,7 @@ export type UserUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -13809,6 +13901,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -13952,6 +14045,7 @@ export type UserCreateWithoutDoctorPayoffRequestActivitiesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -14095,6 +14189,7 @@ export type UserUncheckedCreateWithoutDoctorPayoffRequestActivitiesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -14254,6 +14349,7 @@ export type UserUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -14397,6 +14493,7 @@ export type UserUncheckedUpdateWithoutDoctorPayoffRequestActivitiesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -14539,6 +14636,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -14682,6 +14780,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -14841,6 +14940,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -14984,6 +15084,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -15127,6 +15228,7 @@ export type UserCreateWithoutEmployeeInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -15270,6 +15372,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -15419,6 +15522,7 @@ export type UserCreateWithoutOnboardingApprovalsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
@@ -15562,6 +15666,7 @@ export type UserUncheckedCreateWithoutOnboardingApprovalsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
@@ -15709,6 +15814,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -15852,6 +15958,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -16011,6 +16118,7 @@ export type UserUpdateWithoutEmployeeInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -16154,6 +16262,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -16309,6 +16418,7 @@ export type UserUpdateWithoutOnboardingApprovalsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
@@ -16452,6 +16562,7 @@ export type UserUncheckedUpdateWithoutOnboardingApprovalsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
   leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
@@ -16605,6 +16716,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -16748,6 +16860,599 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedUpdateManyWithoutActorUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutVerifiedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUncheckedUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutEmployeeProfileActivityAsActorInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryCreateNestedManyWithoutUpdatedByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkCreateNestedManyWithoutActorUserInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentCreateNestedManyWithoutVerifiedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutEmployeeProfileActivityAsActorInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedCreateNestedManyWithoutAssignedVendorByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedCreateNestedManyWithoutResetByInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedCreateNestedManyWithoutActorUserInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutUserInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutCreatedByInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedCreateNestedManyWithoutUpdatedByInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUncheckedCreateNestedManyWithoutActorUserInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutVerifiedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadUserInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdUserInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutUpdatedByInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutUpdatedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUncheckedCreateNestedManyWithoutActorInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUncheckedCreateNestedManyWithoutUserInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiMessages?: Prisma.AiMessageUncheckedCreateNestedManyWithoutUserInput
+  aiToolCalls?: Prisma.AiToolCallUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutEmployeeProfileActivityAsActorInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEmployeeProfileActivityAsActorInput, Prisma.UserUncheckedCreateWithoutEmployeeProfileActivityAsActorInput>
+}
+
+export type UserUpsertWithoutEmployeeProfileActivityAsActorInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEmployeeProfileActivityAsActorInput, Prisma.UserUncheckedUpdateWithoutEmployeeProfileActivityAsActorInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEmployeeProfileActivityAsActorInput, Prisma.UserUncheckedCreateWithoutEmployeeProfileActivityAsActorInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEmployeeProfileActivityAsActorInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEmployeeProfileActivityAsActorInput, Prisma.UserUncheckedUpdateWithoutEmployeeProfileActivityAsActorInput>
+}
+
+export type UserUpdateWithoutEmployeeProfileActivityAsActorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
+  leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
+  leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
+  leadQrPublicLinks?: Prisma.LeadQrPublicLinkUpdateManyWithoutActorUserNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  paymentInstallmentsVerified?: Prisma.PaymentInstallmentUpdateManyWithoutVerifiedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadUserNestedInput
+  campaignBdDailyLimits?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdUserNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamBulkCostsCreated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamBulkCostsUpdated?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutUpdatedByNestedInput
+  salesTeamBulkCostHistory?: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyWithoutChangedByNestedInput
+  salesTeamSalaryOverridesUpdated?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutUpdatedByNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutUpdatedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
+  invoiceRequestActivities?: Prisma.InvoiceRequestActivityUpdateManyWithoutActorNestedInput
+  doctorPayoffRequestsSubmitted?: Prisma.DoctorPayoffRequestUpdateManyWithoutRequestedByNestedInput
+  doctorPayoffRequestsReviewed?: Prisma.DoctorPayoffRequestUpdateManyWithoutReviewedByNestedInput
+  doctorPayoffRequestActivities?: Prisma.DoctorPayoffRequestActivityUpdateManyWithoutActorNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+  knowledgeDocumentsUploaded?: Prisma.KnowledgeDocumentUpdateManyWithoutUploadedByNestedInput
+  knowledgeDocumentUsers?: Prisma.KnowledgeDocumentUserUpdateManyWithoutUserNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiMessages?: Prisma.AiMessageUpdateManyWithoutUserNestedInput
+  aiToolCalls?: Prisma.AiToolCallUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEmployeeProfileActivityAsActorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  doctorLeaveRequestsReviewed?: Prisma.DoctorLeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsReviewed?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  doctorCabRequestsVendorAssigned?: Prisma.DoctorCabRequestUncheckedUpdateManyWithoutAssignedVendorByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  cumulativeReportManualEntriesUpdated?: Prisma.CumulativeReportManualEntryUncheckedUpdateManyWithoutUpdatedByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  workflowResetsPerformed?: Prisma.WorkflowResetLogUncheckedUpdateManyWithoutResetByNestedInput
+  bulkLeadReassignmentRuns?: Prisma.BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmPermissions?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutUserNestedInput
+  crmPermissionsGranted?: Prisma.UserCrmPermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  crmAssignmentRulesCreated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+  crmAssignmentRulesUpdated?: Prisma.CrmAssignmentRuleUncheckedUpdateManyWithoutUpdatedByNestedInput
+  crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -16891,6 +17596,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -17034,6 +17740,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -17193,6 +17900,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -17336,6 +18044,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -17479,6 +18188,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -17622,6 +18332,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -17770,6 +18481,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -17913,6 +18625,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -18072,6 +18785,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -18215,6 +18929,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -18369,6 +19084,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -18512,6 +19228,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -18656,6 +19373,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -18799,6 +19517,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -18958,6 +19677,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -19101,6 +19821,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -19244,6 +19965,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -19387,6 +20109,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -19546,6 +20269,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -19689,6 +20413,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -19831,6 +20556,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -19974,6 +20700,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -20122,6 +20849,7 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -20265,6 +20993,7 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -20413,6 +21142,7 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -20556,6 +21286,7 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -20704,6 +21435,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -20847,6 +21579,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -20995,6 +21728,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -21138,6 +21872,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -21286,6 +22021,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -21429,6 +22165,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -21577,6 +22314,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -21720,6 +22458,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -21879,6 +22618,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -22022,6 +22762,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -22176,6 +22917,7 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -22319,6 +23061,7 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -22473,6 +23216,7 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -22616,6 +23360,7 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -22770,6 +23515,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -22913,6 +23659,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -23067,6 +23814,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -23210,6 +23958,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -23364,6 +24113,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -23507,6 +24257,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -23661,6 +24412,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -23804,6 +24556,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -23947,6 +24700,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -24090,6 +24844,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -24249,6 +25004,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -24392,6 +25148,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -24535,6 +25292,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -24678,6 +25436,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -24837,6 +25596,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -24980,6 +25740,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -25123,6 +25884,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -25266,6 +26028,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -25425,6 +26188,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -25568,6 +26332,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -25711,6 +26476,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -25854,6 +26620,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -26013,6 +26780,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -26156,6 +26924,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -26299,6 +27068,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -26442,6 +27212,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -26590,6 +27361,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -26733,6 +27505,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -26892,6 +27665,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -27035,6 +27809,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -27189,6 +27964,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -27332,6 +28108,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -27475,6 +28252,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -27618,6 +28396,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -27777,6 +28556,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -27920,6 +28700,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -28063,6 +28844,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -28206,6 +28988,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -28354,6 +29137,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -28497,6 +29281,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -28645,6 +29430,7 @@ export type UserCreateWithoutPreAuthHeldInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -28788,6 +29574,7 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -28947,6 +29734,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -29090,6 +29878,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -29244,6 +30033,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -29387,6 +30177,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -29541,6 +30332,7 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -29684,6 +30476,7 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -29827,6 +30620,7 @@ export type UserCreateWithoutNotificationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -29970,6 +30764,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -30129,6 +30924,7 @@ export type UserUpdateWithoutNotificationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -30272,6 +31068,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -30415,6 +31212,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -30558,6 +31356,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -30717,6 +31516,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -30860,6 +31660,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -31003,6 +31804,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -31146,6 +31948,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -31305,6 +32108,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -31448,6 +32252,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -31591,6 +32396,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -31734,6 +32540,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -31882,6 +32689,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -32025,6 +32833,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -32173,6 +32982,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -32316,6 +33126,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -32475,6 +33286,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -32618,6 +33430,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -32772,6 +33585,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -32915,6 +33729,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -33069,6 +33884,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -33212,6 +34028,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -33355,6 +34172,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -33498,6 +34316,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -33646,6 +34465,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -33789,6 +34609,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -33948,6 +34769,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -34091,6 +34913,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -34245,6 +35068,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -34388,6 +35212,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -34531,6 +35356,7 @@ export type UserCreateWithoutCrmPermissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -34674,6 +35500,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -34822,6 +35649,7 @@ export type UserCreateWithoutCrmPermissionsGrantedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -34965,6 +35793,7 @@ export type UserUncheckedCreateWithoutCrmPermissionsGrantedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -35124,6 +35953,7 @@ export type UserUpdateWithoutCrmPermissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -35267,6 +36097,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -35421,6 +36252,7 @@ export type UserUpdateWithoutCrmPermissionsGrantedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -35564,6 +36396,7 @@ export type UserUncheckedUpdateWithoutCrmPermissionsGrantedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -35707,6 +36540,7 @@ export type UserCreateWithoutCrmAssignmentRulesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -35850,6 +36684,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -35998,6 +36833,7 @@ export type UserCreateWithoutCrmAssignmentRulesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -36141,6 +36977,7 @@ export type UserUncheckedCreateWithoutCrmAssignmentRulesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -36300,6 +37137,7 @@ export type UserUpdateWithoutCrmAssignmentRulesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -36443,6 +37281,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -36597,6 +37436,7 @@ export type UserUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -36740,6 +37580,7 @@ export type UserUncheckedUpdateWithoutCrmAssignmentRulesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -36884,6 +37725,7 @@ export type UserCreateWithoutCampaignTeamLeadAssignmentsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -37027,6 +37869,7 @@ export type UserUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -37186,6 +38029,7 @@ export type UserUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -37329,6 +38173,7 @@ export type UserUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -37472,6 +38317,7 @@ export type UserCreateWithoutCampaignBdDailyLimitsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -37615,6 +38461,7 @@ export type UserUncheckedCreateWithoutCampaignBdDailyLimitsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -37774,6 +38621,7 @@ export type UserUpdateWithoutCampaignBdDailyLimitsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -37917,6 +38765,7 @@ export type UserUncheckedUpdateWithoutCampaignBdDailyLimitsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -38059,6 +38908,7 @@ export type UserCreateWithoutCrmActivityLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -38202,6 +39052,7 @@ export type UserUncheckedCreateWithoutCrmActivityLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -38361,6 +39212,7 @@ export type UserUpdateWithoutCrmActivityLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -38504,6 +39356,7 @@ export type UserUncheckedUpdateWithoutCrmActivityLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -38647,6 +39500,7 @@ export type UserCreateWithoutBulkLeadReassignmentRunsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -38790,6 +39644,7 @@ export type UserUncheckedCreateWithoutBulkLeadReassignmentRunsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -38949,6 +39804,7 @@ export type UserUpdateWithoutBulkLeadReassignmentRunsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -39092,6 +39948,7 @@ export type UserUncheckedUpdateWithoutBulkLeadReassignmentRunsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -39235,6 +40092,7 @@ export type UserCreateWithoutPermissionSubjectsInput = {
   crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -39378,6 +40236,7 @@ export type UserUncheckedCreateWithoutPermissionSubjectsInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -39526,6 +40385,7 @@ export type UserCreateWithoutPermissionsGrantedInput = {
   crmActivityLogs?: Prisma.CrmActivityLogCreateNestedManyWithoutActorUserInput
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -39669,6 +40529,7 @@ export type UserUncheckedCreateWithoutPermissionsGrantedInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -39828,6 +40689,7 @@ export type UserUpdateWithoutPermissionSubjectsInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -39971,6 +40833,7 @@ export type UserUncheckedUpdateWithoutPermissionSubjectsInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -40125,6 +40988,7 @@ export type UserUpdateWithoutPermissionsGrantedInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUpdateManyWithoutActorUserNestedInput
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -40268,6 +41132,7 @@ export type UserUncheckedUpdateWithoutPermissionsGrantedInput = {
   crmActivityLogs?: Prisma.CrmActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -40412,6 +41277,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -40555,6 +41421,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -40714,6 +41581,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -40857,6 +41725,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -41000,6 +41869,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -41143,6 +42013,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -41302,6 +42173,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -41445,6 +42317,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -41587,6 +42460,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -41730,6 +42604,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -41878,6 +42753,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -42021,6 +42897,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -42180,6 +43057,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -42323,6 +43201,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -42477,6 +43356,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -42620,6 +43500,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -42763,6 +43644,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -42906,6 +43788,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -43065,6 +43948,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -43208,6 +44092,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -43351,6 +44236,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -43494,6 +44380,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -43653,6 +44540,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -43796,6 +44684,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -43939,6 +44828,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -44082,6 +44972,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -44241,6 +45132,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -44384,6 +45276,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -44527,6 +45420,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -44670,6 +45564,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -44829,6 +45724,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -44972,6 +45868,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -45115,6 +46012,7 @@ export type UserCreateWithoutWorkflowResetsPerformedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -45258,6 +46156,7 @@ export type UserUncheckedCreateWithoutWorkflowResetsPerformedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -45417,6 +46316,7 @@ export type UserUpdateWithoutWorkflowResetsPerformedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -45560,6 +46460,7 @@ export type UserUncheckedUpdateWithoutWorkflowResetsPerformedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -45703,6 +46604,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -45846,6 +46748,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -46005,6 +46908,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -46148,6 +47052,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -46291,6 +47196,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -46434,6 +47340,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -46593,6 +47500,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -46736,6 +47644,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -46879,6 +47788,7 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -47022,6 +47932,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -47170,6 +48081,7 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -47313,6 +48225,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -47461,6 +48374,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -47604,6 +48518,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -47763,6 +48678,7 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -47906,6 +48822,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -48060,6 +48977,7 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -48203,6 +49121,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -48357,6 +49276,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -48500,6 +49420,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -48643,6 +49564,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -48786,6 +49708,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -48945,6 +49868,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -49088,6 +50012,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -49232,6 +50157,7 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -49375,6 +50301,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -49523,6 +50450,7 @@ export type UserCreateWithoutPaymentInstallmentsVerifiedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -49666,6 +50594,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsVerifiedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -49825,6 +50754,7 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -49968,6 +50898,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -50122,6 +51053,7 @@ export type UserUpdateWithoutPaymentInstallmentsVerifiedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -50265,6 +51197,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsVerifiedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -50407,6 +51340,7 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -50550,6 +51484,7 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -50709,6 +51644,7 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -50852,6 +51788,7 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -50995,6 +51932,7 @@ export type UserCreateWithoutCumulativeReportManualEntriesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -51138,6 +52076,7 @@ export type UserUncheckedCreateWithoutCumulativeReportManualEntriesUpdatedInput 
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -51297,6 +52236,7 @@ export type UserUpdateWithoutCumulativeReportManualEntriesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -51440,6 +52380,7 @@ export type UserUncheckedUpdateWithoutCumulativeReportManualEntriesUpdatedInput 
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -51584,6 +52525,7 @@ export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -51727,6 +52669,7 @@ export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -51886,6 +52829,7 @@ export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -52029,6 +52973,7 @@ export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -52172,6 +53117,7 @@ export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -52315,6 +53261,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -52463,6 +53410,7 @@ export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -52606,6 +53554,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -52765,6 +53714,7 @@ export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -52908,6 +53858,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -53062,6 +54013,7 @@ export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -53205,6 +54157,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -53348,6 +54301,7 @@ export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -53491,6 +54445,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -53639,6 +54594,7 @@ export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -53782,6 +54738,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -53941,6 +54898,7 @@ export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -54084,6 +55042,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -54238,6 +55197,7 @@ export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -54381,6 +55341,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -54524,6 +55485,7 @@ export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -54667,6 +55629,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -54815,6 +55778,7 @@ export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -54958,6 +55922,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -55117,6 +56082,7 @@ export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -55260,6 +56226,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -55414,6 +56381,7 @@ export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -55557,6 +56525,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -55700,6 +56669,7 @@ export type UserCreateWithoutSeatingMiscCostHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -55843,6 +56813,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -56002,6 +56973,7 @@ export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -56145,6 +57117,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -56288,6 +57261,7 @@ export type UserCreateWithoutSalesTeamBulkCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -56431,6 +57405,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -56579,6 +57554,7 @@ export type UserCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -56722,6 +57698,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -56881,6 +57858,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -57024,6 +58002,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -57178,6 +58157,7 @@ export type UserUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -57321,6 +58301,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostsUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -57464,6 +58445,7 @@ export type UserCreateWithoutSalesTeamBulkCostHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -57607,6 +58589,7 @@ export type UserUncheckedCreateWithoutSalesTeamBulkCostHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -57766,6 +58749,7 @@ export type UserUpdateWithoutSalesTeamBulkCostHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -57909,6 +58893,7 @@ export type UserUncheckedUpdateWithoutSalesTeamBulkCostHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -58052,6 +59037,7 @@ export type UserCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -58195,6 +59181,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -58354,6 +59341,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -58497,6 +59485,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverridesUpdatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -58640,6 +59629,7 @@ export type UserCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -58783,6 +59773,7 @@ export type UserUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -58942,6 +59933,7 @@ export type UserUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -59085,6 +60077,7 @@ export type UserUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -59227,6 +60220,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -59370,6 +60364,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -59518,6 +60513,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -59661,6 +60657,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -59809,6 +60806,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -59952,6 +60950,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -60111,6 +61110,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -60254,6 +61254,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -60408,6 +61409,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -60551,6 +61553,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -60705,6 +61708,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -60848,6 +61852,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -60991,6 +61996,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -61134,6 +62140,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -61293,6 +62300,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -61436,6 +62444,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -61579,6 +62588,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -61722,6 +62732,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -61881,6 +62892,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -62024,6 +63036,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -62167,6 +63180,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -62310,6 +63324,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -62458,6 +63473,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -62601,6 +63617,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -62760,6 +63777,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -62903,6 +63921,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -63057,6 +64076,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -63200,6 +64220,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -63343,6 +64364,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -63486,6 +64508,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -63645,6 +64668,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -63788,6 +64812,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -63931,6 +64956,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -64074,6 +65100,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -64233,6 +65260,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -64376,6 +65404,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -64519,6 +65548,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -64662,6 +65692,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -64821,6 +65852,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -64964,6 +65996,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -65107,6 +66140,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -65250,6 +66284,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -65398,6 +66433,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -65541,6 +66577,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -65700,6 +66737,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -65843,6 +66881,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -65997,6 +67036,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -66140,6 +67180,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -66283,6 +67324,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -66426,6 +67468,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -66585,6 +67628,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -66728,6 +67772,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -66871,6 +67916,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -67014,6 +68060,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -67173,6 +68220,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -67316,6 +68364,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -67459,6 +68508,7 @@ export type UserCreateWithoutWorkLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -67602,6 +68652,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -67761,6 +68812,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -67904,6 +68956,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -68047,6 +69100,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -68190,6 +69244,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -68349,6 +69404,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -68492,6 +69548,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -68635,6 +69692,7 @@ export type UserCreateWithoutDoctorLeaveRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -68778,6 +69836,7 @@ export type UserUncheckedCreateWithoutDoctorLeaveRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -68937,6 +69996,7 @@ export type UserUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -69080,6 +70140,7 @@ export type UserUncheckedUpdateWithoutDoctorLeaveRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -69223,6 +70284,7 @@ export type UserCreateWithoutDoctorCabRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -69366,6 +70428,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -69514,6 +70577,7 @@ export type UserCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -69657,6 +70721,7 @@ export type UserUncheckedCreateWithoutDoctorCabRequestsVendorAssignedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -69816,6 +70881,7 @@ export type UserUpdateWithoutDoctorCabRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -69959,6 +71025,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsReviewedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -70113,6 +71180,7 @@ export type UserUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -70256,6 +71324,7 @@ export type UserUncheckedUpdateWithoutDoctorCabRequestsVendorAssignedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -70400,6 +71469,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -70543,6 +71613,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -70702,6 +71773,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -70845,6 +71917,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -70988,6 +72061,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -71131,6 +72205,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -71290,6 +72365,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -71433,6 +72509,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -71576,6 +72653,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -71719,6 +72797,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -71878,6 +72957,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -72021,6 +73101,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -72164,6 +73245,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -72307,6 +73389,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -72466,6 +73549,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -72609,6 +73693,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -72752,6 +73837,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -72895,6 +73981,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -73054,6 +74141,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -73197,6 +74285,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -73340,6 +74429,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -73483,6 +74573,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -73642,6 +74733,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -73785,6 +74877,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -73928,6 +75021,7 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -74071,6 +75165,7 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -74230,6 +75325,7 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -74373,6 +75469,7 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -74516,6 +75613,7 @@ export type UserCreateWithoutKnowledgeDocumentsUploadedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -74659,6 +75757,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentsUploadedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -74818,6 +75917,7 @@ export type UserUpdateWithoutKnowledgeDocumentsUploadedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -74961,6 +76061,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentsUploadedInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -75104,6 +76205,7 @@ export type UserCreateWithoutKnowledgeDocumentUsersInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -75247,6 +76349,7 @@ export type UserUncheckedCreateWithoutKnowledgeDocumentUsersInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -75406,6 +76509,7 @@ export type UserUpdateWithoutKnowledgeDocumentUsersInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -75549,6 +76653,7 @@ export type UserUncheckedUpdateWithoutKnowledgeDocumentUsersInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -75692,6 +76797,7 @@ export type UserCreateWithoutAiConversationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -75835,6 +76941,7 @@ export type UserUncheckedCreateWithoutAiConversationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -75994,6 +77101,7 @@ export type UserUpdateWithoutAiConversationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -76137,6 +77245,7 @@ export type UserUncheckedUpdateWithoutAiConversationsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -76280,6 +77389,7 @@ export type UserCreateWithoutAiMessagesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -76423,6 +77533,7 @@ export type UserUncheckedCreateWithoutAiMessagesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -76582,6 +77693,7 @@ export type UserUpdateWithoutAiMessagesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -76725,6 +77837,7 @@ export type UserUncheckedUpdateWithoutAiMessagesInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -76868,6 +77981,7 @@ export type UserCreateWithoutAiToolCallsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogCreateNestedManyWithoutUserInput
@@ -77011,6 +78125,7 @@ export type UserUncheckedCreateWithoutAiToolCallsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutActorUserInput
   onboardingApprovals?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedCreateNestedManyWithoutCreatedByInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -77170,6 +78285,7 @@ export type UserUpdateWithoutAiToolCallsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUpdateManyWithoutUserNestedInput
@@ -77313,6 +78429,7 @@ export type UserUncheckedUpdateWithoutAiToolCallsInput = {
   permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
   permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  employeeProfileActivityAsActor?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutActorUserNestedInput
   onboardingApprovals?: Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput
   leadRemarkEntriesAuthored?: Prisma.LeadRemarkEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   leadQrCallAuditLogs?: Prisma.LeadQrCallAuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -77445,6 +78562,7 @@ export type UserCountOutputType = {
   permissionSubjects: number
   permissionsGranted: number
   fnfCompletedForEmployees: number
+  employeeProfileActivityAsActor: number
   onboardingApprovals: number
   leadRemarkEntriesAuthored: number
   leadQrCallAuditLogs: number
@@ -77573,6 +78691,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   permissionSubjects?: boolean | UserCountOutputTypeCountPermissionSubjectsArgs
   permissionsGranted?: boolean | UserCountOutputTypeCountPermissionsGrantedArgs
   fnfCompletedForEmployees?: boolean | UserCountOutputTypeCountFnfCompletedForEmployeesArgs
+  employeeProfileActivityAsActor?: boolean | UserCountOutputTypeCountEmployeeProfileActivityAsActorArgs
   onboardingApprovals?: boolean | UserCountOutputTypeCountOnboardingApprovalsArgs
   leadRemarkEntriesAuthored?: boolean | UserCountOutputTypeCountLeadRemarkEntriesAuthoredArgs
   leadQrCallAuditLogs?: boolean | UserCountOutputTypeCountLeadQrCallAuditLogsArgs
@@ -78193,6 +79312,13 @@ export type UserCountOutputTypeCountFnfCompletedForEmployeesArgs<ExtArgs extends
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountEmployeeProfileActivityAsActorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeProfileActivityLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountOnboardingApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EmployeeWhereInput
 }
@@ -78603,6 +79729,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   permissionSubjects?: boolean | Prisma.User$permissionSubjectsArgs<ExtArgs>
   permissionsGranted?: boolean | Prisma.User$permissionsGrantedArgs<ExtArgs>
   fnfCompletedForEmployees?: boolean | Prisma.User$fnfCompletedForEmployeesArgs<ExtArgs>
+  employeeProfileActivityAsActor?: boolean | Prisma.User$employeeProfileActivityAsActorArgs<ExtArgs>
   onboardingApprovals?: boolean | Prisma.User$onboardingApprovalsArgs<ExtArgs>
   leadRemarkEntriesAuthored?: boolean | Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>
   leadQrCallAuditLogs?: boolean | Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>
@@ -78788,6 +79915,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   permissionSubjects?: boolean | Prisma.User$permissionSubjectsArgs<ExtArgs>
   permissionsGranted?: boolean | Prisma.User$permissionsGrantedArgs<ExtArgs>
   fnfCompletedForEmployees?: boolean | Prisma.User$fnfCompletedForEmployeesArgs<ExtArgs>
+  employeeProfileActivityAsActor?: boolean | Prisma.User$employeeProfileActivityAsActorArgs<ExtArgs>
   onboardingApprovals?: boolean | Prisma.User$onboardingApprovalsArgs<ExtArgs>
   leadRemarkEntriesAuthored?: boolean | Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>
   leadQrCallAuditLogs?: boolean | Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>
@@ -78922,6 +80050,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     permissionSubjects: Prisma.$PermissionAssignmentPayload<ExtArgs>[]
     permissionsGranted: Prisma.$PermissionAssignmentPayload<ExtArgs>[]
     fnfCompletedForEmployees: Prisma.$EmployeePayload<ExtArgs>[]
+    employeeProfileActivityAsActor: Prisma.$EmployeeProfileActivityLogPayload<ExtArgs>[]
     onboardingApprovals: Prisma.$EmployeePayload<ExtArgs>[]
     leadRemarkEntriesAuthored: Prisma.$LeadRemarkEntryPayload<ExtArgs>[]
     leadQrCallAuditLogs: Prisma.$LeadQrCallAuditLogPayload<ExtArgs>[]
@@ -79459,6 +80588,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   permissionSubjects<T extends Prisma.User$permissionSubjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$permissionSubjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PermissionAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   permissionsGranted<T extends Prisma.User$permissionsGrantedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$permissionsGrantedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PermissionAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fnfCompletedForEmployees<T extends Prisma.User$fnfCompletedForEmployeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$fnfCompletedForEmployeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  employeeProfileActivityAsActor<T extends Prisma.User$employeeProfileActivityAsActorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$employeeProfileActivityAsActorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeProfileActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   onboardingApprovals<T extends Prisma.User$onboardingApprovalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$onboardingApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadRemarkEntriesAuthored<T extends Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadRemarkEntriesAuthoredArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadRemarkEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadQrCallAuditLogs<T extends Prisma.User$leadQrCallAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadQrCallAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadQrCallAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -81877,6 +83007,30 @@ export type User$fnfCompletedForEmployeesArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.EmployeeScalarFieldEnum | Prisma.EmployeeScalarFieldEnum[]
+}
+
+/**
+ * User.employeeProfileActivityAsActor
+ */
+export type User$employeeProfileActivityAsActorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeProfileActivityLog
+   */
+  select?: Prisma.EmployeeProfileActivityLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeProfileActivityLog
+   */
+  omit?: Prisma.EmployeeProfileActivityLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeProfileActivityLogInclude<ExtArgs> | null
+  where?: Prisma.EmployeeProfileActivityLogWhereInput
+  orderBy?: Prisma.EmployeeProfileActivityLogOrderByWithRelationInput | Prisma.EmployeeProfileActivityLogOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeProfileActivityLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeProfileActivityLogScalarFieldEnum | Prisma.EmployeeProfileActivityLogScalarFieldEnum[]
 }
 
 /**

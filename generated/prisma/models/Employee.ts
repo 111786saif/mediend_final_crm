@@ -681,6 +681,7 @@ export type EmployeeWhereInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryListRelationFilter
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideListRelationFilter
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryListRelationFilter
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogListRelationFilter
 }
 
 export type EmployeeOrderByWithRelationInput = {
@@ -783,6 +784,7 @@ export type EmployeeOrderByWithRelationInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryOrderByRelationAggregateInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideOrderByRelationAggregateInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryOrderByRelationAggregateInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogOrderByRelationAggregateInput
 }
 
 export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -888,6 +890,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryListRelationFilter
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideListRelationFilter
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryListRelationFilter
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogListRelationFilter
 }, "id" | "userId" | "employeeCode" | "bdNumber">
 
 export type EmployeeOrderByWithAggregationInput = {
@@ -1114,6 +1117,7 @@ export type EmployeeCreateInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateInput = {
@@ -1210,6 +1214,7 @@ export type EmployeeUncheckedCreateInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUpdateInput = {
@@ -1306,6 +1311,7 @@ export type EmployeeUpdateInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateInput = {
@@ -1402,6 +1408,7 @@ export type EmployeeUncheckedUpdateInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyInput = {
@@ -2078,6 +2085,20 @@ export type EmployeeUncheckedUpdateManyWithoutManagerNestedInput = {
   deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
 }
 
+export type EmployeeCreateNestedOneWithoutProfileActivityLogsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutProfileActivityLogsInput, Prisma.EmployeeUncheckedCreateWithoutProfileActivityLogsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutProfileActivityLogsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutProfileActivityLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutProfileActivityLogsInput, Prisma.EmployeeUncheckedCreateWithoutProfileActivityLogsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutProfileActivityLogsInput
+  upsert?: Prisma.EmployeeUpsertWithoutProfileActivityLogsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutProfileActivityLogsInput, Prisma.EmployeeUpdateWithoutProfileActivityLogsInput>, Prisma.EmployeeUncheckedUpdateWithoutProfileActivityLogsInput>
+}
+
 export type EmployeeCreateNestedOneWithoutAttendanceLogsInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutAttendanceLogsInput, Prisma.EmployeeUncheckedCreateWithoutAttendanceLogsInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutAttendanceLogsInput
@@ -2645,6 +2666,7 @@ export type EmployeeCreateWithoutUserInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutUserInput = {
@@ -2740,6 +2762,7 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutUserInput = {
@@ -2840,6 +2863,7 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
@@ -2935,6 +2959,7 @@ export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutFnfCompletedByInput = {
@@ -3040,6 +3065,7 @@ export type EmployeeCreateWithoutOnboardingApprovedByInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutOnboardingApprovedByInput = {
@@ -3135,6 +3161,7 @@ export type EmployeeUncheckedCreateWithoutOnboardingApprovedByInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutOnboardingApprovedByInput = {
@@ -3251,6 +3278,7 @@ export type EmployeeUpdateWithoutUserInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutUserInput = {
@@ -3346,6 +3374,7 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithWhereUniqueWithoutFnfCompletedByInput = {
@@ -3537,6 +3566,7 @@ export type EmployeeCreateWithoutDepartmentInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutDepartmentInput = {
@@ -3632,6 +3662,7 @@ export type EmployeeUncheckedCreateWithoutDepartmentInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutDepartmentInput = {
@@ -3753,6 +3784,7 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
@@ -3848,6 +3880,7 @@ export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTeamLeadOfInput = {
@@ -3948,6 +3981,7 @@ export type EmployeeCreateWithoutTeamInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTeamInput = {
@@ -4043,6 +4077,7 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTeamInput = {
@@ -4159,6 +4194,7 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
@@ -4254,6 +4290,7 @@ export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithWhereUniqueWithoutTeamInput = {
@@ -4365,6 +4402,7 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
@@ -4460,6 +4498,7 @@ export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSubordinatesInput = {
@@ -4560,6 +4599,7 @@ export type EmployeeCreateWithoutManagerInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutManagerInput = {
@@ -4655,6 +4695,7 @@ export type EmployeeUncheckedCreateWithoutManagerInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutManagerInput = {
@@ -4771,6 +4812,7 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
@@ -4866,6 +4908,7 @@ export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithWhereUniqueWithoutManagerInput = {
@@ -4882,6 +4925,406 @@ export type EmployeeUpdateWithWhereUniqueWithoutManagerInput = {
 export type EmployeeUpdateManyWithWhereWithoutManagerInput = {
   where: Prisma.EmployeeScalarWhereInput
   data: Prisma.XOR<Prisma.EmployeeUpdateManyMutationInput, Prisma.EmployeeUncheckedUpdateManyWithoutManagerInput>
+}
+
+export type EmployeeCreateWithoutProfileActivityLogsInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberCreateNestedManyWithoutEmployeeInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitCreateNestedManyWithoutBdEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutProfileActivityLogsInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  circle?: string | null
+  knowlarityPhoneNumber?: string | null
+  knowlarityCallerId?: string | null
+  knowlarityNotificationsEnabled?: boolean
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  salarySlipDocUrl?: string | null
+  bankStatementDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  experienceType?: $Enums.ExperienceType | null
+  personalEmail?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutTeamLeadEmployeeInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedCreateNestedManyWithoutBdEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutProfileActivityLogsInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutProfileActivityLogsInput, Prisma.EmployeeUncheckedCreateWithoutProfileActivityLogsInput>
+}
+
+export type EmployeeUpsertWithoutProfileActivityLogsInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutProfileActivityLogsInput, Prisma.EmployeeUncheckedUpdateWithoutProfileActivityLogsInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutProfileActivityLogsInput, Prisma.EmployeeUncheckedCreateWithoutProfileActivityLogsInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutProfileActivityLogsInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutProfileActivityLogsInput, Prisma.EmployeeUncheckedUpdateWithoutProfileActivityLogsInput>
+}
+
+export type EmployeeUpdateWithoutProfileActivityLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUpdateManyWithoutEmployeeNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUpdateManyWithoutBdEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutProfileActivityLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  circle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityCallerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowlarityNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salarySlipDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankStatementDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceType?: Prisma.NullableEnumExperienceTypeFieldUpdateOperationsInput | $Enums.ExperienceType | null
+  personalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  crmAssignmentRuleMemberships?: Prisma.CrmAssignmentRuleMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  campaignTeamLeadAssignments?: Prisma.CrmCampaignTeamLeadAssignmentUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsTeamLead?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutTeamLeadEmployeeNestedInput
+  campaignBdDailyLimitsAsBd?: Prisma.CrmCampaignBdDailyLimitUncheckedUpdateManyWithoutBdEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAttendanceLogsInput = {
@@ -4977,6 +5420,7 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
@@ -5072,6 +5516,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceLogsInput = {
@@ -5183,6 +5628,7 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
@@ -5278,6 +5724,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
@@ -5373,6 +5820,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput = {
@@ -5468,6 +5916,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceNormalizationsAsSubjectInput = {
@@ -5568,6 +6017,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput = {
@@ -5663,6 +6113,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceNormalizationsRequestedInput = {
@@ -5763,6 +6214,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput = {
@@ -5858,6 +6310,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput 
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceNormalizationsApprovedInput = {
@@ -5958,6 +6411,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprovedInput = {
@@ -6053,6 +6507,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprove
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceNormalizationsManagerApprovedInput = {
@@ -6164,6 +6619,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
@@ -6259,6 +6715,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutAttendanceNormalizationsRequestedInput = {
@@ -6365,6 +6822,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput = {
@@ -6460,6 +6918,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutAttendanceNormalizationsApprovedInput = {
@@ -6566,6 +7025,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput = {
@@ -6661,6 +7121,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput 
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutAttendanceNormalizationsManagerApprovedInput = {
@@ -6767,6 +7228,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprovedInput = {
@@ -6862,6 +7324,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprove
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutLeaveRequestsInput = {
@@ -6957,6 +7420,7 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
@@ -7052,6 +7516,7 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutLeaveRequestsInput = {
@@ -7152,6 +7617,7 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
@@ -7247,6 +7713,7 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutLeaveRequestsTargetApproverInput = {
@@ -7358,6 +7825,7 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
@@ -7453,6 +7921,7 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutLeaveRequestsTargetApproverInput = {
@@ -7559,6 +8028,7 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
@@ -7654,6 +8124,7 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutLeaveBalancesInput = {
@@ -7749,6 +8220,7 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
@@ -7844,6 +8316,7 @@ export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutLeaveBalancesInput = {
@@ -7955,6 +8428,7 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
@@ -8050,6 +8524,7 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
@@ -8145,6 +8620,7 @@ export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
@@ -8240,6 +8716,7 @@ export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutLeaveBalanceEditRequestsInput = {
@@ -8351,6 +8828,7 @@ export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
@@ -8446,6 +8924,7 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutPayrollRecordsInput = {
@@ -8541,6 +9020,7 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
@@ -8636,6 +9116,7 @@ export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutPayrollRecordsInput = {
@@ -8747,6 +9228,7 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
@@ -8842,6 +9324,7 @@ export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutSalaryStructuresInput = {
@@ -8937,6 +9420,7 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
@@ -9032,6 +9516,7 @@ export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSalaryStructuresInput = {
@@ -9143,6 +9628,7 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
@@ -9238,6 +9724,7 @@ export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMonthlyPayrollsInput = {
@@ -9333,6 +9820,7 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
@@ -9428,6 +9916,7 @@ export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMonthlyPayrollsInput = {
@@ -9539,6 +10028,7 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
@@ -9634,6 +10124,7 @@ export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutDocumentsInput = {
@@ -9729,6 +10220,7 @@ export type EmployeeCreateWithoutDocumentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutDocumentsInput = {
@@ -9824,6 +10316,7 @@ export type EmployeeUncheckedCreateWithoutDocumentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutDocumentsInput = {
@@ -9935,6 +10428,7 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
@@ -10030,6 +10524,7 @@ export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutFeedbacksInput = {
@@ -10125,6 +10620,7 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
@@ -10220,6 +10716,7 @@ export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutFeedbacksInput = {
@@ -10331,6 +10828,7 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
@@ -10426,6 +10924,7 @@ export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMdAppointmentsInput = {
@@ -10521,6 +11020,7 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
@@ -10616,6 +11116,7 @@ export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMdAppointmentsInput = {
@@ -10727,6 +11228,7 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
@@ -10822,6 +11324,7 @@ export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMentalHealthRequestsInput = {
@@ -10917,6 +11420,7 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
@@ -11012,6 +11516,7 @@ export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMentalHealthRequestsInput = {
@@ -11123,6 +11628,7 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
@@ -11218,6 +11724,7 @@ export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutSupportTicketsInput = {
@@ -11313,6 +11820,7 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
@@ -11408,6 +11916,7 @@ export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSupportTicketsInput = {
@@ -11519,6 +12028,7 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
@@ -11614,6 +12124,7 @@ export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutIncrementRequestsInput = {
@@ -11709,6 +12220,7 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
@@ -11804,6 +12316,7 @@ export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutIncrementRequestsInput = {
@@ -11915,6 +12428,7 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
@@ -12010,6 +12524,7 @@ export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutIjpApplicationsInput = {
@@ -12105,6 +12620,7 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
@@ -12200,6 +12716,7 @@ export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutIjpApplicationsInput = {
@@ -12311,6 +12828,7 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
@@ -12406,6 +12924,7 @@ export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutCrmAssignmentRuleMembershipsInput = {
@@ -12501,6 +13020,7 @@ export type EmployeeCreateWithoutCrmAssignmentRuleMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutCrmAssignmentRuleMembershipsInput = {
@@ -12596,6 +13116,7 @@ export type EmployeeUncheckedCreateWithoutCrmAssignmentRuleMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutCrmAssignmentRuleMembershipsInput = {
@@ -12707,6 +13228,7 @@ export type EmployeeUpdateWithoutCrmAssignmentRuleMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutCrmAssignmentRuleMembershipsInput = {
@@ -12802,6 +13324,7 @@ export type EmployeeUncheckedUpdateWithoutCrmAssignmentRuleMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutCampaignTeamLeadAssignmentsInput = {
@@ -12897,6 +13420,7 @@ export type EmployeeCreateWithoutCampaignTeamLeadAssignmentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
@@ -12992,6 +13516,7 @@ export type EmployeeUncheckedCreateWithoutCampaignTeamLeadAssignmentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutCampaignTeamLeadAssignmentsInput = {
@@ -13103,6 +13628,7 @@ export type EmployeeUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
@@ -13198,6 +13724,7 @@ export type EmployeeUncheckedUpdateWithoutCampaignTeamLeadAssignmentsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
@@ -13293,6 +13820,7 @@ export type EmployeeCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
@@ -13388,6 +13916,7 @@ export type EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsTeamLeadInput =
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
@@ -13488,6 +14017,7 @@ export type EmployeeCreateWithoutCampaignBdDailyLimitsAsBdInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsBdInput = {
@@ -13583,6 +14113,7 @@ export type EmployeeUncheckedCreateWithoutCampaignBdDailyLimitsAsBdInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutCampaignBdDailyLimitsAsBdInput = {
@@ -13694,6 +14225,7 @@ export type EmployeeUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput = {
@@ -13789,6 +14321,7 @@ export type EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsTeamLeadInput =
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutCampaignBdDailyLimitsAsBdInput = {
@@ -13895,6 +14428,7 @@ export type EmployeeUpdateWithoutCampaignBdDailyLimitsAsBdInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsBdInput = {
@@ -13990,6 +14524,7 @@ export type EmployeeUncheckedUpdateWithoutCampaignBdDailyLimitsAsBdInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
@@ -14085,6 +14620,7 @@ export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput = {
@@ -14180,6 +14716,7 @@ export type EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSalesTeamCostEntriesInput = {
@@ -14291,6 +14828,7 @@ export type EmployeeUpdateWithoutSalesTeamCostEntriesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput = {
@@ -14386,6 +14924,7 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMonthlyIncentivesInput = {
@@ -14481,6 +15020,7 @@ export type EmployeeCreateWithoutMonthlyIncentivesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMonthlyIncentivesInput = {
@@ -14576,6 +15116,7 @@ export type EmployeeUncheckedCreateWithoutMonthlyIncentivesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMonthlyIncentivesInput = {
@@ -14687,6 +15228,7 @@ export type EmployeeUpdateWithoutMonthlyIncentivesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput = {
@@ -14782,6 +15324,7 @@ export type EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMasterSeatingCostInput = {
@@ -14877,6 +15420,7 @@ export type EmployeeCreateWithoutMasterSeatingCostInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMasterSeatingCostInput = {
@@ -14972,6 +15516,7 @@ export type EmployeeUncheckedCreateWithoutMasterSeatingCostInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMasterSeatingCostInput = {
@@ -15083,6 +15628,7 @@ export type EmployeeUpdateWithoutMasterSeatingCostInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMasterSeatingCostInput = {
@@ -15178,6 +15724,7 @@ export type EmployeeUncheckedUpdateWithoutMasterSeatingCostInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMonthlySeatingMiscCostsInput = {
@@ -15273,6 +15820,7 @@ export type EmployeeCreateWithoutMonthlySeatingMiscCostsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput = {
@@ -15368,6 +15916,7 @@ export type EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMonthlySeatingMiscCostsInput = {
@@ -15479,6 +16028,7 @@ export type EmployeeUpdateWithoutMonthlySeatingMiscCostsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput = {
@@ -15574,6 +16124,7 @@ export type EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutSalesTeamBulkCostEntriesInput = {
@@ -15669,6 +16220,7 @@ export type EmployeeCreateWithoutSalesTeamBulkCostEntriesInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSalesTeamBulkCostEntriesInput = {
@@ -15764,6 +16316,7 @@ export type EmployeeUncheckedCreateWithoutSalesTeamBulkCostEntriesInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSalesTeamBulkCostEntriesInput = {
@@ -15875,6 +16428,7 @@ export type EmployeeUpdateWithoutSalesTeamBulkCostEntriesInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSalesTeamBulkCostEntriesInput = {
@@ -15970,6 +16524,7 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamBulkCostEntriesInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutSalesTeamSalaryOverridesInput = {
@@ -16065,6 +16620,7 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverridesInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverridesInput = {
@@ -16160,6 +16716,7 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverridesInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSalesTeamSalaryOverridesInput = {
@@ -16271,6 +16828,7 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverridesInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverridesInput = {
@@ -16366,6 +16924,7 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverridesInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
@@ -16461,6 +17020,7 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
@@ -16556,6 +17116,7 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = 
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSalesTeamSalaryOverrideHistoryInput = {
@@ -16667,6 +17228,7 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
@@ -16762,6 +17324,7 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = 
   monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
@@ -16857,6 +17420,7 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
@@ -16952,6 +17516,7 @@ export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMdTaskTeamMembershipsInput = {
@@ -17063,6 +17628,7 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
@@ -17158,6 +17724,7 @@ export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
@@ -17253,6 +17820,7 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
@@ -17348,6 +17916,7 @@ export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMdWatchlistMembershipsInput = {
@@ -17459,6 +18028,7 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
@@ -17554,6 +18124,7 @@ export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutItProjectResourcesInput = {
@@ -17649,6 +18220,7 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
@@ -17744,6 +18316,7 @@ export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutItProjectResourcesInput = {
@@ -17855,6 +18428,7 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
@@ -17950,6 +18524,7 @@ export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyFnfCompletedByInput = {
@@ -18165,6 +18740,7 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
@@ -18260,6 +18836,7 @@ export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutFnfCompletedByInput = {
@@ -18415,6 +18992,7 @@ export type EmployeeUpdateWithoutOnboardingApprovedByInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutOnboardingApprovedByInput = {
@@ -18510,6 +19088,7 @@ export type EmployeeUncheckedUpdateWithoutOnboardingApprovedByInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByInput = {
@@ -18725,6 +19304,7 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
@@ -18820,6 +19400,7 @@ export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutDepartmentInput = {
@@ -19035,6 +19616,7 @@ export type EmployeeUpdateWithoutTeamInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTeamInput = {
@@ -19130,6 +19712,7 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutTeamInput = {
@@ -19345,6 +19928,7 @@ export type EmployeeUpdateWithoutManagerInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutManagerInput = {
@@ -19440,6 +20024,7 @@ export type EmployeeUncheckedUpdateWithoutManagerInput = {
   salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
   salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+  profileActivityLogs?: Prisma.EmployeeProfileActivityLogUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutManagerInput = {
@@ -19541,6 +20126,7 @@ export type EmployeeCountOutputType = {
   salesTeamBulkCostEntries: number
   salesTeamSalaryOverrides: number
   salesTeamSalaryOverrideHistory: number
+  profileActivityLogs: number
 }
 
 export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -19577,6 +20163,7 @@ export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   salesTeamBulkCostEntries?: boolean | EmployeeCountOutputTypeCountSalesTeamBulkCostEntriesArgs
   salesTeamSalaryOverrides?: boolean | EmployeeCountOutputTypeCountSalesTeamSalaryOverridesArgs
   salesTeamSalaryOverrideHistory?: boolean | EmployeeCountOutputTypeCountSalesTeamSalaryOverrideHistoryArgs
+  profileActivityLogs?: boolean | EmployeeCountOutputTypeCountProfileActivityLogsArgs
 }
 
 /**
@@ -19820,6 +20407,13 @@ export type EmployeeCountOutputTypeCountSalesTeamSalaryOverrideHistoryArgs<ExtAr
   where?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryWhereInput
 }
 
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountProfileActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeProfileActivityLogWhereInput
+}
+
 
 export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -19921,6 +20515,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   salesTeamBulkCostEntries?: boolean | Prisma.Employee$salesTeamBulkCostEntriesArgs<ExtArgs>
   salesTeamSalaryOverrides?: boolean | Prisma.Employee$salesTeamSalaryOverridesArgs<ExtArgs>
   salesTeamSalaryOverrideHistory?: boolean | Prisma.Employee$salesTeamSalaryOverrideHistoryArgs<ExtArgs>
+  profileActivityLogs?: boolean | Prisma.Employee$profileActivityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -20162,6 +20757,7 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   salesTeamBulkCostEntries?: boolean | Prisma.Employee$salesTeamBulkCostEntriesArgs<ExtArgs>
   salesTeamSalaryOverrides?: boolean | Prisma.Employee$salesTeamSalaryOverridesArgs<ExtArgs>
   salesTeamSalaryOverrideHistory?: boolean | Prisma.Employee$salesTeamSalaryOverrideHistoryArgs<ExtArgs>
+  profileActivityLogs?: boolean | Prisma.Employee$profileActivityLogsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -20225,6 +20821,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     salesTeamBulkCostEntries: Prisma.$SalesTeamBulkCostEntryPayload<ExtArgs>[]
     salesTeamSalaryOverrides: Prisma.$EmployeeSalesTeamSalaryOverridePayload<ExtArgs>[]
     salesTeamSalaryOverrideHistory: Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload<ExtArgs>[]
+    profileActivityLogs: Prisma.$EmployeeProfileActivityLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -20720,6 +21317,7 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   salesTeamBulkCostEntries<T extends Prisma.Employee$salesTeamBulkCostEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$salesTeamBulkCostEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesTeamBulkCostEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   salesTeamSalaryOverrides<T extends Prisma.Employee$salesTeamSalaryOverridesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$salesTeamSalaryOverridesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   salesTeamSalaryOverrideHistory<T extends Prisma.Employee$salesTeamSalaryOverrideHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$salesTeamSalaryOverrideHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profileActivityLogs<T extends Prisma.Employee$profileActivityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$profileActivityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeProfileActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22130,6 +22728,30 @@ export type Employee$salesTeamSalaryOverrideHistoryArgs<ExtArgs extends runtime.
   take?: number
   skip?: number
   distinct?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum | Prisma.EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum[]
+}
+
+/**
+ * Employee.profileActivityLogs
+ */
+export type Employee$profileActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeProfileActivityLog
+   */
+  select?: Prisma.EmployeeProfileActivityLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeProfileActivityLog
+   */
+  omit?: Prisma.EmployeeProfileActivityLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeProfileActivityLogInclude<ExtArgs> | null
+  where?: Prisma.EmployeeProfileActivityLogWhereInput
+  orderBy?: Prisma.EmployeeProfileActivityLogOrderByWithRelationInput | Prisma.EmployeeProfileActivityLogOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeProfileActivityLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeProfileActivityLogScalarFieldEnum | Prisma.EmployeeProfileActivityLogScalarFieldEnum[]
 }
 
 /**

@@ -9,6 +9,10 @@ import { Prisma } from '@/generated/prisma/client'
 import { UserRole } from '@/generated/prisma/enums'
 import { isTeamLeadEquivalent } from '@/lib/sales-hierarchy-roles'
 import { parseEmployeeCircleList, serializeEmployeeCircleList } from '@/lib/employee-circles'
+import {
+  EMPLOYEE_PROFILE_ACTIONS,
+  logEmployeeProfileActivity,
+} from '@/lib/hrms/employee-profile-activity'
 
 const updateEmployeeSchema = z.object({
   employeeCode: z.string().optional(),
@@ -31,6 +35,7 @@ const updateEmployeeSchema = z.object({
   ifscCode: z.string().max(11).optional().nullable(),
   uanNumber: z.string().max(50).optional().nullable(),
   role: z.nativeEnum(UserRole).optional(),
+  name: z.string().trim().min(1).max(200).optional(),
 })
 
 export async function GET(
@@ -379,6 +384,18 @@ export async function PATCH(
     if (data.ifscCode !== undefined) updateData.ifscCode = data.ifscCode || null
     if (data.uanNumber !== undefined) updateData.uanNumber = data.uanNumber || null
 
+    const userUpdate: Prisma.UserUpdateInput = {}
+    const previousName = currentEmployee.user.name
+    let nameChangedTo: string | null = null
+
+    if (data.name !== undefined && data.name !== previousName) {
+      if (!canWriteFull) {
+        return errorResponse('Forbidden', 403)
+      }
+      userUpdate.name = data.name
+      nameChangedTo = data.name
+    }
+
     if (data.role !== undefined && data.role !== currentEmployee.user.role) {
       if (!hasPermission(user, 'users:write')) {
         return errorResponse('Forbidden', 403)
@@ -395,7 +412,11 @@ export async function PATCH(
       if (!canCreateRole(user, data.role)) {
         return errorResponse(`You do not have permission to assign role: ${data.role}`, 403)
       }
-      updateData.user = { update: { role: data.role } }
+      userUpdate.role = data.role
+    }
+
+    if (Object.keys(userUpdate).length > 0) {
+      updateData.user = { update: userUpdate }
     }
 
     const { clearBdNumberCache } = await import('@/lib/sync/bd-number-map')
@@ -459,6 +480,16 @@ export async function PATCH(
       } catch (err) {
         console.error('Failed to delete old attendance:', err)
       }
+    }
+
+    if (nameChangedTo) {
+      await logEmployeeProfileActivity({
+        employeeId: id,
+        actorUserId: user.id,
+        action: EMPLOYEE_PROFILE_ACTIONS.NAME_CHANGED,
+        summary: `Name changed from ${previousName} to ${nameChangedTo}`,
+        metadata: { from: previousName, to: nameChangedTo },
+      })
     }
 
     return successResponse(updated, 'Employee updated successfully.')

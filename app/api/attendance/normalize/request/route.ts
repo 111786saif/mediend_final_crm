@@ -8,6 +8,7 @@ import {
 } from '@/lib/hrms/normalization-deadline'
 import { notifyNormalizationPendingReview } from '@/lib/hrms/normalization-notify'
 import { isUserInMDManagedCohort } from '@/lib/hierarchy'
+import { isActiveHeadcountEmployee } from '@/lib/hrms/headcount'
 import { z } from 'zod'
 
 const bodySchema = z.object({
@@ -26,6 +27,10 @@ function toDayStart(d: Date): Date {
   return new Date(Date.UTC(y, m - 1, day, 0, 0, 0, 0))
 }
 
+function toDayEnd(d: Date): Date {
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 23, 59, 59, 999))
+}
+
 export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -37,6 +42,7 @@ export async function POST(request: NextRequest) {
       where: { userId: user.id },
       include: {
         user: { select: { name: true } },
+        manager: { select: { status: true } },
       },
     })
 
@@ -85,23 +91,52 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const minDay = toCreate.reduce((min, d) => (d < min ? d : min), toCreate[0]!)
+    const maxDay = toCreate.reduce((max, d) => (d > max ? d : max), toCreate[0]!)
+    const punches = await prisma.attendanceLog.findMany({
+      where: {
+        employeeId: employee.id,
+        logDate: { gte: minDay, lte: toDayEnd(maxDay) },
+      },
+      select: { logDate: true },
+    })
+    const daysWithPunch = new Set(
+      punches.map((p) => p.logDate.toISOString().split('T')[0])
+    )
+
+    const hasActiveManager =
+      !!employee.managerId && isActiveHeadcountEmployee(employee.manager?.status)
+    const skipManagerNow = new Date()
+
+    const rows = toCreate.map((date) => {
+      const dateKey = date.toISOString().split('T')[0]
+      const isAbsent = !daysWithPunch.has(dateKey)
+      const skipManager = isAbsent || !hasActiveManager
+      return { date, skipManager }
+    })
+    const anySkipManager = rows.some((row) => row.skipManager)
+    const allSkipManager = rows.every((row) => row.skipManager)
+
     await prisma.attendanceNormalization.createMany({
-      data: toCreate.map((date) => ({
+      data: rows.map(({ date, skipManager }) => ({
         employeeId: employee.id,
         date,
-        type: 'EMPLOYEE_REQUEST',
+        type: 'EMPLOYEE_REQUEST' as const,
         requestedById: employee.id,
-        status: 'PENDING',
+        status: 'PENDING' as const,
         reason,
+        // Absent days and employees with no active manager go straight to HR.
+        managerApprovedAt: skipManager ? skipManagerNow : null,
       })),
     })
 
     const empName = employee.user?.name ?? 'An employee'
     const routeToMd = await isUserInMDManagedCohort(employee.userId)
 
-    // MD cohort: MD is the reviewer immediately (no manager gate).
-    // Non-MD: HR only acts after manager approval — notify then (manager-approve route).
-    if (routeToMd) {
+    // MD cohort: MD is the reviewer immediately.
+    // Non-MD: HR is notified immediately when the manager gate is skipped
+    // (absent day / no active manager). Punched days wait for manager-approve.
+    if (routeToMd || anySkipManager) {
       await notifyNormalizationPendingReview({
         subjectUserId: employee.userId,
         message: `${empName} has requested attendance normalization for ${toCreate.length} day(s)`,
@@ -109,7 +144,13 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const pendingCopy = routeToMd ? 'Pending MD approval.' : 'Pending manager approval.'
+    const pendingCopy = routeToMd
+      ? 'Pending MD approval.'
+      : allSkipManager
+        ? 'Pending HR approval.'
+        : anySkipManager
+          ? 'Pending manager and HR approval.'
+          : 'Pending manager approval.'
 
     return successResponse(
       { created: toCreate.length, skipped: dayStarts.length - toCreate.length },

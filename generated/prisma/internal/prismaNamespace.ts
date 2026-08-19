@@ -406,6 +406,7 @@ export const ModelName = {
   Department: 'Department',
   DepartmentTeam: 'DepartmentTeam',
   Employee: 'Employee',
+  EmployeeProfileActivityLog: 'EmployeeProfileActivityLog',
   AttendanceLog: 'AttendanceLog',
   AttendanceNormalization: 'AttendanceNormalization',
   LeaveTypeMaster: 'LeaveTypeMaster',
@@ -565,7 +566,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadQrPublicLink" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCircleSelection" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmCampaignBdDailyLimit" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "leadOpdAppointment" | "leadOpdAppointmentPrescriptionImage" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
+    modelProps: "user" | "userStatus" | "lead" | "leadOpdPrescriptionImage" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadQrPublicLink" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "employeeProfileActivityLog" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "documentTemplate" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCircleSelection" | "crmCampaignCity" | "crmSubStatusMaster" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmCampaignBdDailyLimit" | "crmActivityLog" | "bulkLeadReassignmentRun" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "leadOpdAppointment" | "leadOpdAppointmentPrescriptionImage" | "admissionRecordImplantUsage" | "admissionRecordPrescriptionImage" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "cumulativeReportManualEntry" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "implantMaster" | "surgeryRemarkMaster" | "reasonNoSurgeryMaster" | "followUpReasonMaster" | "doctorAppAccount" | "doctorAppRefreshToken" | "doctorAppWhatsappOtp" | "doctorLeaveRequest" | "doctorCabRequest" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentCategoryMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog" | "knowledgeDocument" | "knowledgeChunk" | "knowledgeDocumentRole" | "knowledgeDocumentUser" | "knowledgeDocumentDepartment" | "aiConversation" | "aiMessage" | "aiToolCall"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2194,6 +2195,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.EmployeeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.EmployeeCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmployeeProfileActivityLog: {
+      payload: Prisma.$EmployeeProfileActivityLogPayload<ExtArgs>
+      fields: Prisma.EmployeeProfileActivityLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeProfileActivityLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeProfileActivityLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeProfileActivityLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeProfileActivityLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeProfileActivityLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeProfileActivityLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeProfileActivityLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmployeeProfileActivityLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>[]
+        }
+        delete: {
+          args: Prisma.EmployeeProfileActivityLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>
+        }
+        update: {
+          args: Prisma.EmployeeProfileActivityLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeProfileActivityLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeProfileActivityLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmployeeProfileActivityLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmployeeProfileActivityLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeProfileActivityLogPayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeProfileActivityLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeProfileActivityLog>
+        }
+        groupBy: {
+          args: Prisma.EmployeeProfileActivityLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeProfileActivityLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeProfileActivityLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeProfileActivityLogCountAggregateOutputType> | number
         }
       }
     }
@@ -13437,6 +13512,19 @@ export const EmployeeScalarFieldEnum = {
 export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
 
 
+export const EmployeeProfileActivityLogScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  actorUserId: 'actorUserId',
+  action: 'action',
+  summary: 'summary',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type EmployeeProfileActivityLogScalarFieldEnum = (typeof EmployeeProfileActivityLogScalarFieldEnum)[keyof typeof EmployeeProfileActivityLogScalarFieldEnum]
+
+
 export const AttendanceLogScalarFieldEnum = {
   id: 'id',
   employeeId: 'employeeId',
@@ -17263,6 +17351,7 @@ export type GlobalOmitConfig = {
   department?: Prisma.DepartmentOmit
   departmentTeam?: Prisma.DepartmentTeamOmit
   employee?: Prisma.EmployeeOmit
+  employeeProfileActivityLog?: Prisma.EmployeeProfileActivityLogOmit
   attendanceLog?: Prisma.AttendanceLogOmit
   attendanceNormalization?: Prisma.AttendanceNormalizationOmit
   leaveTypeMaster?: Prisma.LeaveTypeMasterOmit

@@ -128,6 +128,11 @@ export type DepartmentTeam = Prisma.DepartmentTeamModel
  */
 export type Employee = Prisma.EmployeeModel
 /**
+ * Model EmployeeProfileActivityLog
+ * 
+ */
+export type EmployeeProfileActivityLog = Prisma.EmployeeProfileActivityLogModel
+/**
  * Model AttendanceLog
  * 
  */

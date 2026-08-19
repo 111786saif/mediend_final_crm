@@ -1,8 +1,9 @@
 /**
  * Backfill Lead.followUpDate and Lead.modeOfPayment from a legacy CSV export.
  *
- * CSV columns (header row required):
- *   id, Patient_Name, Patient_Number, Follow-up_Date, Mode_Of_Payment
+ * CSV columns (header row required). Supported formats:
+ *   id, Follow-up_Date, Mode_Of_Payment
+ *   id, Patient_Name, Patient_Number, Follow-up_Date, Mode_Of_Payment  (legacy)
  *
  * The `id` column maps to Lead.leadRef (not the Prisma cuid).
  *
@@ -12,10 +13,15 @@
  *   bun run scripts/import-leads-followup-mop-csv.ts --csv ../leads_export.csv --overwrite
  *   bun run scripts/import-leads-followup-mop-csv.ts --follow-up-only --overwrite
  *
- * Docker (on server — copy CSV to data/leads_export.csv first):
+ * Docker (on workspace server — copy CSV to data/leads_export.csv first):
  *   docker compose --profile tools run --rm import-leads-followup-mop -- --dry-run
  *   docker compose --profile tools run --rm import-leads-followup-mop
  *   docker compose --profile tools run --rm import-leads-followup-mop -- --follow-up-only --overwrite
+ *
+ * End-to-end (CRM MySQL server -> workspace server, no laptop copy):
+ *   1. On CRM server: scripts/export-leads-followup-mop-csv.sh /root/leads_export.csv
+ *   2. CRM -> workspace: scp /root/leads_export.csv root@WORKSPACE_IP:/root/mediend.workspace/data/leads_export.csv
+ *   3. On workspace: git pull && docker compose --profile tools run --rm import-leads-followup-mop -- --follow-up-only --overwrite --dry-run
  */
 
 import 'dotenv/config'
@@ -74,21 +80,34 @@ function parseCsvModeOfPayment(value: string | undefined | null): string | null 
   return normalizeModeOfPaymentStorageValue(value!.trim())
 }
 
-// Patient_Name / Patient_Number columns are ignored (often malformed quotes in export).
-// Format: id,<name>,<phone>,Follow-up_Date,Mode_Of_Payment
-const LOOSE_CSV_LINE =
-  /^(\d+),(?:.*?,){2}([^,]+),([^,\r\n]+)\s*$/
+// Legacy format: id,<name>,<phone>,Follow-up_Date,Mode_Of_Payment
+const LEGACY_CSV_LINE = /^(\d+),(?:.*?,){2}([^,]+),([^,\r\n]+)\s*$/
+
+// Preferred export format (no patient name/phone): id,Follow-up_Date,Mode_Of_Payment
+const MINIMAL_CSV_LINE = /^(\d+),([^,]+),([^,\r\n]+)\s*$/
 
 function parseLooseCsvLine(line: string): ParsedCsvRow | null | 'skip' {
   const trimmed = line.trim().replace(/^\uFEFF/, '')
   if (!trimmed || /^id,/i.test(trimmed)) return 'skip'
 
-  const match = LOOSE_CSV_LINE.exec(trimmed)
-  if (!match) return null
+  const minimal = MINIMAL_CSV_LINE.exec(trimmed)
+  if (minimal) {
+    const field2 = minimal[2]!.trim()
+    if (/^\d{4}-\d{2}-\d{2}|^NULL$/i.test(field2)) {
+      const leadRef = minimal[1]!.trim()
+      const followUpDate = parseCsvDate(minimal[2])
+      const modeOfPayment = parseCsvModeOfPayment(minimal[3])
+      if (!followUpDate && !modeOfPayment) return 'skip'
+      return { leadRef, followUpDate, modeOfPayment }
+    }
+  }
 
-  const leadRef = match[1]!.trim()
-  const followUpDate = parseCsvDate(match[2])
-  const modeOfPayment = parseCsvModeOfPayment(match[3])
+  const legacy = LEGACY_CSV_LINE.exec(trimmed)
+  if (!legacy) return null
+
+  const leadRef = legacy[1]!.trim()
+  const followUpDate = parseCsvDate(legacy[2])
+  const modeOfPayment = parseCsvModeOfPayment(legacy[3])
 
   if (!followUpDate && !modeOfPayment) return 'skip'
 

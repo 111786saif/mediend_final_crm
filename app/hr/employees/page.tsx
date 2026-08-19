@@ -109,6 +109,7 @@ const ROW_STATUS_CLASS: Record<string, string> = {
 const DEFAULT_STATUS_FILTER = 'ACTIVE'
 
 interface EditFormData {
+  name: string
   employeeCode: string
   bdNumber: string
   circles: string[]
@@ -129,6 +130,7 @@ interface EditFormData {
 }
 
 interface EditPatchPayload {
+  name?: string
   employeeCode?: string
   circle?: string | null
   circles?: string[]
@@ -223,6 +225,7 @@ export default function HREmployeesPage() {
       )
       queryClient.invalidateQueries({ queryKey: ['employees'] })
       queryClient.invalidateQueries({ queryKey: ['employee', variables.id] })
+      queryClient.invalidateQueries({ queryKey: ['employee-activity', variables.id] })
 
       const previous = selectedEmployee
       const codeChanged =
@@ -603,6 +606,7 @@ function EmployeeEditForm({
   const { user } = useAuth()
   const currentRole = employee.user.role as UserRole
   const [formData, setFormData] = useState<EditFormData>({
+    name: employee.user.name,
     employeeCode: employee.employeeCode,
     bdNumber: employee.bdNumber != null ? String(employee.bdNumber) : '',
     circles: parseEmployeeCircleList(employee.circle),
@@ -659,6 +663,10 @@ function EmployeeEditForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!formData.name.trim()) {
+      toast.error('Name is required')
+      return
+    }
     if (!formData.employeeCode.trim()) {
       toast.error('Employee code is required')
       return
@@ -676,6 +684,7 @@ function EmployeeEditForm({
     }
 
     const payload: EditPatchPayload = {
+      name: formData.name.trim(),
       employeeCode: formData.employeeCode.trim(),
       circles: formData.circles,
       joinDate: formData.joinDate || null,
@@ -817,6 +826,15 @@ function EmployeeEditForm({
 
       <FormSection title="Personal">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label>Full name *</Label>
+            <Input
+              value={formData.name}
+              onChange={(e) => set('name', e.target.value)}
+              placeholder="Employee name"
+              required
+            />
+          </div>
           <div>
             <Label>Date of Birth</Label>
             <Input

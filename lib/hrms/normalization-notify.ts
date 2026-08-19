@@ -8,8 +8,8 @@ const HR_LINK = '/hr/attendance-leaves?tab=normalizations'
 /**
  * Notify the final reviewer once a normalization is actionable for them:
  * - MD cohort → MD (employee create or manager apply)
- * - otherwise → HR_HEAD (manager apply, or employee request after manager approval)
- * Do not call on non-MD employee request create — HR cannot act until managerApprovedAt is set.
+ * - otherwise → HR_HEAD (manager apply, or employee request after manager /
+ *   skip-manager for absent days / no active manager)
  */
 export async function notifyNormalizationPendingReview(params: {
   subjectUserId: string

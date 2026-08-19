@@ -6,6 +6,10 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { z } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
 import { UserRole } from '@/generated/prisma/enums'
+import {
+  EMPLOYEE_PROFILE_ACTIONS,
+  logEmployeeProfileActivity,
+} from '@/lib/hrms/employee-profile-activity'
 
 const updateUserSchema = z.object({
   name: z.string().min(1).optional(),
@@ -48,6 +52,22 @@ export async function PATCH(
       }
     }
 
+    const currentUserRow = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        name: true,
+        role: true,
+        employee: { select: { id: true } },
+      },
+    })
+    if (!currentUserRow) {
+      return errorResponse('User not found', 404)
+    }
+
+    const previousName = currentUserRow.name
+    const nameChangedTo =
+      data.name !== undefined && data.name !== previousName ? data.name : null
+
     const updateData: Prisma.UserUpdateInput = {}
     if (data.name !== undefined) updateData.name = data.name
     if (normalizedEmail !== undefined) updateData.email = normalizedEmail
@@ -60,12 +80,7 @@ export async function PATCH(
       if (data.role === 'MD') {
         return errorResponse('Cannot assign MD role', 400)
       }
-      // Prevent changing role of MD user
-      const targetUser = await prisma.user.findUnique({
-        where: { id },
-        select: { role: true },
-      })
-      if (targetUser?.role === 'MD') {
+      if (currentUserRow.role === 'MD') {
         return errorResponse('Cannot change role of MD user', 400)
       }
       if (!canCreateRole(user, data.role)) {
@@ -101,6 +116,16 @@ export async function PATCH(
     const safeUser = { ...updated }
     delete (safeUser as { passwordHash?: string }).passwordHash
     const employee = safeUser.employee
+
+    if (nameChangedTo && currentUserRow.employee) {
+      await logEmployeeProfileActivity({
+        employeeId: currentUserRow.employee.id,
+        actorUserId: user.id,
+        action: EMPLOYEE_PROFILE_ACTIONS.NAME_CHANGED,
+        summary: `Name changed from ${previousName} to ${nameChangedTo}`,
+        metadata: { from: previousName, to: nameChangedTo },
+      })
+    }
 
     return successResponse(
       {

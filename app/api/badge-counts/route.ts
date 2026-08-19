@@ -4,8 +4,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { LedgerStatus, LeaveRequestStatus } from '@/generated/prisma/client'
-import { employeeNotInMDManagedCohortWhere } from '@/lib/hierarchy'
 import { mdPendingNormalizationsWhere } from '@/lib/hrms/normalization-md-pending'
+import { hrPendingNormalizationsWhere } from '@/lib/hrms/normalization-hr-pending'
 import { getTaskOverviewCount } from '@/lib/tasks/stats-scope'
 
 export interface BadgeCounts {
@@ -173,20 +173,11 @@ export async function GET(request: NextRequest) {
     }
 
     // HR-level: PENDING normalizations ready for HR action (for HR Attendance tab)
-    // MANAGER type: always HR-actionable when PENDING.
-    // EMPLOYEE_REQUEST type: only HR-actionable after manager has approved (managerApprovedAt set).
     if (hasPermission(user, 'hrms:attendance:write')) {
       promises.push(
         prisma.attendanceNormalization
           .count({
-            where: {
-              status: 'PENDING',
-              employee: employeeNotInMDManagedCohortWhere(),
-              OR: [
-                { type: 'MANAGER' },
-                { type: 'EMPLOYEE_REQUEST', managerApprovedAt: { not: null } },
-              ],
-            },
+            where: hrPendingNormalizationsWhere(),
           })
           .then((c) => {
             counts.hrPendingNormalizations = c
@@ -386,14 +377,7 @@ export async function GET(request: NextRequest) {
           prisma.feedback.count({ where: { status: 'PENDING' } }),
           prisma.incrementRequest.count({ where: { status: 'PENDING' } }),
           prisma.attendanceNormalization.count({
-            where: {
-              status: 'PENDING',
-              employee: employeeNotInMDManagedCohortWhere(),
-              OR: [
-                { type: 'MANAGER' },
-                { type: 'EMPLOYEE_REQUEST', managerApprovedAt: { not: null } },
-              ],
-            },
+            where: hrPendingNormalizationsWhere(),
           }),
         ]).then(([f, i, n]) => {
           counts.pendingHRActions = f + i + n

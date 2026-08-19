@@ -54,6 +54,7 @@ import { NewHireWelcomePopup } from '@/components/new-hire-welcome-popup'
 import { Megaphone } from 'lucide-react'
 import { FnFReminderCard } from '@/components/hr/fnf-reminder-card'
 import { BirthdayCelebrationCard } from '@/components/birthday-celebration-card'
+import { UpcomingBirthdayCard } from '@/components/upcoming-birthday-card'
 import { NewJoinerCelebrationCard } from '@/components/new-joiner-celebration-card'
 import { BirthdayPopup } from '@/components/birthday-popup'
 import { RankUpPopup } from '@/components/notifications/rank-up-popup'
@@ -655,6 +656,8 @@ export default function HomePage() {
   const { user } = useAuth()
   const { hasAccess, permissionsReady } = usePermissions()
   const showFnFCard = user?.role === 'HR_HEAD'
+  const showUpcomingBirthdays =
+    user?.role === 'HR_HEAD' || user?.role === 'ADMIN' || user?.role === 'EXECUTIVE_ASSISTANT'
   const { data: workLogCheck } = useWorkLogCheck({
     tzOffsetMinutes: -new Date().getTimezoneOffset(),
   })
@@ -703,6 +706,9 @@ export default function HomePage() {
 
       {/* Birthday celebration */}
       <BirthdayCelebrationCard />
+
+      {/* Upcoming birthdays for HR */}
+      {showUpcomingBirthdays && <UpcomingBirthdayCard />}
 
       {/* New joiner announcement */}
       <NewJoinerCelebrationCard />

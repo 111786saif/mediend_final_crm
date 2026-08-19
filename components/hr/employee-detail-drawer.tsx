@@ -11,9 +11,20 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -22,7 +33,7 @@ import { Progress } from '@/components/ui/progress'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { apiGet, apiPatch } from '@/lib/api-client'
+import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { format } from 'date-fns'
 import {
   User,
@@ -47,6 +58,8 @@ import {
   Bell,
   PhoneCall,
   ListChecks,
+  KeyRound,
+  History,
 } from 'lucide-react'
 import { differenceInCalendarDays } from 'date-fns'
 import { cn } from '@/lib/utils'
@@ -136,6 +149,16 @@ interface EmployeeKnowlarityRegistrations {
   normalizedCurrentNumber: string | null
   currentNumberRegistered: boolean
 }
+
+interface EmployeeActivityLogItem {
+  id: string
+  action: string
+  summary: string
+  createdAt: string
+  actorName: string
+}
+
+const HR_RESET_PASSWORD_DISPLAY = '12345678'
 
 function computeProfileCompletion(emp: EmployeeData): number {
   const fields = [
@@ -555,6 +578,73 @@ function EmployeeKnowlarityRegistrationsDialog({
   )
 }
 
+function EditEmployeeNameDialog({
+  open,
+  onOpenChange,
+  employeeId,
+  currentName,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  employeeId: string
+  currentName: string
+}) {
+  const queryClient = useQueryClient()
+  const [name, setName] = useState(currentName)
+
+  useEffect(() => {
+    if (open) setName(currentName)
+  }, [open, currentName])
+
+  const mutation = useMutation({
+    mutationFn: () => apiPatch(`/api/employees/${employeeId}`, { name: name.trim() }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employee', employeeId] })
+      queryClient.invalidateQueries({ queryKey: ['employee-activity', employeeId] })
+      queryClient.invalidateQueries({ queryKey: ['employees'] })
+      toast.success('Name updated')
+      onOpenChange(false)
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || 'Failed to update name')
+    },
+  })
+
+  const trimmed = name.trim()
+  const canSave = trimmed.length > 0 && trimmed !== currentName
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit name</DialogTitle>
+          <DialogDescription>This name is shown across the workspace and HR records.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-2">
+          <Label htmlFor="employee-name">Full name</Label>
+          <Input
+            id="employee-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            autoFocus
+          />
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => mutation.mutate()}
+            disabled={!canSave || mutation.isPending}
+          >
+            {mutation.isPending ? 'Saving…' : 'Save name'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 export interface EmployeeDetailDrawerProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -577,6 +667,8 @@ export function EmployeeDetailDrawer({
   const [actionDialog, setActionDialog] = useState<{ action: EmployeeActionType } | null>(null)
   const [knowlarityDialogOpen, setKnowlarityDialogOpen] = useState(false)
   const [knowlarityRegistrationsOpen, setKnowlarityRegistrationsOpen] = useState(false)
+  const [editNameOpen, setEditNameOpen] = useState(false)
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false)
   const queryClient = useQueryClient()
   const { user: currentUser } = useAuth()
   const canManageKnowlarity = currentUser?.role === 'EXECUTIVE_ASSISTANT'
@@ -585,6 +677,24 @@ export function EmployeeDetailDrawer({
     queryKey: ['employee', employeeId],
     queryFn: () => apiGet<EmployeeData>(`/api/employees/${employeeId}`),
     enabled: !!employeeId && open,
+  })
+
+  const { data: activityLogs = [] } = useQuery({
+    queryKey: ['employee-activity', employeeId],
+    queryFn: () => apiGet<EmployeeActivityLogItem[]>(`/api/employees/${employeeId}/activity`),
+    enabled: !!employeeId && open && canEdit,
+  })
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: () => apiPost(`/api/employees/${employeeId}/reset-password`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employee-activity', employeeId] })
+      toast.success(`Password reset to ${HR_RESET_PASSWORD_DISPLAY}`)
+      setResetPasswordOpen(false)
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || 'Failed to reset password')
+    },
   })
 
   const user = employee?.user
@@ -802,9 +912,11 @@ export function EmployeeDetailDrawer({
                         </ul>
                       </Section>
                     )}
+                  </div>
 
-                    {canEdit && (
-                      <div className="space-y-2 pt-4 border-t">
+                  {canEdit && (
+                  <div className="lg:col-span-2 space-y-4">
+                    <div className="space-y-2 pt-4 border-t">
                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                           HR Actions
                         </p>
@@ -883,6 +995,26 @@ export function EmployeeDetailDrawer({
                             <Edit className="h-3.5 w-3.5" />
                             Edit
                           </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5"
+                            onClick={() => setEditNameOpen(true)}
+                          >
+                            <User className="h-3.5 w-3.5" />
+                            Edit name
+                          </Button>
+                          {currentUser?.id !== employee.user.id && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-1.5"
+                              onClick={() => setResetPasswordOpen(true)}
+                            >
+                              <KeyRound className="h-3.5 w-3.5" />
+                              Reset password
+                            </Button>
+                          )}
                           {canManageKnowlarity && (
                             <>
                               <Button
@@ -907,8 +1039,32 @@ export function EmployeeDetailDrawer({
                           )}
                         </div>
                       </div>
-                    )}
+
+                      <Section title="Activity log">
+                        {activityLogs.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">No profile changes recorded yet.</p>
+                        ) : (
+                          <ul className="space-y-2">
+                            {activityLogs.map((log) => (
+                              <li
+                                key={log.id}
+                                className="flex items-start gap-2 py-1.5 border-b border-border/60 last:border-0"
+                              >
+                                <History className="h-3.5 w-3.5 mt-0.5 text-muted-foreground shrink-0" />
+                                <div className="min-w-0">
+                                  <p className="text-sm">{log.summary}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {format(new Date(log.createdAt), 'PPP')}
+                                    {log.actorName ? ` · ${log.actorName}` : ''}
+                                  </p>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </Section>
                   </div>
+                  )}
                 </div>
               )}
             </div>
@@ -946,6 +1102,41 @@ export function EmployeeDetailDrawer({
             onOpenChange={setKnowlarityRegistrationsOpen}
             phoneNumber={employee.knowlarityPhoneNumber}
           />
+        </>
+      )}
+
+      {employeeId && employee && canEdit && (
+        <>
+          <EditEmployeeNameDialog
+            open={editNameOpen}
+            onOpenChange={setEditNameOpen}
+            employeeId={employeeId}
+            currentName={employee.user.name ?? ''}
+          />
+          <AlertDialog open={resetPasswordOpen} onOpenChange={setResetPasswordOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Reset password?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will set {employee.user.name}&apos;s password to{' '}
+                  <span className="font-mono font-medium text-foreground">{HR_RESET_PASSWORD_DISPLAY}</span>.
+                  They can log in with that password afterwards. Custom passwords cannot be set from here.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={resetPasswordMutation.isPending}>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={(e) => {
+                    e.preventDefault()
+                    resetPasswordMutation.mutate()
+                  }}
+                  disabled={resetPasswordMutation.isPending}
+                >
+                  {resetPasswordMutation.isPending ? 'Resetting…' : 'Reset password'}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       )}
     </>
