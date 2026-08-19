@@ -523,6 +523,22 @@ export async function PATCH(
       typeof lead.remarks === 'string' ? lead.remarks.trim() || null : lead.remarks ?? null
     const crmEditFollowUpValidation = body.crmEditFollowUpValidation === 'true'
     const parsedFollowUpDateInput = parseFollowUpDateInput(body.followUpDate)
+    const requestedCategory =
+      body.category === undefined
+        ? undefined
+        : typeof body.category === 'string'
+          ? body.category.trim() || null
+          : body.category === null
+            ? null
+            : body.category
+    const requestedTreatmentMasterId =
+      body.treatmentMasterId === undefined
+        ? undefined
+        : typeof body.treatmentMasterId === 'string'
+          ? body.treatmentMasterId.trim() || null
+          : body.treatmentMasterId === null
+            ? null
+            : body.treatmentMasterId
     const updateData: Prisma.LeadUpdateInput = {
       updatedBy: { connect: { id: user.id } },
       updatedDate: new Date(),
@@ -536,6 +552,11 @@ export async function PATCH(
       (body.whatsapp !== undefined && body.whatsapp !== lead.whatsapp) ||
       (body.city !== undefined &&
         (typeof body.city === 'string' ? body.city.trim() || null : body.city ?? null) !== currentLeadCity) ||
+      (requestedCategory !== undefined && requestedCategory !== lead.category) ||
+      (
+        requestedTreatmentMasterId !== undefined &&
+        requestedTreatmentMasterId !== (lead.treatmentMasterId ?? null)
+      ) ||
       (body.surgeryDate !== undefined &&
         body.surgeryDate !== (lead.surgeryDate ? lead.surgeryDate.toISOString().slice(0, 10) : null))
     const remarksChanged = requestedRemarks !== undefined && requestedRemarks !== currentRemarks
@@ -599,6 +620,22 @@ export async function PATCH(
       if (!normalizedSex) {
         return errorResponse('Sex must be Male, Female, or Other', 400)
       }
+    }
+
+    if (
+      requestedCategory !== undefined &&
+      requestedCategory !== null &&
+      typeof requestedCategory !== 'string'
+    ) {
+      return errorResponse('Category is invalid', 400)
+    }
+
+    if (
+      requestedTreatmentMasterId !== undefined &&
+      requestedTreatmentMasterId !== null &&
+      typeof requestedTreatmentMasterId !== 'string'
+    ) {
+      return errorResponse('Treatment is invalid', 400)
     }
 
     if (parsedFollowUpDateInput.value === 'invalid') {
@@ -691,6 +728,57 @@ export async function PATCH(
       )
     }
 
+    let resolvedTreatmentMaster:
+      | {
+          id: string
+          name: string
+          category: string
+          isActive: boolean
+        }
+      | null = null
+
+    if (requestedCategory !== undefined && requestedCategory !== null) {
+      const categoryMaster = await prisma.treatmentCategoryMaster.findFirst({
+        where: {
+          name: requestedCategory,
+          isActive: true,
+        },
+        select: { id: true },
+      })
+
+      if (!categoryMaster) {
+        return errorResponse('Selected category was not found in master data', 400)
+      }
+    }
+
+    if (requestedTreatmentMasterId !== undefined && requestedTreatmentMasterId !== null) {
+      resolvedTreatmentMaster = await prisma.treatmentMaster.findFirst({
+        where: {
+          id: requestedTreatmentMasterId,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          name: true,
+          category: true,
+          isActive: true,
+        },
+      })
+
+      if (!resolvedTreatmentMaster) {
+        return errorResponse('Selected treatment was not found in master data', 400)
+      }
+    }
+
+    if (
+      requestedCategory !== undefined &&
+      requestedCategory !== null &&
+      resolvedTreatmentMaster &&
+      resolvedTreatmentMaster.category !== requestedCategory
+    ) {
+      return errorResponse('Selected treatment does not belong to the selected category', 400)
+    }
+
     const nextOpdDoctorName =
       body.opdDrName !== undefined
         ? normalizeDoctorName(typeof body.opdDrName === 'string' ? body.opdDrName : null)
@@ -749,8 +837,6 @@ export async function PATCH(
       'whatsapp',
       'attendantName',
       'circle',
-      'category',
-      'treatment',
       'diseaseDetails',
       'anesthesia',
       'quantityGrade',
@@ -839,6 +925,35 @@ export async function PATCH(
         }
 
         ;(updateData as any)[field] = nextValue
+      }
+    }
+
+    if (requestedCategory !== undefined || requestedTreatmentMasterId !== undefined) {
+      const nextCategory =
+        resolvedTreatmentMaster?.category ??
+        (requestedCategory !== undefined ? requestedCategory : lead.category ?? null)
+      const nextTreatment = resolvedTreatmentMaster?.name ?? (requestedTreatmentMasterId === null ? null : lead.treatment ?? null)
+
+      updateData.category = nextCategory
+      updateData.treatment = nextTreatment
+      if (requestedTreatmentMasterId !== undefined) {
+        updateData.treatmentMaster = resolvedTreatmentMaster
+          ? {
+              connect: {
+                id: resolvedTreatmentMaster.id,
+              },
+            }
+          : {
+              disconnect: true,
+            }
+      }
+
+      if (requestedTreatmentMasterId === null) {
+        updateData.treatment = null
+      }
+
+      if (requestedCategory === null && requestedTreatmentMasterId == null) {
+        updateData.category = null
       }
     }
 

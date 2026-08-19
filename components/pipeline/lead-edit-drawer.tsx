@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -58,6 +58,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 
 const CRM_LEAD_SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
+const LEGACY_CURRENT_TREATMENT_OPTION_ID = '__legacy_current_treatment__'
 
 function formatDisplayValue(value: unknown, fallback = '—') {
   if (typeof value !== 'string') return fallback
@@ -98,6 +99,7 @@ type LeadEditLead = {
   modeOfPayment?: string | null
   circle?: string | null
   category?: string | null
+  treatmentMasterId?: string | null
   hospitalName?: string | null
   source?: string | null
   campaignName?: string | null
@@ -108,6 +110,23 @@ type LeadEditLead = {
     id: string
     name: string
   } | null
+}
+
+type MasterListResponse<T> = {
+  items: T[]
+}
+
+type TreatmentCategoryMasterItem = {
+  id: string
+  name: string
+  isActive?: boolean
+}
+
+type TreatmentMasterItem = {
+  id: string
+  name: string
+  category: string
+  isActive?: boolean
 }
 
 type LeadOwnershipUser = {
@@ -264,6 +283,8 @@ export function LeadEditDrawer({
   const [sexDraft, setSexDraft] = useState<string | null>(null)
   const [cityDraft, setCityDraft] = useState<string | null>(null)
   const [professionDraft, setProfessionDraft] = useState<string | null>(null)
+  const [categoryDraft, setCategoryDraft] = useState<string | null>(null)
+  const [treatmentMasterIdDraft, setTreatmentMasterIdDraft] = useState<string | null>(null)
   const [leadStatusDraft, setLeadStatusDraft] = useState<string | null>(null)
   const [leadStatusSearch, setLeadStatusSearch] = useState('')
   const [leadStatusOpen, setLeadStatusOpen] = useState(false)
@@ -326,6 +347,24 @@ export function LeadEditDrawer({
     retry: false,
   })
 
+  const { data: treatmentMasterData } = useQuery<MasterListResponse<TreatmentMasterItem>, Error>({
+    queryKey: ['lead-edit-treatment-masters'],
+    queryFn: () => apiGet<MasterListResponse<TreatmentMasterItem>>('/api/masters/treatments'),
+    enabled: open,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const { data: treatmentCategoryMasterData } = useQuery<
+    MasterListResponse<TreatmentCategoryMasterItem>,
+    Error
+  >({
+    queryKey: ['lead-edit-treatment-category-masters'],
+    queryFn: () =>
+      apiGet<MasterListResponse<TreatmentCategoryMasterItem>>('/api/masters/treatment-categories'),
+    enabled: open,
+    staleTime: 5 * 60 * 1000,
+  })
+
   const effectivePatientName = patientNameDraft ?? lead?.patientName ?? ''
   const effectiveWhatsapp = whatsappDraft ?? (lead?.whatsapp ?? '')
   const effectiveSurgeryDate = surgeryDateDraft ?? toDateInputValue(lead?.surgeryDate)
@@ -335,10 +374,75 @@ export function LeadEditDrawer({
   const effectiveSex = sexDraft ?? currentNormalizedSex
   const effectiveCity = cityDraft ?? (lead?.city ?? '')
   const effectiveProfession = professionDraft ?? (lead?.profession ?? '')
+  const currentCategory = lead?.category ?? ''
+  const currentTreatment = lead?.treatment ?? ''
+  const currentTreatmentMasterId = lead?.treatmentMasterId ?? ''
+  const effectiveCategory = categoryDraft ?? currentCategory
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
   const effectiveFollowUpDate = followUpDateDraft ?? toDateInputValue(lead?.followUpDate)
   const effectiveModeOfPayment = modeOfPaymentDraft ?? (lead?.modeOfPayment ?? '')
   const todayDateInputValue = getTodayDateInputValue()
+
+  const categoryOptions = useMemo(() => {
+    const items = (treatmentCategoryMasterData?.items ?? []).filter((item) => item.isActive !== false)
+    const names = new Set(items.map((item) => item.name))
+    if (currentCategory.trim().length > 0 && !names.has(currentCategory)) {
+      return [{ id: '__current__', name: currentCategory }, ...items]
+    }
+    return items
+  }, [currentCategory, treatmentCategoryMasterData?.items])
+
+  const allTreatmentOptions = useMemo(
+    () => (treatmentMasterData?.items ?? []).filter((item) => item.isActive !== false),
+    [treatmentMasterData?.items]
+  )
+
+  const inferredCurrentTreatmentMasterId = useMemo(() => {
+    if (currentTreatmentMasterId) return currentTreatmentMasterId
+    if (!currentTreatment.trim()) return ''
+    const exactMatch = allTreatmentOptions.find(
+      (item) =>
+        item.name === currentTreatment &&
+        (!currentCategory.trim() || item.category === currentCategory)
+    )
+    return exactMatch?.id ?? LEGACY_CURRENT_TREATMENT_OPTION_ID
+  }, [allTreatmentOptions, currentCategory, currentTreatment, currentTreatmentMasterId])
+
+  const treatmentOptions = useMemo(() => {
+    const selectedCategory = effectiveCategory.trim()
+    const filtered = selectedCategory
+      ? allTreatmentOptions.filter((item) => item.category === selectedCategory)
+      : allTreatmentOptions
+    const hasLegacyCurrentTreatment =
+      currentTreatment.trim().length > 0 &&
+      !filtered.some((item) => item.name === currentTreatment) &&
+      (!selectedCategory || selectedCategory === currentCategory)
+
+    if (hasLegacyCurrentTreatment) {
+      return [
+        {
+          id: inferredCurrentTreatmentMasterId || LEGACY_CURRENT_TREATMENT_OPTION_ID,
+          name: currentTreatment,
+          category: currentCategory,
+        },
+        ...filtered,
+      ]
+    }
+
+    return filtered
+  }, [
+    allTreatmentOptions,
+    currentCategory,
+    currentTreatment,
+    effectiveCategory,
+    inferredCurrentTreatmentMasterId,
+  ])
+
+  const effectiveTreatmentMasterId = useMemo(() => {
+    const draftValue = treatmentMasterIdDraft ?? inferredCurrentTreatmentMasterId
+    if (!draftValue) return ''
+    return treatmentOptions.some((item) => item.id === draftValue) ? draftValue : ''
+  }, [inferredCurrentTreatmentMasterId, treatmentMasterIdDraft, treatmentOptions])
 
   const canEditLeadProfile = leadOwnershipMeta?.canEditLeadProfile ?? false
   const canEditRemarks = leadOwnershipMeta?.canEditRemarks ?? false
@@ -396,6 +500,8 @@ export function LeadEditDrawer({
   const sexChanged = effectiveSex !== currentNormalizedSex
   const cityChanged = effectiveCity !== (lead?.city ?? '')
   const professionChanged = effectiveProfession !== (lead?.profession ?? '')
+  const categoryChanged = effectiveCategory !== currentCategory
+  const treatmentChanged = effectiveTreatmentMasterId !== inferredCurrentTreatmentMasterId
 
   const profileDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
@@ -404,7 +510,9 @@ export function LeadEditDrawer({
     ageChanged ||
     sexChanged ||
     cityChanged ||
-    professionChanged
+    professionChanged ||
+    categoryChanged ||
+    treatmentChanged
   const assigneeDirty = effectiveAssigneeId !== currentAssigneeId
 
   const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged
@@ -500,6 +608,7 @@ export function LeadEditDrawer({
     const trimmedSex = effectiveSex.trim()
     const trimmedCity = effectiveCity.trim()
     const trimmedProfession = effectiveProfession.trim()
+    const trimmedCategory = effectiveCategory.trim()
     const trimmedModeOfPayment = effectiveModeOfPayment.trim()
 
     if (trimmedPatientName.length === 0) {
@@ -589,6 +698,14 @@ export function LeadEditDrawer({
 
     if (professionChanged) {
       payload.profession = trimmedProfession || null
+    }
+
+    if (categoryChanged) {
+      payload.category = trimmedCategory || null
+    }
+
+    if (categoryChanged || treatmentChanged) {
+      payload.treatmentMasterId = effectiveTreatmentMasterId || null
     }
 
     if (assigneeDirty) {
@@ -824,6 +941,55 @@ export function LeadEditDrawer({
                         disabled={!canEditLeadProfile || saving}
                         placeholder="Enter profession"
                       />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-category">Category</Label>
+                      <Select
+                        value={effectiveCategory || '__none__'}
+                        onValueChange={(value) => {
+                          setCategoryDraft(value === '__none__' ? '' : value)
+                          setTreatmentMasterIdDraft('')
+                        }}
+                        disabled={!canEditLeadProfile || saving}
+                      >
+                        <SelectTrigger id="drawer-category">
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__none__">No category</SelectItem>
+                          {categoryOptions.map((categoryOption) => (
+                            <SelectItem key={categoryOption.id} value={categoryOption.name}>
+                              {categoryOption.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-treatment">Treatment</Label>
+                      <Select
+                        value={effectiveTreatmentMasterId || '__none__'}
+                        onValueChange={(value) =>
+                          setTreatmentMasterIdDraft(value === '__none__' ? '' : value)
+                        }
+                        disabled={!canEditLeadProfile || saving}
+                      >
+                        <SelectTrigger id="drawer-treatment">
+                          <SelectValue placeholder="Select treatment" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__none__">No treatment</SelectItem>
+                          {treatmentOptions.map((treatmentOption) => (
+                            <SelectItem key={treatmentOption.id} value={treatmentOption.id}>
+                              {treatmentOption.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
