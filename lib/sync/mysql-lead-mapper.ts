@@ -9,6 +9,7 @@ import type { LookupMaps } from './mysql-lookup-cache'
  */
 export interface MySQLLeadRow {
   id: number
+  leadRef?: string | number | null
   month?: string | null
   Lead_Date?: Date | string | null
   LeadEntryDate?: Date | string | null
@@ -79,6 +80,13 @@ export interface MySQLLeadRow {
 }
 
 export type BdMap = Map<string, { id: string }>
+
+export function getMySQLSourceLeadRef(row: Pick<MySQLLeadRow, 'id' | 'leadRef'>) {
+  const explicitLeadRef =
+    row.leadRef == null ? null : String(row.leadRef).trim()
+
+  return explicitLeadRef || String(row.id)
+}
 
 /**
  * Finds a BD user by name using multiple matching strategies (async fallback for rare cases)
@@ -433,7 +441,7 @@ function buildLeadData(
       : null
 
   return {
-    leadRef: String(mysqlRow.id),
+    leadRef: getMySQLSourceLeadRef(mysqlRow),
     patientName: mysqlRow.Patient_Name || 'Unknown',
     age: mysqlRow.Age ?? 0,
     sex: mysqlRow.Sex || 'Not Specified',

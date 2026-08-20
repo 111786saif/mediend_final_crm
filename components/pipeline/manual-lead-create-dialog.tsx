@@ -308,7 +308,7 @@ export function ManualLeadCreateDialog({
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="manual-lead-date">Lead date</Label>
+              <Label htmlFor="manual-lead-date">Lead date *</Label>
               <Input
                 id="manual-lead-date"
                 type="datetime-local"
@@ -325,7 +325,7 @@ export function ManualLeadCreateDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="manual-lead-assign-to">Assign to</Label>
+              <Label htmlFor="manual-lead-assign-to">Assign to *</Label>
               <Select
                 value={effectiveAssignToUserId}
                 onValueChange={(value) =>
@@ -350,7 +350,7 @@ export function ManualLeadCreateDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="manual-lead-patient-name">Patient name</Label>
+              <Label htmlFor="manual-lead-patient-name">Patient name *</Label>
               <Input
                 id="manual-lead-patient-name"
                 value={formValues.patientName}
@@ -363,7 +363,7 @@ export function ManualLeadCreateDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="manual-lead-phone">Phone number</Label>
+              <Label htmlFor="manual-lead-phone">Phone number *</Label>
               <Input
                 id="manual-lead-phone"
                 value={formValues.phoneNumber}

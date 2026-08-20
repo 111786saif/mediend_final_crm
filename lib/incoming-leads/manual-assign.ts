@@ -9,7 +9,13 @@ import {
 } from '@/lib/lead-duplicates'
 import { prisma } from '@/lib/prisma'
 import { loadLookupMaps, type LookupMaps } from '@/lib/sync/mysql-lookup-cache'
-import { mapMySQLLeadToPrismaWithoutOwner, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
+import { withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
+import {
+  getMySQLSourceLeadRef,
+  mapMySQLLeadToPrismaWithoutOwner,
+  type MySQLLeadRow,
+} from '@/lib/sync/mysql-lead-mapper'
+import { MANUAL_MYSQL_INCOMING_SOURCE } from '@/lib/mysql-incoming-leads'
 
 type AssignableUserContext = {
   userId: string
@@ -337,7 +343,7 @@ async function processManualAssignedMySQLLead(
     return { incomingLeadId: incomingLead.id, status: 'failed', error }
   }
 
-  const leadRef = String(mysqlLead.id)
+  const sourceLeadRef = getMySQLSourceLeadRef(mysqlLead)
   const normalizedPhone =
     incomingLead.normalizedPhone ?? normalizeLeadPhoneToLast10(mysqlLead.Patient_Number)
 
@@ -354,10 +360,13 @@ async function processManualAssignedMySQLLead(
     return { incomingLeadId: incomingLead.id, status: 'failed', error }
   }
 
-  const existingLead = await prisma.lead.findUnique({
-    where: { leadRef },
-    select: { id: true, leadRef: true },
-  })
+  const existingLead =
+    incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
+      ? null
+      : await prisma.lead.findUnique({
+          where: { leadRef: sourceLeadRef },
+          select: { id: true, leadRef: true },
+        })
 
   if (existingLead) {
     await prisma.incomingLead.update({
@@ -391,24 +400,41 @@ async function processManualAssignedMySQLLead(
     priorIncomingLead && !priorIncomingLead.processedLeadId
   )
   const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
+  const assignedAt = new Date()
 
   const leadData = mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUserId, lookups)
   const { updatedDate, ...leadDataWithoutOwner } = leadData
 
-  const createdLead = await prisma.lead.create({
-    data: {
-      ...leadDataWithoutOwner,
-      ...(updatedDate !== null ? { updatedDate } : {}),
-      status: isDuplicate ? DUPLICATE_LEAD_STATUS : leadDataWithoutOwner.status,
-      bdId: bd.userId,
-      bdeName: bd.userName,
-      teamLeadId: bd.managerLeadId,
-    },
-    select: {
-      id: true,
-      leadRef: true,
-    },
-  })
+  const leadCreateData = {
+    ...leadDataWithoutOwner,
+    ...(updatedDate !== null ? { updatedDate } : {}),
+    status: isDuplicate ? DUPLICATE_LEAD_STATUS : leadDataWithoutOwner.status,
+    assignedDate: assignedAt,
+    bdId: bd.userId,
+    bdeName: bd.userName,
+    teamLeadId: bd.managerLeadId,
+  }
+  const createdLead =
+    incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
+      ? await withGeneratedManualLeadRef((leadRef) =>
+          prisma.lead.create({
+            data: {
+              ...leadCreateData,
+              leadRef,
+            },
+            select: {
+              id: true,
+              leadRef: true,
+            },
+          })
+        )
+      : await prisma.lead.create({
+          data: leadCreateData,
+          select: {
+            id: true,
+            leadRef: true,
+          },
+        })
 
   await prisma.incomingLead.update({
     where: { id: incomingLead.id },
@@ -419,7 +445,7 @@ async function processManualAssignedMySQLLead(
       selectedTeamLeadUserId: bd.managerUserId,
       selectedTeamLeadEmployeeId: bd.managerEmployeeId,
       selectedBdUserId: bd.userId,
-      processedAt: new Date(),
+      processedAt: assignedAt,
       errorMessage: duplicateLead
         ? `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`
         : hasPriorIncomingDuplicate && priorIncomingLead

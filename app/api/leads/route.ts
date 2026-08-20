@@ -868,7 +868,7 @@ export async function POST(request: NextRequest) {
       duplCount: 0,
       createdById: user.id,
       updatedById: user.id,
-    })
+    });
 
     const lead = leadRef
       ? await prisma.lead.create({
@@ -894,7 +894,7 @@ export async function POST(request: NextRequest) {
               },
             },
           })
-        )
+        );
 
     return successResponse(
       lead,

@@ -9,6 +9,7 @@ import {
   mapMySQLLeadToPrismaAsyncFallback,
   mapMySQLLeadToPrismaWithoutOwner,
   getLeadLatestActivityDate,
+  getMySQLSourceLeadRef,
   type MySQLLeadRow,
 } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
     console.log(`📥 MySQL query: Found ${leads.length} leads to sync`)
 
     // Pre-fetch existing leads
-    const leadRefs = leads.map((l) => String(l.id))
+    const leadRefs = leads.map((l) => getMySQLSourceLeadRef(l))
     const existingLeadsMap = new Map<string, { updatedDate: Date | null; patientName: string; status: string; bdId: string; bdeName: string | null }>()
     
     const CHUNK_SIZE = 1000
@@ -176,6 +177,7 @@ export async function POST(request: NextRequest) {
     let errorCount = 0
     let assignmentFailedCount = 0
     const syncedLeadIds: number[] = []
+    const syncedLeadRefsById = new Map<number, string>()
     const leadsToUpdate: Array<{ leadRef: string; data: any }> = []
     const leadDates: Date[] = []
     const leadIds: number[] = []
@@ -190,7 +192,8 @@ export async function POST(request: NextRequest) {
 
     const processLead = async (mysqlLead: MySQLLeadRow) => {
       try {
-        const leadRef = String(mysqlLead.id)
+        const leadRef = getMySQLSourceLeadRef(mysqlLead)
+        syncedLeadRefsById.set(mysqlLead.id, leadRef)
         leadDates.push(getLeadLatestActivityDate(mysqlLead))
         leadIds.push(mysqlLead.id)
 
@@ -293,7 +296,16 @@ export async function POST(request: NextRequest) {
         const REMARK_CHUNK_SIZE = 500
         for (let i = 0; i < remarks.length; i += REMARK_CHUNK_SIZE) {
           const chunk = remarks.slice(i, i + REMARK_CHUNK_SIZE)
-          const leadRefsChunk = [...new Set(chunk.map((r) => String(r.RefId)))]
+          const leadRefsChunk = [
+            ...new Set(
+              chunk
+                .map((r) => syncedLeadRefsById.get(r.RefId))
+                .filter((leadRef): leadRef is string => Boolean(leadRef))
+            ),
+          ]
+          if (leadRefsChunk.length === 0) {
+            continue
+          }
           const existingRemarks = await prisma.leadRemark.findMany({
             where: {
               leadRef: { in: leadRefsChunk },
@@ -312,7 +324,10 @@ export async function POST(request: NextRequest) {
 
         const newRemarks = remarks
           .map((remark) => {
-            const leadRef = String(remark.RefId)
+            const leadRef = syncedLeadRefsById.get(remark.RefId)
+            if (!leadRef) {
+              return null
+            }
             const updateDate = new Date(remark.UpdateDate)
             const cleanRemarks = remark.Remarks?.replace(/\x00/g, '') ?? null
             const key = `${leadRef}|${updateDate.toISOString()}|${cleanRemarks}`

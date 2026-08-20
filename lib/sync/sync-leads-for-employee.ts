@@ -1,6 +1,12 @@
 import { prisma } from '@/lib/prisma'
 import { queryMySQL, testMySQLConnection } from '@/lib/mysql-source-client'
-import { mapMySQLLeadToPrisma, mapMySQLLeadToPrismaAsyncFallback, getLeadLatestActivityDate, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
+import {
+  getLeadLatestActivityDate,
+  getMySQLSourceLeadRef,
+  mapMySQLLeadToPrisma,
+  mapMySQLLeadToPrismaAsyncFallback,
+  type MySQLLeadRow,
+} from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { UserRole } from '@/generated/prisma/client'
@@ -53,7 +59,7 @@ async function fetchExistingLeads(
   return existingLeadsMap
 }
 
-async function syncLeadRemarks(leadIds: number[]) {
+async function syncLeadRemarks(leadIds: number[], leadRefsById: Map<number, string>) {
   if (leadIds.length === 0) return
   try {
     const remarks = await queryMySQL<MySQLRemarkRow>(
@@ -61,11 +67,16 @@ async function syncLeadRemarks(leadIds: number[]) {
       leadIds
     )
     if (remarks.length === 0) return
-    const leadRefsSet = new Set(leadIds.map((id) => String(id)))
-    const validRemarks = remarks.filter((r) => leadRefsSet.has(String(r.RefId)))
+    const validRemarks = remarks.filter((r) => leadRefsById.has(r.RefId))
     if (validRemarks.length === 0) return
     const existingRemarkKeys = new Set<string>()
-    const refs = [...new Set(validRemarks.map((r) => String(r.RefId)))]
+    const refs = [
+      ...new Set(
+        validRemarks
+          .map((r) => leadRefsById.get(r.RefId))
+          .filter((leadRef): leadRef is string => Boolean(leadRef))
+      ),
+    ]
     for (let i = 0; i < refs.length; i += 500) {
       const chunk = refs.slice(i, i + 500)
       const existing = await prisma.leadRemark.findMany({
@@ -76,7 +87,8 @@ async function syncLeadRemarks(leadIds: number[]) {
     }
     const newRemarks = validRemarks
       .map((r) => {
-        const leadRef = String(r.RefId)
+        const leadRef = leadRefsById.get(r.RefId)
+        if (!leadRef) return null
         const updateDate = new Date(r.UpdateDate)
         const cleanRemarks = r.Remarks?.replace(/\x00/g, '') ?? null
         if (existingRemarkKeys.has(`${leadRef}|${updateDate.toISOString()}|${cleanRemarks}`)) return null
@@ -143,17 +155,19 @@ export async function syncLeadsForEmployee(
 
       if (leads.length === 0) break
 
-      const leadRefs = leads.map((l) => String(l.id))
+      const leadRefs = leads.map((l) => getMySQLSourceLeadRef(l))
       const existingLeadsMap = await fetchExistingLeads(leadRefs)
       const leadsToCreate: any[] = []
       const leadsToUpdate: Array<{ leadRef: string; data: any }> = []
       const syncedLeadIds: number[] = []
+      const syncedLeadRefsById = new Map<number, string>()
       const leadDates: Date[] = []
       const leadIds: number[] = []
 
       const processLead = async (mysqlLead: MySQLLeadRow) => {
         try {
-          const leadRef = String(mysqlLead.id)
+          const leadRef = getMySQLSourceLeadRef(mysqlLead)
+          syncedLeadRefsById.set(mysqlLead.id, leadRef)
           leadDates.push(getLeadLatestActivityDate(mysqlLead))
           leadIds.push(mysqlLead.id)
           let leadData = mapMySQLLeadToPrisma(mysqlLead, systemUser!.id, lookups, bdMap)
@@ -207,7 +221,7 @@ export async function syncLeadsForEmployee(
         }
       }
 
-      if (syncedLeadIds.length > 0) await syncLeadRemarks(syncedLeadIds)
+      if (syncedLeadIds.length > 0) await syncLeadRemarks(syncedLeadIds, syncedLeadRefsById)
 
       progress.created += leadsToCreate.length
       progress.updated += leadsToUpdate.length

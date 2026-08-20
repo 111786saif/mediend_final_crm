@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
       profession: normalizeOptionalLeadText(parsed.data.profession),
       modeOfPayment: normalizedModeOfPayment,
       teamLeadId,
-    })
+    });
 
     const lead = await withGeneratedManualLeadRef((generatedLeadRef) =>
       prisma.lead.create({
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
           leadRef: true,
         },
       })
-    })
+    );
 
     return successResponse(
       lead,
