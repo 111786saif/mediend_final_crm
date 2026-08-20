@@ -689,14 +689,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   }, [setState])
 
   useEffect(() => {
-    const id = window.setTimeout(() => {
-      setSearchInput(state.q)
-    }, 0)
-
-    return () => window.clearTimeout(id)
-  }, [state.q])
-
-  useEffect(() => {
     if (debouncedSearch !== state.q) {
       setState({ q: debouncedSearch })
     }

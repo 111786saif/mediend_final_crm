@@ -122,6 +122,7 @@ export function usePipelineUrlState() {
   const searchParams = useSearchParams()
 
   const state = useMemo(() => readState(searchParams), [searchParams])
+  const currentStateQueryString = useMemo(() => toSearchParams(state).toString(), [state])
 
   const setState = useCallback(
     (patch: Partial<PipelineUrlState>, options?: { resetPage?: boolean }) => {
@@ -136,9 +137,12 @@ export function usePipelineUrlState() {
         }
       }
       const qs = toSearchParams(next).toString()
+      if (qs === currentStateQueryString) {
+        return
+      }
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
     },
-    [router, pathname, state],
+    [currentStateQueryString, router, pathname, state],
   )
 
   const campaignSelection: CampaignSelection = useMemo(() => {

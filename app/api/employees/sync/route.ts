@@ -80,7 +80,6 @@ async function runSyncInBackground(jobId: string) {
   const { getSyncJob } = await import('@/lib/sync/sync-job-store')
   const { syncLeadsForEmployee } = await import('@/lib/sync/sync-leads-for-employee')
   const { syncAttendanceForEmployee } = await import('@/lib/sync/sync-attendance-for-employee')
-  const { closeMySQLPool } = await import('@/lib/mysql-source-client')
 
   const job = getSyncJob(jobId)
   if (!job) return
@@ -150,7 +149,5 @@ async function runSyncInBackground(jobId: string) {
       j.status = 'failed'
       j.completedAt = new Date().toISOString()
     })
-  } finally {
-    try { await closeMySQLPool() } catch {}
   }
 }

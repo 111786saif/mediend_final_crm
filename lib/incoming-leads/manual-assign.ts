@@ -46,10 +46,33 @@ export type ManualAssignIncomingLeadsResult = {
   results: ManualAssignResultItem[]
 }
 
+function emptyLookupMaps(): LookupMaps {
+  return {
+    source: new Map(),
+    campaign: new Map(),
+    category: new Map(),
+    treatment: new Map(),
+    circle: new Map(),
+    status: new Map(),
+  }
+}
+
 type ManualAssignActor = {
   id: string
   name: string
   role: string
+}
+
+async function loadLookupMapsForManualAssign(): Promise<LookupMaps> {
+  try {
+    return await loadLookupMaps()
+  } catch (error) {
+    console.warn(
+      '[manual-assign] Falling back to empty MySQL lookups:',
+      error instanceof Error ? error.message : error
+    )
+    return emptyLookupMaps()
+  }
 }
 
 function getPayloadRecord(payload: unknown) {
@@ -724,7 +747,7 @@ export async function manuallyAssignIncomingLeads(
       let result: ManualAssignResultItem
       if (getMySQLLeadFromPayload(incomingLead.payload)) {
         if (!mysqlLookupsPromise) {
-          mysqlLookupsPromise = loadLookupMaps()
+          mysqlLookupsPromise = loadLookupMapsForManualAssign()
         }
         result = await processManualAssignedMySQLLead(
           incomingLead,
