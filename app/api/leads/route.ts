@@ -19,6 +19,7 @@ import {
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
+import { isLeadRefUniqueViolation, withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
 
 function normalizeOptionalLeadText(value: unknown) {
   if (value == null) return null
@@ -844,40 +845,56 @@ export async function POST(request: NextRequest) {
 
     const effectiveStatus = duplicateLead ? DUPLICATE_LEAD_STATUS : (status || 'Hot Lead')
 
-    const lead = await prisma.lead.create({
-      data: {
-        leadRef: leadRef || `LEAD-${Date.now()}`,
-        patientName,
-        age: parseInt(age),
-        sex,
-        phoneNumber,
-        alternateNumber,
-        attendantName,
-        bdId: bdId || user.id,
-        status: effectiveStatus,
-        pipelineStage: 'SALES',
-        circle: finalCircle,
-        category: finalCategory,
-        treatment: finalTreatment,
-        treatmentMasterId: finalTreatmentMasterId,
-        hospitalName,
-        source: finalSource,
-        campaignId: normalizedCampaignId,
-        campaignName: finalCampaignName,
-        remarks,
-        duplCount: 0,
-        createdById: user.id,
-        updatedById: user.id,
-      },
-      include: {
-        bd: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
+    const buildLeadData = (resolvedLeadRef: string) => ({
+      leadRef: resolvedLeadRef,
+      patientName,
+      age: parseInt(age),
+      sex,
+      phoneNumber,
+      alternateNumber,
+      attendantName,
+      bdId: bdId || user.id,
+      status: effectiveStatus,
+      pipelineStage: 'SALES',
+      circle: finalCircle,
+      category: finalCategory,
+      treatment: finalTreatment,
+      treatmentMasterId: finalTreatmentMasterId,
+      hospitalName,
+      source: finalSource,
+      campaignId: normalizedCampaignId,
+      campaignName: finalCampaignName,
+      remarks,
+      duplCount: 0,
+      createdById: user.id,
+      updatedById: user.id,
     })
+
+    const lead = leadRef
+      ? await prisma.lead.create({
+          data: buildLeadData(leadRef),
+          include: {
+            bd: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        })
+      : await withGeneratedManualLeadRef((generatedLeadRef) =>
+          prisma.lead.create({
+            data: buildLeadData(generatedLeadRef),
+            include: {
+              bd: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          })
+        )
 
     return successResponse(
       lead,
@@ -886,7 +903,7 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error('Error creating lead:', error)
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+    if (isLeadRefUniqueViolation(error)) {
       return errorResponse('Lead reference already exists', 400)
     }
     return errorResponse('Failed to create lead', 500)

@@ -10,6 +10,7 @@ const MODE_OF_PAYMENT_CODE_BY_KEY = {
   cashless: '2',
   emi: '3',
   reimbursement: '4',
+  not_yet_confirmed: 'Not Yet Confirmed',
 } as const
 
 type ModeOfPaymentKey = keyof typeof MODE_OF_PAYMENT_CODE_BY_KEY
@@ -38,6 +39,7 @@ export function normalizeModeOfPaymentLabel(value: unknown): string | null {
   if (lowered === 'cashless') return 'Cashless'
   if (lowered === 'emi') return 'EMI'
   if (lowered === 'reimbursement') return 'Reimbursement'
+  if (lowered === 'not yet confirmed') return 'Not Yet Confirmed'
 
   return raw
 }
@@ -51,6 +53,7 @@ export function normalizeModeOfPaymentKey(value: unknown): ModeOfPaymentKey | nu
   if (lowered === 'cashless') return 'cashless'
   if (lowered === 'emi') return 'emi'
   if (lowered === 'reimbursement') return 'reimbursement'
+  if (lowered === 'not yet confirmed') return 'not_yet_confirmed'
 
   return null
 }

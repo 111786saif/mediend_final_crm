@@ -12,6 +12,7 @@ import {
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
 import { isLeadDateAfterToday, LEAD_DATE_FUTURE_ERROR } from '@/lib/lead-date-validation'
+import { isLeadRefUniqueViolation, withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
 import { prisma } from '@/lib/prisma'
 import { hasPermission } from '@/lib/rbac'
 import { getSessionWithFreshUser } from '@/lib/session'
@@ -65,10 +66,6 @@ function normalizeOptionalLeadText(value: unknown) {
 
 function formatMonthName(date: Date) {
   return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date)
-}
-
-function buildManualLeadRef() {
-  return `ML-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`
 }
 
 export async function POST(request: NextRequest) {
@@ -140,47 +137,51 @@ export async function POST(request: NextRequest) {
 
     const teamLeadId = await getLeadTeamLeadIdForAssigneeManager(assignee.id)
     const assignedAt = new Date()
-    const lead = await prisma.lead.create({
-      data: {
-        leadRef: buildManualLeadRef(),
-        patientName: parsed.data.patientName.trim(),
-        age: parsed.data.age ?? 0,
-        sex: normalizeOptionalLeadText(parsed.data.sex) ?? 'Not Specified',
-        phoneNumber: parsed.data.phoneNumber.trim(),
-        alternateNumber: normalizeOptionalLeadText(parsed.data.alternateNumber),
-        bdId: assignee.id,
-        bdeName: assignee.name,
-        status: effectiveStatus,
-        pipelineStage: PipelineStage.SALES,
-        caseStage: CaseStage.NEW_LEAD,
-        circle: normalizeOptionalLeadText(parsed.data.circle) ?? 'Unknown',
-        category:
-          normalizeOptionalLeadText(parsed.data.category) ??
-          normalizeOptionalLeadText(treatmentMaster?.category) ??
-          null,
-        treatment: normalizeOptionalLeadText(treatmentMaster?.name) ?? null,
-        treatmentMasterId: treatmentMaster?.id ?? null,
-        hospitalName: normalizeOptionalLeadText(parsed.data.hospitalName) ?? 'Not Specified',
-        source: normalizeOptionalLeadText(parsed.data.source),
-        campaignName: normalizeOptionalLeadText(parsed.data.leadSource),
-        remarks: normalizeOptionalLeadText(parsed.data.remarks),
-        duplCount: 0,
-        createdById: currentUser.id,
-        updatedById: currentUser.id,
-        createdDate: leadDate,
-        assignedDate: assignedAt,
-        leadEntryDate: leadDate,
-        month: formatMonthName(leadDate),
-        patientEmail: normalizeOptionalLeadText(parsed.data.patientEmail),
-        insuranceName: normalizeOptionalLeadText(parsed.data.insuranceName),
-        profession: normalizeOptionalLeadText(parsed.data.profession),
-        modeOfPayment: normalizedModeOfPayment,
-        teamLeadId,
-      },
-      select: {
-        id: true,
-        leadRef: true,
-      },
+    const buildLeadData = (generatedLeadRef: string) => ({
+      leadRef: generatedLeadRef,
+      patientName: parsed.data.patientName.trim(),
+      age: parsed.data.age ?? 0,
+      sex: normalizeOptionalLeadText(parsed.data.sex) ?? 'Not Specified',
+      phoneNumber: parsed.data.phoneNumber.trim(),
+      alternateNumber: normalizeOptionalLeadText(parsed.data.alternateNumber),
+      bdId: assignee.id,
+      bdeName: assignee.name,
+      status: effectiveStatus,
+      pipelineStage: PipelineStage.SALES,
+      caseStage: CaseStage.NEW_LEAD,
+      circle: normalizeOptionalLeadText(parsed.data.circle) ?? 'Unknown',
+      category:
+        normalizeOptionalLeadText(parsed.data.category) ??
+        normalizeOptionalLeadText(treatmentMaster?.category) ??
+        null,
+      treatment: normalizeOptionalLeadText(treatmentMaster?.name) ?? null,
+      treatmentMasterId: treatmentMaster?.id ?? null,
+      hospitalName: normalizeOptionalLeadText(parsed.data.hospitalName) ?? 'Not Specified',
+      source: normalizeOptionalLeadText(parsed.data.source),
+      campaignName: normalizeOptionalLeadText(parsed.data.leadSource),
+      remarks: normalizeOptionalLeadText(parsed.data.remarks),
+      duplCount: 0,
+      createdById: currentUser.id,
+      updatedById: currentUser.id,
+      createdDate: leadDate,
+      assignedDate: assignedAt,
+      leadEntryDate: leadDate,
+      month: formatMonthName(leadDate),
+      patientEmail: normalizeOptionalLeadText(parsed.data.patientEmail),
+      insuranceName: normalizeOptionalLeadText(parsed.data.insuranceName),
+      profession: normalizeOptionalLeadText(parsed.data.profession),
+      modeOfPayment: normalizedModeOfPayment,
+      teamLeadId,
+    })
+
+    const lead = await withGeneratedManualLeadRef((generatedLeadRef) =>
+      prisma.lead.create({
+        data: buildLeadData(generatedLeadRef),
+        select: {
+          id: true,
+          leadRef: true,
+        },
+      })
     })
 
     return successResponse(
@@ -189,7 +190,7 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error('Error creating pipeline manual lead:', error)
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+    if (isLeadRefUniqueViolation(error)) {
       return errorResponse('Lead reference already exists', 400)
     }
     return errorResponse('Failed to create manual lead', 500)
