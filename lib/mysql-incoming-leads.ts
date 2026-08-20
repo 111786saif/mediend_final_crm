@@ -15,7 +15,6 @@ import {
 import type { LookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { resolveInboundSubStatus } from '@/lib/sub-status'
 import {
-  DuplicateLeadPhoneError,
   findLatestPriorIncomingLeadByPrimaryPhone,
 } from '@/lib/lead-duplicates'
 
@@ -264,28 +263,9 @@ export async function processMySQLIncomingLead(
     excludeIncomingLeadId: incomingLead.id,
     beforeReceivedAt: incomingLead.receivedAt,
   })
-
-  if (priorIncomingLead && !priorIncomingLead.processedLeadId) {
-    const errorMessage = `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
-    await prisma.incomingLead.update({
-      where: { id: incomingLead.id },
-      data: {
-        status: 'DUPLICATE',
-        externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
-        selectedTeamLeadUserId: null,
-        selectedTeamLeadEmployeeId: null,
-        selectedBdUserId: null,
-        normalizedPhone,
-        processedAt: new Date(),
-        errorMessage,
-      },
-    })
-
-    return {
-      status: 'duplicate' as const,
-      assignedBdName: null,
-    }
-  }
+  const hasPriorIncomingDuplicate = Boolean(
+    priorIncomingLead && !priorIncomingLead.processedLeadId
+  )
 
   const leadData =
     mapMySQLLeadToPrisma(mysqlLead, deps.systemUserId, deps.lookups, deps.bdMap) ??
@@ -330,6 +310,7 @@ export async function processMySQLIncomingLead(
   const createInput: ImportedLeadCreateInput = {
     source: sourceLabel,
     sourceReference: leadRef,
+    forceDuplicateStatus: hasPriorIncomingDuplicate,
     assignmentContext: {
       externalCampaignId: mysqlCampaignId,
       city: assignmentCity,
@@ -343,46 +324,27 @@ export async function processMySQLIncomingLead(
   }
 
   let result
-  try {
-    result = await createImportedLeadWithCrmAssignment(createInput)
-  } catch (error) {
-    if (error instanceof DuplicateLeadPhoneError) {
-      await prisma.incomingLead.update({
-        where: { id: incomingLead.id },
-        data: {
-          status: 'DUPLICATE',
-          processedLeadId: error.leadId,
-          externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
-          selectedTeamLeadUserId: null,
-          selectedTeamLeadEmployeeId: null,
-          selectedBdUserId: null,
-          normalizedPhone: error.normalizedPhone,
-          processedAt: new Date(),
-          errorMessage: `Duplicate phone number. Existing lead: ${error.leadRef}. Duplicate count: ${error.duplicateCount}`,
-        },
-      })
+  result = await createImportedLeadWithCrmAssignment(createInput)
 
-      return {
-        status: 'duplicate' as const,
-        leadId: error.leadId,
-        leadRef: error.leadRef,
-        assignedBdName: null,
-      }
-    }
-    throw error
-  }
+  const isDuplicate = result.deduplicated
+  const duplicateErrorMessage = result.duplicateLeadRef
+    ? `Duplicate phone number. Existing lead: ${result.duplicateLeadRef}. Duplicate count: ${result.duplicateCount ?? 0}`
+    : hasPriorIncomingDuplicate && priorIncomingLead
+      ? `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
+      : null
 
   await prisma.incomingLead.update({
     where: { id: incomingLead.id },
     data: {
-      status: 'PROCESSED',
+      status: isDuplicate ? 'DUPLICATE' : 'PROCESSED',
       processedLeadId: result.leadId,
       externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
       selectedTeamLeadUserId: result.assignment?.teamLead?.userId ?? null,
       selectedTeamLeadEmployeeId: result.assignment?.teamLead?.employeeId ?? null,
       selectedBdUserId: result.assignment?.bd.userId ?? null,
+      normalizedPhone: result.normalizedPhone ?? normalizedPhone,
       processedAt: new Date(),
-      errorMessage: null,
+      errorMessage: duplicateErrorMessage,
     },
   })
 
@@ -391,7 +353,7 @@ export async function processMySQLIncomingLead(
   )
 
   return {
-    status: 'processed' as const,
+    status: isDuplicate ? ('duplicate' as const) : ('processed' as const),
     leadId: result.leadId,
     leadRef: result.leadRef,
     assignedBdName: result.assignment?.bd.name ?? null,

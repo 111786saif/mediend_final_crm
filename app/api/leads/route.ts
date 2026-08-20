@@ -15,6 +15,7 @@ import { maskPhoneNumber } from '@/lib/phone-utils'
 import { last10DigitsFromStored } from '@/lib/phone-search'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 import {
+  DUPLICATE_LEAD_STATUS,
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
@@ -811,13 +812,6 @@ export async function POST(request: NextRequest) {
     }
 
     const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-    if (duplicateLead) {
-      return errorResponse(
-        `Duplicate lead detected for this phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
-        409
-      )
-    }
-
     const normalizedCampaignId = normalizeOptionalLeadText(campaignId)
     const campaign = normalizedCampaignId
       ? await getCampaignForWebhook(normalizedCampaignId)
@@ -848,6 +842,8 @@ export async function POST(request: NextRequest) {
         normalizeOptionalLeadText(campaignName)
       : normalizeOptionalLeadText(campaignName)
 
+    const effectiveStatus = duplicateLead ? DUPLICATE_LEAD_STATUS : (status || 'Hot Lead')
+
     const lead = await prisma.lead.create({
       data: {
         leadRef: leadRef || `LEAD-${Date.now()}`,
@@ -858,7 +854,7 @@ export async function POST(request: NextRequest) {
         alternateNumber,
         attendantName,
         bdId: bdId || user.id,
-        status: status || 'Hot Lead',
+        status: effectiveStatus,
         pipelineStage: 'SALES',
         circle: finalCircle,
         category: finalCategory,
@@ -883,7 +879,11 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return successResponse(lead, 'Lead created successfully', 'lead')
+    return successResponse(
+      lead,
+      duplicateLead ? 'Duplicate lead created successfully' : 'Lead created successfully',
+      'lead'
+    )
   } catch (error) {
     console.error('Error creating lead:', error)
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {

@@ -13,6 +13,7 @@ import { getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
 import { prisma } from '@/lib/prisma'
 import { resolveInboundSubStatus } from '@/lib/sub-status'
 import {
+  DUPLICATE_LEAD_STATUS,
   findLatestPriorIncomingLeadByPrimaryPhone,
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
@@ -1307,30 +1308,9 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
     excludeIncomingLeadId: input.incomingLeadId,
     beforeReceivedAt: receivedAt,
   })
-
-  if (priorIncomingLead && !priorIncomingLead.processedLeadId) {
-    await prisma.incomingLead.update({
-      where: { id: input.incomingLeadId },
-      data: {
-        status: 'DUPLICATE',
-        externalCampaignId: input.externalCampaignId,
-        normalizedPhone,
-        processedAt: receivedAt,
-        errorMessage: `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`,
-      },
-    })
-
-    return {
-      success: true,
-      deduplicated: true,
-      leadId: undefined,
-      leadRef: undefined,
-      campaign: null,
-      teamLead: null,
-      bd: null,
-      assignedToTeamLeadFallback: false,
-    }
-  }
+  const hasPriorIncomingDuplicate = Boolean(
+    priorIncomingLead && !priorIncomingLead.processedLeadId
+  )
 
   const campaign = await getCampaignForWebhook(input.externalCampaignId)
 
@@ -1383,45 +1363,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
   }
 
   const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-  if (duplicateLead) {
-    await prisma.incomingLead.update({
-      where: { id: input.incomingLeadId },
-      data: {
-        status: 'DUPLICATE',
-        externalCampaignId: campaign.externalCampaignId,
-        normalizedPhone,
-        processedLeadId: duplicateLead.id,
-        selectedTeamLeadUserId: null,
-        selectedTeamLeadEmployeeId: null,
-        selectedBdUserId: null,
-        processedAt: receivedAt,
-        errorMessage: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
-      },
-    })
-
-    return {
-      success: true,
-      deduplicated: true,
-      leadId: duplicateLead.id,
-      leadRef: duplicateLead.leadRef,
-      campaign: {
-        id: campaign.id,
-        externalCampaignId: campaign.externalCampaignId,
-        displayName: campaign.displayName,
-      },
-      teamLead: {
-        employeeId: selectedAssignment.teamLeadEmployeeId,
-        userId: selectedAssignment.teamLeadUserId,
-        name: selectedAssignment.teamLeadUser.name,
-      },
-      bd: {
-        employeeId: selectedBd.id,
-        userId: selectedBd.userId,
-        name: selectedBd.user.name,
-      },
-      assignedToTeamLeadFallback,
-    }
-  }
+  const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
 
   const systemUserId = await getDefaultSystemUserId()
   const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
@@ -1455,7 +1397,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       age: 0,
       sex: 'Not Specified',
       phoneNumber: input.phone.trim(),
-      status: 'New Lead',
+      status: isDuplicate ? DUPLICATE_LEAD_STATUS : 'New Lead',
       pipelineStage: PipelineStage.SALES,
       flowType: FlowType.INSURANCE,
       hospitalName: 'Not Specified',
@@ -1486,7 +1428,7 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
   await prisma.incomingLead.update({
     where: { id: input.incomingLeadId },
     data: {
-      status: 'PROCESSED',
+      status: isDuplicate ? 'DUPLICATE' : 'PROCESSED',
       externalCampaignId: campaign.externalCampaignId,
       normalizedPhone,
       processedLeadId: lead.id,
@@ -1494,13 +1436,17 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       selectedTeamLeadEmployeeId: selectedAssignment.teamLeadEmployeeId,
       selectedBdUserId: assignedToTeamLeadFallback ? null : selectedBd.userId,
       processedAt: receivedAt,
-      errorMessage: null,
+      errorMessage: duplicateLead
+        ? `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`
+        : hasPriorIncomingDuplicate && priorIncomingLead
+          ? `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
+          : null,
     },
   })
 
   return {
     success: true,
-    deduplicated: false,
+    deduplicated: isDuplicate,
     leadId: lead.id,
     leadRef: lead.leadRef,
     campaign: {

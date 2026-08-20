@@ -2,6 +2,7 @@ import { EmployeeStatus, FlowType, PipelineStage, UserRole } from '@/generated/p
 import { logCrmActivity } from '@/lib/crm-activity'
 import { getBusinessMonthYear, getDefaultSystemUserId } from '@/lib/crm-campaigns'
 import {
+  DUPLICATE_LEAD_STATUS,
   findLatestPriorIncomingLeadByPrimaryPhone,
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
@@ -381,52 +382,15 @@ async function processManualAssignedMySQLLead(
   }
 
   const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-  if (duplicateLead) {
-    await prisma.incomingLead.update({
-      where: { id: incomingLead.id },
-      data: {
-        status: 'DUPLICATE',
-        processedLeadId: duplicateLead.id,
-        normalizedPhone,
-        selectedTeamLeadUserId: bd.managerUserId,
-        selectedTeamLeadEmployeeId: bd.managerEmployeeId,
-        selectedBdUserId: bd.userId,
-        processedAt: new Date(),
-        errorMessage: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
-      },
-    })
-    return {
-      incomingLeadId: incomingLead.id,
-      status: 'duplicate',
-      leadId: duplicateLead.id,
-      leadRef: duplicateLead.leadRef,
-      bdName: bd.userName,
-    }
-  }
 
   const priorIncomingLead = await findLatestPriorIncomingLeadByPrimaryPhone(normalizedPhone, {
     excludeIncomingLeadId: incomingLead.id,
     beforeReceivedAt: incomingLead.receivedAt,
   })
-  if (priorIncomingLead && !priorIncomingLead.processedLeadId) {
-    await prisma.incomingLead.update({
-      where: { id: incomingLead.id },
-      data: {
-        status: 'DUPLICATE',
-        normalizedPhone,
-        selectedTeamLeadUserId: bd.managerUserId,
-        selectedTeamLeadEmployeeId: bd.managerEmployeeId,
-        selectedBdUserId: bd.userId,
-        processedAt: new Date(),
-        errorMessage: `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`,
-      },
-    })
-    return {
-      incomingLeadId: incomingLead.id,
-      status: 'duplicate',
-      bdName: bd.userName,
-    }
-  }
+  const hasPriorIncomingDuplicate = Boolean(
+    priorIncomingLead && !priorIncomingLead.processedLeadId
+  )
+  const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
 
   const leadData = mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUserId, lookups)
   const { updatedDate, ...leadDataWithoutOwner } = leadData
@@ -435,6 +399,7 @@ async function processManualAssignedMySQLLead(
     data: {
       ...leadDataWithoutOwner,
       ...(updatedDate !== null ? { updatedDate } : {}),
+      status: isDuplicate ? DUPLICATE_LEAD_STATUS : leadDataWithoutOwner.status,
       bdId: bd.userId,
       bdeName: bd.userName,
       teamLeadId: bd.managerLeadId,
@@ -448,19 +413,24 @@ async function processManualAssignedMySQLLead(
   await prisma.incomingLead.update({
     where: { id: incomingLead.id },
     data: {
-      status: 'PROCESSED',
+      status: isDuplicate ? 'DUPLICATE' : 'PROCESSED',
       processedLeadId: createdLead.id,
+      normalizedPhone,
       selectedTeamLeadUserId: bd.managerUserId,
       selectedTeamLeadEmployeeId: bd.managerEmployeeId,
       selectedBdUserId: bd.userId,
       processedAt: new Date(),
-      errorMessage: null,
+      errorMessage: duplicateLead
+        ? `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`
+        : hasPriorIncomingDuplicate && priorIncomingLead
+          ? `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
+          : null,
     },
   })
 
   return {
     incomingLeadId: incomingLead.id,
-    status: 'processed',
+    status: isDuplicate ? 'duplicate' : 'processed',
     leadId: createdLead.id,
     leadRef: createdLead.leadRef,
     bdName: bd.userName,
@@ -531,25 +501,9 @@ async function processManualAssignedSaveMyLeadsLead(
     excludeIncomingLeadId: incomingLead.id,
     beforeReceivedAt: incomingLead.receivedAt,
   })
-  if (priorIncomingLead && !priorIncomingLead.processedLeadId) {
-    await prisma.incomingLead.update({
-      where: { id: incomingLead.id },
-      data: {
-        status: 'DUPLICATE',
-        normalizedPhone,
-        selectedTeamLeadUserId: bd.managerUserId,
-        selectedTeamLeadEmployeeId: bd.managerEmployeeId,
-        selectedBdUserId: bd.userId,
-        processedAt: new Date(),
-        errorMessage: `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`,
-      },
-    })
-    return {
-      incomingLeadId: incomingLead.id,
-      status: 'duplicate',
-      bdName: bd.userName,
-    }
-  }
+  const hasPriorIncomingDuplicate = Boolean(
+    priorIncomingLead && !priorIncomingLead.processedLeadId
+  )
 
   const campaign = await loadWebhookCampaign(extracted.campaignId)
   if (!campaign || !campaign.isActive) {
@@ -566,30 +520,7 @@ async function processManualAssignedSaveMyLeadsLead(
   }
 
   const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-
-  if (duplicateLead) {
-    await prisma.incomingLead.update({
-      where: { id: incomingLead.id },
-      data: {
-        status: 'DUPLICATE',
-        externalCampaignId: campaign.externalCampaignId,
-        normalizedPhone,
-        processedLeadId: duplicateLead.id,
-        selectedTeamLeadUserId: bd.managerUserId,
-        selectedTeamLeadEmployeeId: bd.managerEmployeeId,
-        selectedBdUserId: bd.userId,
-        processedAt: new Date(),
-        errorMessage: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
-      },
-    })
-    return {
-      incomingLeadId: incomingLead.id,
-      status: 'duplicate',
-      leadId: duplicateLead.id,
-      leadRef: duplicateLead.leadRef,
-      bdName: bd.userName,
-    }
-  }
+  const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
 
   const { month } = getBusinessMonthYear(incomingLead.receivedAt)
   const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
@@ -621,7 +552,7 @@ async function processManualAssignedSaveMyLeadsLead(
       age: 0,
       sex: 'Not Specified',
       phoneNumber: extracted.phone || '0000000000',
-      status: 'New Lead',
+      status: isDuplicate ? DUPLICATE_LEAD_STATUS : 'New Lead',
       pipelineStage: PipelineStage.SALES,
       flowType: FlowType.INSURANCE,
       hospitalName: 'Not Specified',
@@ -653,7 +584,7 @@ async function processManualAssignedSaveMyLeadsLead(
   await prisma.incomingLead.update({
     where: { id: incomingLead.id },
     data: {
-      status: 'PROCESSED',
+      status: isDuplicate ? 'DUPLICATE' : 'PROCESSED',
       externalCampaignId: campaign.externalCampaignId,
       normalizedPhone,
       processedLeadId: lead.id,
@@ -661,13 +592,17 @@ async function processManualAssignedSaveMyLeadsLead(
       selectedTeamLeadEmployeeId: bd.managerEmployeeId,
       selectedBdUserId: bd.userId,
       processedAt: new Date(),
-      errorMessage: null,
+      errorMessage: duplicateLead
+        ? `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`
+        : hasPriorIncomingDuplicate && priorIncomingLead
+          ? `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
+          : null,
     },
   })
 
   return {
     incomingLeadId: incomingLead.id,
-    status: 'processed',
+    status: isDuplicate ? 'duplicate' : 'processed',
     leadId: lead.id,
     leadRef: lead.leadRef,
     bdName: bd.userName,

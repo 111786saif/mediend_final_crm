@@ -7,6 +7,7 @@ import {
   CRM_MODE_OF_PAYMENT_OPTIONS,
 } from '@/lib/lead-status-options'
 import {
+  DUPLICATE_LEAD_STATUS,
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
@@ -107,17 +108,11 @@ export async function POST(request: NextRequest) {
     }
 
     const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-    if (duplicateLead) {
-      return errorResponse(
-        `Duplicate lead detected for this phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
-        409,
-      )
-    }
-
     const normalizedStatus = normalizeOptionalLeadText(parsed.data.status) ?? 'New Lead'
-    if (!CRM_LEAD_STATUS_OPTIONS.includes(normalizedStatus)) {
+    if (!duplicateLead && !CRM_LEAD_STATUS_OPTIONS.includes(normalizedStatus)) {
       return errorResponse('Please select a valid lead status', 400)
     }
+    const effectiveStatus = duplicateLead ? DUPLICATE_LEAD_STATUS : normalizedStatus
 
     const normalizedModeOfPayment = normalizeOptionalLeadText(parsed.data.modeOfPayment)
     if (
@@ -155,7 +150,7 @@ export async function POST(request: NextRequest) {
         alternateNumber: normalizeOptionalLeadText(parsed.data.alternateNumber),
         bdId: assignee.id,
         bdeName: assignee.name,
-        status: normalizedStatus,
+        status: effectiveStatus,
         pipelineStage: PipelineStage.SALES,
         caseStage: CaseStage.NEW_LEAD,
         circle: normalizeOptionalLeadText(parsed.data.circle) ?? 'Unknown',
@@ -188,7 +183,10 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return successResponse(lead, 'Lead created successfully')
+    return successResponse(
+      lead,
+      duplicateLead ? 'Duplicate lead created successfully' : 'Lead created successfully'
+    )
   } catch (error) {
     console.error('Error creating pipeline manual lead:', error)
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {

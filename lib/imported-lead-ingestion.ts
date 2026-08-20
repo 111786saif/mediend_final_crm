@@ -8,6 +8,7 @@ import {
 } from '@/lib/crm-campaigns'
 import { dryRunCrmLeadAssignment } from '@/lib/crm-assignment'
 import {
+  DUPLICATE_LEAD_STATUS,
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
@@ -31,6 +32,7 @@ export type ImportedLeadCreateInput = {
   source: ImportedLeadSource
   sourceReference: string
   assignmentContext: ImportedLeadAssignmentContext
+  forceDuplicateStatus?: boolean
   leadData: Omit<Prisma.LeadCreateInput, 'bd' | 'bdeName'> & {
     bdId?: string | null
     bdeName?: string | null
@@ -40,6 +42,7 @@ export type ImportedLeadCreateInput = {
 
 export type ImportedLeadIngestionResult = {
   created: boolean
+  deduplicated: boolean
   leadId: string
   leadRef: string
   assignmentApplied: boolean
@@ -47,27 +50,10 @@ export type ImportedLeadIngestionResult = {
   assignment: unknown
   candidateDiagnostics: unknown
   explanation: string
-}
-
-export class DuplicateLeadPhoneError extends Error {
-  leadId: string
-  leadRef: string
-  duplicateCount: number
-  normalizedPhone: string
-
-  constructor(params: {
-    leadId: string
-    leadRef: string
-    duplicateCount: number
-    normalizedPhone: string
-  }) {
-    super(`Duplicate lead phone ${params.normalizedPhone}. Existing leadRef: ${params.leadRef}`)
-    this.name = 'DuplicateLeadPhoneError'
-    this.leadId = params.leadId
-    this.leadRef = params.leadRef
-    this.duplicateCount = params.duplicateCount
-    this.normalizedPhone = params.normalizedPhone
-  }
+  duplicateLeadId?: string
+  duplicateLeadRef?: string
+  duplicateCount?: number
+  normalizedPhone?: string
 }
 
 function normalizeImportedLeadString(value: unknown): string | null {
@@ -125,14 +111,7 @@ export async function createImportedLeadWithCrmAssignment(
   }
 
   const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-  if (duplicateLead) {
-    throw new DuplicateLeadPhoneError({
-      leadId: duplicateLead.id,
-      leadRef: duplicateLead.leadRef,
-      duplicateCount: duplicateLead.duplCount,
-      normalizedPhone,
-    })
-  }
+  const isDuplicate = Boolean(duplicateLead) || Boolean(input.forceDuplicateStatus)
 
   const assignmentResult = await previewImportedLeadAssignment(input.assignmentContext)
 
@@ -210,6 +189,10 @@ export async function createImportedLeadWithCrmAssignment(
   const lead = await prisma.lead.create({
     data: {
       ...leadDataWithoutOwner,
+      status: isDuplicate
+        ? DUPLICATE_LEAD_STATUS
+        : normalizeImportedLeadString(typeof leadDataWithoutOwner.status === 'string' ? leadDataWithoutOwner.status : null) ??
+          'New Lead',
       circle: leadCircle,
       category: leadCategory,
       treatment: leadTreatment,
@@ -230,6 +213,7 @@ export async function createImportedLeadWithCrmAssignment(
 
   return {
     created: true,
+    deduplicated: isDuplicate,
     leadId: lead.id,
     leadRef: lead.leadRef,
     assignmentApplied: true,
@@ -237,6 +221,10 @@ export async function createImportedLeadWithCrmAssignment(
     assignment: assignmentResult.assignment,
     candidateDiagnostics: assignmentResult.candidateDiagnostics,
     explanation: assignmentResult.explanation,
+    duplicateLeadId: duplicateLead?.id,
+    duplicateLeadRef: duplicateLead?.leadRef,
+    duplicateCount: duplicateLead?.duplCount,
+    normalizedPhone,
   }
 }
 
