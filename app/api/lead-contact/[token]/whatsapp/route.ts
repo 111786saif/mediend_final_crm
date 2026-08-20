@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { errorResponse } from '@/lib/api-utils'
 import {
   loadLeadQrPublicLink,
+  normalizeLeadQrWhatsappPhone,
   parseLeadQrDeviceInfo,
   recordLeadQrEvent,
 } from '@/lib/lead-qr'
@@ -18,10 +19,10 @@ export async function GET(
     }
     const lead = publicLink.lead
 
-    const rawPhone = lead.phoneNumber ?? lead.alternateNumber ?? ''
-    const cleanDigits = rawPhone.replace(/\D+/g, '')
-
-    if (!cleanDigits) {
+    const targetPhone = normalizeLeadQrWhatsappPhone(
+      lead.phoneNumber ?? lead.alternateNumber ?? ''
+    )
+    if (!targetPhone) {
       const errorUrl = new URL(`/lead-contact/${encodeURIComponent(token)}`, request.url)
       errorUrl.searchParams.set('error', 'no-phone')
       return NextResponse.redirect(errorUrl)
@@ -43,8 +44,6 @@ export async function GET(
       summary: `QR contact WhatsApp started from ${deviceInfo.label} for ${lead.patientName || lead.leadRef || 'lead'}`,
       source: 'public_page',
     })
-
-    const targetPhone = cleanDigits.length >= 10 ? cleanDigits.slice(-10) : cleanDigits
 
     return NextResponse.redirect(`https://wa.me/${targetPhone}`)
   } catch (error) {

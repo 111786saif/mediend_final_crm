@@ -335,10 +335,15 @@ export function KYPBasicForm({
 
     setErrors({})
     try {
+      const submittedPhone =
+        canViewPhone && formData.phone.trim().replace(/\D/g, '').length >= 10
+          ? formData.phone.trim()
+          : undefined
+
       await apiPost('/api/kyp/submit', {
         leadId,
         patientName: formData.patientName.trim(),
-        phone: formData.phone.trim(),
+        ...(submittedPhone ? { phone: submittedPhone } : {}),
         age: computedAge,
         dateOfBirth: formData.dob?.trim() || undefined,
         sex: formData.sex,
