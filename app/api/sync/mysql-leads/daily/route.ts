@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server'
 import {
   queryMySQL,
-  closeMySQLPool,
   testMySQLConnection,
 } from '@/lib/mysql-source-client'
 import { prisma } from '@/lib/prisma'
@@ -367,8 +366,6 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    await closeMySQLPool()
-
     const executionTime = Date.now() - startTime
 
     return successResponse({
@@ -404,7 +401,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Error in daily MySQL leads sync:', error)
-    await closeMySQLPool().catch(() => {})
     return errorResponse(
       error instanceof Error ? error.message : 'Failed to sync MySQL leads',
       500
