@@ -10,6 +10,7 @@ import {
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
+import { isLeadDateAfterToday, LEAD_DATE_FUTURE_ERROR } from '@/lib/lead-date-validation'
 import { prisma } from '@/lib/prisma'
 import { hasPermission } from '@/lib/rbac'
 import { getSessionWithFreshUser } from '@/lib/session'
@@ -96,6 +97,10 @@ export async function POST(request: NextRequest) {
       return errorResponse('Lead date is invalid', 400)
     }
 
+    if (isLeadDateAfterToday(leadDate)) {
+      return errorResponse(LEAD_DATE_FUTURE_ERROR, 400)
+    }
+
     const normalizedPhone = normalizeLeadPhoneToLast10(parsed.data.phoneNumber)
     if (!normalizedPhone) {
       return errorResponse('Phone number must contain at least 10 digits', 400)
@@ -139,6 +144,7 @@ export async function POST(request: NextRequest) {
     }
 
     const teamLeadId = await getLeadTeamLeadIdForAssigneeManager(assignee.id)
+    const assignedAt = new Date()
     const lead = await prisma.lead.create({
       data: {
         leadRef: buildManualLeadRef(),
@@ -167,7 +173,7 @@ export async function POST(request: NextRequest) {
         createdById: currentUser.id,
         updatedById: currentUser.id,
         createdDate: leadDate,
-        assignedDate: leadDate,
+        assignedDate: assignedAt,
         leadEntryDate: leadDate,
         month: formatMonthName(leadDate),
         patientEmail: normalizeOptionalLeadText(parsed.data.patientEmail),
