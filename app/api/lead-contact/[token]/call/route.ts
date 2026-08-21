@@ -19,8 +19,12 @@ export async function GET(
     }
     const lead = publicLink.lead
 
-    const normalizedPhone = normalizeLeadQrPhone(lead.phoneNumber)
-    if (!normalizedPhone) {
+    const targetParam = request.nextUrl.searchParams.get('target')
+    const callTarget = targetParam === 'alternate' ? 'alternate' : 'primary'
+    const targetPhone = normalizeLeadQrPhone(
+      callTarget === 'alternate' ? lead.alternateNumber ?? '' : lead.phoneNumber ?? ''
+    )
+    if (!targetPhone) {
       const errorUrl = new URL(`/lead-contact/${encodeURIComponent(token)}`, request.url)
       errorUrl.searchParams.set('error', 'no-phone')
       return NextResponse.redirect(errorUrl)
@@ -36,13 +40,23 @@ export async function GET(
       actorUserId: publicLink.actorUser.id,
       actorRole: publicLink.actorUser.role,
       actorName: publicLink.actorUser.name ?? null,
-      auditAction: 'QR_CALL_INITIATED',
-      crmAction: 'CRM_LEAD_QR_CALL_STARTED',
-      summary: `QR contact call started from ${deviceInfo.label} for ${lead.patientName || lead.leadRef || 'lead'}`,
+      auditAction: callTarget === 'alternate' ? 'QR_ALTERNATE_CALL_INITIATED' : 'QR_CALL_INITIATED',
+      crmAction:
+        callTarget === 'alternate'
+          ? 'CRM_LEAD_QR_ALTERNATE_CALL_STARTED'
+          : 'CRM_LEAD_QR_CALL_STARTED',
+      summary:
+        callTarget === 'alternate'
+          ? `QR alternate contact call started from ${deviceInfo.label} for ${lead.patientName || lead.leadRef || 'lead'}`
+          : `QR contact call started from ${deviceInfo.label} for ${lead.patientName || lead.leadRef || 'lead'}`,
       source: 'public_page',
+      phoneNumber: callTarget === 'alternate' ? lead.alternateNumber : lead.phoneNumber,
+      metadata: {
+        contactTarget: callTarget,
+      },
     })
 
-    return NextResponse.redirect(`tel:${normalizedPhone}`)
+    return NextResponse.redirect(`tel:${targetPhone}`)
   } catch (error) {
     console.error('GET /api/lead-contact/[token]/call', error)
     return errorResponse('Failed to initiate call.', 500)

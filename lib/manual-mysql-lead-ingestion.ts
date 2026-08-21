@@ -13,6 +13,7 @@ import {
   normalizeFlexibleDateInput,
   parseFlexibleDateInput,
 } from '@/lib/flexible-date-input'
+import { isLeadDateAfterToday, LEAD_DATE_FUTURE_ERROR } from '@/lib/lead-date-validation'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps, type LookupMaps } from '@/lib/sync/mysql-lookup-cache'
@@ -86,6 +87,29 @@ function deriveMonthNameFromLeadDate(value: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date)
 }
 
+function getManualLeadDateFieldEntries(record: ManualLeadInputRecord) {
+  return [
+    ['Lead_Date', record.Lead_Date],
+    ['LeadEntryDate', record.LeadEntryDate],
+    ['create_date', record.create_date],
+  ] as const
+}
+
+function resolveManualLeadDate(record: ManualLeadInputRecord) {
+  for (const [fieldKey, rawValue] of getManualLeadDateFieldEntries(record)) {
+    const parsedValue = parseFlexibleDateInput(rawValue)
+    if (!parsedValue) continue
+
+    if (isLeadDateAfterToday(parsedValue)) {
+      throw new Error(`${LEAD_DATE_FUTURE_ERROR} (${fieldKey})`)
+    }
+
+    return normalizeFlexibleDateInput(parsedValue)!
+  }
+
+  return getCurrentNormalizedDateTime()
+}
+
 function buildManualLeadId(record: ManualLeadInputRecord, rowNumber: number) {
   const explicitId = parseNumberish(record.id)
   if (explicitId != null) return explicitId
@@ -103,20 +127,17 @@ function validateManualRow(record: ManualLeadInputRecord) {
 }
 
 function toMySQLLeadRow(record: ManualLeadInputRecord, rowNumber: number): MySQLLeadRow {
-  // CSV/manual intake should always get a valid lead timestamp even when Lead_Date is blank or malformed.
-  const normalizedLeadDate =
-    normalizeFlexibleDateInput(record.Lead_Date) ?? getCurrentNormalizedDateTime()
-  const normalizedLeadEntryDate =
-    normalizeFlexibleDateInput(record.LeadEntryDate) || normalizedLeadDate
-  const normalizedCreateDate =
-    normalizeFlexibleDateInput(record.create_date) || normalizedLeadDate
+  // Manual intake treats the provided lead date as received/created time, not assignment time.
+  const normalizedLeadDate = resolveManualLeadDate(record)
+  const normalizedLeadEntryDate = normalizedLeadDate
+  const normalizedCreateDate = normalizedLeadDate
   const normalizedMonth =
     normalizeString(record.month) || deriveMonthNameFromLeadDate(normalizedLeadDate ?? '')
 
   return {
     id: buildManualLeadId(record, rowNumber),
     month: normalizedMonth,
-    Lead_Date: normalizedLeadDate,
+    Lead_Date: null,
     LeadEntryDate: normalizedLeadEntryDate,
     create_date: normalizedCreateDate,
     Patient_Number: normalizeString(record.Patient_Number),

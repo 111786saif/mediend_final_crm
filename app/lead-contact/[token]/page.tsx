@@ -3,6 +3,7 @@ import { MessageSquare, Phone } from 'lucide-react'
 import {
   loadLeadQrPublicLink,
   markLeadQrPublicLinkOpened,
+  normalizeLeadQrPhone,
   parseLeadQrDeviceInfo,
   recordLeadQrEvent,
 } from '@/lib/lead-qr'
@@ -57,6 +58,9 @@ export default async function LeadContactPage({
   }
 
   const lead = publicLink.lead
+  const primaryCallPhone = normalizeLeadQrPhone(lead.phoneNumber ?? '')
+  const alternateCallPhone = normalizeLeadQrPhone(lead.alternateNumber ?? '')
+  const hasAlternateCall = Boolean(alternateCallPhone && alternateCallPhone !== primaryCallPhone)
 
   const headerStore = await headers()
   const requestHeaders = new Headers(headerStore)
@@ -112,6 +116,16 @@ export default async function LeadContactPage({
             <Phone className="h-5 w-5" />
             Click here to call
           </a>
+
+          {hasAlternateCall ? (
+            <a
+              href={`/api/lead-contact/${encodeURIComponent(token)}/call?target=alternate`}
+              className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-sky-400 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-sky-300 shadow-lg shadow-sky-500/20"
+            >
+              <Phone className="h-5 w-5" />
+              Click here to call alternate number
+            </a>
+          ) : null}
 
           <a
             href={`/api/lead-contact/${encodeURIComponent(token)}/whatsapp`}

@@ -50,4 +50,5 @@ export const CRM_MODE_OF_PAYMENT_OPTIONS = [
   'Cashless',
   'EMI',
   'Reimbursement',
+  'Not Yet Confirmed',
 ] as const

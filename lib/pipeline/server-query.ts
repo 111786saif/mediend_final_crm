@@ -783,6 +783,7 @@ const MODE_OF_PAYMENT_FILTER_VARIANTS: Record<string, string[]> = {
   Cashless: ['2', 'Cashless'],
   EMI: ['3', 'EMI'],
   Reimbursement: ['4', 'Reimbursement'],
+  'Not Yet Confirmed': ['Not Yet Confirmed'],
 }
 
 function buildModeOfPaymentFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {

@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { UserRole, PipelineStage } from '@/generated/prisma/client'
 import { hashPassword } from '@/lib/auth'
 import {
+  DUPLICATE_LEAD_STATUS,
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
@@ -253,23 +254,6 @@ export async function processIncomingLead(
     }
 
     const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-    if (duplicateLead) {
-      await prisma.incomingLead.update({
-        where: { id: incomingLeadId },
-        data: {
-          status: 'DUPLICATE',
-          processedLeadId: duplicateLead.id,
-          normalizedPhone,
-          processedAt: new Date(),
-          errorMessage: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`,
-        },
-      })
-      return {
-        success: true,
-        leadId: duplicateLead.id,
-        error: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}`,
-      }
-    }
 
     // Create the lead with required defaults for missing fields
     const lead = await prisma.lead.create({
@@ -280,7 +264,7 @@ export async function processIncomingLead(
         sex: 'Not Specified', // Default sex
         phoneNumber,
         bdId,
-        status,
+        status: duplicateLead ? DUPLICATE_LEAD_STATUS : status,
         pipelineStage: PipelineStage.SALES,
         circle: bdCircle || 'Unknown',
         category: category || null,
@@ -299,15 +283,23 @@ export async function processIncomingLead(
     await prisma.incomingLead.update({
       where: { id: incomingLeadId },
       data: {
-        status: 'PROCESSED',
+        status: duplicateLead ? 'DUPLICATE' : 'PROCESSED',
         processedLeadId: lead.id,
         normalizedPhone,
         processedAt: new Date(),
-        errorMessage: null,
+        errorMessage: duplicateLead
+          ? `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}. Duplicate count: ${duplicateLead.duplCount}`
+          : null,
       },
     })
 
-    return { success: true, leadId: lead.id }
+    return {
+      success: true,
+      leadId: lead.id,
+      ...(duplicateLead
+        ? { error: `Duplicate phone number. Existing lead: ${duplicateLead.leadRef}` }
+        : {}),
+    }
   } catch (error) {
     console.error('Error processing incoming lead:', error)
     

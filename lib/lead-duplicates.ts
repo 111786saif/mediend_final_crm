@@ -4,6 +4,8 @@ import { last10DigitsFromStored } from '@/lib/phone-search'
 type LeadDuplicateStore = Pick<typeof prisma, 'lead'>
 type IncomingLeadDuplicateStore = Pick<typeof prisma, 'incomingLead'>
 
+export const DUPLICATE_LEAD_STATUS = 'Duplicate lead'
+
 export class DuplicateLeadPhoneError extends Error {
   leadId: string
   leadRef: string
@@ -29,7 +31,7 @@ export function normalizeLeadPhoneToLast10(raw: string | null | undefined) {
   return last10DigitsFromStored(raw)
 }
 
-export async function findLatestLeadByPrimaryPhone(
+export async function findCanonicalLeadByPrimaryPhone(
   normalizedPhone: string,
   db: LeadDuplicateStore = prisma
 ) {
@@ -45,7 +47,7 @@ export async function findLatestLeadByPrimaryPhone(
       createdDate: true,
     },
     orderBy: {
-      createdDate: 'desc',
+      createdDate: 'asc',
     },
   })
 
@@ -59,7 +61,7 @@ export async function recordDuplicateLeadHitByPrimaryPhone(
   normalizedPhone: string,
   db: LeadDuplicateStore = prisma
 ) {
-  const existingLead = await findLatestLeadByPrimaryPhone(normalizedPhone, db)
+  const existingLead = await findCanonicalLeadByPrimaryPhone(normalizedPhone, db)
   if (!existingLead) return null
 
   return db.lead.update({
