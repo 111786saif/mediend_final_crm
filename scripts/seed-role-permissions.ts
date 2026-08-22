@@ -208,7 +208,7 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
 
   SUPER_ADMIN: [
-    'main.home', 'main.tasks', 'main.calendar', 'crm',
+    'main.home', 'main.tasks', 'main.calendar', 'main.master_data', 'crm',
   ],
 
   CRM_ADMIN: [
