@@ -716,7 +716,7 @@ export default function CaseTrackerPage() {
           </Card>
 
           {/* ── Stage cards ── */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4">
             {user?.role !== 'PL_HEAD' && (
               <button
                 type="button"
