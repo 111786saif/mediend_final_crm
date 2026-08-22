@@ -42,10 +42,20 @@ export async function loadLeadForQrAudit(id: string): Promise<LeadQrAuditLead | 
 
 export function normalizeLeadQrPhone(raw: string): string {
   const digits = raw.replace(/\D+/g, '')
-  if (!digits) return ''
-  if (digits.startsWith('91') && digits.length >= 12) return `+${digits}`
+  if (digits.length < 10) return ''
+  if (digits.startsWith('91') && digits.length === 12) return `+${digits}`
   if (digits.length === 10) return `+91${digits}`
-  return `+${digits}`
+  if (digits.length === 11 && digits.startsWith('0')) return `+91${digits.slice(-10)}`
+  return digits.length > 10 ? `+${digits}` : ''
+}
+
+export function normalizeLeadQrWhatsappPhone(raw: string): string {
+  const digits = raw.replace(/\D+/g, '')
+  if (digits.length < 10) return ''
+  if (digits.startsWith('91') && digits.length === 12) return digits
+  if (digits.length === 10) return `91${digits}`
+  if (digits.length === 11 && digits.startsWith('0')) return `91${digits.slice(-10)}`
+  return digits.length > 10 ? digits : ''
 }
 
 export function getLeadQrClientIp(headers: Headers): string | null {

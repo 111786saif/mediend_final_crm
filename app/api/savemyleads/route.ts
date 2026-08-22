@@ -208,7 +208,7 @@ export async function POST(request: Request) {
       status: 'SUCCESS',
       request,
       summary: responseData.deduplicated
-        ? `Processed duplicate SaveMyLeads webhook for campaign ${extracted.campaignId}`
+        ? `Processed duplicate SaveMyLeads webhook and created a duplicate lead for campaign ${extracted.campaignId}`
         : `Processed SaveMyLeads webhook for campaign ${extracted.campaignId}`,
       metadata: {
         incomingLeadId: incomingLead.id,
@@ -225,7 +225,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: responseData.deduplicated ? 'Duplicate lead detected' : 'Lead created successfully',
+      message: responseData.deduplicated
+        ? 'Duplicate lead created successfully'
+        : 'Lead created successfully',
       incomingLeadId: incomingLead.id,
       ...responseData,
     })

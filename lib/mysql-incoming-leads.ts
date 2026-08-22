@@ -9,13 +9,13 @@ import {
   mapMySQLLeadToPrisma,
   mapMySQLLeadToPrismaAsyncFallback,
   mapMySQLLeadToPrismaWithoutOwner,
+  getMySQLSourceLeadRef,
   type BdMap,
   type MySQLLeadRow,
 } from '@/lib/sync/mysql-lead-mapper'
 import type { LookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { resolveInboundSubStatus } from '@/lib/sub-status'
 import {
-  DuplicateLeadPhoneError,
   findLatestPriorIncomingLeadByPrimaryPhone,
 } from '@/lib/lead-duplicates'
 
@@ -88,7 +88,7 @@ export async function queueMySQLIncomingLead(
   mysqlLead: MySQLLeadRow,
   options?: { source?: string }
 ) {
-  const leadRef = String(mysqlLead.id)
+  const leadRef = getMySQLSourceLeadRef(mysqlLead)
   const source = options?.source ?? MYSQL_INCOMING_SOURCE
   const externalRef = mysqlIncomingExternalRef(leadRef, source)
   const normalizedPhone = normalizePhoneToLast10(mysqlLead.Patient_Number)
@@ -205,7 +205,7 @@ export async function processMySQLIncomingLead(
     return { status: 'failed' as const, error: 'Stored MySQL payload is missing mysqlLead data.' }
   }
 
-  const leadRef = String(mysqlLead.id)
+  const sourceLeadRef = getMySQLSourceLeadRef(mysqlLead)
   const normalizedPhone =
     incomingLead.normalizedPhone ?? normalizePhoneToLast10(mysqlLead.Patient_Number)
   const mysqlCampaignId =
@@ -219,10 +219,13 @@ export async function processMySQLIncomingLead(
       ? MANUAL_MYSQL_INCOMING_SOURCE
       : MYSQL_INCOMING_SOURCE
 
-  const existingLead = await prisma.lead.findUnique({
-    where: { leadRef },
-    select: { id: true, bdeName: true },
-  })
+  const existingLead =
+    incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
+      ? null
+      : await prisma.lead.findUnique({
+          where: { leadRef: sourceLeadRef },
+          select: { id: true, bdeName: true },
+        })
 
   if (existingLead) {
     await prisma.incomingLead.update({
@@ -236,12 +239,12 @@ export async function processMySQLIncomingLead(
       },
     })
     console.log(
-      `[mysql-sync] leadRef=${leadRef} already exists, linked to BD=${existingLead.bdeName ?? 'Unknown'}`
+      `[mysql-sync] leadRef=${sourceLeadRef} already exists, linked to BD=${existingLead.bdeName ?? 'Unknown'}`
     )
     return {
       status: 'processed' as const,
       leadId: existingLead.id,
-      leadRef: leadRef,
+      leadRef: sourceLeadRef,
       assignedBdName: existingLead.bdeName ?? null,
     }
   }
@@ -264,28 +267,10 @@ export async function processMySQLIncomingLead(
     excludeIncomingLeadId: incomingLead.id,
     beforeReceivedAt: incomingLead.receivedAt,
   })
-
-  if (priorIncomingLead && !priorIncomingLead.processedLeadId) {
-    const errorMessage = `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
-    await prisma.incomingLead.update({
-      where: { id: incomingLead.id },
-      data: {
-        status: 'DUPLICATE',
-        externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
-        selectedTeamLeadUserId: null,
-        selectedTeamLeadEmployeeId: null,
-        selectedBdUserId: null,
-        normalizedPhone,
-        processedAt: new Date(),
-        errorMessage,
-      },
-    })
-
-    return {
-      status: 'duplicate' as const,
-      assignedBdName: null,
-    }
-  }
+  const hasPriorIncomingDuplicate = Boolean(
+    priorIncomingLead && !priorIncomingLead.processedLeadId
+  )
+  const assignedAt = new Date()
 
   const leadData =
     mapMySQLLeadToPrisma(mysqlLead, deps.systemUserId, deps.lookups, deps.bdMap) ??
@@ -307,11 +292,14 @@ export async function processMySQLIncomingLead(
     externalCampaignId: mysqlCampaignId,
     city: assignmentCity,
     category: leadData.category ?? null,
-    assignmentDate: leadData.assignedDate ?? leadData.createdDate,
+    assignmentDate:
+      incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
+        ? assignedAt
+        : leadData.assignedDate ?? leadData.createdDate,
   })
 
   if (!assignmentPreview.assignment) {
-    const errorMessage = `CRM auto-assignment failed for ${sourceLabel} lead ${leadRef}: ${assignmentPreview.explanation}`
+    const errorMessage = `CRM auto-assignment failed for ${sourceLabel} lead ${sourceLeadRef}: ${assignmentPreview.explanation}`
     await prisma.incomingLead.update({
       where: { id: incomingLead.id },
       data: {
@@ -329,69 +317,57 @@ export async function processMySQLIncomingLead(
   const { updatedDate, ...leadDataForCreate } = leadData
   const createInput: ImportedLeadCreateInput = {
     source: sourceLabel,
-    sourceReference: leadRef,
+    sourceReference: sourceLeadRef,
+    forceDuplicateStatus: hasPriorIncomingDuplicate,
+    generateManualLeadRef: incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE,
     assignmentContext: {
       externalCampaignId: mysqlCampaignId,
       city: assignmentCity,
       category: leadData.category ?? null,
-      assignmentDate: leadData.assignedDate ?? leadData.createdDate,
+      assignmentDate:
+        incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
+          ? assignedAt
+          : leadData.assignedDate ?? leadData.createdDate,
     },
     leadData: {
       ...leadDataForCreate,
+      ...(incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
+        ? { assignedDate: assignedAt }
+        : {}),
       ...(updatedDate !== null && { updatedDate }),
     },
   }
 
-  let result
-  try {
-    result = await createImportedLeadWithCrmAssignment(createInput)
-  } catch (error) {
-    if (error instanceof DuplicateLeadPhoneError) {
-      await prisma.incomingLead.update({
-        where: { id: incomingLead.id },
-        data: {
-          status: 'DUPLICATE',
-          processedLeadId: error.leadId,
-          externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
-          selectedTeamLeadUserId: null,
-          selectedTeamLeadEmployeeId: null,
-          selectedBdUserId: null,
-          normalizedPhone: error.normalizedPhone,
-          processedAt: new Date(),
-          errorMessage: `Duplicate phone number. Existing lead: ${error.leadRef}. Duplicate count: ${error.duplicateCount}`,
-        },
-      })
+  const result = await createImportedLeadWithCrmAssignment(createInput)
 
-      return {
-        status: 'duplicate' as const,
-        leadId: error.leadId,
-        leadRef: error.leadRef,
-        assignedBdName: null,
-      }
-    }
-    throw error
-  }
+  const isDuplicate = result.deduplicated
+  const duplicateErrorMessage = result.duplicateLeadRef
+    ? `Duplicate phone number. Existing lead: ${result.duplicateLeadRef}. Duplicate count: ${result.duplicateCount ?? 0}`
+    : hasPriorIncomingDuplicate && priorIncomingLead
+      ? `Duplicate phone number. Existing incoming lead: ${priorIncomingLead.id}`
+      : null
 
   await prisma.incomingLead.update({
     where: { id: incomingLead.id },
     data: {
-      status: 'PROCESSED',
+      status: isDuplicate ? 'DUPLICATE' : 'PROCESSED',
       processedLeadId: result.leadId,
       externalCampaignId: mysqlCampaignId ?? incomingLead.externalCampaignId,
       selectedTeamLeadUserId: result.assignment?.teamLead?.userId ?? null,
       selectedTeamLeadEmployeeId: result.assignment?.teamLead?.employeeId ?? null,
       selectedBdUserId: result.assignment?.bd.userId ?? null,
-      processedAt: new Date(),
-      errorMessage: null,
+      normalizedPhone: result.normalizedPhone ?? normalizedPhone,
+      processedAt: assignedAt,
+      errorMessage: duplicateErrorMessage,
     },
   })
 
   console.log(
-    `[mysql-sync] leadRef=${leadRef} created from queue, assigned BD=${result.assignment?.bd.name ?? 'Unknown'}`
+    `[mysql-sync] leadRef=${sourceLeadRef} created from queue, assigned BD=${result.assignment?.bd.name ?? 'Unknown'}`
   )
 
   return {
-    status: 'processed' as const,
+    status: isDuplicate ? ('duplicate' as const) : ('processed' as const),
     leadId: result.leadId,
     leadRef: result.leadRef,
     assignedBdName: result.assignment?.bd.name ?? null,

@@ -5,6 +5,7 @@ import { canMutateLead } from '@/lib/lead-access-api'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
+import { canViewPhoneNumber } from '@/lib/case-permissions'
 import { z } from 'zod'
 import { CaseStage, InsuranceType, Prisma } from '@/generated/prisma/client'
 
@@ -48,6 +49,22 @@ const submitKYPSchema = z.object({
   patientConsent: z.boolean().optional(),
   otherFiles: z.array(z.object({ name: z.string(), url: z.string() })).optional(),
 })
+
+function sanitizePhoneForLeadUpdate(
+  rawPhone: string | undefined,
+  canViewPhone: boolean
+): string | undefined {
+  if (!canViewPhone || !rawPhone) return undefined
+
+  const trimmed = rawPhone.trim()
+  if (!trimmed) return undefined
+  if (/[a-z]/i.test(trimmed)) return undefined
+
+  const digits = trimmed.replace(/\D/g, '')
+  if (digits.length < 10) return undefined
+
+  return trimmed
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -138,9 +155,11 @@ export async function POST(request: NextRequest) {
       otherFiles: data.otherFiles || data.insuranceCardFiles || [],
     }
 
+    const safeLeadPhone = sanitizePhoneForLeadUpdate(data.phone, canViewPhoneNumber(user))
+
     const leadUpdateFromForm = {
       ...(data.patientName?.trim() ? { patientName: data.patientName.trim() } : {}),
-      ...(data.phone?.trim() ? { phoneNumber: data.phone.trim() } : {}),
+      ...(safeLeadPhone ? { phoneNumber: safeLeadPhone } : {}),
       ...(data.age ? { age: data.age } : {}),
       ...(data.sex?.trim() ? { sex: data.sex.trim() } : {}),
       ...(data.insuranceName?.trim() ? { insuranceName: data.insuranceName.trim() } : {}),

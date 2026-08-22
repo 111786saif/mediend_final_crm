@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { errorResponse } from '@/lib/api-utils'
 import {
   loadLeadQrPublicLink,
+  normalizeLeadQrWhatsappPhone,
   parseLeadQrDeviceInfo,
   recordLeadQrEvent,
 } from '@/lib/lead-qr'
@@ -45,9 +46,7 @@ export async function GET(
       source: 'public_page',
     })
 
-    const targetPhone = cleanDigits.length >= 10 ? cleanDigits.slice(-10) : cleanDigits
-
-    return NextResponse.redirect(`https://wa.me/${targetPhone}`)
+    return NextResponse.redirect(`https://wa.me/${cleanDigits}`)
   } catch (error) {
     console.error('GET /api/lead-contact/[token]/whatsapp', error)
     return errorResponse('Failed to initiate WhatsApp chat.', 500)

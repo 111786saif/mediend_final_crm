@@ -3,6 +3,7 @@ import { MessageSquare, Phone } from 'lucide-react'
 import {
   loadLeadQrPublicLink,
   markLeadQrPublicLinkOpened,
+  normalizeLeadQrPhone,
   parseLeadQrDeviceInfo,
   recordLeadQrEvent,
 } from '@/lib/lead-qr'
@@ -57,6 +58,9 @@ export default async function LeadContactPage({
   }
 
   const lead = publicLink.lead
+  const primaryCallPhone = normalizeLeadQrPhone(lead.phoneNumber ?? '')
+  const alternateCallPhone = normalizeLeadQrPhone(lead.alternateNumber ?? '')
+  const hasAlternateCall = Boolean(alternateCallPhone && alternateCallPhone !== primaryCallPhone)
 
   const headerStore = await headers()
   const requestHeaders = new Headers(headerStore)

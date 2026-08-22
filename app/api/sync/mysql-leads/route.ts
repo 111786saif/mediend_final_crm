@@ -9,6 +9,7 @@ import {
   mapMySQLLeadToPrismaAsyncFallback,
   mapMySQLLeadToPrismaWithoutOwner,
   getLeadLatestActivityDate,
+  getMySQLSourceLeadRef,
   type MySQLLeadRow,
 } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
@@ -126,6 +127,7 @@ export async function POST(request: NextRequest) {
     let maxDate = lastSyncedDate
     let maxId: number | null = null
     const syncedLeadIds: number[] = []
+    const syncedLeadRefsById = new Map<number, string>()
     const queueRetryResult = await processQueuedMySQLIncomingLeads(
       queueDeps,
       Math.min(BATCH_SIZE, 100)
@@ -140,12 +142,13 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        const leadRef = String(mysqlLead.id)
+        const leadRef = getMySQLSourceLeadRef(mysqlLead)
         const activityDate = getLeadLatestActivityDate(mysqlLead)
         if (activityDate > maxDate) maxDate = activityDate
         if (maxId === null || mysqlLead.id > maxId) {
           maxId = mysqlLead.id
         }
+        syncedLeadRefsById.set(mysqlLead.id, leadRef)
 
         const leadData =
           mapMySQLLeadToPrisma(mysqlLead, systemUser.id, lookups, bdMap) ??
@@ -211,7 +214,8 @@ export async function POST(request: NextRequest) {
         let remarksSynced = 0
         for (const remark of remarks) {
           try {
-            const leadRef = String(remark.RefId)
+            const leadRef = syncedLeadRefsById.get(remark.RefId)
+            if (!leadRef) continue
             const lead = await prisma.lead.findUnique({
               where: { leadRef },
             })

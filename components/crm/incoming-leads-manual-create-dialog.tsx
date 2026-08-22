@@ -15,6 +15,12 @@ import {
   MANUAL_MYSQL_LEAD_FIELDS,
   MANUAL_MYSQL_LEAD_SECTION_ORDER,
 } from '@/lib/manual-mysql-lead-import'
+import {
+  formatDateTimeLocalValue,
+  getLeadDateInputMaxValue,
+  isLeadDateAfterToday,
+  LEAD_DATE_FUTURE_ERROR,
+} from '@/lib/lead-date-validation'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -117,15 +123,6 @@ const HIDDEN_FORM_FIELD_KEYS = new Set([
 ])
 
 const HIDDEN_FORM_SECTIONS = new Set(['Communication', 'Tracking'])
-
-function formatDateTimeLocalValue(date: Date) {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
-}
 
 function convertDateTimeLocalToMysql(value: string) {
   const trimmed = value.trim()
@@ -300,6 +297,17 @@ export function IncomingLeadsManualCreateDialog({
   }
 
   const submitForm = () => {
+    const parsedLeadDate = new Date(manualLeadDate)
+    if (Number.isNaN(parsedLeadDate.getTime())) {
+      toast.error('Lead date is invalid')
+      return
+    }
+
+    if (isLeadDateAfterToday(parsedLeadDate)) {
+      toast.error(LEAD_DATE_FUTURE_ERROR)
+      return
+    }
+
     const mysqlDateTime = convertDateTimeLocalToMysql(manualLeadDate)
     mutation.mutate({
       mode: 'form',
@@ -307,7 +315,7 @@ export function IncomingLeadsManualCreateDialog({
         ...formValues,
         id: '',
         month: getMonthNameFromDateTimeLocal(manualLeadDate),
-        Lead_Date: mysqlDateTime,
+        Lead_Date: '',
         LeadEntryDate: mysqlDateTime,
         create_date: mysqlDateTime,
       },
@@ -368,9 +376,10 @@ export function IncomingLeadsManualCreateDialog({
               <div className="space-y-6">
                 <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
                   <code>Patient_Name</code>, <code>Patient_Number</code>, and <code>campaign_id</code> are
-                  required. Lead identity is auto-generated. The selected date fills <code>Lead_Date</code>,{' '}
-                  <code>LeadEntryDate</code>, <code>create_date</code>, and derived <code>month</code>.
-                  Assignment follows the same campaign/circle/category logic as MySQL intake, so{' '}
+                  required. Lead identity is auto-generated. The selected date fills <code>LeadEntryDate</code>,{' '}
+                  <code>create_date</code>, and derived <code>month</code>. It does not backfill the MySQL{' '}
+                  <code>Lead_Date</code> assignment timestamp. Assignment follows the same campaign/circle/category
+                  logic as MySQL intake, so{' '}
                   <code>campaign_id</code>, <code>Circle</code>, and <code>Category</code> are the most
                   important routing inputs.
                 </div>
@@ -384,9 +393,10 @@ export function IncomingLeadsManualCreateDialog({
                         type="datetime-local"
                         value={manualLeadDate}
                         onChange={(event) => setManualLeadDate(event.target.value)}
+                        max={getLeadDateInputMaxValue()}
                       />
                       <p className="mt-1 text-xs text-muted-foreground">
-                        This single date fills lead date, entry date, create date, and month automatically.
+                        This fills lead entry date, create date, and month. Only today or older dates are allowed.
                       </p>
                     </div>
                   </div>
