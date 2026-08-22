@@ -133,12 +133,12 @@ export type CaseEvent = {
 export function useCaseEvents(params: {
   startDate: string
   endDate: string
-  types: CaseEventType[]
-  statuses: CaseEventStatus[]
+  types?: CaseEventType[]
+  statuses?: CaseEventStatus[]
   bdIds?: string[]
   enabled?: boolean
 }) {
-  const { startDate, endDate, types, statuses, bdIds, enabled = true } = params
+  const { startDate, endDate, types = [], statuses = [], bdIds, enabled = true } = params
   return useQuery<CaseEvent[]>({
     queryKey: ['case-events', startDate, endDate, types.join(','), statuses.join(','), bdIds?.join(',') ?? ''],
     queryFn: () => {

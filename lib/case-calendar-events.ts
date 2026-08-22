@@ -46,7 +46,7 @@ export async function getCaseCalendarEvents(
 ): Promise<CaseEvent[]> {
   const { startDate, endDate, types, statuses } = params
 
-  const scopeUserIds = await getLeadVisibilityScopeUserIds(user)
+  const scopeUserIds = user.role === 'BD' ? [user.id] : await getLeadVisibilityScopeUserIds(user)
   let allowedBdIds: string[] | null = scopeUserIds
   if (params.bdIds && params.bdIds.length > 0) {
     allowedBdIds = scopeUserIds ? scopeUserIds.filter((id) => params.bdIds!.includes(id)) : params.bdIds

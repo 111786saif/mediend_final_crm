@@ -78,6 +78,25 @@ function toDateInputValue(value: string | null | undefined) {
   return Number.isNaN(parsed.getTime()) ? '' : format(parsed, 'yyyy-MM-dd')
 }
 
+function toTimeInputValue(value: string | null | undefined) {
+  if (!value) return ''
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return ''
+  const hours = parsed.getHours()
+  const minutes = parsed.getMinutes()
+  if (hours === 0 && minutes === 0) return ''
+  return format(parsed, 'HH:mm')
+}
+
+function toCombinedDateTime(dateStr: string | null | undefined, timeStr: string | null | undefined) {
+  if (!dateStr) return null
+  const dateTrimmed = dateStr.trim()
+  if (!dateTrimmed) return null
+  const timeTrimmed = timeStr?.trim() ?? ''
+  if (!timeTrimmed) return dateTrimmed
+  return `${dateTrimmed}T${timeTrimmed}:00`
+}
+
 function getTodayDateInputValue() {
   return format(new Date(), 'yyyy-MM-dd')
 }
@@ -295,6 +314,7 @@ export function LeadEditDrawer({
   const [leadStatusSearch, setLeadStatusSearch] = useState('')
   const [leadStatusOpen, setLeadStatusOpen] = useState(false)
   const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
+  const [followUpTimeDraft, setFollowUpTimeDraft] = useState<string | null>(null)
   const [modeOfPaymentDraft, setModeOfPaymentDraft] = useState<string | null>(null)
   const [statusChangeRemarkDraftState, setStatusChangeRemarkDraftState] = useState<{
     leadId: string | null
@@ -388,6 +408,7 @@ export function LeadEditDrawer({
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
   const effectiveSubStatus = subStatusDraft ?? (lead?.subStatus ?? '')
   const effectiveFollowUpDate = followUpDateDraft ?? toDateInputValue(lead?.followUpDate)
+  const effectiveFollowUpTime = followUpTimeDraft ?? toTimeInputValue(lead?.followUpDate)
   const effectiveModeOfPayment = modeOfPaymentDraft ?? (lead?.modeOfPayment ?? '')
   const todayDateInputValue = getTodayDateInputValue()
 
@@ -467,6 +488,7 @@ export function LeadEditDrawer({
 
   const currentStatus = lead?.status ?? 'New'
   const currentFollowUpDate = toDateInputValue(lead?.followUpDate)
+  const currentFollowUpTime = toTimeInputValue(lead?.followUpDate)
   const currentModeOfPayment = lead?.modeOfPayment ?? ''
   const remarkHistory = remarksData?.remarks ?? []
   const previousRemark = remarksData?.latestRemark ?? null
@@ -492,7 +514,9 @@ export function LeadEditDrawer({
   const showAllRemarks = Boolean(leadId) && expandedRemarksLeadId === leadId
 
   const statusChanged = effectiveLeadStatus !== currentStatus
-  const followUpDateChanged = effectiveFollowUpDate !== currentFollowUpDate
+  const followUpDateChanged =
+    effectiveFollowUpDate !== currentFollowUpDate ||
+    effectiveFollowUpTime !== currentFollowUpTime
   const modeOfPaymentChanged = effectiveModeOfPayment !== currentModeOfPayment
   const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
   const shouldValidatePastFollowUpDate =
@@ -741,7 +765,7 @@ export function LeadEditDrawer({
     }
 
     if (followUpDateChanged) {
-      payload.followUpDate = effectiveFollowUpDate || null
+      payload.followUpDate = toCombinedDateTime(effectiveFollowUpDate, effectiveFollowUpTime)
     }
 
     if (modeOfPaymentChanged) {
@@ -1155,6 +1179,21 @@ export function LeadEditDrawer({
                         min={todayDateInputValue}
                         onChange={(e) => setFollowUpDateDraft(e.target.value)}
                         disabled={!canUpdateLeadStatus || saving}
+                        className="h-10 w-full"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-follow-up-time">
+                        Follow-up time <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+                      </Label>
+                      <Input
+                        id="drawer-follow-up-time"
+                        type="time"
+                        value={effectiveFollowUpTime}
+                        onChange={(e) => setFollowUpTimeDraft(e.target.value)}
+                        disabled={!canUpdateLeadStatus || saving || !effectiveFollowUpDate}
+                        className="h-10 w-full"
                       />
                     </div>
                   </div>

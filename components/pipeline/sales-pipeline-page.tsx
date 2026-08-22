@@ -76,6 +76,7 @@ import {
   Pencil,
   PhoneCall,
   Plus,
+  RotateCw,
   Search,
   SlidersHorizontal,
 } from 'lucide-react'
@@ -364,7 +365,9 @@ function writePipelineVisibleColumns(
 function formatTableDate(value: unknown) {
   if (!value) return '—'
   const parsed = new Date(String(value))
-  return Number.isNaN(parsed.getTime()) ? String(value) : format(parsed, 'dd MMM yyyy')
+  if (Number.isNaN(parsed.getTime())) return String(value)
+  const hasTime = parsed.getHours() !== 0 || parsed.getMinutes() !== 0
+  return hasTime ? format(parsed, 'dd MMM yyyy, hh:mm a') : format(parsed, 'dd MMM yyyy')
 }
 
 function formatTableDateTime(value: unknown) {
@@ -438,16 +441,35 @@ function stripRemarkMetadataPrefix(value: string) {
   )
 }
 
-function getLeadLastRemarksText(lead: Lead) {
+function getLeadLastRemarkDetails(lead: Lead): { dateText: string | null; content: string } {
+  const remarkObj = lead.latestRemark
   const candidate =
-    typeof lead.latestRemark?.content === 'string' && lead.latestRemark.content.trim().length > 0
-      ? lead.latestRemark.content
+    typeof remarkObj?.content === 'string' && remarkObj.content.trim().length > 0
+      ? remarkObj.content
       : typeof lead.remarks === 'string'
         ? lead.remarks
         : null
-  if (candidate == null) return '—'
+
+  if (candidate == null) return { dateText: null, content: '—' }
   const trimmed = stripRemarkMetadataPrefix(candidate.trim()).trim()
-  return trimmed.length > 0 ? trimmed : '—'
+  if (!trimmed) return { dateText: null, content: '—' }
+
+  const dateValue = remarkObj?.createdAt ?? lead.updatedDate ?? lead.createdDate
+  let dateText: string | null = null
+  if (dateValue) {
+    const d = new Date(dateValue)
+    if (!Number.isNaN(d.getTime())) {
+      dateText = format(d, 'dd MMM yyyy, hh:mm a')
+    }
+  }
+
+  return { dateText, content: trimmed }
+}
+
+function getLeadLastRemarksText(lead: Lead) {
+  const { dateText, content } = getLeadLastRemarkDetails(lead)
+  if (content === '—') return '—'
+  return dateText ? `${dateText}  ${content}` : content
 }
 
 function getLeadPlanningTreatmentText(lead: Lead) {
@@ -689,7 +711,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
     return filters.length > 0 ? JSON.stringify(filters) : ''
   }, [columnFilters])
-  const { data, isLoading, isFetching } = usePipelinePage({ filters: serverColumnFilters })
+  const { data, isLoading, isFetching, refetch } = usePipelinePage({ filters: serverColumnFilters })
   const handleColumnFilterChange = useCallback(
     (key: PipelineColumnId, selected: string[]) => {
       setColumnFilters((prev) => {
@@ -1361,13 +1383,25 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => refetch()}
+                      disabled={isFetching}
+                      className="gap-2"
+                      title="Refresh CRM data"
+                    >
+                      <RotateCw className={cn('h-4 w-4', isFetching && 'animate-spin')} />
+                      Refresh
+                    </Button>
                   </div>
                 </div>
 
                 <div
                   className={cn(
                     'max-h-[min(70vh,900px)] overflow-auto transition-opacity duration-200',
-                    isBackgroundRefetching && 'opacity-60 pointer-events-none'
+                    isFetching && !isLoading && 'opacity-60 pointer-events-none'
                   )}
                 >
                   {isLoading ? (
@@ -1635,14 +1669,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 }
 
 function getLatestRemarkPreview(lead: Lead) {
-  const rawRemark =
-    typeof lead.latestRemark?.content === 'string'
-      ? lead.latestRemark.content
-      : typeof lead.remarks === 'string'
-        ? lead.remarks
-        : ''
-  const trimmed = stripRemarkMetadataPrefix(rawRemark.trim()).trim()
-  return trimmed.length > 0 ? trimmed : 'No remarks yet.'
+  const text = getLeadLastRemarksText(lead)
+  return text !== '—' ? text : 'No remarks yet.'
 }
 
 type PipelineCaseAction = {
@@ -2061,7 +2089,23 @@ const PipelineRow = memo(function PipelineRow({
       {show('bd') && <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>}
       {show('lastRemarks') && (
         <td className="max-w-[420px] whitespace-normal break-words px-3 py-2 text-sm align-top">
-          {lastRemarksText}
+          {(() => {
+            const { dateText, content } = getLeadLastRemarkDetails(lead)
+            if (content === '—') return '—'
+            return (
+              <div className="flex flex-wrap items-baseline gap-1.5">
+                {dateText && (
+                  <Badge
+                    variant="outline"
+                    className="inline-flex shrink-0 items-center rounded-full border-slate-300 bg-slate-100/90 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 shadow-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                  >
+                    {dateText}
+                  </Badge>
+                )}
+                <span>{content}</span>
+              </div>
+            )
+          })()}
         </td>
       )}
       {show('status') && (
@@ -2079,7 +2123,7 @@ const PipelineRow = memo(function PipelineRow({
       )}
       {show('followUpDate') && (
         <td
-          className={`whitespace-nowrap px-3 py-2 text-sm ${
+          className={`min-w-[185px] whitespace-nowrap px-3 py-2 text-sm ${
             isPastFollowUpDate(lead.followUpDate) ? 'font-medium text-red-500' : ''
           }`}
         >

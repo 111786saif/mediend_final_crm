@@ -84,6 +84,7 @@ export function BulkLeadReassignDialog({
   const [removePreviousRemarks, setRemovePreviousRemarks] = useState(false)
   const [leadStatus, setLeadStatus] = useState('')
   const [followUpDate, setFollowUpDate] = useState('')
+  const [followUpTime, setFollowUpTime] = useState('')
   const [modeOfPayment, setModeOfPayment] = useState('')
   const [subStatus, setSubStatus] = useState('')
   const [pauseSeconds, setPauseSeconds] = useState('')
@@ -182,12 +183,16 @@ export function BulkLeadReassignDialog({
   }
 
   async function handleSubmit() {
+    const combinedFollowUp = followUpDate.trim().length > 0
+      ? (followUpTime.trim().length > 0 ? `${followUpDate.trim()}T${followUpTime.trim()}:00` : followUpDate.trim())
+      : ''
+
     await onSubmit({
       bdUserIds: selectedBdUserIds,
       removePreviousRemarks,
       ...(leadStatus.trim().length > 0 ? { leadStatus: leadStatus.trim() } : {}),
-      ...(statusRequiresFollowUpDate && followUpDate.trim().length > 0
-        ? { followUpDate }
+      ...(statusRequiresFollowUpDate && combinedFollowUp.length > 0
+        ? { followUpDate: combinedFollowUp }
         : {}),
       ...(statusRequiresModeOfPayment && modeOfPayment.trim().length > 0
         ? { modeOfPayment }
@@ -204,6 +209,7 @@ export function BulkLeadReassignDialog({
       setRemovePreviousRemarks(false)
       setLeadStatus('')
       setFollowUpDate('')
+      setFollowUpTime('')
       setModeOfPayment('')
       setSubStatus('')
       setPauseSeconds('')
@@ -442,21 +448,6 @@ export function BulkLeadReassignDialog({
                 </Select>
               </div>
 
-              {statusRequiresFollowUpDate ? (
-                <div className="space-y-2">
-                  <Label htmlFor="bulk-reassign-follow-up-date">
-                    Follow-up date
-                    <span className="text-destructive"> *</span>
-                  </Label>
-                  <Input
-                    id="bulk-reassign-follow-up-date"
-                    type="date"
-                    value={followUpDate}
-                    onChange={(event) => setFollowUpDate(event.target.value)}
-                  />
-                </div>
-              ) : null}
-
               {statusRequiresModeOfPayment ? (
                 <div className="space-y-2">
                   <Label htmlFor="bulk-reassign-mode-of-payment">
@@ -473,7 +464,7 @@ export function BulkLeadReassignDialog({
                       <SelectValue placeholder="Select mode of payment" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__none__">Select mode of payment</SelectItem>
+                      <SelectItem value="__none__">No mode selected</SelectItem>
                       {CRM_MODE_OF_PAYMENT_OPTIONS.map((modeOption) => (
                         <SelectItem key={modeOption} value={modeOption}>
                           {modeOption}
@@ -484,6 +475,37 @@ export function BulkLeadReassignDialog({
                 </div>
               ) : null}
             </div>
+
+            {statusRequiresFollowUpDate ? (
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="bulk-reassign-follow-up-date">
+                    Follow-up date
+                    <span className="text-destructive"> *</span>
+                  </Label>
+                  <Input
+                    id="bulk-reassign-follow-up-date"
+                    type="date"
+                    value={followUpDate}
+                    onChange={(event) => setFollowUpDate(event.target.value)}
+                    className="h-10 w-full"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bulk-reassign-follow-up-time">
+                    Follow-up time <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+                  </Label>
+                  <Input
+                    id="bulk-reassign-follow-up-time"
+                    type="time"
+                    value={followUpTime}
+                    onChange={(event) => setFollowUpTime(event.target.value)}
+                    disabled={!followUpDate}
+                    className="h-10 w-full"
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">

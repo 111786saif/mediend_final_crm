@@ -23,8 +23,10 @@ type Bucket =
   | 'HOSPITALS_SUGGESTED'
   | 'PREAUTH_RAISED'
   | 'PREAUTH_COMPLETE'
+  | 'IPD_POSSIBLE'
   | 'IPD_SCHEDULED'
   | 'IPD_DONE'
+  | 'POSTPONED'
   | 'CANCELLED'
 
 const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
@@ -32,8 +34,10 @@ const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
   HOSPITALS_SUGGESTED: { label: 'Hospitals suggested', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' },
   PREAUTH_RAISED: { label: 'Pre-auth raised', className: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' },
   PREAUTH_COMPLETE: { label: 'Pre-auth approved', className: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' },
+  IPD_POSSIBLE: { label: 'IPD Possible', className: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' },
   IPD_SCHEDULED: { label: 'IPD scheduled', className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300' },
   IPD_DONE: { label: 'IPD done', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300' },
+  POSTPONED: { label: 'Postponed', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300' },
   CANCELLED: { label: 'Cancelled', className: 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300' },
 }
 
@@ -98,6 +102,9 @@ export function CaseOverviewSheet({ row, open, onClose }: CaseOverviewSheetProps
                 </p>
                 <DetailRow label="Lead date" value={entryDate ? format(new Date(entryDate as string), 'MMM d, yyyy') : undefined} />
                 <DetailRow label="Surgery date" value={surgeryDate ? format(new Date(surgeryDate as string), 'MMM d, yyyy') : undefined} />
+                {lead.ipdPotentialDate && (
+                  <DetailRow label="Expected IPD" value={format(new Date(lead.ipdPotentialDate as string), 'MMM d, yyyy')} />
+                )}
               </div>
 
               <Separator />

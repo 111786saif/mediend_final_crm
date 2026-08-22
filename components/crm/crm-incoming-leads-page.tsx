@@ -449,8 +449,10 @@ function formatDateOnly(value: string | null) {
   const date = parseFlexibleDateInput(value)
   if (!date) return value
 
+  const hasTime = date.getHours() !== 0 || date.getMinutes() !== 0 || date.getSeconds() !== 0
   return new Intl.DateTimeFormat('en-IN', {
     dateStyle: 'medium',
+    ...(hasTime ? { timeStyle: 'short' } : {}),
   }).format(date)
 }
 
