@@ -1657,6 +1657,7 @@ function MarketingInsightsTab({ dateRange }: { dateRange: DateRange | undefined 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVariant }) {
+  const { user } = useAuth()
   const [activeTab, setActiveTab] = useState('overview')
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const t = new Date()
@@ -1674,14 +1675,15 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
     dateRange?.to ? `endDate=${format(dateRange.to, 'yyyy-MM-dd')}` : '',
   ].filter(Boolean).join('&')
 
-  useEffect(() => {
-    if (variant === 'team-lead' && activeTab === 'team') {
-      setActiveTab('overview')
-    }
-  }, [variant, activeTab])
+  const { data: myTeamData } = useQuery<any>({
+    queryKey: ['hierarchy-my-team'],
+    queryFn: () => apiGet<any>('/api/hierarchy/my-team'),
+    enabled: variant === 'team-lead',
+  })
 
-  const tabsForNav =
-    variant === 'team-lead' ? TABS.filter((t) => t.value !== 'team') : TABS
+  const myEmployeeId = myTeamData?.manager?.id
+
+  const tabsForNav = TABS
 
   return (
     <AuthenticatedLayout>
@@ -1719,8 +1721,22 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
           {activeTab === 'overview' && (
             <OverviewTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} variant={variant} />
           )}
-          {activeTab === 'team' && variant !== 'team-lead' && (
-            selectedTeamId ? (
+          {activeTab === 'team' && (
+            variant === 'team-lead' ? (
+              myEmployeeId ? (
+                <TeamDetailView
+                  teamId={myEmployeeId}
+                  dateParams={dateParams}
+                  variant={variant}
+                  dateRange={dateRange}
+                  onBack={() => {}}
+                />
+              ) : (
+                <div className="text-center py-12 text-muted-foreground animate-pulse font-medium">
+                  Loading team performance...
+                </div>
+              )
+            ) : selectedTeamId ? (
               <TeamDetailView
                 teamId={selectedTeamId}
                 dateParams={dateParams}

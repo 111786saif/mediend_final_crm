@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { ColumnDef } from '@tanstack/react-table'
@@ -9,7 +9,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { PieChart, Pie, Cell, Tooltip } from 'recharts'
-import { ArrowLeft, Users, Target, BarChart3, ChevronRight, TrendingUp, Clock, Filter, ArrowUpDown, ChevronDown, Loader2 } from 'lucide-react'
+import { ArrowLeft, Users, Target, BarChart3, ChevronRight, TrendingUp, Clock, Filter, ArrowUpDown, ChevronDown, Loader2, Settings2, GripVertical } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import type { DateRange } from 'react-day-picker'
 import {
   type TeamDetail,
@@ -39,6 +47,31 @@ export function TeamDetailView({
 }: TeamDetailViewProps) {
   const [selectedBdId, setSelectedBdId] = useState<string>('all')
   const [selectedMonth, setSelectedMonth] = useState<string>('all')
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({})
+  const [columnOrder, setColumnOrder] = useState<string[]>([])
+
+  // Drag-to-reorder state for the custom Columns dropdown
+  const dragColId = useRef<string | null>(null)
+  const dragOverColId = useRef<string | null>(null)
+
+  const handleColDragStart = (id: string) => { dragColId.current = id }
+  const handleColDragEnter = (id: string) => { dragOverColId.current = id }
+  const handleColDragEnd = () => {
+    const from = dragColId.current
+    const to = dragOverColId.current
+    if (!from || !to || from === to) { dragColId.current = null; dragOverColId.current = null; return }
+    setColumnOrder((prev) => {
+      const base = prev.length ? prev : columns.map((c) => c.id || (c as any).accessorKey)
+      const fromIdx = base.indexOf(from)
+      const toIdx = base.indexOf(to)
+      if (fromIdx === -1 || toIdx === -1) return prev
+      const next = [...base]
+      next.splice(fromIdx, 1)
+      next.splice(toIdx, 0, from)
+      return next
+    })
+    dragColId.current = null; dragOverColId.current = null
+  }
 
   const { data, isLoading } = useQuery<TeamDetail>({
     queryKey: ['sales-dashboard', variant, 'team-detail-inline', teamId, dateParams],
@@ -235,23 +268,27 @@ export function TeamDetailView({
     return (
       <div className="text-center py-24 space-y-4">
         <p className="text-muted-foreground">No data found for this team in the selected period.</p>
-        <Button variant="outline" onClick={onBack}>Go Back</Button>
+        {variant !== 'team-lead' && (
+          <Button variant="outline" onClick={onBack}>Go Back</Button>
+        )}
       </div>
     )
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* 1. Header Area */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-border">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-1.5 border-b border-border">
         <div>
-          <div className="flex items-center gap-1.5 text-muted-foreground mb-2">
-            <Button variant="ghost" size="icon" onClick={onBack} className="h-7 w-7 rounded-full">
-              <ArrowLeft className="h-3.5 w-3.5" />
-            </Button>
-            <span className="text-[10px] font-bold uppercase tracking-wider cursor-pointer hover:text-foreground transition-colors" onClick={onBack}>Back to Team Cards</span>
-          </div>
+          {variant !== 'team-lead' && (
+            <div className="flex items-center gap-1.5 text-muted-foreground mb-2">
+              <Button variant="ghost" size="icon" onClick={onBack} className="h-7 w-7 rounded-full">
+                <ArrowLeft className="h-3.5 w-3.5" />
+              </Button>
+              <span className="text-[10px] font-bold uppercase tracking-wider cursor-pointer hover:text-foreground transition-colors" onClick={onBack}>Back to Team Cards</span>
+            </div>
+          )}
           <div className="flex items-center gap-4">
             <UserAvatar 
               name={activeMember ? activeMember.name : (data.team.manager?.name || 'Unknown')} 
@@ -283,44 +320,44 @@ export function TeamDetailView({
         <div className="flex items-center gap-3">
           {/* Month Select */}
           <div className="flex flex-col">
-            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Select Month</span>
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Select Month</span>
             <div className="relative">
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="appearance-none bg-[#151e3c] hover:bg-[#1f2847] border border-[#283150] hover:border-blue-500/40 rounded px-3 py-1.5 pr-8 text-xs font-bold uppercase tracking-wider text-[#dce1ff] transition-all cursor-pointer outline-none focus:ring-1 focus:ring-blue-500/50 min-w-[120px]"
+                className="appearance-none bg-background hover:bg-accent border border-slate-400 rounded px-3 py-1.5 pr-8 text-xs font-bold uppercase tracking-wider text-foreground dark:text-[#dce1ff] dark:bg-[#151e3c] dark:hover:bg-[#1f2847] dark:border-[#283150] transition-all cursor-pointer outline-none focus:ring-1 focus:ring-ring min-w-[120px]"
               >
-                <option value="all">All Months</option>
+                <option value="all" className="bg-background text-foreground dark:bg-[#151e3c]">All Months</option>
                 {months.map((m) => (
-                  <option key={m} value={m} className="bg-[#151e3c] text-foreground">{m}</option>
+                  <option key={m} value={m} className="bg-background text-foreground dark:bg-[#151e3c]">{m}</option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#81859a] pointer-events-none transition-colors" />
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none transition-colors" />
             </div>
           </div>
 
           {/* BD Select */}
           <div className="flex flex-col">
-            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Select BD</span>
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Select BD</span>
             <div className="relative">
               <select
                 value={selectedBdId}
                 onChange={(e) => setSelectedBdId(e.target.value)}
-                className="appearance-none bg-[#151e3c] hover:bg-[#1f2847] border border-[#283150] hover:border-blue-500/40 rounded px-3 py-1.5 pr-8 text-xs font-bold uppercase tracking-wider text-[#dce1ff] transition-all cursor-pointer outline-none focus:ring-1 focus:ring-blue-500/50 min-w-[160px]"
+                className="appearance-none bg-background hover:bg-accent border border-slate-400 rounded px-3 py-1.5 pr-8 text-xs font-bold uppercase tracking-wider text-foreground dark:text-[#dce1ff] dark:bg-[#151e3c] dark:hover:bg-[#1f2847] dark:border-[#283150] transition-all cursor-pointer outline-none focus:ring-1 focus:ring-ring min-w-[160px]"
               >
-                <option value="all">Whole Team</option>
+                <option value="all" className="bg-background text-foreground dark:bg-[#151e3c]">Whole Team</option>
                 {data.members.map((m) => (
-                  <option key={m.id} value={m.id} className="bg-[#151e3c] text-foreground">{m.name}</option>
+                  <option key={m.id} value={m.id} className="bg-background text-foreground dark:bg-[#151e3c]">{m.name}</option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#81859a] pointer-events-none transition-colors" />
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none transition-colors" />
             </div>
           </div>
         </div>
       </header>
 
       {/* 2. KPI Grid (6 Cards) */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 !mt-3">
         {[
           {
             title: 'Total Leads',
@@ -590,7 +627,7 @@ export function TeamDetailView({
       {/* 6. Comprehensive Member Contribution Table */}
       {selectedBdId === 'all' && (
         <Card className="shadow-sm border-border w-full overflow-hidden">
-          <div className="p-4 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="py-2.5 px-4 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h3 className="text-base font-semibold text-foreground">Team Member Contribution</h3>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" className="h-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -599,13 +636,79 @@ export function TeamDetailView({
               <Button variant="outline" size="sm" className="h-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <ArrowUpDown className="h-3.5 w-3.5 mr-1" /> Sort
               </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground gap-1">
+                    <Settings2 className="h-3.5 w-3.5" /> Columns
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-56 max-h-[380px] overflow-y-auto p-0"
+                  onCloseAutoFocus={(e) => e.preventDefault()}
+                >
+                  <div className="px-2 py-1.5">
+                    <DropdownMenuLabel className="px-0 py-0.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Toggle &amp; Reorder
+                    </DropdownMenuLabel>
+                  </div>
+                  <DropdownMenuSeparator className="my-0" />
+                  <div className="py-1">
+                    {(columnOrder.length ? columnOrder : columns.map((c) => c.id || (c as any).accessorKey))
+                      .map((colId) => {
+                        const col = columns.find((c) => (c.id || (c as any).accessorKey) === colId)
+                        if (!col) return null
+                        const colName = typeof col.header === 'string' ? col.header : colId
+                        const isVisible = columnVisibility[colId] ?? true
+                        return (
+                          <div
+                            key={colId}
+                            draggable
+                            onDragStart={() => handleColDragStart(colId)}
+                            onDragEnter={() => handleColDragEnter(colId)}
+                            onDragEnd={handleColDragEnd}
+                            onDragOver={(e) => e.preventDefault()}
+                            className="flex items-center gap-2 px-2 py-1.5 rounded-sm hover:bg-accent cursor-default select-none"
+                          >
+                            <input
+                              type="checkbox"
+                              id={`col-vis-${colId}`}
+                              checked={isVisible}
+                              onChange={(e) =>
+                                setColumnVisibility((prev) => ({ ...prev, [colId]: e.target.checked }))
+                              }
+                              className="h-4 w-4 rounded border border-input accent-primary cursor-pointer shrink-0"
+                            />
+                            <label
+                              htmlFor={`col-vis-${colId}`}
+                              className="flex-1 text-sm capitalize cursor-pointer truncate"
+                            >
+                              {colName}
+                            </label>
+                            <span
+                              className="cursor-grab active:cursor-grabbing shrink-0 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
+                              title="Drag to reorder"
+                            >
+                              <GripVertical className="h-4 w-4" />
+                            </span>
+                          </div>
+                        )
+                      })}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           <DataTable
-            columns={columns}
+            columns={columns.length && columnOrder.length
+              ? [...columnOrder.map((id) => columns.find((c) => (c.id || (c as any).accessorKey) === id)!).filter(Boolean)]
+              : columns
+            }
             data={data.members}
             enablePagination={false}
             emptyMessage="No members found"
+            columnVisibility={columnVisibility}
+            onColumnVisibilityChange={setColumnVisibility}
           />
         </Card>
       )}

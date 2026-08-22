@@ -328,6 +328,19 @@ export async function GET(request: NextRequest) {
                   ],
                 })
               }
+            } else if (field === 'subStatus') {
+              if (Array.isArray(value) && value.length > 0) {
+                const query = value[0]
+                if (typeof query === 'string' && query.trim()) {
+                  filterConditions.push({
+                    subStatus: { contains: query.trim(), mode: 'insensitive' },
+                  })
+                }
+              } else if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({
+                  subStatus: { contains: value.trim(), mode: 'insensitive' },
+                })
+              }
 
             // ── dateRange / between ──────────────────────────────────────
             } else if (field === 'date') {
@@ -443,6 +456,7 @@ export async function GET(request: NextRequest) {
       treatment: true,
       category: true,
       status: true,
+      subStatus: true,
       caseStage: true,
       pipelineStage: true,
       bdId: true,
@@ -857,7 +871,7 @@ export async function POST(request: NextRequest) {
       attendantName,
       bdId: bdId || user.id,
       status: effectiveStatus,
-      pipelineStage: 'SALES',
+      pipelineStage: PipelineStage.SALES,
       circle: finalCircle,
       category: finalCategory,
       treatment: finalTreatment,

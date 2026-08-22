@@ -1,5 +1,6 @@
 'use client'
 
+import { DataTable } from '@/components/ui/data-table'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { CallNotesPopover } from '@/components/pipeline/call-notes-popover'
 import { BulkLeadReassignDialog } from '@/components/pipeline/bulk-lead-reassign-dialog'
@@ -12,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Card } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ColumnFilter } from '@/components/ui/column-filter'
 import {
@@ -28,7 +30,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { Skeleton } from '@/components/ui/skeleton'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useAuth } from '@/hooks/use-auth'
 import { usePipelinePage, usePipelineUrlState } from '@/hooks/use-pipeline'
@@ -61,7 +62,8 @@ import {
   normalizePipelineMonthValue,
 } from '@/lib/pipeline/filter-normalizers'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { ColumnDef } from '@tanstack/react-table'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import {
   ArrowDown,
@@ -70,7 +72,9 @@ import {
   CalendarIcon,
   ChevronLeft,
   ChevronRight,
+  Database,
   ExternalLink,
+  GripVertical,
   Loader2,
   Menu,
   Pencil,
@@ -84,11 +88,11 @@ import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   Suspense,
-  memo,
   startTransition,
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { toast } from 'sonner'
@@ -239,6 +243,7 @@ type PipelineColumnDefinition = {
 }
 
 const PIPELINE_VISIBLE_COLUMNS_STORAGE_KEY_PREFIX = 'crm-pipeline-visible-columns'
+const PIPELINE_COLUMN_ORDER_STORAGE_KEY_PREFIX = 'crm-pipeline-col-order'
 
 const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'leadRef', label: 'Lead Ref', defaultVisible: { bd: true, 'team-lead': true } },
@@ -300,6 +305,7 @@ const PIPELINE_SERVER_FILTER_COLUMNS = new Set<PipelineColumnId>([
   'surgeryDate',
   'createDate',
   'modifyDate',
+  'subStatus',
 ])
 
 function getPipelineColumnDefinitions(variant: 'bd' | 'team-lead') {
@@ -359,6 +365,43 @@ function writePipelineVisibleColumns(
     )
   } catch {
     // Ignore storage write failures. Column visibility is best-effort only.
+  }
+}
+
+function readPipelineColumnOrder(variant: 'bd' | 'team-lead'): PipelineColumnId[] {
+  if (typeof window === 'undefined') return []
+
+  try {
+    const stored = window.localStorage.getItem(`${PIPELINE_COLUMN_ORDER_STORAGE_KEY_PREFIX}:${variant}`)
+    if (!stored) return []
+
+    const parsed = JSON.parse(stored)
+    if (!Array.isArray(parsed)) return []
+
+    const validIds = new Set(getPipelineColumnDefinitions(variant).map((column) => column.id))
+    return parsed.filter((id): id is PipelineColumnId => typeof id === 'string' && validIds.has(id as PipelineColumnId))
+  } catch {
+    return []
+  }
+}
+
+function writePipelineColumnOrder(
+  variant: 'bd' | 'team-lead',
+  order: PipelineColumnId[]
+) {
+  if (typeof window === 'undefined') return
+
+  try {
+    if (!order || order.length === 0) {
+      window.localStorage.removeItem(`${PIPELINE_COLUMN_ORDER_STORAGE_KEY_PREFIX}:${variant}`)
+    } else {
+      window.localStorage.setItem(
+        `${PIPELINE_COLUMN_ORDER_STORAGE_KEY_PREFIX}:${variant}`,
+        JSON.stringify(order)
+      )
+    }
+  } catch {
+    // Ignore storage write failures. Column ordering is best-effort only.
   }
 }
 
@@ -584,13 +627,31 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
 
 function PipelinePageFallback({ variant }: { variant: 'bd' | 'team-lead' }) {
   const title = variant === 'bd' ? 'CRM' : 'Team CRM'
+  const subtitle = 'Manage, track & convert leads across all pipelines'
   return (
     <AuthenticatedLayout>
-      <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-[#F2F2F7] dark:bg-background">
-        <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur-md dark:bg-background/90 md:px-6">
-          <h1 className="text-lg font-bold tracking-tight md:text-xl">{title}</h1>
+      <div className="flex h-[calc(100vh-4rem)] flex-col bg-background overflow-hidden -mt-4 md:-mt-6 -mx-4 md:-mx-6 -mb-24 md:-mb-6">
+        <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 px-4 py-1.5 backdrop-blur-md dark:bg-background/90 md:px-6">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h1 className="text-xl font-bold tracking-tight md:text-2xl text-foreground">{title}</h1>
+              <p className="text-xs text-muted-foreground">{subtitle}</p>
+            </div>
+            {/* Flashy Teal Banner: Total Leads */}
+            <div className="relative overflow-hidden flex items-center justify-between px-4 py-1.5 bg-gradient-to-r from-teal-500/15 via-emerald-500/10 to-teal-500/20 dark:from-teal-950/60 dark:via-emerald-950/40 dark:to-teal-900/50 border border-teal-500/30 dark:border-teal-500/40 rounded-xl shadow-md shadow-teal-500/10 min-w-[240px] sm:min-w-[280px] backdrop-blur-md">
+              <div className="relative flex flex-col text-left flex-1 min-w-0 pr-3">
+                <span className="text-[10px] font-black tracking-widest uppercase text-teal-700 dark:text-teal-300 leading-none mb-1">
+                  Total Leads
+                </span>
+                <Skeleton className="h-5 w-20 bg-teal-500/20 rounded-md" />
+              </div>
+              <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-md shadow-teal-500/30 shrink-0">
+                <Database className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main className="flex-1 flex flex-col pt-1.5 px-3 pb-2 md:pt-1.5 md:px-4 md:pb-3 overflow-hidden">
           <PipelineStatusCards selected="all" onSelect={() => {}} isLoading />
         </main>
       </div>
@@ -608,6 +669,21 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const { state, setState, campaignSelection } = usePipelineUrlState()
 
   const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
+  const [callingLeadId, setCallingLeadId] = useState<string | null>(null)
+  const handleInitiateCall = useCallback(async (targetLead: Lead) => {
+    const patientName = targetLead.patientName || 'patient'
+    try {
+      setCallingLeadId(targetLead.id)
+      toast.info(`Initiating Knowlarity call for ${patientName}...`)
+      await apiPost(`/api/leads/${targetLead.id}/make-call`, {})
+      toast.success(`Knowlarity call initiated for ${patientName}`)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to initiate call via Knowlarity')
+    } finally {
+      setCallingLeadId(null)
+    }
+  }, [])
+
   const [bulkReassignOpen, setBulkReassignOpen] = useState(false)
   const [manualLeadCreateOpen, setManualLeadCreateOpen] = useState(false)
   const [activeBulkReassignJobId, setActiveBulkReassignJobId] = useState<string | null>(null)
@@ -617,6 +693,40 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const [visibleColumns, setVisibleColumns] = useState<Record<PipelineColumnId, boolean>>(() =>
     readPipelineVisibleColumns(variant)
   )
+  const [columnOrder, setColumnOrder] = useState<PipelineColumnId[]>(() =>
+    readPipelineColumnOrder(variant)
+  )
+
+  const availableColumns = useMemo(() => getPipelineColumnDefinitions(variant), [variant])
+  const orderedAvailableColumnIds = useMemo(() => {
+    const defaultIds = availableColumns.map((c) => c.id)
+    if (!columnOrder.length) return defaultIds
+    const set = new Set(columnOrder)
+    const missing = defaultIds.filter((id) => !set.has(id))
+    return [...columnOrder.filter((id) => defaultIds.includes(id)), ...missing]
+  }, [availableColumns, columnOrder])
+
+  // Drag-to-reorder refs for the Columns dropdown
+  const dragColRef = useRef<string | null>(null)
+  const dragOverColRef = useRef<string | null>(null)
+  const handleColDragStart = (id: string) => { dragColRef.current = id }
+  const handleColDragEnter = (id: string) => { dragOverColRef.current = id }
+  const handleColDragEnd = () => {
+    const from = dragColRef.current as PipelineColumnId | null
+    const to = dragOverColRef.current as PipelineColumnId | null
+    dragColRef.current = null; dragOverColRef.current = null
+    if (!from || !to || from === to) return
+    setColumnOrder(() => {
+      const base: PipelineColumnId[] = [...orderedAvailableColumnIds]
+      const fromIdx = base.indexOf(from)
+      const toIdx = base.indexOf(to)
+      if (fromIdx === -1 || toIdx === -1) return base
+      const next = [...base]
+      next.splice(fromIdx, 1)
+      next.splice(toIdx, 0, from)
+      return next
+    })
+  }
 
   const [searchInput, setSearchInput] = useState(state.q)
   const debouncedSearch = useDebouncedValue(searchInput, 300)
@@ -631,7 +741,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     'EXECUTIVE_ASSISTANT',
   ]).has(String(user?.role ?? ''))
 
-  const availableColumns = useMemo(() => getPipelineColumnDefinitions(variant), [variant])
   const { data: bulkReassignOptions } = useQuery<BulkLeadReassignOptionsResponse>({
     queryKey: ['lead-bulk-reassign-options'],
     queryFn: () => apiGet<BulkLeadReassignOptionsResponse>('/api/leads/bulk-reassign'),
@@ -654,14 +763,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     refetchInterval: (query) =>
       isActiveBulkLeadReassignStatus(query.state.data?.status ?? '') ? 2000 : false,
   })
-  const visibleColumnCount = useMemo(
-    () => availableColumns.filter((column) => visibleColumns[column.id]).length + 4 + (showBulkReassign ? 1 : 0),
-    [availableColumns, showBulkReassign, visibleColumns]
-  )
-  const isColumnVisible = useCallback(
-    (columnId: PipelineColumnId) => visibleColumns[columnId] === true,
-    [visibleColumns]
-  )
   const areAllColumnsVisible = useMemo(
     () => availableColumns.every((column) => visibleColumns[column.id] === true),
     [availableColumns, visibleColumns]
@@ -747,6 +848,10 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   useEffect(() => {
     writePipelineVisibleColumns(variant, visibleColumns)
   }, [variant, visibleColumns])
+
+  useEffect(() => {
+    writePipelineColumnOrder(variant, columnOrder)
+  }, [variant, columnOrder])
 
   const handleSort = useCallback(
     (field: PipelineSortField) => {
@@ -883,6 +988,16 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           filterOptions: undefined,
           filterType: undefined,
           onFilterChange: undefined,
+        }
+      }
+
+      if (columnId === 'subStatus') {
+        const valArray = columnFilters[columnId]
+        return {
+          filterValue: (valArray && valArray.length > 0) ? valArray[0] : '',
+          filterOptions: undefined,
+          filterType: 'search' as const,
+          onFilterChange: (val: string) => handleColumnFilterChange(columnId, val ? [val] : []),
         }
       }
 
@@ -1061,8 +1176,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   }, [activeBulkReassignRun, handledBulkReassignTerminalKey, queryClient])
 
   const title = variant === 'bd' ? 'CRM' : 'Team CRM'
-  const subtitle =
-    variant === 'bd' ? 'Campaigns, status breakdown, and all your leads' : 'Your team\u2019s leads by campaign and status'
+  const subtitle = 'Manage, track & convert leads across all pipelines'
 
   const total = data?.total ?? 0
   const page = data?.page ?? state.page
@@ -1076,25 +1190,469 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     return query ? `${pathname}?${query}` : pathname
   }, [pathname, searchParams])
 
+  // -----------------------------------------------------------------------
+  // TanStack ColumnDef array — exact 1-to-1 port of PipelineRow + HeaderCell
+  // -----------------------------------------------------------------------
+  const columns = useMemo<ColumnDef<Lead>[]>(() => {
+    const defs: ColumnDef<Lead>[] = []
+
+    // Fixed: S.No. (serial number — sticky fixed left column)
+    defs.push({
+      id: '__sno',
+      enableHiding: false,
+      header: 'S.No.',
+      cell: ({ row }) => (
+        <span className="font-bold text-xs tabular-nums text-slate-800 dark:text-slate-200">
+          {(page - 1) * pageSize + row.index + 1}
+        </span>
+      ),
+      size: 54,
+      meta: {
+        headerStyle: { width: 54, minWidth: 54, position: 'sticky', left: 0, zIndex: 30 },
+        headerClassName: "sticky left-0 z-30 text-center text-[11px] font-extrabold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-r border-border/80 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.08)]",
+        cellStyle: { width: 54, minWidth: 54, position: 'sticky', left: 0, zIndex: 20 },
+        cellClassName: "sticky left-0 z-20 text-center bg-slate-100 dark:bg-slate-900 font-bold border-r border-border/70 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.06)]",
+      },
+    })
+
+    // Fixed: Bulk select (conditional on showBulkReassign)
+    if (showBulkReassign) {
+      defs.push({
+        id: '__select',
+        enableHiding: false,
+        header: () => (
+          <div className="flex justify-center">
+            <Checkbox
+              checked={allVisibleSelected ? true : someVisibleSelected ? 'indeterminate' : false}
+              onCheckedChange={(checked) =>
+                setSelectedLeadIds(checked === true ? tableRows.map((l) => l.id) : [])
+              }
+              aria-label="Select visible leads"
+            />
+          </div>
+        ),
+        cell: ({ row }) => (
+          <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
+            <Checkbox
+              checked={selectedLeadIds.includes(row.original.id)}
+              onCheckedChange={(checked) => toggleLeadSelection(row.original.id, checked === true)}
+              aria-label={`Select lead ${row.original.leadRef ?? ''}`}
+            />
+          </div>
+        ),
+        size: 48,
+        meta: { headerStyle: { width: 48 }, cellStyle: { textAlign: 'center' }, headerClassName: "text-center text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200" },
+      })
+    }
+
+    // Fixed: Flow actions menu
+    defs.push({
+      id: '__flow',
+      enableHiding: false,
+      header: 'Flow',
+      cell: ({ row }) => {
+        const lead = row.original
+        const caseActions = getPipelineCaseActions(lead, pipelineReturnTo)
+        return (
+          <div onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/80" aria-label="Open case actions">
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-52 shadow-lg border-border">
+                <DropdownMenuLabel className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Case Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {caseActions.length > 0 ? caseActions.map((action) => (
+                  <DropdownMenuItem key={action.id} asChild className="font-medium">
+                    <Link href={action.href} onClick={(e) => { e.stopPropagation(); markLeadOpened(lead.id, Boolean(lead.openedInCrmAt) || optimisticallyOpenedLeadIds.includes(lead.id)) }}>{action.label}</Link>
+                  </DropdownMenuItem>
+                )) : (
+                  <div className="px-2 py-1.5 text-xs text-muted-foreground">No flow actions available yet.</div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )
+      },
+      size: 48,
+      meta: { headerStyle: { width: 48 }, headerClassName: "text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200" },
+    })
+
+    // Helper to push a toggleable column
+    const addCol = (colId: PipelineColumnId, def: Omit<ColumnDef<Lead>, 'id'>) =>
+      defs.push({
+        id: colId,
+        enableHiding: true,
+        ...def,
+        meta: {
+          ...def.meta,
+          headerClassName: cn(
+            "text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200",
+            (def.meta as any)?.headerClassName
+          )
+        }
+      })
+
+    addCol('leadRef', {
+      header: () => <HeaderCell label="Lead Ref" sortField="leadRef" state={state} onSort={handleSort} {...getHeaderFilterProps('leadRef')} />,
+      cell: ({ row }) => {
+        const lead = row.original
+        const leadRefText = typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
+        const isOpened = isLeadOpened(lead)
+        return (
+          <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="truncate max-w-[120px] text-left font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 hover:underline sm:max-w-[160px]"
+              title={leadRefText}
+              onClick={() => handleEditLead(lead.id, isOpened)}
+            >
+              {leadRefText}
+            </button>
+            {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
+          </div>
+        )
+      },
+      meta: { headerStyle: { minWidth: 120 } },
+    })
+
+    addCol('assignDate', {
+      header: () => <HeaderCell label="Assign Date" {...getHeaderFilterProps('assignDate')} />,
+      cell: ({ row }) => <span className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">{formatTableDateTime(row.original.assignedDate)}</span>,
+      meta: { headerStyle: { minWidth: 120 } },
+    })
+
+    addCol('leadDate', {
+      header: () => <HeaderCell label="Lead Date" sortField="date" state={state} onSort={handleSort} {...getHeaderFilterProps('leadDate')} />,
+      cell: ({ row }) => {
+        const receipt = getLeadReceiptDate(row.original)
+        return <span className="whitespace-nowrap text-sm text-muted-foreground">{receipt ? format(receipt, 'dd MMM yyyy, hh:mm a') : '—'}</span>
+      },
+      meta: { headerStyle: { minWidth: 130 } },
+    })
+
+    addCol('patient', {
+      header: () => <HeaderCell label="Patient Name" sortField="patient" state={state} onSort={handleSort} {...getHeaderFilterProps('patient')} />,
+      cell: ({ row }) => {
+        const lead = row.original
+        const patientName = typeof lead.patientName === 'string' ? lead.patientName : '—'
+        const isOpened = isLeadOpened(lead)
+        const latestRemarkPreview = getLatestRemarkPreview(lead)
+        return (
+          <div className="flex items-center gap-1.5 min-w-0 max-w-[170px]">
+            <button
+              type="button"
+              disabled={callingLeadId === lead.id}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleInitiateCall(lead)
+              }}
+              title={`Call ${patientName} via Knowlarity`}
+              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:bg-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white transition-all duration-200 disabled:opacity-50"
+            >
+              {callingLeadId === lead.id ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <PhoneCall className="h-3.5 w-3.5" />
+              )}
+            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href={appendReturnTo(`/patient/${lead.id}?action=edit-lead`, pipelineReturnTo)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    markLeadOpened(lead.id, isOpened)
+                  }}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block max-w-[125px] truncate align-bottom font-semibold text-foreground hover:text-primary transition-colors hover:underline"
+                >
+                  {patientName}
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5 shadow-lg border border-border">{latestRemarkPreview}</TooltipContent>
+            </Tooltip>
+          </div>
+        )
+      },
+      meta: { headerStyle: { minWidth: 175 } },
+    })
+
+    addCol('month', {
+      header: () => <HeaderCell label="Month" {...getHeaderFilterProps('month')} />,
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm font-medium">{formatMonthCell(row.original.month)}</span>,
+    })
+    addCol('age', {
+      header: 'Age',
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{row.original.age ?? '—'}</span>,
+    })
+    addCol('sex', {
+      header: 'Sex',
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{normalizedText(row.original.sex, '—')}</span>,
+    })
+    addCol('circle', {
+      header: () => <HeaderCell label="Circle" {...getHeaderFilterProps('circle')} />,
+      cell: ({ row }) => <span className="max-w-[100px] truncate text-sm">{normalizedText(row.original.circle, '—')}</span>,
+    })
+    addCol('city', {
+      header: 'City',
+      cell: ({ row }) => <span className="max-w-[120px] truncate text-sm">{resolveLeadCity(row.original) ?? '—'}</span>,
+    })
+    addCol('category', {
+      header: () => <HeaderCell label="Category" {...getHeaderFilterProps('category')} />,
+      cell: ({ row }) => <span className="max-w-[120px] truncate text-sm">{normalizedText(row.original.category, '—')}</span>,
+    })
+    addCol('treatment', {
+      header: () => <HeaderCell label="Treatment" {...getHeaderFilterProps('treatment')} />,
+      cell: ({ row }) => <span className="max-w-[120px] truncate text-sm text-muted-foreground">{normalizedText(row.original.treatment, '—')}</span>,
+    })
+    addCol('tl', {
+      header: () => <HeaderCell label="Team Lead" {...getHeaderFilterProps('tl')} />,
+      cell: ({ row }) => {
+        const text = getLeadTeamLeadText(row.original)
+        return <span className="max-w-[120px] truncate text-sm font-medium" title={text}>{text}</span>
+      },
+    })
+    addCol('bd', {
+      header: () => <HeaderCell label="BDM" {...getHeaderFilterProps('bd')} />,
+      cell: ({ row }) => <span className="max-w-[100px] truncate text-sm font-medium">{row.original.bd?.name ?? '—'}</span>,
+    })
+    addCol('lastRemarks', {
+      header: () => <HeaderCell label="Last Remark" {...getHeaderFilterProps('lastRemarks')} />,
+      cell: ({ row }) => {
+        const { dateText, content } = getLeadLastRemarkDetails(row.original)
+        if (content === '—') return '—'
+        return (
+          <div className="min-w-[360px] max-w-[600px] whitespace-normal break-words text-sm leading-relaxed text-foreground/90 flex flex-wrap items-baseline gap-1.5">
+            {dateText && (
+              <Badge
+                variant="outline"
+                className="inline-flex shrink-0 items-center rounded-full border-slate-300 bg-slate-100/90 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 shadow-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              >
+                {dateText}
+              </Badge>
+            )}
+            <span>{content}</span>
+          </div>
+        )
+      },
+      size: 400,
+      meta: {
+        headerStyle: { minWidth: 360 },
+        cellClassName: "min-w-[360px] max-w-[600px]",
+      },
+    })
+    addCol('status', {
+      header: () => <HeaderCell label="Status" {...getHeaderFilterProps('status')} />,
+      cell: ({ row }) => normalizeLeadStatus(row.original.status),
+      meta: {
+        cellStyle: (lead: Lead) => {
+          const st = normalizeLeadStatus(lead.status)
+          const sc = getStatusColor(st)
+          return {
+            backgroundColor: sc.backgroundColor,
+            color: sc.textColor,
+          }
+        },
+        cellClassName: "px-2 py-0.5 text-xs font-bold text-center whitespace-nowrap shadow-[inset_0_1px_0_0_#ffffff,inset_0_-1px_0_0_#ffffff] dark:shadow-[inset_0_1px_0_0_#0f172a,inset_0_-1px_0_0_#0f172a]",
+      },
+    })
+    addCol('followUpDate', {
+      header: () => <HeaderCell label="Follow Up Date" sortField="followUpDate" state={state} onSort={handleSort} {...getHeaderFilterProps('followUpDate')} />,
+      cell: ({ row }) => {
+        const past = isPastFollowUpDate(row.original.followUpDate)
+        return <span className={`whitespace-nowrap text-sm ${past ? 'font-medium text-red-500' : ''}`}>{formatTableDate(row.original.followUpDate)}</span>
+      },
+      meta: { headerStyle: { minWidth: 120 } },
+    })
+    addCol('mop', {
+      header: () => <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />,
+      cell: ({ row }) => <span className="max-w-[120px] truncate text-sm">{normalizedText(normalizeModeOfPaymentLabel(row.original.modeOfPayment), '—')}</span>,
+    })
+    addCol('surgeryDate', {
+      header: () => <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />,
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{formatTableDate(getLeadSurgeryDateValue(row.original))}</span>,
+    })
+    addCol('planningTreatment', {
+      header: () => <HeaderCell label="Planning Treatment" {...getHeaderFilterProps('planningTreatment')} />,
+      cell: ({ row }) => {
+        const text = typeof row.original.diseaseDetails === 'string' && row.original.diseaseDetails.trim().length > 0 ? row.original.diseaseDetails.trim() : '—'
+        return <span className="max-w-[180px] truncate text-sm" title={text}>{text}</span>
+      },
+    })
+    addCol('subStatus', {
+      header: () => <HeaderCell label="Sub Status" {...getHeaderFilterProps('subStatus')} />,
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{row.original.subStatus != null ? String(row.original.subStatus) : '—'}</span>,
+    })
+    addCol('healthInsurance', {
+      header: () => <HeaderCell label="Health Insurance" {...getHeaderFilterProps('healthInsurance')} />,
+      cell: ({ row }) => <span className="max-w-[160px] truncate text-sm">{normalizedText(row.original.insuranceName, '—')}</span>,
+    })
+    addCol('preferredLocation', {
+      header: () => <HeaderCell label="Preferred Location" {...getHeaderFilterProps('preferredLocation')} />,
+      cell: ({ row }) => {
+        const loc = resolveLeadCity(row.original) ?? normalizedText(row.original.circle, '—')
+        return <span className="max-w-[160px] truncate text-sm">{loc}</span>
+      },
+    })
+    addCol('profession', {
+      header: () => <HeaderCell label="Profession" {...getHeaderFilterProps('profession')} />,
+      cell: ({ row }) => <span className="max-w-[120px] truncate text-sm">{normalizedText(row.original.profession, '—')}</span>,
+    })
+    addCol('source', {
+      header: () => <HeaderCell label="Source" {...getHeaderFilterProps('source')} />,
+      cell: ({ row }) => <span className="max-w-[120px] truncate text-sm">{normalizedText(row.original.source, '—')}</span>,
+    })
+    addCol('leadSource', {
+      header: () => <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />,
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{resolveLeadSourceDisplay(row.original)}</span>,
+    })
+    addCol('createDate', {
+      header: () => <HeaderCell label="Create Date" {...getHeaderFilterProps('createDate')} />,
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{formatTableDateTime(row.original.createdDate)}</span>,
+    })
+    addCol('modifyBy', {
+      header: () => <HeaderCell label="Modify By" {...getHeaderFilterProps('modifyBy')} />,
+      cell: ({ row }) => <span className="max-w-[140px] truncate text-sm">{row.original.updatedBy?.name ?? '—'}</span>,
+    })
+    addCol('modifyDate', {
+      header: () => <HeaderCell label="Modified Date" {...getHeaderFilterProps('modifyDate')} />,
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{formatTableDateTime(row.original.updatedDate)}</span>,
+    })
+    addCol('dupCount', {
+      header: () => <HeaderCell label="Duplicate Count" {...getHeaderFilterProps('dupCount')} />,
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{row.original.duplCount != null ? String(row.original.duplCount) : '0'}</span>,
+    })
+    addCol('stage', {
+      header: () => <HeaderCell label="Stage" {...getHeaderFilterProps('stage')} />,
+      cell: ({ row }) => {
+        const stageBadge = getLeadStageBadge(row.original)
+        return stageBadge ? <Badge variant="secondary" className={`text-[11px] ${stageBadge.className}`}>{stageBadge.label}</Badge> : <span>—</span>
+      },
+    })
+    addCol('hospital', {
+      header: () => <HeaderCell label="Hospital" {...getHeaderFilterProps('hospital')} />,
+      cell: ({ row }) => {
+        const { hospital } = resolveLeadHospitalDoctor(row.original)
+        return <span className="max-w-[160px] truncate text-sm">{hospital || '—'}</span>
+      },
+    })
+    addCol('doctor', {
+      header: () => <HeaderCell label="Doctor" {...getHeaderFilterProps('doctor')} />,
+      cell: ({ row }) => {
+        const { doctor } = resolveLeadHospitalDoctor(row.original)
+        return <span className="max-w-[160px] truncate text-sm">{doctor || '—'}</span>
+      },
+    })
+    addCol('recency', {
+      header: () => <HeaderCell label="Recency" {...getHeaderFilterProps('recency')} />,
+      cell: ({ row }) => <LeadAgeBadge lead={row.original} />,
+    })
+
+    // Fixed: Notes + Actions (always last)
+    defs.push({
+      id: '__notes',
+      enableHiding: false,
+      header: 'Notes',
+      cell: ({ row }) => (
+        <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
+          <CallNotesPopover leadId={row.original.id} onRowClickStop noteCount={noteCounts[row.original.id]} />
+        </div>
+      ),
+      size: 100,
+      meta: { headerStyle: { width: 100 }, cellStyle: { textAlign: 'center' }, headerClassName: "text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 text-center" },
+    })
+    defs.push({
+      id: '__actions',
+      enableHiding: false,
+      header: '',
+      cell: ({ row }) => {
+        const lead = row.original
+        const isOpened = isLeadOpened(lead)
+        return (
+          <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
+            <Button variant="ghost" size="sm" className="h-8 gap-1 px-2.5 font-medium hover:bg-muted/80" onClick={() => handleEditLead(lead.id, isOpened)}>
+              <Pencil className="h-3.5 w-3.5" />Edit
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/80" asChild>
+              <Link href={`/patient/${lead.id}`} aria-label="Open lead" onClick={(e) => { e.stopPropagation(); markLeadOpened(lead.id, isOpened) }}>
+                <ExternalLink className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        )
+      },
+      size: 132,
+      meta: { headerStyle: { width: 132 }, headerClassName: "text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 text-right" },
+    })
+
+    // Apply column visibility from visibleColumns state (hide toggleable cols not in visibleColumns)
+    return defs.filter((col) => {
+      if (col.enableHiding === false) return true
+      const id = col.id as PipelineColumnId
+      return visibleColumns[id] !== false
+    })
+  }, [
+    page, pageSize, showBulkReassign, allVisibleSelected, someVisibleSelected,
+    tableRows, selectedLeadIds, state, pipelineReturnTo,
+    getHeaderFilterProps, handleSort, handleEditLead, isLeadOpened,
+    markLeadOpened, optimisticallyOpenedLeadIds, noteCounts,
+    toggleLeadSelection, visibleColumns, callingLeadId, handleInitiateCall,
+  ])
+
+
   const startDate = state.from ? new Date(state.from) : undefined
   const endDate = state.to ? new Date(state.to) : undefined
 
+  const effectiveColumnOrder = useMemo(() => {
+    const leading = ['__sno', ...(showBulkReassign ? ['__select'] : []), '__flow']
+    const trailing = ['__notes', '__actions']
+    return [...leading, ...orderedAvailableColumnIds, ...trailing]
+  }, [orderedAvailableColumnIds, showBulkReassign])
+
   return (
     <AuthenticatedLayout>
-      <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-[#F2F2F7] dark:bg-background">
-        <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur-md dark:bg-background/90 md:px-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="flex h-[calc(100vh-4rem)] flex-col bg-background overflow-hidden -mt-4 md:-mt-6 -mx-4 md:-mx-6 -mb-24 md:-mb-6">
+        {/* Top Header */}
+        <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 px-4 py-1.5 backdrop-blur-xl dark:bg-background/80 md:px-6 shrink-0 shadow-xs">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-lg font-bold tracking-tight md:text-xl">{title}</h1>
-              <p className="text-xs text-muted-foreground md:text-sm">{subtitle}</p>
+              <h1 className="text-xl font-bold tracking-tight md:text-2xl text-foreground">
+                {title}
+              </h1>
+              <p className="text-xs text-muted-foreground hidden sm:block">
+                {subtitle}
+              </p>
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-right">
-              <div>
-                <p className="text-xl font-bold text-primary tabular-nums">{data ? total : '—'}</p>
-                <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">Total leads</p>
+            <div className="flex items-center gap-3 text-right">
+              {/* Flashy Teal Banner: Total Leads (Compact, Icon on Right) */}
+              <div className="relative overflow-hidden flex items-center justify-between px-4 py-1.5 bg-gradient-to-r from-teal-600/15 via-emerald-500/10 to-teal-500/20 dark:from-teal-950/60 dark:via-emerald-950/40 dark:to-teal-900/50 border border-teal-500/30 dark:border-teal-500/40 rounded-xl shadow-md shadow-teal-500/10 min-w-[240px] sm:min-w-[280px] backdrop-blur-md group hover:border-teal-400/60 transition-all duration-300">
+                {/* Ambient glowing background blur */}
+                <div className="absolute -right-6 -top-6 w-20 h-20 bg-teal-400/20 rounded-full blur-xl pointer-events-none group-hover:bg-teal-400/30 transition-all duration-500" />
+
+                <div className="relative flex flex-col text-left flex-1 min-w-0 pr-3">
+                  <span className="text-[10px] font-black tracking-widest uppercase bg-gradient-to-r from-teal-700 via-teal-800 to-emerald-700 dark:from-teal-300 dark:via-teal-200 dark:to-emerald-300 bg-clip-text text-transparent leading-none mb-1">
+                    Total Leads
+                  </span>
+                  <span className="text-xl font-black tabular-nums tracking-tight text-teal-900 dark:text-teal-100 drop-shadow-2xs leading-tight">
+                    {data ? total.toLocaleString() : '—'}
+                  </span>
+                </div>
+
+                <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-md shadow-teal-500/30 shrink-0 group-hover:scale-105 transition-transform duration-300">
+                  <Database className="w-4 h-4 drop-shadow-xs" />
+                </div>
               </div>
+
               {variant === 'bd' && (
-                <Button variant="outline" size="sm" asChild>
+                <Button
+                  variant="outline"
+                  className="h-9 text-xs font-semibold px-3 border-teal-200 hover:bg-teal-50 hover:text-teal-700 dark:border-teal-800/80 dark:hover:bg-teal-950/50 dark:hover:text-teal-300 shadow-xs transition-all"
+                  asChild
+                >
                   <Link href="/bd/kyp">Case tracker</Link>
                 </Button>
               )}
@@ -1103,39 +1661,37 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         </header>
 
         <div className="flex flex-1 overflow-hidden">
-          {/* <CampaignSidebar
-            tree={data?.campaignTree ?? []}
-            totalLeads={data?.facetTotal ?? 0}
-            groupBy={state.groupBy}
-            onGroupByChange={handleGroupByChange}
-            selection={campaignSelection}
-            onSelect={setCampaignSelection}
-            collapsed={sidebarCollapsed}
-            onCollapsedChange={setSidebarCollapsed}
-            isLoading={isLoading && !data}
-          /> */}
-
-          <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          <main className="flex-1 flex flex-col pt-1.5 px-3 pb-2 md:pt-1.5 md:px-4 md:pb-3 overflow-hidden">
+            {/* Target Progress Card */}
             {targetProgress && (
-              <Card className="mb-4 border-border/80 p-4 shadow-sm">
+              <Card className="mb-2 overflow-hidden rounded-xl border border-indigo-200/80 bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-purple-50/80 p-3 shadow-sm dark:border-indigo-900/60 dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-purple-950/30">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm font-semibold">Target progress</p>
-                    <p className="text-xs text-muted-foreground">
-                      {targetProgress.target.metric.replace(/_/g, ' ')} &middot; period active
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-indigo-600" />
+                      <p className="text-sm font-bold text-foreground">Target Progress</p>
+                      <Badge variant="outline" className="text-[10px] font-semibold uppercase tracking-wide border-indigo-300 text-indigo-700 dark:border-indigo-700 dark:text-indigo-300">
+                        Active Period
+                      </Badge>
+                    </div>
+                    <p className="text-xs font-medium text-muted-foreground mt-0.5">
+                      Metric: {targetProgress.target.metric.replace(/_/g, ' ')}
                     </p>
                   </div>
                   <div className="w-full max-w-md space-y-1">
                     {targetProgress.showActual ? (
                       <>
-                        <div className="flex justify-between text-xs">
-                          <span>Actual: {targetProgress.actual}</span>
-                          <span>Goal: {targetProgress.target.targetValue}</span>
+                        <div className="flex justify-between text-xs font-semibold">
+                          <span className="text-indigo-700 dark:text-indigo-300">Actual: {targetProgress.actual}</span>
+                          <span className="text-muted-foreground">Goal: {targetProgress.target.targetValue} ({targetProgress.pct?.toFixed(0)}%)</span>
                         </div>
-                        <Progress value={targetProgress.pct ?? 0} className="h-2" />
+                        <Progress
+                          value={targetProgress.pct ?? 0}
+                          className="h-2 rounded-full bg-indigo-200/50 dark:bg-indigo-950 [&>div]:bg-gradient-to-r [&>div]:from-blue-600 [&>div]:via-indigo-600 [&>div]:to-purple-600"
+                        />
                       </>
                     ) : (
-                      <div className="flex justify-end text-xs">
+                      <div className="flex justify-end text-xs font-semibold text-muted-foreground">
                         <span>Goal: {targetProgress.target.targetValue}</span>
                       </div>
                     )}
@@ -1144,32 +1700,34 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
               </Card>
             )}
 
+            {/* Campaign Selection Card */}
             {campaignSelection.type === 'campaign' && (
-              <Card className="mb-4 border-border/80 p-4 shadow-sm">
+              <Card className="mb-2 overflow-hidden rounded-xl border border-violet-200/80 bg-gradient-to-r from-violet-50/80 via-fuchsia-50/40 to-card p-3 shadow-sm dark:border-violet-900/60 dark:from-violet-950/30 dark:via-fuchsia-950/20 dark:to-card">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">
                       {campaignSelection.groupValue}
                     </p>
-                    <h2 className="text-lg font-bold tracking-tight">{campaignSelection.campaignLabel}</h2>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <Badge variant="secondary" className="text-xs">
+                    <h2 className="text-lg font-black tracking-tight text-foreground">{campaignSelection.campaignLabel}</h2>
+                    <div className="mt-1.5 flex flex-wrap gap-2">
+                      <Badge variant="secondary" className="text-xs font-semibold bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-200">
                         {data?.facetTotal ?? 0} in campaign
                       </Badge>
-                      <Badge variant="outline" className="text-xs capitalize">
+                      <Badge variant="outline" className="text-xs capitalize font-semibold border-violet-300 text-violet-700 dark:border-violet-700 dark:text-violet-300">
                         {campaignSelection.groupBy}
                       </Badge>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-bold tabular-nums text-primary">{data?.facetTotal ?? 0}</p>
-                    <p className="text-xs text-muted-foreground">Leads</p>
+                    <p className="text-2xl font-black tabular-nums text-violet-700 dark:text-violet-400">{data?.facetTotal ?? 0}</p>
+                    <p className="text-xs font-medium text-muted-foreground">Total Campaign Leads</p>
                   </div>
                 </div>
               </Card>
             )}
 
-            <div className="mb-4">
+            {/* Status Breakdown Cards */}
+            <div className="mb-2 shrink-0">
               <PipelineStatusCards
                 counts={data?.statusCounts}
                 total={data?.facetTotal}
@@ -1179,139 +1737,43 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
               />
             </div>
 
-            <Card className="border-border/80 p-4 shadow-sm">
-              <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-end">
-                <div className="relative min-w-[200px] flex-1">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search all table columns except dates… or full mobile (10 digits or 91…) "
-                    className="pl-9"
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                  />
-                </div>
-                {variant === 'team-lead' && (data?.facets.bds.length ?? 0) > 0 && (
-                  <Select value={state.bdId} onValueChange={(v) => setState({ bdId: v })}>
-                    <SelectTrigger className="w-full lg:w-[200px]">
-                      <SelectValue placeholder="BD" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All BDs</SelectItem>
-                      {data?.facets.bds.map(({ id, name }) => (
-                        <SelectItem key={id} value={id}>
-                          {name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-                <Select value={state.age} onValueChange={(v) => setState({ age: v as LeadAgeFilter })}>
-                  <SelectTrigger className="w-full lg:w-[160px]">
-                    <SelectValue placeholder="Lead age" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All ages</SelectItem>
-                    <SelectItem value="new">New (&lt; 1 week)</SelectItem>
-                    <SelectItem value="lt1m">&lt; 1 month</SelectItem>
-                    <SelectItem value="1to2m">1–2 months</SelectItem>
-                    <SelectItem value="2to3m">2–3 months</SelectItem>
-                    <SelectItem value="3plus">3+ months</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={state.category} onValueChange={(v) => setState({ category: v })}>
-                  <SelectTrigger className="w-full lg:w-[160px]">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All categories</SelectItem>
-                    {data?.facets.categories.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={state.circle} onValueChange={(v) => setState({ circle: v })}>
-                  <SelectTrigger className="w-full lg:w-[160px]">
-                    <SelectValue placeholder="Circle" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All circles</SelectItem>
-                    {data?.facets.circles.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal lg:w-[140px]">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate ? format(startDate, 'MMM d') : 'From'}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={startDate}
-                      onSelect={(d) => setState({ from: d ? format(d, 'yyyy-MM-dd') : '' })}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal lg:w-[140px]">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {endDate ? format(endDate, 'MMM d') : 'To'}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={endDate}
-                      onSelect={(d) => setState({ to: d ? format(d, 'yyyy-MM-dd') : '' })}
-                    />
-                  </PopoverContent>
-                </Popover>
-                {(state.from || state.to) && (
-                  <Button variant="ghost" size="sm" onClick={() => setState({ from: '', to: '' })}>
-                    Clear dates
-                  </Button>
-                )}
-              </div>
-
-              <div className="rounded-xl border border-border/80 bg-card overflow-hidden">
-                <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
+            {/* Main Table Card Container */}
+            <div className="space-y-3 flex-1 flex flex-col min-h-0 overflow-hidden">
+              <div className="rounded-2xl border border-border/80 bg-card overflow-hidden flex-1 flex flex-col min-h-0 shadow-md">
+                {/* Table Toolbar Header Section */}
+                <div className="flex items-center justify-between border-b border-[#062D4C] bg-[#062D4C] text-white px-4 py-2.5 shrink-0 rounded-t-2xl shadow-sm">
                   <div>
-                    <h3 className="flex items-center gap-2 text-sm font-semibold">
-                      Leads
+                    <h3 className="flex items-center gap-2.5 text-sm font-bold text-white">
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-400" />
+                      </span>
+                      <span>Leads Pipeline</span>
                       {activeColumnFilterCount > 0 && (
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="h-6 px-2 py-0 text-[10px] font-medium text-rose-600 hover:text-rose-700 dark:text-rose-400"
+                          className="h-6 px-2.5 py-0 text-[11px] font-semibold text-rose-300 hover:text-white hover:bg-rose-500/20 rounded-full"
                           onClick={clearColumnFilters}
                         >
-                          Clear column filters ({activeColumnFilterCount})
+                          Clear filters ({activeColumnFilterCount})
                         </Button>
                       )}
                     </h3>
-                    <p className="text-xs text-muted-foreground">
-                      {data ? `${rangeStart}–${rangeEnd} of ${total} shown` : 'Loading…'}{' '}
+                    <p className="text-xs font-medium text-slate-300 mt-0.5">
+                      {data ? `Showing ${rangeStart}–${rangeEnd} of ${total} leads` : 'Loading…'}{' '}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
                     {canCreateManualLead ? (
                       <Button
                         type="button"
-                        variant="outline"
                         size="sm"
-                        className="gap-2"
+                        className="h-8 gap-1.5 text-xs font-bold bg-white text-[#062D4C] hover:bg-slate-100 shadow-sm border-0 transition-all"
                         onClick={() => setManualLeadCreateOpen(true)}
                       >
-                        <Plus className="h-4 w-4" />
+                        <Plus className="h-3.5 w-3.5 text-[#062D4C] stroke-[2.5]" />
                         Create manual lead
                       </Button>
                     ) : null}
@@ -1321,6 +1783,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           type="button"
                           variant="outline"
                           size="sm"
+                          className="h-8 text-xs font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white shadow-xs"
                           onClick={() => setBulkReassignOpen(true)}
                         >
                           Bulk Reassign
@@ -1331,6 +1794,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             type="button"
                             variant="ghost"
                             size="sm"
+                            className="h-8 text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/10"
                             onClick={() => setSelectedLeadIds([])}
                           >
                             Clear selection
@@ -1340,47 +1804,87 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     ) : null}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button type="button" variant="outline" size="sm" className="gap-2">
-                          <SlidersHorizontal className="h-4 w-4" />
+                        <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white shadow-xs">
+                          <SlidersHorizontal className="h-3.5 w-3.5 text-slate-200" />
                           Columns
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="max-h-[380px] w-64 overflow-y-auto">
-                        <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuCheckboxItem
-                          checked={areAllColumnsVisible}
-                          onSelect={(event) => event.preventDefault()}
-                          onCheckedChange={(checked) =>
-                            setVisibleColumns(
-                              availableColumns.reduce<Record<PipelineColumnId, boolean>>(
-                                (next, column) => {
-                                  next[column.id] = checked === true
-                                  return next
-                                },
-                                {} as Record<PipelineColumnId, boolean>
-                              )
-                            )
-                          }
-                        >
-                          Select all
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuSeparator />
-                        {availableColumns.map((column) => (
+                      <DropdownMenuContent
+                        align="end"
+                        className="max-h-[380px] w-64 overflow-y-auto p-0 shadow-lg border-border"
+                        onCloseAutoFocus={(e) => e.preventDefault()}
+                      >
+                        <div className="px-2.5 py-2">
+                          <DropdownMenuLabel className="px-0 py-0.5 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                            Toggle &amp; Reorder Columns
+                          </DropdownMenuLabel>
+                        </div>
+                        <DropdownMenuSeparator className="my-0" />
+                        {/* Select All row */}
+                        <div className="px-2 py-1">
                           <DropdownMenuCheckboxItem
-                            key={column.id}
-                            checked={visibleColumns[column.id]}
+                            checked={areAllColumnsVisible}
                             onSelect={(event) => event.preventDefault()}
                             onCheckedChange={(checked) =>
-                              setVisibleColumns((current) => ({
-                                ...current,
-                                [column.id]: checked === true,
-                              }))
+                              setVisibleColumns(
+                                availableColumns.reduce<Record<PipelineColumnId, boolean>>(
+                                  (next, column) => {
+                                    next[column.id] = checked === true
+                                    return next
+                                  },
+                                  {} as Record<PipelineColumnId, boolean>
+                                )
+                              )
                             }
+                            className="font-medium"
                           >
-                            {column.label}
+                            Select all
                           </DropdownMenuCheckboxItem>
-                        ))}
+                        </div>
+                        <DropdownMenuSeparator className="my-0" />
+                        {/* Draggable column rows */}
+                        <div className="py-1">
+                          {orderedAvailableColumnIds.map((colId) => {
+                            const column = availableColumns.find((c) => c.id === colId)
+                            if (!column) return null
+                            return (
+                              <div
+                                key={colId}
+                                draggable
+                                onDragStart={() => handleColDragStart(colId)}
+                                onDragEnter={() => handleColDragEnter(colId)}
+                                onDragEnd={handleColDragEnd}
+                                onDragOver={(e) => e.preventDefault()}
+                                className="flex items-center gap-2 px-2.5 py-1.5 rounded-sm hover:bg-accent cursor-default select-none transition-colors"
+                              >
+                                <input
+                                  type="checkbox"
+                                  id={`pipeline-col-${colId}`}
+                                  checked={visibleColumns[colId] ?? false}
+                                  onChange={(e) =>
+                                    setVisibleColumns((current) => ({
+                                      ...current,
+                                      [colId]: e.target.checked,
+                                    }))
+                                  }
+                                  className="h-4 w-4 rounded border border-input accent-indigo-600 cursor-pointer shrink-0"
+                                />
+                                <label
+                                  htmlFor={`pipeline-col-${colId}`}
+                                  className="flex-1 text-sm font-medium cursor-pointer truncate"
+                                >
+                                  {column.label}
+                                </label>
+                                <span
+                                  className="cursor-grab active:cursor-grabbing shrink-0 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
+                                  title="Drag to reorder"
+                                >
+                                  <GripVertical className="h-4 w-4" />
+                                </span>
+                              </div>
+                            )
+                          })}
+                        </div>
                       </DropdownMenuContent>
                     </DropdownMenu>
                     <Button
@@ -1389,209 +1893,163 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       size="sm"
                       onClick={() => refetch()}
                       disabled={isFetching}
-                      className="gap-2"
+                      className="h-8 gap-1.5 text-xs font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white shadow-xs"
                       title="Refresh CRM data"
                     >
-                      <RotateCw className={cn('h-4 w-4', isFetching && 'animate-spin')} />
+                      <RotateCw className={cn('h-3.5 w-3.5', isFetching && 'animate-spin')} />
                       Refresh
                     </Button>
                   </div>
                 </div>
 
-                <div
-                  className={cn(
-                    'max-h-[min(70vh,900px)] overflow-auto transition-opacity duration-200',
-                    isFetching && !isLoading && 'opacity-60 pointer-events-none'
-                  )}
-                >
-                  {isLoading ? (
-                    <table className="w-full caption-bottom text-sm">
-                      <tbody>
-                        {Array.from({ length: 10 }).map((_, i) => (
-                          <tr key={i} className="border-b border-border/60">
-                            {Array.from({ length: visibleColumnCount }).map((__, j) => (
-                              <td key={j} className="px-3 py-2.5">
-                                <Skeleton className="h-4 w-full" />
-                              </td>
-                            ))}
-                          </tr>
+                {/* Filter Search Bar */}
+                <div className="border-b border-border/70 px-4 py-2.5 bg-muted/30 dark:bg-muted/10 shrink-0 flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center">
+                  <div className="relative min-w-[220px] flex-1">
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
+                    <Input
+                      placeholder="Search all table columns except dates… or full mobile (10 digits or 91…) "
+                      className="pl-9 h-9 text-xs bg-background/80 hover:bg-background focus:bg-background border-border/80 rounded-lg shadow-xs transition-colors"
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                    />
+                  </div>
+                  {variant === 'team-lead' && (data?.facets.bds.length ?? 0) > 0 && (
+                    <Select value={state.bdId} onValueChange={(v) => setState({ bdId: v })}>
+                      <SelectTrigger className="w-full lg:w-[200px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs font-medium">
+                        <SelectValue placeholder="BD" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All BDs</SelectItem>
+                        {data?.facets.bds.map(({ id, name }) => (
+                          <SelectItem key={id} value={id}>
+                            {name}
+                          </SelectItem>
                         ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <table className="w-full caption-bottom text-sm">
-                      <thead className="sticky top-0 z-10 bg-background [&_tr]:border-b">
-                        <tr className="border-b bg-background">
-                          <th className="h-10 w-12 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            S.No.
-                          </th>
-                          {showBulkReassign ? (
-                            <th className="h-10 w-12 px-2 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                              <div className="flex justify-center">
-                                <Checkbox
-                                  checked={allVisibleSelected ? true : someVisibleSelected ? 'indeterminate' : false}
-                                  onCheckedChange={(checked) =>
-                                    setSelectedLeadIds(
-                                      checked === true ? tableRows.map((lead) => lead.id) : []
-                                    )
-                                  }
-                                  aria-label="Select visible leads"
-                                />
-                              </div>
-                            </th>
-                          ) : null}
-                          <th className="h-10 w-12 px-2 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            Flow
-                          </th>
-                          {isColumnVisible('leadRef') && (
-                            <HeaderCell
-                              label="Lead Ref"
-                              sortField="leadRef"
-                              state={state}
-                              onSort={handleSort}
-                              {...getHeaderFilterProps('leadRef')}
-                            />
-                          )}
-                          {isColumnVisible('assignDate') && <HeaderCell label="Assign Date" {...getHeaderFilterProps('assignDate')} />}
-                          {isColumnVisible('leadDate') && (
-                            <HeaderCell label="Lead Date" sortField="date" state={state} onSort={handleSort} {...getHeaderFilterProps('leadDate')} />
-                          )}
-                          {isColumnVisible('patient') && (
-                            <HeaderCell
-                              label="Patient Name"
-                              sortField="patient"
-                              state={state}
-                              onSort={handleSort}
-                              {...getHeaderFilterProps('patient')}
-                            />
-                          )}
-                          {isColumnVisible('month') && <HeaderCell label="Month" {...getHeaderFilterProps('month')} />}
-                          {isColumnVisible('age') && <HeaderCell label="Age" />}
-                          {isColumnVisible('sex') && <HeaderCell label="Sex" />}
-                          {isColumnVisible('circle') && (
-                            <HeaderCell
-                              label="Circle"
-                              {...getHeaderFilterProps('circle')}
-                            />
-                          )}
-                          {isColumnVisible('city') && <HeaderCell label="City" />}
-                          {isColumnVisible('category') && (
-                            <HeaderCell
-                              label="Category"
-                              {...getHeaderFilterProps('category')}
-                            />
-                          )}
-                          {isColumnVisible('treatment') && (
-                            <HeaderCell
-                              label="Treatment"
-                              {...getHeaderFilterProps('treatment')}
-                            />
-                          )}
-                          {isColumnVisible('tl') && <HeaderCell label="Team Lead" {...getHeaderFilterProps('tl')} />}
-                          {isColumnVisible('bd') && (
-                            <HeaderCell
-                              label="BDM"
-                              {...getHeaderFilterProps('bd')}
-                            />
-                          )}
-                          {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remark" {...getHeaderFilterProps('lastRemarks')} />}
-                          {isColumnVisible('status') && (
-                            <HeaderCell
-                              label="Status"
-                              {...getHeaderFilterProps('status')}
-                            />
-                          )}
-                          {isColumnVisible('followUpDate') && (
-                            <HeaderCell
-                              label="Follow Up Date"
-                              sortField="followUpDate"
-                              state={state}
-                              onSort={handleSort}
-                              {...getHeaderFilterProps('followUpDate')}
-                            />
-                          )}
-                          {isColumnVisible('mop') && <HeaderCell label="MOP" {...getHeaderFilterProps('mop')} />}
-                          {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />}
-                          {isColumnVisible('planningTreatment') && <HeaderCell label="Planning Treatment" {...getHeaderFilterProps('planningTreatment')} />}
-                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" />}
-                          {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" {...getHeaderFilterProps('healthInsurance')} />}
-                          {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" {...getHeaderFilterProps('preferredLocation')} />}
-                          {isColumnVisible('profession') && <HeaderCell label="Profession" {...getHeaderFilterProps('profession')} />}
-                          {isColumnVisible('source') && <HeaderCell label="Source" {...getHeaderFilterProps('source')} />}
-                          {isColumnVisible('leadSource') && <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />}
-                          {isColumnVisible('createDate') && <HeaderCell label="Create Date" {...getHeaderFilterProps('createDate')} />}
-                          {isColumnVisible('modifyBy') && <HeaderCell label="Modify By" {...getHeaderFilterProps('modifyBy')} />}
-                          {isColumnVisible('modifyDate') && <HeaderCell label="Modified Date" {...getHeaderFilterProps('modifyDate')} />}
-                          {isColumnVisible('dupCount') && <HeaderCell label="Duplicate Count" {...getHeaderFilterProps('dupCount')} />}
-                          {/* {isColumnVisible('bdm') && (
-                            <HeaderCell
-                              label="BDM (Assign)"
-                              {...getHeaderFilterProps('bdm')}
-                            />
-                          )} */}
-                          {isColumnVisible('hospital') && (
-                            <HeaderCell
-                              label="Hospital"
-                              {...getHeaderFilterProps('hospital')}
-                            />
-                          )}
-                          {isColumnVisible('doctor') && (
-                            <HeaderCell
-                              label="Doctor"
-                              {...getHeaderFilterProps('doctor')}
-                            />
-                          )}
-                          {isColumnVisible('stage') && (
-                            <HeaderCell
-                              label="Stage"
-                              {...getHeaderFilterProps('stage')}
-                            />
-                          )}
-                          {isColumnVisible('recency') && <HeaderCell label="Recency" {...getHeaderFilterProps('recency')} />}
-                          <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            Notes
-                          </th>
-                          <th className="h-10 w-[132px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {tableRows.length === 0 ? (
-                          <tr>
-                            <td
-                              colSpan={visibleColumnCount}
-                              className="p-8 text-center text-sm text-muted-foreground"
-                            >
-                              No leads match filters
-                            </td>
-                          </tr>
-                        ) : (
-                          tableRows.map((lead, index) => (
-                            <PipelineRow
-                              key={lead.id}
-                              lead={lead}
-                              serialNumber={(page - 1) * pageSize + index + 1}
-                              returnTo={pipelineReturnTo}
-                              noteCount={noteCounts[lead.id]}
-                              onClick={handleRowClick}
-                              onEdit={handleEditLead}
-                              onMarkOpened={markLeadOpened}
-                              isOpened={isLeadOpened(lead)}
-                              selectionEnabled={showBulkReassign}
-                              isSelected={selectedLeadIds.includes(lead.id)}
-                              onToggleSelected={toggleLeadSelection}
-                              visibleColumns={visibleColumns}
-                            />
-                          ))
-                        )}
-                      </tbody>
-                    </table>
+                      </SelectContent>
+                    </Select>
+                  )}
+                  <Select value={state.age} onValueChange={(v) => setState({ age: v as LeadAgeFilter })}>
+                    <SelectTrigger className="w-full lg:w-[140px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs font-medium">
+                      <SelectValue placeholder="Lead age" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All ages</SelectItem>
+                      <SelectItem value="new">New (&lt; 1 week)</SelectItem>
+                      <SelectItem value="lt1m">&lt; 1 month</SelectItem>
+                      <SelectItem value="1to2m">1–2 months</SelectItem>
+                      <SelectItem value="2to3m">2–3 months</SelectItem>
+                      <SelectItem value="3plus">3+ months</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={state.category} onValueChange={(v) => setState({ category: v })}>
+                    <SelectTrigger className="w-full lg:w-[140px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs font-medium">
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All categories</SelectItem>
+                      {data?.facets.categories.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={state.circle} onValueChange={(v) => setState({ circle: v })}>
+                    <SelectTrigger className="w-full lg:w-[140px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs font-medium">
+                      <SelectValue placeholder="Circle" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All circles</SelectItem>
+                      {data?.facets.circles.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-medium lg:w-[120px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs">
+                        <CalendarIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                        {startDate ? format(startDate, 'MMM d') : 'From'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={startDate}
+                        onSelect={(d) => setState({ from: d ? format(d, 'yyyy-MM-dd') : '' })}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-medium lg:w-[120px] h-9 text-xs bg-background/80 hover:bg-background border-border/80 rounded-lg shadow-xs">
+                        <CalendarIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                        {endDate ? format(endDate, 'MMM d') : 'To'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={endDate}
+                        onSelect={(d) => setState({ to: d ? format(d, 'yyyy-MM-dd') : '' })}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {(state.from || state.to) && (
+                    <Button
+                      variant="ghost"
+                      className="h-9 px-3 text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/30 rounded-lg"
+                      onClick={() => setState({ from: '', to: '' })}
+                    >
+                      Clear dates
+                    </Button>
                   )}
                 </div>
 
-                <div className="flex flex-col gap-2 border-t border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-xs text-muted-foreground">
+                {/* Table Content Container */}
+                <div
+                  className={cn(
+                    'flex-1 overflow-auto transition-opacity duration-200 min-h-0',
+                    isBackgroundRefetching && 'opacity-60 pointer-events-none'
+                  )}
+                >
+                  <DataTable
+                    columns={columns}
+                    data={tableRows}
+                    isLoading={isLoading}
+                    emptyMessage="No leads match filters"
+                    onRowClick={(lead) => handleRowClick(lead.id, isLeadOpened(lead))}
+                    rowClassName={(lead) =>
+                      !isLeadOpened(lead)
+                        ? 'bg-[#E4EEFF] hover:bg-[#D9E7FF] shadow-[inset_0_1px_0_0_rgba(175,196,255,0.9),inset_0_-1px_0_0_rgba(175,196,255,0.9)] dark:bg-[#2A3B60] dark:hover:bg-[#334874] dark:shadow-[inset_0_1px_0_0_rgba(93,124,199,0.95),inset_0_-1px_0_0_rgba(93,124,199,0.95)] font-medium'
+                        : 'hover:bg-muted/50'
+                    }
+                    columnVisibility={visibleColumns as Record<string, boolean>}
+                    tableHeaderClassName="sticky top-0 z-10 bg-slate-100/95 dark:bg-slate-900/95 border-b border-border/80 text-foreground backdrop-blur-md shadow-xs [&_tr]:border-b [&_tr]:border-border/60"
+                    onColumnVisibilityChange={(updaterOrVal) => {
+                      const next = typeof updaterOrVal === 'function'
+                        ? updaterOrVal(visibleColumns as Record<string, boolean>)
+                        : updaterOrVal
+                      setVisibleColumns(next as Record<PipelineColumnId, boolean>)
+                    }}
+                    columnOrder={effectiveColumnOrder}
+                    onColumnOrderChange={(updaterOrVal) => {
+                      const next = typeof updaterOrVal === 'function'
+                        ? updaterOrVal(effectiveColumnOrder ?? [])
+                        : updaterOrVal
+                      const fixedIds = new Set(['__sno', '__select', '__flow', '__notes', '__actions'])
+                      setColumnOrder(next.filter((id) => !fixedIds.has(id)) as PipelineColumnId[])
+                    }}
+                  />
+                </div>
+
+                {/* Pagination Footer */}
+                <div className="flex flex-col gap-2 border-t border-border/70 bg-gradient-to-r from-muted/30 via-muted/10 to-card px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between shrink-0">
+                  <p className="text-xs font-semibold text-muted-foreground">
                     {total > 0
-                      ? `Showing ${rangeStart}–${rangeEnd} of ${total}`
+                      ? `Showing ${rangeStart}–${rangeEnd} of ${total} results`
                       : 'No results'}
                   </p>
                   <div className="flex items-center gap-2">
@@ -1599,7 +2057,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       value={String(pageSize)}
                       onValueChange={(v) => setState({ pageSize: Number(v), page: 1 })}
                     >
-                      <SelectTrigger className="h-8 w-[110px] text-xs">
+                      <SelectTrigger className="h-8 w-[110px] text-xs font-medium bg-background/80 border-border/80 shadow-xs">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -1613,28 +2071,30 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     <Button
                       variant="outline"
                       size="sm"
+                      className="h-8 text-xs font-medium border-border/80 hover:bg-muted shadow-xs"
                       disabled={page <= 1}
                       onClick={() => setState({ page: page - 1 })}
                     >
-                      <ChevronLeft className="h-4 w-4" />
+                      <ChevronLeft className="h-3.5 w-3.5 mr-0.5" />
                       Prev
                     </Button>
-                    <span className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
+                    <span className="whitespace-nowrap text-xs font-bold text-foreground/80 tabular-nums px-1">
                       Page {page} of {totalPages}
                     </span>
                     <Button
                       variant="outline"
                       size="sm"
+                      className="h-8 text-xs font-medium border-border/80 hover:bg-muted shadow-xs"
                       disabled={page >= totalPages}
                       onClick={() => setState({ page: page + 1 })}
                     >
                       Next
-                      <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-3.5 w-3.5 ml-0.5" />
                     </Button>
                   </div>
                 </div>
               </div>
-            </Card>
+            </div>
           </main>
         </div>
         <LeadEditDrawer
@@ -1831,395 +2291,50 @@ function HeaderCell({
   sortField?: PipelineSortField
   state?: { sort: PipelineSortField; dir: PipelineSortDir }
   onSort?: (field: PipelineSortField) => void
-  filterValue?: string[]
+  filterValue?: any
   filterOptions?: string[]
-  filterType?: 'multiSelect' | 'dateRange'
-  onFilterChange?: (v: string[]) => void
+  filterType?: 'multiSelect' | 'dateRange' | 'search'
+  onFilterChange?: (v: any) => void
 }) {
   const active = !!sortField && state?.sort === sortField
 
   return (
-    <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-        {sortField && onSort ? (
-          <button
-            type="button"
-            onClick={() => onSort(sortField)}
-            className={cn(
-              'inline-flex items-center gap-1 transition-colors hover:text-foreground',
-              active && 'text-foreground'
-            )}
-          >
-            {label}
-            {active ? (
-              state!.dir === 'asc' ? (
-                <ArrowUp className="h-3 w-3" />
-              ) : (
-                <ArrowDown className="h-3 w-3" />
-              )
-            ) : (
-              <ArrowUpDown className="h-3 w-3 text-muted-foreground/50" />
-            )}
-          </button>
-        ) : (
+    <div className="flex items-center justify-between gap-1.5 whitespace-nowrap w-full">
+      {sortField && onSort ? (
+        <button
+          type="button"
+          onClick={() => onSort(sortField)}
+          className={cn(
+            'group inline-flex items-center gap-1 font-bold transition-colors hover:text-indigo-600 dark:hover:text-indigo-400',
+            active ? 'text-indigo-600 dark:text-indigo-400 font-black' : 'text-slate-700 dark:text-slate-200'
+          )}
+        >
           <span>{label}</span>
-        )}
-        {onFilterChange && (filterType === 'dateRange' || filterOptions) && (
+          {active ? (
+            state!.dir === 'asc' ? (
+              <ArrowUp className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400 stroke-[2.5]" />
+            ) : (
+              <ArrowDown className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400 stroke-[2.5]" />
+            )
+          ) : (
+            <ArrowUpDown className="h-3 w-3 opacity-40 group-hover:opacity-100 transition-opacity" />
+          )}
+        </button>
+      ) : (
+        <span className="font-bold text-slate-700 dark:text-slate-200">{label}</span>
+      )}
+      {onFilterChange && (filterType === 'dateRange' || filterType === 'search' || filterOptions) && (
+        <div className="shrink-0">
           <ColumnFilter
             type={filterType}
             value={filterValue}
             options={filterOptions}
-            onChange={(v) => onFilterChange(v as string[])}
+            onChange={(v) => onFilterChange(v)}
+            placeholder={`Filter ${label.toLowerCase()}...`}
           />
-        )}
-      </div>
-    </th>
+        </div>
+      )}
+    </div>
   )
 }
 
-const PipelineRow = memo(function PipelineRow({
-  lead,
-  serialNumber,
-  returnTo,
-  noteCount,
-  onClick,
-  onEdit,
-  onMarkOpened,
-  isOpened,
-  selectionEnabled,
-  isSelected,
-  onToggleSelected,
-  visibleColumns,
-}: {
-  lead: Lead
-  serialNumber: number
-  returnTo: string
-  noteCount?: number
-  onClick: (id: string, alreadyOpened: boolean) => void
-  onEdit: (id: string, alreadyOpened: boolean) => void
-  onMarkOpened: (id: string, alreadyOpened: boolean) => void
-  isOpened: boolean
-  selectionEnabled: boolean
-  isSelected: boolean
-  onToggleSelected: (leadId: string, checked: boolean) => void
-  visibleColumns: Record<PipelineColumnId, boolean>
-}) {
-  const stage = getLeadStageBadge(lead)
-  const st = normalizeLeadStatus(lead.status)
-  const sc = getStatusColor(st)
-  const latestRemarkPreview = getLatestRemarkPreview(lead)
-  const patientName = typeof lead.patientName === 'string' ? lead.patientName : '—'
-  const receipt = getLeadReceiptDate(lead)
-  const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
-  const preferredLocation = resolveLeadCity(lead) ?? normalizedText(lead.circle, '—')
-  const leadRefText = typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
-  const lastRemarksText = getLeadLastRemarksText(lead)
-  const planningTreatmentText =
-    typeof lead.diseaseDetails === 'string' && lead.diseaseDetails.trim().length > 0
-      ? lead.diseaseDetails.trim()
-      : '—'
-  const caseActions = getPipelineCaseActions(lead, returnTo)
-  const teamLeadText =
-    (typeof lead.plRecord?.managerName === 'string' && lead.plRecord.managerName.trim()) ||
-    (lead.teamLeadId != null ? String(lead.teamLeadId) : '—')
-  // const bdmText =
-  //   typeof lead.plRecord?.bdmName === 'string' && lead.plRecord.bdmName.trim().length > 0
-  //     ? lead.plRecord.bdmName.trim()
-  //     : '—'
-  const show = (columnId: PipelineColumnId) => visibleColumns[columnId] === true
-
-  const [callingLeadId, setCallingLeadId] = useState<string | null>(null)
-
-  const handleInitiateCall = async (targetLead: Lead) => {
-    const patientName = targetLead.patientName || 'patient'
-    try {
-      setCallingLeadId(targetLead.id)
-      toast.info(`Initiating Knowlarity call for ${patientName}...`)
-      await apiPost(`/api/leads/${targetLead.id}/make-call`, {})
-      toast.success(`Knowlarity call initiated for ${patientName}`)
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to initiate call via Knowlarity')
-    } finally {
-      setCallingLeadId(null)
-    }
-  }
-
-  return (
-    <tr
-      className={cn(
-        'cursor-pointer border-b border-border/60 transition-colors',
-        isOpened
-          ? 'bg-[#E4EEFF] hover:bg-[#D9E7FF] shadow-[inset_0_1px_0_0_rgba(175,196,255,0.9),inset_0_-1px_0_0_rgba(175,196,255,0.9)] dark:bg-[#2A3B60] dark:hover:bg-[#334874] dark:shadow-[inset_0_1px_0_0_rgba(93,124,199,0.95),inset_0_-1px_0_0_rgba(93,124,199,0.95)]'
-          : 'hover:bg-muted/50'
-      )}
-      onClick={() => onClick(lead.id, isOpened)}
-    >
-      <td className="whitespace-nowrap px-3 py-2 text-xs font-medium text-muted-foreground tabular-nums">
-        {serialNumber}
-      </td>
-      {selectionEnabled ? (
-        <td className="px-2 py-2 text-center" onClick={(e) => e.stopPropagation()}>
-          <div className="flex justify-center">
-            <Checkbox
-              checked={isSelected}
-              onCheckedChange={(checked) => onToggleSelected(lead.id, checked === true)}
-              aria-label={`Select lead ${leadRefText}`}
-            />
-          </div>
-        </td>
-      ) : null}
-      <td className="px-2 py-2" onClick={(e) => e.stopPropagation()}>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-md text-muted-foreground hover:text-foreground"
-              aria-label="Open case actions"
-            >
-              <Menu className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-52">
-            <DropdownMenuLabel>Case Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {caseActions.length > 0 ? (
-              caseActions.map((action) => (
-                <DropdownMenuItem key={action.id} asChild>
-                  <Link
-                    href={action.href}
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      onMarkOpened(lead.id, isOpened)
-                    }}
-                  >
-                    {action.label}
-                  </Link>
-                </DropdownMenuItem>
-              ))
-            ) : (
-              <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                No flow actions available yet.
-              </div>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </td>
-      {show('leadRef') && (
-        <td className="px-3 py-2 font-medium" onClick={(e) => e.stopPropagation()}>
-          <div className="flex items-center gap-0.5">
-            <button
-              type="button"
-              className="truncate max-w-[120px] text-left text-primary hover:underline sm:max-w-[160px]"
-              title={leadRefText}
-              onClick={() => onEdit(lead.id, isOpened)}
-            >
-              {leadRefText}
-            </button>
-            {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
-          </div>
-        </td>
-      )}
-      {show('assignDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">
-          {formatTableDateTime(lead.assignedDate)}
-        </td>
-      )}
-      {show('leadDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">
-          {receipt ? format(receipt, 'dd MMM yyyy, hh:mm a') : '—'}
-        </td>
-      )}
-      {show('patient') && (
-        <td className="max-w-[170px] px-3 py-2">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <button
-              type="button"
-              disabled={callingLeadId === lead.id}
-              onClick={(e) => {
-                e.stopPropagation()
-                handleInitiateCall(lead)
-              }}
-              title={`Call ${patientName} via Knowlarity`}
-              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white dark:bg-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white transition-all duration-200 disabled:opacity-50"
-            >
-              {callingLeadId === lead.id ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <PhoneCall className="h-3.5 w-3.5" />
-              )}
-            </button>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href={appendReturnTo(`/patient/${lead.id}?action=edit-lead`, returnTo)}
-                  onClick={(e) => e.stopPropagation()}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-block max-w-[120px] truncate align-bottom font-medium hover:underline"
-                >
-                  {patientName}
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
-                {latestRemarkPreview}
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </td>
-      )}
-      {show('month') && <td className="whitespace-nowrap px-3 py-2 text-sm">{formatMonthCell(lead.month)}</td>}
-      {show('age') && <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.age ?? '—'}</td>}
-      {show('sex') && <td className="whitespace-nowrap px-3 py-2 text-sm">{normalizedText(lead.sex, '—')}</td>}
-      {show('circle') && (
-        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{normalizedText(lead.circle, '—')}</td>
-      )}
-      {show('city') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{resolveLeadCity(lead) ?? '—'}</td>
-      )}
-      {show('category') && <td className="max-w-[120px] truncate px-3 py-2">{normalizedText(lead.category, '—')}</td>}
-      {show('treatment') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{normalizedText(lead.treatment, '—')}</td>
-      )}
-      {show('tl') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm" title={teamLeadText}>
-          {teamLeadText}
-        </td>
-      )}
-      {show('bd') && <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>}
-      {show('lastRemarks') && (
-        <td className="max-w-[420px] whitespace-normal break-words px-3 py-2 text-sm align-top">
-          {(() => {
-            const { dateText, content } = getLeadLastRemarkDetails(lead)
-            if (content === '—') return '—'
-            return (
-              <div className="flex flex-wrap items-baseline gap-1.5">
-                {dateText && (
-                  <Badge
-                    variant="outline"
-                    className="inline-flex shrink-0 items-center rounded-full border-slate-300 bg-slate-100/90 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 shadow-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                  >
-                    {dateText}
-                  </Badge>
-                )}
-                <span>{content}</span>
-              </div>
-            )
-          })()}
-        </td>
-      )}
-      {show('status') && (
-        <td className="px-3 py-2">
-          <span
-            className="rounded-md px-2 py-0.5 text-xs font-medium"
-            style={{
-              backgroundColor: sc.backgroundColor,
-              color: sc.textColor,
-            }}
-          >
-            {st}
-          </span>
-        </td>
-      )}
-      {show('followUpDate') && (
-        <td
-          className={`min-w-[185px] whitespace-nowrap px-3 py-2 text-sm ${
-            isPastFollowUpDate(lead.followUpDate) ? 'font-medium text-red-500' : ''
-          }`}
-        >
-          {formatTableDate(lead.followUpDate)}
-        </td>
-      )}
-      {show('mop') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(normalizeModeOfPaymentLabel(lead.modeOfPayment), '—')}</td>
-      )}
-      {show('surgeryDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(getLeadSurgeryDateValue(lead))}</td>
-      )}
-      {show('planningTreatment') && (
-        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={planningTreatmentText}>
-          {planningTreatmentText}
-        </td>
-      )}
-      {show('subStatus') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.subStatus != null ? String(lead.subStatus) : '—'}</td>
-      )}
-      {show('healthInsurance') && (
-        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{normalizedText(lead.insuranceName, '—')}</td>
-      )}
-      {show('preferredLocation') && (
-        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{preferredLocation}</td>
-      )}
-      {show('profession') && (
-        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.profession, '—')}</td>
-      )}
-      {show('source') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.source, '—')}</td>}
-      {show('leadSource') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">
-          {resolveLeadSourceDisplay(lead)}
-        </td>
-      )}
-      {show('createDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDateTime(lead.createdDate)}</td>
-      )}
-      {show('modifyBy') && (
-        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{lead.updatedBy?.name ?? '—'}</td>
-      )}
-      {show('modifyDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDateTime(lead.updatedDate)}</td>
-      )}
-      {show('dupCount') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.duplCount != null ? String(lead.duplCount) : '0'}</td>
-      )}
-      {/* {show('bdm') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{bdmText}</td>} */}
-      {show('stage') && (
-        <td className="px-3 py-2">
-          {stage ? (
-            <Badge variant="secondary" className={`text-[11px] ${stage.className}`}>
-              {stage.label}
-            </Badge>
-          ) : (
-            '—'
-          )}
-        </td>
-      )}
-      {show('hospital') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{hospital || '—'}</td>}
-      {show('doctor') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>}
-      {show('recency') && (
-        <td className="px-3 py-2">
-          <LeadAgeBadge lead={lead} />
-        </td>
-      )}
-      <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
-        <div className="flex justify-center">
-          <CallNotesPopover leadId={lead.id} onRowClickStop noteCount={noteCount} />
-        </div>
-      </td>
-      <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-end gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 gap-1 px-2"
-            onClick={() => onEdit(lead.id, isOpened)}
-          >
-            <Pencil className="h-4 w-4" />
-            Edit
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <Link
-              href={`/patient/${lead.id}`}
-              aria-label="Open lead"
-              onClick={(event) => {
-                event.stopPropagation()
-                onMarkOpened(lead.id, isOpened)
-              }}
-            >
-              <ExternalLink className="h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-      </td>
-    </tr>
-  )
-})
