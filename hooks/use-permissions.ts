@@ -41,7 +41,7 @@ export function usePermissions() {
   })
 
   const permissions = data?.permissions ?? {}
-  const permissionsReady = !!user?.id && !!data && !isFetching
+  const permissionsReady = !!user?.id && !!data
 
   /**
    * Check if the user has access to a resource key at the required permission level.
