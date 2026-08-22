@@ -58,6 +58,7 @@ interface DataTableProps<TData, TValue> {
   paginationState?: { pageIndex: number; pageSize: number }
   onPaginationChange?: OnChangeFn<{ pageIndex: number; pageSize: number }>
   tableHeaderClassName?: string
+  tableContainerClassName?: string
   rowClassName?: (row: TData) => string | undefined
 }
 
@@ -82,6 +83,7 @@ export function DataTable<TData, TValue>({
   paginationState,
   onPaginationChange,
   tableHeaderClassName,
+  tableContainerClassName,
   rowClassName,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -298,10 +300,9 @@ export function DataTable<TData, TValue>({
       )}
 
       {/* Main Table Content */}
-      <div className="rounded-md border border-border bg-card overflow-hidden">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader className={cn("bg-muted/50 border-b border-border", tableHeaderClassName)}>
+      <div className={cn("rounded-md border border-border bg-card overflow-hidden flex-1 flex flex-col min-h-0", tableContainerClassName)}>
+        <Table containerClassName="overflow-auto flex-1 min-h-0">
+          <TableHeader className={cn("bg-muted/50 border-b border-border sticky top-0 z-20", tableHeaderClassName)}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className="border-b border-border">
                   {headerGroup.headers.map((header) => (
@@ -313,7 +314,7 @@ export function DataTable<TData, TValue>({
                         ...((header.column.columnDef.meta as any)?.headerStyle) 
                       }}
                       className={cn(
-                        "text-muted-foreground font-semibold px-4 py-3",
+                        "text-muted-foreground font-semibold px-4 py-3 sticky top-0 z-10",
                         header.colSpan > 1 && "text-center border-x border-border", // Grouped header centering
                         (header.column.columnDef.meta as any)?.headerClassName
                       )}
@@ -392,7 +393,6 @@ export function DataTable<TData, TValue>({
             </TableBody>
             {footer}
           </Table>
-        </div>
       </div>
 
       {/* Pagination Controls Footer */}

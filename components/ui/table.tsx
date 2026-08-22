@@ -61,7 +61,7 @@ interface TableFilterContextType {
 
 const TableFilterContext = React.createContext<TableFilterContextType | null>(null)
 
-function Table({ className, ...props }: React.ComponentProps<"table">) {
+function Table({ className, containerClassName, ...props }: React.ComponentProps<"table"> & { containerClassName?: string }) {
   const [columnOptions, setColumnOptions] = React.useState<Record<number, string[]>>({})
   const [activeFilters, setActiveFilters] = React.useState<Record<number, string[]>>({})
 
@@ -196,7 +196,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     <TableFilterContext.Provider value={contextValue}>
       <div
         data-slot="table-container"
-        className="relative w-full overflow-x-auto"
+        className={cn("relative w-full overflow-auto", containerClassName)}
       >
         <table
           data-slot="table"

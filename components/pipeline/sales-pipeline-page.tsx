@@ -1197,6 +1197,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     const defs: ColumnDef<Lead>[] = []
 
     // Fixed: S.No. (serial number — sticky fixed left column)
+    // Fixed: S.No. (serial number — sticky fixed top and left)
     defs.push({
       id: '__sno',
       enableHiding: false,
@@ -1208,8 +1209,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       ),
       size: 54,
       meta: {
-        headerStyle: { width: 54, minWidth: 54, position: 'sticky', left: 0, zIndex: 30 },
-        headerClassName: "sticky left-0 z-30 text-center text-[11px] font-extrabold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-r border-border/80 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.08)]",
+        headerStyle: { width: 54, minWidth: 54, position: 'sticky', top: 0, left: 0, zIndex: 30 },
+        headerClassName: "sticky top-0 left-0 z-30 text-center text-[11px] font-extrabold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-r border-border/80 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.08)]",
         cellStyle: { width: 54, minWidth: 54, position: 'sticky', left: 0, zIndex: 20 },
         cellClassName: "sticky left-0 z-20 text-center bg-slate-100 dark:bg-slate-900 font-bold border-r border-border/70 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.06)]",
       },
@@ -1241,7 +1242,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           </div>
         ),
         size: 48,
-        meta: { headerStyle: { width: 48 }, cellStyle: { textAlign: 'center' }, headerClassName: "text-center text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200" },
+        meta: { headerStyle: { width: 48, position: 'sticky', top: 0, zIndex: 10 }, cellStyle: { textAlign: 'center' }, headerClassName: "sticky top-0 z-10 bg-slate-100 dark:bg-slate-900 text-center text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200" },
       })
     }
 
@@ -1277,7 +1278,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         )
       },
       size: 48,
-      meta: { headerStyle: { width: 48 }, headerClassName: "text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200" },
+      meta: { headerStyle: { width: 48, position: 'sticky', top: 0, zIndex: 10 }, headerClassName: "sticky top-0 z-10 bg-slate-100 dark:bg-slate-900 text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200" },
     })
 
     // Helper to push a toggleable column
@@ -1288,8 +1289,14 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         ...def,
         meta: {
           ...def.meta,
+          headerStyle: {
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
+            ...(def.meta as any)?.headerStyle,
+          },
           headerClassName: cn(
-            "text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200",
+            "sticky top-0 z-10 bg-slate-100 dark:bg-slate-900 text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200",
             (def.meta as any)?.headerClassName
           )
         }
@@ -1563,7 +1570,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         </div>
       ),
       size: 100,
-      meta: { headerStyle: { width: 100 }, cellStyle: { textAlign: 'center' }, headerClassName: "text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 text-center" },
+      meta: { headerStyle: { width: 100, position: 'sticky', top: 0, zIndex: 10 }, cellStyle: { textAlign: 'center' }, headerClassName: "sticky top-0 z-10 bg-slate-100 dark:bg-slate-900 text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 text-center" },
     })
     defs.push({
       id: '__actions',
@@ -1586,7 +1593,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         )
       },
       size: 132,
-      meta: { headerStyle: { width: 132 }, headerClassName: "text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 text-right" },
+      meta: { headerStyle: { width: 132, position: 'sticky', top: 0, zIndex: 10 }, headerClassName: "sticky top-0 z-10 bg-slate-100 dark:bg-slate-900 text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 text-right" },
     })
 
     // Apply column visibility from visibleColumns state (hide toggleable cols not in visibleColumns)
@@ -2011,7 +2018,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                 {/* Table Content Container */}
                 <div
                   className={cn(
-                    'flex-1 overflow-auto transition-opacity duration-200 min-h-0',
+                    'flex-1 flex flex-col min-h-0 overflow-hidden transition-opacity duration-200',
                     isBackgroundRefetching && 'opacity-60 pointer-events-none'
                   )}
                 >
@@ -2027,7 +2034,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                         : 'hover:bg-muted/50'
                     }
                     columnVisibility={visibleColumns as Record<string, boolean>}
-                    tableHeaderClassName="sticky top-0 z-10 bg-slate-100/95 dark:bg-slate-900/95 border-b border-border/80 text-foreground backdrop-blur-md shadow-xs [&_tr]:border-b [&_tr]:border-border/60"
+                    tableContainerClassName="border-0 rounded-none shadow-none flex-1 min-h-0"
+                    tableHeaderClassName="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-b border-border/80 text-foreground shadow-xs [&_tr]:border-b [&_tr]:border-border/60"
                     onColumnVisibilityChange={(updaterOrVal) => {
                       const next = typeof updaterOrVal === 'function'
                         ? updaterOrVal(visibleColumns as Record<string, boolean>)

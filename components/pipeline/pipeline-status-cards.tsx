@@ -289,7 +289,7 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
       },
       {
         id: 'dnp_exh',
-        label: 'DNP Exh.',
+        label: 'DNP Exhausted',
         bucket: 'dnp',
         countKey: 'dnp_exh',
         icon: PhoneMissed,
