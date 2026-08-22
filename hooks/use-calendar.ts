@@ -114,7 +114,7 @@ export function useTeamBds() {
 
 /** IPD/OPD combined calendar feed — type/status/bdId filterable */
 export type CaseEventType = 'IPD' | 'OPD'
-export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED'
+export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED' | 'POSSIBLE'
 export type CaseEvent = {
   id: string
   leadId: string

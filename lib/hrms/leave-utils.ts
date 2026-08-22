@@ -43,6 +43,13 @@ export function isSickLeaveType(leaveType: { code?: string | null; name: string 
   return /sick/i.test(leaveType.name.trim())
 }
 
+/** Leave Without Benefits (LWB) - Unpaid Leave where salary is cut and no leads assigned. */
+export function isLwbLeaveType(leaveType: { code?: string | null; name: string }): boolean {
+  const c = leaveType.code?.trim().toUpperCase()
+  if (c === 'LWB') return true
+  return /lwb|leave without benefit/i.test(leaveType.name.trim())
+}
+
 export interface LeaveBalanceWithType extends LeaveBalance {
   leaveType: LeaveTypeMaster
 }

@@ -19,7 +19,9 @@ export async function GET(
     }
     const lead = publicLink.lead
 
-    const normalizedPhone = normalizeLeadQrPhone(lead.phoneNumber)
+    const target = request.nextUrl.searchParams.get('target')
+    const phoneToUse = target === 'alternate' ? (lead.alternateNumber || lead.phoneNumber) : (lead.phoneNumber || lead.alternateNumber)
+    const normalizedPhone = normalizeLeadQrPhone(phoneToUse ?? '')
     if (!normalizedPhone) {
       const errorUrl = new URL(`/lead-contact/${encodeURIComponent(token)}`, request.url)
       errorUrl.searchParams.set('error', 'no-phone')

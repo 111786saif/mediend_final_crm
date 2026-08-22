@@ -38,6 +38,7 @@ type Bucket =
   | 'PREAUTH_COMPLETE'
   | 'IPD_SCHEDULED'
   | 'IPD_DONE'
+  | 'CANCELLED'
 
 type BucketFilter = Bucket | 'all'
 
@@ -115,6 +116,7 @@ const BUCKET_DEFS: { key: Bucket; label: string; tone: string }[] = [
   { key: 'PREAUTH_COMPLETE', label: 'Pre-auth approved', tone: 'text-indigo-600' },
   { key: 'IPD_SCHEDULED', label: 'IPD scheduled', tone: 'text-cyan-600' },
   { key: 'IPD_DONE', label: 'IPD done', tone: 'text-emerald-600' },
+  { key: 'CANCELLED', label: 'Cancelled', tone: 'text-rose-600' },
 ]
 
 const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
@@ -124,6 +126,7 @@ const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
   PREAUTH_COMPLETE: { label: 'Pre-auth approved', className: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' },
   IPD_SCHEDULED: { label: 'IPD scheduled', className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300' },
   IPD_DONE: { label: 'IPD done', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300' },
+  CANCELLED: { label: 'Cancelled', className: 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300' },
 }
 
 /* ─── Page component ─────────────────────────────────────────────────────── */
@@ -258,6 +261,24 @@ export default function CaseTrackerPage() {
         lead.patientName.trim() === 'Unknown' ||
         lead.patientName.trim() === ''
       ) continue
+
+      const isCancelled =
+        lead.admissionRecord?.ipdStatus === 'CANCELLED' ||
+        String(lead.status ?? '').toLowerCase().includes('cancel')
+
+      if (isCancelled) {
+        const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
+        const badge = BUCKET_BADGE.CANCELLED
+        out.push({
+          lead,
+          bucket: 'CANCELLED',
+          hospital: hospital ?? '',
+          doctor: doctor ?? '',
+          stageLabel: badge.label,
+        })
+        continue
+      }
+
       const bucket = lead.caseStage ? BUCKET_OF_STAGE[lead.caseStage as CaseStage] : undefined
       const resolvedBucket = bucket === undefined && (
         lead.caseStage === CaseStage.PL_PENDING || lead.caseStage === CaseStage.OUTSTANDING
@@ -265,7 +286,9 @@ export default function CaseTrackerPage() {
         (lead as { surgeryDate?: unknown }).surgeryDate != null ||
         (lead as { admissionRecord?: { surgeryDate?: unknown } }).admissionRecord?.surgeryDate != null
       ) ? 'IPD_DONE' : bucket
+
       if (!resolvedBucket) continue
+
       const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
       const badge = BUCKET_BADGE[resolvedBucket]
       out.push({
@@ -449,6 +472,7 @@ export default function CaseTrackerPage() {
       PREAUTH_COMPLETE: 0,
       IPD_SCHEDULED: 0,
       IPD_DONE: 0,
+      CANCELLED: 0,
     }
     for (const { bucket } of monthFiltered) base[bucket]++
     return base
@@ -692,7 +716,7 @@ export default function CaseTrackerPage() {
           </Card>
 
           {/* ── Stage cards ── */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
             {user?.role !== 'PL_HEAD' && (
               <button
                 type="button"

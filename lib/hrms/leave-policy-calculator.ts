@@ -121,6 +121,11 @@ export function validateComputedBalance(
     return { valid: false, error: 'Leave type not found' }
   }
 
+  // LWB (Leave Without Benefits / Unpaid) has no balance limit
+  if (balance.leaveTypeName.toUpperCase() === 'LWB') {
+    return { valid: true }
+  }
+
   const available = balance.remaining
   if (available < days) {
     return {

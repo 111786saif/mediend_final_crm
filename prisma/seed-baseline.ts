@@ -30,6 +30,14 @@ const LEAVE_TYPES = [
     carryForward: true,
     probationUnlockDays: 12,
   },
+  {
+    name: 'LWB',
+    code: 'LWB',
+    maxDays: 365,
+    monthlyAccrual: 0,
+    carryForward: false,
+    probationUnlockDays: null as number | null,
+  },
 ] as const
 
 /** HR departments referenced by employee JSON (DEPT column) and sales team rebuild. */

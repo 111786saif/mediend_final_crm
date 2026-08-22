@@ -6,6 +6,7 @@ export type LeadQrAuditLead = {
   bdId: string
   leadRef: string | null
   phoneNumber: string | null
+  alternateNumber?: string | null
   patientName: string | null
   campaignId: string | null
   campaignName: string | null
@@ -29,6 +30,7 @@ export async function loadLeadForQrAudit(id: string): Promise<LeadQrAuditLead | 
       bdId: true,
       leadRef: true,
       phoneNumber: true,
+      alternateNumber: true,
       patientName: true,
       campaignId: true,
       campaignName: true,
@@ -145,6 +147,7 @@ export async function loadLeadQrPublicLink(id: string) {
           bdId: true,
           leadRef: true,
           phoneNumber: true,
+          alternateNumber: true,
           patientName: true,
           campaignId: true,
           campaignName: true,

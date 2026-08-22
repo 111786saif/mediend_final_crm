@@ -25,6 +25,7 @@ type Bucket =
   | 'PREAUTH_COMPLETE'
   | 'IPD_SCHEDULED'
   | 'IPD_DONE'
+  | 'CANCELLED'
 
 const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
   KYP: { label: 'KYP raised', className: 'bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300' },
@@ -33,6 +34,7 @@ const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
   PREAUTH_COMPLETE: { label: 'Pre-auth approved', className: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' },
   IPD_SCHEDULED: { label: 'IPD scheduled', className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300' },
   IPD_DONE: { label: 'IPD done', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300' },
+  CANCELLED: { label: 'Cancelled', className: 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300' },
 }
 
 export interface CaseOverviewRow {

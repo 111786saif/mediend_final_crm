@@ -18,7 +18,8 @@ export async function GET(
     }
     const lead = publicLink.lead
 
-    const rawPhone = lead.phoneNumber ?? lead.alternateNumber ?? ''
+    const target = request.nextUrl.searchParams.get('target')
+    const rawPhone = target === 'alternate' ? (lead.alternateNumber ?? lead.phoneNumber ?? '') : (lead.phoneNumber ?? lead.alternateNumber ?? '')
     const cleanDigits = rawPhone.replace(/\D+/g, '')
 
     if (!cleanDigits) {

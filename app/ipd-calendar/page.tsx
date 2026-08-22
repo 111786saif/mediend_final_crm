@@ -38,7 +38,7 @@ import {
 } from '@/components/meets/meet-details-drawer'
 
 const ALL_TYPES: CaseEventType[] = ['IPD', 'OPD']
-const ALL_STATUSES: CaseEventStatus[] = ['DONE', 'SCHEDULED', 'POSTPONED', 'CANCELLED']
+const ALL_STATUSES: CaseEventStatus[] = ['DONE', 'SCHEDULED', 'POSTPONED', 'CANCELLED', 'POSSIBLE']
 
 // Roles that manage a team of BDs and get the multi-BD filter instead of
 // (or in addition to) the single-person calendar switcher.

@@ -1963,6 +1963,7 @@ export function CrmIncomingLeadsPage() {
                       >
                         <TableHeader className="sticky top-0 z-10 bg-background [&_tr]:border-b">
                           <TableRow className="bg-background hover:bg-background">
+                            <TableHead className="w-[60px] text-center">S.No.</TableHead>
                             {canManuallyAssignFailedLeads ? (
                               <TableHead className="w-[52px] text-center">
                                 <Checkbox
@@ -2008,7 +2009,7 @@ export function CrmIncomingLeadsPage() {
                           {isLoading ? (
                             <TableRow>
                               <TableCell
-                                colSpan={visibleColumnDefinitions.length + 1 + (canManuallyAssignFailedLeads ? 1 : 0)}
+                                colSpan={visibleColumnDefinitions.length + 2 + (canManuallyAssignFailedLeads ? 1 : 0)}
                                 className="py-10 text-center text-muted-foreground"
                               >
                                 Loading incoming leads...
@@ -2017,15 +2018,18 @@ export function CrmIncomingLeadsPage() {
                           ) : sortedRows.length === 0 ? (
                             <TableRow>
                               <TableCell
-                                colSpan={visibleColumnDefinitions.length + 1 + (canManuallyAssignFailedLeads ? 1 : 0)}
+                                colSpan={visibleColumnDefinitions.length + 2 + (canManuallyAssignFailedLeads ? 1 : 0)}
                                 className="py-10 text-center text-muted-foreground"
                               >
                                 No incoming leads matched the selected month or filters.
                               </TableCell>
                             </TableRow>
                           ) : (
-                            paginatedRows.map((row) => (
+                            paginatedRows.map((row, index) => (
                               <TableRow key={row.id}>
+                                <TableCell className="text-center font-medium text-muted-foreground whitespace-nowrap">
+                                  {pageStartIndex + index + 1}
+                                </TableCell>
                                 {canManuallyAssignFailedLeads ? (
                                   <TableCell className="text-center">
                                     {isSelectableIncomingLead(row.raw) ? (

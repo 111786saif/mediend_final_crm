@@ -13,6 +13,7 @@ const STATUS_OPTIONS: { value: CaseEventStatus; label: string; dot: string }[] =
   { value: 'SCHEDULED', label: 'Scheduled', dot: 'bg-blue-500' },
   { value: 'POSTPONED', label: 'Postponed', dot: 'bg-amber-500' },
   { value: 'CANCELLED', label: 'Cancelled', dot: 'bg-rose-500' },
+  { value: 'POSSIBLE', label: 'Possible', dot: 'bg-purple-500' },
 ]
 
 function toggle<T>(list: T[], value: T): T[] {

@@ -38,10 +38,12 @@ const CASE_EVENT_CLASS: Record<string, string> = {
   'IPD-SCHEDULED': 'cal-ev-ipd-scheduled',
   'IPD-POSTPONED': 'cal-ev-ipd-postponed',
   'IPD-CANCELLED': 'cal-ev-ipd-cancelled',
+  'IPD-POSSIBLE': 'cal-ev-ipd-possible',
   'OPD-DONE': 'cal-ev-opd-done',
   'OPD-SCHEDULED': 'cal-ev-opd-scheduled',
   'OPD-POSTPONED': 'cal-ev-opd-postponed',
   'OPD-CANCELLED': 'cal-ev-opd-cancelled',
+  'OPD-POSSIBLE': 'cal-ev-opd-possible',
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -49,6 +51,7 @@ const STATUS_LABEL: Record<string, string> = {
   SCHEDULED: 'Scheduled',
   POSTPONED: 'Postponed',
   CANCELLED: 'Cancelled',
+  POSSIBLE: 'Possible',
 }
 
 interface CaseTooltipData {
@@ -385,11 +388,13 @@ export function TeamCalendar({
         .team-calendar .cal-ev-ipd-scheduled  { background: #dbeafe; border-left-color: #2563eb; color: #1e3a8a; font-weight: 600; }
         .team-calendar .cal-ev-ipd-postponed  { background: #fef3c7; border-left-color: #d97706; color: #78350f; font-weight: 600; }
         .team-calendar .cal-ev-ipd-cancelled  { background: #ffe4e6; border-left-color: #e11d48; color: #881337; font-weight: 600; text-decoration: line-through; }
+        .team-calendar .cal-ev-ipd-possible   { background: #f3e8ff; border-left-color: #9333ea; color: #581c87; font-weight: 600; }
         /* OPD — same status hues, slightly lighter, no bold — keeps IPD visually "heavier" */
         .team-calendar .cal-ev-opd-done       { background: #ecfdf5; border-left-color: #34d399; color: #065f46; }
         .team-calendar .cal-ev-opd-scheduled  { background: #eff6ff; border-left-color: #60a5fa; color: #1e3a8a; }
         .team-calendar .cal-ev-opd-postponed  { background: #fffbeb; border-left-color: #fbbf24; color: #78350f; }
         .team-calendar .cal-ev-opd-cancelled  { background: #fff1f2; border-left-color: #fb7185; color: #881337; text-decoration: line-through; }
+        .team-calendar .cal-ev-opd-possible   { background: #faf5ff; border-left-color: #c084fc; color: #581c87; }
 
         /* ── Event category colors — dark mode ──────────────────────────
            Translucent backgrounds over the dark card + brighter text keep
@@ -406,10 +411,12 @@ export function TeamCalendar({
         .dark .team-calendar .cal-ev-ipd-scheduled  { background: rgb(37 99 235 / 0.22); border-left-color: #60a5fa; color: #93c5fd; }
         .dark .team-calendar .cal-ev-ipd-postponed  { background: rgb(217 119 6 / 0.22); border-left-color: #fbbf24; color: #fde68a; }
         .dark .team-calendar .cal-ev-ipd-cancelled  { background: rgb(225 29 72 / 0.22); border-left-color: #fb7185; color: #fda4af; }
+        .dark .team-calendar .cal-ev-ipd-possible   { background: rgb(147 51 234 / 0.22); border-left-color: #c084fc; color: #e9d5ff; }
         .dark .team-calendar .cal-ev-opd-done       { background: rgb(52 211 153 / 0.14); border-left-color: #6ee7b7; color: #a7f3d0; }
         .dark .team-calendar .cal-ev-opd-scheduled  { background: rgb(96 165 250 / 0.14); border-left-color: #93c5fd; color: #bfdbfe; }
         .dark .team-calendar .cal-ev-opd-postponed  { background: rgb(251 191 36 / 0.14); border-left-color: #fcd34d; color: #fde68a; }
         .dark .team-calendar .cal-ev-opd-cancelled  { background: rgb(251 113 133 / 0.14); border-left-color: #fda4af; color: #fecdd3; }
+        .dark .team-calendar .cal-ev-opd-possible   { background: rgb(192 132 252 / 0.14); border-left-color: #e9d5ff; color: #f3e8ff; }
 
         /* ── Attendance pill ─────────────────────────────────────────────── */
         .tc-att-pill {

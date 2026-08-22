@@ -51,6 +51,7 @@ import {
 } from '@/lib/pipeline-lead-buckets'
 import type {
   PipelineMultiColumnFilterField,
+  PipelineServerColumnFilter,
   PipelineSortDir,
   PipelineSortField,
 } from '@/lib/pipeline/server-query'
@@ -366,6 +367,12 @@ function formatTableDate(value: unknown) {
   return Number.isNaN(parsed.getTime()) ? String(value) : format(parsed, 'dd MMM yyyy')
 }
 
+function formatTableDateTime(value: unknown) {
+  if (!value) return '—'
+  const parsed = new Date(String(value))
+  return Number.isNaN(parsed.getTime()) ? String(value) : format(parsed, 'dd MMM yyyy, hh:mm a')
+}
+
 function isPastFollowUpDate(value: unknown) {
   if (!value) return false
   const parsed = new Date(String(value))
@@ -475,9 +482,9 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'leadRef':
       return typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
     case 'assignDate':
-      return formatTableDate(lead.assignedDate)
+      return formatTableDateTime(lead.assignedDate)
     case 'leadDate':
-      return receipt ? format(receipt, 'dd MMM yyyy') : '—'
+      return receipt ? format(receipt, 'dd MMM yyyy, hh:mm a') : '—'
     case 'patient':
       return typeof lead.patientName === 'string' ? lead.patientName : '—'
     case 'month':
@@ -626,7 +633,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       isActiveBulkLeadReassignStatus(query.state.data?.status ?? '') ? 2000 : false,
   })
   const visibleColumnCount = useMemo(
-    () => availableColumns.filter((column) => visibleColumns[column.id]).length + 3 + (showBulkReassign ? 1 : 0),
+    () => availableColumns.filter((column) => visibleColumns[column.id]).length + 4 + (showBulkReassign ? 1 : 0),
     [availableColumns, showBulkReassign, visibleColumns]
   )
   const isColumnVisible = useCallback(
@@ -640,10 +647,18 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
   // Column header filters are sent to the server so they apply across the full
   // dataset before pagination.
-  const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
+  const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>(() => {
+    if (typeof window === 'undefined') return {}
+    try {
+      const saved = sessionStorage.getItem(`pipeline-column-filters-${variant}`)
+      return saved ? JSON.parse(saved) : {}
+    } catch {
+      return {}
+    }
+  })
   const serverColumnFilters = useMemo(() => {
     const filters = (Object.entries(columnFilters) as Array<[PipelineColumnId, string[]]>).flatMap(
-      ([columnId, selected]) => {
+      ([columnId, selected]): PipelineServerColumnFilter[] => {
         if (!isPipelineServerFilterColumn(columnId) || selected.length === 0) {
           return []
         }
@@ -655,7 +670,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
           return [
             {
-              field: columnId,
+              field: columnId as any,
               operator: 'between' as const,
               value: [selected[0], selected[1] || selected[0]] as [string, string],
             },
@@ -664,7 +679,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
         return [
           {
-            field: columnId,
+            field: columnId as any,
             operator: 'in' as const,
             value: selected,
           },
@@ -675,18 +690,30 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     return filters.length > 0 ? JSON.stringify(filters) : ''
   }, [columnFilters])
   const { data, isLoading, isFetching } = usePipelinePage({ filters: serverColumnFilters })
-  const handleColumnFilterChange = useCallback((key: PipelineColumnId, selected: string[]) => {
-    setColumnFilters((prev) => ({ ...prev, [key]: selected }))
-    setState({ page: 1 }, { resetPage: false })
-  }, [setState])
+  const handleColumnFilterChange = useCallback(
+    (key: PipelineColumnId, selected: string[]) => {
+      setColumnFilters((prev) => {
+        const next = { ...prev, [key]: selected }
+        try {
+          sessionStorage.setItem(`pipeline-column-filters-${variant}`, JSON.stringify(next))
+        } catch {}
+        return next
+      })
+      setState({ page: 1 }, { resetPage: false })
+    },
+    [setState, variant]
+  )
   const activeColumnFilterCount = useMemo(
     () => Object.values(columnFilters).filter((v) => v && v.length > 0).length,
     [columnFilters]
   )
   const clearColumnFilters = useCallback(() => {
     setColumnFilters({})
+    try {
+      sessionStorage.removeItem(`pipeline-column-filters-${variant}`)
+    } catch {}
     setState({ page: 1 }, { resetPage: false })
-  }, [setState])
+  }, [setState, variant])
 
   useEffect(() => {
     if (debouncedSearch !== state.q) {
@@ -916,11 +943,15 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     setEditingLeadId(id)
   }, [markLeadOpened])
 
-  const handleEditDrawerChange = useCallback((open: boolean) => {
-    if (!open) {
-      setEditingLeadId(null)
-    }
-  }, [])
+  const handleEditDrawerChange = useCallback(
+    (open: boolean) => {
+      if (!open) {
+        setEditingLeadId(null)
+        queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+      }
+    },
+    [queryClient]
+  )
 
   const toggleLeadSelection = useCallback((leadId: string, checked: boolean) => {
     setSelectedLeadIds((current) => {
@@ -1357,6 +1388,9 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     <table className="w-full caption-bottom text-sm">
                       <thead className="sticky top-0 z-10 bg-background [&_tr]:border-b">
                         <tr className="border-b bg-background">
+                          <th className="h-10 w-12 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            S.No.
+                          </th>
                           {showBulkReassign ? (
                             <th className="h-10 w-12 px-2 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               <div className="flex justify-center">
@@ -1497,10 +1531,11 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             </td>
                           </tr>
                         ) : (
-                          tableRows.map((lead) => (
+                          tableRows.map((lead, index) => (
                             <PipelineRow
                               key={lead.id}
                               lead={lead}
+                              serialNumber={(page - 1) * pageSize + index + 1}
                               returnTo={pipelineReturnTo}
                               noteCount={noteCounts[lead.id]}
                               onClick={handleRowClick}
@@ -1816,6 +1851,7 @@ function HeaderCell({
 
 const PipelineRow = memo(function PipelineRow({
   lead,
+  serialNumber,
   returnTo,
   noteCount,
   onClick,
@@ -1828,6 +1864,7 @@ const PipelineRow = memo(function PipelineRow({
   visibleColumns,
 }: {
   lead: Lead
+  serialNumber: number
   returnTo: string
   noteCount?: number
   onClick: (id: string, alreadyOpened: boolean) => void
@@ -1889,6 +1926,9 @@ const PipelineRow = memo(function PipelineRow({
       )}
       onClick={() => onClick(lead.id, isOpened)}
     >
+      <td className="whitespace-nowrap px-3 py-2 text-xs font-medium text-muted-foreground tabular-nums">
+        {serialNumber}
+      </td>
       {selectionEnabled ? (
         <td className="px-2 py-2 text-center" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-center">
@@ -1944,7 +1984,7 @@ const PipelineRow = memo(function PipelineRow({
               type="button"
               className="truncate max-w-[120px] text-left text-primary hover:underline sm:max-w-[160px]"
               title={leadRefText}
-              onClick={() => onEdit(lead.id)}
+              onClick={() => onEdit(lead.id, isOpened)}
             >
               {leadRefText}
             </button>
@@ -1954,12 +1994,12 @@ const PipelineRow = memo(function PipelineRow({
       )}
       {show('assignDate') && (
         <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">
-          {formatTableDate(lead.assignedDate)}
+          {formatTableDateTime(lead.assignedDate)}
         </td>
       )}
       {show('leadDate') && (
         <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">
-          {receipt ? format(receipt, 'dd MMM yyyy') : '—'}
+          {receipt ? format(receipt, 'dd MMM yyyy, hh:mm a') : '—'}
         </td>
       )}
       {show('patient') && (
@@ -2076,13 +2116,13 @@ const PipelineRow = memo(function PipelineRow({
         </td>
       )}
       {show('createDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.createdDate)}</td>
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDateTime(lead.createdDate)}</td>
       )}
       {show('modifyBy') && (
         <td className="max-w-[140px] truncate px-3 py-2 text-sm">{lead.updatedBy?.name ?? '—'}</td>
       )}
       {show('modifyDate') && (
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.updatedDate)}</td>
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDateTime(lead.updatedDate)}</td>
       )}
       {show('dupCount') && (
         <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.duplCount != null ? String(lead.duplCount) : '0'}</td>

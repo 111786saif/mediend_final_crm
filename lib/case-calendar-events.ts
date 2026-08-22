@@ -3,7 +3,7 @@ import type { SessionUser } from '@/lib/auth'
 import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 
 export type CaseEventType = 'IPD' | 'OPD'
-export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED'
+export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED' | 'POSSIBLE'
 
 export type CaseEvent = {
   id: string
@@ -20,17 +20,6 @@ export type CaseEvent = {
   circle: string | null
 }
 
-/**
- * NOTE on status mapping — the schema doesn't have a 1:1 status per requested
- * bucket, so a couple of these are best-effort mappings rather than exact
- * matches:
- *  - OPD "POSTPONED" isn't a distinct LeadOpdStatus value (only SCHEDULED /
- *    DONE / CANCELLED / NO_SHOW exist). NO_SHOW is mapped to POSTPONED here
- *    as the closest fit — flag if that's not the right read.
- *  - IPD "SCHEDULED" isn't an IpdStatus value either — an AdmissionRecord
- *    with no ipdStatus set yet (surgery date booked, outcome not recorded)
- *    is treated as SCHEDULED.
- */
 function mapOpdStatus(status: string): CaseEventStatus {
   if (status === 'DONE') return 'DONE'
   if (status === 'CANCELLED') return 'CANCELLED'
@@ -62,9 +51,6 @@ export async function getCaseCalendarEvents(
   if (params.bdIds && params.bdIds.length > 0) {
     allowedBdIds = scopeUserIds ? scopeUserIds.filter((id) => params.bdIds!.includes(id)) : params.bdIds
   }
-  // scopeUserIds === null means "no restriction" (full-access role). If a
-  // bdId filter was requested, narrow to just those; otherwise leave
-  // unrestricted.
   const leadBdWhere = allowedBdIds ? { bdId: { in: allowedBdIds } } : {}
 
   const events: CaseEvent[] = []
@@ -170,6 +156,45 @@ export async function getCaseCalendarEvents(
         treatment: rec.lead.treatment,
         circle: rec.lead.circle,
       })
+    }
+
+    if (statuses.includes('POSSIBLE')) {
+      const potentialLeads = await prisma.lead.findMany({
+        where: {
+          ...leadBdWhere,
+          ipdPotentialDate: { gte: startDate, lte: endDate },
+        },
+        select: {
+          id: true,
+          patientName: true,
+          bdId: true,
+          ipdPotentialDate: true,
+          hospitalName: true,
+          ipdDrName: true,
+          surgeonName: true,
+          treatment: true,
+          circle: true,
+          bd: { select: { name: true } },
+        },
+      })
+
+      for (const lead of potentialLeads) {
+        if (!lead.ipdPotentialDate) continue
+        events.push({
+          id: `possible:${lead.id}`,
+          leadId: lead.id,
+          patientName: lead.patientName,
+          bdId: lead.bdId,
+          bdName: lead.bd?.name ?? '—',
+          type: 'IPD',
+          status: 'POSSIBLE',
+          date: lead.ipdPotentialDate.toISOString(),
+          hospital: lead.hospitalName,
+          doctor: lead.ipdDrName ?? lead.surgeonName ?? null,
+          treatment: lead.treatment,
+          circle: lead.circle,
+        })
+      }
     }
   }
 

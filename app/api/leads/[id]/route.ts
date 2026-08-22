@@ -751,7 +751,11 @@ export async function PATCH(
       }
     }
 
-    if (requestedTreatmentMasterId !== undefined && requestedTreatmentMasterId !== null) {
+    if (
+      requestedTreatmentMasterId !== undefined &&
+      requestedTreatmentMasterId !== null &&
+      requestedTreatmentMasterId !== '__legacy_current_treatment__'
+    ) {
       resolvedTreatmentMaster = await prisma.treatmentMaster.findFirst({
         where: {
           id: requestedTreatmentMasterId,
@@ -828,6 +832,7 @@ export async function PATCH(
     // Update other fields
     const allowedFields = [
       'status',
+      'subStatus',
       'patientName',
       'age',
       'sex',
@@ -1021,6 +1026,8 @@ export async function PATCH(
       if (body.city !== undefined) {
         const nextCity =
           typeof body.city === 'string' ? body.city.trim() || null : body.city === null ? null : null
+
+        updateData.circle = nextCity
 
         const existingKypSubmission = await (tx as any).kYPSubmission.findUnique({
           where: { leadId: id },

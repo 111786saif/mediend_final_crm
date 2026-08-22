@@ -7,6 +7,7 @@ import { isManagerOf } from '@/lib/hierarchy'
 import {
   calculateLeaveDays,
   checkDateConflict,
+  isLwbLeaveType,
   isSickLeaveType,
   parseDateOnlyLocal,
   startOfLocalDay,
@@ -24,8 +25,8 @@ const bodySchema = z.object({
 })
 
 /**
- * Manager marks paid leave for a report as APPROVED immediately (no approval workflow).
- * Same date rules and balance checks as employee apply, but unpaid leave is not allowed.
+ * Manager marks leave for a report as APPROVED immediately (no approval workflow).
+ * Supports paid leave (CL, SL, EL) and LWB (unpaid leave).
  */
 export async function POST(request: NextRequest) {
   try {
@@ -114,16 +115,37 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const leaveType = await prisma.leaveTypeMaster.findUnique({ where: { id: leaveTypeId } })
+    let leaveType = await prisma.leaveTypeMaster.findUnique({ where: { id: leaveTypeId } })
+    if (!leaveType && (leaveTypeId === 'lwb-default' || leaveTypeId.toUpperCase() === 'LWB')) {
+      leaveType = await prisma.leaveTypeMaster.findFirst({
+        where: { OR: [{ code: 'LWB' }, { name: 'LWB' }] },
+      })
+      if (!leaveType) {
+        leaveType = await prisma.leaveTypeMaster.create({
+          data: {
+            name: 'LWB',
+            code: 'LWB',
+            maxDays: 365,
+            monthlyAccrual: 0,
+            carryForward: false,
+            isActive: true,
+          },
+        })
+      }
+    }
+
     if (!leaveType || !leaveType.isActive) {
       return errorResponse('Invalid leave type', 400)
     }
 
+    const effectiveLeaveTypeId = leaveType.id
+
     const sick = isSickLeaveType(leaveType)
-    if (!sick) {
+    const lwb = isLwbLeaveType(leaveType)
+    if (!sick && !lwb) {
       if (startDay < today || endDay < today) {
         return errorResponse(
-          'Casual Leave and Earned Leave can only be marked for today or a future date. Use Sick Leave (SL) for past dates.',
+          'Casual Leave and Earned Leave can only be marked for today or a future date. Use Sick Leave (SL) or LWB for past dates.',
           400
         )
       }
@@ -136,17 +158,17 @@ export async function POST(request: NextRequest) {
     const days = isHalfDay ? 0.5 : calculateLeaveDays(startDate, endDate)
 
     const balances = await getComputedBalancesForEmployee(employeeId)
-    const balanceValidation = validateComputedBalance(balances, leaveTypeId, days)
+    const balanceValidation = validateComputedBalance(balances, effectiveLeaveTypeId, days)
 
-    if (!balanceValidation.valid) {
+    if (!lwb && !balanceValidation.valid) {
       return errorResponse(
         balanceValidation.error ?? 'Insufficient or unavailable leave balance for this type',
         400
       )
     }
 
-    const balanceRow = balances.find((b) => b.leaveTypeId === leaveTypeId)
-    if (balanceRow && balanceRow.isProbation && balanceRow.locked > 0) {
+    const balanceRow = balances.find((b) => b.leaveTypeId === effectiveLeaveTypeId)
+    if (!lwb && balanceRow && balanceRow.isProbation && balanceRow.locked > 0) {
       return errorResponse('This employee leave balance is still locked (probation).', 400)
     }
 
@@ -167,12 +189,12 @@ export async function POST(request: NextRequest) {
     const leaveRequest = await prisma.leaveRequest.create({
       data: {
         employeeId,
-        leaveTypeId,
+        leaveTypeId: effectiveLeaveTypeId,
         startDate,
         endDate,
         days,
         reason: managerNote,
-        isUnpaid: false,
+        isUnpaid: lwb,
         status: 'APPROVED',
         targetApproverId: null,
         approvedById: user.id,
