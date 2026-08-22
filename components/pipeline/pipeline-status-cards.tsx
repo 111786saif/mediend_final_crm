@@ -154,7 +154,7 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
     items: [
       {
         id: 'ip_done',
-        label: 'IP Done',
+        label: 'IPD Done',
         bucket: 'ipd_done',
         countKey: 'ip_done',
         icon: Building2,
@@ -182,7 +182,7 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
       },
       {
         id: 'op_done',
-        label: 'OP Done',
+        label: 'OPD Done',
         bucket: 'opd_done',
         countKey: 'op_done',
         icon: ClipboardCheck,
@@ -196,7 +196,7 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
       },
       {
         id: 'ipd_sch',
-        label: 'IPD Sch.',
+        label: 'IPD Scheduled',
         bucket: 'follow_up',
         countKey: 'ipd_sch',
         icon: CalendarClock,
@@ -210,7 +210,7 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
       },
       {
         id: 'opd_sch',
-        label: 'OPD Sch.',
+        label: 'OPD Scheduled',
         bucket: 'follow_up',
         countKey: 'opd_sch',
         icon: CalendarCheck,

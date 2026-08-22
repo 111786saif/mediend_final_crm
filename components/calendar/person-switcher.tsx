@@ -14,6 +14,7 @@ import {
 import { getAvatarColor } from '@/lib/avatar-colors'
 import { cn } from '@/lib/utils'
 import { useUserDirectory } from '@/hooks/use-calendar'
+import { useAuth } from '@/hooks/use-auth'
 import type { DirectoryUser } from '@/app/api/users/directory/route'
 
 function getInitials(name: string): string {
@@ -33,6 +34,10 @@ export function PersonSwitcher({
   onChange: (userId: string) => void
   disabled?: boolean
 }) {
+  const { user } = useAuth()
+  const isBD = user?.role === 'BD'
+  const isSwitcherDisabled = disabled || isBD
+
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const { data: directory = [], isLoading } = useUserDirectory()
@@ -65,10 +70,10 @@ export function PersonSwitcher({
       <Button
         type="button"
         variant="outline"
-        onClick={() => !disabled && setOpen(true)}
+        onClick={() => !isSwitcherDisabled && setOpen(true)}
         className={cn(
           'w-full h-auto justify-between rounded-2xl py-2.5 pl-2.5 pr-3',
-          disabled && 'cursor-default opacity-90 hover:bg-background'
+          isSwitcherDisabled && 'cursor-default opacity-90 hover:bg-background'
         )}
       >
         <div className="flex items-center gap-2.5 min-w-0">
@@ -90,10 +95,10 @@ export function PersonSwitcher({
             )}
           </div>
         </div>
-        {!disabled && <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
+        {!isSwitcherDisabled && <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
       </Button>
 
-      {!disabled && (
+      {!isSwitcherDisabled && (
         <Drawer open={open} onOpenChange={setOpen} direction="bottom">
           <DrawerContent className="rounded-t-2xl pb-[max(1rem,env(safe-area-inset-bottom))] max-h-[85vh]">
             <DrawerHeader className="border-b">
