@@ -60,6 +60,7 @@ interface DataTableProps<TData, TValue> {
   tableHeaderClassName?: string
   tableContainerClassName?: string
   rowClassName?: (row: TData) => string | undefined
+  className?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -85,6 +86,7 @@ export function DataTable<TData, TValue>({
   tableHeaderClassName,
   tableContainerClassName,
   rowClassName,
+  className,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -209,7 +211,7 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4 w-full", className)}>
       {/* Table Toolbar controls: Columns Visibility dropdown & CSV Export */}
       {(enableExport || !columnVisibility) && (
         <div className="flex items-center justify-end gap-2 px-4 py-1">
@@ -300,8 +302,8 @@ export function DataTable<TData, TValue>({
       )}
 
       {/* Main Table Content */}
-      <div className={cn("rounded-md border border-border bg-card overflow-hidden flex-1 flex flex-col min-h-0", tableContainerClassName)}>
-        <Table containerClassName="overflow-auto flex-1 min-h-0">
+      <div className={cn("rounded-md border border-border bg-card overflow-hidden", tableContainerClassName)}>
+        <Table containerClassName="overflow-auto flex-1 min-h-0 h-full">
           <TableHeader className={cn("bg-muted/50 border-b border-border sticky top-0 z-20", tableHeaderClassName)}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className="border-b border-border">

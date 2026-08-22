@@ -429,15 +429,18 @@ export function PipelineStatusCards({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-2.5 w-full">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="p-2.5 rounded-xl border border-border/60 bg-muted/20 space-y-2"
+            className={cn(
+              'p-2.5 rounded-xl border border-border/60 bg-muted/20 space-y-2',
+              i === 3 ? 'lg:flex-[0.75] lg:min-w-[140px] lg:shrink' : 'lg:flex-[1.1] lg:min-w-[220px]'
+            )}
           >
             <Skeleton className="h-3.5 w-24 rounded-md bg-muted/60" />
-            <div className="grid grid-cols-2 gap-1.5">
-              {Array.from({ length: 6 }).map((_, j) => (
+            <div className={cn('grid gap-1.5', i === 3 ? 'grid-cols-1' : 'grid-cols-2')}>
+              {Array.from({ length: i === 3 ? 2 : 6 }).map((_, j) => (
                 <Skeleton key={j} className="h-9 rounded-lg bg-muted/40" />
               ))}
             </div>
@@ -448,34 +451,39 @@ export function PipelineStatusCards({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
-      {CATEGORY_GROUPS.map((group) => (
-        <div
-          key={group.id}
-          className={cn(
-            'p-2.5 rounded-xl border transition-all duration-200 shadow-xs flex flex-col justify-between backdrop-blur-xs',
-            group.containerBgClass,
-            group.containerBorderClass
-          )}
-        >
-          <div>
-            <div className="flex items-center justify-between px-1 mb-1.5">
-              <h3
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-2.5 w-full">
+      {CATEGORY_GROUPS.map((group) => {
+        const isChurning = group.id === 'churning'
+        return (
+          <div
+            key={group.id}
+            className={cn(
+              'p-2.5 rounded-xl border transition-all duration-200 shadow-xs flex flex-col justify-between backdrop-blur-xs',
+              isChurning
+                ? 'lg:flex-[0.75] lg:min-w-[140px] lg:shrink'
+                : 'lg:flex-[1.1] lg:min-w-[220px]',
+              group.containerBgClass,
+              group.containerBorderClass
+            )}
+          >
+            <div>
+              <div className="flex items-center justify-between px-1 mb-1.5">
+                <h3
+                  className={cn(
+                    'text-[10px] font-extrabold uppercase tracking-widest',
+                    group.headerColorClass
+                  )}
+                >
+                  {group.title}
+                </h3>
+              </div>
+
+              <div
                 className={cn(
-                  'text-[10px] font-extrabold uppercase tracking-widest',
-                  group.headerColorClass
+                  'grid gap-1.5',
+                  isChurning ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-1' : 'grid-cols-2'
                 )}
               >
-                {group.title}
-              </h3>
-            </div>
-
-            <div
-              className={cn(
-                'grid gap-1.5',
-                group.id === 'churning' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-1' : 'grid-cols-2'
-              )}
-            >
               {group.items.map((item) => {
                 const targetBucket = item.bucket ?? 'all'
                 const isSelected = activeCardId === item.id
@@ -525,17 +533,11 @@ export function PipelineStatusCards({
                       </span>
                     </div>
 
-                    {/* Right: Circular Progress + Count */}
+                    {/* Right: Count */}
                     <div className="flex items-center gap-1.5 shrink-0">
-                      <MiniCircularProgress
-                        pct={pct}
-                        strokeColor={item.strokeColor}
-                        size={26}
-                        strokeWidth={2.5}
-                      />
                       <span
                         className={cn(
-                          'text-xs font-black tabular-nums tracking-tight',
+                          'text-xs font-black tabular-nums tracking-tight px-2 py-0.5 rounded-lg bg-white/70 dark:bg-slate-900/60 shadow-2xs border border-inherit',
                           item.textClass
                         )}
                       >
@@ -548,7 +550,8 @@ export function PipelineStatusCards({
             </div>
           </div>
         </div>
-      ))}
-    </div>
-  )
+      )
+    })}
+  </div>
+)
 }

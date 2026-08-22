@@ -69,20 +69,33 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  Banknote,
+  CalendarClock,
   CalendarIcon,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Clock,
+  Copy,
   Database,
   ExternalLink,
   GripVertical,
+  HeartCrack,
   Loader2,
+  MapPinOff,
   Menu,
   Pencil,
   PhoneCall,
+  PhoneOff,
   Plus,
+  RotateCcw,
   RotateCw,
   Search,
   SlidersHorizontal,
+  Sprout,
+  Sparkles,
+  Trash2,
+  type LucideIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -171,6 +184,127 @@ function normalizedText(value: unknown, fallback: string): string {
 }
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500]
+
+interface StatusBadgeConfig {
+  label: string
+  icon: LucideIcon
+  className: string
+  iconClass: string
+}
+
+function getStatusBadgeConfig(status: string | null | undefined): StatusBadgeConfig {
+  const norm = normalizeLeadStatus(status)
+  const lower = norm.toLowerCase()
+
+  if (lower.includes('callback')) {
+    return {
+      label: norm,
+      icon: PhoneCall,
+      className: 'bg-[#FFF7ED] dark:bg-amber-950/40 text-[#C2410C] dark:text-amber-300 border-[#FDBA74]/80 dark:border-amber-800/60',
+      iconClass: 'text-[#EA580C] dark:text-amber-400',
+    }
+  }
+  if (lower.includes('junk')) {
+    return {
+      label: norm,
+      icon: Trash2,
+      className: 'bg-[#F1F5F9] dark:bg-slate-800/60 text-[#475569] dark:text-slate-300 border-[#CBD5E1] dark:border-slate-700',
+      iconClass: 'text-[#64748B] dark:text-slate-400',
+    }
+  }
+  if (lower.includes('dnp') || lower.includes('did not pick') || lower.includes('not connected')) {
+    return {
+      label: norm,
+      icon: PhoneOff,
+      className: 'bg-[#FFF1F2] dark:bg-rose-950/40 text-[#E11D48] dark:text-rose-300 border-[#FECDD3] dark:border-rose-800/60',
+      iconClass: 'text-[#F43F5E] dark:text-rose-400',
+    }
+  }
+  if (
+    lower.includes('ipd sch') ||
+    lower.includes('opd sch') ||
+    lower.includes('schedule') ||
+    lower.includes('appointment')
+  ) {
+    return {
+      label: norm,
+      icon: CalendarClock,
+      className: 'bg-[#ECFDF5] dark:bg-emerald-950/40 text-[#047857] dark:text-emerald-300 border-[#A7F3D0] dark:border-emerald-800/60',
+      iconClass: 'text-[#059669] dark:text-emerald-400',
+    }
+  }
+  if (lower.includes('follow') || lower.includes('interested') || lower.includes('hot')) {
+    return {
+      label: norm,
+      icon: PhoneCall,
+      className: 'bg-[#ECFDF5] dark:bg-emerald-950/40 text-[#047857] dark:text-emerald-300 border-[#A7F3D0] dark:border-emerald-800/60',
+      iconClass: 'text-[#059669] dark:text-emerald-400',
+    }
+  }
+  if (lower.includes('new')) {
+    return {
+      label: norm,
+      icon: Sparkles,
+      className: 'bg-[#EFF6FF] dark:bg-sky-950/40 text-[#1D4ED8] dark:text-sky-300 border-[#BFDBFE] dark:border-sky-800/60',
+      iconClass: 'text-[#2563EB] dark:text-sky-400',
+    }
+  }
+  if (lower.includes('done') || lower.includes('closed') || lower.includes('won')) {
+    return {
+      label: norm,
+      icon: CheckCircle2,
+      className: 'bg-[#F0FDF4] dark:bg-emerald-950/40 text-[#15803D] dark:text-emerald-300 border-[#BBF7D0] dark:border-emerald-800/60',
+      iconClass: 'text-[#16A34A] dark:text-emerald-400',
+    }
+  }
+  if (lower.includes('fund') || lower.includes('finance')) {
+    return {
+      label: norm,
+      icon: Banknote,
+      className: 'bg-[#F0FDFA] dark:bg-teal-950/40 text-[#0F766E] dark:text-teal-300 border-[#99F6E4] dark:border-teal-800/60',
+      iconClass: 'text-[#0D9488] dark:text-teal-400',
+    }
+  }
+  if (lower.includes('duplicate')) {
+    return {
+      label: norm,
+      icon: Copy,
+      className: 'bg-[#FFF1F2] dark:bg-rose-950/40 text-[#E11D48] dark:text-rose-300 border-[#FECDD3] dark:border-rose-800/60',
+      iconClass: 'text-[#F43F5E] dark:text-rose-400',
+    }
+  }
+  if (lower.includes('outstation')) {
+    return {
+      label: norm,
+      icon: MapPinOff,
+      className: 'bg-[#FFFBEB] dark:bg-amber-950/40 text-[#B45309] dark:text-amber-300 border-[#FDE68A] dark:border-amber-800/60',
+      iconClass: 'text-[#D97706] dark:text-amber-400',
+    }
+  }
+  if (lower.includes('loss') || lower.includes('lost')) {
+    return {
+      label: norm,
+      icon: HeartCrack,
+      className: 'bg-[#FFF1F2] dark:bg-rose-950/40 text-[#E11D48] dark:text-rose-300 border-[#FECDD3] dark:border-rose-800/60',
+      iconClass: 'text-[#F43F5E] dark:text-rose-400',
+    }
+  }
+  if (lower.includes('nurture')) {
+    return {
+      label: norm,
+      icon: Sprout,
+      className: 'bg-[#FAF5FF] dark:bg-purple-950/40 text-[#7E22CE] dark:text-purple-300 border-[#E9D5FF] dark:border-purple-800/60',
+      iconClass: 'text-[#9333EA] dark:text-purple-400',
+    }
+  }
+
+  return {
+    label: norm,
+    icon: CheckCircle2,
+    className: 'bg-[#F8FAFC] dark:bg-slate-900/50 text-[#334155] dark:text-slate-300 border-[#E2E8F0] dark:border-slate-800',
+    iconClass: 'text-[#64748B] dark:text-slate-400',
+  }
+}
 
 const PIPELINE_STATUS_FILTER_OPTIONS = Array.from(
   new Set([
@@ -838,6 +972,31 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     setState({ page: 1 }, { resetPage: false })
   }, [setState, variant])
 
+  const hasAnyActiveFilters = useMemo(
+    () =>
+      activeColumnFilterCount > 0 ||
+      Boolean(state.q) ||
+      Boolean(state.from) ||
+      Boolean(state.to) ||
+      Boolean(state.bdId) ||
+      (state.status && state.status !== 'all') ||
+      Boolean(searchInput),
+    [activeColumnFilterCount, state.q, state.from, state.to, state.bdId, state.status, searchInput]
+  )
+
+  const handleResetAllFilters = useCallback(() => {
+    clearColumnFilters()
+    setSearchInput('')
+    setState({
+      q: '',
+      from: '',
+      to: '',
+      bdId: '',
+      status: 'all',
+      page: 1,
+    })
+  }, [clearColumnFilters, setState])
+
   useEffect(() => {
     if (debouncedSearch !== state.q) {
       setState({ q: debouncedSearch })
@@ -1179,6 +1338,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const subtitle = 'Manage, track & convert leads across all pipelines'
 
   const total = data?.total ?? 0
+  const overallTotalLeads = data?.facetTotal ?? total
   const page = data?.page ?? state.page
   const pageSize = data?.pageSize ?? state.pageSize
   const totalPages = data?.totalPages ?? 1
@@ -1454,17 +1614,26 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     })
     addCol('status', {
       header: () => <HeaderCell label="Status" {...getHeaderFilterProps('status')} />,
-      cell: ({ row }) => normalizeLeadStatus(row.original.status),
+      cell: ({ row }) => {
+        const config = getStatusBadgeConfig(row.original.status)
+        const IconComponent = config.icon
+        return (
+          <div className="flex items-center">
+            <span
+              className={cn(
+                'inline-flex items-center gap-2.5 px-4 py-2 min-h-[34px] rounded-xl text-[13px] font-bold border shadow-xs whitespace-nowrap tracking-wide',
+                config.className
+              )}
+            >
+              <IconComponent className={cn('h-4 w-4 shrink-0 stroke-[2.3]', config.iconClass)} />
+              <span>{config.label}</span>
+            </span>
+          </div>
+        )
+      },
       meta: {
-        cellStyle: (lead: Lead) => {
-          const st = normalizeLeadStatus(lead.status)
-          const sc = getStatusColor(st)
-          return {
-            backgroundColor: sc.backgroundColor,
-            color: sc.textColor,
-          }
-        },
-        cellClassName: "px-2 py-0.5 text-xs font-bold text-center whitespace-nowrap shadow-[inset_0_1px_0_0_#ffffff,inset_0_-1px_0_0_#ffffff] dark:shadow-[inset_0_1px_0_0_#0f172a,inset_0_-1px_0_0_#0f172a]",
+        headerStyle: { minWidth: 150 },
+        cellClassName: "py-1 px-1.5",
       },
     })
     addCol('followUpDate', {
@@ -1645,7 +1814,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     Total Leads
                   </span>
                   <span className="text-xl font-black tabular-nums tracking-tight text-teal-900 dark:text-teal-100 drop-shadow-2xs leading-tight">
-                    {data ? total.toLocaleString() : '—'}
+                    {data ? overallTotalLeads.toLocaleString() : '—'}
                   </span>
                 </div>
 
@@ -1667,8 +1836,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           </div>
         </header>
 
-        <div className="flex flex-1 overflow-hidden">
-          <main className="flex-1 flex flex-col pt-1.5 px-3 pb-2 md:pt-1.5 md:px-4 md:pb-3 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden min-h-0">
+          <main className="flex-1 flex flex-col pt-1.5 px-3 pb-2 md:pt-1.5 md:px-4 md:pb-3 overflow-hidden min-h-0">
             {/* Target Progress Card */}
             {targetProgress && (
               <Card className="mb-2 overflow-hidden rounded-xl border border-indigo-200/80 bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-purple-50/80 p-3 shadow-sm dark:border-indigo-900/60 dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-purple-950/30">
@@ -1745,42 +1914,48 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             </div>
 
             {/* Main Table Card Container */}
-            <div className="space-y-3 flex-1 flex flex-col min-h-0 overflow-hidden">
-              <div className="rounded-2xl border border-border/80 bg-card overflow-hidden flex-1 flex flex-col min-h-0 shadow-md">
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+              <div className="rounded-2xl border border-border/80 bg-white dark:bg-card flex-1 flex flex-col min-h-0 overflow-hidden shadow-sm">
                 {/* Table Toolbar Header Section */}
-                <div className="flex items-center justify-between border-b border-[#062D4C] bg-[#062D4C] text-white px-4 py-2.5 shrink-0 rounded-t-2xl shadow-sm">
+                <div className="flex items-center justify-between border-b border-border/80 bg-white dark:bg-card text-foreground px-4 py-2.5 shrink-0 rounded-t-2xl shadow-xs">
                   <div>
-                    <h3 className="flex items-center gap-2.5 text-sm font-bold text-white">
+                    <h3 className="flex items-center gap-2.5 text-sm font-bold text-foreground">
                       <span className="relative flex h-2.5 w-2.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-400" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                       </span>
                       <span>Leads Pipeline</span>
-                      {activeColumnFilterCount > 0 && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2.5 py-0 text-[11px] font-semibold text-rose-300 hover:text-white hover:bg-rose-500/20 rounded-full"
-                          onClick={clearColumnFilters}
-                        >
-                          Clear filters ({activeColumnFilterCount})
-                        </Button>
-                      )}
                     </h3>
-                    <p className="text-xs font-medium text-slate-300 mt-0.5">
+                    <p className="text-xs font-medium text-muted-foreground mt-0.5">
                       {data ? `Showing ${rangeStart}–${rangeEnd} of ${total} leads` : 'Loading…'}{' '}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleResetAllFilters}
+                      disabled={!hasAnyActiveFilters}
+                      className={cn(
+                        "h-8 gap-1.5 text-xs font-semibold border-border shadow-xs transition-colors",
+                        hasAnyActiveFilters
+                          ? "text-rose-600 dark:text-rose-400 bg-rose-50/60 hover:bg-rose-100/80 dark:bg-rose-950/30 dark:hover:bg-rose-950/50 border-rose-200 dark:border-rose-800"
+                          : "text-muted-foreground bg-background hover:bg-muted opacity-60"
+                      )}
+                      title="Reset all search, date, and column filters"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" />
+                      Reset Filters
+                    </Button>
                     {canCreateManualLead ? (
                       <Button
                         type="button"
                         size="sm"
-                        className="h-8 gap-1.5 text-xs font-bold bg-white text-[#062D4C] hover:bg-slate-100 shadow-sm border-0 transition-all"
+                        className="h-8 gap-1.5 text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm border-0 transition-all"
                         onClick={() => setManualLeadCreateOpen(true)}
                       >
-                        <Plus className="h-3.5 w-3.5 text-[#062D4C] stroke-[2.5]" />
+                        <Plus className="h-3.5 w-3.5 stroke-[2.5]" />
                         Create manual lead
                       </Button>
                     ) : null}
@@ -1790,7 +1965,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           type="button"
                           variant="outline"
                           size="sm"
-                          className="h-8 text-xs font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white shadow-xs"
+                          className="h-8 text-xs font-semibold border-border text-foreground bg-background hover:bg-muted shadow-xs"
                           onClick={() => setBulkReassignOpen(true)}
                         >
                           Bulk Reassign
@@ -1801,18 +1976,18 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="h-8 text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/10"
+                            className="h-8 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50"
                             onClick={() => setSelectedLeadIds([])}
                           >
-                            Clear selection
+                            Deselect all
                           </Button>
                         ) : null}
                       </>
                     ) : null}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white shadow-xs">
-                          <SlidersHorizontal className="h-3.5 w-3.5 text-slate-200" />
+                        <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs font-semibold border-border text-foreground bg-background hover:bg-muted shadow-xs">
+                          <SlidersHorizontal className="h-3.5 w-3.5 text-muted-foreground" />
                           Columns
                         </Button>
                       </DropdownMenuTrigger>
@@ -1900,7 +2075,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       size="sm"
                       onClick={() => refetch()}
                       disabled={isFetching}
-                      className="h-8 gap-1.5 text-xs font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white shadow-xs"
+                      className="h-8 gap-1.5 text-xs font-semibold border-border text-foreground bg-background hover:bg-muted shadow-xs"
                       title="Refresh CRM data"
                     >
                       <RotateCw className={cn('h-3.5 w-3.5', isFetching && 'animate-spin')} />
@@ -2033,8 +2208,9 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                         ? 'bg-[#E4EEFF] hover:bg-[#D9E7FF] shadow-[inset_0_1px_0_0_rgba(175,196,255,0.9),inset_0_-1px_0_0_rgba(175,196,255,0.9)] dark:bg-[#2A3B60] dark:hover:bg-[#334874] dark:shadow-[inset_0_1px_0_0_rgba(93,124,199,0.95),inset_0_-1px_0_0_rgba(93,124,199,0.95)] font-medium'
                         : 'hover:bg-muted/50'
                     }
+                    className="flex-1 flex flex-col min-h-0 space-y-0 overflow-hidden"
                     columnVisibility={visibleColumns as Record<string, boolean>}
-                    tableContainerClassName="border-0 rounded-none shadow-none flex-1 min-h-0"
+                    tableContainerClassName="border-0 rounded-none shadow-none flex-1 flex flex-col min-h-0 h-full overflow-hidden"
                     tableHeaderClassName="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-b border-border/80 text-foreground shadow-xs [&_tr]:border-b [&_tr]:border-border/60"
                     onColumnVisibilityChange={(updaterOrVal) => {
                       const next = typeof updaterOrVal === 'function'
