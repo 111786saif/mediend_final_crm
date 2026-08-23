@@ -22,6 +22,7 @@ import {
   type PipelineSelectedLead,
   pipelineTableSelect,
 } from '@/lib/pipeline/server-query'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -49,6 +50,10 @@ export async function GET(request: NextRequest) {
       where: facetWhere,
       _count: { _all: true },
     })
+    const ipdDoneCount = await prisma.lead.count({
+      where: { AND: [facetWhere, canonicalSalesCompletedWhere({})] },
+    })
+    const facetTotal = await prisma.lead.count({ where: facetWhere })
     const categoryRows = await prisma.lead.findMany({
       where: facetWhere,
       select: { category: true },
@@ -87,7 +92,7 @@ export async function GET(request: NextRequest) {
     })
 
     const statusCounts = bucketsFromStatusGroups(statusGroups)
-    const facetTotal = Object.values(statusCounts).reduce((s, n) => s + n, 0)
+    statusCounts.ipd_done = ipdDoneCount
 
     const categories = categoryRows
       .map((r) => r.category?.trim())
@@ -175,15 +180,15 @@ async function loadCampaignTree(
   const rows =
     groupBy === 'circle'
       ? await prisma.lead.groupBy({
-          by: ['circle', 'campaignName'],
-          where,
-          _count: { _all: true },
-        })
+        by: ['circle', 'campaignName'],
+        where,
+        _count: { _all: true },
+      })
       : await prisma.lead.groupBy({
-          by: ['treatment', 'campaignName'],
-          where,
-          _count: { _all: true },
-        })
+        by: ['treatment', 'campaignName'],
+        where,
+        _count: { _all: true },
+      })
 
   const map = new Map<string, Map<string, number>>()
   for (const row of rows) {
