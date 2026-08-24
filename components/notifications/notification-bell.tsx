@@ -27,15 +27,8 @@ export function NotificationBell() {
   const markAsRead = useMarkNotificationRead()
   const queryClient = useQueryClient()
 
-  const handleNotificationClick = async (notification: { id: string; link: string | null; isRead: boolean }) => {
+  const handleNotificationClick = (notification: { id: string; link: string | null; isRead: boolean }) => {
     if (notification.link) {
-      if (!notification.isRead) {
-        try {
-          await markAsRead.mutateAsync(notification.id)
-        } catch {
-          /* still navigate */
-        }
-      }
       router.push(notification.link)
     }
     setOpen(false)
@@ -54,14 +47,14 @@ export function NotificationBell() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
           <Bell className="h-5 w-5" />
           {count > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+              className="absolute -top-1 -right-1 h-5 min-w-5 px-1 flex items-center justify-center p-0 text-[10px] font-bold bg-red-600 hover:bg-red-700 text-white rounded-full border-2 border-background"
             >
-              {count > 9 ? '9+' : count}
+              {count > 99 ? '99+' : count}
             </Badge>
           )}
         </Button>

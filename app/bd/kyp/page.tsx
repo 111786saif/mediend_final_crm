@@ -36,8 +36,11 @@ type Bucket =
   | 'HOSPITALS_SUGGESTED'
   | 'PREAUTH_RAISED'
   | 'PREAUTH_COMPLETE'
+  | 'IPD_POSSIBLE'
   | 'IPD_SCHEDULED'
   | 'IPD_DONE'
+  | 'POSTPONED'
+  | 'CANCELLED'
 
 type BucketFilter = Bucket | 'all'
 
@@ -113,8 +116,11 @@ const BUCKET_DEFS: { key: Bucket; label: string; tone: string }[] = [
   { key: 'HOSPITALS_SUGGESTED', label: 'Hospitals suggested', tone: 'text-blue-600' },
   { key: 'PREAUTH_RAISED', label: 'Pre-auth raised', tone: 'text-purple-600' },
   { key: 'PREAUTH_COMPLETE', label: 'Pre-auth approved', tone: 'text-indigo-600' },
+  { key: 'IPD_POSSIBLE', label: 'IPD Possible', tone: 'text-purple-600' },
   { key: 'IPD_SCHEDULED', label: 'IPD scheduled', tone: 'text-cyan-600' },
   { key: 'IPD_DONE', label: 'IPD done', tone: 'text-emerald-600' },
+  { key: 'POSTPONED', label: 'Postponed', tone: 'text-amber-600' },
+  { key: 'CANCELLED', label: 'Cancelled', tone: 'text-rose-600' },
 ]
 
 const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
@@ -122,8 +128,11 @@ const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
   HOSPITALS_SUGGESTED: { label: 'Hospitals suggested', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' },
   PREAUTH_RAISED: { label: 'Pre-auth raised', className: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' },
   PREAUTH_COMPLETE: { label: 'Pre-auth approved', className: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' },
+  IPD_POSSIBLE: { label: 'IPD Possible', className: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' },
   IPD_SCHEDULED: { label: 'IPD scheduled', className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300' },
   IPD_DONE: { label: 'IPD done', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300' },
+  POSTPONED: { label: 'Postponed', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300' },
+  CANCELLED: { label: 'Cancelled', className: 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300' },
 }
 
 /* ─── Page component ─────────────────────────────────────────────────────── */
@@ -258,14 +267,61 @@ export default function CaseTrackerPage() {
         lead.patientName.trim() === 'Unknown' ||
         lead.patientName.trim() === ''
       ) continue
+
+      const isCancelled =
+        lead.admissionRecord?.ipdStatus === 'CANCELLED' ||
+        String(lead.status ?? '').toLowerCase().includes('cancel')
+
+      if (isCancelled) {
+        const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
+        const badge = BUCKET_BADGE.CANCELLED
+        out.push({
+          lead,
+          bucket: 'CANCELLED',
+          hospital: hospital ?? '',
+          doctor: doctor ?? '',
+          stageLabel: badge.label,
+        })
+        continue
+      }
+
+      const isPostponed =
+        lead.admissionRecord?.ipdStatus === 'POSTPONED' ||
+        String(lead.status ?? '').toLowerCase().includes('postpone')
+
+      if (isPostponed) {
+        const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
+        const badge = BUCKET_BADGE.POSTPONED
+        out.push({
+          lead,
+          bucket: 'POSTPONED',
+          hospital: hospital ?? '',
+          doctor: doctor ?? '',
+          stageLabel: badge.label,
+        })
+        continue
+      }
+
+      const isPossible =
+        !isCancelled &&
+        lead.caseStage !== CaseStage.IPD_DONE &&
+        lead.caseStage !== CaseStage.DISCHARGED &&
+        lead.caseStage !== CaseStage.CASH_IPD_DONE &&
+        lead.caseStage !== CaseStage.CASH_DISCHARGED &&
+        (lead.admissionRecord?.ipdStatus === 'POSSIBLE' || !!lead.ipdPotentialDate)
+
       const bucket = lead.caseStage ? BUCKET_OF_STAGE[lead.caseStage as CaseStage] : undefined
-      const resolvedBucket = bucket === undefined && (
-        lead.caseStage === CaseStage.PL_PENDING || lead.caseStage === CaseStage.OUTSTANDING
-      ) && (
-        (lead as { surgeryDate?: unknown }).surgeryDate != null ||
-        (lead as { admissionRecord?: { surgeryDate?: unknown } }).admissionRecord?.surgeryDate != null
-      ) ? 'IPD_DONE' : bucket
+      const resolvedBucket = isPossible
+        ? 'IPD_POSSIBLE'
+        : (bucket === undefined && (
+            lead.caseStage === CaseStage.PL_PENDING || lead.caseStage === CaseStage.OUTSTANDING
+          ) && (
+            (lead as { surgeryDate?: unknown }).surgeryDate != null ||
+            (lead as { admissionRecord?: { surgeryDate?: unknown } }).admissionRecord?.surgeryDate != null
+          ) ? 'IPD_DONE' : bucket)
+
       if (!resolvedBucket) continue
+
       const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
       const badge = BUCKET_BADGE[resolvedBucket]
       out.push({
@@ -285,6 +341,15 @@ export default function CaseTrackerPage() {
     if (monthFilter === 'all') return decorated
 
     return decorated.filter((d) => {
+      if (d.bucket === 'IPD_POSSIBLE') {
+        const pd = d.lead.ipdPotentialDate
+        if (pd) {
+          const t = new Date(pd as string).getTime()
+          if (Number.isFinite(t) && t > 0) {
+            return monthKeyOf(new Date(t).toISOString()) === monthFilter
+          }
+        }
+      }
       const isIpdDone = d.bucket === 'IPD_DONE'
       if (isIpdDone) {
         const adSurg = (d.lead as { admissionRecord?: { surgeryDate?: string | Date } }).admissionRecord?.surgeryDate
@@ -447,8 +512,11 @@ export default function CaseTrackerPage() {
       HOSPITALS_SUGGESTED: 0,
       PREAUTH_RAISED: 0,
       PREAUTH_COMPLETE: 0,
+      IPD_POSSIBLE: 0,
       IPD_SCHEDULED: 0,
       IPD_DONE: 0,
+      POSTPONED: 0,
+      CANCELLED: 0,
     }
     for (const { bucket } of monthFiltered) base[bucket]++
     return base
@@ -692,12 +760,12 @@ export default function CaseTrackerPage() {
           </Card>
 
           {/* ── Stage cards ── */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5">
             {user?.role !== 'PL_HEAD' && (
               <button
                 type="button"
                 onClick={() => setStageFilter('all')}
-                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${stageFilter === 'all' ? 'ring-2 ring-primary' : ''}`}
+                className={`rounded-xl border bg-card p-3.5 text-left shadow-sm transition-all hover:shadow-md ${stageFilter === 'all' ? 'ring-2 ring-primary' : ''}`}
               >
                 <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">All active</p>
                 <p className="mt-1 text-2xl font-bold tabular-nums">{monthFiltered.length}</p>
@@ -708,9 +776,9 @@ export default function CaseTrackerPage() {
                 key={key}
                 type="button"
                 onClick={() => setStageFilter(key)}
-                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${stageFilter === key ? 'ring-2 ring-primary' : ''}`}
+                className={`rounded-xl border bg-card p-3.5 text-left shadow-sm transition-all hover:shadow-md ${stageFilter === key ? 'ring-2 ring-primary' : ''}`}
               >
-                <p className="line-clamp-2 text-[11px] font-medium text-muted-foreground">{label}</p>
+                <p className="line-clamp-1 text-[11px] font-medium text-muted-foreground" title={label}>{label}</p>
                 <p className={`mt-1 text-2xl font-bold tabular-nums ${tone}`}>{counts[key]}</p>
               </button>
             ))}

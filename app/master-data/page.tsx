@@ -78,6 +78,16 @@ const TAB_LABEL: Record<TabKey, string> = {
   'treatment-categories': 'Treatment Category',
 }
 
+const TAB_RESOURCE: Record<TabKey, string> = {
+  hospitals: 'main.master_data.hospitals',
+  doctors: 'main.master_data.doctors',
+  tpas: 'main.master_data.tpas',
+  insurance: 'main.master_data.insurance',
+  anesthesia: 'main.master_data.anesthesia',
+  treatments: 'main.master_data.treatments',
+  'treatment-categories': 'main.master_data.treatment_categories',
+}
+
 const API_BASE: Record<MasterType, string> = {
   hospitals: '/api/masters/hospitals',
   doctors: '/api/masters/doctors',
@@ -85,6 +95,7 @@ const API_BASE: Record<MasterType, string> = {
   anesthesia: '/api/masters/anesthesia',
   insurance: '/api/masters/insurance',
   treatments: '/api/masters/treatments',
+  'treatment-categories': '/api/masters/treatment-categories',
 }
 
 const DOC_TYPES: { value: DoctorDocument['type']; label: string }[] = [
@@ -170,10 +181,24 @@ export default function MasterDataPage() {
   })
 
   const { hasAccess } = usePermissions()
-  const canAccess = !!(user && (hasAccess('main.master_data') || hasPermission(user, 'masters:read')))
-  const canWrite = !!(user && (hasAccess('main.master_data', PermissionLevel.READ_WRITE) || hasPermission(user, 'masters:write')))
 
-  const { data, isLoading, refetch } = useMasterList(tab, search, canAccess && !authLoading)
+  // Page-level gate: user must have at least read access to the overall master data page
+  const canAccess = !!(user && (hasAccess('main.master_data') || hasPermission(user, 'masters:read')))
+
+  // Per-tab permission: check the specific tab resource key first, fall back to page-level, then static
+  const tabResource = TAB_RESOURCE[tab]
+  const tabCanRead = !!(user && (
+    hasAccess(tabResource) ||
+    hasAccess('main.master_data') ||
+    hasPermission(user, 'masters:read')
+  ))
+  const tabCanWrite = !!(user && (
+    hasAccess(tabResource, PermissionLevel.READ_WRITE) ||
+    hasAccess('main.master_data', PermissionLevel.READ_WRITE) ||
+    hasPermission(user, 'masters:write')
+  ))
+
+  const { data, isLoading, refetch } = useMasterList(tab, search, canAccess && tabCanRead && !authLoading)
 
   const { data: insuranceData } = useQuery({
     queryKey: ['masters-admin', 'insurance', 'picker'],
@@ -411,7 +436,7 @@ export default function MasterDataPage() {
               </p>
             </div>
           </div>
-          {canWrite && (
+          {tabCanWrite && (
             <Button onClick={openCreate}>
               <Plus className="mr-2 size-4" />
               Add {TAB_LABEL[tab]}
@@ -473,7 +498,7 @@ export default function MasterDataPage() {
                     </>
                   )}
                   <TableHead className="w-[100px]">Status</TableHead>
-                  {(canWrite || tab === 'hospitals') && (
+                  {(tabCanWrite || tab === 'hospitals') && (
                     <TableHead className="w-[180px]">Actions</TableHead>
                   )}
                 </TableRow>
@@ -484,14 +509,21 @@ export default function MasterDataPage() {
                     <TableCell colSpan={12}>Loading…</TableCell>
                   </TableRow>
                 )}
-                {!isLoading && items.length === 0 && (
+                {!isLoading && !tabCanRead && (
                   <TableRow>
                     <TableCell colSpan={12} className="text-muted-foreground">
-                      No rows. {canWrite ? 'Add one or adjust search.' : ''}
+                      You don&apos;t have access to the {TAB_LABEL[tab]} tab.
                     </TableCell>
                   </TableRow>
                 )}
-                {!isLoading &&
+                {!isLoading && tabCanRead && items.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={12} className="text-muted-foreground">
+                      No rows. {tabCanWrite ? 'Add one or adjust search.' : ''}
+                    </TableCell>
+                  </TableRow>
+                )}
+                {!isLoading && tabCanRead &&
                   items.map((row) => (
                     <TableRow key={row.id}>
                       <TableCell className="font-medium">{row.name}</TableCell>
@@ -596,7 +628,7 @@ export default function MasterDataPage() {
                           {row.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                       </TableCell>
-                      {(canWrite || tab === 'hospitals') && (
+                      {(tabCanWrite || tab === 'hospitals') && (
                         <TableCell>
                           <div className="flex flex-wrap gap-1.5">
                             {tab === 'hospitals' && (
@@ -607,7 +639,7 @@ export default function MasterDataPage() {
                                 </Link>
                               </Button>
                             )}
-                            {canWrite && (
+                            {tabCanWrite && (
                               <Button
                                 type="button"
                                 variant="outline"

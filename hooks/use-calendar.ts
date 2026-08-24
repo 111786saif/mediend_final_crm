@@ -114,7 +114,7 @@ export function useTeamBds() {
 
 /** IPD/OPD combined calendar feed — type/status/bdId filterable */
 export type CaseEventType = 'IPD' | 'OPD'
-export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED'
+export type CaseEventStatus = 'DONE' | 'SCHEDULED' | 'POSTPONED' | 'CANCELLED' | 'POSSIBLE'
 export type CaseEvent = {
   id: string
   leadId: string
@@ -133,12 +133,12 @@ export type CaseEvent = {
 export function useCaseEvents(params: {
   startDate: string
   endDate: string
-  types: CaseEventType[]
-  statuses: CaseEventStatus[]
+  types?: CaseEventType[]
+  statuses?: CaseEventStatus[]
   bdIds?: string[]
   enabled?: boolean
 }) {
-  const { startDate, endDate, types, statuses, bdIds, enabled = true } = params
+  const { startDate, endDate, types = [], statuses = [], bdIds, enabled = true } = params
   return useQuery<CaseEvent[]>({
     queryKey: ['case-events', startDate, endDate, types.join(','), statuses.join(','), bdIds?.join(',') ?? ''],
     queryFn: () => {

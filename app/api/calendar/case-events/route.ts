@@ -4,7 +4,7 @@ import { getCaseCalendarEvents, type CaseEventStatus, type CaseEventType } from 
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 const ALL_TYPES: CaseEventType[] = ['IPD', 'OPD']
-const ALL_STATUSES: CaseEventStatus[] = ['DONE', 'SCHEDULED', 'POSTPONED', 'CANCELLED']
+const ALL_STATUSES: CaseEventStatus[] = ['DONE', 'SCHEDULED', 'POSTPONED', 'CANCELLED', 'POSSIBLE']
 
 function parseList<T extends string>(raw: string | null, allowed: T[]): T[] {
   if (!raw) return allowed

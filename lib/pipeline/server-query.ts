@@ -10,6 +10,7 @@ import {
   type LeadAgeFilter,
   type PipelineStatusBucket,
 } from '@/lib/pipeline-lead-buckets'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import {
@@ -71,15 +72,15 @@ export type PipelineMultiColumnFilterField = Exclude<
 
 export type PipelineServerColumnFilter =
   | {
-      field: PipelineDateColumnFilterField
-      operator: 'between'
-      value: [string, string]
-    }
+    field: PipelineDateColumnFilterField
+    operator: 'between'
+    value: [string, string]
+  }
   | {
-      field: PipelineMultiColumnFilterField
-      operator: 'in'
-      value: string[]
-    }
+    field: PipelineMultiColumnFilterField
+    operator: 'in'
+    value: string[]
+  }
 
 const PIPELINE_DATE_COLUMN_FILTER_FIELDS = new Set<PipelineDateColumnFilterField>([
   'assignDate',
@@ -210,7 +211,7 @@ function parsePipelineColumnFilters(raw: string | null): PipelineServerColumnFil
             operator: 'between' as const,
             value: [value[0], value[1]],
           },
-        ]
+        ] as PipelineServerColumnFilter[]
       }
 
       if (PIPELINE_MULTI_COLUMN_FILTER_FIELDS.has(field as PipelineMultiColumnFilterField)) {
@@ -233,7 +234,7 @@ function parsePipelineColumnFilters(raw: string | null): PipelineServerColumnFil
             operator: 'in' as const,
             value: cleanedValues,
           },
-        ]
+        ] as PipelineServerColumnFilter[]
       }
 
       return []
@@ -340,7 +341,7 @@ export function statusBucketWhere(
     case 'opd_done':
       return contains('opd done')
     case 'ipd_done':
-      return contains('ipd done')
+      return canonicalSalesCompletedWhere({})
     case 'dnp':
       return contains('dnp')
     case 'junk':
@@ -426,7 +427,7 @@ export function buildPipelineFiltersWhere(
   if (params.circle) {
     if (params.circle === 'Unknown') {
       and.push({
-        OR: [{ circle: null }, { circle: '' }, { circle: { equals: 'Unknown', mode: 'insensitive' } }],
+        OR: [{ circle: null as any }, { circle: '' }, { circle: { equals: 'Unknown', mode: 'insensitive' } }],
       })
     } else {
       and.push({ circle: { equals: params.circle, mode: 'insensitive' } })

@@ -162,6 +162,7 @@ interface Lead {
   leadEntryDate?: string | null
   assignedDate?: string | null
   createdDate?: string | null
+  updatedDate?: string | null
   surgeryDate?: string | null
   ipdPotentialDate?: string | null
   ipdPotentialMarkedAt?: string | null
@@ -1288,6 +1289,7 @@ export default function PatientDetailsPage() {
                 <LeadQrPopover
                   leadId={leadId}
                   phoneNumber={lead.phoneNumber ?? ''}
+                  alternateNumber={lead.alternateNumber ?? ''}
                   patientName={lead.patientName}
                   triggerVariant="button"
                   buttonLabel="Lead QR"
@@ -3100,6 +3102,8 @@ export default function PatientDetailsPage() {
                       queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
                       queryClient.invalidateQueries({ queryKey: ['leads'] })
                       queryClient.invalidateQueries({ queryKey: ['pipeline'] })
+                      queryClient.invalidateQueries({ queryKey: ['case-events'] })
+                      queryClient.invalidateQueries({ queryKey: ['calendar-events'] })
                     } catch (error) {
                       toast.error(error instanceof Error ? error.message : 'Failed to mark IPD possibility')
                     } finally {

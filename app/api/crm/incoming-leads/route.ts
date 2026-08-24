@@ -61,23 +61,21 @@ export async function GET(request: NextRequest) {
     const year = hasExplicitMonthFilter ? parsed.data.year! : fallback.year
     const dateRange = hasExplicitMonthFilter ? getBusinessMonthRange(year, month) : null
 
-    const [campaignData, incomingLeads] = await Promise.all([
-      getCampaignManagementPageData(month, year),
-      prisma.incomingLead.findMany({
-        where: {
-          ...(dateRange
-            ? {
-                receivedAt: {
-                  gte: dateRange.start,
-                  lte: dateRange.end,
-                },
-              }
-            : {}),
-        },
-        orderBy: { receivedAt: 'desc' },
-        take: 2000,
-      }),
-    ])
+    const campaignData = await getCampaignManagementPageData(month, year)
+    const incomingLeads = await prisma.incomingLead.findMany({
+      where: {
+        ...(dateRange
+          ? {
+              receivedAt: {
+                gte: dateRange.start,
+                lte: dateRange.end,
+              },
+            }
+          : {}),
+      },
+      orderBy: { receivedAt: 'desc' },
+      take: 2000,
+    })
 
     const processedLeadIds = incomingLeads
       .map((incomingLead) => incomingLead.processedLeadId)

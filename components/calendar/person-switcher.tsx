@@ -14,6 +14,7 @@ import {
 import { getAvatarColor } from '@/lib/avatar-colors'
 import { cn } from '@/lib/utils'
 import { useUserDirectory } from '@/hooks/use-calendar'
+import { useAuth } from '@/hooks/use-auth'
 import type { DirectoryUser } from '@/app/api/users/directory/route'
 
 function getInitials(name: string): string {
@@ -26,11 +27,17 @@ export function PersonSwitcher({
   currentUserId,
   targetUserId,
   onChange,
+  disabled = false,
 }: {
   currentUserId: string
   targetUserId: string
   onChange: (userId: string) => void
+  disabled?: boolean
 }) {
+  const { user } = useAuth()
+  const isBD = user?.role === 'BD'
+  const isSwitcherDisabled = disabled || isBD
+
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const { data: directory = [], isLoading } = useUserDirectory()
@@ -63,8 +70,11 @@ export function PersonSwitcher({
       <Button
         type="button"
         variant="outline"
-        onClick={() => setOpen(true)}
-        className="w-full h-auto justify-between rounded-2xl py-2.5 pl-2.5 pr-3"
+        onClick={() => !isSwitcherDisabled && setOpen(true)}
+        className={cn(
+          'w-full h-auto justify-between rounded-2xl py-2.5 pl-2.5 pr-3',
+          isSwitcherDisabled && 'cursor-default opacity-90 hover:bg-background'
+        )}
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <Avatar className="size-9 shrink-0">
@@ -85,61 +95,63 @@ export function PersonSwitcher({
             )}
           </div>
         </div>
-        <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+        {!isSwitcherDisabled && <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
       </Button>
 
-      <Drawer open={open} onOpenChange={setOpen} direction="bottom">
-        <DrawerContent className="rounded-t-2xl pb-[max(1rem,env(safe-area-inset-bottom))] max-h-[85vh]">
-          <DrawerHeader className="border-b">
-            <DrawerTitle className="text-base">Pick someone</DrawerTitle>
-          </DrawerHeader>
-          <div className="px-3 pt-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                autoFocus
-                placeholder="Search name, role, department…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="pl-9 rounded-xl"
-              />
-            </div>
-          </div>
-          <div className="overflow-y-auto p-2">
-            <PersonRow
-              isActive={isMe}
-              name="My calendar"
-              sub="Viewing yourself"
-              onClick={() => {
-                onChange(currentUserId)
-                setOpen(false)
-              }}
-            />
-            {isLoading && (
-              <div className="p-4 text-center text-sm text-muted-foreground">Loading…</div>
-            )}
-            {filtered
-              .filter((u) => u.id !== currentUserId)
-              .map((u) => (
-                <PersonRow
-                  key={u.id}
-                  isActive={u.id === targetUserId}
-                  name={u.name}
-                  sub={u.designation || u.department?.name || u.role}
-                  onClick={() => {
-                    onChange(u.id)
-                    setOpen(false)
-                  }}
+      {!isSwitcherDisabled && (
+        <Drawer open={open} onOpenChange={setOpen} direction="bottom">
+          <DrawerContent className="rounded-t-2xl pb-[max(1rem,env(safe-area-inset-bottom))] max-h-[85vh]">
+            <DrawerHeader className="border-b">
+              <DrawerTitle className="text-base">Pick someone</DrawerTitle>
+            </DrawerHeader>
+            <div className="px-3 pt-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  autoFocus
+                  placeholder="Search name, role, department…"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="pl-9 rounded-xl"
                 />
-              ))}
-            {!isLoading && filtered.length === 0 && (
-              <div className="p-6 text-center text-sm text-muted-foreground">
-                No matches.
               </div>
-            )}
-          </div>
-        </DrawerContent>
-      </Drawer>
+            </div>
+            <div className="overflow-y-auto p-2">
+              <PersonRow
+                isActive={isMe}
+                name="My calendar"
+                sub="Viewing yourself"
+                onClick={() => {
+                  onChange(currentUserId)
+                  setOpen(false)
+                }}
+              />
+              {isLoading && (
+                <div className="p-4 text-center text-sm text-muted-foreground">Loading…</div>
+              )}
+              {filtered
+                .filter((u) => u.id !== currentUserId)
+                .map((u) => (
+                  <PersonRow
+                    key={u.id}
+                    isActive={u.id === targetUserId}
+                    name={u.name}
+                    sub={u.designation || u.department?.name || u.role}
+                    onClick={() => {
+                      onChange(u.id)
+                      setOpen(false)
+                    }}
+                  />
+                ))}
+              {!isLoading && filtered.length === 0 && (
+                <div className="p-6 text-center text-sm text-muted-foreground">
+                  No matches.
+                </div>
+              )}
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </>
   )
 }

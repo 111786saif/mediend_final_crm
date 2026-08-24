@@ -751,7 +751,11 @@ export async function PATCH(
       }
     }
 
-    if (requestedTreatmentMasterId !== undefined && requestedTreatmentMasterId !== null) {
+    if (
+      requestedTreatmentMasterId !== undefined &&
+      requestedTreatmentMasterId !== null &&
+      requestedTreatmentMasterId !== '__legacy_current_treatment__'
+    ) {
       resolvedTreatmentMaster = await prisma.treatmentMaster.findFirst({
         where: {
           id: requestedTreatmentMasterId,
@@ -828,6 +832,7 @@ export async function PATCH(
     // Update other fields
     const allowedFields = [
       'status',
+      'subStatus',
       'patientName',
       'age',
       'sex',
@@ -1022,6 +1027,8 @@ export async function PATCH(
         const nextCity =
           typeof body.city === 'string' ? body.city.trim() || null : body.city === null ? null : null
 
+        updateData.circle = nextCity
+
         const existingKypSubmission = await (tx as any).kYPSubmission.findUnique({
           where: { leadId: id },
           select: { id: true },
@@ -1173,6 +1180,23 @@ export async function PATCH(
     }
 
     if (assigneeChanged || churnAutomationResult) {
+      if (updatedLead.bdId && updatedLead.bdId !== user.id) {
+        try {
+          await prisma.notification.create({
+            data: {
+              userId: updatedLead.bdId,
+              type: 'TASK_ASSIGNED',
+              title: 'New Lead Assigned',
+              message: `You have been assigned a new lead: ${updatedLead.patientName} (${updatedLead.leadRef})`,
+              link: `/patient/${updatedLead.id}`,
+              relatedId: updatedLead.id,
+            },
+          })
+        } catch (err) {
+          console.error('Failed to create lead assignment notification:', err)
+        }
+      }
+
       activityLogs.push(
         logCrmActivity({
           action: 'CRM_LEAD_REASSIGNED',

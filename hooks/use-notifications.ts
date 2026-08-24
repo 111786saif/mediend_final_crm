@@ -37,7 +37,7 @@ export function useNotifications(unreadOnly: boolean = false) {
       }
       return apiGet<Notification[]>(`/api/notifications?${params.toString()}`)
     },
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: 10000, // Refetch every 10 seconds for live updates
   })
 }
 
@@ -47,7 +47,7 @@ export function useUnreadCount() {
     queryFn: async () => {
       return apiGet<{ count: number }>('/api/notifications/unread-count')
     },
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: 10000, // Refetch every 10 seconds for live updates
   })
 }
 

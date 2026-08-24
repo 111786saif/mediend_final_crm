@@ -19,10 +19,11 @@ export async function GET(
     }
     const lead = publicLink.lead
 
-    const targetPhone = normalizeLeadQrWhatsappPhone(
-      lead.phoneNumber ?? lead.alternateNumber ?? ''
-    )
-    if (!targetPhone) {
+    const target = request.nextUrl.searchParams.get('target')
+    const rawPhone = target === 'alternate' ? (lead.alternateNumber ?? lead.phoneNumber ?? '') : (lead.phoneNumber ?? lead.alternateNumber ?? '')
+    const cleanDigits = rawPhone.replace(/\D+/g, '')
+
+    if (!cleanDigits) {
       const errorUrl = new URL(`/lead-contact/${encodeURIComponent(token)}`, request.url)
       errorUrl.searchParams.set('error', 'no-phone')
       return NextResponse.redirect(errorUrl)
@@ -45,7 +46,7 @@ export async function GET(
       source: 'public_page',
     })
 
-    return NextResponse.redirect(`https://wa.me/${targetPhone}`)
+    return NextResponse.redirect(`https://wa.me/${cleanDigits}`)
   } catch (error) {
     console.error('GET /api/lead-contact/[token]/whatsapp', error)
     return errorResponse('Failed to initiate WhatsApp chat.', 500)

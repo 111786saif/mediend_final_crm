@@ -31,6 +31,23 @@ export async function GET(request: NextRequest) {
       ? {}
       : { isActive: true }
 
+    // Ensure LWB (Leave Without Benefits) exists in LeaveTypeMaster
+    const lwbExists = await prisma.leaveTypeMaster.findFirst({
+      where: { OR: [{ code: 'LWB' }, { name: 'LWB' }] },
+    })
+    if (!lwbExists) {
+      await prisma.leaveTypeMaster.create({
+        data: {
+          name: 'LWB',
+          code: 'LWB',
+          maxDays: 365,
+          monthlyAccrual: 0,
+          carryForward: false,
+          isActive: true,
+        },
+      })
+    }
+
     const leaveTypes = await prisma.leaveTypeMaster.findMany({
       where,
       orderBy: {
@@ -38,7 +55,6 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // If no leave types exist, return empty array (not an error)
     return successResponse(leaveTypes)
   } catch (error) {
     console.error('Error fetching leave types:', error)

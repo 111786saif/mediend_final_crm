@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/use-auth"
 interface LeadQrPopoverProps {
   leadId: string
   phoneNumber?: string | null
+  alternateNumber?: string | null
   patientName?: string
   triggerVariant?: "icon" | "button"
   buttonLabel?: string
@@ -45,6 +46,7 @@ function canUseLeadQr(userRole: string | undefined) {
 export function LeadQrPopover({
   leadId,
   phoneNumber,
+  alternateNumber,
   patientName,
   triggerVariant = "icon",
   buttonLabel = "Lead QR",
@@ -55,7 +57,8 @@ export function LeadQrPopover({
   const [qrUrl, setQrUrl] = useState<string | null>(null)
   const [isPreparingQr, setIsPreparingQr] = useState(false)
   const normalized = normalizePhone(phoneNumber ?? "")
-  const canInitiateCall = Boolean(normalized) || allowServerSidePhoneLookup
+  const normalizedAlt = normalizePhone(alternateNumber ?? "")
+  const canInitiateCall = Boolean(normalized) || Boolean(normalizedAlt) || allowServerSidePhoneLookup
   const buttonRoute = `/api/leads/${leadId}/qr-call?source=button`
   const qrLabel = useMemo(
     () => patientName ? patientName.split(" ")[0] : "lead",

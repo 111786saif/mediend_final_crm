@@ -6,6 +6,7 @@ import {
   calculateLeaveDays,
   checkDateConflict,
   isClElPastBackdateGraceActive,
+  isLwbLeaveType,
   isSickLeaveType,
   parseDateOnlyLocal,
   startOfLocalDay,
@@ -102,10 +103,11 @@ export async function POST(request: NextRequest) {
     }
 
     const sick = isSickLeaveType(leaveType)
-    if (!sick && !isClElPastBackdateGraceActive()) {
+    const lwb = isLwbLeaveType(leaveType)
+    if (!sick && !lwb && !isClElPastBackdateGraceActive()) {
       if (startDay < today || endDay < today) {
         return errorResponse(
-          'Casual Leave and Earned Leave can only be applied for today or a future date. Use Sick Leave (SL) for past dates.',
+          'Casual Leave and Earned Leave can only be applied for today or a future date. Use Sick Leave (SL) or LWB for past dates.',
           400
         )
       }
@@ -123,7 +125,7 @@ export async function POST(request: NextRequest) {
     // Validate against policy-computed balance
     const balances = await getComputedBalancesForEmployee(employee.id)
     const balanceValidation = validateComputedBalance(balances, leaveTypeId, days)
-    const isUnpaid = !balanceValidation.valid
+    const isUnpaid = !balanceValidation.valid || lwb
 
     if (!balanceValidation.valid && !balanceValidation.error?.includes('Insufficient')) {
       return errorResponse(balanceValidation.error ?? 'Cannot apply for leave', 400)

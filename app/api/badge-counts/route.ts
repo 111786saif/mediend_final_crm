@@ -354,19 +354,55 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Unread chat messages: CASE_CHAT_MESSAGE notifications for BD/Insurance/PL
-    const chatRoles = ['BD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS']
+    // Unread chat messages: calculate unread lead conversations from CaseChatMessage & ChatReadReceipt
+    const chatRoles = [
+      'BD',
+      'INSURANCE',
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'PL_ENTRY',
+      'PL_VIEWER',
+      'ACCOUNTS',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+    ]
     if (chatRoles.includes(user.role) || user.role === 'ADMIN') {
       promises.push(
-        prisma.notification.count({
-          where: {
-            userId: user.id,
-            type: 'CASE_CHAT_MESSAGE',
-            isRead: false,
-          },
-        }).then((c) => {
-          counts.unreadChatMessages = c
-        })
+        (async () => {
+          const receipts = await prisma.chatReadReceipt.findMany({
+            where: { userId: user.id },
+            select: { leadId: true, lastReadAt: true },
+          })
+          const receiptMap = new Map(receipts.map((r) => [r.leadId, r.lastReadAt]))
+
+          const latestMessagesFromOthers = await prisma.caseChatMessage.groupBy({
+            by: ['leadId'],
+            where: {
+              senderId: { not: user.id },
+            },
+            _max: { createdAt: true },
+          })
+
+          if (latestMessagesFromOthers.length === 0) {
+            counts.unreadChatMessages = 0
+            return
+          }
+
+          let unreadLeadCount = 0
+          for (const msg of latestMessagesFromOthers) {
+            const lastRead = receiptMap.get(msg.leadId)
+            const latestMessageTime = msg._max.createdAt
+            if (latestMessageTime) {
+              if (!lastRead || latestMessageTime > lastRead) {
+                unreadLeadCount++
+              }
+            }
+          }
+
+          counts.unreadChatMessages = unreadLeadCount
+        })()
       )
     }
 

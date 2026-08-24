@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
-import { isSickLeaveType } from '@/lib/hrms/leave-utils'
+import { isLwbLeaveType, isSickLeaveType } from '@/lib/hrms/leave-utils'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface TeamOption {
@@ -103,16 +103,36 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
     onError: (e: Error) => toast.error(e.message || 'Failed to mark leave'),
   })
 
+  const activeLeaveTypes = useMemo(() => {
+    const active = leaveTypes.filter((lt) => lt.isActive)
+    const hasLwb = active.some((lt) => lt.code === 'LWB' || lt.name === 'LWB')
+    if (!hasLwb) {
+      return [
+        ...active,
+        {
+          id: 'lwb-default',
+          name: 'LWB',
+          code: 'LWB',
+          maxDays: 365,
+          isActive: true,
+        },
+      ]
+    }
+    return active
+  }, [leaveTypes])
+
   const selectedLeaveType = leaveTypeId
-    ? leaveTypes.find((lt) => lt.id === leaveTypeId)
+    ? activeLeaveTypes.find((lt) => lt.id === leaveTypeId)
     : null
-  const sickAllowsPast = selectedLeaveType ? isSickLeaveType(selectedLeaveType) : false
+  const sickOrLwbAllowsPast = selectedLeaveType
+    ? isSickLeaveType(selectedLeaveType) || isLwbLeaveType(selectedLeaveType)
+    : false
   const todayStr = format(new Date(), 'yyyy-MM-dd')
   const earliestSelectableStr = format(
     new Date(new Date().setFullYear(new Date().getFullYear() - 2)),
     'yyyy-MM-dd'
   )
-  const startDateMinStr = sickAllowsPast ? earliestSelectableStr : todayStr
+  const startDateMinStr = sickOrLwbAllowsPast ? earliestSelectableStr : todayStr
 
   const singleCalendarDay =
     startDate && endDate ? format(startDate, 'yyyy-MM-dd') === format(endDate, 'yyyy-MM-dd') : false
@@ -127,8 +147,13 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
     ? preview?.balances.find((b) => b.leaveTypeId === leaveTypeId)
     : null
 
+  const isLwb = selectedLeaveType ? isLwbLeaveType(selectedLeaveType) : false
+
   const insufficientBalance =
-    selectedBalance != null && effectiveDays > 0 && selectedBalance.remaining < effectiveDays
+    selectedBalance != null &&
+    effectiveDays > 0 &&
+    !isLwb &&
+    selectedBalance.remaining < effectiveDays
 
   const canSubmit =
     !!employeeId &&
@@ -154,8 +179,6 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
     })
   }
 
-  const activeLeaveTypes = leaveTypes.filter((lt) => lt.isActive)
-
   if (teamOptions.length === 0) {
     return null
   }
@@ -165,8 +188,7 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
       <CardHeader>
         <CardTitle>Mark leave for team member</CardTitle>
         <CardDescription>
-          Records paid leave as approved immediately (no workflow). Same balance and date rules as employee
-          self-apply—probation, locked, or exhausted balance blocks this action.
+          Records leave as approved immediately (no workflow). Paid leave (CL, SL, EL) or LWB (unpaid/salary cut) can be marked for team members.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -246,8 +268,10 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
                   <SelectContent>
                     {activeLeaveTypes.map((lt) => {
                       const bal = preview.balances.find((b) => b.leaveTypeId === lt.id)
-                      const suffix =
-                        bal != null
+                      const isLwb = isLwbLeaveType(lt)
+                      const suffix = isLwb
+                        ? ' — Unpaid (Salary Cut)'
+                        : bal != null
                           ? ` — ${bal.remaining} available` +
                             (bal.locked > 0 ? ` (${bal.locked} locked)` : '')
                           : ''

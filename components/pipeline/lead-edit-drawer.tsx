@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import { useAuth } from '@/hooks/use-auth'
 import {
   formatLeadAssigneeName,
   formatLeadAssigneeRoleLabel,
@@ -77,6 +78,25 @@ function toDateInputValue(value: string | null | undefined) {
   return Number.isNaN(parsed.getTime()) ? '' : format(parsed, 'yyyy-MM-dd')
 }
 
+function toTimeInputValue(value: string | null | undefined) {
+  if (!value) return ''
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return ''
+  const hours = parsed.getHours()
+  const minutes = parsed.getMinutes()
+  if (hours === 0 && minutes === 0) return ''
+  return format(parsed, 'HH:mm')
+}
+
+function toCombinedDateTime(dateStr: string | null | undefined, timeStr: string | null | undefined) {
+  if (!dateStr) return null
+  const dateTrimmed = dateStr.trim()
+  if (!dateTrimmed) return null
+  const timeTrimmed = timeStr?.trim() ?? ''
+  if (!timeTrimmed) return dateTrimmed
+  return `${dateTrimmed}T${timeTrimmed}:00`
+}
+
 function getTodayDateInputValue() {
   return format(new Date(), 'yyyy-MM-dd')
 }
@@ -95,6 +115,7 @@ type LeadEditLead = {
   treatment?: string | null
   diseaseDetails?: string | null
   status?: string | null
+  subStatus?: string | null
   followUpDate?: string | null
   modeOfPayment?: string | null
   circle?: string | null
@@ -274,8 +295,12 @@ export function LeadEditDrawer({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
+  const { user } = useAuth()
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN'
   const queryClient = useQueryClient()
   const [patientNameDraft, setPatientNameDraft] = useState<string | null>(null)
+  const [alternateNumberDraft, setAlternateNumberDraft] = useState<string | null>(null)
+  const [subStatusDraft, setSubStatusDraft] = useState<string | null>(null)
   const [whatsappDraft, setWhatsappDraft] = useState<string | null>(null)
   const [surgeryDateDraft, setSurgeryDateDraft] = useState<string | null>(null)
   const [assigneeIdDraft, setAssigneeIdDraft] = useState<string | null>(null)
@@ -289,6 +314,7 @@ export function LeadEditDrawer({
   const [leadStatusSearch, setLeadStatusSearch] = useState('')
   const [leadStatusOpen, setLeadStatusOpen] = useState(false)
   const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
+  const [followUpTimeDraft, setFollowUpTimeDraft] = useState<string | null>(null)
   const [modeOfPaymentDraft, setModeOfPaymentDraft] = useState<string | null>(null)
   const [statusChangeRemarkDraftState, setStatusChangeRemarkDraftState] = useState<{
     leadId: string | null
@@ -366,6 +392,7 @@ export function LeadEditDrawer({
   })
 
   const effectivePatientName = patientNameDraft ?? lead?.patientName ?? ''
+  const effectiveAlternateNumber = alternateNumberDraft ?? (lead?.alternateNumber ?? '')
   const effectiveWhatsapp = whatsappDraft ?? (lead?.whatsapp ?? '')
   const effectiveSurgeryDate = surgeryDateDraft ?? toDateInputValue(lead?.surgeryDate)
   const effectiveAssigneeId = assigneeIdDraft ?? leadOwnershipMeta?.currentAssigneeId ?? lead?.bd?.id ?? ''
@@ -379,7 +406,9 @@ export function LeadEditDrawer({
   const currentTreatmentMasterId = lead?.treatmentMasterId ?? ''
   const effectiveCategory = categoryDraft ?? currentCategory
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
+  const effectiveSubStatus = subStatusDraft ?? (lead?.subStatus ?? '')
   const effectiveFollowUpDate = followUpDateDraft ?? toDateInputValue(lead?.followUpDate)
+  const effectiveFollowUpTime = followUpTimeDraft ?? toTimeInputValue(lead?.followUpDate)
   const effectiveModeOfPayment = modeOfPaymentDraft ?? (lead?.modeOfPayment ?? '')
   const todayDateInputValue = getTodayDateInputValue()
 
@@ -459,6 +488,7 @@ export function LeadEditDrawer({
 
   const currentStatus = lead?.status ?? 'New'
   const currentFollowUpDate = toDateInputValue(lead?.followUpDate)
+  const currentFollowUpTime = toTimeInputValue(lead?.followUpDate)
   const currentModeOfPayment = lead?.modeOfPayment ?? ''
   const remarkHistory = remarksData?.remarks ?? []
   const previousRemark = remarksData?.latestRemark ?? null
@@ -484,7 +514,9 @@ export function LeadEditDrawer({
   const showAllRemarks = Boolean(leadId) && expandedRemarksLeadId === leadId
 
   const statusChanged = effectiveLeadStatus !== currentStatus
-  const followUpDateChanged = effectiveFollowUpDate !== currentFollowUpDate
+  const followUpDateChanged =
+    effectiveFollowUpDate !== currentFollowUpDate ||
+    effectiveFollowUpTime !== currentFollowUpTime
   const modeOfPaymentChanged = effectiveModeOfPayment !== currentModeOfPayment
   const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
   const shouldValidatePastFollowUpDate =
@@ -497,14 +529,19 @@ export function LeadEditDrawer({
   const statusRequiresCity = isStatusRequiringCity(effectiveLeadStatus)
   const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
   const ageChanged = effectiveAge !== (lead?.age == null ? '' : String(lead.age))
+  const alternateNumberChanged = isSuperAdmin && (effectiveAlternateNumber !== (lead?.alternateNumber ?? ''))
+  const subStatusChanged = isSuperAdmin && (effectiveSubStatus !== (lead?.subStatus ?? ''))
   const sexChanged = effectiveSex !== currentNormalizedSex
   const cityChanged = effectiveCity !== (lead?.city ?? '')
   const professionChanged = effectiveProfession !== (lead?.profession ?? '')
   const categoryChanged = effectiveCategory !== currentCategory
-  const treatmentChanged = effectiveTreatmentMasterId !== inferredCurrentTreatmentMasterId
+  const treatmentChanged =
+    treatmentMasterIdDraft !== null &&
+    effectiveTreatmentMasterId !== inferredCurrentTreatmentMasterId
 
   const profileDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
+    alternateNumberChanged ||
     effectiveWhatsapp !== (lead?.whatsapp ?? '') ||
     effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate) ||
     ageChanged ||
@@ -515,7 +552,7 @@ export function LeadEditDrawer({
     treatmentChanged
   const assigneeDirty = effectiveAssigneeId !== currentAssigneeId
 
-  const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged
+  const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged || subStatusChanged
   const isDirty = profileDirty || assigneeDirty || statusDirty || remarkDirty
   const saveDisabled =
     saving ||
@@ -603,6 +640,7 @@ export function LeadEditDrawer({
     }
 
     const trimmedPatientName = effectivePatientName.trim()
+    const trimmedAlternateNumber = effectiveAlternateNumber.trim()
     const trimmedWhatsapp = effectiveWhatsapp.trim()
     const trimmedAge = effectiveAge.trim()
     const trimmedSex = effectiveSex.trim()
@@ -676,6 +714,10 @@ export function LeadEditDrawer({
       payload.patientName = trimmedPatientName
     }
 
+    if (alternateNumberChanged) {
+      payload.alternateNumber = trimmedAlternateNumber || null
+    }
+
     if (effectiveWhatsapp !== (lead.whatsapp ?? '')) {
       payload.whatsapp = trimmedWhatsapp || null
     }
@@ -723,11 +765,15 @@ export function LeadEditDrawer({
     }
 
     if (followUpDateChanged) {
-      payload.followUpDate = effectiveFollowUpDate || null
+      payload.followUpDate = toCombinedDateTime(effectiveFollowUpDate, effectiveFollowUpTime)
     }
 
     if (modeOfPaymentChanged) {
       payload.modeOfPayment = trimmedModeOfPayment || null
+    }
+
+    if (isSuperAdmin && subStatusChanged) {
+      payload.subStatus = effectiveSubStatus.trim() || null
     }
 
     if (Object.keys(payload).length === 0) {
@@ -802,6 +848,7 @@ export function LeadEditDrawer({
                       <LeadQrPopover
                         leadId={lead.id}
                         phoneNumber={lead.phoneNumber ?? ''}
+                        alternateNumber={lead.alternateNumber ?? ''}
                         patientName={lead.patientName}
                         triggerVariant="button"
                         buttonLabel="Lead QR"
@@ -995,7 +1042,20 @@ export function LeadEditDrawer({
 
                   <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                     <ReadonlyField label="Phone" value={formatMaskedPhone(lead.phoneNumber)} />
-                    <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
+                    {isSuperAdmin ? (
+                      <div className="space-y-1.5">
+                        <Label htmlFor="drawer-alternate-number" className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Alternate Phone</Label>
+                        <Input
+                          id="drawer-alternate-number"
+                          value={effectiveAlternateNumber}
+                          onChange={(e) => setAlternateNumberDraft(e.target.value)}
+                          disabled={!canEditLeadProfile || saving}
+                          placeholder="Enter alternate phone number"
+                        />
+                      </div>
+                    ) : (
+                      <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
+                    )}
                     <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
                     <ReadonlyField label="Current Owner" value={currentAssigneeName} />
                   </div>
@@ -1119,6 +1179,21 @@ export function LeadEditDrawer({
                         min={todayDateInputValue}
                         onChange={(e) => setFollowUpDateDraft(e.target.value)}
                         disabled={!canUpdateLeadStatus || saving}
+                        className="h-10 w-full"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-follow-up-time">
+                        Follow-up time <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+                      </Label>
+                      <Input
+                        id="drawer-follow-up-time"
+                        type="time"
+                        value={effectiveFollowUpTime}
+                        onChange={(e) => setFollowUpTimeDraft(e.target.value)}
+                        disabled={!canUpdateLeadStatus || saving || !effectiveFollowUpDate}
+                        className="h-10 w-full"
                       />
                     </div>
                   </div>
@@ -1151,6 +1226,20 @@ export function LeadEditDrawer({
                         </SelectContent>
                       </Select>
                     </div>
+
+                    {isSuperAdmin && (
+                      <div className="space-y-2">
+                        <Label htmlFor="drawer-sub-status">Sub status</Label>
+                        <Input
+                          id="drawer-sub-status"
+                          value={effectiveSubStatus}
+                          onChange={(e) => setSubStatusDraft(e.target.value)}
+                          disabled={saving}
+                          placeholder="Enter sub status"
+                          maxLength={25}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   

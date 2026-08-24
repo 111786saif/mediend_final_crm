@@ -95,8 +95,16 @@ export default async function LeadContactPage({
       description={`Record ID ${lead.leadRef || lead.id}. Actions on this page are tracked in CRM along with device & browser details.`}
     >
       <div className="space-y-4">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-2">
           <p className="text-sm font-medium text-slate-200">Contact Patient / Lead</p>
+          <div className="space-y-1 text-xs text-slate-300">
+            {lead.phoneNumber && (
+              <p><span className="font-semibold text-slate-400">Primary Phone:</span> {lead.phoneNumber}</p>
+            )}
+            {lead.alternateNumber && (
+              <p><span className="font-semibold text-cyan-300">Alternate Phone:</span> {lead.alternateNumber}</p>
+            )}
+          </div>
           <p className="mt-1 text-xs leading-5 text-slate-400">
             Choose an option below to initiate a phone call or WhatsApp message. Activity is logged in CRM.
           </p>
@@ -114,18 +122,18 @@ export default async function LeadContactPage({
             className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-cyan-500 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-cyan-400 shadow-lg shadow-cyan-500/20"
           >
             <Phone className="h-5 w-5" />
-            Click here to call
+            Call Primary Phone {lead.phoneNumber ? `(${lead.phoneNumber})` : ''}
           </a>
 
-          {hasAlternateCall ? (
+          {lead.alternateNumber && (
             <a
               href={`/api/lead-contact/${encodeURIComponent(token)}/call?target=alternate`}
-              className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-sky-400 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-sky-300 shadow-lg shadow-sky-500/20"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-amber-500 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-amber-400 shadow-lg shadow-amber-500/20"
             >
               <Phone className="h-5 w-5" />
-              Click here to call alternate number
+              Call Alternate Phone ({lead.alternateNumber})
             </a>
-          ) : null}
+          )}
 
           <a
             href={`/api/lead-contact/${encodeURIComponent(token)}/whatsapp`}
@@ -134,8 +142,20 @@ export default async function LeadContactPage({
             className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-emerald-500 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-emerald-400 shadow-lg shadow-emerald-500/20"
           >
             <MessageSquare className="h-5 w-5" />
-            Chat on WhatsApp
+            Chat on WhatsApp (Primary)
           </a>
+
+          {lead.alternateNumber && (
+            <a
+              href={`/api/lead-contact/${encodeURIComponent(token)}/whatsapp?target=alternate`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-teal-500 px-4 py-4 text-base font-semibold text-slate-950 transition hover:bg-teal-400 shadow-lg shadow-teal-500/20"
+            >
+              <MessageSquare className="h-5 w-5" />
+              Chat on WhatsApp (Alternate)
+            </a>
+          )}
         </div>
 
         <p className="text-center text-xs leading-5 text-slate-500">

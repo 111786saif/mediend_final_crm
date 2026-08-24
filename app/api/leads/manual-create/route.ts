@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
 
     const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
     const normalizedStatus = normalizeOptionalLeadText(parsed.data.status) ?? 'New Lead'
-    if (!duplicateLead && !CRM_LEAD_STATUS_OPTIONS.includes(normalizedStatus)) {
+    if (!duplicateLead && !CRM_LEAD_STATUS_OPTIONS.includes(normalizedStatus as (typeof CRM_LEAD_STATUS_OPTIONS)[number])) {
       return errorResponse('Please select a valid lead status', 400)
     }
     const effectiveStatus = duplicateLead ? DUPLICATE_LEAD_STATUS : normalizedStatus
@@ -183,6 +183,23 @@ export async function POST(request: NextRequest) {
         },
       })
     );
+
+    if (assignee.id) {
+      try {
+        await prisma.notification.create({
+          data: {
+            userId: assignee.id,
+            type: 'TASK_ASSIGNED',
+            title: 'New Lead Assigned',
+            message: `You have been assigned a new lead: ${parsed.data.patientName.trim()} (${lead.leadRef})`,
+            link: `/patient/${lead.id}`,
+            relatedId: lead.id,
+          },
+        })
+      } catch (err) {
+        console.error('Failed to create notification for assigned BD:', err)
+      }
+    }
 
     return successResponse(
       lead,

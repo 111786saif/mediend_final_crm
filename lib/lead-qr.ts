@@ -6,7 +6,7 @@ export type LeadQrAuditLead = {
   bdId: string
   leadRef: string | null
   phoneNumber: string | null
-  alternateNumber: string | null
+  alternateNumber?: string | null
   patientName: string | null
   campaignId: string | null
   campaignName: string | null

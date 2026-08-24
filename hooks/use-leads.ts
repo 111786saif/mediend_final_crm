@@ -1,9 +1,9 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPost, apiPatch } from '@/lib/api-client'
-import { getCachedLeads, cacheLeads } from '@/lib/indexeddb'
-import { useState, useEffect } from 'react'
+import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import { cacheLeads, getCachedLeads } from '@/lib/indexeddb'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 
 export interface LeadFilters {
   pipelineStage?: string
@@ -92,10 +92,15 @@ export interface Lead {
       queries?: { updatedAt?: string | Date }[]
     } | null
   } | null
+  ipdPotentialDate?: string | Date | null
+  ipdPotentialMarkedAt?: string | Date | null
   insuranceInitiateForm?: { updatedAt?: string | Date } | null
   admissionRecord?: {
+    ipdStatus?: string | null
+    ipdStatusReason?: string | null
     ipdStatusUpdatedAt?: string | Date | null
     initiatedAt?: string | Date
+    surgeryDate?: string | Date | null
   } | null
   dischargeSheet?: { updatedAt?: string | Date } | null
   caseStageHistory?: { changedAt?: string | Date }[]
