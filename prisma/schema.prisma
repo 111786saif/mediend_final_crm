@@ -818,6 +818,8 @@ model Lead {
   removeRemarks      Boolean   @default(false)
   isOldCrmLead       Boolean   @default(false)
   remarksClearedAt   DateTime?
+  removeFollowUpDate Boolean   @default(false)
+  followUpDateClearedAt DateTime?
   adId               String?
   campaignId         String?
   formId             String?
@@ -2946,6 +2948,7 @@ model BulkLeadReassignmentRun {
   pauseSeconds          Int
   subStatus             String?  @db.VarChar(25)
   removePreviousRemarks Boolean  @default(false)
+  removePreviousFollowUpDate Boolean @default(false)
   status                String   @default("queued")
   processedCount        Int      @default(0)
   currentLeadIndex      Int      @default(0)

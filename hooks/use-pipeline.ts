@@ -19,6 +19,31 @@ export interface PipelineCampaignGroup {
   campaigns: { name: string; count: number }[]
 }
 
+export interface PipelineTableResponse {
+  leads: Lead[]
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+  sortBy: PipelineSortField
+  sortDir: PipelineSortDir
+}
+
+export interface PipelineMetaResponse {
+  statusCounts: Record<Exclude<PipelineStatusBucket, 'all'>, number>
+  facetTotal: number
+  facets: {
+    categories: string[]
+    circles: string[]
+    bds: { id: string; name: string }[]
+    columnFacets: Partial<Record<PipelineMultiColumnFilterField, string[]>>
+  }
+}
+
+export interface PipelineCampaignTreeResponse {
+  campaignTree: PipelineCampaignGroup[]
+}
+
 export interface PipelinePageResponse {
   leads: Lead[]
   total: number
@@ -176,13 +201,34 @@ export function usePipelineUrlState() {
   return { state, setState, campaignSelection, setCampaignSelection }
 }
 
+const DEFAULT_STATUS_COUNTS: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
+  new_hot: 0,
+  nurture: 0,
+  follow_up: 0,
+  callback: 0,
+  opd_done: 0,
+  ipd_done: 0,
+  opd_sch: 0,
+  ipd_sch: 0,
+  dnp: 0,
+  dnp_exh: 0,
+  junk: 0,
+  outstation: 0,
+  duplicate: 0,
+  ipd_loss: 0,
+  fund_issues: 0,
+  lost: 0,
+  closed: 0,
+}
+
 export function usePipelinePage(
   options: { enabled?: boolean; filters?: string } = {}
 ) {
   const { enabled = true, filters = '' } = options
   const { state } = usePipelineUrlState()
 
-  const queryString = useMemo(() => {
+  // Table query parameters (includes pagination, sorting, search, and row filters)
+  const tableQueryString = useMemo(() => {
     const p = new URLSearchParams()
     p.set('page', String(state.page))
     p.set('pageSize', String(state.pageSize))
@@ -207,17 +253,93 @@ export function usePipelinePage(
     return p.toString()
   }, [filters, state])
 
-  const query = useQuery({
-    queryKey: ['pipeline', queryString],
-    queryFn: () => apiGet<PipelinePageResponse>(`/api/pipeline?${queryString}`),
+  // Metadata query parameters (ignores pagination and status bucket to keep counts stable)
+  const metaQueryString = useMemo(() => {
+    const p = new URLSearchParams()
+    if (state.q) p.set('q', state.q)
+    if (state.bdId !== 'all') p.set('bdId', state.bdId)
+    if (state.category !== 'all') p.set('category', state.category)
+    if (state.circle !== 'all') p.set('circle', state.circle)
+    if (state.age !== 'all') p.set('age', state.age)
+    if (state.from) p.set('from', state.from)
+    if (state.to) p.set('to', state.to)
+    if (state.campaign) {
+      p.set('campaign', state.campaign)
+      if (state.groupBy === 'disease' && state.groupValue) {
+        p.set('treatment', state.groupValue)
+      }
+    }
+    p.set('groupBy', state.groupBy)
+    if (filters) p.set('filters', filters)
+    return p.toString()
+  }, [filters, state])
+
+  // 1. Primary Table Query: Instant 30-60ms response
+  const tableQuery = useQuery({
+    queryKey: ['pipeline-table', tableQueryString],
+    queryFn: () => apiGet<PipelineTableResponse>(`/api/pipeline?${tableQueryString}`),
     enabled,
     placeholderData: (prev) => prev,
-    staleTime: 15_000,
+    staleTime: 10_000,
   })
 
+  // 2. Metadata Query: Background 60s cache
+  const metaQuery = useQuery({
+    queryKey: ['pipeline-meta', metaQueryString],
+    queryFn: () => apiGet<PipelineMetaResponse>(`/api/pipeline/meta?${metaQueryString}`),
+    enabled,
+    placeholderData: (prev) => prev,
+    staleTime: 60_000,
+  })
+
+  // 3. Campaign Tree Query: Background 120s cache
+  const treeQuery = useQuery({
+    queryKey: ['pipeline-tree', metaQueryString],
+    queryFn: () => apiGet<PipelineCampaignTreeResponse>(`/api/pipeline/campaign-tree?${metaQueryString}`),
+    enabled,
+    placeholderData: (prev) => prev,
+    staleTime: 120_000,
+  })
+
+  // Combined response data for full backward compatibility
+  const combinedData: PipelinePageResponse | undefined = useMemo(() => {
+    if (!tableQuery.data && !metaQuery.data) return undefined
+
+    return {
+      leads: tableQuery.data?.leads ?? [],
+      total: tableQuery.data?.total ?? 0,
+      page: tableQuery.data?.page ?? state.page,
+      pageSize: tableQuery.data?.pageSize ?? state.pageSize,
+      totalPages: tableQuery.data?.totalPages ?? 1,
+      sortBy: tableQuery.data?.sortBy ?? state.sort,
+      sortDir: tableQuery.data?.sortDir ?? state.dir,
+      statusCounts: metaQuery.data?.statusCounts ?? DEFAULT_STATUS_COUNTS,
+      facetTotal: metaQuery.data?.facetTotal ?? 0,
+      facets: metaQuery.data?.facets ?? {
+        categories: [],
+        circles: [],
+        bds: [],
+        columnFacets: {},
+      },
+      campaignTree: treeQuery.data?.campaignTree ?? [],
+    }
+  }, [tableQuery.data, metaQuery.data, treeQuery.data, state.page, state.pageSize, state.sort, state.dir])
+
+  const refetch = useCallback(() => {
+    tableQuery.refetch()
+    metaQuery.refetch()
+    treeQuery.refetch()
+  }, [tableQuery, metaQuery, treeQuery])
+
   return {
-    ...query,
+    ...tableQuery,
+    isLoading: tableQuery.isLoading,
+    isFetching: tableQuery.isFetching,
+    data: combinedData,
+    tableData: tableQuery.data,
+    metaData: metaQuery.data,
+    campaignTree: treeQuery.data?.campaignTree,
+    refetch,
     state,
-    data: query.data,
   }
 }

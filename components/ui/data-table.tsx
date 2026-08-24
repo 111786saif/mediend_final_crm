@@ -97,9 +97,11 @@ export function DataTable<TData, TValue>({
   })
   const [internalColumnOrder, setInternalColumnOrder] = useState<ColumnOrderState>([])
 
-  // Drag-and-drop refs for the columns dropdown
+  // Drag-and-drop state for the columns dropdown
+  const [draggingColId, setDraggingColId] = useState<string | null>(null)
+  const [dropIndicator, setDropIndicator] = useState<{ id: string; position: 'top' | 'bottom' } | null>(null)
   const dragColId = useRef<string | null>(null)
-  const dragOverColId = useRef<string | null>(null)
+  const dropTargetRef = useRef<{ id: string; position: 'top' | 'bottom' } | null>(null)
 
   const visibilityState = columnVisibility !== undefined ? columnVisibility : localColumnVisibility
   const onVisibilityChangeState = onColumnVisibilityChange !== undefined ? onColumnVisibilityChange : setLocalColumnVisibility
@@ -135,36 +137,87 @@ export function DataTable<TData, TValue>({
   })
 
   // Handle drag-and-drop reordering in the columns panel
-  const handleDragStart = (colId: string) => {
+  const handleDragStart = (e: React.DragEvent, colId: string) => {
     dragColId.current = colId
+    setDraggingColId(colId)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', colId)
   }
 
-  const handleDragEnter = (colId: string) => {
-    dragOverColId.current = colId
-  }
-
-  const handleDragEnd = () => {
-    const from = dragColId.current
-    const to = dragOverColId.current
-    if (!from || !to || from === to) {
-      dragColId.current = null
-      dragOverColId.current = null
+  const handleDragOver = (e: React.DragEvent, colId: string) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (dragColId.current === colId) {
+      if (dropIndicator) setDropIndicator(null)
+      dropTargetRef.current = null
       return
     }
 
-    // Build ordered list from current table column order
+    const rect = e.currentTarget.getBoundingClientRect()
+    const midY = rect.top + rect.height / 2
+    const position: 'top' | 'bottom' = e.clientY < midY ? 'top' : 'bottom'
+
+    if (!dropTargetRef.current || dropTargetRef.current.id !== colId || dropTargetRef.current.position !== position) {
+      const newTarget = { id: colId, position }
+      dropTargetRef.current = newTarget
+      setDropIndicator(newTarget)
+    }
+  }
+
+  const handleDragLeave = (e: React.DragEvent, colId: string) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      if (dropTargetRef.current?.id === colId) {
+        dropTargetRef.current = null
+        setDropIndicator(null)
+      }
+    }
+  }
+
+  const handleDrop = (e: React.DragEvent, targetColId: string) => {
+    e.preventDefault()
+    const from = dragColId.current
+    const target = dropTargetRef.current
+    if (!from || !target || from === target.id) {
+      setDraggingColId(null)
+      setDropIndicator(null)
+      dragColId.current = null
+      dropTargetRef.current = null
+      return
+    }
+
     const currentOrder = table.getAllLeafColumns().map((c) => c.id)
     const fromIdx = currentOrder.indexOf(from)
-    const toIdx = currentOrder.indexOf(to)
-    if (fromIdx === -1 || toIdx === -1) return
+    if (fromIdx === -1) {
+      setDraggingColId(null)
+      setDropIndicator(null)
+      dragColId.current = null
+      dropTargetRef.current = null
+      return
+    }
 
+    // Remove from previous position
     const newOrder = [...currentOrder]
     newOrder.splice(fromIdx, 1)
-    newOrder.splice(toIdx, 0, from)
-    setActiveColumnOrder(newOrder)
 
+    // Insert into target position
+    const targetIdx = newOrder.indexOf(target.id)
+    if (targetIdx !== -1) {
+      const insertIdx = target.position === 'top' ? targetIdx : targetIdx + 1
+      newOrder.splice(insertIdx, 0, from)
+      setActiveColumnOrder(newOrder)
+    }
+
+    setDraggingColId(null)
+    setDropIndicator(null)
     dragColId.current = null
-    dragOverColId.current = null
+    dropTargetRef.current = null
+  }
+
+  const handleDragEnd = () => {
+    setDraggingColId(null)
+    setDropIndicator(null)
+    dragColId.current = null
+    dropTargetRef.current = null
   }
 
   // Default CSV export handler
@@ -250,7 +303,19 @@ export function DataTable<TData, TValue>({
                   </DropdownMenuLabel>
                 </div>
                 <DropdownMenuSeparator className="my-0" />
-                <div className="py-1">
+                <div
+                  className="py-1 relative"
+                  onDragOver={(e) => {
+                    e.preventDefault()
+                    e.dataTransfer.dropEffect = 'move'
+                  }}
+                  onDragLeave={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                      setDropIndicator(null)
+                      dropTargetRef.current = null
+                    }
+                  }}
+                >
                   {table
                     .getAllColumns()
                     .filter((col) => col.getCanHide())
@@ -259,38 +324,78 @@ export function DataTable<TData, TValue>({
                         typeof col.columnDef.header === 'string'
                           ? col.columnDef.header
                           : col.id
+                      const isDragging = draggingColId === col.id
+                      const isDropTop = dropIndicator?.id === col.id && dropIndicator?.position === 'top'
+                      const isDropBottom = dropIndicator?.id === col.id && dropIndicator?.position === 'bottom'
+
                       return (
                         <div
                           key={col.id}
-                          draggable
-                          onDragStart={() => handleDragStart(col.id)}
-                          onDragEnter={() => handleDragEnter(col.id)}
-                          onDragEnd={handleDragEnd}
-                          onDragOver={(e) => e.preventDefault()}
-                          className="flex items-center gap-2 px-2 py-1.5 rounded-sm hover:bg-accent cursor-default select-none group"
+                          className="relative"
+                          onDragOver={(e) => handleDragOver(e, col.id)}
+                          onDrop={(e) => handleDrop(e, col.id)}
                         >
-                          {/* Checkbox */}
-                          <input
-                            type="checkbox"
-                            id={`col-toggle-${col.id}`}
-                            checked={col.getIsVisible()}
-                            onChange={(e) => col.toggleVisibility(e.target.checked)}
-                            className="h-4 w-4 rounded border border-input accent-primary cursor-pointer shrink-0"
-                          />
-                          {/* Label */}
-                          <label
-                            htmlFor={`col-toggle-${col.id}`}
-                            className="flex-1 text-sm capitalize cursor-pointer truncate"
+                          {/* Drop Indicator Bar (Top) */}
+                          {isDropTop && (
+                            <div className="absolute -top-1 inset-x-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full z-20 shadow-[0_0_6px_rgba(37,99,235,0.8)] pointer-events-none" />
+                          )}
+
+                          {/* Column item row */}
+                          <div
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, col.id)}
+                            onDragOver={(e) => handleDragOver(e, col.id)}
+                            onDragEnter={(e) => handleDragOver(e, col.id)}
+                            onDragLeave={(e) => handleDragLeave(e, col.id)}
+                            onDrop={(e) => handleDrop(e, col.id)}
+                            onDragEnd={handleDragEnd}
+                            className={cn(
+                              "flex items-center gap-2 px-2.5 py-1.5 rounded-sm transition-colors select-none group cursor-default relative",
+                              isDragging
+                                ? "opacity-30 bg-blue-50/40 dark:bg-blue-950/30 border border-dashed border-blue-500 dark:border-blue-400"
+                                : "hover:bg-accent/80",
+                              (isDropTop || isDropBottom) && "bg-blue-50/20 dark:bg-blue-950/30 ring-1 ring-blue-500/40"
+                            )}
                           >
-                            {colName}
-                          </label>
-                          {/* Drag handle — always visible */}
-                          <span
-                            className="cursor-grab active:cursor-grabbing shrink-0 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
-                            title="Drag to reorder"
-                          >
-                            <GripVertical className="h-4 w-4" />
-                          </span>
+                            {/* Checkbox */}
+                            <input
+                              type="checkbox"
+                              id={`col-toggle-${col.id}`}
+                              checked={col.getIsVisible()}
+                              onChange={(e) => col.toggleVisibility(e.target.checked)}
+                              className={cn(
+                                "h-4 w-4 rounded border border-input accent-primary cursor-pointer shrink-0",
+                                draggingColId && "pointer-events-none"
+                              )}
+                            />
+                            {/* Label */}
+                            <label
+                              htmlFor={`col-toggle-${col.id}`}
+                              className={cn(
+                                "flex-1 text-sm capitalize cursor-pointer truncate",
+                                draggingColId && "pointer-events-none"
+                              )}
+                            >
+                              {colName}
+                            </label>
+                            {/* Drag handle */}
+                            <span
+                              onMouseDown={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => e.stopPropagation()}
+                              className={cn(
+                                "cursor-grab active:cursor-grabbing shrink-0 text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300 transition-colors p-0.5",
+                                draggingColId && "pointer-events-none"
+                              )}
+                              title="Drag to reorder"
+                            >
+                              <GripVertical className="h-4 w-4" />
+                            </span>
+                          </div>
+
+                          {/* Drop Indicator Bar (Bottom) */}
+                          {isDropBottom && (
+                            <div className="absolute -bottom-1 inset-x-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full z-20 shadow-[0_0_6px_rgba(37,99,235,0.8)] pointer-events-none" />
+                          )}
                         </div>
                       )
                     })}

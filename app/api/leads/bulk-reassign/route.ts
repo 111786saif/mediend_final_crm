@@ -20,6 +20,7 @@ type BulkReassignBody = {
   bdUserIds?: unknown
   pauseSeconds?: unknown
   removePreviousRemarks?: unknown
+  removePreviousFollowUpDate?: unknown
   leadStatus?: unknown
   followUpDate?: unknown
   modeOfPayment?: unknown
@@ -120,6 +121,7 @@ export async function POST(request: NextRequest) {
         : [],
       pauseSeconds: parseOptionalInteger(body.pauseSeconds) ?? 0,
       removePreviousRemarks: body.removePreviousRemarks === true,
+      removePreviousFollowUpDate: body.removePreviousFollowUpDate === true,
       ...(leadStatus !== undefined ? { leadStatus } : {}),
       ...(followUpDate !== undefined ? { followUpDate } : {}),
       ...(modeOfPayment !== undefined ? { modeOfPayment } : {}),

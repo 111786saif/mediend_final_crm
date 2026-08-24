@@ -9,11 +9,20 @@ import {
 export type PipelineStatusBucket =
   | 'all'
   | 'new_hot'
+  | 'nurture'
   | 'follow_up'
+  | 'callback'
   | 'opd_done'
   | 'ipd_done'
+  | 'opd_sch'
+  | 'ipd_sch'
   | 'dnp'
+  | 'dnp_exh'
   | 'junk'
+  | 'outstation'
+  | 'duplicate'
+  | 'ipd_loss'
+  | 'fund_issues'
   | 'lost'
   | 'closed'
 
@@ -80,6 +89,10 @@ const STATUS_NORMALIZE: Record<string, string> = {
   'supply gap': 'Supply Gap',
   'sx not suggested': 'SX Not Suggested',
   'language barrier': 'Language Barrier',
+  'fund issued': 'Fund Issued',
+  'policy issued': 'Policy Issued',
+  'policy booked': 'Policy Booked',
+  'order booked': 'Order Booked',
 }
 
 export function normalizeLeadStatus(status: string | null | undefined): string {
@@ -95,15 +108,59 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   const s = normalizeLeadStatus(status)
   const lower = s.toLowerCase()
 
-  if (s === OPD_DONE_LABEL || lower.includes('opd done')) {
+  // 1. OPD Done
+  if (s === OPD_DONE_LABEL || lower.includes('opd done') || s === '11') {
     return 'opd_done'
   }
+  // 2. IPD Done
+  if (s === 'IPD Done' || lower.includes('ipd done') || s === '13') {
+    return 'ipd_done'
+  }
+  // 3. IPD Schedule
+  if (s === 'IPD Schedule' || lower.includes('ipd schedule') || s === '14') {
+    return 'ipd_sch'
+  }
+  // 4. OPD Schedule
+  if (isOpdScheduledStatus(status) || s === 'OPD Schedule' || s === '12') {
+    return 'opd_sch'
+  }
+  // 5. Callback: ONLY Callback
+  if (
+    ['Call Back (SD)', 'Call Back (T)', 'Call Back Next Week', 'Call Back Next Month'].includes(s) ||
+    lower.includes('call back') ||
+    lower.includes('callback') ||
+    ['19', '20', '21', '22'].includes(s)
+  ) {
+    return 'callback'
+  }
+  // 6. Follow-up: ONLY Follow-up
   if (
     [
-      'New',
-      'New Lead',
-      'Hot Lead',
-      'Interested',
+      'Follow-up (1-3)',
+      'Follow-up 1',
+      'Follow-up 2',
+      'Follow-up 3',
+      'Follow-up 4',
+      'Follow-up 5',
+      'Follow-up',
+    ].includes(s) ||
+    lower.includes('follow') ||
+    ['1', '2', '3', '35'].includes(s)
+  ) {
+    return 'follow_up'
+  }
+  // 7. Fund Issues: ONLY Fund Issues
+  if (
+    ['Fund Issues', 'Fund Issue'].includes(s) ||
+    lower.includes('fund issue') ||
+    lower.includes('fund issues') ||
+    s === '10'
+  ) {
+    return 'fund_issues'
+  }
+  // 8. Nurture: ONLY Nurture
+  if (
+    [
       'Nurture',
       'Nurture 1',
       'Nurture 2',
@@ -116,65 +173,87 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
       'Nuture 4',
       'Nuture 5',
     ].includes(s) ||
+    lower.includes('nurture') ||
+    lower.includes('nuture') ||
+    s === '37'
+  ) {
+    return 'nurture'
+  }
+  // 9. New / Hot / Interested (ONLY New, Hot, Interested)
+  if (
+    [
+      'New',
+      'New Lead',
+      'Hot Lead',
+      'Interested',
+    ].includes(s) ||
     lower.includes('new') ||
     lower.includes('hot') ||
     lower.includes('interested') ||
-    lower.includes('nurture') ||
-    lower.includes('nuture')
+    ['27', '28', '39'].includes(s)
   ) {
     return 'new_hot'
   }
-  if (s === 'Junk' || s === 'Invalid Number' || lower.includes('junk') || lower.includes('invalid number')) {
+  // 10. Junk (ONLY Junk)
+  if (s === 'Junk' || lower === 'junk' || s === '26') {
     return 'junk'
   }
+  // 11. Out of Station (ONLY Out of station)
   if (
-    [
-      'Follow-up (1-3)',
-      'Follow-up 1',
-      'Follow-up 2',
-      'Follow-up 3',
-      'Follow-up 4',
-      'Follow-up 5',
-      'Follow-up',
-      'Call Back (SD)',
-      'Call Back (T)',
-      'Call Back Next Week',
-      'Call Back Next Month',
-      'Out of Station',
-      'Out of Station follow-up',
-      'Out of station follow-up',
-      'IPD Schedule',
-      OPD_SCHEDULED_LABEL,
-      'OPD Schedule',
-    ].includes(s) ||
-    lower.includes('follow') ||
-    lower.includes('call back') ||
-    (lower.includes('schedule') && !lower.includes('ipd done'))
+    ['Out of Station', 'Out of Station follow-up', 'Out of station follow-up'].includes(s) ||
+    lower.includes('out of station') ||
+    s === '16' ||
+    s === '42'
   ) {
-    return 'follow_up'
+    return 'outstation'
   }
-  if (s === 'IPD Done' || lower.includes('ipd done')) {
-    return 'ipd_done'
+  // 12. Duplicate (ONLY Duplicate)
+  if (
+    ['Duplicate lead', 'Duplicate Lead', 'Duplicate'].includes(s) ||
+    lower.includes('duplicate') ||
+    s === '34'
+  ) {
+    return 'duplicate'
   }
-  if (['DNP', 'DNP-1', 'DNP-2', 'DNP-3', 'DNP-4', 'DNP-5', 'DNP Exhausted', 'DNP (1-5, Exhausted)'].includes(s) || lower.includes('dnp')) {
+  // 13. IPD Lost (ONLY IPD Lost)
+  if (s === 'IPD Lost' || lower.includes('ipd lost') || s === '15') {
+    return 'ipd_loss'
+  }
+  // 14. DNP Exhausted (ONLY DNP Exhausted)
+  if (['DNP Exhausted', 'DNP (1-5, Exhausted)'].includes(s) || lower.includes('exhausted') || s === '9') {
+    return 'dnp_exh'
+  }
+  // 15. DNP: all other DNP
+  if (
+    ['DNP', 'DNP-1', 'DNP-2', 'DNP-3', 'DNP-4', 'DNP-5'].includes(s) ||
+    lower.includes('dnp') ||
+    lower.includes('did not pick') ||
+    lower.includes('not connected') ||
+    ['4', '5', '6', '7', '8'].includes(s)
+  ) {
     return 'dnp'
   }
+  // 16. Closed / Won
   if (
-    ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'Order Booked', 'Policy Booked', 'Policy Issued'].includes(s) ||
+    ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'Order Booked', 'Policy Booked', 'Policy Issued', 'Fund Issued'].includes(s) ||
     lower.includes('closed') ||
     (lower.includes('done') && !lower.includes('ipd')) ||
-    lower.includes('booked')
+    lower.includes('booked') ||
+    ['25', '24', '38', '29', '30', '31', '32', '40'].includes(s)
   ) {
     return 'closed'
   }
+  // 17. Lost / Inactive
   if (
-    ['Lost', 'Churned', 'IPD Lost', 'Fund Issues', 'Not Interested', 'Duplicate lead', 'Already Insured', 'SX Not Suggested', 'Language Barrier'].includes(s) ||
+    ['Lost', 'Churned', 'Not Interested', 'Already Insured', 'SX Not Suggested', 'Language Barrier', 'Invalid Number', 'Supply Gap'].includes(s) ||
     lower.includes('lost') ||
     lower.includes('churn') ||
-    lower.includes('duplicate') ||
     lower.includes('not interested') ||
-    lower.includes('fund issues') ||
-    lower.includes('language barrier')
+    lower.includes('language barrier') ||
+    lower.includes('invalid') ||
+    lower.includes('supply gap') ||
+    lower.includes('sx not suggested') ||
+    ['17', '18', '23', '33', '36', '41'].includes(s)
   ) {
     return 'lost'
   }
@@ -183,11 +262,20 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
 
 export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>, string> = {
   new_hot: 'New / Hot',
+  nurture: 'Nurture',
   follow_up: 'Follow-up',
+  callback: 'Callback',
   opd_done: 'OPD Done',
   ipd_done: 'IPD Done',
+  opd_sch: 'OPD Scheduled',
+  ipd_sch: 'IPD Scheduled',
   dnp: 'DNP',
-  junk: 'Junk / Invalid',
+  dnp_exh: 'DNP Exhausted',
+  junk: 'Junk',
+  outstation: 'Out of Station',
+  duplicate: 'Duplicate',
+  ipd_loss: 'IPD Lost',
+  fund_issues: 'Fund Issues',
   lost: 'Lost / Inactive',
   closed: 'Closed / Won',
 }
@@ -195,11 +283,20 @@ export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>
 export function countBuckets(leads: { status?: string | null }[]) {
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
+    nurture: 0,
     follow_up: 0,
+    callback: 0,
     opd_done: 0,
     ipd_done: 0,
+    opd_sch: 0,
+    ipd_sch: 0,
     dnp: 0,
+    dnp_exh: 0,
     junk: 0,
+    outstation: 0,
+    duplicate: 0,
+    ipd_loss: 0,
+    fund_issues: 0,
     lost: 0,
     closed: 0,
   }

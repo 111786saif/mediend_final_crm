@@ -122,15 +122,6 @@ interface Target {
   targetValue: number
 }
 
-type NamedMasterItem = {
-  id: string
-  name: string
-}
-
-type MasterListResponse<TItem> = {
-  items: TItem[]
-}
-
 type BulkLeadReassignOptionsResponse = {
   canBulkReassign: boolean
   assignableUsers: Array<{
@@ -553,6 +544,31 @@ function formatTableDateTime(value: unknown) {
   return Number.isNaN(parsed.getTime()) ? String(value) : format(parsed, 'dd MMM yyyy, hh:mm a')
 }
 
+function renderTableDateTime(value: unknown, customColorClass?: string) {
+  if (!value) return <span className="text-muted-foreground text-xs">—</span>
+  const parsed = new Date(String(value))
+  if (Number.isNaN(parsed.getTime())) {
+    return <span className="text-muted-foreground text-xs">{String(value)}</span>
+  }
+  const hasTime = parsed.getHours() !== 0 || parsed.getMinutes() !== 0
+  const dateStr = format(parsed, 'dd MMM yyyy')
+  const timeStr = hasTime ? format(parsed, 'hh:mm a') : null
+
+  return (
+    <div className="flex flex-col gap-0.5 text-xs text-left">
+      <span className={cn("font-medium whitespace-nowrap text-[13px] text-foreground/90", customColorClass)}>
+        {dateStr}
+      </span>
+      {timeStr && (
+        <span className={cn("font-medium whitespace-nowrap text-[12px] text-muted-foreground/90", customColorClass)}>
+          {timeStr}
+        </span>
+      )}
+    </div>
+  )
+}
+
+
 function isPastFollowUpDate(value: unknown) {
   if (!value) return false
   const parsed = new Date(String(value))
@@ -595,13 +611,13 @@ function getLeadStageBadge(lead: Lead) {
 
     return hasLeadOpdScheduled(lead)
       ? {
-          className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
-          label: 'OPD Schedule',
-        }
+        className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
+        label: 'OPD Schedule',
+      }
       : {
-          className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
-          label: 'OPD Schedule',
-        }
+        className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
+        label: 'OPD Schedule',
+      }
   }
 
   return getCaseStageBadgeConfig(String(lead.caseStage))
@@ -771,22 +787,34 @@ function PipelinePageFallback({ variant }: { variant: 'bd' | 'team-lead' }) {
               <h1 className="text-xl font-bold tracking-tight md:text-2xl text-foreground">{title}</h1>
               <p className="text-xs text-muted-foreground">{subtitle}</p>
             </div>
-            {/* Flashy Teal Banner: Total Leads */}
-            <div className="relative overflow-hidden flex items-center justify-between px-4 py-1.5 bg-gradient-to-r from-teal-500/15 via-emerald-500/10 to-teal-500/20 dark:from-teal-950/60 dark:via-emerald-950/40 dark:to-teal-900/50 border border-teal-500/30 dark:border-teal-500/40 rounded-xl shadow-md shadow-teal-500/10 min-w-[240px] sm:min-w-[280px] backdrop-blur-md">
-              <div className="relative flex flex-col text-left flex-1 min-w-0 pr-3">
-                <span className="text-[10px] font-black tracking-widest uppercase text-teal-700 dark:text-teal-300 leading-none mb-1">
-                  Total Leads
-                </span>
-                <Skeleton className="h-5 w-20 bg-teal-500/20 rounded-md" />
-              </div>
-              <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-md shadow-teal-500/30 shrink-0">
-                <Database className="w-4 h-4" />
+            <div className="flex items-center gap-3 text-right">
+              {/* Month Selector Dropdown (Disabled during loading) */}
+              <Select value="all" disabled>
+                <SelectTrigger className="w-[130px] h-9 text-xs bg-background/80 border-zinc-400 dark:border-zinc-500 rounded-xl shadow-xs font-semibold">
+                  <SelectValue placeholder="Select Month" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[200px]">
+                  <SelectItem value="all">All Months</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Flashy Teal Banner: Total Leads */}
+              <div className="relative overflow-hidden flex items-center justify-between px-4 py-1.5 bg-gradient-to-r from-teal-500/15 via-emerald-500/10 to-teal-500/20 dark:from-teal-950/60 dark:via-emerald-950/40 dark:to-teal-900/50 border border-teal-500/30 dark:border-teal-500/40 rounded-xl shadow-md shadow-teal-500/10 min-w-[240px] sm:min-w-[280px] backdrop-blur-md">
+                <div className="relative flex flex-col text-left flex-1 min-w-0 pr-3">
+                  <span className="text-[10px] font-black tracking-widest uppercase text-teal-700 dark:text-teal-300 leading-none mb-1">
+                    Total Leads
+                  </span>
+                  <Skeleton className="h-5 w-20 bg-teal-500/20 rounded-md" />
+                </div>
+                <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-md shadow-teal-500/30 shrink-0">
+                  <Database className="w-4 h-4" />
+                </div>
               </div>
             </div>
           </div>
         </header>
         <main className="flex-1 flex flex-col pt-1.5 px-3 pb-2 md:pt-1.5 md:px-4 md:pb-3 overflow-hidden">
-          <PipelineStatusCards selected="all" onSelect={() => {}} isLoading />
+          <PipelineStatusCards selected="all" onSelect={() => { }} isLoading />
         </main>
       </div>
     </AuthenticatedLayout>
@@ -840,30 +868,89 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     return [...columnOrder.filter((id) => defaultIds.includes(id)), ...missing]
   }, [availableColumns, columnOrder])
 
-  // Drag-to-reorder refs for the Columns dropdown
+  // Drag-to-reorder state for the Columns dropdown
+  const [pipelineDraggingColId, setPipelineDraggingColId] = useState<string | null>(null)
+  const [pipelineDropIndicator, setPipelineDropIndicator] = useState<{ id: string; position: 'top' | 'bottom' } | null>(null)
   const dragColRef = useRef<string | null>(null)
-  const dragOverColRef = useRef<string | null>(null)
-  const handleColDragStart = (id: string) => { dragColRef.current = id }
-  const handleColDragEnter = (id: string) => { dragOverColRef.current = id }
-  const handleColDragEnd = () => {
+  const dropTargetColRef = useRef<{ id: string; position: 'top' | 'bottom' } | null>(null)
+
+  const handleColDragStart = (e: React.DragEvent, id: string) => {
+    dragColRef.current = id
+    setPipelineDraggingColId(id)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', id)
+  }
+
+  const handleColDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (dragColRef.current === id) {
+      if (pipelineDropIndicator) setPipelineDropIndicator(null)
+      dropTargetColRef.current = null
+      return
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect()
+    const midY = rect.top + rect.height / 2
+    const position: 'top' | 'bottom' = e.clientY < midY ? 'top' : 'bottom'
+
+    if (!dropTargetColRef.current || dropTargetColRef.current.id !== id || dropTargetColRef.current.position !== position) {
+      const target = { id, position }
+      dropTargetColRef.current = target
+      setPipelineDropIndicator(target)
+    }
+  }
+
+  const handleColDragLeave = (e: React.DragEvent, id: string) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      if (dropTargetColRef.current?.id === id) {
+        dropTargetColRef.current = null
+        setPipelineDropIndicator(null)
+      }
+    }
+  }
+
+  const handleColDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault()
     const from = dragColRef.current as PipelineColumnId | null
-    const to = dragOverColRef.current as PipelineColumnId | null
-    dragColRef.current = null; dragOverColRef.current = null
-    if (!from || !to || from === to) return
+    const target = dropTargetColRef.current || { id: targetId, position: 'bottom' as const }
+    if (!from || !target || from === target.id) {
+      setPipelineDraggingColId(null)
+      setPipelineDropIndicator(null)
+      dragColRef.current = null
+      dropTargetColRef.current = null
+      return
+    }
+
     setColumnOrder(() => {
       const base: PipelineColumnId[] = [...orderedAvailableColumnIds]
       const fromIdx = base.indexOf(from)
-      const toIdx = base.indexOf(to)
-      if (fromIdx === -1 || toIdx === -1) return base
+      if (fromIdx === -1) return base
       const next = [...base]
       next.splice(fromIdx, 1)
-      next.splice(toIdx, 0, from)
+      const targetIdx = next.indexOf(target.id as PipelineColumnId)
+      if (targetIdx !== -1) {
+        const insertIdx = target.position === 'top' ? targetIdx : targetIdx + 1
+        next.splice(insertIdx, 0, from)
+      }
       return next
     })
+
+    setPipelineDraggingColId(null)
+    setPipelineDropIndicator(null)
+    dragColRef.current = null
+    dropTargetColRef.current = null
+  }
+
+  const handleColDragEnd = () => {
+    setPipelineDraggingColId(null)
+    setPipelineDropIndicator(null)
+    dragColRef.current = null
+    dropTargetColRef.current = null
   }
 
   const [searchInput, setSearchInput] = useState(state.q)
-  const debouncedSearch = useDebouncedValue(searchInput, 300)
+  const debouncedSearch = useDebouncedValue(searchInput, 400)
   const isBulkReassignAllowedRole =
     user?.role !== 'BD' && user?.role !== 'USER'
   const canCreateManualLead = new Set([
@@ -953,7 +1040,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         const next = { ...prev, [key]: selected }
         try {
           sessionStorage.setItem(`pipeline-column-filters-${variant}`, JSON.stringify(next))
-        } catch {}
+        } catch { }
         return next
       })
       setState({ page: 1 }, { resetPage: false })
@@ -968,7 +1055,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     setColumnFilters({})
     try {
       sessionStorage.removeItem(`pipeline-column-filters-${variant}`)
-    } catch {}
+    } catch { }
     setState({ page: 1 }, { resetPage: false })
   }, [setState, variant])
 
@@ -1027,36 +1114,22 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     enabled: variant === 'bd' && !!user?.id,
   })
 
-  const { data: treatmentMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
-    queryKey: ['pipeline-master-filter', 'treatments'],
-    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/treatments?includeInactive=true'),
-    staleTime: 5 * 60_000,
-    retry: false,
-  })
-  const { data: treatmentCategoryMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
-    queryKey: ['pipeline-master-filter', 'treatment-categories'],
-    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/treatment-categories?includeInactive=true'),
-    staleTime: 5 * 60_000,
-    retry: false,
-  })
-
-  const { data: hospitalMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
-    queryKey: ['pipeline-master-filter', 'hospitals'],
-    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/hospitals?includeInactive=true'),
-    staleTime: 5 * 60_000,
-    retry: false,
-  })
-
-  const { data: doctorMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
-    queryKey: ['pipeline-master-filter', 'doctors'],
-    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/doctors?includeInactive=true'),
-    staleTime: 5 * 60_000,
-    retry: false,
-  })
-
-  const { data: insuranceMasterData } = useQuery<MasterListResponse<NamedMasterItem>, Error>({
-    queryKey: ['pipeline-master-filter', 'insurance'],
-    queryFn: () => apiGet<MasterListResponse<NamedMasterItem>>('/api/masters/insurance?includeInactive=true'),
+  const { data: masterOptions } = useQuery<{
+    treatments: string[]
+    treatmentCategories: string[]
+    hospitals: string[]
+    doctors: string[]
+    insurance: string[]
+  }, Error>({
+    queryKey: ['pipeline-master-options'],
+    queryFn: () =>
+      apiGet<{
+        treatments: string[]
+        treatmentCategories: string[]
+        hospitals: string[]
+        doctors: string[]
+        insurance: string[]
+      }>('/api/masters/pipeline-options'),
     staleTime: 5 * 60_000,
     retry: false,
   })
@@ -1092,27 +1165,17 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         isPipelineDateFilterColumn(column.id)
           ? []
           : mergeUniqueSortedLists(
-              data?.facets.columnFacets?.[column.id as PipelineMultiColumnFilterField] ?? [],
-              rawPageLeads.map((lead) => getPipelineColumnFilterValue(lead, column.id))
-            ),
+            data?.facets.columnFacets?.[column.id as PipelineMultiColumnFilterField] ?? [],
+            rawPageLeads.map((lead) => getPipelineColumnFilterValue(lead, column.id))
+          ),
       ])
     ) as Record<PipelineColumnId, string[]>
 
-    const treatmentMasterOptions = uniqueSorted(
-      (treatmentMasterData?.items ?? []).map((item) => item.name)
-    )
-    const categoryMasterOptions = uniqueSorted(
-      (treatmentCategoryMasterData?.items ?? []).map((item) => item.name)
-    )
-    const hospitalMasterOptions = uniqueSorted(
-      (hospitalMasterData?.items ?? []).map((item) => item.name)
-    )
-    const doctorMasterOptions = uniqueSorted(
-      (doctorMasterData?.items ?? []).map((item) => item.name)
-    )
-    const insuranceMasterOptions = uniqueSorted(
-      (insuranceMasterData?.items ?? []).map((item) => item.name)
-    )
+    const treatmentMasterOptions = uniqueSorted(masterOptions?.treatments ?? [])
+    const categoryMasterOptions = uniqueSorted(masterOptions?.treatmentCategories ?? [])
+    const hospitalMasterOptions = uniqueSorted(masterOptions?.hospitals ?? [])
+    const doctorMasterOptions = uniqueSorted(masterOptions?.doctors ?? [])
+    const insuranceMasterOptions = uniqueSorted(masterOptions?.insurance ?? [])
 
     options.treatment = treatmentMasterOptions
     options.category = categoryMasterOptions
@@ -1132,11 +1195,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     data?.facets.columnFacets,
     data?.facets.circles,
     rawPageLeads,
-    treatmentMasterData,
-    treatmentCategoryMasterData,
-    hospitalMasterData,
-    doctorMasterData,
-    insuranceMasterData,
+    masterOptions,
   ])
 
   const getHeaderFilterProps = useCallback(
@@ -1283,6 +1342,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     mutationFn: (payload: {
       bdUserIds: string[]
       removePreviousRemarks: boolean
+      removePreviousFollowUpDate?: boolean
       leadStatus?: string
       followUpDate?: string
       modeOfPayment?: string
@@ -1349,6 +1409,41 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     const query = searchParams.toString()
     return query ? `${pathname}?${query}` : pathname
   }, [pathname, searchParams])
+
+  // Prefetch next page for instant (0ms) pagination transition
+  useEffect(() => {
+    if (page < totalPages) {
+      const nextPage = page + 1
+      const p = new URLSearchParams()
+      p.set('page', String(nextPage))
+      p.set('pageSize', String(pageSize))
+      if (state.q) p.set('q', state.q)
+      if (state.status !== 'all') p.set('status', state.status)
+      if (state.bdId !== 'all') p.set('bdId', state.bdId)
+      if (state.category !== 'all') p.set('category', state.category)
+      if (state.circle !== 'all') p.set('circle', state.circle)
+      if (state.age !== 'all') p.set('age', state.age)
+      if (state.from) p.set('from', state.from)
+      if (state.to) p.set('to', state.to)
+      if (state.campaign) {
+        p.set('campaign', state.campaign)
+        if (state.groupBy === 'disease' && state.groupValue) {
+          p.set('treatment', state.groupValue)
+        }
+      }
+      p.set('groupBy', state.groupBy)
+      p.set('sort', state.sort)
+      p.set('dir', state.dir)
+      if (serverColumnFilters) p.set('filters', serverColumnFilters)
+      const nextQueryString = p.toString()
+
+      queryClient.prefetchQuery({
+        queryKey: ['pipeline-table', nextQueryString],
+        queryFn: () => apiGet(`/api/pipeline?${nextQueryString}`),
+        staleTime: 10_000,
+      })
+    }
+  }, [page, totalPages, pageSize, state, serverColumnFilters, queryClient])
 
   // -----------------------------------------------------------------------
   // TanStack ColumnDef array — exact 1-to-1 port of PipelineRow + HeaderCell
@@ -1487,16 +1582,13 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
     addCol('assignDate', {
       header: () => <HeaderCell label="Assign Date" {...getHeaderFilterProps('assignDate')} />,
-      cell: ({ row }) => <span className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">{formatTableDateTime(row.original.assignedDate)}</span>,
+      cell: ({ row }) => renderTableDateTime(row.original.assignedDate),
       meta: { headerStyle: { minWidth: 120 } },
     })
 
     addCol('leadDate', {
       header: () => <HeaderCell label="Lead Date" sortField="date" state={state} onSort={handleSort} {...getHeaderFilterProps('leadDate')} />,
-      cell: ({ row }) => {
-        const receipt = getLeadReceiptDate(row.original)
-        return <span className="whitespace-nowrap text-sm text-muted-foreground">{receipt ? format(receipt, 'dd MMM yyyy, hh:mm a') : '—'}</span>
-      },
+      cell: ({ row }) => renderTableDateTime(getLeadReceiptDate(row.original)),
       meta: { headerStyle: { minWidth: 130 } },
     })
 
@@ -1640,7 +1732,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       header: () => <HeaderCell label="Follow Up Date" sortField="followUpDate" state={state} onSort={handleSort} {...getHeaderFilterProps('followUpDate')} />,
       cell: ({ row }) => {
         const past = isPastFollowUpDate(row.original.followUpDate)
-        return <span className={`whitespace-nowrap text-sm ${past ? 'font-medium text-red-500' : ''}`}>{formatTableDate(row.original.followUpDate)}</span>
+        return renderTableDateTime(row.original.followUpDate, past ? 'text-rose-600 dark:text-rose-400 font-semibold' : undefined)
       },
       meta: { headerStyle: { minWidth: 120 } },
     })
@@ -1650,7 +1742,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     })
     addCol('surgeryDate', {
       header: () => <HeaderCell label="Surgery Date" {...getHeaderFilterProps('surgeryDate')} />,
-      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{formatTableDate(getLeadSurgeryDateValue(row.original))}</span>,
+      cell: ({ row }) => renderTableDateTime(getLeadSurgeryDateValue(row.original)),
+      meta: { headerStyle: { minWidth: 120 } },
     })
     addCol('planningTreatment', {
       header: () => <HeaderCell label="Planning Treatment" {...getHeaderFilterProps('planningTreatment')} />,
@@ -1688,7 +1781,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     })
     addCol('createDate', {
       header: () => <HeaderCell label="Create Date" {...getHeaderFilterProps('createDate')} />,
-      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{formatTableDateTime(row.original.createdDate)}</span>,
+      cell: ({ row }) => renderTableDateTime(row.original.createdDate),
+      meta: { headerStyle: { minWidth: 120 } },
     })
     addCol('modifyBy', {
       header: () => <HeaderCell label="Modify By" {...getHeaderFilterProps('modifyBy')} />,
@@ -1696,7 +1790,8 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     })
     addCol('modifyDate', {
       header: () => <HeaderCell label="Modified Date" {...getHeaderFilterProps('modifyDate')} />,
-      cell: ({ row }) => <span className="whitespace-nowrap text-sm">{formatTableDateTime(row.original.updatedDate)}</span>,
+      cell: ({ row }) => renderTableDateTime(row.original.updatedDate),
+      meta: { headerStyle: { minWidth: 120 } },
     })
     addCol('dupCount', {
       header: () => <HeaderCell label="Duplicate Count" {...getHeaderFilterProps('dupCount')} />,
@@ -1804,6 +1899,30 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
               </p>
             </div>
             <div className="flex items-center gap-3 text-right">
+              {/* Month Selector Dropdown */}
+              <Select
+                value={columnFilters.month?.[0] || 'all'}
+                onValueChange={(val) => {
+                  if (val === 'all') {
+                    handleColumnFilterChange('month', [])
+                  } else {
+                    handleColumnFilterChange('month', [val])
+                  }
+                }}
+              >
+                <SelectTrigger className="w-[130px] h-9 text-xs bg-background/80 hover:bg-background border-zinc-400 dark:border-zinc-500 rounded-xl shadow-xs font-semibold">
+                  <SelectValue placeholder="Select Month" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[200px]">
+                  <SelectItem value="all">All Months</SelectItem>
+                  {PIPELINE_MONTH_FILTER_OPTIONS.map((m) => (
+                    <SelectItem key={m} value={m}>
+                      {m}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               {/* Flashy Teal Banner: Total Leads (Compact, Icon on Right) */}
               <div className="relative overflow-hidden flex items-center justify-between px-4 py-1.5 bg-gradient-to-r from-teal-600/15 via-emerald-500/10 to-teal-500/20 dark:from-teal-950/60 dark:via-emerald-950/40 dark:to-teal-900/50 border border-teal-500/30 dark:border-teal-500/40 rounded-xl shadow-md shadow-teal-500/10 min-w-[240px] sm:min-w-[280px] backdrop-blur-md group hover:border-teal-400/60 transition-all duration-300">
                 {/* Ambient glowing background blur */}
@@ -2025,44 +2144,97 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                         </div>
                         <DropdownMenuSeparator className="my-0" />
                         {/* Draggable column rows */}
-                        <div className="py-1">
+                        <div
+                          className="py-1 relative"
+                          onDragOver={(e) => {
+                            e.preventDefault()
+                            e.dataTransfer.dropEffect = 'move'
+                          }}
+                          onDragLeave={(e) => {
+                            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                              setPipelineDropIndicator(null)
+                              dropTargetColRef.current = null
+                            }
+                          }}
+                        >
                           {orderedAvailableColumnIds.map((colId) => {
                             const column = availableColumns.find((c) => c.id === colId)
                             if (!column) return null
+                            const isDragging = pipelineDraggingColId === colId
+                            const isDropTop = pipelineDropIndicator?.id === colId && pipelineDropIndicator?.position === 'top'
+                            const isDropBottom = pipelineDropIndicator?.id === colId && pipelineDropIndicator?.position === 'bottom'
+                            const draggingColLabel = availableColumns.find((c) => c.id === pipelineDraggingColId)?.label || 'Column'
+
                             return (
                               <div
                                 key={colId}
-                                draggable
-                                onDragStart={() => handleColDragStart(colId)}
-                                onDragEnter={() => handleColDragEnter(colId)}
-                                onDragEnd={handleColDragEnd}
-                                onDragOver={(e) => e.preventDefault()}
-                                className="flex items-center gap-2 px-2.5 py-1.5 rounded-sm hover:bg-accent cursor-default select-none transition-colors"
+                                className="relative"
+                                onDragOver={(e) => handleColDragOver(e, colId)}
+                                onDrop={(e) => handleColDrop(e, colId)}
                               >
-                                <input
-                                  type="checkbox"
-                                  id={`pipeline-col-${colId}`}
-                                  checked={visibleColumns[colId] ?? false}
-                                  onChange={(e) =>
-                                    setVisibleColumns((current) => ({
-                                      ...current,
-                                      [colId]: e.target.checked,
-                                    }))
-                                  }
-                                  className="h-4 w-4 rounded border border-input accent-indigo-600 cursor-pointer shrink-0"
-                                />
-                                <label
-                                  htmlFor={`pipeline-col-${colId}`}
-                                  className="flex-1 text-sm font-medium cursor-pointer truncate"
+                                {/* Drop Indicator Bar (Top) */}
+                                {isDropTop && (
+                                  <div className="absolute -top-1 inset-x-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full z-20 shadow-[0_0_6px_rgba(37,99,235,0.8)] pointer-events-none" />
+                                )}
+
+                                {/* Draggable Column Row */}
+                                <div
+                                  draggable
+                                  onDragStart={(e) => handleColDragStart(e, colId)}
+                                  onDragOver={(e) => handleColDragOver(e, colId)}
+                                  onDragEnter={(e) => handleColDragOver(e, colId)}
+                                  onDragLeave={(e) => handleColDragLeave(e, colId)}
+                                  onDrop={(e) => handleColDrop(e, colId)}
+                                  onDragEnd={handleColDragEnd}
+                                  className={cn(
+                                    "flex items-center gap-2 px-2.5 py-1.5 rounded-sm transition-colors select-none group cursor-default relative",
+                                    isDragging
+                                      ? "opacity-30 bg-blue-50/40 dark:bg-blue-950/30 border border-dashed border-blue-500 dark:border-blue-400"
+                                      : "hover:bg-accent",
+                                    (isDropTop || isDropBottom) && "bg-blue-50/20 dark:bg-blue-950/30 ring-1 ring-blue-500/40"
+                                  )}
                                 >
-                                  {column.label}
-                                </label>
-                                <span
-                                  className="cursor-grab active:cursor-grabbing shrink-0 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
-                                  title="Drag to reorder"
-                                >
-                                  <GripVertical className="h-4 w-4" />
-                                </span>
+                                  <input
+                                    type="checkbox"
+                                    id={`pipeline-col-${colId}`}
+                                    checked={visibleColumns[colId] ?? false}
+                                    onChange={(e) =>
+                                      setVisibleColumns((current) => ({
+                                        ...current,
+                                        [colId]: e.target.checked,
+                                      }))
+                                    }
+                                    className={cn(
+                                      "h-4 w-4 rounded border border-input accent-indigo-600 cursor-pointer shrink-0",
+                                      pipelineDraggingColId && "pointer-events-none"
+                                    )}
+                                  />
+                                  <label
+                                    htmlFor={`pipeline-col-${colId}`}
+                                    className={cn(
+                                      "flex-1 text-sm font-medium cursor-pointer truncate",
+                                      pipelineDraggingColId && "pointer-events-none"
+                                    )}
+                                  >
+                                    {column.label}
+                                  </label>
+                                  <span
+                                    onMouseDown={(e) => e.stopPropagation()}
+                                    onPointerDown={(e) => e.stopPropagation()}
+                                    className={cn(
+                                      "cursor-grab active:cursor-grabbing shrink-0 text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300 transition-colors p-0.5",
+                                      pipelineDraggingColId && "pointer-events-none"
+                                    )}
+                                    title="Drag to reorder"
+                                  >
+                                    <GripVertical className="h-4 w-4" />
+                                  </span>
+                                </div>
+
+                                {/* Drop Indicator Bar (Bottom) */}
+                                {isDropBottom && (
+                                  <div className="absolute -bottom-1 inset-x-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full z-20 shadow-[0_0_6px_rgba(37,99,235,0.8)] pointer-events-none" />
+                                )}
                               </div>
                             )
                           })}
@@ -2211,7 +2383,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     className="flex-1 flex flex-col min-h-0 space-y-0 overflow-hidden"
                     columnVisibility={visibleColumns as Record<string, boolean>}
                     tableContainerClassName="border-0 rounded-none shadow-none flex-1 flex flex-col min-h-0 h-full overflow-hidden"
-                    tableHeaderClassName="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-b border-border/80 text-foreground shadow-xs [&_tr]:border-b [&_tr]:border-border/60"
+                    tableHeaderClassName="!static [&_th]:bg-slate-100 dark:[&_th]:bg-slate-900 border-b border-border/80 text-foreground shadow-xs [&_tr]:border-b [&_tr]:border-border/60"
                     onColumnVisibilityChange={(updaterOrVal) => {
                       const next = typeof updaterOrVal === 'function'
                         ? updaterOrVal(visibleColumns as Record<string, boolean>)

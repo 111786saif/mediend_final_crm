@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server'
-import type { JsonValue } from '@/generated/prisma/runtime/library'
+import type { Prisma } from '@/generated/prisma/client'
+type JsonValue = Prisma.JsonValue
 import type { SessionUser } from '@/lib/auth'
 import { logCrmActivity } from '@/lib/crm-activity'
 import {
@@ -143,6 +144,7 @@ function mapRunToResponse(run: RunForResponse): BulkLeadReassignmentRunResponse 
     currentBdIndex: run.currentBdIndex,
     currentCycleNumber: run.currentCycleNumber,
     removePreviousRemarks: run.removePreviousRemarks,
+    removePreviousFollowUpDate: (run as any).removePreviousFollowUpDate ?? false,
     subStatus: run.subStatus ?? null,
     nextRunAt: run.nextRunAt?.toISOString() ?? null,
     startedAt: run.startedAt?.toISOString() ?? null,
@@ -166,6 +168,7 @@ async function fetchRunForResponse(runId: string) {
       currentBdIndex: true,
       currentCycleNumber: true,
       removePreviousRemarks: true,
+      removePreviousFollowUpDate: true,
       subStatus: true,
       nextRunAt: true,
       startedAt: true,
@@ -214,7 +217,7 @@ export async function createBulkLeadReassignmentRun(
   if (
     leadStatus !== undefined &&
     leadStatus.length > 0 &&
-    !CRM_LEAD_STATUS_OPTIONS.includes(leadStatus)
+    !CRM_LEAD_STATUS_OPTIONS.includes(leadStatus as any)
   ) {
     throw new BulkLeadReassignError('Please select a valid CRM lead status', 400)
   }
@@ -376,6 +379,7 @@ export async function createBulkLeadReassignmentRun(
       pauseSeconds,
       subStatus: subStatus ?? null,
       removePreviousRemarks: input.removePreviousRemarks,
+      removePreviousFollowUpDate: input.removePreviousFollowUpDate ?? false,
       status: 'queued',
       totalLeads: leadIds.length,
       totalBds: bdUserIds.length,
@@ -422,6 +426,7 @@ export async function createBulkLeadReassignmentRun(
       bdUserIds,
       pauseSeconds,
       removePreviousRemarks: input.removePreviousRemarks,
+      removePreviousFollowUpDate: input.removePreviousFollowUpDate ?? false,
       leadStatus: leadStatus ?? null,
       followUpDate: parsedFollowUpDate?.toISOString() ?? (followUpDate ?? null),
       modeOfPayment: modeOfPayment ?? null,
@@ -451,6 +456,7 @@ export async function processBulkLeadReassignCycle(
       pauseSeconds: true,
       subStatus: true,
       removePreviousRemarks: true,
+      removePreviousFollowUpDate: true,
       status: true,
       processedCount: true,
       currentLeadIndex: true,
@@ -628,6 +634,12 @@ export async function processBulkLeadReassignCycle(
               remarksClearedAt: assignedAt,
             }
           : {}),
+        ...((run as any).removePreviousFollowUpDate
+          ? {
+              removeFollowUpDate: true,
+              followUpDateClearedAt: assignedAt,
+            }
+          : {}),
       }
 
       await prisma.$transaction(
@@ -709,6 +721,28 @@ export async function processBulkLeadReassignCycle(
           },
         })
       }
+
+      if ((run as any).removePreviousFollowUpDate) {
+        await logCrmActivity({
+          action: 'CRM_LEAD_FOLLOW_UP_HIDDEN_AFTER_REASSIGN',
+          entityType: 'CRM_LEAD',
+          entityId: lead.id,
+          entityLabel,
+          actorUserId: run.actorUser.id,
+          actorRole: run.actorUser.role,
+          route: '/workers/lead-bulk-reassign-worker',
+          method: 'QUEUE',
+          summary: `Hidden previous follow-up date after reassignment for ${entityLabel}`,
+          metadata: {
+            leadId: lead.id,
+            leadRef: lead.leadRef,
+            patientName: lead.patientName,
+            followUpDateClearedAt: assignedAt.toISOString(),
+            runId,
+            cycleNumber,
+          },
+        })
+      }
     }
 
     const updatedRun = await prisma.bulkLeadReassignmentRun.findUnique({
@@ -721,6 +755,7 @@ export async function processBulkLeadReassignCycle(
         pauseSeconds: true,
         subStatus: true,
         removePreviousRemarks: true,
+        removePreviousFollowUpDate: true,
         status: true,
         processedCount: true,
         currentLeadIndex: true,
@@ -730,6 +765,7 @@ export async function processBulkLeadReassignCycle(
         totalBds: true,
         bullJobId: true,
         startedAt: true,
+        metadata: true,
         actorUser: {
           select: {
             id: true,
@@ -813,25 +849,27 @@ export async function processBulkLeadReassignCycle(
       },
     })
 
-    await logCrmActivity({
-      action: 'CRM_BULK_LEAD_REASSIGN_RUN_FAILED',
-      entityType: 'CRM_LEAD_BULK_REASSIGN_RUN',
-      entityId: runId,
-      entityLabel: `Bulk lead reassignment run ${runId}`,
-      actorUserId: run.actorUser.id,
-      actorRole: run.actorUser.role,
-      route: '/workers/lead-bulk-reassign-worker',
-      method: 'QUEUE',
-      status: 'FAILED',
-      summary: `Bulk lead reassignment failed for run ${runId}`,
-      errorMessage: message,
-      metadata: {
-        runId,
-        processedCount: run.processedCount,
-        totalLeads: run.totalLeads,
-        totalBds: run.totalBds,
-      },
-    })
+    if (run?.actorUser) {
+      await logCrmActivity({
+        action: 'CRM_BULK_LEAD_REASSIGN_RUN_FAILED',
+        entityType: 'CRM_LEAD_BULK_REASSIGN_RUN',
+        entityId: runId,
+        entityLabel: `Bulk lead reassignment run ${runId}`,
+        actorUserId: run.actorUser.id,
+        actorRole: run.actorUser.role,
+        route: '/workers/lead-bulk-reassign-worker',
+        method: 'QUEUE',
+        status: 'FAILED',
+        summary: `Bulk lead reassignment failed for run ${runId}`,
+        errorMessage: message,
+        metadata: {
+          runId,
+          processedCount: run.processedCount,
+          totalLeads: run.totalLeads,
+          totalBds: run.totalBds,
+        },
+      })
+    }
 
     throw error
   }

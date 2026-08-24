@@ -73,6 +73,7 @@ export function BulkLeadReassignDialog({
   onSubmit: (payload: {
     bdUserIds: string[]
     removePreviousRemarks: boolean
+    removePreviousFollowUpDate?: boolean
     leadStatus?: string
     followUpDate?: string
     modeOfPayment?: string
@@ -82,6 +83,7 @@ export function BulkLeadReassignDialog({
 }) {
   const [selectedBdUserIds, setSelectedBdUserIds] = useState<string[]>([])
   const [removePreviousRemarks, setRemovePreviousRemarks] = useState(false)
+  const [removePreviousFollowUpDate, setRemovePreviousFollowUpDate] = useState(false)
   const [leadStatus, setLeadStatus] = useState('')
   const [followUpDate, setFollowUpDate] = useState('')
   const [followUpTime, setFollowUpTime] = useState('')
@@ -190,6 +192,7 @@ export function BulkLeadReassignDialog({
     await onSubmit({
       bdUserIds: selectedBdUserIds,
       removePreviousRemarks,
+      removePreviousFollowUpDate,
       ...(leadStatus.trim().length > 0 ? { leadStatus: leadStatus.trim() } : {}),
       ...(statusRequiresFollowUpDate && combinedFollowUp.length > 0
         ? { followUpDate: combinedFollowUp }
@@ -207,6 +210,7 @@ export function BulkLeadReassignDialog({
     if (!nextOpen) {
       setSelectedBdUserIds([])
       setRemovePreviousRemarks(false)
+      setRemovePreviousFollowUpDate(false)
       setLeadStatus('')
       setFollowUpDate('')
       setFollowUpTime('')
@@ -412,16 +416,30 @@ export function BulkLeadReassignDialog({
             />
           </div>
 
-          <div className="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-50 px-3 py-3 dark:border-slate-700 dark:bg-slate-900/40">
-            <Checkbox
-              id="bulk-reassign-remove-remarks"
-              checked={removePreviousRemarks}
-              onCheckedChange={(checked) => setRemovePreviousRemarks(checked === true)}
-              className="border-slate-400 bg-white data-[state=checked]:border-primary dark:border-slate-500 dark:bg-slate-950"
-            />
-            <Label htmlFor="bulk-reassign-remove-remarks" className="cursor-pointer font-medium text-slate-900 dark:text-slate-100">
-              Remove previous remarks
-            </Label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-50 px-3 py-3 dark:border-slate-700 dark:bg-slate-900/40">
+              <Checkbox
+                id="bulk-reassign-remove-remarks"
+                checked={removePreviousRemarks}
+                onCheckedChange={(checked) => setRemovePreviousRemarks(checked === true)}
+                className="border-slate-400 bg-white data-[state=checked]:border-primary dark:border-slate-500 dark:bg-slate-950"
+              />
+              <Label htmlFor="bulk-reassign-remove-remarks" className="cursor-pointer font-medium text-slate-900 dark:text-slate-100 text-xs sm:text-sm">
+                Remove previous remarks
+              </Label>
+            </div>
+
+            <div className="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-50 px-3 py-3 dark:border-slate-700 dark:bg-slate-900/40">
+              <Checkbox
+                id="bulk-reassign-remove-followup-date"
+                checked={removePreviousFollowUpDate}
+                onCheckedChange={(checked) => setRemovePreviousFollowUpDate(checked === true)}
+                className="border-slate-400 bg-white data-[state=checked]:border-primary dark:border-slate-500 dark:bg-slate-950"
+              />
+              <Label htmlFor="bulk-reassign-remove-followup-date" className="cursor-pointer font-medium text-slate-900 dark:text-slate-100 text-xs sm:text-sm">
+                Remove previous follow up date
+              </Label>
+            </div>
           </div>
 
           <div className="space-y-4">
