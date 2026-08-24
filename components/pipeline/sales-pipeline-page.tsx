@@ -401,6 +401,9 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'modifyDate', label: 'Modified Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'dupCount', label: 'Duplicate Count', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'hospital', label: 'Hospital', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'doctor', label: 'Doctor', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'recency', label: 'Recency', defaultVisible: { bd: true, 'team-lead': true } },
 ]
 
 const PIPELINE_DATE_FILTER_COLUMNS = new Set<PipelineColumnId>([
@@ -431,6 +434,9 @@ const PIPELINE_SERVER_FILTER_COLUMNS = new Set<PipelineColumnId>([
   'createDate',
   'modifyDate',
   'subStatus',
+  'hospital',
+  'doctor',
+  'recency',
 ])
 
 function getPipelineColumnDefinitions(variant: 'bd' | 'team-lead') {

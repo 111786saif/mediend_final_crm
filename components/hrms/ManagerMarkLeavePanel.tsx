@@ -1,8 +1,10 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPost } from '@/lib/api-client'
+import { useMemo, useState, useEffect } from 'react'
+import { format } from 'date-fns'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,24 +17,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { format } from 'date-fns'
-import { toast } from 'sonner'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { isLwbLeaveType, isSickLeaveType } from '@/lib/hrms/leave-utils'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface TeamOption {
   id: string
   name: string
+  employeeCode: string | null
   email: string
-  employeeCode?: string
 }
 
 interface LeaveType {
   id: string
   name: string
+  code: string
   maxDays: number
   isActive: boolean
-  code?: string | null
 }
 
 interface PreviewBalance {
@@ -43,7 +43,7 @@ interface PreviewBalance {
   remaining: number
   locked: number
   isProbation: boolean
-  carryForward: boolean
+  carryForward: number
 }
 
 interface SubordinatePreview {
@@ -121,6 +121,17 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
     return active
   }, [leaveTypes])
 
+  // Automatically default to LWB if the employee is in probation or has no paid balances
+  useEffect(() => {
+    if (preview && !leaveTypeId) {
+      const lwbType = activeLeaveTypes.find((lt) => isLwbLeaveType(lt))
+      const hasPaidBalance = preview.balances.some((b) => !b.isProbation && b.remaining > 0)
+      if ((preview.probationBlocksLeave || !hasPaidBalance) && lwbType) {
+        setLeaveTypeId(lwbType.id)
+      }
+    }
+  }, [preview, leaveTypeId, activeLeaveTypes])
+
   const selectedLeaveType = leaveTypeId
     ? activeLeaveTypes.find((lt) => lt.id === leaveTypeId)
     : null
@@ -149,6 +160,9 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
 
   const isLwb = selectedLeaveType ? isLwbLeaveType(selectedLeaveType) : false
 
+  const isProbation = preview?.probationBlocksLeave || false
+  const probationPaidLeaveBlocked = isProbation && !isLwb
+
   const insufficientBalance =
     selectedBalance != null &&
     effectiveDays > 0 &&
@@ -161,7 +175,7 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
     !!startDate &&
     !!endDate &&
     reason.trim().length > 0 &&
-    !preview?.probationBlocksLeave &&
+    !probationPaidLeaveBlocked &&
     !insufficientBalance &&
     !(isHalfDay && !singleCalendarDay) &&
     !markMutation.isPending
@@ -223,15 +237,26 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
             <p className="text-sm text-muted-foreground">Loading balances…</p>
           )}
 
-          {preview?.probationBlocksLeave && preview.probationMessage && (
-            <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-3 py-2 text-sm">
-              <p className="font-medium text-destructive">Leave not available</p>
-              <p className="text-destructive/90 mt-1">{preview.probationMessage}</p>
-            </div>
-          )}
-
-          {employeeId && preview && !preview.probationBlocksLeave && (
+          {employeeId && preview && (
             <>
+              {preview.probationMessage && (
+                <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-900 dark:text-amber-200">
+                  <p className="font-medium">Probation period</p>
+                  <p className="text-amber-800 dark:text-amber-300 mt-0.5 text-xs">
+                    {preview.probationMessage}
+                  </p>
+                </div>
+              )}
+
+              {preview.probationBlocksLeave && (
+                <div className="rounded-lg border border-blue-500/40 bg-blue-500/10 px-3 py-2 text-sm text-blue-900 dark:text-blue-200 mb-3">
+                  <p className="font-medium">Employee is on probation</p>
+                  <p className="text-blue-800 dark:text-blue-300 mt-0.5 text-xs">
+                    Paid leaves (CL, SL, EL) are not available. You can apply for <strong>LWB (Leave Without Pay)</strong> only.
+                  </p>
+                </div>
+              )}
+
               <div className="rounded-lg border bg-muted/30 p-3 text-sm">
                 <p className="font-medium">{preview.employeeName}</p>
                 <p className="text-muted-foreground text-xs">{preview.employeeCode} · {preview.employeeEmail}</p>
@@ -268,8 +293,8 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
                   <SelectContent>
                     {activeLeaveTypes.map((lt) => {
                       const bal = preview.balances.find((b) => b.leaveTypeId === lt.id)
-                      const isLwb = isLwbLeaveType(lt)
-                      const suffix = isLwb
+                      const isLwbItem = isLwbLeaveType(lt)
+                      const suffix = isLwbItem
                         ? ' — Unpaid (Salary Cut)'
                         : bal != null
                           ? ` — ${bal.remaining} available` +
@@ -284,6 +309,11 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
                     })}
                   </SelectContent>
                 </Select>
+                {probationPaidLeaveBlocked && (
+                  <p className="text-xs text-destructive mt-1.5 font-medium">
+                    Paid leave is locked during probation. Please select <strong>LWB (Unpaid / Salary Cut)</strong> to mark leave.
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -311,56 +341,66 @@ export function ManagerMarkLeavePanel({ teamOptions }: ManagerMarkLeavePanelProp
                       const v = ev.target.value
                       setEndDate(v ? new Date(v + 'T12:00:00') : undefined)
                     }}
-                    disabled={isHalfDay}
                     min={startDate ? format(startDate, 'yyyy-MM-dd') : startDateMinStr}
+                    disabled={isHalfDay}
                   />
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-lg border bg-muted/40 p-3">
+              <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="mgr-leave-half"
+                  id="manager-half-day"
                   checked={isHalfDay}
-                  disabled={!startDate}
                   onCheckedChange={(c) => {
-                    const on = c === true
-                    if (!startDate) return
-                    setIsHalfDay(on)
-                    if (on) setEndDate(startDate)
+                    const checked = c === true
+                    setIsHalfDay(checked)
+                    if (checked && startDate) {
+                      setEndDate(startDate)
+                    }
                   }}
                 />
-                <div>
-                  <Label htmlFor="mgr-leave-half" className="text-sm cursor-pointer">
-                    Half day (0.5)
-                  </Label>
-                  <p className="text-xs text-muted-foreground">Single calendar day only.</p>
-                </div>
+                <Label htmlFor="manager-half-day" className="text-sm font-normal cursor-pointer">
+                  Half day (0.5 day)
+                </Label>
               </div>
 
-              {insufficientBalance && selectedBalance && (
-                <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-3 py-2 text-sm">
-                  <p className="font-medium text-destructive">Insufficient balance</p>
-                  <p className="text-destructive/90 mt-1">
-                    {selectedBalance.leaveTypeName}: {selectedBalance.remaining} day(s) available,{' '}
-                    {effectiveDays} requested. Reduce dates or pick another type.
-                  </p>
-                </div>
+              {startDate && endDate && (
+                <p className="text-sm text-muted-foreground">
+                  Days: <span className="font-semibold text-foreground">{effectiveDays}</span>
+                  {selectedBalance && !isLwb && (
+                    <>
+                      {' '}
+                      (Remaining after: {Math.max(0, selectedBalance.remaining - effectiveDays)})
+                    </>
+                  )}
+                  {isLwb && (
+                    <span className="ml-1 text-xs text-amber-700 dark:text-amber-400">
+                      (Leave Without Pay — marked with salary cut)
+                    </span>
+                  )}
+                </p>
+              )}
+
+              {insufficientBalance && (
+                <p className="text-sm text-destructive">
+                  Insufficient balance for {selectedBalance?.leaveTypeName}. Available: {selectedBalance?.remaining}
+                </p>
               )}
 
               <div>
-                <Label>Reason (required)</Label>
+                <Label>Reason / note</Label>
                 <Textarea
-                  value={reason}
-                  onChange={(ev) => setReason(ev.target.value)}
                   className="mt-1"
                   rows={3}
-                  placeholder="Why you are recording this leave…"
+                  placeholder="Reason for marking leave (e.g., informed over phone / emergency)…"
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
                   required
                 />
               </div>
 
-              <Button type="submit" disabled={!canSubmit}>
-                {markMutation.isPending ? 'Saving…' : 'Mark leave (approved)'}
+              <Button type="submit" disabled={!canSubmit} className="w-full">
+                {markMutation.isPending ? 'Marking leave…' : 'Mark leave as approved'}
               </Button>
             </>
           )}
