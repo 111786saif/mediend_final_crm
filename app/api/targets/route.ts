@@ -106,10 +106,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const data = targetSchema.parse(body)
 
+    const isSalesHeadOrAbove = [
+      'SALES_HEAD',
+      'MD',
+      'EXECUTIVE_ASSISTANT',
+      'ADMIN',
+      'SUPER_ADMIN',
+      'CRM_ADMIN',
+    ].includes(user.role)
+
     // Validation based on targetType and role scopes
     if (data.targetType === 'CATEGORY') {
-      const allowedRoles = ['SALES_HEAD', 'MD', 'EXECUTIVE_ASSISTANT', 'ADMIN', 'SUPER_ADMIN', 'CRM_ADMIN']
-      if (!allowedRoles.includes(user.role)) {
+      if (!isSalesHeadOrAbove) {
         return errorResponse('Forbidden: only Sales Head or Admin can assign Category targets', 403)
       }
 
@@ -123,26 +131,36 @@ export async function POST(request: NextRequest) {
     }
 
     if (data.targetType === 'TEAM') {
-      // Category Managers are the only ones allowed to assign TEAM targets
-      if (user.role !== 'CATEGORY_MANAGER') {
-        return errorResponse('Forbidden: only Category Managers can assign TEAM targets', 403)
-      }
-      const [tlUnits, cmUnits] = await Promise.all([
-        getSalesTeamUnits({ level: 'tl' }),
-        getSalesTeamUnits({ level: 'cm' }),
-      ])
-      const selfCm = cmUnits.find((c) => c.userId === user.id)
-      const scope = new Set(selfCm?.scopeUserIds ?? [])
-      const allowedTeamIds = new Set(
-        tlUnits.filter((t) => scope.has(t.userId)).map((t) => t.id)
-      )
-      if (!allowedTeamIds.has(data.targetForId)) {
-        return errorResponse('Forbidden: team is outside your category scope', 403)
+      if (isSalesHeadOrAbove) {
+        const targetTeam = await prisma.employee.findUnique({
+          where: { id: data.targetForId },
+          select: { user: { select: { role: true } } },
+        })
+        if (!targetTeam || !['TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER'].includes(targetTeam.user.role)) {
+          return errorResponse('Team targets must be assigned to a Team Lead or ACM', 400)
+        }
+      } else if (user.role === 'CATEGORY_MANAGER') {
+        const [tlUnits, cmUnits] = await Promise.all([
+          getSalesTeamUnits({ level: 'tl' }),
+          getSalesTeamUnits({ level: 'cm' }),
+        ])
+        const selfCm = cmUnits.find((c) => c.userId === user.id)
+        const scope = new Set(selfCm?.scopeUserIds ?? [])
+        const allowedTeamIds = new Set(
+          tlUnits.filter((t) => scope.has(t.userId)).map((t) => t.id)
+        )
+        if (!allowedTeamIds.has(data.targetForId)) {
+          return errorResponse('Forbidden: team is outside your category scope', 403)
+        }
+      } else {
+        return errorResponse('Forbidden: only Category Managers or Sales Head can assign TEAM targets', 403)
       }
     }
 
     if (data.targetType === 'BD') {
-      if (user.role === 'CATEGORY_MANAGER') {
+      if (isSalesHeadOrAbove) {
+        // Sales Head and Admin are allowed to directly set BD targets
+      } else if (user.role === 'CATEGORY_MANAGER') {
         // Category Managers can only set BD targets for themselves
         if (data.targetForId !== user.id) {
           return errorResponse('Forbidden: Category Managers can only assign BD targets to themselves', 403)
@@ -165,8 +183,7 @@ export async function POST(request: NextRequest) {
           return errorResponse('Forbidden: you can only assign targets to BDs on your team or yourself', 403)
         }
       } else {
-        // Sales Head, EA, MD, Admin are not allowed to directly set BD targets
-        return errorResponse('Forbidden: only Team Leads and Category Managers (for self) can assign BD targets', 403)
+        return errorResponse('Forbidden: only Team Leads, Category Managers (for self), and Sales Head can assign BD targets', 403)
       }
 
       const targetUser = await prisma.user.findUnique({

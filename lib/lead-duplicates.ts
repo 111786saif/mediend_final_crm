@@ -11,19 +11,22 @@ export class DuplicateLeadPhoneError extends Error {
   leadRef: string
   duplicateCount: number
   normalizedPhone: string
+  treatment?: string | null
 
   constructor(input: {
     leadId: string
     leadRef: string
     duplicateCount: number
     normalizedPhone: string
+    treatment?: string | null
   }) {
-    super(`Duplicate lead detected for phone ${input.normalizedPhone}. Existing lead: ${input.leadRef}`)
+    super(`Duplicate lead detected for phone ${input.normalizedPhone} and treatment ${input.treatment || 'N/A'}. Existing lead: ${input.leadRef}`)
     this.name = 'DuplicateLeadPhoneError'
     this.leadId = input.leadId
     this.leadRef = input.leadRef
     this.duplicateCount = input.duplicateCount
     this.normalizedPhone = input.normalizedPhone
+    this.treatment = input.treatment
   }
 }
 
@@ -31,8 +34,18 @@ export function normalizeLeadPhoneToLast10(raw: string | null | undefined) {
   return last10DigitsFromStored(raw)
 }
 
-export async function findCanonicalLeadByPrimaryPhone(
+export function normalizeTreatmentForComparison(treatment: string | null | undefined): string {
+  if (!treatment) return ''
+  const s = String(treatment).trim().toLowerCase()
+  if (['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd', 'unknown'].includes(s)) {
+    return ''
+  }
+  return s
+}
+
+export async function findCanonicalLeadByPhoneAndTreatment(
   normalizedPhone: string,
+  treatment?: string | null,
   db: LeadDuplicateStore = prisma
 ) {
   const candidates = await db.lead.findMany({
@@ -43,6 +56,7 @@ export async function findCanonicalLeadByPrimaryPhone(
       id: true,
       leadRef: true,
       phoneNumber: true,
+      treatment: true,
       duplCount: true,
       createdDate: true,
     },
@@ -51,17 +65,36 @@ export async function findCanonicalLeadByPrimaryPhone(
     },
   })
 
+  const normalizedInputTreatment = normalizeTreatmentForComparison(treatment)
+
   return (
-    candidates.find((lead) => normalizeLeadPhoneToLast10(lead.phoneNumber) === normalizedPhone) ??
-    null
+    candidates.find((lead) => {
+      if (normalizeLeadPhoneToLast10(lead.phoneNumber) !== normalizedPhone) {
+        return false
+      }
+      const leadTreatment = normalizeTreatmentForComparison(lead.treatment)
+      if (normalizedInputTreatment) {
+        return leadTreatment === normalizedInputTreatment
+      }
+      return !leadTreatment
+    }) ?? null
   )
+}
+
+export async function findCanonicalLeadByPrimaryPhone(
+  normalizedPhone: string,
+  treatment?: string | null,
+  db: LeadDuplicateStore = prisma
+) {
+  return findCanonicalLeadByPhoneAndTreatment(normalizedPhone, treatment, db)
 }
 
 export async function recordDuplicateLeadHitByPrimaryPhone(
   normalizedPhone: string,
+  treatment?: string | null,
   db: LeadDuplicateStore = prisma
 ) {
-  const existingLead = await findCanonicalLeadByPrimaryPhone(normalizedPhone, db)
+  const existingLead = await findCanonicalLeadByPhoneAndTreatment(normalizedPhone, treatment, db)
   if (!existingLead) return null
 
   return db.lead.update({

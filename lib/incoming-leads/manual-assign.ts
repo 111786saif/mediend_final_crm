@@ -1,4 +1,4 @@
-import { EmployeeStatus, FlowType, PipelineStage, UserRole } from '@/generated/prisma/client'
+import { EmployeeStatus, FlowType, PipelineStage, Prisma, UserRole } from '@/generated/prisma/client'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { getBusinessMonthYear, getDefaultSystemUserId } from '@/lib/crm-campaigns'
 import {
@@ -10,6 +10,7 @@ import {
 import { prisma } from '@/lib/prisma'
 import { loadLookupMaps, type LookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
+import { createLeadAssignedNotification } from '@/lib/lead-notifications'
 import {
   getMySQLSourceLeadRef,
   mapMySQLLeadToPrismaWithoutOwner,
@@ -30,7 +31,7 @@ type IncomingLeadForManualAssign = {
   id: string
   source: string | null
   status: string
-  payload: unknown
+  payload: Prisma.JsonValue
   processedLeadId: string | null
   externalCampaignId: string | null
   normalizedPhone: string | null
@@ -390,7 +391,14 @@ async function processManualAssignedMySQLLead(
     }
   }
 
-  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
+  const assignedAt = new Date()
+  const leadData = mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUserId, lookups)
+  const { updatedDate, ...leadDataWithoutOwner } = leadData
+
+  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(
+    normalizedPhone,
+    leadData.treatment as string | null | undefined
+  )
 
   const priorIncomingLead = await findLatestPriorIncomingLeadByPrimaryPhone(normalizedPhone, {
     excludeIncomingLeadId: incomingLead.id,
@@ -400,10 +408,6 @@ async function processManualAssignedMySQLLead(
     priorIncomingLead && !priorIncomingLead.processedLeadId
   )
   const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
-  const assignedAt = new Date()
-
-  const leadData = mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUserId, lookups)
-  const { updatedDate, ...leadDataWithoutOwner } = leadData
 
   const leadCreateData = {
     ...leadDataWithoutOwner,
@@ -413,7 +417,7 @@ async function processManualAssignedMySQLLead(
     bdId: bd.userId,
     bdeName: bd.userName,
     teamLeadId: bd.managerLeadId,
-  }
+  } as any
   const createdLead =
     incomingLead.source === MANUAL_MYSQL_INCOMING_SOURCE
       ? await withGeneratedManualLeadRef((leadRef) =>
@@ -435,6 +439,13 @@ async function processManualAssignedMySQLLead(
             leadRef: true,
           },
         })
+
+  await createLeadAssignedNotification({
+    userId: bd.userId,
+    patientName: String(leadData.patientName || 'Patient'),
+    leadRef: createdLead.leadRef,
+    leadId: createdLead.id,
+  })
 
   await prisma.incomingLead.update({
     where: { id: incomingLead.id },
@@ -545,13 +556,6 @@ async function processManualAssignedSaveMyLeadsLead(
     return { incomingLeadId: incomingLead.id, status: 'failed', error }
   }
 
-  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-  const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
-
-  const { month } = getBusinessMonthYear(incomingLead.receivedAt)
-  const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
-  const campaignCircles = getCampaignCircleNames(campaign)
-
   const cleanStr = (v: unknown): string | null => {
     if (v == null) return null
     const s = String(v).trim()
@@ -561,10 +565,17 @@ async function processManualAssignedSaveMyLeadsLead(
     return s
   }
 
+  const campaignCircles = getCampaignCircleNames(campaign)
   const explicitCircle = cleanStr(extracted.circle)
   const finalCircle = explicitCircle ?? (campaignCircles.length === 1 ? campaignCircles[0] : '')
   const finalCategory = cleanStr(extracted.category) ?? cleanStr(campaign.category)
   const finalTreatment = cleanStr(extracted.treatment) ?? cleanStr(campaign.treatment)
+
+  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone, finalTreatment)
+  const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
+
+  const { month } = getBusinessMonthYear(incomingLead.receivedAt)
+  const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
   const finalSource = cleanStr(campaign.source.name) ?? cleanStr(extracted.source) ?? 'SaveMyLeads'
   const finalCampaignName =
     cleanStr(campaign.leadSource.name) ??
@@ -605,6 +616,13 @@ async function processManualAssignedSaveMyLeadsLead(
       id: true,
       leadRef: true,
     },
+  })
+
+  await createLeadAssignedNotification({
+    userId: bd.userId,
+    patientName: extracted.patientName || 'Patient',
+    leadRef: lead.leadRef,
+    leadId: lead.id,
   })
 
   await prisma.incomingLead.update({

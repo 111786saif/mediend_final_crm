@@ -104,21 +104,6 @@ export async function POST(request: NextRequest) {
       return errorResponse('Phone number must contain at least 10 digits', 400)
     }
 
-    const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-    const normalizedStatus = normalizeOptionalLeadText(parsed.data.status) ?? 'New Lead'
-    if (!duplicateLead && !CRM_LEAD_STATUS_OPTIONS.includes(normalizedStatus as (typeof CRM_LEAD_STATUS_OPTIONS)[number])) {
-      return errorResponse('Please select a valid lead status', 400)
-    }
-    const effectiveStatus = duplicateLead ? DUPLICATE_LEAD_STATUS : normalizedStatus
-
-    const normalizedModeOfPayment = normalizeOptionalLeadText(parsed.data.modeOfPayment)
-    if (
-      normalizedModeOfPayment &&
-      !CRM_MODE_OF_PAYMENT_OPTIONS.includes(normalizedModeOfPayment as (typeof CRM_MODE_OF_PAYMENT_OPTIONS)[number])
-    ) {
-      return errorResponse('Please select a valid mode of payment', 400)
-    }
-
     const normalizedTreatmentMasterId = normalizeOptionalLeadText(parsed.data.treatmentMasterId)
     const treatmentMaster = normalizedTreatmentMasterId
       ? await prisma.treatmentMaster.findUnique({
@@ -133,6 +118,23 @@ export async function POST(request: NextRequest) {
 
     if (normalizedTreatmentMasterId && !treatmentMaster) {
       return errorResponse('Selected treatment was not found', 400)
+    }
+
+    const explicitTreatment = normalizeOptionalLeadText(treatmentMaster?.name) ?? null
+
+    const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone, explicitTreatment)
+    const normalizedStatus = normalizeOptionalLeadText(parsed.data.status) ?? 'New Lead'
+    if (!duplicateLead && !CRM_LEAD_STATUS_OPTIONS.includes(normalizedStatus as (typeof CRM_LEAD_STATUS_OPTIONS)[number])) {
+      return errorResponse('Please select a valid lead status', 400)
+    }
+    const effectiveStatus = duplicateLead ? DUPLICATE_LEAD_STATUS : normalizedStatus
+
+    const normalizedModeOfPayment = normalizeOptionalLeadText(parsed.data.modeOfPayment)
+    if (
+      normalizedModeOfPayment &&
+      !CRM_MODE_OF_PAYMENT_OPTIONS.includes(normalizedModeOfPayment as (typeof CRM_MODE_OF_PAYMENT_OPTIONS)[number])
+    ) {
+      return errorResponse('Please select a valid mode of payment', 400)
     }
 
     const teamLeadId = await getLeadTeamLeadIdForAssigneeManager(assignee.id)
