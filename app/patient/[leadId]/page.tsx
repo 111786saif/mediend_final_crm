@@ -20,7 +20,7 @@ import { hrefWithReturnTo, resolveReturnTo } from '@/lib/navigation/return-to'
 import { normalizeModeOfPaymentKey, normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, ArrowRight, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, ArrowRight, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, Layers, MapPin, MessageCircle, Pencil, PhoneCall, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -598,6 +598,7 @@ export default function PatientDetailsPage() {
   })
   const [makeCallLoading, setMakeCallLoading] = useState(false)
   const [leadEditDrawerOpen, setLeadEditDrawerOpen] = useState(false)
+  const [activeDetailsSection, setActiveDetailsSection] = useState<string>('all')
 
   const { data: initiateFormData } = useQuery<any>({
     queryKey: ['insurance-initiate-form', leadId],
@@ -1043,6 +1044,40 @@ export default function PatientDetailsPage() {
     getNextAvailableOpdSlot(effectiveOpdAppointments, LeadOpdPhase.POST) !== null &&
     ([CaseStage.IPD_DONE, CaseStage.CASH_IPD_DONE, CaseStage.DISCHARGED, CaseStage.CASH_DISCHARGED, CaseStage.PL_PENDING, CaseStage.OUTSTANDING] as CaseStage[]).includes(lead.caseStage)
   const showOpdDetails = effectiveOpdAppointments.length > 0
+  const showInitiateForm = Boolean(initiateFormData?.initiateForm && canViewInitiateForm(user as any, lead))
+  const showDischargeSection = Boolean(
+    lead.dischargeSheet &&
+    user?.role !== 'BD' &&
+    user?.role !== 'TEAM_LEAD' &&
+    user?.role !== 'ASSISTANT_CATEGORY_MANAGER' &&
+    user?.role !== 'CATEGORY_MANAGER'
+  )
+
+  const availableSections = (() => {
+    const list: { id: string; label: string; icon: any; count?: number }[] = [
+      { id: 'all', label: 'All Sections', icon: Layers }
+    ]
+    if (showOpdDetails) {
+      list.push({ id: 'opd', label: 'OPD Details', icon: CalendarIcon, count: effectiveOpdAppointments.length })
+    }
+    if (kypSubmission) {
+      list.push({ id: 'kyp', label: 'KYP Details', icon: FileText })
+    }
+    if (kypSubmission?.preAuthData) {
+      list.push({ id: 'pre_auth', label: 'Insurance & Pre-Auth', icon: Shield })
+    }
+    if (showInitiateForm) {
+      list.push({ id: 'initiate_form', label: 'Initial Form', icon: Receipt })
+    }
+    if (lead?.admissionRecord) {
+      list.push({ id: 'ipd', label: 'IPD Details', icon: Stethoscope })
+    }
+    if (showDischargeSection) {
+      list.push({ id: 'discharge', label: 'Discharge', icon: CheckCircle2 })
+    }
+    return list
+  })()
+
   const canEditOpdEntry = (entry: EffectiveOpdEntry) =>
     canManageOpd && !(user?.role === 'BD' && entry.status === LeadOpdStatus.DONE)
   const canMarkOpdEntry = (entry: EffectiveOpdEntry) =>
@@ -2069,7 +2104,43 @@ export default function PatientDetailsPage() {
           </Card>
         )}
 
-        {showOpdDetails && (
+        {/* Section Filter Chips */}
+        {availableSections.length > 1 && (
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
+            {availableSections.map((sec) => {
+              const Icon = sec.icon
+              const isActive = activeDetailsSection === sec.id
+              return (
+                <button
+                  key={sec.id}
+                  type="button"
+                  onClick={() => setActiveDetailsSection(sec.id)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shadow-xs cursor-pointer",
+                    isActive
+                      ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                      : "bg-background text-muted-foreground hover:text-foreground hover:bg-muted/80 border-border"
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  <span>{sec.label}</span>
+                  {sec.count !== undefined && (
+                    <span
+                      className={cn(
+                        "ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-bold",
+                        isActive ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
+                      )}
+                    >
+                      {sec.count}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        )}
+
+        {showOpdDetails && (activeDetailsSection === 'all' || activeDetailsSection === 'opd') && (
           <Card className="border-2 shadow-sm">
             <CardHeader className="border-b bg-gradient-to-r from-cyan-50 to-sky-50 dark:from-cyan-950/20 dark:to-sky-950/20">
               <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -2316,7 +2387,7 @@ export default function PatientDetailsPage() {
         )}
 
         {/* KYP Details Section */}
-        {kypSubmission && (
+        {kypSubmission && (activeDetailsSection === 'all' || activeDetailsSection === 'kyp') && (
           <Card className="border-2 shadow-sm">
             <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-b">
               <div className="flex items-center justify-between flex-wrap gap-2">
@@ -2527,7 +2598,7 @@ export default function PatientDetailsPage() {
         )}
 
         {/* Insurance & Pre-Auth Details Section */}
-        {kypSubmission?.preAuthData && (() => {
+        {kypSubmission?.preAuthData && (activeDetailsSection === 'all' || activeDetailsSection === 'pre_auth') && (() => {
           const pre = kypSubmission.preAuthData
           const requestedName = pre.requestedHospitalName?.trim()
           const requestedRoom = (pre.requestedRoomType || '').toLowerCase().replace(/\s+/g, ' ')
@@ -2686,17 +2757,17 @@ export default function PatientDetailsPage() {
         })()}
 
         {/* Initiate Form Details */}
-        {initiateFormData?.initiateForm && canViewInitiateForm(user as any, lead) && (
+        {showInitiateForm && (activeDetailsSection === 'all' || activeDetailsSection === 'initiate_form') && (
           <InitiateFormCard initiateForm={initiateFormData.initiateForm} />
         )}
 
         {/* IPD Details Section */}
-        {lead.admissionRecord && (
+        {lead.admissionRecord && (activeDetailsSection === 'all' || activeDetailsSection === 'ipd') && (
           <IPDDetailsCard admissionRecord={lead.admissionRecord} lead={lead} />
         )}
 
         {/* Discharge & patient info — inline read-only panel, hidden from BD and TL */}
-        {lead.dischargeSheet && user?.role !== 'BD' && user?.role !== 'TEAM_LEAD' && user?.role !== 'ASSISTANT_CATEGORY_MANAGER' && user?.role !== 'CATEGORY_MANAGER' && (
+        {showDischargeSection && (activeDetailsSection === 'all' || activeDetailsSection === 'discharge') && (
           <Card>
             <CardHeader>
               <CardTitle>Discharge</CardTitle>

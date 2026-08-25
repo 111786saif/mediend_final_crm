@@ -72,19 +72,6 @@ export async function POST(request: NextRequest) {
       return errorResponse('Employee not found', 404)
     }
 
-    if (subordinate.joinDate) {
-      const sixMonthsAgo = new Date()
-      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
-      if (subordinate.joinDate > sixMonthsAgo) {
-        const probationEndDate = new Date(subordinate.joinDate)
-        probationEndDate.setMonth(probationEndDate.getMonth() + 6)
-        return errorResponse(
-          `This employee is in probation. Leave marking is available after ${probationEndDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}.`,
-          400
-        )
-      }
-    }
-
     let startDate: Date
     let endDate: Date
     try {
@@ -142,6 +129,19 @@ export async function POST(request: NextRequest) {
 
     const sick = isSickLeaveType(leaveType)
     const lwb = isLwbLeaveType(leaveType)
+
+    if (subordinate.joinDate && !lwb) {
+      const sixMonthsAgo = new Date()
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
+      if (subordinate.joinDate > sixMonthsAgo) {
+        const probationEndDate = new Date(subordinate.joinDate)
+        probationEndDate.setMonth(probationEndDate.getMonth() + 6)
+        return errorResponse(
+          `This employee is in probation. Leave marking is available after ${probationEndDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}.`,
+          400
+        )
+      }
+    }
     if (!sick && !lwb) {
       if (startDay < today || endDay < today) {
         return errorResponse(

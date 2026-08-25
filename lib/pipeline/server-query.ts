@@ -131,11 +131,20 @@ export function parsePipelineQueryParams(searchParams: URLSearchParams): Pipelin
   const allowedStatus: PipelineStatusBucket[] = [
     'all',
     'new_hot',
+    'nurture',
     'follow_up',
+    'callback',
     'opd_done',
     'ipd_done',
+    'opd_sch',
+    'ipd_sch',
     'dnp',
+    'dnp_exh',
     'junk',
+    'outstation',
+    'duplicate',
+    'ipd_loss',
+    'fund_issues',
     'lost',
     'closed',
   ]
@@ -321,7 +330,22 @@ export function statusBucketWhere(
   switch (bucket) {
     case 'new_hot':
       return {
-        OR: [contains('new'), contains('hot'), contains('interested'), contains('nurture')],
+        OR: [
+          contains('new'),
+          contains('hot'),
+          contains('interested'),
+          { status: '27' },
+          { status: '28' },
+          { status: '39' },
+        ],
+      }
+    case 'nurture':
+      return {
+        OR: [
+          contains('nurture'),
+          contains('nuture'),
+          { status: '37' },
+        ],
       }
     case 'follow_up':
       return {
@@ -329,33 +353,137 @@ export function statusBucketWhere(
           {
             OR: [
               contains('follow'),
-              contains('call back'),
-              contains('callback'),
-              contains('schedule'),
-              contains('out of station'),
+              { status: '1' },
+              { status: '2' },
+              { status: '3' },
+              { status: '35' },
             ],
           },
-          { NOT: contains('ipd done') },
+          {
+            NOT: {
+              OR: [
+                contains('out of station'),
+                { status: '16' },
+                { status: '42' },
+              ],
+            },
+          },
+        ],
+      }
+    case 'callback':
+      return {
+        OR: [
+          contains('call back'),
+          contains('callback'),
+          { status: '19' },
+          { status: '20' },
+          { status: '21' },
+          { status: '22' },
+        ],
+      }
+    case 'fund_issues':
+      return {
+        OR: [
+          contains('fund issue'),
+          contains('fund issues'),
+          { status: '10' },
         ],
       }
     case 'opd_done':
-      return contains('opd done')
+      return {
+        OR: [
+          contains('opd done'),
+          { status: '11' },
+        ],
+      }
     case 'ipd_done':
       return canonicalSalesCompletedWhere({})
+    case 'ipd_sch':
+      return {
+        OR: [
+          contains('ipd schedule'),
+          { status: '14' },
+        ],
+      }
+    case 'opd_sch':
+      return {
+        OR: [
+          contains('opd schedule'),
+          contains('opd scheduled'),
+          { status: '12' },
+        ],
+      }
     case 'dnp':
-      return contains('dnp')
+      return {
+        AND: [
+          {
+            OR: [
+              contains('dnp'),
+              contains('did not pick'),
+              contains('not connected'),
+              { status: '4' },
+              { status: '5' },
+              { status: '6' },
+              { status: '7' },
+              { status: '8' },
+            ],
+          },
+          { NOT: { OR: [contains('exhausted'), { status: '9' }] } },
+        ],
+      }
+    case 'dnp_exh':
+      return {
+        OR: [
+          contains('exhausted'),
+          { status: '9' },
+        ],
+      }
     case 'junk':
-      return { OR: [contains('junk'), contains('invalid number')] }
+      return {
+        OR: [
+          { status: { equals: 'Junk', mode: 'insensitive' } },
+          { status: '26' },
+        ],
+      }
+    case 'outstation':
+      return {
+        OR: [
+          contains('out of station'),
+          { status: '16' },
+          { status: '42' },
+        ],
+      }
+    case 'duplicate':
+      return {
+        OR: [
+          contains('duplicate'),
+          { status: '34' },
+        ],
+      }
+    case 'ipd_loss':
+      return {
+        OR: [
+          contains('ipd lost'),
+          { status: '15' },
+        ],
+      }
     case 'lost':
       return {
         OR: [
-          contains('lost'),
+          { status: { equals: 'Lost', mode: 'insensitive' } },
           contains('not interested'),
-          contains('duplicate'),
-          contains('fund issues'),
           contains('already insured'),
           contains('language barrier'),
           contains('sx not suggested'),
+          contains('invalid number'),
+          contains('supply gap'),
+          contains('churned'),
+          { status: '17' },
+          { status: '18' },
+          { status: '23' },
+          { status: '33' },
+          { status: '36' },
+          { status: '41' },
         ],
       }
     case 'closed':
@@ -368,8 +496,16 @@ export function statusBucketWhere(
               contains('c/w done'),
               contains('wa done'),
               contains('scan done'),
-              contains('booked'),
-              contains('policy'),
+              contains('order booked'),
+              contains('policy booked'),
+              { status: '24' },
+              { status: '25' },
+              { status: '29' },
+              { status: '30' },
+              { status: '31' },
+              { status: '32' },
+              { status: '38' },
+              { status: '40' },
             ],
           },
           { NOT: contains('ipd done') },
@@ -900,38 +1036,30 @@ function buildPipelineGlobalSearchWhere(query: string): Prisma.LeadWhereInput {
   const or: Prisma.LeadWhereInput[] = [
     { patientName: { contains: q, mode: 'insensitive' } },
     { leadRef: { contains: q, mode: 'insensitive' } },
-    { sex: { contains: q, mode: 'insensitive' } },
     { circle: { contains: q, mode: 'insensitive' } },
     { category: { contains: q, mode: 'insensitive' } },
     { treatment: { contains: q, mode: 'insensitive' } },
     { diseaseDetails: { contains: q, mode: 'insensitive' } },
-    { profession: { contains: q, mode: 'insensitive' } },
     { hospitalName: { contains: q, mode: 'insensitive' } },
-    { opdHospital: { contains: q, mode: 'insensitive' } },
-    { ipdHospital: { contains: q, mode: 'insensitive' } },
-    { surgeonName: { contains: q, mode: 'insensitive' } },
-    { ipdDrName: { contains: q, mode: 'insensitive' } },
-    { opdDrName: { contains: q, mode: 'insensitive' } },
-    { insuranceName: { contains: q, mode: 'insensitive' } },
-    { subStatus: { contains: q, mode: 'insensitive' } },
+    { remarks: { contains: q, mode: 'insensitive' } },
     { source: { contains: q, mode: 'insensitive' } },
     { campaignName: { contains: q, mode: 'insensitive' } },
-    { remarks: { contains: q, mode: 'insensitive' } },
+    { subStatus: { contains: q, mode: 'insensitive' } },
+    { profession: { contains: q, mode: 'insensitive' } },
+    { surgeonName: { contains: q, mode: 'insensitive' } },
+    { ipdDrName: { contains: q, mode: 'insensitive' } },
+    { insuranceName: { contains: q, mode: 'insensitive' } },
     { month: { contains: q, mode: 'insensitive' } },
-    { bd: { name: { contains: q, mode: 'insensitive' } } },
-    { updatedBy: { name: { contains: q, mode: 'insensitive' } } },
-    { leadRemarkEntries: { some: { content: { contains: q, mode: 'insensitive' } } } },
-    { plRecord: { is: { bdmName: { contains: q, mode: 'insensitive' } } } },
-    { plRecord: { is: { managerName: { contains: q, mode: 'insensitive' } } } },
-    { plRecord: { is: { doctorName: { contains: q, mode: 'insensitive' } } } },
-    { plRecord: { is: { hospitalName: { contains: q, mode: 'insensitive' } } } },
-    { dischargeSheet: { is: { doctorName: { contains: q, mode: 'insensitive' } } } },
-    { dischargeSheet: { is: { hospitalName: { contains: q, mode: 'insensitive' } } } },
-    { kypSubmission: { is: { location: { contains: q, mode: 'insensitive' } } } },
-    { kypSubmission: { is: { preAuthData: { is: { requestedHospitalName: { contains: q, mode: 'insensitive' } } } } } },
-    { kypSubmission: { is: { preAuthData: { is: { hospitalNameSuggestion: { contains: q, mode: 'insensitive' } } } } } },
+    { bd: { is: { name: { contains: q, mode: 'insensitive' } } } },
     { status: { contains: q, mode: 'insensitive' } },
   ]
+
+  // If query contains 4 or more digits, include phone search
+  const digitMatch = q.replace(/\D/g, '')
+  if (digitMatch.length >= 4) {
+    or.push({ phoneNumber: { contains: digitMatch } })
+    or.push({ alternateNumber: { contains: digitMatch } })
+  }
 
   if (numericWhere) {
     or.push(numericWhere)
@@ -1011,11 +1139,20 @@ export function bucketsFromStatusGroups(
 ): Record<Exclude<PipelineStatusBucket, 'all'>, number> {
   const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
     new_hot: 0,
+    nurture: 0,
     follow_up: 0,
+    callback: 0,
     opd_done: 0,
     ipd_done: 0,
+    opd_sch: 0,
+    ipd_sch: 0,
     dnp: 0,
+    dnp_exh: 0,
     junk: 0,
+    outstation: 0,
+    duplicate: 0,
+    ipd_loss: 0,
+    fund_issues: 0,
     lost: 0,
     closed: 0,
   }
@@ -1052,6 +1189,8 @@ export const pipelineTableSelect = {
   surgeryDate: true,
   removeRemarks: true,
   remarksClearedAt: true,
+  removeFollowUpDate: true,
+  followUpDateClearedAt: true,
   profession: true,
   teamLeadId: true,
   duplCount: true,

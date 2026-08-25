@@ -17,6 +17,7 @@ import {
   normalizeDoctorName,
   parseDoctorAvailabilityDate,
 } from '@/lib/doctor-availability'
+import { getVisibleLeadFollowUpDate } from '@/lib/lead-follow-up-visibility'
 import {
   isStatusRequiringAgeSex,
   isStatusRequiringCity,
@@ -433,6 +434,7 @@ export async function GET(
     const canViewPhone = user.role === 'ADMIN'
     const mappedLead = {
       ...fullLead,
+      followUpDate: getVisibleLeadFollowUpDate(fullLead, user.role),
       status: mapStatusCode(fullLead.status),
       source: fullLead.source ? mapSourceCode(fullLead.source) : fullLead.source,
       modeOfPayment: normalizeModeOfPaymentLabel(fullLead.modeOfPayment),

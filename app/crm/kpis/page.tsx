@@ -2,7 +2,16 @@
 
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { BarChart3, QrCode, RefreshCw, PhoneCall, MousePointerClick, AlertTriangle } from 'lucide-react'
+import {
+  BarChart3,
+  QrCode,
+  RefreshCw,
+  PhoneCall,
+  MousePointerClick,
+  AlertTriangle,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -50,6 +59,10 @@ type KpiEvent = {
 type CrmKpiResponse = {
   month: number
   year: number
+  page: number
+  pageSize: number
+  totalEvents: number
+  totalPages: number
   summary: {
     totalEvents: number
     qrViewed: number
@@ -116,17 +129,48 @@ export default function CrmKpisPage() {
   const initialMonthYear = getInitialMonthYear()
   const [month, setMonth] = useState(String(initialMonthYear.month))
   const [year, setYear] = useState(String(initialMonthYear.year))
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState<number>(20)
+
   const hasAccess = String(user?.role) === 'SUPER_ADMIN' || String(user?.role) === 'CRM_ADMIN'
 
   const selectedMonth = Number.parseInt(month, 10) || initialMonthYear.month
   const selectedYear = Number.parseInt(year, 10) || initialMonthYear.year
 
   const { data, isLoading, error, refetch, isFetching } = useQuery<CrmKpiResponse, Error>({
-    queryKey: ['crm-kpis', selectedMonth, selectedYear],
-    queryFn: () => apiGet<CrmKpiResponse>(`/api/crm/kpis?month=${selectedMonth}&year=${selectedYear}`),
+    queryKey: ['crm-kpis', selectedMonth, selectedYear, currentPage, pageSize],
+    queryFn: () =>
+      apiGet<CrmKpiResponse>(
+        `/api/crm/kpis?month=${selectedMonth}&year=${selectedYear}&page=${currentPage}&pageSize=${pageSize}`
+      ),
     retry: false,
+    placeholderData: (prev) => prev,
     enabled: hasAccess,
   })
+
+  const handleMonthChange = (val: string) => {
+    setMonth(val)
+    setCurrentPage(1)
+  }
+
+  const handleYearChange = (val: string) => {
+    setYear(val)
+    setCurrentPage(1)
+  }
+
+  const handlePageSizeChange = (val: string) => {
+    const nextSize = Number.parseInt(val, 10) || 20
+    setPageSize(nextSize)
+    setCurrentPage(1)
+  }
+
+  const events = data?.events ?? []
+  const totalEvents = data?.totalEvents ?? 0
+  const totalPages = data?.totalPages ?? 1
+  const safeCurrentPage = Math.min(currentPage, totalPages)
+
+  const rangeStart = totalEvents === 0 ? 0 : (safeCurrentPage - 1) * pageSize + 1
+  const rangeEnd = Math.min(safeCurrentPage * pageSize, totalEvents)
 
   const summaryCards = useMemo(
     () => [
@@ -159,92 +203,90 @@ export default function CrmKpisPage() {
 
   return (
     <ProtectedRoute>
-      <div className="mx-auto max-w-[1600px] space-y-6 p-4 md:p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div className="space-y-6 p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="flex items-center gap-2 text-3xl font-bold">
-              <BarChart3 className="h-8 w-8 text-cyan-600" />
-              CRM KPIs
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              QR usage and call initiation metrics for CRM leads.
+            <h1 className="text-2xl font-semibold tracking-tight">CRM QR &amp; Call KPIs</h1>
+            <p className="text-sm text-muted-foreground">
+              Monitor monthly QR views, phone calls initiated from QR popovers, and direct call button usage.
             </p>
           </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-            <div className="space-y-2">
-              <Label>Month</Label>
-              <Select value={month} onValueChange={setMonth}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Month" />
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="w-36">
+              <Label htmlFor="kpi-month" className="sr-only">
+                Month
+              </Label>
+              <Select value={month} onValueChange={handleMonthChange}>
+                <SelectTrigger id="kpi-month">
+                  <SelectValue placeholder="Select month" />
                 </SelectTrigger>
                 <SelectContent>
-                  {MONTH_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={String(option.value)}>
-                      {option.label}
+                  {MONTH_OPTIONS.map((item) => (
+                    <SelectItem key={item.value} value={String(item.value)}>
+                      {item.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>Year</Label>
+            <div className="w-28">
+              <Label htmlFor="kpi-year" className="sr-only">
+                Year
+              </Label>
               <Input
+                id="kpi-year"
                 type="number"
-                min={2000}
+                min={2020}
                 max={2100}
                 value={year}
-                onChange={(event) => setYear(event.target.value)}
-                className="w-[140px]"
+                onChange={(e) => handleYearChange(e.target.value)}
               />
             </div>
-            <Button type="button" variant="outline" onClick={() => refetch()} disabled={isFetching || !hasAccess}>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => refetch()}
+              disabled={isLoading || isFetching}
+              title="Refresh KPI data"
+            >
+              <RefreshCw className={`h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </div>
 
-        {!isAuthLoading && !hasAccess ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>No access</CardTitle>
-              <CardDescription>
-                This CRM KPI view is available to Super Admin and CRM Admin users.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        ) : error && !isLoading ? (
-          <Card className="border-amber-300 bg-amber-50/70">
-            <CardHeader className="flex flex-row items-start gap-3 space-y-0">
-              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
-              <div className="space-y-1">
-                <CardTitle>Unable to load CRM KPIs</CardTitle>
-                <CardDescription className="text-amber-900/80">{errorMessage}</CardDescription>
+        {error ? (
+          <Card className="border-destructive/50 bg-destructive/5">
+            <CardHeader className="flex flex-row items-center gap-3">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <div>
+                <CardTitle className="text-base text-destructive">Failed to load CRM KPIs</CardTitle>
+                <CardDescription className="text-destructive/80">{errorMessage}</CardDescription>
               </div>
             </CardHeader>
           </Card>
         ) : (
           <>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {summaryCards.map((card) => {
                 const Icon = card.icon
                 return (
                   <Card key={card.title}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardDescription>{card.title}</CardDescription>
+                      <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
                       <Icon className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                      <div className="text-3xl font-bold">{formatWholeNumber(card.value)}</div>
+                      <div className="text-2xl font-bold">
+                        {isLoading && !data ? '...' : formatWholeNumber(card.value)}
+                      </div>
                     </CardContent>
                   </Card>
                 )
               })}
             </div>
 
-            <div className="grid gap-4 xl:grid-cols-[1.4fr_2fr]">
-              <Card>
+            <div className="grid gap-6 lg:grid-cols-3">
+              <Card className="lg:col-span-1">
                 <CardHeader>
                   <CardTitle>Top campaigns</CardTitle>
                   <CardDescription>Most QR interactions for the selected month.</CardDescription>
@@ -265,12 +307,12 @@ export default function CrmKpisPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="lg:col-span-2">
                 <CardHeader>
                   <CardTitle>Recent QR events</CardTitle>
                   <CardDescription>Latest lead QR and click-to-call actions.</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
                   <div className="rounded-xl border">
                     <Table>
                       <TableHeader>
@@ -283,20 +325,20 @@ export default function CrmKpisPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {isLoading ? (
+                        {isLoading && !data ? (
                           <TableRow>
                             <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
                               Loading KPI events...
                             </TableCell>
                           </TableRow>
-                        ) : (data?.events ?? []).length === 0 ? (
+                        ) : events.length === 0 ? (
                           <TableRow>
                             <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
                               No QR usage recorded for the selected month.
                             </TableCell>
                           </TableRow>
                         ) : (
-                          data?.events.map((event) => (
+                          events.map((event) => (
                             <TableRow key={event.id}>
                               <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                                 {formatDateTime(event.createdAt)}
@@ -323,6 +365,54 @@ export default function CrmKpisPage() {
                       </TableBody>
                     </Table>
                   </div>
+
+                  {/* Server-Driven Pagination Controls */}
+                  {totalEvents > 0 && (
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2 py-2">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span>Rows per page:</span>
+                        <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
+                          <SelectTrigger className="h-8 w-[72px] text-xs">
+                            <SelectValue placeholder={String(pageSize)} />
+                          </SelectTrigger>
+                          <SelectContent side="top">
+                            <SelectItem value="20">20</SelectItem>
+                            <SelectItem value="50">50</SelectItem>
+                            <SelectItem value="100">100</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <span className="ml-2">
+                          Showing {rangeStart}–{rangeEnd} of {formatWholeNumber(totalEvents)} events
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground mr-2">
+                          Page {safeCurrentPage} of {totalPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                          disabled={safeCurrentPage <= 1 || isFetching}
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                          <span className="sr-only">Previous page</span>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                          disabled={safeCurrentPage >= totalPages || isFetching}
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                          <span className="sr-only">Next page</span>
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>

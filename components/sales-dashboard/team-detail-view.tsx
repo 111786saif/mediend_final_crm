@@ -28,6 +28,8 @@ import {
   HIDE_MISSING_INCENTIVE_CAPSULE
 } from './sales-dashboard-view'
 
+import { cn } from '@/lib/utils'
+
 interface TeamDetailViewProps {
   teamId: string
   dateParams: string
@@ -35,6 +37,20 @@ interface TeamDetailViewProps {
   dateRange?: DateRange
   onBack: () => void
   onSelectNestedTeam?: (managerId: string) => void
+}
+
+function getMonthDateParams(monthStr: string): string {
+  if (!monthStr || monthStr === 'all') return ''
+  const [yStr, mStr] = monthStr.split('-')
+  const year = parseInt(yStr, 10)
+  const month = parseInt(mStr, 10)
+  if (isNaN(year) || isNaN(month)) return ''
+  const start = new Date(year, month - 1, 1)
+  const end = new Date(year, month, 0, 23, 59, 59, 999)
+  const pad = (n: number) => n.toString().padStart(2, '0')
+  const startStr = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(start.getDate())}`
+  const endStr = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}`
+  return `startDate=${startStr}&endDate=${endStr}`
 }
 
 export function TeamDetailView({
@@ -50,48 +66,121 @@ export function TeamDetailView({
   const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({})
   const [columnOrder, setColumnOrder] = useState<string[]>([])
 
-  // Drag-to-reorder state for the custom Columns dropdown
-  const dragColId = useRef<string | null>(null)
-  const dragOverColId = useRef<string | null>(null)
+  // Effective date parameters based on selectedMonth
+  const effectiveDateParams = useMemo(() => {
+    if (selectedMonth && selectedMonth !== 'all') {
+      return getMonthDateParams(selectedMonth)
+    }
+    return dateParams
+  }, [selectedMonth, dateParams])
 
-  const handleColDragStart = (id: string) => { dragColId.current = id }
-  const handleColDragEnter = (id: string) => { dragOverColId.current = id }
-  const handleColDragEnd = () => {
+  // Drag-to-reorder state for the custom Columns dropdown
+  const [teamDraggingColId, setTeamDraggingColId] = useState<string | null>(null)
+  const [teamDropIndicator, setTeamDropIndicator] = useState<{ id: string; position: 'top' | 'bottom' } | null>(null)
+  const dragColId = useRef<string | null>(null)
+  const dropTargetColRef = useRef<{ id: string; position: 'top' | 'bottom' } | null>(null)
+
+  const handleColDragStart = (e: React.DragEvent, id: string) => {
+    dragColId.current = id
+    setTeamDraggingColId(id)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', id)
+  }
+
+  const handleColDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (dragColId.current === id) {
+      if (teamDropIndicator) setTeamDropIndicator(null)
+      dropTargetColRef.current = null
+      return
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect()
+    const midY = rect.top + rect.height / 2
+    const position: 'top' | 'bottom' = e.clientY < midY ? 'top' : 'bottom'
+
+    if (!dropTargetColRef.current || dropTargetColRef.current.id !== id || dropTargetColRef.current.position !== position) {
+      const target = { id, position }
+      dropTargetColRef.current = target
+      setTeamDropIndicator(target)
+    }
+  }
+
+  const handleColDragLeave = (e: React.DragEvent, id: string) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      if (dropTargetColRef.current?.id === id) {
+        dropTargetColRef.current = null
+        setTeamDropIndicator(null)
+      }
+    }
+  }
+
+  const handleColDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault()
     const from = dragColId.current
-    const to = dragOverColId.current
-    if (!from || !to || from === to) { dragColId.current = null; dragOverColId.current = null; return }
+    const target = dropTargetColRef.current || { id: targetId, position: 'bottom' as const }
+    if (!from || !target || from === target.id) {
+      setTeamDraggingColId(null)
+      setTeamDropIndicator(null)
+      dragColId.current = null
+      dropTargetColRef.current = null
+      return
+    }
+
     setColumnOrder((prev) => {
       const base = prev.length ? prev : columns.map((c) => c.id || (c as any).accessorKey)
       const fromIdx = base.indexOf(from)
-      const toIdx = base.indexOf(to)
-      if (fromIdx === -1 || toIdx === -1) return prev
+      if (fromIdx === -1) return prev
       const next = [...base]
       next.splice(fromIdx, 1)
-      next.splice(toIdx, 0, from)
+      const targetIdx = next.indexOf(target.id)
+      if (targetIdx !== -1) {
+        const insertIdx = target.position === 'top' ? targetIdx : targetIdx + 1
+        next.splice(insertIdx, 0, from)
+      }
       return next
     })
-    dragColId.current = null; dragOverColId.current = null
+
+    setTeamDraggingColId(null)
+    setTeamDropIndicator(null)
+    dragColId.current = null
+    dropTargetColRef.current = null
+  }
+
+  const handleColDragEnd = () => {
+    setTeamDraggingColId(null)
+    setTeamDropIndicator(null)
+    dragColId.current = null
+    dropTargetColRef.current = null
   }
 
   const { data, isLoading } = useQuery<TeamDetail>({
-    queryKey: ['sales-dashboard', variant, 'team-detail-inline', teamId, dateParams],
-    queryFn: () => apiGet<TeamDetail>(`/api/analytics/sales-dashboard/team-detail?managerId=${teamId}${dateParams ? '&' + dateParams : ''}`),
+    queryKey: ['sales-dashboard', variant, 'team-detail-inline', teamId, effectiveDateParams],
+    queryFn: () => apiGet<TeamDetail>(`/api/analytics/sales-dashboard/team-detail?managerId=${teamId}${effectiveDateParams ? '&' + effectiveDateParams : ''}`),
     enabled: !!teamId,
   })
 
   const { data: bdDetailData, isLoading: isBdLoading } = useQuery<any>({
-    queryKey: ['sales-dashboard', variant, 'bd-detail-inline', selectedBdId, dateParams],
-    queryFn: () => apiGet<any>(`/api/analytics/sales-dashboard/bd-detail?bdId=${selectedBdId}${dateParams ? '&' + dateParams : ''}`),
+    queryKey: ['sales-dashboard', variant, 'bd-detail-inline', selectedBdId, effectiveDateParams],
+    queryFn: () => apiGet<any>(`/api/analytics/sales-dashboard/bd-detail?bdId=${selectedBdId}${effectiveDateParams ? '&' + effectiveDateParams : ''}`),
     enabled: !!selectedBdId && selectedBdId !== 'all',
   })
 
-  const dateFrom = dateRange?.from || new Date()
-  const incentiveMonth = dateFrom.getMonth() + 1
-  const incentiveYear = dateFrom.getFullYear()
+  const effectiveIncentiveMonth = useMemo(() => {
+    if (selectedMonth && selectedMonth !== 'all') {
+      const parts = selectedMonth.split('-')
+      if (parts.length === 2) {
+        return { month: parseInt(parts[1], 10), year: parseInt(parts[0], 10) }
+      }
+    }
+    const d = dateRange?.from || new Date()
+    return { month: d.getMonth() + 1, year: d.getFullYear() }
+  }, [selectedMonth, dateRange])
 
   const { data: incentivesData } = useQuery<{ records: any[] }>({
-    queryKey: ['incentives-list', incentiveMonth, incentiveYear],
-    queryFn: () => apiGet<{ records: any[] }>(`/api/incentives?month=${incentiveMonth}&year=${incentiveYear}`),
+    queryKey: ['incentives-list', effectiveIncentiveMonth.month, effectiveIncentiveMonth.year],
+    queryFn: () => apiGet<{ records: any[] }>(`/api/incentives?month=${effectiveIncentiveMonth.month}&year=${effectiveIncentiveMonth.year}`),
   })
 
   const incentivesByUserId = new Map<string, number>()
@@ -130,7 +219,7 @@ export function TeamDetailView({
   const overallConvPercent = kpis.conversionRate || 0
 
   const formatMonthName = (monthStr: string) => {
-    if (!monthStr) return '–'
+    if (!monthStr || monthStr === 'all') return 'All Months'
     const [year, month] = monthStr.split('-')
     if (!month) return monthStr
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -140,7 +229,26 @@ export function TeamDetailView({
 
   // Month-wise derivations directly from pre-computed backend response
   const headers = data?.monthWiseHeaders ?? { current: '', prev: '', prev2: '', prev3: '' }
-  const months = [headers.current, headers.prev, headers.prev2, headers.prev3].filter(Boolean)
+  const months = useMemo(() => {
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const set = new Set<string>()
+    if (headers.current) set.add(headers.current)
+    if (headers.prev) set.add(headers.prev)
+    if (headers.prev2) set.add(headers.prev2)
+    if (headers.prev3) set.add(headers.prev3)
+    if (Array.isArray(data?.monthWise)) {
+      for (const r of data.monthWise) {
+        if (r.month) set.add(r.month)
+      }
+    }
+    // Also include months of current year
+    for (let m = 1; m <= 12; m++) {
+      const pad = m.toString().padStart(2, '0')
+      set.add(`${currentYear}-${pad}`)
+    }
+    return Array.from(set).sort().reverse()
+  }, [headers, data?.monthWise])
 
   // Calculate dynamic total IPD for each period based on selected BD
   const totalCurrent = selectedBdId === 'all'
@@ -290,10 +398,10 @@ export function TeamDetailView({
             </div>
           )}
           <div className="flex items-center gap-4">
-            <UserAvatar 
-              name={activeMember ? activeMember.name : (data.team.manager?.name || 'Unknown')} 
-              picture={activeMember ? activeMember.profilePicture : data.team.manager?.profilePicture} 
-              size="md" 
+            <UserAvatar
+              name={activeMember ? activeMember.name : (data.team.manager?.name || 'Unknown')}
+              picture={activeMember ? activeMember.profilePicture : data.team.manager?.profilePicture}
+              size="md"
             />
             <div>
               <h1 className="text-lg font-bold tracking-tight text-foreground">
@@ -329,7 +437,7 @@ export function TeamDetailView({
               >
                 <option value="all" className="bg-background text-foreground dark:bg-[#151e3c]">All Months</option>
                 {months.map((m) => (
-                  <option key={m} value={m} className="bg-background text-foreground dark:bg-[#151e3c]">{m}</option>
+                  <option key={m} value={m} className="bg-background text-foreground dark:bg-[#151e3c]">{formatMonthName(m)}</option>
                 ))}
               </select>
               <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none transition-colors" />
@@ -432,7 +540,7 @@ export function TeamDetailView({
 
       {/* 3. Analytics Overview (4 Columns) */}
       <div className={`grid grid-cols-1 md:grid-cols-2 ${selectedBdId === 'all' ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-4`}>
-        
+
         {/* Col 1: Lead Aging Dist */}
         <Card className="shadow-sm border-border flex flex-col bg-card/60 backdrop-blur-sm">
           <CardHeader className="pb-2 pt-4 px-4">
@@ -484,7 +592,7 @@ export function TeamDetailView({
                 <span className="text-[9px] font-semibold text-muted-foreground whitespace-nowrap">{mockOpdCount}/{kpis.totalLeads}</span>
               </div>
             </div>
-            
+
             {/* OPD to IPD */}
             <div className="flex flex-col gap-1.5 p-2.5 bg-emerald-500/5 hover:bg-emerald-500/10 rounded-xl border border-emerald-500/10 hover:border-emerald-500/20 transition-all group">
               <div className="flex justify-between items-center">
@@ -653,44 +761,112 @@ export function TeamDetailView({
                     </DropdownMenuLabel>
                   </div>
                   <DropdownMenuSeparator className="my-0" />
-                  <div className="py-1">
+                  <div
+                    className="py-1 relative"
+                    onDragOver={(e) => {
+                      e.preventDefault()
+                      e.dataTransfer.dropEffect = 'move'
+                    }}
+                    onDragLeave={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                        setTeamDropIndicator(null)
+                        dropTargetColRef.current = null
+                      }
+                    }}
+                  >
                     {(columnOrder.length ? columnOrder : columns.map((c) => c.id || (c as any).accessorKey))
                       .map((colId) => {
                         const col = columns.find((c) => (c.id || (c as any).accessorKey) === colId)
                         if (!col) return null
                         const colName = typeof col.header === 'string' ? col.header : colId
                         const isVisible = columnVisibility[colId] ?? true
+                        const isDragging = teamDraggingColId === colId
+                        const isDropTop = teamDropIndicator?.id === colId && teamDropIndicator?.position === 'top'
+                        const isDropBottom = teamDropIndicator?.id === colId && teamDropIndicator?.position === 'bottom'
+                        const draggingColLabel = columns.find((c) => (c.id || (c as any).accessorKey) === teamDraggingColId)?.header?.toString() || 'Column'
+
                         return (
-                          <div
-                            key={colId}
-                            draggable
-                            onDragStart={() => handleColDragStart(colId)}
-                            onDragEnter={() => handleColDragEnter(colId)}
-                            onDragEnd={handleColDragEnd}
-                            onDragOver={(e) => e.preventDefault()}
-                            className="flex items-center gap-2 px-2 py-1.5 rounded-sm hover:bg-accent cursor-default select-none"
-                          >
-                            <input
-                              type="checkbox"
-                              id={`col-vis-${colId}`}
-                              checked={isVisible}
-                              onChange={(e) =>
-                                setColumnVisibility((prev) => ({ ...prev, [colId]: e.target.checked }))
-                              }
-                              className="h-4 w-4 rounded border border-input accent-primary cursor-pointer shrink-0"
-                            />
-                            <label
-                              htmlFor={`col-vis-${colId}`}
-                              className="flex-1 text-sm capitalize cursor-pointer truncate"
+                          <div key={colId} className="relative">
+                            {/* Dark Blue Skeleton drop placeholder (top) */}
+                            {isDropTop && (
+                              <div
+                                onDragOver={(e) => {
+                                  e.preventDefault()
+                                  e.dataTransfer.dropEffect = 'move'
+                                }}
+                                onDrop={(e) => handleColDrop(e, colId)}
+                                className="h-8 mx-1 my-1 rounded-md bg-blue-600/25 dark:bg-blue-600/35 border-2 border-dashed border-blue-600 dark:border-blue-400 flex items-center px-2.5 gap-2 text-xs font-semibold text-blue-700 dark:text-blue-300 shadow-sm animate-pulse"
+                              >
+                                <div className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 shrink-0" />
+                                <span className="truncate">Move &quot;{draggingColLabel}&quot; here</span>
+                              </div>
+                            )}
+
+                            {/* Column Item Row */}
+                            <div
+                              draggable
+                              onDragStart={(e) => handleColDragStart(e, colId)}
+                              onDragOver={(e) => handleColDragOver(e, colId)}
+                              onDragEnter={(e) => handleColDragOver(e, colId)}
+                              onDragLeave={(e) => handleColDragLeave(e, colId)}
+                              onDrop={(e) => handleColDrop(e, colId)}
+                              onDragEnd={handleColDragEnd}
+                              className={cn(
+                                "flex items-center gap-2 px-2.5 py-1.5 rounded-sm transition-all select-none group cursor-default",
+                                isDragging
+                                  ? "opacity-30 bg-blue-50/40 dark:bg-blue-950/30 border border-dashed border-blue-500 dark:border-blue-400"
+                                  : "hover:bg-accent",
+                                (isDropTop || isDropBottom) && "bg-blue-50/15 dark:bg-blue-950/20"
+                              )}
                             >
-                              {colName}
-                            </label>
-                            <span
-                              className="cursor-grab active:cursor-grabbing shrink-0 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
-                              title="Drag to reorder"
-                            >
-                              <GripVertical className="h-4 w-4" />
-                            </span>
+                              <input
+                                type="checkbox"
+                                id={`col-vis-${colId}`}
+                                checked={isVisible}
+                                onChange={(e) =>
+                                  setColumnVisibility((prev) => ({ ...prev, [colId]: e.target.checked }))
+                                }
+                                className={cn(
+                                  "h-4 w-4 rounded border border-input accent-primary cursor-pointer shrink-0",
+                                  teamDraggingColId && "pointer-events-none"
+                                )}
+                              />
+                              <label
+                                htmlFor={`col-vis-${colId}`}
+                                className={cn(
+                                  "flex-1 text-sm capitalize cursor-pointer truncate",
+                                  teamDraggingColId && "pointer-events-none"
+                                )}
+                              >
+                                {colName}
+                              </label>
+                              <span
+                                onMouseDown={(e) => e.stopPropagation()}
+                                onPointerDown={(e) => e.stopPropagation()}
+                                className={cn(
+                                  "cursor-grab active:cursor-grabbing shrink-0 text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300 transition-colors p-0.5",
+                                  teamDraggingColId && "pointer-events-none"
+                                )}
+                                title="Drag to reorder"
+                              >
+                                <GripVertical className="h-4 w-4" />
+                              </span>
+                            </div>
+
+                            {/* Dark Blue Skeleton drop placeholder (bottom) */}
+                            {isDropBottom && (
+                              <div
+                                onDragOver={(e) => {
+                                  e.preventDefault()
+                                  e.dataTransfer.dropEffect = 'move'
+                                }}
+                                onDrop={(e) => handleColDrop(e, colId)}
+                                className="h-8 mx-1 my-1 rounded-md bg-blue-600/25 dark:bg-blue-600/35 border-2 border-dashed border-blue-600 dark:border-blue-400 flex items-center px-2.5 gap-2 text-xs font-semibold text-blue-700 dark:text-blue-300 shadow-sm animate-pulse"
+                              >
+                                <div className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 shrink-0" />
+                                <span className="truncate">Move &quot;{draggingColLabel}&quot; here</span>
+                              </div>
+                            )}
                           </div>
                         )
                       })}

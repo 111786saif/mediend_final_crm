@@ -23,6 +23,7 @@ export type BulkLeadReassignmentRunResponse = {
   currentBdIndex: number
   currentCycleNumber: number
   removePreviousRemarks: boolean
+  removePreviousFollowUpDate?: boolean
   subStatus: string | null
   nextRunAt: string | null
   startedAt: string | null
@@ -36,6 +37,7 @@ export type CreateBulkLeadReassignmentRunInput = {
   bdUserIds: string[]
   pauseSeconds: number
   removePreviousRemarks: boolean
+  removePreviousFollowUpDate?: boolean
   leadStatus?: string
   followUpDate?: string
   modeOfPayment?: string

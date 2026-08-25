@@ -7,6 +7,7 @@ import {
   getVisibleLatestLeadRemark,
   getVisibleLeadRemarksFallbackContent,
 } from '@/lib/lead-remark-visibility'
+import { getVisibleLeadFollowUpDate } from '@/lib/lead-follow-up-visibility'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { FlowType, Prisma, PipelineStage, CaseStage } from '@/generated/prisma/client'
 import { getCampaignCircleNames, getCampaignForWebhook } from '@/lib/crm-campaigns'
@@ -466,8 +467,11 @@ export async function GET(request: NextRequest) {
       assignedDate: true,
       createdDate: true,
       updatedDate: true,
+      followUpDate: true,
       removeRemarks: true,
       remarksClearedAt: true,
+      removeFollowUpDate: true,
+      followUpDateClearedAt: true,
       hospitalName: true,
       remarks: true,
       leadRemarkEntries: {
@@ -760,6 +764,7 @@ export async function GET(request: NextRequest) {
         ...lead,
         latestRemark,
         remarks: isPipelineView ? getVisibleLeadRemarksFallbackContent(lead, lead.remarks, user.role) : lead.remarks,
+        followUpDate: isPipelineView ? getVisibleLeadFollowUpDate(lead, user.role) : lead.followUpDate,
         status: mapStatusCode(lead.status),
         source: lead.source ? mapSourceCode(lead.source) : lead.source,
         modeOfPayment: normalizeModeOfPaymentLabel(lead.modeOfPayment),
