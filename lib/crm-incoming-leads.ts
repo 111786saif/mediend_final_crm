@@ -9,6 +9,7 @@ export type IncomingLeadSummary = {
   city: string | null
   patientName: string | null
   phone: string | null
+  alternatePhone?: string | null
   email: string | null
 }
 
@@ -151,6 +152,13 @@ export function extractIncomingLeadSummary(payload: unknown): IncomingLeadSummar
           mysqlLead.mobile ??
           mysqlLead.mobileNumber,
       ),
+      alternatePhone: toNullableString(
+        mysqlLead.AlternativePhone ??
+          mysqlLead.alternativePhone ??
+          mysqlLead.alternatePhone ??
+          mysqlLead.alternateNumber ??
+          mysqlLead.altPhone,
+      ),
       email: toNullableString(mysqlLead.PatientEmail ?? mysqlLead.email),
     }
   }
@@ -173,6 +181,13 @@ export function extractIncomingLeadSummary(payload: unknown): IncomingLeadSummar
     patientName: toNullableString(record.name ?? record.patientName ?? record.patient_name),
     phone: toNullableString(
       record.phone ?? record.phoneNumber ?? record.mobile ?? record.mobileNumber,
+    ),
+    alternatePhone: toNullableString(
+      record.AlternativePhone ??
+        record.alternativePhone ??
+        record.alternatePhone ??
+        record.alternateNumber ??
+        record.altPhone,
     ),
     email: toNullableString(record.email),
   }

@@ -168,6 +168,7 @@ type IncomingLeadRecord = {
     city: string | null
     patientName: string | null
     phone: string | null
+    alternatePhone?: string | null
     email: string | null
   }
   campaign: {
@@ -180,6 +181,7 @@ type IncomingLeadRecord = {
     leadRef: string
     patientName: string
     phoneNumber: string
+    alternateNumber?: string | null
     category: string | null
     treatment: string | null
     assignedDate: string | null
@@ -278,6 +280,7 @@ type IncomingLeadTableRow = {
   patientName: string
   email: string
   normalizedPhone: string
+  alternatePhone: string
   assignedDate: string
   leadDate: string
   followUpDate: string
@@ -420,6 +423,7 @@ const INCOMING_LEAD_COLUMNS: IncomingLeadColumn[] = [
   { id: 'patientName', label: 'Patient', type: 'string' },
   { id: 'email', label: 'Email', type: 'string' },
   { id: 'normalizedPhone', label: 'Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.normalizedPhone}</span> },
+  { id: 'alternatePhone', label: 'Alternate Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.alternatePhone}</span> },
   { id: 'assignedDate', label: 'Assign Date', type: 'date', cell: (row) => formatDateOnly(row.assignedDate) },
   { id: 'leadDate', label: 'Lead Date', type: 'date', cell: (row) => formatDateOnly(row.leadDate) },
   { id: 'followUpDate', label: 'Follow up Date', type: 'date', cell: (row) => formatDateOnly(row.followUpDate) },
@@ -861,7 +865,7 @@ export function CrmIncomingLeadsPage() {
   )
   const serverPhoneSearch = useMemo(
     () =>
-      effectiveSearchColumn === 'normalizedPhone'
+      effectiveSearchColumn === 'normalizedPhone' || effectiveSearchColumn === 'alternatePhone'
         ? parsePhoneSearchQuery(searchValue)
         : null,
     [effectiveSearchColumn, searchValue]
@@ -883,8 +887,8 @@ export function CrmIncomingLeadsPage() {
         params.set('month', String(selectedMonth))
         params.set('year', String(selectedYear))
       }
-      if (serverPhoneSearch && effectiveSearchColumn === 'normalizedPhone') {
-        params.set('searchColumn', 'normalizedPhone')
+      if (serverPhoneSearch && (effectiveSearchColumn === 'normalizedPhone' || effectiveSearchColumn === 'alternatePhone')) {
+        params.set('searchColumn', effectiveSearchColumn)
         params.set('searchValue', searchValue.trim())
       }
       const query = params.toString()
@@ -961,6 +965,10 @@ export function CrmIncomingLeadsPage() {
         patientName: incomingLead.summary.patientName ?? '—',
         email: incomingLead.summary.email ?? '—',
         normalizedPhone: incomingLead.normalizedPhone ?? '—',
+        alternatePhone:
+          incomingLead.processedLead?.alternateNumber ??
+          incomingLead.summary.alternatePhone ??
+          '—',
         assignedDate: incomingLead.processedLead?.assignedDate ?? '',
         leadDate: incomingLead.processedLead?.leadEntryDate ?? incomingLead.summary.leadDate ?? '',
         followUpDate: incomingLead.processedLead?.followUpDate ?? '',
@@ -1065,7 +1073,11 @@ export function CrmIncomingLeadsPage() {
       if (!normalizedSearch) return true
 
       if (effectiveSearchColumn === 'normalizedPhone' && serverPhoneSearch) {
-        return true
+        return row.normalizedPhone.includes(serverPhoneSearch.last10) || row.normalizedPhone.toLowerCase().includes(normalizedSearch)
+      }
+
+      if (effectiveSearchColumn === 'alternatePhone' && serverPhoneSearch) {
+        return row.alternatePhone.includes(serverPhoneSearch.last10) || row.alternatePhone.toLowerCase().includes(normalizedSearch)
       }
 
       const rawValue = String(row[effectiveSearchColumn] ?? '')

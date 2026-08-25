@@ -97,6 +97,7 @@ export async function GET(request: NextRequest) {
               leadRef: true,
               patientName: true,
               phoneNumber: true,
+              alternateNumber: true,
               category: true,
               treatment: true,
               assignedDate: true,
@@ -128,8 +129,11 @@ export async function GET(request: NextRequest) {
         ? new Set(hierarchyScopedUserIds)
         : null
     const canViewPhone = String(currentUser.role) === 'ADMIN'
+    const isPhoneSearchColumn =
+      parsed.data.searchColumn === 'normalizedPhone' ||
+      parsed.data.searchColumn === 'alternatePhone'
     const phoneSearch =
-      parsed.data.searchColumn === 'normalizedPhone' && parsed.data.searchValue
+      isPhoneSearchColumn && parsed.data.searchValue
         ? parsePhoneSearchQuery(parsed.data.searchValue)
         : null
     const filteredIncomingLeads =
@@ -158,6 +162,13 @@ export async function GET(request: NextRequest) {
               ? processedLeadById.get(incomingLead.processedLeadId)
               : undefined
             const summary = extractIncomingLeadSummary(incomingLead.payload)
+
+            if (parsed.data.searchColumn === 'alternatePhone') {
+              return (
+                last10DigitsFromStored(summary.alternatePhone) === phoneSearch.last10 ||
+                last10DigitsFromStored(processedLead?.alternateNumber) === phoneSearch.last10
+              )
+            }
 
             return (
               incomingLead.normalizedPhone === phoneSearch.last10 ||
@@ -201,6 +212,7 @@ export async function GET(request: NextRequest) {
           summary: {
             ...summary,
             phone: canViewPhone ? summary.phone : maskPhoneNumber(summary.phone),
+            alternatePhone: canViewPhone ? summary.alternatePhone : maskPhoneNumber(summary.alternatePhone),
           },
           campaign: campaign
             ? {
@@ -217,6 +229,9 @@ export async function GET(request: NextRequest) {
                 phoneNumber: canViewPhone
                   ? processedLead.phoneNumber
                   : maskPhoneNumber(processedLead.phoneNumber),
+                alternateNumber: canViewPhone
+                  ? processedLead.alternateNumber
+                  : maskPhoneNumber(processedLead.alternateNumber),
                 category: processedLead.category,
                 treatment: processedLead.treatment,
                 assignedDate: processedLead.assignedDate,

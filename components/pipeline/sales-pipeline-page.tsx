@@ -1201,25 +1201,31 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     enabled: variant === 'bd' && !!user?.id,
   })
 
-  const { data: masterOptions } = useQuery<{
-    treatments: string[]
-    treatmentCategories: string[]
-    hospitals: string[]
-    doctors: string[]
-    insurance: string[]
+  const { data: filterConfigData } = useQuery<{
+    filters: Array<{
+      field: string
+      label: string
+      filterType: string
+      filterable: boolean
+      options?: Array<{ label: string; value: string }>
+    }>
   }, Error>({
-    queryKey: ['pipeline-master-options'],
-    queryFn: () =>
-      apiGet<{
-        treatments: string[]
-        treatmentCategories: string[]
-        hospitals: string[]
-        doctors: string[]
-        insurance: string[]
-      }>('/api/masters/pipeline-options'),
+    queryKey: ['pipeline-filter-config'],
+    queryFn: () => apiGet('/api/pipeline/filter-config'),
     staleTime: 5 * 60_000,
     retry: false,
+    enabled: !!user?.id,
   })
+
+  const filterConfigByField = useMemo(() => {
+    const map = new Map<string, { label: string; value: string }[]>()
+    for (const f of filterConfigData?.filters ?? []) {
+      if (f.options && Array.isArray(f.options)) {
+        map.set(f.field, f.options)
+      }
+    }
+    return map
+  }, [filterConfigData])
 
   const targetProgress = useMemo(() => {
     if (variant !== 'bd' || !targets?.length || !data) return null
@@ -1258,25 +1264,48 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       ])
     ) as Record<PipelineColumnId, string[]>
 
-    const treatmentMasterOptions = uniqueSorted(masterOptions?.treatments ?? [])
-    const categoryMasterOptions = uniqueSorted(masterOptions?.treatmentCategories ?? [])
-    const hospitalMasterOptions = uniqueSorted(masterOptions?.hospitals ?? [])
-    const doctorMasterOptions = uniqueSorted(masterOptions?.doctors ?? [])
-    const insuranceMasterOptions = uniqueSorted(masterOptions?.insurance ?? [])
+    const configTreatmentOptions = (filterConfigByField.get('treatment') ?? []).map((o) => o.value)
+    const configCategoryOptions = (filterConfigByField.get('category') ?? []).map((o) => o.value)
+    const configCircleOptions = (filterConfigByField.get('circle') ?? []).map((o) => o.value)
+    const configCityOptions = (filterConfigByField.get('city') ?? []).map((o) => o.value)
+    const configHospitalOptions = (filterConfigByField.get('hospital') ?? []).map((o) => o.value)
+    const configDoctorOptions = (filterConfigByField.get('doctor') ?? []).map((o) => o.value)
+    const configInsuranceOptions = (filterConfigByField.get('healthInsurance') ?? []).map((o) => o.value)
+    const configTlOptions = (filterConfigByField.get('tl') ?? []).map((o) => o.value)
+    const configBdOptions = (filterConfigByField.get('bd') ?? []).map((o) => o.value)
+    const configSourceOptions = (filterConfigByField.get('source') ?? []).map((o) => o.value)
+    const configLeadSourceOptions = (filterConfigByField.get('leadSource') ?? []).map((o) => o.value)
+    const configStatusOptions = (filterConfigByField.get('status') ?? []).map((o) => o.value)
+    const configMopOptions = (filterConfigByField.get('mop') ?? []).map((o) => o.value)
 
-    options.treatment = treatmentMasterOptions
-    options.category = categoryMasterOptions
-    options.hospital = mergeUniqueSortedLists(hospitalMasterOptions, options.hospital)
-    options.doctor = mergeUniqueSortedLists(doctorMasterOptions, options.doctor)
-    options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
+    options.treatment = mergeUniqueSortedLists(configTreatmentOptions, options.treatment)
+    options.category = mergeUniqueSortedLists(configCategoryOptions, options.category)
+    options.hospital = mergeUniqueSortedLists(configHospitalOptions, options.hospital)
+    options.doctor = mergeUniqueSortedLists(configDoctorOptions, options.doctor)
+    options.healthInsurance = mergeUniqueSortedLists(configInsuranceOptions, options.healthInsurance)
     options.month = [...PIPELINE_MONTH_FILTER_OPTIONS]
-    options.circle = mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
-    options.bd = mergeUniqueSortedLists(data?.facets.bds?.map((b) => b.name) ?? [], options.bd)
-    options.tl = mergeUniqueSortedLists(data?.facets.teamLeads ?? [], options.tl)
-    options.mop = mergeUniqueSortedLists(PIPELINE_MOP_FILTER_OPTIONS, options.mop)
+    options.circle = mergeUniqueSortedLists(
+      configCircleOptions,
+      mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
+    )
+    options.city = mergeUniqueSortedLists(configCityOptions, options.city)
+    options.bd = mergeUniqueSortedLists(
+      configBdOptions,
+      mergeUniqueSortedLists(data?.facets.bds?.map((b) => b.name) ?? [], options.bd)
+    )
+    options.tl = mergeUniqueSortedLists(
+      configTlOptions,
+      mergeUniqueSortedLists(data?.facets.teamLeads ?? [], options.tl)
+    )
+    options.mop = mergeUniqueSortedLists(
+      configMopOptions,
+      mergeUniqueSortedLists(PIPELINE_MOP_FILTER_OPTIONS, options.mop)
+    )
+    options.source = mergeUniqueSortedLists(configSourceOptions, options.source)
+    options.leadSource = mergeUniqueSortedLists(configLeadSourceOptions, options.leadSource)
     options.recency = mergeUniqueSortedLists(PIPELINE_RECENCY_FILTER_OPTIONS, options.recency)
     options.stage = mergeUniqueSortedLists(PIPELINE_STAGE_FILTER_OPTIONS, options.stage)
-    options.status = PIPELINE_STATUS_FILTER_OPTIONS
+    options.status = configStatusOptions.length > 0 ? configStatusOptions : PIPELINE_STATUS_FILTER_OPTIONS
 
     return options
   }, [
@@ -1286,7 +1315,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     data?.facets.bds,
     data?.facets.teamLeads,
     rawPageLeads,
-    masterOptions,
+    filterConfigByField,
   ])
 
   const getHeaderFilterProps = useCallback(

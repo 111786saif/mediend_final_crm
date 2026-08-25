@@ -95,6 +95,7 @@ const PIPELINE_DATE_COLUMN_FILTER_FIELDS = new Set<PipelineDateColumnFilterField
 const PIPELINE_MULTI_COLUMN_FILTER_FIELDS = new Set<PipelineMultiColumnFilterField>([
   'month',
   'circle',
+  'city',
   'category',
   'treatment',
   'tl',
@@ -104,6 +105,10 @@ const PIPELINE_MULTI_COLUMN_FILTER_FIELDS = new Set<PipelineMultiColumnFilterFie
   'source',
   'leadSource',
   'bd',
+  'hospital',
+  'doctor',
+  'healthInsurance',
+  'preferredLocation',
 ])
 
 export interface PipelineQueryParams {
@@ -1093,6 +1098,15 @@ function buildPipelineMultiSelectWhere(
       return buildLeadSourceFilterWhere(values)
     case 'bd':
       return buildExactInsensitiveNameRelationWhere('bd', values)
+    case 'hospital':
+      return buildExactInsensitiveStringWhere('hospitalName', values)
+    case 'doctor':
+      return buildExactInsensitiveStringWhere('surgeonName', values)
+    case 'healthInsurance':
+      return buildExactInsensitiveStringWhere('insuranceName', values)
+    case 'city':
+    case 'preferredLocation':
+      return buildExactInsensitiveStringWhere('circle', values)
     default:
       return undefined
   }
