@@ -29,15 +29,19 @@ export interface PipelineTableResponse {
   sortDir: PipelineSortDir
 }
 
+export interface PipelineFacets {
+  categories: string[]
+  circles: string[]
+  bds: { id: string; name: string }[]
+  teamLeads?: string[]
+  bdOwners?: string[]
+  columnFacets: Partial<Record<PipelineMultiColumnFilterField, string[]>>
+}
+
 export interface PipelineMetaResponse {
   statusCounts: Record<Exclude<PipelineStatusBucket, 'all'>, number>
   facetTotal: number
-  facets: {
-    categories: string[]
-    circles: string[]
-    bds: { id: string; name: string }[]
-    columnFacets: Partial<Record<PipelineMultiColumnFilterField, string[]>>
-  }
+  facets: PipelineFacets
 }
 
 export interface PipelineCampaignTreeResponse {
@@ -52,12 +56,7 @@ export interface PipelinePageResponse {
   totalPages: number
   statusCounts: Record<Exclude<PipelineStatusBucket, 'all'>, number>
   facetTotal: number
-  facets: {
-    categories: string[]
-    circles: string[]
-    bds: { id: string; name: string }[]
-    columnFacets: Partial<Record<PipelineMultiColumnFilterField, string[]>>
-  }
+  facets: PipelineFacets
   campaignTree: PipelineCampaignGroup[]
   sortBy: PipelineSortField
   sortDir: PipelineSortDir

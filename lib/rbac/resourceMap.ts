@@ -180,6 +180,10 @@ export const RESOURCE_MAP = {
   // Calendar (main.calendar)
   "main.calendar.analytics": { label: "Calendar: Analytics Section", component: "CalendarAnalyticsSection" },
   "main.calendar.calendar": { label: "Calendar: Calendar Section", component: "CalendarBoardSection" },
+  "main.calendar.person_switcher": { label: "Calendar: Person Switcher", component: "PersonSwitcher" },
+
+  // IPD/OPD Calendar (main.ipd_calendar)
+  "main.ipd_calendar.person_switcher": { label: "IPD/OPD Calendar: Person Switcher", component: "PersonSwitcher" },
 
   // Meets (main.meets)
   "main.meets.upcoming": { label: "Meets: Upcoming Tab", component: "MeetsUpcomingTab" },

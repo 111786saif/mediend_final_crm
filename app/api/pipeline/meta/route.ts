@@ -121,6 +121,11 @@ async function loadPipelineApplicableUserFilters(user: {
     const ownerMap = new Map<string, { id: string; name: string }>()
     const teamLeadNames = new Set<string>()
 
+    bdMap.set(user.id, {
+      id: user.id,
+      name: user.name,
+    })
+
     addOwnerOption(ownerMap, {
       id: user.id,
       name: user.name,
@@ -134,7 +139,11 @@ async function loadPipelineApplicableUserFilters(user: {
     for (const subordinate of subordinates) {
       if (subordinate.status !== EmployeeStatus.ACTIVE) continue
 
-      if (subordinate.user.role === UserRole.BD) {
+      if (
+        subordinate.user.role === UserRole.BD ||
+        subordinate.user.role === UserRole.TEAM_LEAD ||
+        subordinate.user.role === UserRole.ASSISTANT_CATEGORY_MANAGER
+      ) {
         bdMap.set(subordinate.user.id, {
           id: subordinate.user.id,
           name: subordinate.user.name,
@@ -309,6 +318,8 @@ export async function GET(request: NextRequest) {
         categories,
         circles,
         bds,
+        teamLeads,
+        bdOwners,
         columnFacets: {
           tl: teamLeads,
           bd: bdOwners,

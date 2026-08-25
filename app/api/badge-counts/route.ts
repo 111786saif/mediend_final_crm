@@ -7,6 +7,10 @@ import { LedgerStatus, LeaveRequestStatus } from '@/generated/prisma/client'
 import { mdPendingNormalizationsWhere } from '@/lib/hrms/normalization-md-pending'
 import { hrPendingNormalizationsWhere } from '@/lib/hrms/normalization-hr-pending'
 import { getTaskOverviewCount } from '@/lib/tasks/stats-scope'
+import { canAccessChat } from '@/lib/chat/access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
+import { getLeadAccessSubordinateIds } from '@/lib/lead-access-api'
+import { Prisma } from '@/generated/prisma/client'
 
 export interface BadgeCounts {
   pendingFinanceApprovals: number
@@ -355,22 +359,28 @@ export async function GET(request: NextRequest) {
     }
 
     // Unread chat messages: calculate unread lead conversations from CaseChatMessage & ChatReadReceipt
-    const chatRoles = [
-      'BD',
-      'INSURANCE',
-      'INSURANCE_HEAD',
-      'PL_HEAD',
-      'PL_ENTRY',
-      'PL_VIEWER',
-      'ACCOUNTS',
-      'TEAM_LEAD',
-      'ASSISTANT_CATEGORY_MANAGER',
-      'CATEGORY_MANAGER',
-      'SALES_HEAD',
-    ]
-    if (chatRoles.includes(user.role) || user.role === 'ADMIN') {
+    const chatAllowed = canAccessChat(user)
+    if (chatAllowed) {
       promises.push(
         (async () => {
+          // Build role-based lead access filter identical to /api/chat/conversations
+          const leadWhere: Prisma.LeadWhereInput = {}
+          if (user.role === 'BD') {
+            leadWhere.bdId = user.id
+          } else if (isSubtreeScopedSalesRole(user.role)) {
+            const accessBdIds = (await getLeadAccessSubordinateIds(user)) ?? []
+            leadWhere.bdId = { in: [user.id, ...accessBdIds] }
+          }
+          if (user.role === 'INSURANCE_HEAD') {
+            leadWhere.kypSubmission = { isNot: null }
+          }
+          if (user.role === 'PL_HEAD') {
+            leadWhere.pipelineStage = 'PL'
+          }
+          if (user.role === 'OUTSTANDING_HEAD') {
+            leadWhere.caseStage = 'OUTSTANDING'
+          }
+
           const receipts = await prisma.chatReadReceipt.findMany({
             where: { userId: user.id },
             select: { leadId: true, lastReadAt: true },
@@ -381,6 +391,7 @@ export async function GET(request: NextRequest) {
             by: ['leadId'],
             where: {
               senderId: { not: user.id },
+              lead: leadWhere,
             },
             _max: { createdAt: true },
           })

@@ -365,13 +365,13 @@ export function PipelineStatusCards({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-2.5 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-2.5 w-full min-w-0">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
             className={cn(
-              'p-2.5 rounded-xl border border-border/60 bg-muted/20 space-y-2',
-              i === 3 ? 'lg:flex-[0.75] lg:min-w-[140px] lg:shrink' : 'lg:flex-[1.1] lg:min-w-[220px]'
+              'p-2.5 rounded-xl border border-border/60 bg-muted/20 space-y-2 min-w-0',
+              i === 3 ? 'lg:flex-[0.75] lg:min-w-[140px] lg:shrink' : 'lg:flex-[1.1] lg:min-w-[200px]'
             )}
           >
             <Skeleton className="h-3.5 w-24 rounded-md bg-muted/60" />
@@ -387,17 +387,17 @@ export function PipelineStatusCards({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-2.5 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-2.5 w-full min-w-0">
       {CATEGORY_GROUPS.map((group) => {
         const isChurning = group.id === 'churning'
         return (
           <div
             key={group.id}
             className={cn(
-              'p-2.5 rounded-xl border transition-all duration-200 shadow-xs flex flex-col justify-between backdrop-blur-xs',
+              'p-2.5 rounded-xl border transition-all duration-200 shadow-xs flex flex-col justify-between backdrop-blur-xs min-w-0',
               isChurning
                 ? 'lg:flex-[0.75] lg:min-w-[140px] lg:shrink'
-                : 'lg:flex-[1.1] lg:min-w-[220px]',
+                : 'lg:flex-[1.1] lg:min-w-[200px]',
               group.containerBgClass,
               group.containerBorderClass
             )}
