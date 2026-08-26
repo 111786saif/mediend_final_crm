@@ -81,8 +81,8 @@ export function PatientDetailDrawer({
   const kyp = lead.kypSubmission as { status?: string; submittedAt?: string | Date } | null | undefined
 
   const surgeryRaw =
-    lead.surgeryDate ??
-    (lead as { admissionRecord?: { surgeryDate?: string | Date } }).admissionRecord?.surgeryDate
+    (lead as { admissionRecord?: { surgeryDate?: string | Date } }).admissionRecord?.surgeryDate ??
+    lead.surgeryDate
   const surgeryFormatted = surgeryRaw
     ? format(new Date(surgeryRaw as string), 'MMM d, yyyy')
     : null

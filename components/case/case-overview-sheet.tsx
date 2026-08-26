@@ -69,7 +69,7 @@ export function CaseOverviewSheet({ row, open, onClose }: CaseOverviewSheetProps
 
   const entryDate = lead?.leadEntryDate || lead?.createdDate
   const surgeryDate =
-    lead?.surgeryDate ?? (lead as { admissionRecord?: { surgeryDate?: string } } | undefined)?.admissionRecord?.surgeryDate
+    (lead as { admissionRecord?: { surgeryDate?: string } } | undefined)?.admissionRecord?.surgeryDate ?? lead?.surgeryDate
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>

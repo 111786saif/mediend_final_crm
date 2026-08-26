@@ -220,8 +220,11 @@ export async function POST(
           atsStatus,
           caseStage,
           flowType: FlowType.CASH,
+          status: 'IPD Schedule',
           hospitalName: validatedData.admittingHospital,
           ipdAdmissionDate: new Date(validatedData.admissionDate),
+          // Keep the legacy lead field in sync with the IPD source of truth.
+          surgeryDate: new Date(validatedData.surgeryDate),
           quantityGrade: validatedData.quantityGrade,
           anesthesia: validatedData.anesthesia,
           surgeonName: validatedData.surgeonName,
@@ -393,8 +396,11 @@ export async function PATCH(
           atsAmount: validatedData.atsAmount || null,
           atsStatus,
           caseStage,
+          status: 'IPD Schedule',
           hospitalName: validatedData.admittingHospital,
           ipdAdmissionDate: new Date(validatedData.admissionDate),
+          // Keep the legacy lead field in sync with the IPD source of truth.
+          surgeryDate: new Date(validatedData.surgeryDate),
           quantityGrade: validatedData.quantityGrade,
           anesthesia: validatedData.anesthesia,
           surgeonName: validatedData.surgeonName,

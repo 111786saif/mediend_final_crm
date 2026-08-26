@@ -196,6 +196,7 @@ export async function POST(
       if (data.status === 'IPD_DONE') {
         toStage = CaseStage.CASH_IPD_DONE
         leadUpdateData.caseStage = CaseStage.CASH_IPD_DONE
+        leadUpdateData.status = 'IPD Done'
         const surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : new Date()
         leadUpdateData.surgeryDate = surgeryDate
         leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
@@ -205,6 +206,7 @@ export async function POST(
       if (data.status === 'IPD_DONE') {
         toStage = CaseStage.IPD_DONE
         leadUpdateData.caseStage = CaseStage.IPD_DONE
+        leadUpdateData.status = 'IPD Done'
         const surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : new Date()
         leadUpdateData.surgeryDate = surgeryDate
         leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage

@@ -112,8 +112,7 @@ async function loadPipelineApplicableUserFilters(user: {
     user.role === UserRole.TEAM_LEAD ||
     user.role === UserRole.ASSISTANT_CATEGORY_MANAGER ||
     user.role === UserRole.CATEGORY_MANAGER ||
-    user.role === UserRole.SALES_HEAD ||
-    user.role === UserRole.EXECUTIVE_ASSISTANT
+    user.role === UserRole.SALES_HEAD
   ) {
     const employee = await getEmployeeByUserId(user.id)
     const subordinates = employee ? await getSubordinates(employee.id, true) : []

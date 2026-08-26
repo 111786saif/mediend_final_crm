@@ -267,6 +267,10 @@ function emptyToNull(v: string | null): string | null {
 export async function buildPipelineRoleWhere(
   user: SessionUser,
 ): Promise<{ where: Prisma.LeadWhereInput; subordinateUserIds?: string[] }> {
+  if (user.role === 'EXECUTIVE_ASSISTANT') {
+    return { where: {} }
+  }
+
   if (user.role === 'BD') {
     return { where: { bdId: user.id } }
   }
@@ -275,8 +279,7 @@ export async function buildPipelineRoleWhere(
     user.role === 'TEAM_LEAD' ||
     user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
     user.role === 'CATEGORY_MANAGER' ||
-    user.role === 'SALES_HEAD' ||
-    user.role === 'EXECUTIVE_ASSISTANT'
+    user.role === 'SALES_HEAD'
   ) {
     const employee = await getEmployeeByUserId(user.id)
     const subordinates = employee ? await getSubordinates(employee.id, true) : []

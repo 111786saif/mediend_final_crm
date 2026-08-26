@@ -74,7 +74,6 @@ export async function GET(request: NextRequest) {
           : {}),
       },
       orderBy: { receivedAt: 'desc' },
-      take: 2000,
     })
 
     const processedLeadIds = incomingLeads

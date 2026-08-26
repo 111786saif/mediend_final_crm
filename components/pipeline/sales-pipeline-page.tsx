@@ -730,7 +730,7 @@ function getLeadTeamLeadText(lead: Lead) {
 }
 
 function getLeadSurgeryDateValue(lead: Lead) {
-  return lead.surgeryDate ?? lead.admissionRecord?.surgeryDate ?? null
+  return lead.admissionRecord?.surgeryDate ?? lead.surgeryDate ?? null
 }
 
 // function getLeadBdmText(lead: Lead) {
@@ -2901,4 +2901,3 @@ function HeaderCell({
     </div>
   )
 }
-
