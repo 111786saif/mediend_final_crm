@@ -81,6 +81,7 @@ import {
   ExternalLink,
   GripVertical,
   HeartCrack,
+  LayoutGrid,
   Loader2,
   MapPinOff,
   Menu,
@@ -636,6 +637,20 @@ function formatMonthCell(value: unknown) {
   return formatTableDate(value)
 }
 
+function getPipelineMonthDateRange(
+  monthName: string,
+  year = new Date().getFullYear()
+): { from: string; to: string } | null {
+  const monthIndex = PIPELINE_MONTH_FILTER_OPTIONS.indexOf(monthName as any)
+  if (monthIndex === -1) return null
+  const start = new Date(year, monthIndex, 1)
+  const end = new Date(year, monthIndex + 1, 0)
+  return {
+    from: format(start, 'yyyy-MM-dd'),
+    to: format(end, 'yyyy-MM-dd'),
+  }
+}
+
 function isCashCaseStage(stage: Lead['caseStage']) {
   return ([
     CaseStage.CASH_IPD_PENDING,
@@ -941,6 +956,27 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       const next = typeof val === 'function' ? val(prev) : val
       try {
         localStorage.setItem(PIPELINE_SCROLL_STORAGE_KEY, String(next))
+      } catch {}
+      return next
+    })
+  }
+
+  const PIPELINE_SHOW_CARDS_STORAGE_KEY = 'sales_pipeline_show_cards'
+  const [showStatusCards, setShowStatusCardsState] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true
+    try {
+      const stored = localStorage.getItem(PIPELINE_SHOW_CARDS_STORAGE_KEY)
+      return stored === null ? true : stored === 'true'
+    } catch {
+      return true
+    }
+  })
+
+  const setShowStatusCards = (val: boolean | ((prev: boolean) => boolean)) => {
+    setShowStatusCardsState((prev) => {
+      const next = typeof val === 'function' ? val(prev) : val
+      try {
+        localStorage.setItem(PIPELINE_SHOW_CARDS_STORAGE_KEY, String(next))
       } catch {}
       return next
     })
@@ -1558,7 +1594,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       const nextQueryString = p.toString()
 
       queryClient.prefetchQuery({
-        queryKey: ['pipeline-table', nextQueryString],
+        queryKey: ['pipeline', 'table', nextQueryString],
         queryFn: () => apiGet(`/api/pipeline?${nextQueryString}`),
         staleTime: 10_000,
       })
@@ -2003,6 +2039,18 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const startDate = state.from ? new Date(state.from) : undefined
   const endDate = state.to ? new Date(state.to) : undefined
 
+  const selectedMonthValue = useMemo(() => {
+    if (!state.from || !state.to) return 'all'
+    const fromYear = new Date(state.from).getFullYear()
+    for (const m of PIPELINE_MONTH_FILTER_OPTIONS) {
+      const range = getPipelineMonthDateRange(m, fromYear)
+      if (range && range.from === state.from && range.to === state.to) {
+        return m
+      }
+    }
+    return 'all'
+  }, [state.from, state.to])
+
   const effectiveColumnOrder = useMemo(() => {
     const isSnoVisible = visibleColumns.sno !== false
     const nonSnoOrderedColumns = orderedAvailableColumnIds.filter((id) => id !== 'sno')
@@ -2040,12 +2088,15 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             <div className="flex items-center gap-3 text-right">
               {/* Month Selector Dropdown */}
               <Select
-                value={columnFilters.month?.[0] || 'all'}
+                value={selectedMonthValue}
                 onValueChange={(val) => {
                   if (val === 'all') {
-                    handleColumnFilterChange('month', [])
+                    setState({ from: '', to: '' })
                   } else {
-                    handleColumnFilterChange('month', [val])
+                    const range = getPipelineMonthDateRange(val)
+                    if (range) {
+                      setState({ from: range.from, to: range.to })
+                    }
                   }
                 }}
               >
@@ -2111,6 +2162,22 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                   <span>Page Scroll</span>
                 </button>
               </div>
+
+              {/* Cards Visibility Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setShowStatusCards((prev) => !prev)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-2.5 h-9 rounded-xl text-xs font-semibold border transition-all cursor-pointer select-none shadow-2xs",
+                  showStatusCards
+                    ? "bg-zinc-100 dark:bg-zinc-800/80 border-zinc-300 dark:border-zinc-700 text-foreground hover:bg-zinc-200/80 dark:hover:bg-zinc-700/80"
+                    : "bg-indigo-50 dark:bg-indigo-950/40 border-indigo-300 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 font-bold"
+                )}
+                title={showStatusCards ? "Hide Top Cards to expand table view" : "Show Top Cards"}
+              >
+                <LayoutGrid className={cn("h-3.5 w-3.5", showStatusCards ? "text-muted-foreground" : "text-indigo-600 dark:text-indigo-400")} />
+                <span>{showStatusCards ? "Hide Cards" : "Show Cards"}</span>
+              </button>
 
               {/* Flashy Teal Banner: Total Leads (Compact, Icon on Right) */}
               <div className="relative overflow-hidden flex items-center justify-between px-4 py-1.5 bg-gradient-to-r from-teal-600/15 via-emerald-500/10 to-teal-500/20 dark:from-teal-950/60 dark:via-emerald-950/40 dark:to-teal-900/50 border border-teal-500/30 dark:border-teal-500/40 rounded-xl shadow-md shadow-teal-500/10 min-w-[240px] sm:min-w-[280px] backdrop-blur-md group hover:border-teal-400/60 transition-all duration-300">
@@ -2217,15 +2284,17 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             )}
 
             {/* Status Breakdown Cards */}
-            <div className="mb-2 shrink-0 w-full min-w-0">
-              <PipelineStatusCards
-                counts={data?.statusCounts}
-                total={data?.facetTotal}
-                selected={state.status}
-                onSelect={(b) => setState({ status: b })}
-                isLoading={isLoading}
-              />
-            </div>
+            {showStatusCards && (
+              <div className="mb-2 shrink-0 w-full min-w-0">
+                <PipelineStatusCards
+                  counts={data?.statusCounts}
+                  total={data?.facetTotal}
+                  selected={state.status}
+                  onSelect={(b) => setState({ status: b })}
+                  isLoading={isLoading}
+                />
+              </div>
+            )}
 
             {/* Main Table Card Container */}
             <div className={cn(
