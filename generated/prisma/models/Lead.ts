@@ -198,6 +198,8 @@ export type LeadMinAggregateOutputType = {
   removeRemarks: boolean | null
   isOldCrmLead: boolean | null
   remarksClearedAt: Date | null
+  removeFollowUpDate: boolean | null
+  followUpDateClearedAt: Date | null
   adId: string | null
   campaignId: string | null
   formId: string | null
@@ -320,6 +322,8 @@ export type LeadMaxAggregateOutputType = {
   removeRemarks: boolean | null
   isOldCrmLead: boolean | null
   remarksClearedAt: Date | null
+  removeFollowUpDate: boolean | null
+  followUpDateClearedAt: Date | null
   adId: string | null
   campaignId: string | null
   formId: string | null
@@ -442,6 +446,8 @@ export type LeadCountAggregateOutputType = {
   removeRemarks: number
   isOldCrmLead: number
   remarksClearedAt: number
+  removeFollowUpDate: number
+  followUpDateClearedAt: number
   adId: number
   campaignId: number
   formId: number
@@ -626,6 +632,8 @@ export type LeadMinAggregateInputType = {
   removeRemarks?: true
   isOldCrmLead?: true
   remarksClearedAt?: true
+  removeFollowUpDate?: true
+  followUpDateClearedAt?: true
   adId?: true
   campaignId?: true
   formId?: true
@@ -748,6 +756,8 @@ export type LeadMaxAggregateInputType = {
   removeRemarks?: true
   isOldCrmLead?: true
   remarksClearedAt?: true
+  removeFollowUpDate?: true
+  followUpDateClearedAt?: true
   adId?: true
   campaignId?: true
   formId?: true
@@ -870,6 +880,8 @@ export type LeadCountAggregateInputType = {
   removeRemarks?: true
   isOldCrmLead?: true
   remarksClearedAt?: true
+  removeFollowUpDate?: true
+  followUpDateClearedAt?: true
   adId?: true
   campaignId?: true
   formId?: true
@@ -1079,6 +1091,8 @@ export type LeadGroupByOutputType = {
   removeRemarks: boolean
   isOldCrmLead: boolean
   remarksClearedAt: Date | null
+  removeFollowUpDate: boolean
+  followUpDateClearedAt: Date | null
   adId: string | null
   campaignId: string | null
   formId: string | null
@@ -1224,6 +1238,8 @@ export type LeadWhereInput = {
   removeRemarks?: Prisma.BoolFilter<"Lead"> | boolean
   isOldCrmLead?: Prisma.BoolFilter<"Lead"> | boolean
   remarksClearedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFilter<"Lead"> | boolean
+  followUpDateClearedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   adId?: Prisma.StringNullableFilter<"Lead"> | string | null
   campaignId?: Prisma.StringNullableFilter<"Lead"> | string | null
   formId?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -1376,6 +1392,8 @@ export type LeadOrderByWithRelationInput = {
   removeRemarks?: Prisma.SortOrder
   isOldCrmLead?: Prisma.SortOrder
   remarksClearedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  removeFollowUpDate?: Prisma.SortOrder
+  followUpDateClearedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   adId?: Prisma.SortOrderInput | Prisma.SortOrder
   campaignId?: Prisma.SortOrderInput | Prisma.SortOrder
   formId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1531,6 +1549,8 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   removeRemarks?: Prisma.BoolFilter<"Lead"> | boolean
   isOldCrmLead?: Prisma.BoolFilter<"Lead"> | boolean
   remarksClearedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFilter<"Lead"> | boolean
+  followUpDateClearedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   adId?: Prisma.StringNullableFilter<"Lead"> | string | null
   campaignId?: Prisma.StringNullableFilter<"Lead"> | string | null
   formId?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -1683,6 +1703,8 @@ export type LeadOrderByWithAggregationInput = {
   removeRemarks?: Prisma.SortOrder
   isOldCrmLead?: Prisma.SortOrder
   remarksClearedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  removeFollowUpDate?: Prisma.SortOrder
+  followUpDateClearedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   adId?: Prisma.SortOrderInput | Prisma.SortOrder
   campaignId?: Prisma.SortOrderInput | Prisma.SortOrder
   formId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1813,6 +1835,8 @@ export type LeadScalarWhereWithAggregatesInput = {
   removeRemarks?: Prisma.BoolWithAggregatesFilter<"Lead"> | boolean
   isOldCrmLead?: Prisma.BoolWithAggregatesFilter<"Lead"> | boolean
   remarksClearedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
+  removeFollowUpDate?: Prisma.BoolWithAggregatesFilter<"Lead"> | boolean
+  followUpDateClearedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
   adId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   campaignId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   formId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
@@ -1928,6 +1952,8 @@ export type LeadCreateInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -2080,6 +2106,8 @@ export type LeadUncheckedCreateInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -2218,6 +2246,8 @@ export type LeadUpdateInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2370,6 +2400,8 @@ export type LeadUncheckedUpdateInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2515,6 +2547,8 @@ export type LeadCreateManyInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -2630,6 +2664,8 @@ export type LeadUpdateManyMutationInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2752,6 +2788,8 @@ export type LeadUncheckedUpdateManyInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2884,6 +2922,8 @@ export type LeadCountOrderByAggregateInput = {
   removeRemarks?: Prisma.SortOrder
   isOldCrmLead?: Prisma.SortOrder
   remarksClearedAt?: Prisma.SortOrder
+  removeFollowUpDate?: Prisma.SortOrder
+  followUpDateClearedAt?: Prisma.SortOrder
   adId?: Prisma.SortOrder
   campaignId?: Prisma.SortOrder
   formId?: Prisma.SortOrder
@@ -3036,6 +3076,8 @@ export type LeadMaxOrderByAggregateInput = {
   removeRemarks?: Prisma.SortOrder
   isOldCrmLead?: Prisma.SortOrder
   remarksClearedAt?: Prisma.SortOrder
+  removeFollowUpDate?: Prisma.SortOrder
+  followUpDateClearedAt?: Prisma.SortOrder
   adId?: Prisma.SortOrder
   campaignId?: Prisma.SortOrder
   formId?: Prisma.SortOrder
@@ -3158,6 +3200,8 @@ export type LeadMinOrderByAggregateInput = {
   removeRemarks?: Prisma.SortOrder
   isOldCrmLead?: Prisma.SortOrder
   remarksClearedAt?: Prisma.SortOrder
+  removeFollowUpDate?: Prisma.SortOrder
+  followUpDateClearedAt?: Prisma.SortOrder
   adId?: Prisma.SortOrder
   campaignId?: Prisma.SortOrder
   formId?: Prisma.SortOrder
@@ -3993,6 +4037,8 @@ export type LeadCreateWithoutCreatedByInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -4143,6 +4189,8 @@ export type LeadUncheckedCreateWithoutCreatedByInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -4291,6 +4339,8 @@ export type LeadCreateWithoutBdInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -4441,6 +4491,8 @@ export type LeadUncheckedCreateWithoutBdInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -4589,6 +4641,8 @@ export type LeadCreateWithoutUpdatedByInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -4739,6 +4793,8 @@ export type LeadUncheckedCreateWithoutUpdatedByInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -4913,6 +4969,8 @@ export type LeadScalarWhereInput = {
   removeRemarks?: Prisma.BoolFilter<"Lead"> | boolean
   isOldCrmLead?: Prisma.BoolFilter<"Lead"> | boolean
   remarksClearedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFilter<"Lead"> | boolean
+  followUpDateClearedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   adId?: Prisma.StringNullableFilter<"Lead"> | string | null
   campaignId?: Prisma.StringNullableFilter<"Lead"> | string | null
   formId?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -5060,6 +5118,8 @@ export type LeadCreateWithoutOpdPrescriptionImagesInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -5211,6 +5271,8 @@ export type LeadUncheckedCreateWithoutOpdPrescriptionImagesInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -5364,6 +5426,8 @@ export type LeadUpdateWithoutOpdPrescriptionImagesInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5515,6 +5579,8 @@ export type LeadUncheckedUpdateWithoutOpdPrescriptionImagesInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5652,6 +5718,8 @@ export type LeadCreateWithoutCallNotesInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -5803,6 +5871,8 @@ export type LeadUncheckedCreateWithoutCallNotesInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -5956,6 +6026,8 @@ export type LeadUpdateWithoutCallNotesInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6107,6 +6179,8 @@ export type LeadUncheckedUpdateWithoutCallNotesInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6244,6 +6318,8 @@ export type LeadCreateWithoutLeadRemarkEntriesInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -6395,6 +6471,8 @@ export type LeadUncheckedCreateWithoutLeadRemarkEntriesInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -6548,6 +6626,8 @@ export type LeadUpdateWithoutLeadRemarkEntriesInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6699,6 +6779,8 @@ export type LeadUncheckedUpdateWithoutLeadRemarkEntriesInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6836,6 +6918,8 @@ export type LeadCreateWithoutQrCallAuditLogsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -6987,6 +7071,8 @@ export type LeadUncheckedCreateWithoutQrCallAuditLogsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -7140,6 +7226,8 @@ export type LeadUpdateWithoutQrCallAuditLogsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7291,6 +7379,8 @@ export type LeadUncheckedUpdateWithoutQrCallAuditLogsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7428,6 +7518,8 @@ export type LeadCreateWithoutQrPublicLinksInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -7579,6 +7671,8 @@ export type LeadUncheckedCreateWithoutQrPublicLinksInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -7732,6 +7826,8 @@ export type LeadUpdateWithoutQrPublicLinksInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7883,6 +7979,8 @@ export type LeadUncheckedUpdateWithoutQrPublicLinksInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8020,6 +8118,8 @@ export type LeadCreateWithoutStageEventsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -8171,6 +8271,8 @@ export type LeadUncheckedCreateWithoutStageEventsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -8324,6 +8426,8 @@ export type LeadUpdateWithoutStageEventsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8475,6 +8579,8 @@ export type LeadUncheckedUpdateWithoutStageEventsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8612,6 +8718,8 @@ export type LeadCreateWithoutInsuranceCaseInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -8763,6 +8871,8 @@ export type LeadUncheckedCreateWithoutInsuranceCaseInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -8916,6 +9026,8 @@ export type LeadUpdateWithoutInsuranceCaseInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9067,6 +9179,8 @@ export type LeadUncheckedUpdateWithoutInsuranceCaseInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9204,6 +9318,8 @@ export type LeadCreateWithoutPlRecordInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -9355,6 +9471,8 @@ export type LeadUncheckedCreateWithoutPlRecordInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -9508,6 +9626,8 @@ export type LeadUpdateWithoutPlRecordInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9659,6 +9779,8 @@ export type LeadUncheckedUpdateWithoutPlRecordInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9796,6 +9918,8 @@ export type LeadCreateWithoutInvoiceRequestsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -9947,6 +10071,8 @@ export type LeadUncheckedCreateWithoutInvoiceRequestsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -10100,6 +10226,8 @@ export type LeadUpdateWithoutInvoiceRequestsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10251,6 +10379,8 @@ export type LeadUncheckedUpdateWithoutInvoiceRequestsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10388,6 +10518,8 @@ export type LeadCreateWithoutDoctorPayoffRequestsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -10539,6 +10671,8 @@ export type LeadUncheckedCreateWithoutDoctorPayoffRequestsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -10692,6 +10826,8 @@ export type LeadUpdateWithoutDoctorPayoffRequestsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10843,6 +10979,8 @@ export type LeadUncheckedUpdateWithoutDoctorPayoffRequestsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10980,6 +11118,8 @@ export type LeadCreateWithoutKypSubmissionInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -11131,6 +11271,8 @@ export type LeadUncheckedCreateWithoutKypSubmissionInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -11284,6 +11426,8 @@ export type LeadUpdateWithoutKypSubmissionInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11435,6 +11579,8 @@ export type LeadUncheckedUpdateWithoutKypSubmissionInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11572,6 +11718,8 @@ export type LeadCreateWithoutCrmAssignmentPreviewLogsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -11723,6 +11871,8 @@ export type LeadUncheckedCreateWithoutCrmAssignmentPreviewLogsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -11876,6 +12026,8 @@ export type LeadUpdateWithoutCrmAssignmentPreviewLogsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12027,6 +12179,8 @@ export type LeadUncheckedUpdateWithoutCrmAssignmentPreviewLogsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12164,6 +12318,8 @@ export type LeadCreateWithoutAdmissionRecordInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -12315,6 +12471,8 @@ export type LeadUncheckedCreateWithoutAdmissionRecordInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -12468,6 +12626,8 @@ export type LeadUpdateWithoutAdmissionRecordInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12619,6 +12779,8 @@ export type LeadUncheckedUpdateWithoutAdmissionRecordInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12756,6 +12918,8 @@ export type LeadCreateWithoutOpdAppointmentsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -12907,6 +13071,8 @@ export type LeadUncheckedCreateWithoutOpdAppointmentsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -13060,6 +13226,8 @@ export type LeadUpdateWithoutOpdAppointmentsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -13211,6 +13379,8 @@ export type LeadUncheckedUpdateWithoutOpdAppointmentsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -13348,6 +13518,8 @@ export type LeadCreateWithoutInsuranceInitiateFormInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -13499,6 +13671,8 @@ export type LeadUncheckedCreateWithoutInsuranceInitiateFormInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -13652,6 +13826,8 @@ export type LeadUpdateWithoutInsuranceInitiateFormInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -13803,6 +13979,8 @@ export type LeadUncheckedUpdateWithoutInsuranceInitiateFormInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -13940,6 +14118,8 @@ export type LeadCreateWithoutCaseStageHistoryInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -14091,6 +14271,8 @@ export type LeadUncheckedCreateWithoutCaseStageHistoryInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -14244,6 +14426,8 @@ export type LeadUpdateWithoutCaseStageHistoryInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14395,6 +14579,8 @@ export type LeadUncheckedUpdateWithoutCaseStageHistoryInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14532,6 +14718,8 @@ export type LeadCreateWithoutWorkflowResetLogsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -14683,6 +14871,8 @@ export type LeadUncheckedCreateWithoutWorkflowResetLogsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -14836,6 +15026,8 @@ export type LeadUpdateWithoutWorkflowResetLogsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14987,6 +15179,8 @@ export type LeadUncheckedUpdateWithoutWorkflowResetLogsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15124,6 +15318,8 @@ export type LeadCreateWithoutCaseChatMessagesInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -15275,6 +15471,8 @@ export type LeadUncheckedCreateWithoutCaseChatMessagesInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -15428,6 +15626,8 @@ export type LeadUpdateWithoutCaseChatMessagesInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15579,6 +15779,8 @@ export type LeadUncheckedUpdateWithoutCaseChatMessagesInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15716,6 +15918,8 @@ export type LeadCreateWithoutChatReadReceiptsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -15867,6 +16071,8 @@ export type LeadUncheckedCreateWithoutChatReadReceiptsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -16020,6 +16226,8 @@ export type LeadUpdateWithoutChatReadReceiptsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16171,6 +16379,8 @@ export type LeadUncheckedUpdateWithoutChatReadReceiptsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16308,6 +16518,8 @@ export type LeadCreateWithoutDischargeSheetInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -16459,6 +16671,8 @@ export type LeadUncheckedCreateWithoutDischargeSheetInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -16612,6 +16826,8 @@ export type LeadUpdateWithoutDischargeSheetInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16763,6 +16979,8 @@ export type LeadUncheckedUpdateWithoutDischargeSheetInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16900,6 +17118,8 @@ export type LeadCreateWithoutOutstandingCaseInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -17051,6 +17271,8 @@ export type LeadUncheckedCreateWithoutOutstandingCaseInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -17204,6 +17426,8 @@ export type LeadUpdateWithoutOutstandingCaseInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17355,6 +17579,8 @@ export type LeadUncheckedUpdateWithoutOutstandingCaseInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17492,6 +17718,8 @@ export type LeadCreateWithoutPaymentInstallmentsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -17643,6 +17871,8 @@ export type LeadUncheckedCreateWithoutPaymentInstallmentsInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -17796,6 +18026,8 @@ export type LeadUpdateWithoutPaymentInstallmentsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17947,6 +18179,8 @@ export type LeadUncheckedUpdateWithoutPaymentInstallmentsInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -18084,6 +18318,8 @@ export type LeadCreateWithoutComplianceCallInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -18235,6 +18471,8 @@ export type LeadUncheckedCreateWithoutComplianceCallInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -18388,6 +18626,8 @@ export type LeadUpdateWithoutComplianceCallInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -18539,6 +18779,8 @@ export type LeadUncheckedUpdateWithoutComplianceCallInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -18676,6 +18918,8 @@ export type LeadCreateWithoutOpdSurgeryRemarkInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -18826,6 +19070,8 @@ export type LeadUncheckedCreateWithoutOpdSurgeryRemarkInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -18990,6 +19236,8 @@ export type LeadCreateWithoutOpdReasonNoSurgeryInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -19140,6 +19388,8 @@ export type LeadUncheckedCreateWithoutOpdReasonNoSurgeryInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -19304,6 +19554,8 @@ export type LeadCreateWithoutOpdFollowUpReasonInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -19454,6 +19706,8 @@ export type LeadUncheckedCreateWithoutOpdFollowUpReasonInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -19618,6 +19872,8 @@ export type LeadCreateWithoutTreatmentMasterInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -19768,6 +20024,8 @@ export type LeadUncheckedCreateWithoutTreatmentMasterInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -19938,6 +20196,8 @@ export type LeadCreateManyCreatedByInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -20059,6 +20319,8 @@ export type LeadCreateManyBdInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -20180,6 +20442,8 @@ export type LeadCreateManyUpdatedByInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -20295,6 +20559,8 @@ export type LeadUpdateWithoutCreatedByInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -20445,6 +20711,8 @@ export type LeadUncheckedUpdateWithoutCreatedByInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -20589,6 +20857,8 @@ export type LeadUncheckedUpdateManyWithoutCreatedByInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -20704,6 +20974,8 @@ export type LeadUpdateWithoutBdInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -20854,6 +21126,8 @@ export type LeadUncheckedUpdateWithoutBdInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -20998,6 +21272,8 @@ export type LeadUncheckedUpdateManyWithoutBdInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21113,6 +21389,8 @@ export type LeadUpdateWithoutUpdatedByInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21263,6 +21541,8 @@ export type LeadUncheckedUpdateWithoutUpdatedByInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21407,6 +21687,8 @@ export type LeadUncheckedUpdateManyWithoutUpdatedByInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21528,6 +21810,8 @@ export type LeadCreateManyOpdSurgeryRemarkInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -21643,6 +21927,8 @@ export type LeadUpdateWithoutOpdSurgeryRemarkInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21793,6 +22079,8 @@ export type LeadUncheckedUpdateWithoutOpdSurgeryRemarkInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21937,6 +22225,8 @@ export type LeadUncheckedUpdateManyWithoutOpdSurgeryRemarkInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22058,6 +22348,8 @@ export type LeadCreateManyOpdReasonNoSurgeryInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -22173,6 +22465,8 @@ export type LeadUpdateWithoutOpdReasonNoSurgeryInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22323,6 +22617,8 @@ export type LeadUncheckedUpdateWithoutOpdReasonNoSurgeryInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22467,6 +22763,8 @@ export type LeadUncheckedUpdateManyWithoutOpdReasonNoSurgeryInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22588,6 +22886,8 @@ export type LeadCreateManyOpdFollowUpReasonInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -22703,6 +23003,8 @@ export type LeadUpdateWithoutOpdFollowUpReasonInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22853,6 +23155,8 @@ export type LeadUncheckedUpdateWithoutOpdFollowUpReasonInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22997,6 +23301,8 @@ export type LeadUncheckedUpdateManyWithoutOpdFollowUpReasonInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -23118,6 +23424,8 @@ export type LeadCreateManyTreatmentMasterInput = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: Date | string | null
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: Date | string | null
   adId?: string | null
   campaignId?: string | null
   formId?: string | null
@@ -23233,6 +23541,8 @@ export type LeadUpdateWithoutTreatmentMasterInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -23383,6 +23693,8 @@ export type LeadUncheckedUpdateWithoutTreatmentMasterInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -23527,6 +23839,8 @@ export type LeadUncheckedUpdateManyWithoutTreatmentMasterInput = {
   removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOldCrmLead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   remarksClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  removeFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  followUpDateClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -23806,6 +24120,8 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: boolean
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: boolean
   adId?: boolean
   campaignId?: boolean
   formId?: boolean
@@ -23959,6 +24275,8 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: boolean
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: boolean
   adId?: boolean
   campaignId?: boolean
   formId?: boolean
@@ -24088,6 +24406,8 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: boolean
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: boolean
   adId?: boolean
   campaignId?: boolean
   formId?: boolean
@@ -24217,6 +24537,8 @@ export type LeadSelectScalar = {
   removeRemarks?: boolean
   isOldCrmLead?: boolean
   remarksClearedAt?: boolean
+  removeFollowUpDate?: boolean
+  followUpDateClearedAt?: boolean
   adId?: boolean
   campaignId?: boolean
   formId?: boolean
@@ -24227,7 +24549,7 @@ export type LeadSelectScalar = {
   lostAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadRef" | "patientName" | "age" | "dateOfBirth" | "sex" | "phoneNumber" | "alternateNumber" | "attendantName" | "bdId" | "status" | "pipelineStage" | "caseStage" | "circle" | "category" | "treatment" | "treatmentMasterId" | "atsAmount" | "atsStatus" | "anesthesia" | "quantityGrade" | "surgeonName" | "surgeonType" | "hospitalName" | "flowType" | "modeOfPayment" | "discount" | "copay" | "deduction" | "settledTotal" | "billAmount" | "insuranceName" | "tpa" | "sumInsured" | "roomRent" | "icu" | "capping" | "arrivalDate" | "arrivalTime" | "surgeryDate" | "ipdPotentialDate" | "ipdPotentialMarkedAt" | "operationTime" | "implantType" | "implantAmount" | "instrument" | "consumables" | "createdById" | "createdDate" | "updatedById" | "updatedDate" | "remarks" | "source" | "campaignName" | "bdeName" | "conversionDate" | "mediendProfit" | "hospitalShare" | "doctorShare" | "othersShare" | "netProfit" | "ticketSize" | "collectedByMediend" | "collectedByHospital" | "month" | "assignedDate" | "leadEntryDate" | "patientEmail" | "whatsapp" | "address" | "docUpload" | "diseaseDetails" | "followUpDate" | "subStatus" | "opdHospital" | "opdDrName" | "opdContactNo" | "opdCharges" | "opdScheduleDate" | "opdMeeting" | "opdSurgeryAdvised" | "opdSurgeryRemarkCode" | "opdReasonNoSurgeryCode" | "opdFollowUpReasonCode" | "opdImplantRequired" | "opdDiagnosis" | "ipdAdmissionDate" | "ipdHospital" | "ipdDrName" | "ipdContactNo" | "ipdTotalPayment" | "ipdDetails" | "paymentDetails" | "attendantContactNo" | "waFormat" | "leadSource" | "whatsappMessage" | "notification" | "emailSent" | "smsSent" | "whatsappSent" | "website" | "description" | "refId" | "duplCount" | "aes" | "profession" | "qr" | "removeRemarks" | "isOldCrmLead" | "remarksClearedAt" | "adId" | "campaignId" | "formId" | "teamLeadId" | "remarksId" | "openedInCrmAt" | "lostReason" | "lostAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadRef" | "patientName" | "age" | "dateOfBirth" | "sex" | "phoneNumber" | "alternateNumber" | "attendantName" | "bdId" | "status" | "pipelineStage" | "caseStage" | "circle" | "category" | "treatment" | "treatmentMasterId" | "atsAmount" | "atsStatus" | "anesthesia" | "quantityGrade" | "surgeonName" | "surgeonType" | "hospitalName" | "flowType" | "modeOfPayment" | "discount" | "copay" | "deduction" | "settledTotal" | "billAmount" | "insuranceName" | "tpa" | "sumInsured" | "roomRent" | "icu" | "capping" | "arrivalDate" | "arrivalTime" | "surgeryDate" | "ipdPotentialDate" | "ipdPotentialMarkedAt" | "operationTime" | "implantType" | "implantAmount" | "instrument" | "consumables" | "createdById" | "createdDate" | "updatedById" | "updatedDate" | "remarks" | "source" | "campaignName" | "bdeName" | "conversionDate" | "mediendProfit" | "hospitalShare" | "doctorShare" | "othersShare" | "netProfit" | "ticketSize" | "collectedByMediend" | "collectedByHospital" | "month" | "assignedDate" | "leadEntryDate" | "patientEmail" | "whatsapp" | "address" | "docUpload" | "diseaseDetails" | "followUpDate" | "subStatus" | "opdHospital" | "opdDrName" | "opdContactNo" | "opdCharges" | "opdScheduleDate" | "opdMeeting" | "opdSurgeryAdvised" | "opdSurgeryRemarkCode" | "opdReasonNoSurgeryCode" | "opdFollowUpReasonCode" | "opdImplantRequired" | "opdDiagnosis" | "ipdAdmissionDate" | "ipdHospital" | "ipdDrName" | "ipdContactNo" | "ipdTotalPayment" | "ipdDetails" | "paymentDetails" | "attendantContactNo" | "waFormat" | "leadSource" | "whatsappMessage" | "notification" | "emailSent" | "smsSent" | "whatsappSent" | "website" | "description" | "refId" | "duplCount" | "aes" | "profession" | "qr" | "removeRemarks" | "isOldCrmLead" | "remarksClearedAt" | "removeFollowUpDate" | "followUpDateClearedAt" | "adId" | "campaignId" | "formId" | "teamLeadId" | "remarksId" | "openedInCrmAt" | "lostReason" | "lostAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bd?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   treatmentMaster?: boolean | Prisma.Lead$treatmentMasterArgs<ExtArgs>
@@ -24426,6 +24748,8 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     removeRemarks: boolean
     isOldCrmLead: boolean
     remarksClearedAt: Date | null
+    removeFollowUpDate: boolean
+    followUpDateClearedAt: Date | null
     adId: string | null
     campaignId: string | null
     formId: string | null
@@ -24998,6 +25322,8 @@ export interface LeadFieldRefs {
   readonly removeRemarks: Prisma.FieldRef<"Lead", 'Boolean'>
   readonly isOldCrmLead: Prisma.FieldRef<"Lead", 'Boolean'>
   readonly remarksClearedAt: Prisma.FieldRef<"Lead", 'DateTime'>
+  readonly removeFollowUpDate: Prisma.FieldRef<"Lead", 'Boolean'>
+  readonly followUpDateClearedAt: Prisma.FieldRef<"Lead", 'DateTime'>
   readonly adId: Prisma.FieldRef<"Lead", 'String'>
   readonly campaignId: Prisma.FieldRef<"Lead", 'String'>
   readonly formId: Prisma.FieldRef<"Lead", 'String'>
