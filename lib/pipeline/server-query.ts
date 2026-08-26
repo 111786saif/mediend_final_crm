@@ -17,6 +17,7 @@ import {
   normalizePipelineMonthValue,
   normalizePipelineSexValue,
 } from '@/lib/pipeline/filter-normalizers'
+import { getEmployeeByUserId, getSubordinates } from '@/lib/hierarchy'
 import { format } from 'date-fns'
 
 export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd' | 'followUpDate'
@@ -94,6 +95,7 @@ const PIPELINE_DATE_COLUMN_FILTER_FIELDS = new Set<PipelineDateColumnFilterField
 const PIPELINE_MULTI_COLUMN_FILTER_FIELDS = new Set<PipelineMultiColumnFilterField>([
   'month',
   'circle',
+  'city',
   'category',
   'treatment',
   'tl',
@@ -103,6 +105,10 @@ const PIPELINE_MULTI_COLUMN_FILTER_FIELDS = new Set<PipelineMultiColumnFilterFie
   'source',
   'leadSource',
   'bd',
+  'hospital',
+  'doctor',
+  'healthInsurance',
+  'preferredLocation',
 ])
 
 export interface PipelineQueryParams {
@@ -265,10 +271,6 @@ export async function buildPipelineRoleWhere(
     return { where: { bdId: user.id } }
   }
 
-  // Fixed-depth sales hierarchy:
-  // Executive Assistant -> Sales Head -> Category Manager -> Team Lead -> BD
-  // Build access through the assignee's manager chain instead of expanding a
-  // very large bdId IN (...) list, which is safer for the pg driver adapter.
   if (
     user.role === 'TEAM_LEAD' ||
     user.role === 'ASSISTANT_CATEGORY_MANAGER' ||
@@ -276,46 +278,24 @@ export async function buildPipelineRoleWhere(
     user.role === 'SALES_HEAD' ||
     user.role === 'EXECUTIVE_ASSISTANT'
   ) {
+    const employee = await getEmployeeByUserId(user.id)
+    const subordinates = employee ? await getSubordinates(employee.id, true) : []
+    const visibleUserIds = [user.id, ...subordinates.map((s) => s.userId)]
+
+    const or: Prisma.LeadWhereInput[] = [
+      { bdId: { in: visibleUserIds } },
+    ]
+
+    if (employee?.bdNumber) {
+      or.push({ teamLeadId: employee.bdNumber })
+    }
+
     return {
-      where: buildPipelineHierarchyScopeWhere(user.id),
+      where: or.length === 1 ? or[0]! : { OR: or },
+      subordinateUserIds: visibleUserIds,
     }
   }
   return { where: {} }
-}
-
-function buildPipelineHierarchyScopeWhere(userId: string): Prisma.LeadWhereInput {
-  const or: Prisma.LeadWhereInput[] = [{ bdId: userId }]
-
-  for (let depth = 1; depth <= 4; depth += 1) {
-    or.push({
-      bd: {
-        is: {
-          employee: {
-            is: buildEmployeeManagerChainWhere(userId, depth),
-          },
-        },
-      },
-    })
-  }
-
-  return { OR: or }
-}
-
-function buildEmployeeManagerChainWhere(
-  managerUserId: string,
-  depth: number,
-): Prisma.EmployeeWhereInput {
-  let current: Prisma.EmployeeWhereInput = { userId: managerUserId }
-
-  for (let level = 0; level < depth; level += 1) {
-    current = {
-      manager: {
-        is: current,
-      },
-    }
-  }
-
-  return current
 }
 
 export function statusBucketWhere(
@@ -605,12 +585,23 @@ export function buildPipelineFiltersWhere(
   }
 
   if (params.search) {
+    const trimmedSearch = params.search.trim()
+    const pureDigits = trimmedSearch.replace(/\D/g, '')
     const phone = parsePhoneSearchQuery(params.search)
+
     if (phone) {
       and.push({
         OR: [
           { phoneNumber: { contains: phone.last10 } },
           { alternateNumber: { contains: phone.last10 } },
+        ],
+      })
+    } else if (pureDigits.length > 0 && /^[\d\s+\-().]+$/.test(trimmedSearch)) {
+      const searchTarget = pureDigits.length >= 10 ? pureDigits.slice(-10) : pureDigits
+      and.push({
+        OR: [
+          { phoneNumber: { contains: searchTarget } },
+          { alternateNumber: { contains: searchTarget } },
         ],
       })
     } else {
@@ -1107,6 +1098,15 @@ function buildPipelineMultiSelectWhere(
       return buildLeadSourceFilterWhere(values)
     case 'bd':
       return buildExactInsensitiveNameRelationWhere('bd', values)
+    case 'hospital':
+      return buildExactInsensitiveStringWhere('hospitalName', values)
+    case 'doctor':
+      return buildExactInsensitiveStringWhere('surgeonName', values)
+    case 'healthInsurance':
+      return buildExactInsensitiveStringWhere('insuranceName', values)
+    case 'city':
+    case 'preferredLocation':
+      return buildExactInsensitiveStringWhere('circle', values)
     default:
       return undefined
   }

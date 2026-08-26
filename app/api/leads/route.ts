@@ -21,6 +21,7 @@ import {
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
 import { isLeadRefUniqueViolation, withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
+import { createLeadAssignedNotification } from '@/lib/lead-notifications'
 
 function normalizeOptionalLeadText(value: unknown) {
   if (value == null) return null
@@ -833,7 +834,6 @@ export async function POST(request: NextRequest) {
       return errorResponse('Phone number must contain at least 10 digits', 400)
     }
 
-    const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
     const normalizedCampaignId = normalizeOptionalLeadText(campaignId)
     const campaign = normalizedCampaignId
       ? await getCampaignForWebhook(normalizedCampaignId)
@@ -844,6 +844,8 @@ export async function POST(request: NextRequest) {
     const explicitCategory = normalizeOptionalLeadText(category)
     const explicitTreatment = normalizeOptionalLeadText(treatment)
     const explicitTreatmentMasterId = normalizeOptionalLeadText(treatmentMasterId)
+
+    const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone, explicitTreatment)
 
     const finalCircle =
       explicitCircle ??
@@ -916,6 +918,15 @@ export async function POST(request: NextRequest) {
             },
           })
         );
+
+    if (lead.bdId) {
+      await createLeadAssignedNotification({
+        userId: lead.bdId,
+        patientName: lead.patientName,
+        leadRef: lead.leadRef,
+        leadId: lead.id,
+      })
+    }
 
     return successResponse(
       lead,

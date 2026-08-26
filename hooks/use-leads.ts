@@ -31,6 +31,7 @@ export interface Lead {
   age?: number
   sex?: string | null
   phoneNumber?: string
+  alternateNumber?: string | null
   city?: string
   circle?: string | null
   hospitalName?: string

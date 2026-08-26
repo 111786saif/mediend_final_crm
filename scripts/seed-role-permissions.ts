@@ -260,6 +260,13 @@ async function main() {
         : [...new Set([...allowedKeys, ...UNIVERSAL_SECTIONS])]
 
     const allowedResources = allResources.filter((res) => {
+      // BD and TEAM_LEAD roles do not get person_switcher by default (controlled via Access Matrix)
+      if (
+        (role === 'BD' || role === 'TEAM_LEAD') &&
+        (res.key === 'main.calendar.person_switcher' || res.key === 'main.ipd_calendar.person_switcher')
+      ) {
+        return false
+      }
       return keys.some(
         (allowedKey) =>
           res.key === allowedKey ||

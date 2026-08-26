@@ -69,10 +69,14 @@ function getBadgeCount(
     hrPendingNormalizations?: number
     pendingOnboardingApprovals?: number
     taskOverviewCount?: number
+    crmNewLeads?: number
   } | undefined,
   _isMdOrAdmin: boolean
 ): number {
   if (!counts) return 0
+  if (itemTitle === 'CRM' || itemTitle === 'Pipeline') {
+    return counts.crmNewLeads ?? 0
+  }
   if (itemTitle === 'Tasks') {
     return counts.taskOverviewCount ?? 0
   }

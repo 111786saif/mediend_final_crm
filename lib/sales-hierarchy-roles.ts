@@ -11,9 +11,10 @@ export const CATEGORY_MANAGER_ROLES: UserRole[] = [UserRole.CATEGORY_MANAGER]
 
 /** Roles that auto-scope analytics to their recursive subtree (self + descendants). */
 export const SUBTREE_SCOPED_SALES_ROLES: UserRole[] = [
-  UserRole.TEAM_LEAD,
-  UserRole.ASSISTANT_CATEGORY_MANAGER,
+  UserRole.SALES_HEAD,
   UserRole.CATEGORY_MANAGER,
+  UserRole.ASSISTANT_CATEGORY_MANAGER,
+  UserRole.TEAM_LEAD,
 ]
 
 /** Roles allowed to view org/subtree sales dashboards and IPD analytics. */
@@ -38,9 +39,10 @@ export function isCategoryManagerRole(role: UserRole | string): boolean {
 
 export function isSubtreeScopedSalesRole(role: UserRole | string): boolean {
   return (
-    role === UserRole.TEAM_LEAD ||
+    role === UserRole.SALES_HEAD ||
+    role === UserRole.CATEGORY_MANAGER ||
     role === UserRole.ASSISTANT_CATEGORY_MANAGER ||
-    role === UserRole.CATEGORY_MANAGER
+    role === UserRole.TEAM_LEAD
   )
 }
 

@@ -3,10 +3,14 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { LedgerStatus, LeaveRequestStatus } from '@/generated/prisma/client'
+import { LedgerStatus, LeaveRequestStatus, PipelineStage } from '@/generated/prisma/client'
 import { mdPendingNormalizationsWhere } from '@/lib/hrms/normalization-md-pending'
 import { hrPendingNormalizationsWhere } from '@/lib/hrms/normalization-hr-pending'
 import { getTaskOverviewCount } from '@/lib/tasks/stats-scope'
+import { canAccessChat } from '@/lib/chat/access'
+import { isSubtreeScopedSalesRole } from '@/lib/sales-hierarchy-roles'
+import { getLeadAccessSubordinateIds } from '@/lib/lead-access-api'
+import { Prisma } from '@/generated/prisma/client'
 
 export interface BadgeCounts {
   pendingFinanceApprovals: number
@@ -43,6 +47,7 @@ export interface BadgeCounts {
   taskOverviewCount: number
   upcomingMeetsToday: number
   pendingOnboardingApprovals: number
+  crmNewLeads: number
 }
 
 export async function GET(request: NextRequest) {
@@ -88,6 +93,7 @@ export async function GET(request: NextRequest) {
       taskOverviewCount: 0,
       upcomingMeetsToday: 0,
       pendingOnboardingApprovals: 0,
+      crmNewLeads: 0,
     }
 
     const promises: Promise<unknown>[] = []
@@ -355,22 +361,28 @@ export async function GET(request: NextRequest) {
     }
 
     // Unread chat messages: calculate unread lead conversations from CaseChatMessage & ChatReadReceipt
-    const chatRoles = [
-      'BD',
-      'INSURANCE',
-      'INSURANCE_HEAD',
-      'PL_HEAD',
-      'PL_ENTRY',
-      'PL_VIEWER',
-      'ACCOUNTS',
-      'TEAM_LEAD',
-      'ASSISTANT_CATEGORY_MANAGER',
-      'CATEGORY_MANAGER',
-      'SALES_HEAD',
-    ]
-    if (chatRoles.includes(user.role) || user.role === 'ADMIN') {
+    const chatAllowed = canAccessChat(user)
+    if (chatAllowed) {
       promises.push(
         (async () => {
+          // Build role-based lead access filter identical to /api/chat/conversations
+          const leadWhere: Prisma.LeadWhereInput = {}
+          if (user.role === 'BD') {
+            leadWhere.bdId = user.id
+          } else if (isSubtreeScopedSalesRole(user.role)) {
+            const accessBdIds = (await getLeadAccessSubordinateIds(user)) ?? []
+            leadWhere.bdId = { in: [user.id, ...accessBdIds] }
+          }
+          if (user.role === 'INSURANCE_HEAD') {
+            leadWhere.kypSubmission = { isNot: null }
+          }
+          if (user.role === 'PL_HEAD') {
+            leadWhere.pipelineStage = 'PL'
+          }
+          if (user.role === 'OUTSTANDING_HEAD') {
+            leadWhere.caseStage = 'OUTSTANDING'
+          }
+
           const receipts = await prisma.chatReadReceipt.findMany({
             where: { userId: user.id },
             select: { leadId: true, lastReadAt: true },
@@ -381,6 +393,7 @@ export async function GET(request: NextRequest) {
             by: ['leadId'],
             where: {
               senderId: { not: user.id },
+              lead: leadWhere,
             },
             _max: { createdAt: true },
           })
@@ -517,6 +530,55 @@ export async function GET(request: NextRequest) {
         counts.taskOverviewCount = c
       })
     )
+
+    // CRM New / Unviewed leads for sales roles
+    const salesRoles = [
+      'BD',
+      'TEAM_LEAD',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'CATEGORY_MANAGER',
+      'SALES_HEAD',
+      'SUPER_ADMIN',
+      'CRM_ADMIN',
+      'ADMIN',
+      'EXECUTIVE_ASSISTANT',
+    ]
+    if (salesRoles.includes(user.role)) {
+      promises.push(
+        (async () => {
+          try {
+            if (user.role === 'BD') {
+              counts.crmNewLeads = await prisma.lead.count({
+                where: {
+                  bdId: user.id,
+                  openedInCrmAt: null,
+                  pipelineStage: PipelineStage.SALES,
+                },
+              })
+            } else if (isSubtreeScopedSalesRole(user.role)) {
+              const scopeUserIds = (await getLeadAccessSubordinateIds(user)) ?? []
+              counts.crmNewLeads = await prisma.lead.count({
+                where: {
+                  bdId: { in: [user.id, ...scopeUserIds] },
+                  openedInCrmAt: null,
+                  pipelineStage: PipelineStage.SALES,
+                },
+              })
+            } else {
+              // Sales Head, CRM Admin, Super Admin, Admin, EA
+              counts.crmNewLeads = await prisma.lead.count({
+                where: {
+                  openedInCrmAt: null,
+                  pipelineStage: PipelineStage.SALES,
+                },
+              })
+            }
+          } catch (err) {
+            console.error('Error fetching CRM badge count:', err)
+          }
+        })()
+      )
+    }
 
     await Promise.all(promises)
 

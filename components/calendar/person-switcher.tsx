@@ -15,6 +15,7 @@ import { getAvatarColor } from '@/lib/avatar-colors'
 import { cn } from '@/lib/utils'
 import { useUserDirectory } from '@/hooks/use-calendar'
 import { useAuth } from '@/hooks/use-auth'
+import { usePermissions } from '@/hooks/use-permissions'
 import type { DirectoryUser } from '@/app/api/users/directory/route'
 
 function getInitials(name: string): string {
@@ -28,15 +29,17 @@ export function PersonSwitcher({
   targetUserId,
   onChange,
   disabled = false,
+  permissionKey = 'main.calendar.person_switcher',
 }: {
   currentUserId: string
   targetUserId: string
   onChange: (userId: string) => void
   disabled?: boolean
+  permissionKey?: string
 }) {
-  const { user } = useAuth()
-  const isBD = user?.role === 'BD'
-  const isSwitcherDisabled = disabled || isBD
+  const { hasAccess, permissionsReady } = usePermissions()
+  const hasSwitcherPermission = !permissionsReady || hasAccess(permissionKey)
+  const isSwitcherDisabled = disabled || !hasSwitcherPermission
 
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -67,13 +70,21 @@ export function PersonSwitcher({
 
   return (
     <>
-      <Button
-        type="button"
-        variant="outline"
+      <div
         onClick={() => !isSwitcherDisabled && setOpen(true)}
+        role={isSwitcherDisabled ? undefined : 'button'}
+        tabIndex={isSwitcherDisabled ? -1 : 0}
+        onKeyDown={(e) => {
+          if (!isSwitcherDisabled && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault()
+            setOpen(true)
+          }
+        }}
         className={cn(
-          'w-full h-auto justify-between rounded-2xl py-2.5 pl-2.5 pr-3',
-          isSwitcherDisabled && 'cursor-default opacity-90 hover:bg-background'
+          'w-full flex items-center justify-between rounded-2xl border border-border/80 bg-white dark:bg-card py-2.5 pl-2.5 pr-3 shadow-xs select-none',
+          isSwitcherDisabled
+            ? 'cursor-default'
+            : 'cursor-pointer hover:bg-slate-50/80 dark:hover:bg-accent/80 hover:text-accent-foreground transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring'
         )}
       >
         <div className="flex items-center gap-2.5 min-w-0">
@@ -96,7 +107,7 @@ export function PersonSwitcher({
           </div>
         </div>
         {!isSwitcherDisabled && <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
-      </Button>
+      </div>
 
       {!isSwitcherDisabled && (
         <Drawer open={open} onOpenChange={setOpen} direction="bottom">

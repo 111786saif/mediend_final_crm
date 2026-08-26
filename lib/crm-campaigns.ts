@@ -18,6 +18,7 @@ import {
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
+import { createLeadAssignedNotification } from '@/lib/lead-notifications'
 
 export const CAMPAIGN_MASTER_TYPES = ['source', 'leadSource', 'circle', 'city'] as const
 
@@ -1362,13 +1363,6 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
     }
   }
 
-  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
-  const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
-
-  const systemUserId = await getDefaultSystemUserId()
-  const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
-  const resolvedSubStatus = await resolveInboundSubStatus(input.subStatus)
-
   const cleanStr = (v: unknown): string | null => {
     if (v == null) return null
     const s = String(v).trim()
@@ -1388,6 +1382,13 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
     cleanStr(campaign.leadSource.name) ??
     cleanStr(campaign.displayName) ??
     cleanStr(input.campaignName)
+
+  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone, finalTreatment)
+  const isDuplicate = Boolean(duplicateLead) || hasPriorIncomingDuplicate
+
+  const systemUserId = await getDefaultSystemUserId()
+  const leadRef = `SML-${campaign.externalCampaignId}-${crypto.randomUUID()}`
+  const resolvedSubStatus = await resolveInboundSubStatus(input.subStatus)
   const teamLeadId = await getLeadTeamLeadIdForAssigneeManager(selectedBd.userId)
 
   const lead = await prisma.lead.create({
@@ -1424,6 +1425,15 @@ export async function processSaveMyLeadsIncomingLead(input: ProcessSaveMyLeadsIn
       leadRef: true,
     },
   })
+
+  if (selectedBd?.userId) {
+    await createLeadAssignedNotification({
+      userId: selectedBd.userId,
+      patientName: input.patientName,
+      leadRef: lead.leadRef,
+      leadId: lead.id,
+    })
+  }
 
   await prisma.incomingLead.update({
     where: { id: input.incomingLeadId },

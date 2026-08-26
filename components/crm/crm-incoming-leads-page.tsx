@@ -1,11 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { format } from 'date-fns'
-import { AlertTriangle, CalendarIcon, Eye, Inbox, Loader2, Pencil, RefreshCw, SlidersHorizontal, X } from 'lucide-react'
+import { AlertTriangle, CalendarIcon, Eye, GripVertical, Inbox, Loader2, Pencil, RefreshCw, SlidersHorizontal, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { IncomingLeadsManualAssignDialog } from '@/components/crm/incoming-leads-manual-assign-dialog'
 import { IncomingLeadsManualCreateDialog } from '@/components/crm/incoming-leads-manual-create-dialog'
@@ -48,7 +48,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/crm/crm-filter-table'
+} from '@/components/ui/table'
+import { ColumnFilter } from '@/components/ui/column-filter'
+import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import {
@@ -68,6 +70,7 @@ import {
   MANUAL_MYSQL_LEAD_FIELDS,
   MANUAL_MYSQL_LEAD_SECTION_ORDER,
 } from '@/lib/manual-mysql-lead-import'
+
 
 type SourceMaster = {
   id: string
@@ -165,6 +168,7 @@ type IncomingLeadRecord = {
     city: string | null
     patientName: string | null
     phone: string | null
+    alternatePhone?: string | null
     email: string | null
   }
   campaign: {
@@ -177,6 +181,7 @@ type IncomingLeadRecord = {
     leadRef: string
     patientName: string
     phoneNumber: string
+    alternateNumber?: string | null
     category: string | null
     treatment: string | null
     assignedDate: string | null
@@ -202,6 +207,18 @@ type IncomingLeadPageData = {
   masters: CampaignMasters
   campaigns: CampaignRecord[]
   incomingLeads: IncomingLeadRecord[]
+}
+
+type IncomingLeadFilterConfigItem = {
+  field: string
+  label: string
+  filterType: 'multiSelect' | 'search' | 'dateRange' | 'numberRange' | 'boolean'
+  filterable: boolean
+  options?: Array<{ label: string; value: string }>
+}
+
+type IncomingLeadFilterConfigResponse = {
+  filters: IncomingLeadFilterConfigItem[]
 }
 
 type IncomingLeadManualAssignOptions = {
@@ -263,6 +280,7 @@ type IncomingLeadTableRow = {
   patientName: string
   email: string
   normalizedPhone: string
+  alternatePhone: string
   assignedDate: string
   leadDate: string
   followUpDate: string
@@ -405,6 +423,7 @@ const INCOMING_LEAD_COLUMNS: IncomingLeadColumn[] = [
   { id: 'patientName', label: 'Patient', type: 'string' },
   { id: 'email', label: 'Email', type: 'string' },
   { id: 'normalizedPhone', label: 'Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.normalizedPhone}</span> },
+  { id: 'alternatePhone', label: 'Alternate Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.alternatePhone}</span> },
   { id: 'assignedDate', label: 'Assign Date', type: 'date', cell: (row) => formatDateOnly(row.assignedDate) },
   { id: 'leadDate', label: 'Lead Date', type: 'date', cell: (row) => formatDateOnly(row.leadDate) },
   { id: 'followUpDate', label: 'Follow up Date', type: 'date', cell: (row) => formatDateOnly(row.followUpDate) },
@@ -427,6 +446,24 @@ function createInitialVisibleColumns() {
     IncomingLeadColumn['id'],
     boolean
   >
+}
+
+const INCOMING_LEADS_COL_ORDER_STORAGE_KEY = 'crm_incoming_leads_col_order_v1'
+
+function readIncomingLeadColumnOrder(): IncomingLeadColumn['id'][] {
+  const defaultIds = INCOMING_LEAD_COLUMNS.map((c) => c.id)
+  if (typeof window === 'undefined') return defaultIds
+  try {
+    const saved = localStorage.getItem(INCOMING_LEADS_COL_ORDER_STORAGE_KEY)
+    if (!saved) return defaultIds
+    const parsed = JSON.parse(saved) as IncomingLeadColumn['id'][]
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      const valid = parsed.filter((id) => defaultIds.includes(id))
+      const missing = defaultIds.filter((id) => !valid.includes(id))
+      return [...valid, ...missing]
+    }
+  } catch { }
+  return defaultIds
 }
 
 function getUniqueRowValues(rows: IncomingLeadTableRow[], columnId: IncomingLeadColumn['id']) {
@@ -553,15 +590,19 @@ function DateRangeFilter({
   const toDate = toValue ? parseDateOnlyValue(toValue) : undefined
 
   return (
-    <div className="space-y-2">
-      <Label>{label} between</Label>
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-        <div className="flex items-center gap-2">
+    <div className="space-y-2 min-w-0">
+      <Label>{label}</Label>
+      <div className="grid grid-cols-2 gap-2 items-center">
+        <div className="relative min-w-0 flex items-center">
           <Popover>
             <PopoverTrigger asChild>
-              <Button type="button" variant="outline" className="flex-1 justify-start text-left font-normal">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full justify-start text-left font-normal pr-7 truncate"
+              >
                 <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
-                {fromDate ? format(fromDate, 'PPP') : label}
+                <span className="truncate">{fromDate ? format(fromDate, 'dd MMM yyyy') : 'From date'}</span>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -574,18 +615,29 @@ function DateRangeFilter({
             </PopoverContent>
           </Popover>
           {fromValue ? (
-            <Button type="button" variant="outline" size="icon" onClick={() => onFromChange('')} aria-label={`Clear ${label} from date`}>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onFromChange('')
+              }}
+              className="absolute right-2 text-muted-foreground hover:text-foreground p-0.5"
+              aria-label={`Clear ${label} from date`}
+            >
               <X className="h-4 w-4" />
-            </Button>
+            </button>
           ) : null}
         </div>
-        <span className="hidden text-center text-sm text-muted-foreground sm:block">and</span>
-        <div className="flex items-center gap-2">
+        <div className="relative min-w-0 flex items-center">
           <Popover>
             <PopoverTrigger asChild>
-              <Button type="button" variant="outline" className="flex-1 justify-start text-left font-normal">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full justify-start text-left font-normal pr-7 truncate"
+              >
                 <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
-                {toDate ? format(toDate, 'PPP') : label}
+                <span className="truncate">{toDate ? format(toDate, 'dd MMM yyyy') : 'To date'}</span>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -598,9 +650,17 @@ function DateRangeFilter({
             </PopoverContent>
           </Popover>
           {toValue ? (
-            <Button type="button" variant="outline" size="icon" onClick={() => onToChange('')} aria-label={`Clear ${label} to date`}>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onToChange('')
+              }}
+              className="absolute right-2 text-muted-foreground hover:text-foreground p-0.5"
+              aria-label={`Clear ${label} to date`}
+            >
               <X className="h-4 w-4" />
-            </Button>
+            </button>
           ) : null}
         </div>
       </div>
@@ -621,6 +681,98 @@ export function CrmIncomingLeadsPage() {
   const [sortColumn, setSortColumn] = useState<IncomingLeadColumn['id']>('receivedAt')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [visibleColumns, setVisibleColumns] = useState(createInitialVisibleColumns)
+  const [columnOrder, setColumnOrderState] = useState<IncomingLeadColumn['id'][]>(readIncomingLeadColumnOrder)
+
+  const setColumnOrder = (newOrder: IncomingLeadColumn['id'][] | ((prev: IncomingLeadColumn['id'][]) => IncomingLeadColumn['id'][])) => {
+    setColumnOrderState((prev) => {
+      const next = typeof newOrder === 'function' ? newOrder(prev) : newOrder
+      try {
+        localStorage.setItem(INCOMING_LEADS_COL_ORDER_STORAGE_KEY, JSON.stringify(next))
+      } catch { }
+      return next
+    })
+  }
+
+  const [draggingColId, setDraggingColId] = useState<string | null>(null)
+  const [dropIndicator, setDropIndicator] = useState<{ id: string; position: 'top' | 'bottom' } | null>(null)
+  const dragColRef = useRef<string | null>(null)
+  const dropTargetColRef = useRef<{ id: string; position: 'top' | 'bottom' } | null>(null)
+
+  const handleColDragStart = (e: React.DragEvent, id: string) => {
+    dragColRef.current = id
+    setDraggingColId(id)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', id)
+  }
+
+  const handleColDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (dragColRef.current === id) {
+      if (dropIndicator) setDropIndicator(null)
+      dropTargetColRef.current = null
+      return
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect()
+    const midY = rect.top + rect.height / 2
+    const position: 'top' | 'bottom' = e.clientY < midY ? 'top' : 'bottom'
+
+    if (!dropTargetColRef.current || dropTargetColRef.current.id !== id || dropTargetColRef.current.position !== position) {
+      const target = { id, position }
+      dropTargetColRef.current = target
+      setDropIndicator(target)
+    }
+  }
+
+  const handleColDragLeave = (e: React.DragEvent, id: string) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      if (dropTargetColRef.current?.id === id) {
+        dropTargetColRef.current = null
+        setDropIndicator(null)
+      }
+    }
+  }
+
+  const handleColDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault()
+    const from = dragColRef.current as IncomingLeadColumn['id'] | null
+    const target = dropTargetColRef.current || { id: targetId, position: 'bottom' as const }
+    if (!from || !target || from === target.id) {
+      setDraggingColId(null)
+      setDropIndicator(null)
+      dragColRef.current = null
+      dropTargetColRef.current = null
+      return
+    }
+
+    setColumnOrder((prev) => {
+      const base: IncomingLeadColumn['id'][] = [...prev]
+      const fromIdx = base.indexOf(from)
+      if (fromIdx === -1) return base
+      const next = [...base]
+      next.splice(fromIdx, 1)
+      const targetIdx = next.indexOf(target.id as IncomingLeadColumn['id'])
+      if (targetIdx !== -1) {
+        const insertIdx = target.position === 'top' ? targetIdx : targetIdx + 1
+        next.splice(insertIdx, 0, from)
+      }
+      return next
+    })
+
+    setDraggingColId(null)
+    setDropIndicator(null)
+    dragColRef.current = null
+    dropTargetColRef.current = null
+  }
+
+  const handleColDragEnd = () => {
+    setDraggingColId(null)
+    setDropIndicator(null)
+    dragColRef.current = null
+    dropTargetColRef.current = null
+  }
+
   const [tableFilterVersion, setTableFilterVersion] = useState(0)
   const [selectedIncomingLead, setSelectedIncomingLead] = useState<IncomingLeadRecord | null>(null)
   const [incomingLeadEditMode, setIncomingLeadEditMode] = useState(false)
@@ -628,7 +780,6 @@ export function CrmIncomingLeadsPage() {
     EMPTY_INCOMING_LEAD_EDIT_DRAFT
   )
   const [selectedManualAssignLeadIds, setSelectedManualAssignLeadIds] = useState<string[]>([])
-  const [visibleTableLeadIds, setVisibleTableLeadIds] = useState<string[]>([])
   const [manualAssignDialogOpen, setManualAssignDialogOpen] = useState(false)
   const [manualCreateDialogOpen, setManualCreateDialogOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -653,7 +804,7 @@ export function CrmIncomingLeadsPage() {
   const [cityFilter, setCityFilter] = useState(ALL_FILTER_VALUE)
   const [teamLeadFilter, setTeamLeadFilter] = useState(ALL_FILTER_VALUE)
   const [bdFilter, setBdFilter] = useState(ALL_FILTER_VALUE)
-  const [headerColumnFilters, setHeaderColumnFilters] = useState<Record<number, string[]>>({})
+  const [columnFilters, setColumnFilters] = useState<Record<string, unknown>>({})
 
   const hasAccess = Boolean(user?.role && INCOMING_LEAD_VIEW_ROLES.has(user.role))
   const canManuallyAssignFailedLeads = user?.role === 'SUPER_ADMIN'
@@ -662,6 +813,21 @@ export function CrmIncomingLeadsPage() {
   const canViewIncomingLeadPhone = user?.role === 'ADMIN'
   const selectedMonth = month === ALL_MONTHS_VALUE ? null : Number.parseInt(month, 10) || initialMonthYear.month
   const selectedYear = Number.parseInt(year, 10) || initialMonthYear.year
+
+  const { data: filterConfigData } = useQuery<IncomingLeadFilterConfigResponse, Error>({
+    queryKey: ['crm-incoming-leads', 'filter-config'],
+    queryFn: () => apiGet<IncomingLeadFilterConfigResponse>('/api/crm/incoming-leads/filter-config'),
+    staleTime: 5 * 60 * 1000,
+    enabled: hasAccess,
+  })
+
+  const filterConfigByField = useMemo(() => {
+    const map = new Map<string, IncomingLeadFilterConfigItem>()
+    for (const f of filterConfigData?.filters ?? []) {
+      map.set(f.field, f)
+    }
+    return map
+  }, [filterConfigData])
 
   const incomingLeadEditGroups = useMemo(
     () =>
@@ -699,7 +865,7 @@ export function CrmIncomingLeadsPage() {
   )
   const serverPhoneSearch = useMemo(
     () =>
-      effectiveSearchColumn === 'normalizedPhone'
+      effectiveSearchColumn === 'normalizedPhone' || effectiveSearchColumn === 'alternatePhone'
         ? parsePhoneSearchQuery(searchValue)
         : null,
     [effectiveSearchColumn, searchValue]
@@ -721,8 +887,8 @@ export function CrmIncomingLeadsPage() {
         params.set('month', String(selectedMonth))
         params.set('year', String(selectedYear))
       }
-      if (serverPhoneSearch && effectiveSearchColumn === 'normalizedPhone') {
-        params.set('searchColumn', 'normalizedPhone')
+      if (serverPhoneSearch && (effectiveSearchColumn === 'normalizedPhone' || effectiveSearchColumn === 'alternatePhone')) {
+        params.set('searchColumn', effectiveSearchColumn)
         params.set('searchValue', searchValue.trim())
       }
       const query = params.toString()
@@ -799,6 +965,10 @@ export function CrmIncomingLeadsPage() {
         patientName: incomingLead.summary.patientName ?? '—',
         email: incomingLead.summary.email ?? '—',
         normalizedPhone: incomingLead.normalizedPhone ?? '—',
+        alternatePhone:
+          incomingLead.processedLead?.alternateNumber ??
+          incomingLead.summary.alternatePhone ??
+          '—',
         assignedDate: incomingLead.processedLead?.assignedDate ?? '',
         leadDate: incomingLead.processedLead?.leadEntryDate ?? incomingLead.summary.leadDate ?? '',
         followUpDate: incomingLead.processedLead?.followUpDate ?? '',
@@ -816,44 +986,60 @@ export function CrmIncomingLeadsPage() {
     })
   }, [data?.campaigns, data?.incomingLeads])
 
+  const orderedAvailableColumns = useMemo(() => {
+    const defaultCols = availableIncomingLeadColumns
+    if (!columnOrder.length) return defaultCols
+    const colMap = new Map(defaultCols.map((c) => [c.id, c]))
+    const ordered: IncomingLeadColumn[] = []
+    for (const id of columnOrder) {
+      const col = colMap.get(id)
+      if (col) {
+        ordered.push(col)
+        colMap.delete(id)
+      }
+    }
+    return [...ordered, ...Array.from(colMap.values())]
+  }, [availableIncomingLeadColumns, columnOrder])
+
   const visibleColumnDefinitions = useMemo(
-    () => availableIncomingLeadColumns.filter((column) => visibleColumns[column.id]),
-    [availableIncomingLeadColumns, visibleColumns]
+    () => orderedAvailableColumns.filter((column) => visibleColumns[column.id]),
+    [orderedAvailableColumns, visibleColumns]
   )
   const areAllIncomingLeadColumnsVisible = useMemo(
     () => availableIncomingLeadColumns.every((column) => visibleColumns[column.id]),
     [availableIncomingLeadColumns, visibleColumns]
   )
 
-  const allColumnOptions = useMemo(() => {
-    const optionsMap: Record<number, string[]> = {}
-    visibleColumnDefinitions.forEach((col, idx) => {
-      const colIndex = idx + (canManuallyAssignFailedLeads ? 1 : 0)
-      optionsMap[colIndex] = getUniqueRowValues(rows, col.id)
-    })
-    return optionsMap
-  }, [visibleColumnDefinitions, rows, canManuallyAssignFailedLeads])
-
   const filteredRows = useMemo(() => {
     const normalizedSearch = searchValue.trim().toLowerCase()
     const selectedSearchColumn = availableIncomingLeadColumns.find((column) => column.id === effectiveSearchColumn)
 
     return rows.filter((row) => {
-      for (const [colIndexStr, filterValues] of Object.entries(headerColumnFilters)) {
-        if (!filterValues || filterValues.length === 0) continue
-        const colIndex = Number(colIndexStr)
-        const colDefIdx = colIndex - (canManuallyAssignFailedLeads ? 1 : 0)
-        const colDef = visibleColumnDefinitions[colDefIdx]
-        if (!colDef) continue
+      for (const [colId, filterVal] of Object.entries(columnFilters)) {
+        if (filterVal === undefined || filterVal === null) continue
+        const config = filterConfigByField.get(colId)
+        const filterType = config?.filterType ?? 'multiSelect'
+        const rawValue = String(row[colId as keyof IncomingLeadTableRow] ?? '').trim()
 
-        const rawValue = String(row[colDef.id] ?? '').trim()
-        if (colDef.type === 'date' && filterValues.length === 2) {
-          const [startStr, endStr] = filterValues
-          if (!isWithinDateRange(rawValue, getDateOnlyValue(startStr), getDateOnlyValue(endStr))) {
-            return false
+        if (filterType === 'multiSelect') {
+          if (Array.isArray(filterVal) && filterVal.length > 0) {
+            if (!filterVal.includes(rawValue)) {
+              return false
+            }
           }
-        } else if (!filterValues.includes(rawValue)) {
-          return false
+        } else if (filterType === 'search') {
+          if (typeof filterVal === 'string' && filterVal.trim()) {
+            if (!rawValue.toLowerCase().includes(filterVal.trim().toLowerCase())) {
+              return false
+            }
+          }
+        } else if (filterType === 'dateRange') {
+          if (Array.isArray(filterVal) && filterVal.length === 2 && (filterVal[0] || filterVal[1])) {
+            const [startStr, endStr] = filterVal
+            if (!isWithinDateRange(rawValue, getDateOnlyValue(startStr), getDateOnlyValue(endStr || startStr))) {
+              return false
+            }
+          }
         }
       }
 
@@ -887,7 +1073,11 @@ export function CrmIncomingLeadsPage() {
       if (!normalizedSearch) return true
 
       if (effectiveSearchColumn === 'normalizedPhone' && serverPhoneSearch) {
-        return true
+        return row.normalizedPhone.includes(serverPhoneSearch.last10) || row.normalizedPhone.toLowerCase().includes(normalizedSearch)
+      }
+
+      if (effectiveSearchColumn === 'alternatePhone' && serverPhoneSearch) {
+        return row.alternatePhone.includes(serverPhoneSearch.last10) || row.alternatePhone.toLowerCase().includes(normalizedSearch)
       }
 
       const rawValue = String(row[effectiveSearchColumn] ?? '')
@@ -923,9 +1113,8 @@ export function CrmIncomingLeadsPage() {
     followUpDateTo,
     surgeryDateFrom,
     surgeryDateTo,
-    headerColumnFilters,
-    visibleColumnDefinitions,
-    canManuallyAssignFailedLeads,
+    columnFilters,
+    filterConfigByField,
     availableIncomingLeadColumns,
     serverPhoneSearch,
   ])
@@ -992,10 +1181,10 @@ export function CrmIncomingLeadsPage() {
 
   const visibleSelectableLeadIds = useMemo(
     () =>
-      visibleTableLeadIds.filter((leadId) =>
-        paginatedRows.some((row) => row.id === leadId && isSelectableIncomingLead(row.raw))
-      ),
-    [paginatedRows, visibleTableLeadIds]
+      paginatedRows
+        .filter((row) => isSelectableIncomingLead(row.raw))
+        .map((row) => row.id),
+    [paginatedRows]
   )
 
   const allVisibleSelectableRowsSelected =
@@ -1004,15 +1193,6 @@ export function CrmIncomingLeadsPage() {
   const someVisibleSelectableRowsSelected =
     visibleSelectableLeadIds.some((leadId) => selectedManualAssignLeadIds.includes(leadId)) &&
     !allVisibleSelectableRowsSelected
-
-  const handleVisibleRowIdsChange = useCallback((nextVisibleRowIds: string[]) => {
-    setVisibleTableLeadIds((current) =>
-      current.length === nextVisibleRowIds.length &&
-      current.every((leadId, index) => leadId === nextVisibleRowIds[index])
-        ? current
-        : nextVisibleRowIds
-    )
-  }, [])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -1057,18 +1237,6 @@ export function CrmIncomingLeadsPage() {
       current.filter((leadId) => eligibleLeadIds.has(leadId))
     )
   }, [rows])
-
-  useEffect(() => {
-    const paginatedLeadIdSet = new Set(paginatedRows.map((row) => row.id))
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setVisibleTableLeadIds((current) => {
-      const next = current.filter((leadId) => paginatedLeadIdSet.has(leadId))
-      return current.length === next.length &&
-        current.every((leadId, index) => leadId === next[index])
-        ? current
-        : next
-    })
-  }, [paginatedRows])
 
   const selectedSearchColumnDefinition = useMemo(
     () => availableIncomingLeadColumns.find((column) => column.id === effectiveSearchColumn) ?? null,
@@ -1125,7 +1293,7 @@ export function CrmIncomingLeadsPage() {
         cityFilter !== ALL_FILTER_VALUE,
         teamLeadFilter !== ALL_FILTER_VALUE,
         bdFilter !== ALL_FILTER_VALUE,
-        Object.keys(headerColumnFilters).length > 0,
+        Object.keys(columnFilters).length > 0,
       ].filter(Boolean).length,
     [
       assignDateFrom,
@@ -1138,7 +1306,7 @@ export function CrmIncomingLeadsPage() {
       treatmentFilter,
       followUpDateFrom,
       followUpDateTo,
-      headerColumnFilters,
+      columnFilters,
       leadDateFrom,
       leadDateTo,
       leadSourceFilter,
@@ -1152,7 +1320,7 @@ export function CrmIncomingLeadsPage() {
   )
 
   const clearFilters = () => {
-    setHeaderColumnFilters({})
+    setColumnFilters({})
     setSearchValue('')
     setAssignDateFrom('')
     setAssignDateTo('')
@@ -1175,23 +1343,10 @@ export function CrmIncomingLeadsPage() {
   }
 
   const clearColumnFilters = () => {
-    setHeaderColumnFilters({})
+    setColumnFilters({})
     setTableFilterVersion((current) => current + 1)
     setCurrentPage(1)
   }
-
-  const handleColumnFilterChange = useCallback((colIndex: number, selected: string[]) => {
-    setHeaderColumnFilters((prev) => {
-      const next = { ...prev }
-      if (selected.length === 0) {
-        delete next[colIndex]
-      } else {
-        next[colIndex] = selected
-      }
-      return next
-    })
-    setCurrentPage(1)
-  }, [])
 
   function toggleManualAssignLead(leadId: string, checked: boolean) {
     if (checked) {
@@ -1388,14 +1543,14 @@ export function CrmIncomingLeadsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="mx-auto w-full min-w-0 max-w-full space-y-6 p-4 md:p-6 xl:max-w-[1800px]">
-        <div className="flex min-w-0 flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+      <div className="mx-auto w-full min-w-0 max-w-full space-y-3 p-3 md:p-4 xl:max-w-[1800px]">
+        <div className="flex min-w-0 flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
           <div className="min-w-0 flex-1">
-            <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
-              <Inbox className="h-8 w-8 text-cyan-600" />
+            <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight">
+              <Inbox className="h-6 w-6 text-cyan-600" />
               CRM Incoming Leads
             </h1>
-            <p className="mt-1 max-w-4xl text-sm text-muted-foreground">
+            <p className="mt-0.5 max-w-4xl text-xs text-muted-foreground">
               Review queued inbound leads from webhook and MySQL intake with searchable columns, column-based sorting, and column visibility controls.
             </p>
           </div>
@@ -1438,7 +1593,7 @@ export function CrmIncomingLeadsPage() {
 
         {!isAuthLoading && !hasAccess ? (
           <Card className="w-full">
-            <CardHeader>
+            <CardHeader className="p-4">
               <CardTitle>No access</CardTitle>
               <CardDescription>
                 This incoming lead audit is available to Super Admin and CRM Admin users.
@@ -1447,27 +1602,27 @@ export function CrmIncomingLeadsPage() {
           </Card>
         ) : (
           <>
-            <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
+            <div className="grid gap-3 grid-cols-2 md:grid-cols-2 2xl:grid-cols-4">
               <Card>
-                <CardHeader className="pb-2">
+                <CardHeader className="p-4 pb-3">
                   <CardDescription>Total webhooks</CardDescription>
                   <CardTitle>{formatWholeNumber(summary.total)}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="pb-2">
+                <CardHeader className="p-4 pb-3">
                   <CardDescription>Processed</CardDescription>
                   <CardTitle>{formatWholeNumber(summary.processed)}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="pb-2">
+                <CardHeader className="p-4 pb-3">
                   <CardDescription>Duplicates</CardDescription>
                   <CardTitle>{formatWholeNumber(summary.duplicates)}</CardTitle>
                 </CardHeader>
               </Card>
               <Card>
-                <CardHeader className="pb-2">
+                <CardHeader className="p-4 pb-3">
                   <CardDescription>Failed</CardDescription>
                   <CardTitle>{formatWholeNumber(summary.failed)}</CardTitle>
                 </CardHeader>
@@ -1475,10 +1630,10 @@ export function CrmIncomingLeadsPage() {
             </div>
 
             <Card>
-              <CardHeader>
-                <CardTitle>View controls</CardTitle>
+              <CardHeader className="px-4 pt-3 pb-1.5">
+                <CardTitle className="text-base font-semibold">View controls</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-5">
+              <CardContent className="space-y-3 px-4 pb-3.5 pt-0">
                 <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
                   <div className="min-w-0 space-y-2">
                     <Label>Search column</Label>
@@ -1507,9 +1662,9 @@ export function CrmIncomingLeadsPage() {
                       <div className="flex items-center gap-2">
                         <Popover>
                           <PopoverTrigger asChild>
-                            <Button type="button" variant="outline" className="flex-1 justify-start text-left font-normal">
+                            <Button type="button" variant="outline" className="flex-1 justify-start text-left font-normal truncate">
                               <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
-                              {searchValue ? format(parseDateOnlyValue(searchValue) ?? new Date(), 'PPP') : 'Pick date'}
+                              <span className="truncate">{searchValue ? format(parseDateOnlyValue(searchValue) ?? new Date(), 'PPP') : 'Pick date'}</span>
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0" align="start">
@@ -1616,7 +1771,7 @@ export function CrmIncomingLeadsPage() {
                   </div>
                 </div>
 
-                <div className="grid gap-3 border-t pt-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
+                <div className="grid gap-3 border-t pt-3.5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
                   <div className="min-w-0 space-y-2">
                     <Label>Status</Label>
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -1791,7 +1946,7 @@ export function CrmIncomingLeadsPage() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 border-t pt-5 md:grid-cols-2 2xl:grid-cols-4">
+                <div className="grid gap-3 border-t pt-3.5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4">
                   <DateRangeFilter
                     label="Assign Date"
                     fromValue={assignDateFrom}
@@ -1826,7 +1981,7 @@ export function CrmIncomingLeadsPage() {
 
             {error && !isLoading ? (
               <Card className="border-amber-300 bg-amber-50/70">
-                <CardHeader className="flex flex-row items-start gap-3 space-y-0">
+                <CardHeader className="flex flex-row items-start gap-3 space-y-0 p-4">
                   <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
                   <div className="space-y-1">
                     <CardTitle>Unable to load incoming leads</CardTitle>
@@ -1836,7 +1991,7 @@ export function CrmIncomingLeadsPage() {
               </Card>
             ) : (
               <Card>
-                <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <CardHeader className="p-4 pb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
                     <CardTitle>Incoming lead table</CardTitle>
                     <CardDescription>
@@ -1845,7 +2000,7 @@ export function CrmIncomingLeadsPage() {
                         : `${pageStartIndex + (totalRows > 0 ? 1 : 0)}-${pageEndIndex} of ${formatWholeNumber(sortedRows.length)} rows for ${MONTH_OPTIONS.find((option) => option.value === selectedMonth)?.label} ${selectedYear}.`}
                     </CardDescription>
                   </div>
-                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                  <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:items-center">
                     {canCreateManualLeads ? (
                       <Button
                         type="button"
@@ -1913,55 +2068,145 @@ export function CrmIncomingLeadsPage() {
                           Columns
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="max-h-[360px] w-64 overflow-y-auto">
-                        <DropdownMenuLabel>Visible columns</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuCheckboxItem
-                          checked={areAllIncomingLeadColumnsVisible}
-                          onSelect={(event) => event.preventDefault()}
-                          onCheckedChange={(checked) => {
-                            const nextValue = checked === true
-                            setVisibleColumns(
-                              Object.fromEntries(
-                                availableIncomingLeadColumns.map((column) => [column.id, nextValue])
-                              ) as Record<IncomingLeadColumn['id'], boolean>
-                            )
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-64 p-0 shadow-lg"
+                        onCloseAutoFocus={(e) => e.preventDefault()}
+                      >
+                        <div className="px-3 py-2 border-b">
+                          <DropdownMenuLabel className="px-0 py-0 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                            Reorder & Toggle Columns
+                          </DropdownMenuLabel>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">Drag to rearrange column order</p>
+                        </div>
+                        <div className="p-2 border-b bg-muted/20">
+                          <label className="flex items-center gap-2 text-xs font-medium cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={areAllIncomingLeadColumnsVisible}
+                              onChange={(e) => {
+                                const nextValue = e.target.checked
+                                setVisibleColumns(
+                                  Object.fromEntries(
+                                    availableIncomingLeadColumns.map((column) => [column.id, nextValue])
+                                  ) as Record<IncomingLeadColumn['id'], boolean>
+                                )
+                              }}
+                              className="h-4 w-4 rounded border border-input accent-indigo-600 cursor-pointer"
+                            />
+                            <span>Select all</span>
+                          </label>
+                        </div>
+                        <div
+                          className="py-1 relative max-h-[340px] overflow-y-auto"
+                          onDragOver={(e) => {
+                            e.preventDefault()
+                            e.dataTransfer.dropEffect = 'move'
+                          }}
+                          onDragLeave={(e) => {
+                            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                              setDropIndicator(null)
+                            }
                           }}
                         >
-                          Select all
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuSeparator />
-                        {availableIncomingLeadColumns.map((column) => (
-                          <DropdownMenuCheckboxItem
-                            key={column.id}
-                            checked={visibleColumns[column.id]}
-                            onSelect={(event) => event.preventDefault()}
-                            onCheckedChange={(checked) =>
-                              setVisibleColumns((current) => ({
-                                ...current,
-                                [column.id]: checked === true,
-                              }))
-                            }
-                          >
-                            {column.label}
-                          </DropdownMenuCheckboxItem>
-                        ))}
+                          {columnOrder.map((colId) => {
+                            const column = availableIncomingLeadColumns.find((c) => c.id === colId)
+                            if (!column) return null
+                            const isDragging = draggingColId === colId
+                            const isDropTop = dropIndicator?.id === colId && dropIndicator?.position === 'top'
+                            const isDropBottom = dropIndicator?.id === colId && dropIndicator?.position === 'bottom'
+
+                            return (
+                              <div
+                                key={colId}
+                                className="relative px-1"
+                                onDragOver={(e) => handleColDragOver(e, colId)}
+                                onDrop={(e) => handleColDrop(e, colId)}
+                              >
+                                {isDropTop && (
+                                  <div className="absolute -top-1 inset-x-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full z-20 shadow-[0_0_6px_rgba(37,99,235,0.8)] pointer-events-none" />
+                                )}
+
+                                <div
+                                  draggable
+                                  onDragStart={(e) => handleColDragStart(e, colId)}
+                                  onDragOver={(e) => handleColDragOver(e, colId)}
+                                  onDrop={(e) => handleColDrop(e, colId)}
+                                  onDragEnd={handleColDragEnd}
+                                  className={cn(
+                                    "flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors select-none group",
+                                    isDragging
+                                      ? "opacity-30 bg-blue-50/40 dark:bg-blue-950/30 border border-dashed border-blue-500"
+                                      : "hover:bg-accent",
+                                    (isDropTop || isDropBottom) && "bg-blue-50/20 dark:bg-blue-950/30 ring-1 ring-blue-500/40"
+                                  )}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    id={`incoming-col-${colId}`}
+                                    checked={visibleColumns[colId] ?? false}
+                                    onChange={(e) =>
+                                      setVisibleColumns((current) => ({
+                                        ...current,
+                                        [colId]: e.target.checked,
+                                      }))
+                                    }
+                                    className={cn(
+                                      "h-4 w-4 rounded border border-input accent-indigo-600 cursor-pointer shrink-0",
+                                      draggingColId && "pointer-events-none"
+                                    )}
+                                  />
+                                  <label
+                                    htmlFor={`incoming-col-${colId}`}
+                                    className={cn(
+                                      "flex-1 text-xs font-medium cursor-pointer truncate",
+                                      draggingColId && "pointer-events-none"
+                                    )}
+                                  >
+                                    {column.label}
+                                  </label>
+                                  <span
+                                    onMouseDown={(e) => e.stopPropagation()}
+                                    onPointerDown={(e) => e.stopPropagation()}
+                                    className={cn(
+                                      "cursor-grab active:cursor-grabbing shrink-0 text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300 transition-colors p-0.5",
+                                      draggingColId && "pointer-events-none"
+                                    )}
+                                    title="Drag to reorder"
+                                  >
+                                    <GripVertical className="h-4 w-4" />
+                                  </span>
+                                </div>
+
+                                {isDropBottom && (
+                                  <div className="absolute -bottom-1 inset-x-1 h-1 bg-blue-600 dark:bg-blue-400 rounded-full z-20 shadow-[0_0_6px_rgba(37,99,235,0.8)] pointer-events-none" />
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
                       </DropdownMenuContent>
                     </DropdownMenu>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => refetch()}
+                      disabled={isFetching}
+                      className="w-full gap-1.5 sm:w-auto text-xs font-semibold shadow-xs"
+                      title="Refresh incoming leads"
+                    >
+                      <RefreshCw className={cn('h-3.5 w-3.5', isFetching && 'animate-spin')} />
+                      Refresh
+                    </Button>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 pt-0">
                   <div className="w-full min-w-0 rounded-xl border">
-                    <div className="max-h-[min(70vh,900px)] overflow-auto">
+                    <div className="max-h-[calc(100vh-280px)] min-h-[440px] overflow-auto">
                       <Table
                         key={tableFilterVersion}
                         containerClassName="overflow-visible"
-                        filterableHeaders={availableIncomingLeadHeaderFilters}
-                        rowIds={paginatedRows.map((row) => row.id)}
-                        onVisibleRowIdsChange={handleVisibleRowIdsChange}
-                        externalColumnOptions={allColumnOptions}
-                        externalActiveFilters={headerColumnFilters}
-                        onFilterChange={handleColumnFilterChange}
                       >
                         <TableHeader className="sticky top-0 z-10 bg-background [&_tr]:border-b">
                           <TableRow className="bg-background hover:bg-background">
@@ -2001,9 +2246,42 @@ export function CrmIncomingLeadsPage() {
                                 />
                               </TableHead>
                             ) : null}
-                            {visibleColumnDefinitions.map((column) => (
-                              <TableHead key={column.id}>{column.label}</TableHead>
-                            ))}
+                            {visibleColumnDefinitions.map((column) => {
+                              const config = filterConfigByField.get(column.id)
+                              const filterType = config?.filterType ?? (column.type === 'date' ? 'dateRange' : 'multiSelect')
+                              const filterOptions = config?.options ?? []
+
+                              return (
+                                <TableHead key={column.id} className="whitespace-nowrap">
+                                  <div className="flex items-center justify-between gap-1">
+                                    <span>{column.label}</span>
+                                    <ColumnFilter
+                                      type={filterType}
+                                      options={filterOptions}
+                                      value={columnFilters[column.id]}
+                                      onChange={(val) => {
+                                        setColumnFilters((prev) => {
+                                          const next = { ...prev }
+                                          if (
+                                            val === undefined ||
+                                            val === null ||
+                                            (Array.isArray(val) && val.length === 0) ||
+                                            (typeof val === 'string' && !val.trim())
+                                          ) {
+                                            delete next[column.id]
+                                          } else {
+                                            next[column.id] = val
+                                          }
+                                          return next
+                                        })
+                                        setCurrentPage(1)
+                                      }}
+                                      placeholder={`Search ${column.label}...`}
+                                    />
+                                  </div>
+                                </TableHead>
+                              )
+                            })}
                             <TableHead className="w-[120px] text-right">Action</TableHead>
                           </TableRow>
                         </TableHeader>

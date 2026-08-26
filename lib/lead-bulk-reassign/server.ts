@@ -23,6 +23,7 @@ import {
   isStatusRequiringFollowUpDate,
   isStatusRequiringModeOfPayment,
 } from '@/lib/lead-status-rules'
+import { createLeadAssignedNotification } from '@/lib/lead-notifications'
 import { prisma } from '@/lib/prisma'
 
 export class BulkLeadReassignError extends Error {
@@ -665,6 +666,15 @@ export async function processBulkLeadReassignCycle(
           timeout: 30_000,
         }
       )
+
+      if (nextOwnerUserId && nextOwnerUserId !== run.actorUserId) {
+        await createLeadAssignedNotification({
+          userId: nextOwnerUserId,
+          patientName: lead.patientName,
+          leadRef: lead.leadRef,
+          leadId: lead.id,
+        })
+      }
 
       const entityLabel = `${lead.leadRef} · ${lead.patientName}`
 

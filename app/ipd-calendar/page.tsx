@@ -42,7 +42,15 @@ const ALL_STATUSES: CaseEventStatus[] = ['DONE', 'SCHEDULED', 'POSTPONED', 'CANC
 
 // Roles that manage a team of BDs and get the multi-BD filter instead of
 // (or in addition to) the single-person calendar switcher.
-const TEAM_SCOPE_ROLES = ['TEAM_LEAD', 'ASSISTANT_CATEGORY_MANAGER', 'CATEGORY_MANAGER', 'SALES_HEAD']
+const TEAM_SCOPE_ROLES = [
+  'TEAM_LEAD',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'CATEGORY_MANAGER',
+  'SALES_HEAD',
+  'EXECUTIVE_ASSISTANT',
+  'MD',
+  'ADMIN',
+]
 
 function rangeForView(view: CalendarView, focus: Date): { start: Date; end: Date } {
   if (view === 'month') {
@@ -109,7 +117,7 @@ export default function IpdCalendarPage() {
   // scope (self + all recursive subordinates). Picking specific BDs in the
   // filter narrows it down. BD role keeps the existing single-target behavior.
   const caseBdIds = isTeamScopeRole
-    ? (selectedBdIds.length > 0 ? selectedBdIds : undefined)
+    ? (selectedBdIds.length > 0 ? selectedBdIds : (targetUserId ? [targetUserId] : undefined))
     : (effectiveTarget ? [effectiveTarget] : undefined)
 
   // Cases in the currently visible range — plotted on the calendar
@@ -187,6 +195,7 @@ export default function IpdCalendarPage() {
             currentUserId={user.id}
             targetUserId={effectiveTarget}
             onChange={(id) => setTargetUserId(id === user.id ? undefined : id)}
+            permissionKey="main.ipd_calendar.person_switcher"
           />
         )}
 

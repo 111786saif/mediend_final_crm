@@ -179,6 +179,10 @@ const resourcesToSeed: ResourceSeedItem[] = [
   // Calendar (main.calendar)
   { key: 'main.calendar.analytics', label: 'Analytics Section', type: 'SECTION', parentKey: 'main.calendar', sortOrder: 1 },
   { key: 'main.calendar.calendar', label: 'Calendar Section', type: 'SECTION', parentKey: 'main.calendar', sortOrder: 2 },
+  { key: 'main.calendar.person_switcher', label: 'Person Switcher', type: 'ENTITY', parentKey: 'main.calendar', sortOrder: 3 },
+
+  // IPD/OPD Calendar (main.ipd_calendar)
+  { key: 'main.ipd_calendar.person_switcher', label: 'Person Switcher', type: 'ENTITY', parentKey: 'main.ipd_calendar', sortOrder: 1 },
 
   // Meets (main.meets)
   { key: 'main.meets.upcoming', label: 'Upcoming Tab', type: 'SECTION', parentKey: 'main.meets', sortOrder: 1 },

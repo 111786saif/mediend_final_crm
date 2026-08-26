@@ -116,7 +116,7 @@ export default function CalendarPage() {
             currentUserId={user.id}
             targetUserId={effectiveTarget}
             onChange={(id) => setTargetUserId(id === user.id ? undefined : id)}
-            disabled={user.role === 'BD'}
+            permissionKey="main.calendar.person_switcher"
           />
         )}
 

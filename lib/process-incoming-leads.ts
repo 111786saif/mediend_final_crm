@@ -6,6 +6,7 @@ import {
   normalizeLeadPhoneToLast10,
   recordDuplicateLeadHitByPrimaryPhone,
 } from '@/lib/lead-duplicates'
+import { createLeadAssignedNotification } from '@/lib/lead-notifications'
 
 interface IncomingLeadPayload {
   id?: string
@@ -253,7 +254,7 @@ export async function processIncomingLead(
       }
     }
 
-    const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
+    const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone, treatment)
 
     // Create the lead with required defaults for missing fields
     const lead = await prisma.lead.create({
@@ -278,6 +279,15 @@ export async function processIncomingLead(
         createdDate,
       },
     })
+
+    if (bdId) {
+      await createLeadAssignedNotification({
+        userId: bdId,
+        patientName,
+        leadRef: lead.leadRef,
+        leadId: lead.id,
+      })
+    }
 
     // Update incoming lead status to PROCESSED
     await prisma.incomingLead.update({

@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { format } from 'date-fns'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
@@ -549,6 +550,17 @@ export async function PATCH(
       typeof lead.kypSubmission?.location === 'string' ? lead.kypSubmission.location.trim() || null : null
     const statusChanged = requestedStatus !== undefined && requestedStatus !== lead.status
     const assigneeChanged = body.bdId !== undefined && body.bdId !== lead.bdId
+    const previousFollowUpDateIso = lead.followUpDate
+      ? lead.followUpDate.toISOString().slice(0, 10)
+      : null
+    const nextFollowUpDateIso =
+      parsedFollowUpDateInput.provided && parsedFollowUpDateInput.value instanceof Date
+        ? parsedFollowUpDateInput.value.toISOString().slice(0, 10)
+        : parsedFollowUpDateInput.provided && parsedFollowUpDateInput.value === null
+          ? null
+          : previousFollowUpDateIso
+    const followUpDateChanged =
+      parsedFollowUpDateInput.provided && previousFollowUpDateIso !== nextFollowUpDateIso
     const leadProfileChanged =
       (body.patientName !== undefined && body.patientName !== lead.patientName) ||
       (body.whatsapp !== undefined && body.whatsapp !== lead.whatsapp) ||
@@ -1258,6 +1270,37 @@ export async function PATCH(
             ...leadActivityMetadata,
             previousRemarks: lead.remarks,
             nextRemarks: updatedLead.remarks,
+          },
+        })
+      )
+    }
+
+    if (followUpDateChanged) {
+      const prevDateFormatted = lead.followUpDate
+        ? format(lead.followUpDate, 'dd MMM yyyy')
+        : 'None'
+      const nextDateFormatted = updatedLead.followUpDate
+        ? format(updatedLead.followUpDate, 'dd MMM yyyy')
+        : 'None'
+
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_FOLLOWUP_UPDATED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: updatedLead.followUpDate
+            ? `Updated follow-up date for ${leadEntityLabel} to ${nextDateFormatted}`
+            : `Cleared follow-up date for ${leadEntityLabel}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousFollowUpDate: lead.followUpDate,
+            nextFollowUpDate: updatedLead.followUpDate,
+            previousFollowUpDateFormatted: prevDateFormatted,
+            nextFollowUpDateFormatted: nextDateFormatted,
           },
         })
       )

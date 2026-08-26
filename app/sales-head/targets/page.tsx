@@ -14,8 +14,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
+import { useAuth } from '@/hooks/use-auth'
 import { useState, useMemo } from 'react'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
@@ -27,12 +29,13 @@ import {
   Award,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
   CheckCircle2,
   AlertTriangle,
   Pencil,
   Eye,
   Users,
+  User,
+  ShieldCheck,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -46,6 +49,30 @@ interface CmInfo {
   name: string
   profilePicture: string | null
   employeeCode: string
+  memberCount?: number
+  members?: Array<{
+    id: string
+    employeeId: string
+    name: string
+    profilePicture: string | null
+  }>
+}
+
+interface TeamMember {
+  id: string
+  employeeId: string
+  name: string
+  profilePicture: string | null
+}
+
+interface TeamInfo {
+  id: string
+  userId: string
+  name: string
+  profilePicture: string | null
+  employeeCode?: string
+  memberCount: number
+  members: TeamMember[]
 }
 
 interface TargetProgress {
@@ -119,14 +146,14 @@ function MonthPicker({ selectedMonth, onChange }: { selectedMonth: Date; onChang
 
 // ─── Summary Stats ────────────────────────────────────────────────────────────
 
-function SummaryStats({ targets }: { targets: TargetProgress[] }) {
+function SummaryStats({ targets, targetLabel = 'Target' }: { targets: TargetProgress[]; targetLabel?: string }) {
   const totalTarget = targets.reduce((s, t) => s + t.targetValue, 0)
   const totalActual = targets.reduce((s, t) => s + t.actual, 0)
   const overallPct = totalTarget > 0 ? Math.round((totalActual / totalTarget) * 100) : 0
   const onTrack = targets.filter((t) => t.status === 'completed' || t.status === 'on_track').length
 
   const stats = [
-    { label: 'Category Target', value: totalTarget, color: '' },
+    { label: targetLabel, value: totalTarget, color: '' },
     { label: 'IPDs Done', value: totalActual, color: 'text-emerald-600 dark:text-emerald-400' },
     { label: 'Overall', value: `${overallPct}%`, color: overallPct >= 60 ? 'text-blue-600 dark:text-blue-400' : 'text-red-500' },
     { label: 'On Track', value: `${onTrack}/${targets.length}`, color: 'text-violet-600 dark:text-violet-400' },
@@ -212,6 +239,84 @@ function CategoryBreakdownDialog({
                 <div className="text-right shrink-0">
                   <p className="text-sm font-bold tabular-nums">{team.actual}</p>
                   <p className="text-[11px] text-muted-foreground tabular-nums">{Math.round(team.percentage)}%</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// ─── Team Breakdown Dialog ────────────────────────────────────────────────────
+
+function TeamDetailsDialog({
+  target,
+  open,
+  onOpenChange,
+}: {
+  target: TargetProgress
+  open: boolean
+  onOpenChange: (v: boolean) => void
+}) {
+  const sortedBDs = useMemo(
+    () => [...target.bdBreakdown].sort((a, b) => b.actual - a.actual),
+    [target.bdBreakdown]
+  )
+  const topActual = sortedBDs[0]?.actual ?? 0
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-violet-500" />
+            {target.entityName} · Members breakdown
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="flex items-center justify-between rounded-xl border border-border bg-muted/40 px-4 py-3">
+          <div className="text-sm">
+            <span className="font-bold tabular-nums text-lg">{target.actual}</span>
+            <span className="text-muted-foreground"> / {target.targetValue} IPDs</span>
+          </div>
+          <Badge variant="outline" className="text-xs">{sortedBDs.length} BDs</Badge>
+        </div>
+
+        <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+          {sortedBDs.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-8">No BDs in this team.</p>
+          )}
+          {sortedBDs.map((bd, idx) => {
+            const RankIcon = RANK_ICONS[idx]
+            const bac = getAvatarColor(bd.name)
+            const barPct = topActual > 0 ? Math.round((bd.actual / topActual) * 100) : 0
+            return (
+              <div key={bd.id} className="flex items-center gap-3 rounded-xl border border-border/70 p-3">
+                <div className="w-6 shrink-0 flex justify-center">
+                  {RankIcon ? (
+                    <RankIcon className={cn('h-4 w-4', RANK_COLORS[idx])} />
+                  ) : (
+                    <span className="text-xs font-semibold text-muted-foreground tabular-nums">{idx + 1}</span>
+                  )}
+                </div>
+                <Avatar className="h-8 w-8 shrink-0">
+                  {bd.profilePicture && <AvatarImage src={bd.profilePicture} />}
+                  <AvatarFallback className={cn(bac.bg, bac.text, 'text-[10px] font-bold')}>{getInitials(bd.name)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{bd.name}</p>
+                  <div className="mt-1 h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all"
+                      style={{ width: `${barPct}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-sm font-bold tabular-nums">{bd.actual}</p>
+                  <p className="text-[11px] text-muted-foreground tabular-nums">{Math.round(bd.percentage)}%</p>
                 </div>
               </div>
             )
@@ -343,12 +448,276 @@ function CategoryTargetCard({
   )
 }
 
-// ─── Set Category Target Dialog ────────────────────────────────────────────────────────
+// ─── Team Target Card ────────────────────────────────────────────────────────────
+
+function TeamTargetCard({
+  target,
+  onSetTarget,
+  readOnly,
+}: {
+  target: TargetProgress
+  onSetTarget: () => void
+  readOnly?: boolean
+}) {
+  const [detailsOpen, setDetailsOpen] = useState(false)
+  const pct = Math.min(target.percentage, 100)
+  const sc = STATUS_CONFIG[target.status] || STATUS_CONFIG.at_risk
+  const StatusIcon = sc.icon
+  const ac = getAvatarColor(target.entityName)
+  const topBDs = target.bdBreakdown.slice(0, 3)
+  const remaining = target.bdBreakdown.length - 3
+
+  return (
+    <Card className="rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+      <CardContent className="p-5 space-y-4">
+        {/* Header row */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-11 w-11">
+              {target.entityAvatar && <AvatarImage src={target.entityAvatar} />}
+              <AvatarFallback className={cn(ac.bg, ac.text, 'font-bold text-sm')}>{getInitials(target.entityName)}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h3 className="font-semibold text-base leading-tight">{target.entityName}</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">{target.bdBreakdown.length} members in team</p>
+            </div>
+          </div>
+          <Badge className={cn('text-xs font-medium border-0 gap-1 shrink-0', sc.badge)}>
+            <StatusIcon className="h-3 w-3" />
+            {sc.label}
+          </Badge>
+        </div>
+
+        {/* Progress */}
+        <div>
+          <div className="flex items-end justify-between mb-2">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-4xl font-bold tabular-nums">{target.actual}</span>
+              <span className="text-base text-muted-foreground">/ {target.targetValue} IPDs</span>
+            </div>
+            <span className="text-xl font-bold tabular-nums text-muted-foreground/70">{Math.round(target.percentage)}%</span>
+          </div>
+          <Progress
+            value={pct}
+            className={cn('h-2.5 rounded-full [&>div]:bg-gradient-to-r [&>div]:rounded-full', sc.bar)}
+          />
+        </div>
+
+        {/* BD Mini-leaderboard */}
+        {target.bdBreakdown.length > 0 && (
+          <div className="space-y-2 pt-1 border-t border-border/60">
+            {topBDs.map((bd, idx) => {
+              const RankIcon = RANK_ICONS[idx]
+              const bac = getAvatarColor(bd.name)
+              const barPct = target.bdBreakdown[0].actual > 0
+                ? Math.round((bd.actual / target.bdBreakdown[0].actual) * 100)
+                : 0
+              return (
+                <div key={bd.id} className="flex items-center gap-2.5">
+                  <RankIcon className={cn('h-4 w-4 shrink-0', RANK_COLORS[idx])} />
+                  <Avatar className="h-6 w-6 shrink-0">
+                    {bd.profilePicture && <AvatarImage src={bd.profilePicture} />}
+                    <AvatarFallback className={cn(bac.bg, bac.text, 'text-[9px] font-bold')}>{getInitials(bd.name)}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium flex-1 truncate">{bd.name}</span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden hidden sm:block">
+                      <div
+                        className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all"
+                        style={{ width: `${barPct}%` }}
+                      />
+                    </div>
+                    <span className="text-sm font-bold tabular-nums w-6 text-right">{bd.actual}</span>
+                  </div>
+                </div>
+              )
+            })}
+            {remaining > 0 && (
+              <p className="text-xs text-muted-foreground pl-6">+{remaining} more members</p>
+            )}
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="pt-1 flex justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 h-8 text-xs"
+            onClick={() => setDetailsOpen(true)}
+            disabled={target.bdBreakdown.length === 0}
+          >
+            <Eye className="h-3 w-3" />
+            View Breakdown
+          </Button>
+          {!readOnly && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 h-8 text-xs"
+              onClick={onSetTarget}
+            >
+              <Pencil className="h-3 w-3" />
+              Edit Target
+            </Button>
+          )}
+        </div>
+      </CardContent>
+
+      <TeamDetailsDialog target={target} open={detailsOpen} onOpenChange={setDetailsOpen} />
+    </Card>
+  )
+}
+
+// ─── BD Leaderboard ───────────────────────────────────────────────────────────
+
+function BDLeaderboard({
+  bdTargets,
+  allBds,
+  onAssignTarget,
+  readOnly,
+}: {
+  bdTargets: TargetProgress[]
+  allBds: TeamMember[]
+  onAssignTarget: () => void
+  readOnly?: boolean
+}) {
+  const allBDsList = useMemo(() => {
+    const map = new Map<string, {
+      id: string
+      name: string
+      profilePicture: string | null
+      actual: number
+      targetValue: number
+      percentage: number
+      hasTarget: boolean
+      status: 'completed' | 'on_track' | 'at_risk'
+    }>()
+
+    // Initialize all BDs with 0
+    for (const bd of allBds) {
+      map.set(bd.id, {
+        id: bd.id,
+        name: bd.name,
+        profilePicture: bd.profilePicture,
+        actual: 0,
+        targetValue: 0,
+        percentage: 0,
+        hasTarget: false,
+        status: 'at_risk',
+      })
+    }
+
+    // Populate with actual target data
+    for (const t of bdTargets) {
+      const existing = map.get(t.targetForId)
+      map.set(t.targetForId, {
+        id: t.targetForId,
+        name: t.entityName || existing?.name || 'BD Member',
+        profilePicture: t.entityAvatar || existing?.profilePicture || null,
+        actual: t.actual,
+        targetValue: t.targetValue,
+        percentage: t.percentage,
+        hasTarget: true,
+        status: t.status,
+      })
+    }
+
+    return Array.from(map.values()).sort((a, b) => {
+      if (b.hasTarget !== a.hasTarget) return b.hasTarget ? 1 : -1
+      return b.actual - a.actual
+    })
+  }, [allBds, bdTargets])
+
+  const topActual = allBDsList[0]?.actual ?? 0
+
+  return (
+    <Card className="rounded-2xl border border-border shadow-sm overflow-hidden">
+      <CardContent className="p-5 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-base">Individual BD Performance</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">Ranked by monthly IPDs achieved</p>
+          </div>
+          {!readOnly && (
+            <Button
+              className="gap-2 bg-violet-600 hover:bg-violet-700"
+              size="sm"
+              onClick={onAssignTarget}
+            >
+              <Plus className="h-4 w-4" />
+              Assign BD Target
+            </Button>
+          )}
+        </div>
+
+        <div className="divide-y divide-border/60">
+          {allBDsList.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-10">No BD members found.</p>
+          )}
+          {allBDsList.map((bd, idx) => {
+            const RankIcon = RANK_ICONS[idx]
+            const bac = getAvatarColor(bd.name)
+            const sc = STATUS_CONFIG[bd.status] || STATUS_CONFIG.at_risk
+            const StatusIcon = sc.icon
+            const barPct = bd.targetValue > 0 ? Math.min(100, Math.round((bd.actual / bd.targetValue) * 100)) : 0
+
+            return (
+              <div key={bd.id} className="py-3.5 flex items-center gap-3 hover:bg-muted/30 px-2 rounded-xl transition-colors">
+                <div className="w-6 shrink-0 flex justify-center">
+                  {RankIcon ? (
+                    <RankIcon className={cn('h-5 w-5', RANK_COLORS[idx])} />
+                  ) : (
+                    <span className="text-xs font-semibold text-muted-foreground tabular-nums">{idx + 1}</span>
+                  )}
+                </div>
+                <Avatar className="h-9 w-9 shrink-0">
+                  {bd.profilePicture && <AvatarImage src={bd.profilePicture} />}
+                  <AvatarFallback className={cn(bac.bg, bac.text, 'text-xs font-bold')}>{getInitials(bd.name)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold truncate">{bd.name}</p>
+                    {bd.hasTarget ? (
+                      <Badge className={cn('text-[10px] h-4 px-1.5 font-medium border-0 gap-0.5', sc.badge)}>
+                        <StatusIcon className="h-2.5 w-2.5" />
+                        {sc.label}
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-[10px] h-4 px-1.5 text-muted-foreground">
+                        No Target
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="mt-1.5 h-2 w-full bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all"
+                      style={{ width: `${barPct}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="text-right shrink-0 min-w-[90px]">
+                  <p className="text-sm font-bold tabular-nums">
+                    {bd.actual} <span className="text-xs font-normal text-muted-foreground">/ {bd.targetValue || '—'}</span>
+                  </p>
+                  <p className="text-[11px] text-muted-foreground tabular-nums">
+                    {bd.hasTarget ? `${Math.round(bd.percentage)}%` : '—'}
+                  </p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// ─── Set Category Target Dialog ──────────────────────────────────────────────
 
 function SetCategoryTargetDialog({
   categoryManagers,
   selectedMonth,
-  existingTargets,
   onSubmit,
   isLoading,
   open,
@@ -356,7 +725,6 @@ function SetCategoryTargetDialog({
 }: {
   categoryManagers: CmInfo[]
   selectedMonth: Date
-  existingTargets: TargetProgress[]
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
   open: boolean
@@ -371,7 +739,8 @@ function SetCategoryTargetDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedCmId) { toast.error('Please select a Category Manager'); return }
-    if (!targetValue || Number(targetValue) <= 0) { toast.error('Enter a valid target'); return }
+    const val = parseFloat(targetValue)
+    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
     onSubmit({
       targetType: 'CATEGORY',
       targetForId: selectedCmId,
@@ -379,7 +748,7 @@ function SetCategoryTargetDialog({
       periodStartDate: periodStart.toISOString(),
       periodEndDate: periodEnd.toISOString(),
       metric: 'IPD_DONE',
-      targetValue: parseFloat(targetValue),
+      targetValue: val,
     })
   }
 
@@ -454,51 +823,329 @@ function SetCategoryTargetDialog({
   )
 }
 
+// ─── Set Team Target Dialog ──────────────────────────────────────────────────
+
+function SetTeamTargetDialog({
+  teams,
+  selectedMonth,
+  onSubmit,
+  isLoading,
+  open,
+  onOpenChange,
+}: {
+  teams: TeamInfo[]
+  selectedMonth: Date
+  onSubmit: (data: Record<string, unknown>) => void
+  isLoading: boolean
+  open: boolean
+  onOpenChange: (v: boolean) => void
+}) {
+  const [selectedTeamId, setSelectedTeamId] = useState('')
+  const [targetValue, setTargetValue] = useState('')
+
+  const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
+  const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!selectedTeamId) { toast.error('Please select a team'); return }
+    const val = parseFloat(targetValue)
+    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+
+    onSubmit({
+      targetType: 'TEAM',
+      targetForId: selectedTeamId,
+      periodType: 'MONTH',
+      periodStartDate: periodStart.toISOString(),
+      periodEndDate: periodEnd.toISOString(),
+      metric: 'IPD_DONE',
+      targetValue: val,
+    })
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-violet-500" />
+            Set Team Target · {format(selectedMonth, 'MMMM yyyy')}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-1">
+          <div>
+            <Label className="text-sm font-medium mb-2 block">Select Team Lead / ACM</Label>
+            <div className="grid gap-2 max-h-[220px] overflow-y-auto pr-1">
+              {teams.map((team) => {
+                const ac = getAvatarColor(team.name)
+                const isSelected = selectedTeamId === team.id
+                return (
+                  <button
+                    key={team.id}
+                    type="button"
+                    onClick={() => setSelectedTeamId(team.id)}
+                    className={cn(
+                      'flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left',
+                      isSelected ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20' :
+                        'border-border hover:border-muted-foreground/30'
+                    )}
+                  >
+                    <Avatar className="h-9 w-9">
+                      {team.profilePicture && <AvatarImage src={team.profilePicture} />}
+                      <AvatarFallback className={cn(ac.bg, ac.text, 'font-semibold text-xs')}>
+                        {getInitials(team.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{team.name}</p>
+                      <p className="text-xs text-muted-foreground">{team.memberCount} members</p>
+                    </div>
+                    {isSelected && (
+                      <div className="h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center shrink-0">
+                        <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div>
+            <Label className="text-sm font-medium">IPD Done Target</Label>
+            <Input
+              type="number"
+              className="mt-1.5 text-lg font-semibold h-12"
+              value={targetValue}
+              onChange={(e) => setTargetValue(e.target.value)}
+              placeholder="e.g. 25"
+              min={1}
+              required
+            />
+            <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>
+          </div>
+          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading || !selectedTeamId}>
+            {isLoading ? 'Saving...' : 'Set Target'}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// ─── Assign BD Target Dialog ──────────────────────────────────────────────────
+
+function AssignBDTargetDialog({
+  members,
+  selectedMonth,
+  onSubmit,
+  isLoading,
+  open,
+  onOpenChange,
+}: {
+  members: Array<TeamMember & { teamName?: string }>
+  selectedMonth: Date
+  onSubmit: (data: Record<string, unknown>) => void
+  isLoading: boolean
+  open: boolean
+  onOpenChange: (v: boolean) => void
+}) {
+  const [selectedBdId, setSelectedBdId] = useState('')
+  const [targetValue, setTargetValue] = useState('')
+
+  const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
+  const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!selectedBdId) { toast.error('Please select a team member'); return }
+    const val = parseFloat(targetValue)
+    if (!targetValue || val <= 0) { toast.error('Enter a valid target'); return }
+
+    onSubmit({
+      targetType: 'BD',
+      targetForId: selectedBdId,
+      periodType: 'MONTH',
+      periodStartDate: periodStart.toISOString(),
+      periodEndDate: periodEnd.toISOString(),
+      metric: 'IPD_DONE',
+      targetValue: val,
+    })
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-violet-500" />
+            Assign BD Target · {format(selectedMonth, 'MMMM yyyy')}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-1">
+          <div>
+            <Label className="text-sm font-medium mb-2 block">Select BD Member</Label>
+            <div className="grid gap-2 max-h-[220px] overflow-y-auto pr-1">
+              {members.map((m) => {
+                const ac = getAvatarColor(m.name)
+                const isSelected = selectedBdId === m.id
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setSelectedBdId(m.id)}
+                    className={cn(
+                      'flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left',
+                      isSelected
+                        ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20'
+                        : 'border-border hover:border-muted-foreground/30'
+                    )}
+                  >
+                    <Avatar className="h-9 w-9">
+                      {m.profilePicture && <AvatarImage src={m.profilePicture} />}
+                      <AvatarFallback className={cn(ac.bg, ac.text, 'text-[10px] font-semibold')}>
+                        {getInitials(m.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{m.name}</p>
+                      {m.teamName && (
+                        <p className="text-xs text-muted-foreground truncate">{m.teamName}</p>
+                      )}
+                    </div>
+                    {isSelected && (
+                      <div className="h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center shrink-0">
+                        <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div>
+            <Label className="text-sm font-medium">IPD Done Target</Label>
+            <Input
+              type="number"
+              className="mt-1.5 text-lg font-semibold h-12"
+              value={targetValue}
+              onChange={(e) => setTargetValue(e.target.value)}
+              placeholder="e.g. 8"
+              min={1}
+              required
+            />
+            <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected this month</p>
+          </div>
+          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading || !selectedBdId}>
+            {isLoading ? 'Saving...' : 'Assign Target'}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function SalesHeadTargetsPage({ readOnly = false }: { readOnly?: boolean }) {
+  const { user } = useAuth()
+  const isExecutiveAssistant = user?.role === 'EXECUTIVE_ASSISTANT'
+
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
     return new Date(now.getFullYear(), now.getMonth(), 1)
   })
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false)
+  const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false)
+  const [isBdDialogOpen, setIsBdDialogOpen] = useState(false)
 
   const queryClient = useQueryClient()
   const monthStr = format(selectedMonth, 'yyyy-MM')
 
-  const { data: teamUnitsData } = useQuery<{ categoryManagers: CmInfo[] }>({
-    queryKey: ['target-teams-cm'],
+  const { data: teamUnitsData, isLoading: isUnitsLoading } = useQuery<{
+    teams: TeamInfo[]
+    categoryManagers: CmInfo[]
+  }>({
+    queryKey: ['target-teams-units'],
     queryFn: () => apiGet('/api/targets/teams?includeCm=1'),
   })
-  const categoryManagers = teamUnitsData?.categoryManagers ?? []
 
-  const { data: targets = [], isLoading } = useQuery<TargetProgress[]>({
-    queryKey: ['target-progress-category', monthStr],
-    queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthStr}&targetType=CATEGORY`),
+  const categoryManagers = teamUnitsData?.categoryManagers ?? []
+  const teams = teamUnitsData?.teams ?? []
+
+  // All individual BD members gathered across all teams & CM units
+  const allBdMembers = useMemo(() => {
+    const map = new Map<string, TeamMember & { teamName?: string }>()
+    for (const team of teams) {
+      for (const m of team.members || []) {
+        if (!map.has(m.id)) {
+          map.set(m.id, { ...m, teamName: `${team.name}'s Team` })
+        }
+      }
+    }
+    for (const cm of categoryManagers) {
+      for (const m of cm.members || []) {
+        if (!map.has(m.id)) {
+          map.set(m.id, { ...m, teamName: `${cm.name}'s Category` })
+        }
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name))
+  }, [teams, categoryManagers])
+
+  const { data: targets = [], isLoading: isTargetsLoading } = useQuery<TargetProgress[]>({
+    queryKey: ['target-progress-all', monthStr],
+    queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthStr}`),
   })
+
+  const isLoading = isUnitsLoading || isTargetsLoading
+
+  const categoryTargets = useMemo(
+    () => targets.filter((t) => t.targetType === 'CATEGORY'),
+    [targets]
+  )
+
+  const teamTargets = useMemo(
+    () => targets.filter((t) => t.targetType === 'TEAM'),
+    [targets]
+  )
+
+  const bdTargets = useMemo(
+    () => targets.filter((t) => t.targetType === 'BD'),
+    [targets]
+  )
 
   const createTargetMutation = useMutation({
     mutationFn: (data: Record<string, unknown>) => apiPost('/api/targets', data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['target-progress-all'] })
+      queryClient.invalidateQueries({ queryKey: ['target-progress'] })
       queryClient.invalidateQueries({ queryKey: ['target-progress-category'] })
-      setIsDialogOpen(false)
-      toast.success('Category target set successfully')
+      setIsCategoryDialogOpen(false)
+      setIsTeamDialogOpen(false)
+      setIsBdDialogOpen(false)
+      toast.success('Target set successfully')
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : 'Failed to set target'),
   })
 
   return (
     <AuthenticatedLayout>
-      <div className="space-y-6 max-w-5xl mx-auto">
+      <div className="space-y-6 max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2.5">
               <Target className="h-6 w-6 text-violet-500" />
-              Category Sales Targets
+              {isExecutiveAssistant ? 'Sales Target Management' : 'Category Sales Targets'}
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Top-level Category Target allocations · {format(selectedMonth, 'MMMM yyyy')}
+              {isExecutiveAssistant
+                ? `Executive Assistant target allocations · ${format(selectedMonth, 'MMMM yyyy')}`
+                : `Top-level Category Target allocations · ${format(selectedMonth, 'MMMM yyyy')}`}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -506,75 +1153,252 @@ export default function SalesHeadTargetsPage({ readOnly = false }: { readOnly?: 
           </div>
         </div>
 
-        {/* Category Targets Content */}
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Category Level Performance
-            </h2>
-            {!readOnly && (
-              <Button
-                className="gap-2 bg-violet-600 hover:bg-violet-700"
-                size="sm"
-                onClick={() => setIsDialogOpen(true)}
+        {/* ─── Executive Assistant View: 3 Tabs (Category, Team, Individual) ─── */}
+        {isExecutiveAssistant ? (
+          <Tabs defaultValue="category" className="w-full space-y-6">
+            <TabsList className="grid grid-cols-3 w-full max-w-2xl bg-muted/60 p-1.5 rounded-2xl h-13 border border-border/80 shadow-xs">
+              <TabsTrigger
+                value="category"
+                className="rounded-xl px-6 py-2.5 font-semibold text-sm data-[state=active]:bg-violet-600 data-[state=active]:text-white transition-all shadow-xs"
               >
-                <Plus className="h-4 w-4" />
-                Set Target
-              </Button>
-            )}
-          </div>
+                <Target className="h-4 w-4 mr-2" />
+                Category
+              </TabsTrigger>
+              <TabsTrigger
+                value="team"
+                className="rounded-xl px-6 py-2.5 font-semibold text-sm data-[state=active]:bg-violet-600 data-[state=active]:text-white transition-all shadow-xs"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Team
+              </TabsTrigger>
+              <TabsTrigger
+                value="individual"
+                className="rounded-xl px-6 py-2.5 font-semibold text-sm data-[state=active]:bg-violet-600 data-[state=active]:text-white transition-all shadow-xs"
+              >
+                <Trophy className="h-4 w-4 mr-2" />
+                Individual (BD)
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Summary */}
-          {targets.length > 0 && <SummaryStats targets={targets} />}
-
-          {/* Content */}
-          {isLoading ? (
-            <div className="grid gap-4 md:grid-cols-2">
-              {[1, 2].map((i) => (
-                <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
-              ))}
-            </div>
-          ) : targets.length === 0 ? (
-            <Card className="border-dashed rounded-2xl">
-              <CardContent className="py-16 text-center">
-                <Target className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-1">No targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
-                <p className="text-sm text-muted-foreground mb-5">
-                  {readOnly ? 'No category targets have been set yet.' : 'Assign monthly Category targets to Category Managers to start tracking.'}
-                </p>
+            {/* Tab 1: Category */}
+            <TabsContent value="category" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  Category Level Performance
+                </h2>
                 {!readOnly && (
-                  <Button variant="outline" className="gap-2" onClick={() => setIsDialogOpen(true)}>
+                  <Button
+                    className="gap-2 bg-violet-600 hover:bg-violet-700"
+                    size="sm"
+                    onClick={() => setIsCategoryDialogOpen(true)}
+                  >
                     <Plus className="h-4 w-4" />
-                    Set First Target
+                    Set Category Target
                   </Button>
                 )}
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {targets.map((t) => (
-                <CategoryTargetCard
-                  key={t.id}
-                  target={t}
+              </div>
+
+              {categoryTargets.length > 0 && <SummaryStats targets={categoryTargets} targetLabel="Category Target" />}
+
+              {isLoading ? (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
+                  ))}
+                </div>
+              ) : categoryTargets.length === 0 ? (
+                <Card className="border-dashed rounded-2xl">
+                  <CardContent className="py-16 text-center">
+                    <Target className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-1">No category targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
+                    <p className="text-sm text-muted-foreground mb-5">
+                      {readOnly ? 'No category targets have been set yet.' : 'Assign monthly Category targets to Category Managers to start tracking.'}
+                    </p>
+                    {!readOnly && (
+                      <Button variant="outline" className="gap-2" onClick={() => setIsCategoryDialogOpen(true)}>
+                        <Plus className="h-4 w-4" />
+                        Set First Target
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {categoryTargets.map((t) => (
+                    <CategoryTargetCard
+                      key={t.id}
+                      target={t}
+                      readOnly={readOnly}
+                      onSetTarget={() => setIsCategoryDialogOpen(true)}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            {/* Tab 2: Team */}
+            <TabsContent value="team" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  Team Level Performance
+                </h2>
+                {!readOnly && (
+                  <Button
+                    className="gap-2 bg-violet-600 hover:bg-violet-700"
+                    size="sm"
+                    onClick={() => setIsTeamDialogOpen(true)}
+                  >
+                    <Plus className="h-4 w-4" />
+                    Set Team Target
+                  </Button>
+                )}
+              </div>
+
+              {teamTargets.length > 0 && <SummaryStats targets={teamTargets} targetLabel="Team Target" />}
+
+              {isLoading ? (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
+                  ))}
+                </div>
+              ) : teamTargets.length === 0 ? (
+                <Card className="border-dashed rounded-2xl">
+                  <CardContent className="py-16 text-center">
+                    <Users className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-1">No team targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
+                    <p className="text-sm text-muted-foreground mb-5">
+                      {readOnly ? 'No team targets have been set yet.' : 'Assign monthly delegation targets to team leads / ACMs.'}
+                    </p>
+                    {!readOnly && (
+                      <Button variant="outline" className="gap-2" onClick={() => setIsTeamDialogOpen(true)}>
+                        <Plus className="h-4 w-4" />
+                        Set First Target
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {teamTargets.map((t) => (
+                    <TeamTargetCard
+                      key={t.id}
+                      target={t}
+                      readOnly={readOnly}
+                      onSetTarget={() => setIsTeamDialogOpen(true)}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            {/* Tab 3: Individual (BD) */}
+            <TabsContent value="individual" className="space-y-6">
+              {bdTargets.length > 0 && <SummaryStats targets={bdTargets} targetLabel="BD Target" />}
+
+              {isLoading ? (
+                <div className="h-64 rounded-2xl bg-muted animate-pulse" />
+              ) : (
+                <BDLeaderboard
+                  bdTargets={bdTargets}
+                  allBds={allBdMembers}
+                  onAssignTarget={() => setIsBdDialogOpen(true)}
                   readOnly={readOnly}
-                  onSetTarget={() => setIsDialogOpen(true)}
                 />
-              ))}
+              )}
+            </TabsContent>
+          </Tabs>
+        ) : (
+          /* ─── Standard Category Level View (for Sales Head & other roles) ─── */
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                Category Level Performance
+              </h2>
+              {!readOnly && (
+                <Button
+                  className="gap-2 bg-violet-600 hover:bg-violet-700"
+                  size="sm"
+                  onClick={() => setIsCategoryDialogOpen(true)}
+                >
+                  <Plus className="h-4 w-4" />
+                  Set Target
+                </Button>
+              )}
             </div>
-          )}
-        </div>
+
+            {/* Summary */}
+            {categoryTargets.length > 0 && <SummaryStats targets={categoryTargets} targetLabel="Category Target" />}
+
+            {/* Content */}
+            {isLoading ? (
+              <div className="grid gap-4 md:grid-cols-2">
+                {[1, 2].map((i) => (
+                  <div key={i} className="h-56 rounded-2xl bg-muted animate-pulse" />
+                ))}
+              </div>
+            ) : categoryTargets.length === 0 ? (
+              <Card className="border-dashed rounded-2xl">
+                <CardContent className="py-16 text-center">
+                  <Target className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-1">No targets for {format(selectedMonth, 'MMMM yyyy')}</h3>
+                  <p className="text-sm text-muted-foreground mb-5">
+                    {readOnly ? 'No category targets have been set yet.' : 'Assign monthly Category targets to Category Managers to start tracking.'}
+                  </p>
+                  {!readOnly && (
+                    <Button variant="outline" className="gap-2" onClick={() => setIsCategoryDialogOpen(true)}>
+                      <Plus className="h-4 w-4" />
+                      Set First Target
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                {categoryTargets.map((t) => (
+                  <CategoryTargetCard
+                    key={t.id}
+                    target={t}
+                    readOnly={readOnly}
+                    onSetTarget={() => setIsCategoryDialogOpen(true)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
+      {/* Dialogs */}
       {!readOnly && (
-        <SetCategoryTargetDialog
-          categoryManagers={categoryManagers}
-          selectedMonth={selectedMonth}
-          existingTargets={targets}
-          onSubmit={(data) => createTargetMutation.mutate(data)}
-          isLoading={createTargetMutation.isPending}
-          open={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-        />
+        <>
+          <SetCategoryTargetDialog
+            categoryManagers={categoryManagers}
+            selectedMonth={selectedMonth}
+            onSubmit={(data) => createTargetMutation.mutate(data)}
+            isLoading={createTargetMutation.isPending}
+            open={isCategoryDialogOpen}
+            onOpenChange={setIsCategoryDialogOpen}
+          />
+
+          <SetTeamTargetDialog
+            teams={teams}
+            selectedMonth={selectedMonth}
+            onSubmit={(data) => createTargetMutation.mutate(data)}
+            isLoading={createTargetMutation.isPending}
+            open={isTeamDialogOpen}
+            onOpenChange={setIsTeamDialogOpen}
+          />
+
+          <AssignBDTargetDialog
+            members={allBdMembers}
+            selectedMonth={selectedMonth}
+            onSubmit={(data) => createTargetMutation.mutate(data)}
+            isLoading={createTargetMutation.isPending}
+            open={isBdDialogOpen}
+            onOpenChange={setIsBdDialogOpen}
+          />
+        </>
       )}
     </AuthenticatedLayout>
   )

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@/generated/prisma/client'
 import { getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
 import { withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
 import { prisma } from '@/lib/prisma'
@@ -112,7 +112,10 @@ export async function createImportedLeadWithCrmAssignment(
     )
   }
 
-  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(normalizedPhone)
+  const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(
+    normalizedPhone,
+    input.leadData.treatment as string | null | undefined
+  )
   const isDuplicate = Boolean(duplicateLead) || Boolean(input.forceDuplicateStatus)
 
   const assignmentResult = await previewImportedLeadAssignment(input.assignmentContext)
@@ -204,7 +207,7 @@ export async function createImportedLeadWithCrmAssignment(
     bdId: assignmentResult.assignment.bd.userId,
     bdeName: assignmentResult.assignment.bd.name,
     teamLeadId,
-  } satisfies Prisma.LeadCreateInput
+  } as any
 
   const createLead = (leadRef: string) =>
     prisma.lead.create({

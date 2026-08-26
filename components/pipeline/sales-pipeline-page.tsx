@@ -179,121 +179,159 @@ const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500]
 interface StatusBadgeConfig {
   label: string
   icon: LucideIcon
-  className: string
-  iconClass: string
+  backgroundColor: string
+  color: string
 }
 
 function getStatusBadgeConfig(status: string | null | undefined): StatusBadgeConfig {
   const norm = normalizeLeadStatus(status)
-  const lower = norm.toLowerCase()
+  const lower = norm.toLowerCase().trim()
 
-  if (lower.includes('callback')) {
-    return {
-      label: norm,
-      icon: PhoneCall,
-      className: 'bg-[#FFF7ED] dark:bg-amber-950/40 text-[#C2410C] dark:text-amber-300 border-[#FDBA74]/80 dark:border-amber-800/60',
-      iconClass: 'text-[#EA580C] dark:text-amber-400',
+  const EXACT_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
+    'new lead': { bg: '#67ffbd', text: '#000000' },
+    'new': { bg: '#67ffbd', text: '#000000' },
+    'hot lead': { bg: '#d4edbc', text: '#11734b' },
+    'hot': { bg: '#d4edbc', text: '#11734b' },
+    'follow-up 1': { bg: '#d4edbc', text: '#11734b' },
+    'follow-up 2': { bg: '#d4edbc', text: '#11734b' },
+    'follow-up 3': { bg: '#d4edbc', text: '#11734b' },
+    'follow-up 4': { bg: '#d4edbc', text: '#11734b' },
+    'follow-up 5': { bg: '#d4edbc', text: '#11734b' },
+    'follow-up': { bg: '#d4edbc', text: '#11734b' },
+    'follow up 1': { bg: '#d4edbc', text: '#11734b' },
+    'follow up 2': { bg: '#d4edbc', text: '#11734b' },
+    'follow up 3': { bg: '#d4edbc', text: '#11734b' },
+    'follow up 4': { bg: '#d4edbc', text: '#11734b' },
+    'follow up 5': { bg: '#d4edbc', text: '#11734b' },
+    'follow up': { bg: '#d4edbc', text: '#11734b' },
+    'opd done': { bg: '#bfe1f6', text: '#0a53a8' },
+    'opd schedule': { bg: '#ffe5a0', text: '#473821' },
+    'opd scheduled': { bg: '#ffe5a0', text: '#473821' },
+    'opd sch': { bg: '#ffe5a0', text: '#473821' },
+    'ipd done': { bg: '#11734b', text: '#d4edbc' },
+    'ipd schedule': { bg: '#11734b', text: '#d4edbc' },
+    'ipd scheduled': { bg: '#11734b', text: '#d4edbc' },
+    'ipd sch': { bg: '#11734b', text: '#d4edbc' },
+    'ipd lost': { bg: '#b10202', text: '#ffcfc9' },
+    'ipd loss': { bg: '#b10202', text: '#ffcfc9' },
+    'fund issues': { bg: '#e6e6e6', text: '#3d3d3d' },
+    'dnp-1': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp-2': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp-3': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp-4': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp-5': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp 1': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp 2': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp 3': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp 4': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp 5': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp exhausted': { bg: '#b10202', text: '#ffcfc9' },
+    'dnp': { bg: '#b10202', text: '#ffcfc9' },
+    'did not pick': { bg: '#b10202', text: '#ffcfc9' },
+    'call back (sd)': { bg: '#ffcfc9', text: '#b10202' },
+    'call back (t)': { bg: '#ffcfc9', text: '#b10202' },
+    'call back sd': { bg: '#ffcfc9', text: '#b10202' },
+    'call back t': { bg: '#ffcfc9', text: '#b10202' },
+    'call back': { bg: '#ffcfc9', text: '#b10202' },
+    'callback': { bg: '#ffcfc9', text: '#b10202' },
+    'call done': { bg: '#0028b1', text: '#ffec03' },
+    'closed': { bg: '#3d3d3d', text: '#e5e5e5' },
+    'out of station': { bg: '#ffe5a0', text: '#11734b' },
+    'outstation': { bg: '#ffe5a0', text: '#11734b' },
+    'supply gap': { bg: '#ffe5a0', text: '#11734b' },
+    'sx not suggested': { bg: '#e6e6e6', text: '#3d3d3d' },
+    'surgery not suggested': { bg: '#e6e6e6', text: '#3d3d3d' },
+    'language barrier': { bg: '#e6e6e6', text: '#3d3d3d' },
+    'junk': { bg: '#e6e6e6', text: '#3d3d3d' },
+    'duplicate lead': { bg: '#e6e6e6', text: '#3d3d3d' },
+    'duplicate': { bg: '#e6e6e6', text: '#3d3d3d' },
+    'not interested': { bg: '#b10202', text: '#ffcfc9' },
+    'nurture': { bg: '#5a3286', text: '#e5cff2' },
+    'nurture 1': { bg: '#5a3286', text: '#e5cff2' },
+    'nurture 2': { bg: '#5a3286', text: '#e5cff2' },
+    'nurture 3': { bg: '#5a3286', text: '#e5cff2' },
+    'nurture 4': { bg: '#5a3286', text: '#e5cff2' },
+    'nurture 5': { bg: '#5a3286', text: '#e5cff2' },
+    'nuture': { bg: '#5a3286', text: '#e5cff2' },
+    'nuture 1': { bg: '#5a3286', text: '#e5cff2' },
+    'nuture 2': { bg: '#5a3286', text: '#e5cff2' },
+    'nuture 3': { bg: '#5a3286', text: '#e5cff2' },
+    'nuture 4': { bg: '#5a3286', text: '#e5cff2' },
+    'nuture 5': { bg: '#5a3286', text: '#e5cff2' },
+  }
+
+  const exact = EXACT_STATUS_COLORS[lower]
+  let bg = exact?.bg
+  let text = exact?.text
+
+  if (!bg || !text) {
+    if (lower.includes('nurture') || lower.includes('nuture')) {
+      bg = '#5a3286'; text = '#e5cff2'
+    } else if (lower.includes('call done')) {
+      bg = '#0028b1'; text = '#ffec03'
+    } else if (lower.includes('callback') || lower.includes('call back')) {
+      bg = '#ffcfc9'; text = '#b10202'
+    } else if (
+      lower.includes('dnp') ||
+      lower.includes('did not pick') ||
+      lower.includes('not interested') ||
+      lower.includes('lost') ||
+      lower.includes('loss')
+    ) {
+      bg = '#b10202'; text = '#ffcfc9'
+    } else if (lower.includes('ipd done') || lower.includes('ipd sch') || lower.includes('ipd schedule')) {
+      bg = '#11734b'; text = '#d4edbc'
+    } else if (lower.includes('opd done')) {
+      bg = '#bfe1f6'; text = '#0a53a8'
+    } else if (lower.includes('opd sch') || lower.includes('opd schedule')) {
+      bg = '#ffe5a0'; text = '#473821'
+    } else if (lower.includes('outstation') || lower.includes('out of station') || lower.includes('supply gap')) {
+      bg = '#ffe5a0'; text = '#11734b'
+    } else if (lower.includes('new')) {
+      bg = '#67ffbd'; text = '#000000'
+    } else if (lower.includes('hot') || lower.includes('follow')) {
+      bg = '#d4edbc'; text = '#11734b'
+    } else if (lower.includes('closed')) {
+      bg = '#3d3d3d'; text = '#e5e5e5'
+    } else {
+      bg = '#e6e6e6'; text = '#3d3d3d'
     }
   }
-  if (lower.includes('junk')) {
-    return {
-      label: norm,
-      icon: Trash2,
-      className: 'bg-[#F1F5F9] dark:bg-slate-800/60 text-[#475569] dark:text-slate-300 border-[#CBD5E1] dark:border-slate-700',
-      iconClass: 'text-[#64748B] dark:text-slate-400',
-    }
-  }
-  if (lower.includes('dnp') || lower.includes('did not pick') || lower.includes('not connected')) {
-    return {
-      label: norm,
-      icon: PhoneOff,
-      className: 'bg-[#FFF1F2] dark:bg-rose-950/40 text-[#E11D48] dark:text-rose-300 border-[#FECDD3] dark:border-rose-800/60',
-      iconClass: 'text-[#F43F5E] dark:text-rose-400',
-    }
-  }
-  if (
-    lower.includes('ipd sch') ||
-    lower.includes('opd sch') ||
-    lower.includes('schedule') ||
-    lower.includes('appointment')
-  ) {
-    return {
-      label: norm,
-      icon: CalendarClock,
-      className: 'bg-[#ECFDF5] dark:bg-emerald-950/40 text-[#047857] dark:text-emerald-300 border-[#A7F3D0] dark:border-emerald-800/60',
-      iconClass: 'text-[#059669] dark:text-emerald-400',
-    }
-  }
-  if (lower.includes('follow') || lower.includes('interested') || lower.includes('hot')) {
-    return {
-      label: norm,
-      icon: PhoneCall,
-      className: 'bg-[#ECFDF5] dark:bg-emerald-950/40 text-[#047857] dark:text-emerald-300 border-[#A7F3D0] dark:border-emerald-800/60',
-      iconClass: 'text-[#059669] dark:text-emerald-400',
-    }
-  }
-  if (lower.includes('new')) {
-    return {
-      label: norm,
-      icon: Sparkles,
-      className: 'bg-[#EFF6FF] dark:bg-sky-950/40 text-[#1D4ED8] dark:text-sky-300 border-[#BFDBFE] dark:border-sky-800/60',
-      iconClass: 'text-[#2563EB] dark:text-sky-400',
-    }
-  }
-  if (lower.includes('done') || lower.includes('closed') || lower.includes('won')) {
-    return {
-      label: norm,
-      icon: CheckCircle2,
-      className: 'bg-[#F0FDF4] dark:bg-emerald-950/40 text-[#15803D] dark:text-emerald-300 border-[#BBF7D0] dark:border-emerald-800/60',
-      iconClass: 'text-[#16A34A] dark:text-emerald-400',
-    }
-  }
-  if (lower.includes('fund') || lower.includes('finance')) {
-    return {
-      label: norm,
-      icon: Banknote,
-      className: 'bg-[#F0FDFA] dark:bg-teal-950/40 text-[#0F766E] dark:text-teal-300 border-[#99F6E4] dark:border-teal-800/60',
-      iconClass: 'text-[#0D9488] dark:text-teal-400',
-    }
-  }
-  if (lower.includes('duplicate')) {
-    return {
-      label: norm,
-      icon: Copy,
-      className: 'bg-[#FFF1F2] dark:bg-rose-950/40 text-[#E11D48] dark:text-rose-300 border-[#FECDD3] dark:border-rose-800/60',
-      iconClass: 'text-[#F43F5E] dark:text-rose-400',
-    }
-  }
-  if (lower.includes('outstation')) {
-    return {
-      label: norm,
-      icon: MapPinOff,
-      className: 'bg-[#FFFBEB] dark:bg-amber-950/40 text-[#B45309] dark:text-amber-300 border-[#FDE68A] dark:border-amber-800/60',
-      iconClass: 'text-[#D97706] dark:text-amber-400',
-    }
-  }
-  if (lower.includes('loss') || lower.includes('lost')) {
-    return {
-      label: norm,
-      icon: HeartCrack,
-      className: 'bg-[#FFF1F2] dark:bg-rose-950/40 text-[#E11D48] dark:text-rose-300 border-[#FECDD3] dark:border-rose-800/60',
-      iconClass: 'text-[#F43F5E] dark:text-rose-400',
-    }
-  }
-  if (lower.includes('nurture')) {
-    return {
-      label: norm,
-      icon: Sprout,
-      className: 'bg-[#FAF5FF] dark:bg-purple-950/40 text-[#7E22CE] dark:text-purple-300 border-[#E9D5FF] dark:border-purple-800/60',
-      iconClass: 'text-[#9333EA] dark:text-purple-400',
-    }
+
+  let icon: LucideIcon = CheckCircle2
+  if (lower.includes('callback') || lower.includes('call back')) {
+    icon = PhoneCall
+  } else if (lower.includes('call done')) {
+    icon = PhoneCall
+  } else if (lower.includes('junk')) {
+    icon = Trash2
+  } else if (lower.includes('dnp') || lower.includes('did not pick') || lower.includes('not connected')) {
+    icon = PhoneOff
+  } else if (lower.includes('sch') || lower.includes('schedule') || lower.includes('appointment')) {
+    icon = CalendarClock
+  } else if (lower.includes('follow') || lower.includes('interested') || lower.includes('hot')) {
+    icon = PhoneCall
+  } else if (lower.includes('new')) {
+    icon = Sparkles
+  } else if (lower.includes('done') || lower.includes('closed') || lower.includes('won')) {
+    icon = CheckCircle2
+  } else if (lower.includes('fund') || lower.includes('finance')) {
+    icon = Banknote
+  } else if (lower.includes('duplicate')) {
+    icon = Copy
+  } else if (lower.includes('outstation') || lower.includes('out of station')) {
+    icon = MapPinOff
+  } else if (lower.includes('loss') || lower.includes('lost') || lower.includes('not interested')) {
+    icon = HeartCrack
+  } else if (lower.includes('nurture') || lower.includes('nuture')) {
+    icon = Sprout
   }
 
   return {
     label: norm,
-    icon: CheckCircle2,
-    className: 'bg-[#F8FAFC] dark:bg-slate-900/50 text-[#334155] dark:text-slate-300 border-[#E2E8F0] dark:border-slate-800',
-    iconClass: 'text-[#64748B] dark:text-slate-400',
+    icon,
+    backgroundColor: bg,
+    color: text,
   }
 }
 
@@ -322,10 +360,12 @@ const PIPELINE_STAGE_FILTER_OPTIONS = uniqueSorted([
 ])
 
 type PipelineColumnId =
+  | 'sno'
   | 'leadRef'
   | 'assignDate'
   | 'leadDate'
   | 'patient'
+  | 'alternateNumber'
   | 'month'
   | 'age'
   | 'sex'
@@ -371,10 +411,12 @@ const PIPELINE_VISIBLE_COLUMNS_STORAGE_KEY_PREFIX = 'crm-pipeline-visible-column
 const PIPELINE_COLUMN_ORDER_STORAGE_KEY_PREFIX = 'crm-pipeline-col-order'
 
 const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
+  { id: 'sno', label: 'S No.', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'leadRef', label: 'Lead Ref', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'assignDate', label: 'Assign Date', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'leadDate', label: 'Lead Date', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'patient', label: 'Patient Name', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'alternateNumber', label: 'Alternate Number', defaultVisible: { bd: false, 'team-lead': false } },
   { id: 'month', label: 'Month', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'age', label: 'Age', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'sex', label: 'Sex', defaultVisible: { bd: true, 'team-lead': true } },
@@ -509,8 +551,11 @@ function readPipelineColumnOrder(variant: 'bd' | 'team-lead'): PipelineColumnId[
     const parsed = JSON.parse(stored)
     if (!Array.isArray(parsed)) return []
 
-    const validIds = new Set(getPipelineColumnDefinitions(variant).map((column) => column.id))
-    return parsed.filter((id): id is PipelineColumnId => typeof id === 'string' && validIds.has(id as PipelineColumnId))
+    const allDefIds = getPipelineColumnDefinitions(variant).map((column) => column.id)
+    const validIds = new Set(allDefIds)
+    const filtered = parsed.filter((id): id is PipelineColumnId => typeof id === 'string' && validIds.has(id as PipelineColumnId))
+    const missing = allDefIds.filter((id) => !filtered.includes(id))
+    return [...missing.filter((id) => id === 'sno'), ...filtered, ...missing.filter((id) => id !== 'sno')]
   } catch {
     return []
   }
@@ -720,6 +765,8 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
       return resolveLeadCity(lead) ?? '—'
     case 'category':
       return normalizedText(lead.category, '—')
+    case 'alternateNumber':
+      return lead.alternateNumber || '—'
     case 'treatment':
       return normalizedText(lead.treatment, '—')
     case 'planningTreatment':
@@ -804,6 +851,20 @@ function PipelinePageFallback({ variant }: { variant: 'bd' | 'team-lead' }) {
                 </SelectContent>
               </Select>
 
+              {/* Scroll Mode Segmented Radio Placeholder */}
+              <div className="inline-flex items-center rounded-xl bg-muted/60 dark:bg-muted/30 p-0.5 border border-zinc-300 dark:border-zinc-700 opacity-60 shadow-2xs h-9">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-background text-foreground shadow-xs">
+                  <span className="flex h-3 w-3 items-center justify-center rounded-full border border-indigo-600">
+                    <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
+                  </span>
+                  <span>Screen Fit</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-muted-foreground">
+                  <span className="flex h-3 w-3 items-center justify-center rounded-full border border-muted-foreground/40" />
+                  <span>Page Scroll</span>
+                </div>
+              </div>
+
               {/* Flashy Teal Banner: Total Leads */}
               <div className="relative overflow-hidden flex items-center justify-between px-4 py-1.5 bg-gradient-to-r from-teal-500/15 via-emerald-500/10 to-teal-500/20 dark:from-teal-950/60 dark:via-emerald-950/40 dark:to-teal-900/50 border border-teal-500/30 dark:border-teal-500/40 rounded-xl shadow-md shadow-teal-500/10 min-w-[240px] sm:min-w-[280px] backdrop-blur-md">
                 <div className="relative flex flex-col text-left flex-1 min-w-0 pr-3">
@@ -864,6 +925,26 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const [columnOrder, setColumnOrder] = useState<PipelineColumnId[]>(() =>
     readPipelineColumnOrder(variant)
   )
+
+  const PIPELINE_SCROLL_STORAGE_KEY = 'sales_pipeline_scroll_mode'
+  const [isScrollExpanded, setIsScrollExpandedState] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    try {
+      return localStorage.getItem(PIPELINE_SCROLL_STORAGE_KEY) === 'true'
+    } catch {
+      return false
+    }
+  })
+
+  const setIsScrollExpanded = (val: boolean | ((prev: boolean) => boolean)) => {
+    setIsScrollExpandedState((prev) => {
+      const next = typeof val === 'function' ? val(prev) : val
+      try {
+        localStorage.setItem(PIPELINE_SCROLL_STORAGE_KEY, String(next))
+      } catch {}
+      return next
+    })
+  }
 
   const availableColumns = useMemo(() => getPipelineColumnDefinitions(variant), [variant])
   const orderedAvailableColumnIds = useMemo(() => {
@@ -1120,25 +1201,31 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     enabled: variant === 'bd' && !!user?.id,
   })
 
-  const { data: masterOptions } = useQuery<{
-    treatments: string[]
-    treatmentCategories: string[]
-    hospitals: string[]
-    doctors: string[]
-    insurance: string[]
+  const { data: filterConfigData } = useQuery<{
+    filters: Array<{
+      field: string
+      label: string
+      filterType: string
+      filterable: boolean
+      options?: Array<{ label: string; value: string }>
+    }>
   }, Error>({
-    queryKey: ['pipeline-master-options'],
-    queryFn: () =>
-      apiGet<{
-        treatments: string[]
-        treatmentCategories: string[]
-        hospitals: string[]
-        doctors: string[]
-        insurance: string[]
-      }>('/api/masters/pipeline-options'),
+    queryKey: ['pipeline-filter-config'],
+    queryFn: () => apiGet('/api/pipeline/filter-config'),
     staleTime: 5 * 60_000,
     retry: false,
+    enabled: !!user?.id,
   })
+
+  const filterConfigByField = useMemo(() => {
+    const map = new Map<string, { label: string; value: string }[]>()
+    for (const f of filterConfigData?.filters ?? []) {
+      if (f.options && Array.isArray(f.options)) {
+        map.set(f.field, f.options)
+      }
+    }
+    return map
+  }, [filterConfigData])
 
   const targetProgress = useMemo(() => {
     if (variant !== 'bd' || !targets?.length || !data) return null
@@ -1177,31 +1264,58 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       ])
     ) as Record<PipelineColumnId, string[]>
 
-    const treatmentMasterOptions = uniqueSorted(masterOptions?.treatments ?? [])
-    const categoryMasterOptions = uniqueSorted(masterOptions?.treatmentCategories ?? [])
-    const hospitalMasterOptions = uniqueSorted(masterOptions?.hospitals ?? [])
-    const doctorMasterOptions = uniqueSorted(masterOptions?.doctors ?? [])
-    const insuranceMasterOptions = uniqueSorted(masterOptions?.insurance ?? [])
+    const configTreatmentOptions = (filterConfigByField.get('treatment') ?? []).map((o) => o.value)
+    const configCategoryOptions = (filterConfigByField.get('category') ?? []).map((o) => o.value)
+    const configCircleOptions = (filterConfigByField.get('circle') ?? []).map((o) => o.value)
+    const configCityOptions = (filterConfigByField.get('city') ?? []).map((o) => o.value)
+    const configHospitalOptions = (filterConfigByField.get('hospital') ?? []).map((o) => o.value)
+    const configDoctorOptions = (filterConfigByField.get('doctor') ?? []).map((o) => o.value)
+    const configInsuranceOptions = (filterConfigByField.get('healthInsurance') ?? []).map((o) => o.value)
+    const configTlOptions = (filterConfigByField.get('tl') ?? []).map((o) => o.value)
+    const configBdOptions = (filterConfigByField.get('bd') ?? []).map((o) => o.value)
+    const configSourceOptions = (filterConfigByField.get('source') ?? []).map((o) => o.value)
+    const configLeadSourceOptions = (filterConfigByField.get('leadSource') ?? []).map((o) => o.value)
+    const configStatusOptions = (filterConfigByField.get('status') ?? []).map((o) => o.value)
+    const configMopOptions = (filterConfigByField.get('mop') ?? []).map((o) => o.value)
 
-    options.treatment = treatmentMasterOptions
-    options.category = categoryMasterOptions
-    options.hospital = mergeUniqueSortedLists(hospitalMasterOptions, options.hospital)
-    options.doctor = mergeUniqueSortedLists(doctorMasterOptions, options.doctor)
-    options.healthInsurance = mergeUniqueSortedLists(insuranceMasterOptions, options.healthInsurance)
+    options.treatment = mergeUniqueSortedLists(configTreatmentOptions, options.treatment)
+    options.category = mergeUniqueSortedLists(configCategoryOptions, options.category)
+    options.hospital = mergeUniqueSortedLists(configHospitalOptions, options.hospital)
+    options.doctor = mergeUniqueSortedLists(configDoctorOptions, options.doctor)
+    options.healthInsurance = mergeUniqueSortedLists(configInsuranceOptions, options.healthInsurance)
     options.month = [...PIPELINE_MONTH_FILTER_OPTIONS]
-    options.circle = mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
-    options.mop = mergeUniqueSortedLists(PIPELINE_MOP_FILTER_OPTIONS, options.mop)
+    options.circle = mergeUniqueSortedLists(
+      configCircleOptions,
+      mergeUniqueSortedLists(data?.facets.circles ?? [], options.circle)
+    )
+    options.city = mergeUniqueSortedLists(configCityOptions, options.city)
+    options.bd = mergeUniqueSortedLists(
+      configBdOptions,
+      mergeUniqueSortedLists(data?.facets.bds?.map((b) => b.name) ?? [], options.bd)
+    )
+    options.tl = mergeUniqueSortedLists(
+      configTlOptions,
+      mergeUniqueSortedLists(data?.facets.teamLeads ?? [], options.tl)
+    )
+    options.mop = mergeUniqueSortedLists(
+      configMopOptions,
+      mergeUniqueSortedLists(PIPELINE_MOP_FILTER_OPTIONS, options.mop)
+    )
+    options.source = mergeUniqueSortedLists(configSourceOptions, options.source)
+    options.leadSource = mergeUniqueSortedLists(configLeadSourceOptions, options.leadSource)
     options.recency = mergeUniqueSortedLists(PIPELINE_RECENCY_FILTER_OPTIONS, options.recency)
     options.stage = mergeUniqueSortedLists(PIPELINE_STAGE_FILTER_OPTIONS, options.stage)
-    options.status = PIPELINE_STATUS_FILTER_OPTIONS
+    options.status = configStatusOptions.length > 0 ? configStatusOptions : PIPELINE_STATUS_FILTER_OPTIONS
 
     return options
   }, [
     availableColumns,
     data?.facets.columnFacets,
     data?.facets.circles,
+    data?.facets.bds,
+    data?.facets.teamLeads,
     rawPageLeads,
-    masterOptions,
+    filterConfigByField,
   ])
 
   const getHeaderFilterProps = useCallback(
@@ -1457,23 +1571,41 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const columns = useMemo<ColumnDef<Lead>[]>(() => {
     const defs: ColumnDef<Lead>[] = []
 
-    // Fixed: S.No. (serial number — sticky fixed left column)
-    // Fixed: S.No. (serial number — sticky fixed top and left)
-    defs.push({
-      id: '__sno',
-      enableHiding: false,
+    // Helper to push a toggleable column
+    const addCol = (colId: PipelineColumnId, def: Omit<ColumnDef<Lead>, 'id'>) =>
+      defs.push({
+        id: colId,
+        enableHiding: true,
+        ...def,
+        meta: {
+          ...def.meta,
+          headerStyle: {
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
+            ...(def.meta as any)?.headerStyle,
+          },
+          headerClassName: cn(
+            "sticky top-0 z-10 bg-slate-100 dark:bg-slate-900 text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200",
+            (def.meta as any)?.headerClassName
+          )
+        }
+      })
+
+    // S.No. (serial number — compact sticky left column)
+    addCol('sno', {
       header: 'S.No.',
       cell: ({ row }) => (
         <span className="font-bold text-xs tabular-nums text-slate-800 dark:text-slate-200">
           {(page - 1) * pageSize + row.index + 1}
         </span>
       ),
-      size: 54,
+      size: 38,
       meta: {
-        headerStyle: { width: 54, minWidth: 54, position: 'sticky', top: 0, left: 0, zIndex: 30 },
-        headerClassName: "sticky top-0 left-0 z-30 text-center text-[11px] font-extrabold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-r border-border/80 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.08)]",
-        cellStyle: { width: 54, minWidth: 54, position: 'sticky', left: 0, zIndex: 20 },
-        cellClassName: "sticky left-0 z-20 text-center bg-slate-100 dark:bg-slate-900 font-bold border-r border-border/70 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.06)]",
+        headerStyle: { width: 38, minWidth: 38, maxWidth: 44, position: 'sticky', top: 0, left: 0, zIndex: 30 },
+        headerClassName: "sticky top-0 left-0 z-30 text-center text-[11px] font-extrabold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-r border-border/80 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.08)] px-1",
+        cellStyle: { width: 38, minWidth: 38, maxWidth: 44, position: 'sticky', left: 0, zIndex: 20, textAlign: 'center' },
+        cellClassName: "sticky left-0 z-20 text-center bg-slate-100 dark:bg-slate-900 font-bold border-r border-border/70 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.06)] px-1 py-1 text-xs",
       },
     })
 
@@ -1541,27 +1673,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       size: 48,
       meta: { headerStyle: { width: 48, position: 'sticky', top: 0, zIndex: 10 }, headerClassName: "sticky top-0 z-10 bg-slate-100 dark:bg-slate-900 text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200" },
     })
-
-    // Helper to push a toggleable column
-    const addCol = (colId: PipelineColumnId, def: Omit<ColumnDef<Lead>, 'id'>) =>
-      defs.push({
-        id: colId,
-        enableHiding: true,
-        ...def,
-        meta: {
-          ...def.meta,
-          headerStyle: {
-            position: 'sticky',
-            top: 0,
-            zIndex: 10,
-            ...(def.meta as any)?.headerStyle,
-          },
-          headerClassName: cn(
-            "sticky top-0 z-10 bg-slate-100 dark:bg-slate-900 text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200",
-            (def.meta as any)?.headerClassName
-          )
-        }
-      })
 
     addCol('leadRef', {
       header: () => <HeaderCell label="Lead Ref" sortField="leadRef" state={state} onSort={handleSort} {...getHeaderFilterProps('leadRef')} />,
@@ -1646,6 +1757,12 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       meta: { headerStyle: { minWidth: 175 } },
     })
 
+    addCol('alternateNumber', {
+      header: 'Alternate Number',
+      cell: ({ row }) => <span className="whitespace-nowrap text-sm font-medium">{row.original.alternateNumber || '—'}</span>,
+      meta: { headerStyle: { minWidth: 140 } },
+    })
+
     addCol('month', {
       header: () => <HeaderCell label="Month" {...getHeaderFilterProps('month')} />,
       cell: ({ row }) => <span className="whitespace-nowrap text-sm font-medium">{formatMonthCell(row.original.month)}</span>,
@@ -1718,12 +1835,14 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         return (
           <div className="flex items-center">
             <span
-              className={cn(
-                'inline-flex items-center gap-2.5 px-4 py-2 min-h-[34px] rounded-xl text-[13px] font-bold border shadow-xs whitespace-nowrap tracking-wide',
-                config.className
-              )}
+              className="inline-flex items-center gap-2.5 px-3.5 py-1.5 min-h-[32px] rounded-xl text-[13px] font-bold border shadow-xs whitespace-nowrap tracking-wide"
+              style={{
+                backgroundColor: config.backgroundColor,
+                color: config.color,
+                borderColor: `${config.color}33`,
+              }}
             >
-              <IconComponent className={cn('h-4 w-4 shrink-0 stroke-[2.3]', config.iconClass)} />
+              <IconComponent className="h-4 w-4 shrink-0 stroke-[2.3]" style={{ color: config.color }} />
               <span>{config.label}</span>
             </span>
           </div>
@@ -1885,17 +2004,31 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const endDate = state.to ? new Date(state.to) : undefined
 
   const effectiveColumnOrder = useMemo(() => {
-    const leading = ['__sno', ...(showBulkReassign ? ['__select'] : []), '__flow']
+    const isSnoVisible = visibleColumns.sno !== false
+    const nonSnoOrderedColumns = orderedAvailableColumnIds.filter((id) => id !== 'sno')
+    const leading = [
+      ...(isSnoVisible ? ['sno'] : []),
+      ...(showBulkReassign ? ['__select'] : []),
+      '__flow',
+    ]
     const trailing = ['__notes', '__actions']
-    return [...leading, ...orderedAvailableColumnIds, ...trailing]
-  }, [orderedAvailableColumnIds, showBulkReassign])
+    return [...leading, ...nonSnoOrderedColumns, ...trailing]
+  }, [orderedAvailableColumnIds, showBulkReassign, visibleColumns.sno])
 
   return (
     <AuthenticatedLayout>
-      <div className="flex h-[calc(100vh-4rem)] flex-col bg-background overflow-hidden -mt-4 md:-mt-6 -mx-4 md:-mx-6 -mb-24 md:-mb-6">
+      <div className={cn(
+        "flex flex-col bg-background -mt-4 md:-mt-6 -mx-4 md:-mx-6",
+        isScrollExpanded
+          ? "h-auto pb-8"
+          : "h-[calc(100vh-4rem)] -mb-24 md:-mb-6 overflow-hidden"
+      )}>
         {/* Top Header */}
-        <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 px-4 py-1.5 backdrop-blur-xl dark:bg-background/80 md:px-6 shrink-0 shadow-xs">
-          <div className="flex items-center justify-between gap-4">
+        <header className={cn(
+          "border-b border-border/60 bg-background/80 px-4 py-1.5 backdrop-blur-xl dark:bg-background/80 md:px-6 shrink-0 shadow-xs w-full min-w-0",
+          isScrollExpanded ? "relative" : "sticky top-0 z-20"
+        )}>
+          <div className="flex items-center justify-between gap-4 w-full min-w-0">
             <div>
               <h1 className="text-xl font-bold tracking-tight md:text-2xl text-foreground">
                 {title}
@@ -1929,6 +2062,56 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                 </SelectContent>
               </Select>
 
+              {/* Scroll Mode Segmented Radio Buttons */}
+              <div className="inline-flex items-center rounded-xl bg-zinc-100 dark:bg-zinc-800/80 p-0.5 border border-zinc-300 dark:border-zinc-700 shadow-2xs h-9">
+                <button
+                  type="button"
+                  onClick={() => setIsScrollExpanded(false)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer select-none",
+                    !isScrollExpanded
+                      ? "bg-white dark:bg-zinc-900 text-foreground shadow-xs ring-1 ring-border/50 font-bold"
+                      : "text-muted-foreground hover:text-foreground font-medium"
+                  )}
+                  title="Screen Fit (Fixed to screen viewport, internal scroll)"
+                >
+                  <span
+                    className={cn(
+                      "flex h-3 w-3 items-center justify-center rounded-full border transition-colors",
+                      !isScrollExpanded
+                        ? "border-indigo-600 dark:border-indigo-400"
+                        : "border-zinc-400 dark:border-zinc-500"
+                    )}
+                  >
+                    {!isScrollExpanded && <span className="h-1.5 w-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400" />}
+                  </span>
+                  <span>Screen Fit</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsScrollExpanded(true)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer select-none",
+                    isScrollExpanded
+                      ? "bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-xs ring-1 ring-border/50 font-bold"
+                      : "text-muted-foreground hover:text-foreground font-medium"
+                  )}
+                  title="Page Scroll (Doubled height, whole page scrolls)"
+                >
+                  <span
+                    className={cn(
+                      "flex h-3 w-3 items-center justify-center rounded-full border transition-colors",
+                      isScrollExpanded
+                        ? "border-indigo-600 dark:border-indigo-400"
+                        : "border-zinc-400 dark:border-zinc-500"
+                    )}
+                  >
+                    {isScrollExpanded && <span className="h-1.5 w-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400" />}
+                  </span>
+                  <span>Page Scroll</span>
+                </button>
+              </div>
+
               {/* Flashy Teal Banner: Total Leads (Compact, Icon on Right) */}
               <div className="relative overflow-hidden flex items-center justify-between px-4 py-1.5 bg-gradient-to-r from-teal-600/15 via-emerald-500/10 to-teal-500/20 dark:from-teal-950/60 dark:via-emerald-950/40 dark:to-teal-900/50 border border-teal-500/30 dark:border-teal-500/40 rounded-xl shadow-md shadow-teal-500/10 min-w-[240px] sm:min-w-[280px] backdrop-blur-md group hover:border-teal-400/60 transition-all duration-300">
                 {/* Ambient glowing background blur */}
@@ -1961,11 +2144,17 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
           </div>
         </header>
 
-        <div className="flex flex-1 overflow-hidden min-h-0">
-          <main className="flex-1 flex flex-col pt-1.5 px-3 pb-2 md:pt-1.5 md:px-4 md:pb-3 overflow-hidden min-h-0">
+        <div className={cn(
+          "flex flex-1 w-full min-w-0 max-w-full",
+          isScrollExpanded ? "h-auto" : "overflow-hidden min-h-0"
+        )}>
+          <main className={cn(
+            "flex-1 flex flex-col pt-1.5 px-3 pb-2 md:pt-1.5 md:px-4 md:pb-3 w-full min-w-0 max-w-full",
+            isScrollExpanded ? "h-auto" : "overflow-hidden min-h-0"
+          )}>
             {/* Target Progress Card */}
             {targetProgress && (
-              <Card className="mb-2 overflow-hidden rounded-xl border border-indigo-200/80 bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-purple-50/80 p-3 shadow-sm dark:border-indigo-900/60 dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-purple-950/30">
+              <Card className="mb-2 overflow-hidden rounded-xl border border-indigo-200/80 bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-purple-50/80 p-3 shadow-sm dark:border-indigo-900/60 dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-purple-950/30 w-full min-w-0">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <div className="flex items-center gap-2">
@@ -2003,7 +2192,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
             {/* Campaign Selection Card */}
             {campaignSelection.type === 'campaign' && (
-              <Card className="mb-2 overflow-hidden rounded-xl border border-violet-200/80 bg-gradient-to-r from-violet-50/80 via-fuchsia-50/40 to-card p-3 shadow-sm dark:border-violet-900/60 dark:from-violet-950/30 dark:via-fuchsia-950/20 dark:to-card">
+              <Card className="mb-2 overflow-hidden rounded-xl border border-violet-200/80 bg-gradient-to-r from-violet-50/80 via-fuchsia-50/40 to-card p-3 shadow-sm dark:border-violet-900/60 dark:from-violet-950/30 dark:via-fuchsia-950/20 dark:to-card w-full min-w-0">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">
@@ -2028,7 +2217,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             )}
 
             {/* Status Breakdown Cards */}
-            <div className="mb-2 shrink-0">
+            <div className="mb-2 shrink-0 w-full min-w-0">
               <PipelineStatusCards
                 counts={data?.statusCounts}
                 total={data?.facetTotal}
@@ -2039,8 +2228,18 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             </div>
 
             {/* Main Table Card Container */}
-            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-              <div className="rounded-2xl border border-border/80 bg-white dark:bg-card flex-1 flex flex-col min-h-0 overflow-hidden shadow-sm">
+            <div className={cn(
+              "flex-1 flex flex-col w-full min-w-0 max-w-full",
+              isScrollExpanded
+                ? "min-h-[1400px] overflow-visible"
+                : "min-h-0 overflow-hidden"
+            )}>
+              <div className={cn(
+                "rounded-2xl border border-border/80 bg-white dark:bg-card flex-1 flex flex-col w-full min-w-0 max-w-full shadow-sm",
+                isScrollExpanded
+                  ? "min-h-[1400px] overflow-visible"
+                  : "min-h-0 overflow-hidden"
+              )}>
                 {/* Table Toolbar Header Section */}
                 <div className="flex items-center justify-between border-b border-border/80 bg-white dark:bg-card text-foreground px-4 py-2.5 shrink-0 rounded-t-2xl shadow-xs">
                   <div>
@@ -2267,7 +2466,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                   <div className="relative min-w-[220px] flex-1">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
                     <Input
-                      placeholder="Search all table columns except dates… or full mobile (10 digits or 91…) "
+                      placeholder="Search all table columns… or phone / alternate number (digits or 91…) "
                       className="pl-9 h-9 text-xs bg-background/80 hover:bg-background focus:bg-background border-border/80 rounded-lg shadow-xs transition-colors"
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}
@@ -2371,7 +2570,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                 {/* Table Content Container */}
                 <div
                   className={cn(
-                    'flex-1 flex flex-col min-h-0 overflow-hidden transition-opacity duration-200',
+                    'flex-1 flex flex-col w-full min-w-0 max-w-full overflow-hidden transition-opacity duration-200',
                     isBackgroundRefetching && 'opacity-60 pointer-events-none'
                   )}
                 >
@@ -2382,13 +2581,16 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                     emptyMessage="No leads match filters"
                     onRowClick={(lead) => handleRowClick(lead.id, isLeadOpened(lead))}
                     rowClassName={(lead) =>
-                      !isLeadOpened(lead)
+                      isLeadOpened(lead)
                         ? 'bg-[#E4EEFF] hover:bg-[#D9E7FF] shadow-[inset_0_1px_0_0_rgba(175,196,255,0.9),inset_0_-1px_0_0_rgba(175,196,255,0.9)] dark:bg-[#2A3B60] dark:hover:bg-[#334874] dark:shadow-[inset_0_1px_0_0_rgba(93,124,199,0.95),inset_0_-1px_0_0_rgba(93,124,199,0.95)] font-medium'
                         : 'hover:bg-muted/50'
                     }
-                    className="flex-1 flex flex-col min-h-0 space-y-0 overflow-hidden"
+                    className="flex-1 flex flex-col w-full min-w-0 space-y-0 overflow-hidden"
                     columnVisibility={visibleColumns as Record<string, boolean>}
-                    tableContainerClassName="border-0 rounded-none shadow-none flex-1 flex flex-col min-h-0 h-full overflow-hidden"
+                    tableContainerClassName={cn(
+                      "border-0 rounded-none shadow-none flex-1 flex flex-col w-full min-w-0 overflow-auto",
+                      isScrollExpanded ? "min-h-[1200px]" : "min-h-0 h-full"
+                    )}
                     tableHeaderClassName="!static [&_th]:bg-slate-100 dark:[&_th]:bg-slate-900 border-b border-border/80 text-foreground shadow-xs [&_tr]:border-b [&_tr]:border-border/60"
                     onColumnVisibilityChange={(updaterOrVal) => {
                       const next = typeof updaterOrVal === 'function'

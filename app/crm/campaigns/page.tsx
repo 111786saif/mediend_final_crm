@@ -1,16 +1,29 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   AlertTriangle,
   Edit,
+  GripVertical,
   Megaphone,
   Plus,
   RefreshCw,
   Route,
+  SlidersHorizontal,
   Users,
 } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { ProtectedRoute } from '@/components/protected-route'
 import { MultiSelectDropdown } from '@/components/case-tracker/multi-select-dropdown'
 import { Badge } from '@/components/ui/badge'
@@ -47,6 +60,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost, apiPut } from '@/lib/api-client'
 import { parseEmployeeCircleList } from '@/lib/employee-circles'
+import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
 type SourceMaster = {
@@ -180,15 +194,15 @@ type CampaignPageData = {
 
 type DrawerState =
   | {
-      type: 'campaign'
-      mode: 'create' | 'edit'
-      item?: CampaignRecord
-    }
+    type: 'campaign'
+    mode: 'create' | 'edit'
+    item?: CampaignRecord
+  }
   | {
-      type: 'assignment'
-      mode: 'edit'
-      item: CampaignRecord
-    }
+    type: 'assignment'
+    mode: 'edit'
+    item: CampaignRecord
+  }
   | null
 
 type CampaignFormState = {
@@ -329,6 +343,252 @@ function formatCircleNames(circles: CircleMaster[]) {
   return circles.map((circle) => circle.name).join(', ')
 }
 
+function renderCirclesCell(circles: CircleMaster[]) {
+  if (!circles || circles.length === 0) {
+    return <span className="text-muted-foreground text-xs">—</span>
+  }
+
+  if (circles.length === 1) {
+    return (
+      <Badge variant="outline" className="text-xs px-2 py-0.5 font-normal max-w-[140px] truncate bg-muted/30">
+        {circles[0].name}
+      </Badge>
+    )
+  }
+
+  if (circles.length === 2) {
+    return (
+      <div className="flex flex-wrap gap-1 max-w-[180px]">
+        {circles.map((c) => (
+          <Badge key={c.id || c.name} variant="outline" className="text-xs px-1.5 py-0 font-normal bg-muted/30">
+            {c.name}
+          </Badge>
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className="inline-flex items-center gap-1 max-w-[190px] cursor-help">
+          <Badge variant="outline" className="text-xs px-1.5 py-0 font-normal truncate max-w-[100px] bg-muted/30">
+            {circles[0].name}
+          </Badge>
+          <Badge variant="secondary" className="text-[11px] px-1.5 py-0 font-medium shrink-0 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            +{circles.length - 1} more
+          </Badge>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-xs whitespace-pre-wrap text-xs shadow-md">
+        {circles.map((c) => c.name).join(', ')}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+type CampaignColumnId =
+  | 'actions'
+  | 'externalCampaignId'
+  | 'displayName'
+  | 'source'
+  | 'leadSource'
+  | 'category'
+  | 'treatment'
+  | 'department'
+  | 'circles'
+  | 'status'
+
+const DEFAULT_CAMPAIGN_COLUMNS: { id: CampaignColumnId; label: string }[] = [
+  { id: 'actions', label: 'Action' },
+  { id: 'externalCampaignId', label: 'Campaign ID' },
+  { id: 'displayName', label: 'Name' },
+  { id: 'source', label: 'Source' },
+  { id: 'leadSource', label: 'Lead Source' },
+  { id: 'category', label: 'Category' },
+  { id: 'treatment', label: 'Treatment' },
+  { id: 'department', label: 'Department' },
+  { id: 'circles', label: 'Circles' },
+  { id: 'status', label: 'Status' },
+]
+
+type AssignmentColumnId =
+  | 'actions'
+  | 'campaign'
+  | 'source'
+  | 'leadSource'
+  | 'circles'
+  | 'assignments'
+
+const DEFAULT_ASSIGNMENT_COLUMNS: { id: AssignmentColumnId; label: string }[] = [
+  { id: 'actions', label: 'Action' },
+  { id: 'campaign', label: 'Campaign' },
+  { id: 'source', label: 'Source' },
+  { id: 'leadSource', label: 'Lead Source' },
+  { id: 'circles', label: 'Circles' },
+  { id: 'assignments', label: 'Assignments' },
+]
+
+function ColumnReorderDropdown<T extends string>({
+  columns,
+  columnOrder,
+  onOrderChange,
+}: {
+  columns: { id: T; label: string }[]
+  columnOrder: T[]
+  onOrderChange: (newOrder: T[]) => void
+}) {
+  const [draggingId, setDraggingId] = useState<string | null>(null)
+  const [dropIndicator, setDropIndicator] = useState<{ id: string; position: 'top' | 'bottom' } | null>(null)
+  const dragIdRef = useRef<string | null>(null)
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    dragIdRef.current = id
+    setDraggingId(id)
+    e.dataTransfer.setData('text/plain', id)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDragOver = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!dragIdRef.current || dragIdRef.current === targetId) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const offset = e.clientY - rect.top
+    const position = offset < rect.height / 2 ? 'top' : 'bottom'
+    setDropIndicator({ id: targetId, position })
+  }
+
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const fromId = dragIdRef.current
+    if (!fromId || fromId === targetId) {
+      setDraggingId(null)
+      setDropIndicator(null)
+      return
+    }
+
+    const currentOrder = [...columnOrder]
+    const fromIdx = currentOrder.indexOf(fromId as T)
+    if (fromIdx === -1) return
+    currentOrder.splice(fromIdx, 1)
+
+    const targetIdx = currentOrder.indexOf(targetId as T)
+    if (targetIdx !== -1) {
+      const insertIdx = dropIndicator?.position === 'top' ? targetIdx : targetIdx + 1
+      currentOrder.splice(insertIdx, 0, fromId as T)
+      onOrderChange(currentOrder)
+    }
+
+    setDraggingId(null)
+    setDropIndicator(null)
+    dragIdRef.current = null
+  }
+
+  const handleDragEnd = () => {
+    setDraggingId(null)
+    setDropIndicator(null)
+    dragIdRef.current = null
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="h-9 gap-2">
+          <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+          <span>Columns</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56 p-0 shadow-lg" onCloseAutoFocus={(e) => e.preventDefault()}>
+        <div className="px-3 py-2 border-b">
+          <DropdownMenuLabel className="px-0 py-0 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            Reorder Columns
+          </DropdownMenuLabel>
+          <p className="text-[11px] text-muted-foreground mt-0.5">Drag to rearrange column order</p>
+        </div>
+        <div
+          className="py-1 relative max-h-[340px] overflow-y-auto"
+          onDragOver={(e) => {
+            e.preventDefault()
+            e.dataTransfer.dropEffect = 'move'
+          }}
+          onDragLeave={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+              setDropIndicator(null)
+            }
+          }}
+        >
+          {columnOrder.map((colId) => {
+            const colDef = columns.find((c) => c.id === colId)
+            if (!colDef) return null
+            const isDragging = draggingId === colId
+            const isDropTop = dropIndicator?.id === colId && dropIndicator?.position === 'top'
+            const isDropBottom = dropIndicator?.id === colId && dropIndicator?.position === 'bottom'
+
+            return (
+              <div
+                key={colId}
+                className="relative px-1"
+                onDragOver={(e) => handleDragOver(e, colId)}
+                onDrop={(e) => handleDrop(e, colId)}
+              >
+                {isDropTop && (
+                  <div className="absolute -top-1 inset-x-2 h-1 bg-blue-600 dark:bg-blue-400 rounded-full z-20 shadow-sm pointer-events-none" />
+                )}
+
+                <div
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, colId)}
+                  onDragOver={(e) => handleDragOver(e, colId)}
+                  onDrop={(e) => handleDrop(e, colId)}
+                  onDragEnd={handleDragEnd}
+                  className={cn(
+                    "flex items-center gap-2 px-2.5 py-1.5 rounded-md transition-colors select-none group cursor-grab active:cursor-grabbing",
+                    isDragging
+                      ? "opacity-30 bg-blue-50/40 dark:bg-blue-950/30 border border-dashed border-blue-500"
+                      : "hover:bg-accent",
+                    (isDropTop || isDropBottom) && "bg-blue-50/20 dark:bg-blue-950/30"
+                  )}
+                >
+                  <GripVertical className="h-4 w-4 text-muted-foreground/60 group-hover:text-muted-foreground shrink-0" />
+                  <span className="text-xs font-medium text-foreground truncate">{colDef.label}</span>
+                </div>
+
+                {isDropBottom && (
+                  <div className="absolute -bottom-1 inset-x-2 h-1 bg-blue-600 dark:bg-blue-400 rounded-full z-20 shadow-sm pointer-events-none" />
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+const CAMPAIGN_COL_STORAGE_KEY = 'crm_campaigns_col_order_v2'
+const ASSIGNMENT_COL_STORAGE_KEY = 'crm_assignments_col_order_v2'
+
+function getInitialColumnOrder<T extends string>(
+  storageKey: string,
+  defaultColumns: { id: T; label: string }[]
+): T[] {
+  const defaultIds = defaultColumns.map((c) => c.id)
+  if (typeof window === 'undefined') return defaultIds
+  try {
+    const saved = localStorage.getItem(storageKey)
+    if (!saved) return defaultIds
+    const parsed = JSON.parse(saved) as T[]
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      const valid = parsed.filter((id) => defaultIds.includes(id))
+      const missing = defaultIds.filter((id) => !valid.includes(id))
+      return [...valid, ...missing]
+    }
+  } catch {}
+  return defaultIds
+}
+
 function assignmentSummary(assignments: CampaignAssignment[]) {
   if (assignments.length === 0) return 'No Team Leads mapped'
   return assignments
@@ -343,6 +603,27 @@ export default function CrmCampaignsPage() {
   const [drawer, setDrawer] = useState<DrawerState>(null)
   const [campaignForm, setCampaignForm] = useState<CampaignFormState>(createEmptyCampaignForm())
   const [assignmentDrafts, setAssignmentDrafts] = useState<AssignmentDraft[]>([])
+  const [campaignColumnOrder, setCampaignColumnOrderState] = useState<CampaignColumnId[]>(() =>
+    getInitialColumnOrder(CAMPAIGN_COL_STORAGE_KEY, DEFAULT_CAMPAIGN_COLUMNS)
+  )
+  const [assignmentColumnOrder, setAssignmentColumnOrderState] = useState<AssignmentColumnId[]>(() =>
+    getInitialColumnOrder(ASSIGNMENT_COL_STORAGE_KEY, DEFAULT_ASSIGNMENT_COLUMNS)
+  )
+
+  const setCampaignColumnOrder = (newOrder: CampaignColumnId[]) => {
+    setCampaignColumnOrderState(newOrder)
+    try {
+      localStorage.setItem(CAMPAIGN_COL_STORAGE_KEY, JSON.stringify(newOrder))
+    } catch {}
+  }
+
+  const setAssignmentColumnOrder = (newOrder: AssignmentColumnId[]) => {
+    setAssignmentColumnOrderState(newOrder)
+    try {
+      localStorage.setItem(ASSIGNMENT_COL_STORAGE_KEY, JSON.stringify(newOrder))
+    } catch {}
+  }
+
   const hasAccess = String(user?.role) === 'SUPER_ADMIN' || String(user?.role) === 'CRM_ADMIN'
 
   const { data, isLoading, error } = useQuery<CampaignPageData>({
@@ -647,11 +928,11 @@ export default function CrmCampaignsPage() {
                       value === 'none'
                         ? ''
                         : current.treatmentMasterId &&
-                            (data?.masters.treatments ?? []).some(
-                              (treatment) =>
-                                treatment.id === current.treatmentMasterId &&
-                                treatment.category === value
-                            )
+                          (data?.masters.treatments ?? []).some(
+                            (treatment) =>
+                              treatment.id === current.treatmentMasterId &&
+                              treatment.category === value
+                          )
                           ? current.treatmentMasterId
                           : '',
                   }))
@@ -765,7 +1046,7 @@ export default function CrmCampaignsPage() {
               {assignmentDrafts.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
-                          {campaign.department?.name
+                    {campaign.department?.name
                       ? `No active Team Lead options were found for the selected circles in ${campaign.department.name}.`
                       : 'No Team Lead options are available for the selected circles right now.'}
                   </TableCell>
@@ -827,12 +1108,12 @@ export default function CrmCampaignsPage() {
                                       current.map((item) =>
                                         item.teamLeadEmployeeId === draft.teamLeadEmployeeId
                                           ? {
-                                              ...item,
-                                              bdLimits: {
-                                                ...item.bdLimits,
-                                                [bd.id]: event.target.value,
-                                              },
-                                            }
+                                            ...item,
+                                            bdLimits: {
+                                              ...item.bdLimits,
+                                              [bd.id]: event.target.value,
+                                            },
+                                          }
                                           : item
                                       )
                                     )
@@ -1001,70 +1282,117 @@ export default function CrmCampaignsPage() {
                     External campaign IDs map SaveMyLeads traffic into your CRM routing rules.
                   </CardDescription>
                 </div>
-                <Button type="button" variant="outline" onClick={() => openCampaignDrawer()}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add campaign
-                </Button>
+                <div className="flex items-center gap-2">
+                  <ColumnReorderDropdown
+                    columns={DEFAULT_CAMPAIGN_COLUMNS}
+                    columnOrder={campaignColumnOrder}
+                    onOrderChange={setCampaignColumnOrder}
+                  />
+                  <Button type="button" variant="outline" onClick={() => openCampaignDrawer()}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add campaign
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="rounded-xl border">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Campaign ID</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Source</TableHead>
-                        <TableHead>Lead Source</TableHead>
-                        <TableHead>Category</TableHead>
-                        <TableHead>Treatment</TableHead>
-                        <TableHead>Department</TableHead>
-                        <TableHead>Circles</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="w-[120px] text-right">Action</TableHead>
+                        {campaignColumnOrder.map((colId) => {
+                          if (colId === 'externalCampaignId') return <TableHead key={colId}>Campaign ID</TableHead>
+                          if (colId === 'displayName') return <TableHead key={colId}>Name</TableHead>
+                          if (colId === 'source') return <TableHead key={colId}>Source</TableHead>
+                          if (colId === 'leadSource') return <TableHead key={colId}>Lead Source</TableHead>
+                          if (colId === 'category') return <TableHead key={colId}>Category</TableHead>
+                          if (colId === 'treatment') return <TableHead key={colId}>Treatment</TableHead>
+                          if (colId === 'department') return <TableHead key={colId}>Department</TableHead>
+                          if (colId === 'circles') return <TableHead key={colId}>Circles</TableHead>
+                          if (colId === 'status') return <TableHead key={colId}>Status</TableHead>
+                          if (colId === 'actions') return <TableHead key={colId} className="w-[100px]">Action</TableHead>
+                          return null
+                        })}
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {isLoading ? (
                         <TableRow>
-                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={campaignColumnOrder.length} className="py-10 text-center text-muted-foreground">
                             Loading campaigns...
                           </TableCell>
                         </TableRow>
                       ) : error ? (
                         <TableRow>
-                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={campaignColumnOrder.length} className="py-10 text-center text-muted-foreground">
                             Campaign data could not be loaded.
                           </TableCell>
                         </TableRow>
                       ) : (data?.campaigns.length ?? 0) === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={campaignColumnOrder.length} className="py-10 text-center text-muted-foreground">
                             No campaigns created yet.
                           </TableCell>
                         </TableRow>
                       ) : (
                         data?.campaigns.map((campaign) => (
                           <TableRow key={campaign.id}>
-                            <TableCell className="font-mono text-sm">{campaign.externalCampaignId}</TableCell>
-                            <TableCell className="font-medium">{campaign.displayName}</TableCell>
-                            <TableCell>{campaign.source.name}</TableCell>
-                            <TableCell>{campaign.leadSource.name}</TableCell>
-                            <TableCell>{campaign.category ?? '—'}</TableCell>
-                            <TableCell>{campaign.treatment ?? '—'}</TableCell>
-                            <TableCell>{campaign.department?.name ?? '—'}</TableCell>
-                            <TableCell>{formatCircleNames(campaign.circles)}</TableCell>
-                            <TableCell>{statusBadge(campaign.isActive)}</TableCell>
-                            <TableCell className="text-right">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => openCampaignDrawer(campaign)}
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </Button>
-                            </TableCell>
+                            {campaignColumnOrder.map((colId) => {
+                              if (colId === 'externalCampaignId') {
+                                return (
+                                  <TableCell key={colId} className="font-mono text-sm">
+                                    {campaign.externalCampaignId}
+                                  </TableCell>
+                                )
+                              }
+                              if (colId === 'displayName') {
+                                return (
+                                  <TableCell key={colId} className="font-medium">
+                                    {campaign.displayName}
+                                  </TableCell>
+                                )
+                              }
+                              if (colId === 'source') {
+                                return <TableCell key={colId}>{campaign.source.name}</TableCell>
+                              }
+                              if (colId === 'leadSource') {
+                                return <TableCell key={colId}>{campaign.leadSource.name}</TableCell>
+                              }
+                              if (colId === 'category') {
+                                return <TableCell key={colId}>{campaign.category ?? '—'}</TableCell>
+                              }
+                              if (colId === 'treatment') {
+                                return <TableCell key={colId}>{campaign.treatment ?? '—'}</TableCell>
+                              }
+                              if (colId === 'department') {
+                                return <TableCell key={colId}>{campaign.department?.name ?? '—'}</TableCell>
+                              }
+                              if (colId === 'circles') {
+                                return (
+                                  <TableCell key={colId} className="max-w-[200px]">
+                                    {renderCirclesCell(campaign.circles)}
+                                  </TableCell>
+                                )
+                              }
+                              if (colId === 'status') {
+                                return <TableCell key={colId}>{statusBadge(campaign.isActive)}</TableCell>
+                              }
+                              if (colId === 'actions') {
+                                return (
+                                  <TableCell key={colId} className="w-[100px]">
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => openCampaignDrawer(campaign)}
+                                    >
+                                      <Edit className="mr-2 h-4 w-4" />
+                                      Edit
+                                    </Button>
+                                  </TableCell>
+                                )
+                              }
+                              return null
+                            })}
                           </TableRow>
                         ))
                       )}
@@ -1077,70 +1405,105 @@ export default function CrmCampaignsPage() {
 
           <TabsContent value="assignments">
             <Card>
-              <CardHeader>
-                <CardTitle>Campaign Team Lead assignments</CardTitle>
-                <CardDescription>
-                  Assign one or more Team Leads as the standing routing pool for each campaign.
-                </CardDescription>
+              <CardHeader className="flex flex-row items-start justify-between gap-4">
+                <div>
+                  <CardTitle>Campaign Team Lead assignments</CardTitle>
+                  <CardDescription>
+                    Assign one or more Team Leads as the standing routing pool for each campaign.
+                  </CardDescription>
+                </div>
+                <ColumnReorderDropdown
+                  columns={DEFAULT_ASSIGNMENT_COLUMNS}
+                  columnOrder={assignmentColumnOrder}
+                  onOrderChange={setAssignmentColumnOrder}
+                />
               </CardHeader>
               <CardContent>
                 <div className="rounded-xl border">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Campaign</TableHead>
-                        <TableHead>Source</TableHead>
-                        <TableHead>Lead Source</TableHead>
-                        <TableHead>Circles</TableHead>
-                        <TableHead>Assignments</TableHead>
-                        <TableHead className="w-[140px] text-right">Action</TableHead>
+                        {assignmentColumnOrder.map((colId) => {
+                          if (colId === 'campaign') return <TableHead key={colId}>Campaign</TableHead>
+                          if (colId === 'source') return <TableHead key={colId}>Source</TableHead>
+                          if (colId === 'leadSource') return <TableHead key={colId}>Lead Source</TableHead>
+                          if (colId === 'circles') return <TableHead key={colId}>Circles</TableHead>
+                          if (colId === 'assignments') return <TableHead key={colId}>Assignments</TableHead>
+                          if (colId === 'actions') return <TableHead key={colId} className="w-[120px]">Action</TableHead>
+                          return null
+                        })}
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {isLoading ? (
                         <TableRow>
-                          <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={assignmentColumnOrder.length} className="py-10 text-center text-muted-foreground">
                             Loading assignments...
                           </TableCell>
                         </TableRow>
                       ) : error ? (
                         <TableRow>
-                          <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={assignmentColumnOrder.length} className="py-10 text-center text-muted-foreground">
                             Assignment data could not be loaded.
                           </TableCell>
                         </TableRow>
                       ) : (data?.campaigns.length ?? 0) === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={assignmentColumnOrder.length} className="py-10 text-center text-muted-foreground">
                             Add a campaign first to manage assignments.
                           </TableCell>
                         </TableRow>
                       ) : (
                         data?.campaigns.map((campaign) => (
                           <TableRow key={campaign.id}>
-                            <TableCell>
-                              <div className="font-medium">{campaign.displayName}</div>
-                              <div className="font-mono text-xs text-muted-foreground">
-                                {campaign.externalCampaignId}
-                              </div>
-                            </TableCell>
-                            <TableCell>{campaign.source.name}</TableCell>
-                            <TableCell>{campaign.leadSource.name}</TableCell>
-                            <TableCell>{formatCircleNames(campaign.circles)}</TableCell>
-                            <TableCell className="max-w-[360px] text-sm text-muted-foreground">
-                              {assignmentSummary(campaign.assignments)}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => openAssignmentDrawer(campaign)}
-                              >
-                                <Route className="mr-2 h-4 w-4" />
-                                Configure
-                              </Button>
-                            </TableCell>
+                            {assignmentColumnOrder.map((colId) => {
+                              if (colId === 'campaign') {
+                                return (
+                                  <TableCell key={colId}>
+                                    <div className="font-medium">{campaign.displayName}</div>
+                                    <div className="font-mono text-xs text-muted-foreground">
+                                      {campaign.externalCampaignId}
+                                    </div>
+                                  </TableCell>
+                                )
+                              }
+                              if (colId === 'source') {
+                                return <TableCell key={colId}>{campaign.source.name}</TableCell>
+                              }
+                              if (colId === 'leadSource') {
+                                return <TableCell key={colId}>{campaign.leadSource.name}</TableCell>
+                              }
+                              if (colId === 'circles') {
+                                return (
+                                  <TableCell key={colId} className="max-w-[200px]">
+                                    {renderCirclesCell(campaign.circles)}
+                                  </TableCell>
+                                )
+                              }
+                              if (colId === 'assignments') {
+                                return (
+                                  <TableCell key={colId} className="max-w-[360px] text-sm text-muted-foreground">
+                                    {assignmentSummary(campaign.assignments)}
+                                  </TableCell>
+                                )
+                              }
+                              if (colId === 'actions') {
+                                return (
+                                  <TableCell key={colId} className="w-[120px]">
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => openAssignmentDrawer(campaign)}
+                                    >
+                                      <Route className="mr-2 h-4 w-4" />
+                                      Configure
+                                    </Button>
+                                  </TableCell>
+                                )
+                              }
+                              return null
+                            })}
                           </TableRow>
                         ))
                       )}
