@@ -52,6 +52,7 @@ export type BulkLeadReassignmentRunMinAggregateOutputType = {
   pauseSeconds: number | null
   subStatus: string | null
   removePreviousRemarks: boolean | null
+  removePreviousFollowUpDate: boolean | null
   status: string | null
   processedCount: number | null
   currentLeadIndex: number | null
@@ -75,6 +76,7 @@ export type BulkLeadReassignmentRunMaxAggregateOutputType = {
   pauseSeconds: number | null
   subStatus: string | null
   removePreviousRemarks: boolean | null
+  removePreviousFollowUpDate: boolean | null
   status: string | null
   processedCount: number | null
   currentLeadIndex: number | null
@@ -100,6 +102,7 @@ export type BulkLeadReassignmentRunCountAggregateOutputType = {
   pauseSeconds: number
   subStatus: number
   removePreviousRemarks: number
+  removePreviousFollowUpDate: number
   status: number
   processedCount: number
   currentLeadIndex: number
@@ -146,6 +149,7 @@ export type BulkLeadReassignmentRunMinAggregateInputType = {
   pauseSeconds?: true
   subStatus?: true
   removePreviousRemarks?: true
+  removePreviousFollowUpDate?: true
   status?: true
   processedCount?: true
   currentLeadIndex?: true
@@ -169,6 +173,7 @@ export type BulkLeadReassignmentRunMaxAggregateInputType = {
   pauseSeconds?: true
   subStatus?: true
   removePreviousRemarks?: true
+  removePreviousFollowUpDate?: true
   status?: true
   processedCount?: true
   currentLeadIndex?: true
@@ -194,6 +199,7 @@ export type BulkLeadReassignmentRunCountAggregateInputType = {
   pauseSeconds?: true
   subStatus?: true
   removePreviousRemarks?: true
+  removePreviousFollowUpDate?: true
   status?: true
   processedCount?: true
   currentLeadIndex?: true
@@ -307,6 +313,7 @@ export type BulkLeadReassignmentRunGroupByOutputType = {
   pauseSeconds: number
   subStatus: string | null
   removePreviousRemarks: boolean
+  removePreviousFollowUpDate: boolean
   status: string
   processedCount: number
   currentLeadIndex: number
@@ -356,6 +363,7 @@ export type BulkLeadReassignmentRunWhereInput = {
   pauseSeconds?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
   subStatus?: Prisma.StringNullableFilter<"BulkLeadReassignmentRun"> | string | null
   removePreviousRemarks?: Prisma.BoolFilter<"BulkLeadReassignmentRun"> | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFilter<"BulkLeadReassignmentRun"> | boolean
   status?: Prisma.StringFilter<"BulkLeadReassignmentRun"> | string
   processedCount?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
   currentLeadIndex?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
@@ -383,6 +391,7 @@ export type BulkLeadReassignmentRunOrderByWithRelationInput = {
   pauseSeconds?: Prisma.SortOrder
   subStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   removePreviousRemarks?: Prisma.SortOrder
+  removePreviousFollowUpDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   processedCount?: Prisma.SortOrder
   currentLeadIndex?: Prisma.SortOrder
@@ -413,6 +422,7 @@ export type BulkLeadReassignmentRunWhereUniqueInput = Prisma.AtLeast<{
   pauseSeconds?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
   subStatus?: Prisma.StringNullableFilter<"BulkLeadReassignmentRun"> | string | null
   removePreviousRemarks?: Prisma.BoolFilter<"BulkLeadReassignmentRun"> | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFilter<"BulkLeadReassignmentRun"> | boolean
   status?: Prisma.StringFilter<"BulkLeadReassignmentRun"> | string
   processedCount?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
   currentLeadIndex?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
@@ -440,6 +450,7 @@ export type BulkLeadReassignmentRunOrderByWithAggregationInput = {
   pauseSeconds?: Prisma.SortOrder
   subStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   removePreviousRemarks?: Prisma.SortOrder
+  removePreviousFollowUpDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   processedCount?: Prisma.SortOrder
   currentLeadIndex?: Prisma.SortOrder
@@ -474,6 +485,7 @@ export type BulkLeadReassignmentRunScalarWhereWithAggregatesInput = {
   pauseSeconds?: Prisma.IntWithAggregatesFilter<"BulkLeadReassignmentRun"> | number
   subStatus?: Prisma.StringNullableWithAggregatesFilter<"BulkLeadReassignmentRun"> | string | null
   removePreviousRemarks?: Prisma.BoolWithAggregatesFilter<"BulkLeadReassignmentRun"> | boolean
+  removePreviousFollowUpDate?: Prisma.BoolWithAggregatesFilter<"BulkLeadReassignmentRun"> | boolean
   status?: Prisma.StringWithAggregatesFilter<"BulkLeadReassignmentRun"> | string
   processedCount?: Prisma.IntWithAggregatesFilter<"BulkLeadReassignmentRun"> | number
   currentLeadIndex?: Prisma.IntWithAggregatesFilter<"BulkLeadReassignmentRun"> | number
@@ -499,6 +511,7 @@ export type BulkLeadReassignmentRunCreateInput = {
   pauseSeconds: number
   subStatus?: string | null
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: string
   processedCount?: number
   currentLeadIndex?: number
@@ -526,6 +539,7 @@ export type BulkLeadReassignmentRunUncheckedCreateInput = {
   pauseSeconds: number
   subStatus?: string | null
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: string
   processedCount?: number
   currentLeadIndex?: number
@@ -551,6 +565,7 @@ export type BulkLeadReassignmentRunUpdateInput = {
   pauseSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removePreviousRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
   processedCount?: Prisma.IntFieldUpdateOperationsInput | number
   currentLeadIndex?: Prisma.IntFieldUpdateOperationsInput | number
@@ -578,6 +593,7 @@ export type BulkLeadReassignmentRunUncheckedUpdateInput = {
   pauseSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removePreviousRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
   processedCount?: Prisma.IntFieldUpdateOperationsInput | number
   currentLeadIndex?: Prisma.IntFieldUpdateOperationsInput | number
@@ -604,6 +620,7 @@ export type BulkLeadReassignmentRunCreateManyInput = {
   pauseSeconds: number
   subStatus?: string | null
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: string
   processedCount?: number
   currentLeadIndex?: number
@@ -629,6 +646,7 @@ export type BulkLeadReassignmentRunUpdateManyMutationInput = {
   pauseSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removePreviousRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
   processedCount?: Prisma.IntFieldUpdateOperationsInput | number
   currentLeadIndex?: Prisma.IntFieldUpdateOperationsInput | number
@@ -655,6 +673,7 @@ export type BulkLeadReassignmentRunUncheckedUpdateManyInput = {
   pauseSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removePreviousRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
   processedCount?: Prisma.IntFieldUpdateOperationsInput | number
   currentLeadIndex?: Prisma.IntFieldUpdateOperationsInput | number
@@ -691,6 +710,7 @@ export type BulkLeadReassignmentRunCountOrderByAggregateInput = {
   pauseSeconds?: Prisma.SortOrder
   subStatus?: Prisma.SortOrder
   removePreviousRemarks?: Prisma.SortOrder
+  removePreviousFollowUpDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   processedCount?: Prisma.SortOrder
   currentLeadIndex?: Prisma.SortOrder
@@ -725,6 +745,7 @@ export type BulkLeadReassignmentRunMaxOrderByAggregateInput = {
   pauseSeconds?: Prisma.SortOrder
   subStatus?: Prisma.SortOrder
   removePreviousRemarks?: Prisma.SortOrder
+  removePreviousFollowUpDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   processedCount?: Prisma.SortOrder
   currentLeadIndex?: Prisma.SortOrder
@@ -748,6 +769,7 @@ export type BulkLeadReassignmentRunMinOrderByAggregateInput = {
   pauseSeconds?: Prisma.SortOrder
   subStatus?: Prisma.SortOrder
   removePreviousRemarks?: Prisma.SortOrder
+  removePreviousFollowUpDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   processedCount?: Prisma.SortOrder
   currentLeadIndex?: Prisma.SortOrder
@@ -824,6 +846,7 @@ export type BulkLeadReassignmentRunCreateWithoutActorUserInput = {
   pauseSeconds: number
   subStatus?: string | null
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: string
   processedCount?: number
   currentLeadIndex?: number
@@ -849,6 +872,7 @@ export type BulkLeadReassignmentRunUncheckedCreateWithoutActorUserInput = {
   pauseSeconds: number
   subStatus?: string | null
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: string
   processedCount?: number
   currentLeadIndex?: number
@@ -904,6 +928,7 @@ export type BulkLeadReassignmentRunScalarWhereInput = {
   pauseSeconds?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
   subStatus?: Prisma.StringNullableFilter<"BulkLeadReassignmentRun"> | string | null
   removePreviousRemarks?: Prisma.BoolFilter<"BulkLeadReassignmentRun"> | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFilter<"BulkLeadReassignmentRun"> | boolean
   status?: Prisma.StringFilter<"BulkLeadReassignmentRun"> | string
   processedCount?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
   currentLeadIndex?: Prisma.IntFilter<"BulkLeadReassignmentRun"> | number
@@ -929,6 +954,7 @@ export type BulkLeadReassignmentRunCreateManyActorUserInput = {
   pauseSeconds: number
   subStatus?: string | null
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: string
   processedCount?: number
   currentLeadIndex?: number
@@ -954,6 +980,7 @@ export type BulkLeadReassignmentRunUpdateWithoutActorUserInput = {
   pauseSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removePreviousRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
   processedCount?: Prisma.IntFieldUpdateOperationsInput | number
   currentLeadIndex?: Prisma.IntFieldUpdateOperationsInput | number
@@ -979,6 +1006,7 @@ export type BulkLeadReassignmentRunUncheckedUpdateWithoutActorUserInput = {
   pauseSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removePreviousRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
   processedCount?: Prisma.IntFieldUpdateOperationsInput | number
   currentLeadIndex?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1004,6 +1032,7 @@ export type BulkLeadReassignmentRunUncheckedUpdateManyWithoutActorUserInput = {
   pauseSeconds?: Prisma.IntFieldUpdateOperationsInput | number
   subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removePreviousRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removePreviousFollowUpDate?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
   processedCount?: Prisma.IntFieldUpdateOperationsInput | number
   currentLeadIndex?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1032,6 +1061,7 @@ export type BulkLeadReassignmentRunSelect<ExtArgs extends runtime.Types.Extensio
   pauseSeconds?: boolean
   subStatus?: boolean
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: boolean
   processedCount?: boolean
   currentLeadIndex?: boolean
@@ -1059,6 +1089,7 @@ export type BulkLeadReassignmentRunSelectCreateManyAndReturn<ExtArgs extends run
   pauseSeconds?: boolean
   subStatus?: boolean
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: boolean
   processedCount?: boolean
   currentLeadIndex?: boolean
@@ -1086,6 +1117,7 @@ export type BulkLeadReassignmentRunSelectUpdateManyAndReturn<ExtArgs extends run
   pauseSeconds?: boolean
   subStatus?: boolean
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: boolean
   processedCount?: boolean
   currentLeadIndex?: boolean
@@ -1113,6 +1145,7 @@ export type BulkLeadReassignmentRunSelectScalar = {
   pauseSeconds?: boolean
   subStatus?: boolean
   removePreviousRemarks?: boolean
+  removePreviousFollowUpDate?: boolean
   status?: boolean
   processedCount?: boolean
   currentLeadIndex?: boolean
@@ -1131,7 +1164,7 @@ export type BulkLeadReassignmentRunSelectScalar = {
   updatedAt?: boolean
 }
 
-export type BulkLeadReassignmentRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "actorUserId" | "leadIds" | "bdUserIds" | "pauseSeconds" | "subStatus" | "removePreviousRemarks" | "status" | "processedCount" | "currentLeadIndex" | "currentBdIndex" | "currentCycleNumber" | "totalLeads" | "totalBds" | "bullJobId" | "nextRunAt" | "startedAt" | "completedAt" | "failedAt" | "errorMessage" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["bulkLeadReassignmentRun"]>
+export type BulkLeadReassignmentRunOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "actorUserId" | "leadIds" | "bdUserIds" | "pauseSeconds" | "subStatus" | "removePreviousRemarks" | "removePreviousFollowUpDate" | "status" | "processedCount" | "currentLeadIndex" | "currentBdIndex" | "currentCycleNumber" | "totalLeads" | "totalBds" | "bullJobId" | "nextRunAt" | "startedAt" | "completedAt" | "failedAt" | "errorMessage" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["bulkLeadReassignmentRun"]>
 export type BulkLeadReassignmentRunInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   actorUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -1155,6 +1188,7 @@ export type $BulkLeadReassignmentRunPayload<ExtArgs extends runtime.Types.Extens
     pauseSeconds: number
     subStatus: string | null
     removePreviousRemarks: boolean
+    removePreviousFollowUpDate: boolean
     status: string
     processedCount: number
     currentLeadIndex: number
@@ -1602,6 +1636,7 @@ export interface BulkLeadReassignmentRunFieldRefs {
   readonly pauseSeconds: Prisma.FieldRef<"BulkLeadReassignmentRun", 'Int'>
   readonly subStatus: Prisma.FieldRef<"BulkLeadReassignmentRun", 'String'>
   readonly removePreviousRemarks: Prisma.FieldRef<"BulkLeadReassignmentRun", 'Boolean'>
+  readonly removePreviousFollowUpDate: Prisma.FieldRef<"BulkLeadReassignmentRun", 'Boolean'>
   readonly status: Prisma.FieldRef<"BulkLeadReassignmentRun", 'String'>
   readonly processedCount: Prisma.FieldRef<"BulkLeadReassignmentRun", 'Int'>
   readonly currentLeadIndex: Prisma.FieldRef<"BulkLeadReassignmentRun", 'Int'>
