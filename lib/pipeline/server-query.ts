@@ -591,10 +591,12 @@ export function buildPipelineFiltersWhere(
     const trimmedSearch = params.search.trim()
     const pureDigits = trimmedSearch.replace(/\D/g, '')
     const phone = parsePhoneSearchQuery(params.search)
+    const globalSearchWhere = buildPipelineGlobalSearchWhere(params.search)
 
     if (phone) {
       and.push({
         OR: [
+          globalSearchWhere,
           { phoneNumber: { contains: phone.last10 } },
           { alternateNumber: { contains: phone.last10 } },
         ],
@@ -603,12 +605,13 @@ export function buildPipelineFiltersWhere(
       const searchTarget = pureDigits.length >= 10 ? pureDigits.slice(-10) : pureDigits
       and.push({
         OR: [
+          globalSearchWhere,
           { phoneNumber: { contains: searchTarget } },
           { alternateNumber: { contains: searchTarget } },
         ],
       })
     } else {
-      and.push(buildPipelineGlobalSearchWhere(params.search))
+      and.push(globalSearchWhere)
     }
   }
 
