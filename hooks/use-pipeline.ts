@@ -275,7 +275,7 @@ export function usePipelinePage(
 
   // 1. Primary Table Query: Instant 30-60ms response
   const tableQuery = useQuery({
-    queryKey: ['pipeline-table', tableQueryString],
+    queryKey: ['pipeline', 'table', tableQueryString],
     queryFn: () => apiGet<PipelineTableResponse>(`/api/pipeline?${tableQueryString}`),
     enabled,
     placeholderData: (prev) => prev,
@@ -284,7 +284,7 @@ export function usePipelinePage(
 
   // 2. Metadata Query: Background 60s cache
   const metaQuery = useQuery({
-    queryKey: ['pipeline-meta', metaQueryString],
+    queryKey: ['pipeline', 'meta', metaQueryString],
     queryFn: () => apiGet<PipelineMetaResponse>(`/api/pipeline/meta?${metaQueryString}`),
     enabled,
     placeholderData: (prev) => prev,
@@ -293,7 +293,7 @@ export function usePipelinePage(
 
   // 3. Campaign Tree Query: Background 120s cache
   const treeQuery = useQuery({
-    queryKey: ['pipeline-tree', metaQueryString],
+    queryKey: ['pipeline', 'tree', metaQueryString],
     queryFn: () => apiGet<PipelineCampaignTreeResponse>(`/api/pipeline/campaign-tree?${metaQueryString}`),
     enabled,
     placeholderData: (prev) => prev,

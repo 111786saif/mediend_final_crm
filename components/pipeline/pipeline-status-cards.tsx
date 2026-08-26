@@ -61,7 +61,7 @@ const CATEGORY_GROUPS: PipelineCategoryGroup[] = [
     items: [
       {
         id: 'new',
-        label: 'New',
+        label: 'New Lead',
         bucket: 'new_hot',
         countKey: 'new',
         icon: Sparkles,

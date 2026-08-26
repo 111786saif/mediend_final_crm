@@ -179,18 +179,15 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   ) {
     return 'nurture'
   }
-  // 9. New / Hot / Interested (ONLY New, Hot, Interested)
+  // 9. New Lead (ONLY New Lead)
   if (
     [
       'New',
       'New Lead',
-      'Hot Lead',
-      'Interested',
     ].includes(s) ||
-    lower.includes('new') ||
-    lower.includes('hot') ||
-    lower.includes('interested') ||
-    ['27', '28', '39'].includes(s)
+    lower === 'new' ||
+    lower === 'new lead' ||
+    s === '27'
   ) {
     return 'new_hot'
   }
@@ -261,7 +258,7 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
 }
 
 export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>, string> = {
-  new_hot: 'New / Hot',
+  new_hot: 'New Lead',
   nurture: 'Nurture',
   follow_up: 'Follow-up',
   callback: 'Callback',
