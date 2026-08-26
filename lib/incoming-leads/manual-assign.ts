@@ -11,6 +11,7 @@ import { prisma } from '@/lib/prisma'
 import { loadLookupMaps, type LookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { withGeneratedManualLeadRef } from '@/lib/manual-lead-ref'
 import { createLeadAssignedNotification } from '@/lib/lead-notifications'
+import { parseLegacyCrmDate } from '@/lib/legacy-crm-date'
 import {
   getMySQLSourceLeadRef,
   mapMySQLLeadToPrismaWithoutOwner,
@@ -69,6 +70,28 @@ type ManualAssignActor = {
   id: string
   name: string
   role: string
+}
+
+function normalizeManualIncomingLeadDates(mysqlLead: MySQLLeadRow): MySQLLeadRow {
+  const parseManualDate = (value: Date | string | null | undefined) =>
+    value === undefined ? undefined : parseLegacyCrmDate(value)
+
+  const assignedDate = parseManualDate(mysqlLead.Lead_Date)
+  const leadEntryDate = parseManualDate(mysqlLead.LeadEntryDate)
+  const createdDate = parseManualDate(mysqlLead.create_date)
+  const receivedDate = createdDate ?? leadEntryDate ?? assignedDate ?? new Date()
+
+  return {
+    ...mysqlLead,
+    Lead_Date: assignedDate,
+    LeadEntryDate: leadEntryDate ?? receivedDate,
+    create_date: createdDate ?? receivedDate,
+    update_date: parseManualDate(mysqlLead.update_date),
+    Follow_up_Date: parseManualDate(mysqlLead.Follow_up_Date),
+    Surgery_Date: parseManualDate(mysqlLead.Surgery_Date),
+    OPD_ScheduleDate: parseManualDate(mysqlLead.OPD_ScheduleDate),
+    IPD_AdmisisonDate: parseManualDate(mysqlLead.IPD_AdmisisonDate),
+  }
 }
 
 async function loadLookupMapsForManualAssign(): Promise<LookupMaps> {
@@ -328,7 +351,8 @@ async function processManualAssignedMySQLLead(
   incomingLead: IncomingLeadForManualAssign,
   bd: AssignableUserContext,
   systemUserId: string,
-  lookups: LookupMaps
+  lookups: LookupMaps,
+  actor: ManualAssignActor
 ): Promise<ManualAssignResultItem> {
   const mysqlLead = getMySQLLeadFromPayload(incomingLead.payload)
   if (!mysqlLead) {
@@ -392,7 +416,11 @@ async function processManualAssignedMySQLLead(
   }
 
   const assignedAt = new Date()
-  const leadData = mapMySQLLeadToPrismaWithoutOwner(mysqlLead, systemUserId, lookups)
+  const leadData = mapMySQLLeadToPrismaWithoutOwner(
+    normalizeManualIncomingLeadDates(mysqlLead),
+    systemUserId,
+    lookups
+  )
   const { updatedDate, ...leadDataWithoutOwner } = leadData
 
   const duplicateLead = await recordDuplicateLeadHitByPrimaryPhone(
@@ -440,6 +468,23 @@ async function processManualAssignedMySQLLead(
           },
         })
 
+  await logCrmActivity({
+    action: 'CRM_LEAD_CREATED',
+    entityType: 'CRM_LEAD',
+    entityId: createdLead.id,
+    entityLabel: `${createdLead.leadRef} · ${leadData.patientName || 'Unknown'}`,
+    actorUserId: actor.id,
+    actorRole: actor.role,
+    route: '/api/crm/incoming-leads/manual-assign',
+    method: 'POST',
+    summary: 'Lead created',
+    metadata: {
+      incomingLeadId: incomingLead.id,
+      leadRef: createdLead.leadRef,
+      source: incomingLead.source,
+    },
+  })
+
   await createLeadAssignedNotification({
     userId: bd.userId,
     patientName: String(leadData.patientName || 'Patient'),
@@ -477,7 +522,8 @@ async function processManualAssignedMySQLLead(
 async function processManualAssignedSaveMyLeadsLead(
   incomingLead: IncomingLeadForManualAssign,
   bd: AssignableUserContext,
-  systemUserId: string
+  systemUserId: string,
+  actor: ManualAssignActor
 ): Promise<ManualAssignResultItem> {
   const extracted = extractSaveMyLeadsFields(incomingLead.payload)
 
@@ -618,6 +664,23 @@ async function processManualAssignedSaveMyLeadsLead(
     },
   })
 
+  await logCrmActivity({
+    action: 'CRM_LEAD_CREATED',
+    entityType: 'CRM_LEAD',
+    entityId: lead.id,
+    entityLabel: `${lead.leadRef} · ${extracted.patientName || 'Unknown'}`,
+    actorUserId: actor.id,
+    actorRole: actor.role,
+    route: '/api/crm/incoming-leads/manual-assign',
+    method: 'POST',
+    summary: 'Lead created',
+    metadata: {
+      incomingLeadId: incomingLead.id,
+      leadRef: lead.leadRef,
+      source: incomingLead.source,
+    },
+  })
+
   await createLeadAssignedNotification({
     userId: bd.userId,
     patientName: extracted.patientName || 'Patient',
@@ -732,13 +795,15 @@ export async function manuallyAssignIncomingLeads(
           incomingLead,
           bd,
           systemUserId,
-          await mysqlLookupsPromise
+          await mysqlLookupsPromise,
+          actor
         )
       } else {
         result = await processManualAssignedSaveMyLeadsLead(
           incomingLead,
           bd,
-          systemUserId
+          systemUserId,
+          actor
         )
       }
 

@@ -161,8 +161,11 @@ export async function POST(
       where: { id: leadId },
       data: {
         caseStage: CaseStage.INITIATED,
+        status: 'IPD Schedule',
         hospitalName: data.admittingHospital,
         ipdAdmissionDate: new Date(data.admissionDate),
+        // Keep the legacy lead field in sync with the IPD source of truth.
+        surgeryDate: new Date(data.surgeryDate),
         // Save overrides
         ...(data.quantityGrade ? { quantityGrade: data.quantityGrade } : {}),
         ...(data.anesthesia ? { anesthesia: data.anesthesia } : {}),
@@ -310,8 +313,11 @@ export async function PATCH(
     await prisma.lead.update({
       where: { id: leadId },
       data: {
+        status: 'IPD Schedule',
         hospitalName: data.admittingHospital,
         ipdAdmissionDate: new Date(data.admissionDate),
+        // Keep the legacy lead field in sync with the IPD source of truth.
+        surgeryDate: new Date(data.surgeryDate),
         ...(data.quantityGrade ? { quantityGrade: data.quantityGrade } : {}),
         ...(data.anesthesia ? { anesthesia: data.anesthesia } : {}),
         ...(data.surgeonName ? { ipdDrName: data.surgeonName, surgeonName: data.surgeonName } : {}),

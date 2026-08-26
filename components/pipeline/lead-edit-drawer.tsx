@@ -30,6 +30,7 @@ import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import {
   CRM_LEAD_STATUS_OPTIONS,
   CRM_MODE_OF_PAYMENT_OPTIONS,
+  isWorkflowManagedLeadStatus,
 } from '@/lib/lead-status-options'
 import {
   isStatusRequiringAgeSex,
@@ -126,6 +127,9 @@ type LeadEditLead = {
   campaignName?: string | null
   month?: string | null
   surgeryDate?: string | null
+  admissionRecord?: {
+    surgeryDate?: string | null
+  } | null
   address?: string | null
   bd?: {
     id: string
@@ -394,7 +398,9 @@ export function LeadEditDrawer({
   const effectivePatientName = patientNameDraft ?? lead?.patientName ?? ''
   const effectiveAlternateNumber = alternateNumberDraft ?? (lead?.alternateNumber ?? '')
   const effectiveWhatsapp = whatsappDraft ?? (lead?.whatsapp ?? '')
-  const effectiveSurgeryDate = surgeryDateDraft ?? toDateInputValue(lead?.surgeryDate)
+  // Once IPD exists, its admission record owns the surgery date.
+  const currentSurgeryDate = lead?.admissionRecord?.surgeryDate ?? lead?.surgeryDate
+  const effectiveSurgeryDate = surgeryDateDraft ?? toDateInputValue(currentSurgeryDate)
   const effectiveAssigneeId = assigneeIdDraft ?? leadOwnershipMeta?.currentAssigneeId ?? lead?.bd?.id ?? ''
   const effectiveAge = ageDraft ?? (lead?.age == null ? '' : String(lead.age))
   const currentNormalizedSex = normalizeLeadSexValue(lead?.sex)
@@ -543,7 +549,7 @@ export function LeadEditDrawer({
     effectivePatientName !== (lead?.patientName ?? '') ||
     alternateNumberChanged ||
     effectiveWhatsapp !== (lead?.whatsapp ?? '') ||
-    effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate) ||
+    effectiveSurgeryDate !== toDateInputValue(currentSurgeryDate) ||
     ageChanged ||
     sexChanged ||
     cityChanged ||
@@ -722,7 +728,7 @@ export function LeadEditDrawer({
       payload.whatsapp = trimmedWhatsapp || null
     }
 
-    if (effectiveSurgeryDate !== toDateInputValue(lead.surgeryDate)) {
+    if (effectiveSurgeryDate !== toDateInputValue(currentSurgeryDate)) {
       payload.surgeryDate = effectiveSurgeryDate || null
     }
 
@@ -1133,17 +1139,21 @@ export function LeadEditDrawer({
                             {filteredStatusOptions.length > 0 ? (
                               filteredStatusOptions.map((statusOption) => {
                                 const isSelected = statusOption === effectiveLeadStatus
+                                const isWorkflowManaged = isWorkflowManagedLeadStatus(statusOption)
 
                                 return (
                                   <button
                                     key={statusOption}
                                     type="button"
+                                    disabled={isWorkflowManaged}
+                                    title={isWorkflowManaged ? 'Managed by the OPD/IPD case workflow' : undefined}
                                     className={`flex w-full items-center justify-between rounded-sm px-3 py-2 text-left text-sm ${
                                       isSelected
-                                        ? 'bg-blue-600 text-white'
-                                        : 'hover:bg-accent'
+                                        ? 'bg-blue-600 text-white disabled:opacity-70'
+                                        : 'hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50'
                                     }`}
                                     onMouseDown={(event) => {
+                                      if (isWorkflowManaged) return
                                       event.preventDefault()
                                       setLeadStatusDraft(statusOption)
                                       setLeadStatusSearch('')

@@ -12,6 +12,7 @@ import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-t
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
 import { OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
+import { isWorkflowManagedLeadStatus } from '@/lib/lead-status-options'
 import {
   assertDoctorAvailableOnDate,
   DoctorAvailabilityError,
@@ -579,6 +580,10 @@ export async function PATCH(
 
     if (statusChanged && !(await canUserUpdateLeadStatus(user, lead.bdId))) {
       return errorResponse('You do not have permission to update the lead status', 403)
+    }
+
+    if (crmEditFollowUpValidation && statusChanged && isWorkflowManagedLeadStatus(requestedStatus)) {
+      return errorResponse('OPD/IPD workflow statuses can only be changed from their respective case workflow.', 400)
     }
 
     if (
