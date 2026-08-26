@@ -588,8 +588,8 @@ export default function CaseTrackerPage() {
       {
         id: 'date',
         header: () => (
-          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[110px]">
-            <span>Date</span>
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[120px]">
+            <span>Lead Date</span>
             <ColumnFilter type="dateRange" value={columnFilters.date} onChange={(selected) => handleColumnFilterChange('date', selected as string[])} />
           </div>
         ),

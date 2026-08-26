@@ -314,12 +314,9 @@ export function statusBucketWhere(
     case 'new_hot':
       return {
         OR: [
-          contains('new'),
-          contains('hot'),
-          contains('interested'),
+          { status: { equals: 'New Lead', mode: 'insensitive' } },
+          { status: { equals: 'New', mode: 'insensitive' } },
           { status: '27' },
-          { status: '28' },
-          { status: '39' },
         ],
       }
     case 'nurture':
