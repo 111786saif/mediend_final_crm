@@ -86,10 +86,9 @@ function resolveCashDecision(atsAmount: number | null | undefined, approvedAmoun
   }
 }
 
-function buildCashRemarks(
+function buildCashRemark(
   prefix: string,
   data: z.infer<typeof initiateCashSchema>,
-  previous: string | null | undefined,
 ) {
   const emiBlock = normalizeModeOfPaymentKey(data.modeOfPayment) === 'emi'
     ? `EMI Amount: ${data.emiAmount}\n` +
@@ -99,7 +98,11 @@ function buildCashRemarks(
       `Final EMI Amount: ${data.finalEmiAmount}`
     : ''
 
-  return `${previous ? previous + '\n' : ''}${prefix}\nCollected: ${data.collectedAmount}\n${emiBlock}`
+  return `${prefix}\nCollected: ${data.collectedAmount}\n${emiBlock}`.trim()
+}
+
+function appendLeadRemark(previous: string | null | undefined, remark: string) {
+  return `${previous ? `${previous.trim()}\n` : ''}${remark}`
 }
 
 async function notifyInsuranceHeads(leadId: string, patientName: string, leadRef: string) {
@@ -174,6 +177,7 @@ export async function POST(
       validatedData.atsAmount,
       validatedData.approvedAmount,
     )
+    const cashRemark = buildCashRemark('[CASH FLOW DETAILS]', validatedData)
 
     const admissionRecord = await prisma.$transaction(async (tx) => {
       const admission = await tx.admissionRecord.upsert({
@@ -237,7 +241,15 @@ export async function POST(
           settledTotal: validatedData.approvedAmount,
           collectedByMediend: validatedData.collectedByMediend ?? 0,
           collectedByHospital: validatedData.collectedByHospital ?? 0,
-          remarks: buildCashRemarks('[CASH FLOW DETAILS]', validatedData, lead.remarks),
+          remarks: appendLeadRemark(lead.remarks, cashRemark),
+        },
+      })
+
+      await tx.leadRemarkEntry.create({
+        data: {
+          leadId: id,
+          content: cashRemark,
+          createdById: user.id,
         },
       })
 
@@ -351,6 +363,7 @@ export async function PATCH(
       validatedData.atsAmount,
       validatedData.approvedAmount,
     )
+    const cashRemark = buildCashRemark('[UPDATED CASH FLOW DETAILS]', validatedData)
 
     await prisma.$transaction(async (tx) => {
       await tx.admissionRecord.upsert({
@@ -413,11 +426,19 @@ export async function PATCH(
           settledTotal: validatedData.approvedAmount,
           collectedByMediend: validatedData.collectedByMediend ?? 0,
           collectedByHospital: validatedData.collectedByHospital ?? 0,
-          remarks: buildCashRemarks('[UPDATED CASH FLOW DETAILS]', validatedData, lead.remarks),
+          remarks: appendLeadRemark(lead.remarks, cashRemark),
         },
       })
 
-      if (lead.caseStage === CaseStage.CASH_ON_HOLD && lead.caseStage !== caseStage) {
+      await tx.leadRemarkEntry.create({
+        data: {
+          leadId: id,
+          content: cashRemark,
+          createdById: user.id,
+        },
+      })
+
+      if (lead.caseStage === CaseStage.CASH_ON_HOLD) {
         await tx.caseStageHistory.create({
           data: {
             leadId: id,

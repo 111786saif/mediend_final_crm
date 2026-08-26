@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { Prisma, CaseStage, PipelineStage } from '@/generated/prisma/client'
+import { CaseStage, PipelineStage } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getManualLeadAssignableUsersForActor, getLeadTeamLeadIdForAssigneeManager } from '@/lib/lead-ownership'
 import {
@@ -139,6 +139,7 @@ export async function POST(request: NextRequest) {
 
     const teamLeadId = await getLeadTeamLeadIdForAssigneeManager(assignee.id)
     const assignedAt = new Date()
+    const initialRemarks = normalizeOptionalLeadText(parsed.data.remarks)
     const buildLeadData = (generatedLeadRef: string) => ({
       leadRef: generatedLeadRef,
       patientName: parsed.data.patientName.trim(),
@@ -161,7 +162,7 @@ export async function POST(request: NextRequest) {
       hospitalName: normalizeOptionalLeadText(parsed.data.hospitalName) ?? 'Not Specified',
       source: normalizeOptionalLeadText(parsed.data.source),
       campaignName: normalizeOptionalLeadText(parsed.data.leadSource),
-      remarks: normalizeOptionalLeadText(parsed.data.remarks),
+      remarks: initialRemarks,
       duplCount: 0,
       createdById: currentUser.id,
       updatedById: currentUser.id,
@@ -177,12 +178,26 @@ export async function POST(request: NextRequest) {
     });
 
     const lead = await withGeneratedManualLeadRef((generatedLeadRef) =>
-      prisma.lead.create({
-        data: buildLeadData(generatedLeadRef),
-        select: {
-          id: true,
-          leadRef: true,
-        },
+      prisma.$transaction(async (tx) => {
+        const createdLead = await tx.lead.create({
+          data: buildLeadData(generatedLeadRef),
+          select: {
+            id: true,
+            leadRef: true,
+          },
+        })
+
+        if (initialRemarks) {
+          await tx.leadRemarkEntry.create({
+            data: {
+              leadId: createdLead.id,
+              content: initialRemarks,
+              createdById: currentUser.id,
+            },
+          })
+        }
+
+        return createdLead
       })
     );
 

@@ -327,6 +327,12 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
       input.remarks !== undefined
         ? normalizeText(input.remarks)
         : undefined
+    const previousRemarks =
+      targetMode === 'legacy' ? normalizeText(lead.remarks) : normalizeText(targetRecord?.remarks)
+    const shouldRecordRemark =
+      Boolean(input.actorUserId) &&
+      Boolean(normalizedRemarks) &&
+      normalizedRemarks !== previousRemarks
 
     const shouldMarkDone = input.markDone === true
     const shouldCancel = input.cancel === true
@@ -540,6 +546,16 @@ export async function mutateLeadOpd(input: MutateLeadOpdInput) {
           })
         }
       }
+    }
+
+    if (shouldRecordRemark && normalizedRemarks && input.actorUserId) {
+      await tx.leadRemarkEntry.create({
+        data: {
+          leadId: input.leadId,
+          content: normalizedRemarks,
+          createdById: input.actorUserId,
+        },
+      })
     }
 
     const updatedLead = await tx.lead.findUniqueOrThrow({

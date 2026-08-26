@@ -174,6 +174,7 @@ type LeadRemarkHistoryItem = {
   id: string
   content: string
   createdAt: string
+  source: 'workspace' | 'legacy' | 'lead'
   createdBy: {
     id: string
     name: string | null
@@ -1312,9 +1313,16 @@ export function LeadEditDrawer({
                               </AvatarFallback>
                             </Avatar>
                             <div className="min-w-0">
-                              <p className="font-medium text-foreground">
-                                {previousRemark.createdBy?.name ?? 'System'}
-                              </p>
+                              <div className="flex items-center gap-1.5">
+                                <p className="font-medium text-foreground">
+                                  {previousRemark.createdBy?.name ?? 'System'}
+                                </p>
+                                {previousRemark.source !== 'workspace' ? (
+                                  <span className="rounded border border-border/70 bg-muted/60 px-1 py-px text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+                                    Legacy
+                                  </span>
+                                ) : null}
+                              </div>
                               <p>{format(new Date(previousRemark.createdAt), 'd MMM yyyy, h:mm a')}</p>
                             </div>
                           </div>
@@ -1357,9 +1365,16 @@ export function LeadEditDrawer({
                                         </AvatarFallback>
                                       </Avatar>
                                       <div className="min-w-0">
-                                        <p className="font-medium text-foreground">
-                                          {remark.createdBy?.name ?? 'System'}
-                                        </p>
+                                        <div className="flex items-center gap-1.5">
+                                          <p className="font-medium text-foreground">
+                                            {remark.createdBy?.name ?? 'System'}
+                                          </p>
+                                          {remark.source !== 'workspace' ? (
+                                            <span className="rounded border border-border/70 bg-muted/60 px-1 py-px text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+                                              Legacy
+                                            </span>
+                                          ) : null}
+                                        </div>
                                         <p>{format(new Date(remark.createdAt), 'd MMM yyyy, h:mm a')}</p>
                                       </div>
                                     </div>
