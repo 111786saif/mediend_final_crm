@@ -5,7 +5,6 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
 import {
-  getVisibleLeadRemarksFallbackContent,
   isLeadRemarkVisible,
   normalizeLeadRemarkContent,
 } from '@/lib/lead-remark-visibility'
@@ -53,17 +52,21 @@ export async function GET(
         remarksClearedAt: true,
         assignedDate: true,
         createdDate: true,
-        updatedDate: true,
         createdBy: {
           select: {
             id: true,
             name: true,
           },
         },
-        updatedBy: {
+        admissionRecord: {
           select: {
-            id: true,
-            name: true,
+            initiatedAt: true,
+            initiatedBy: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
         leadRemarkEntries: {
@@ -135,11 +138,11 @@ export async function GET(
 
     const mergedRemarks: MergedLeadRemark[] = [
       ...lead.leadRemarkEntries
-        .map((remark) => {
+        .flatMap((remark): MergedLeadRemark[] => {
           const content = normalizeLeadRemarkContent(remark.content)
-          if (!content || !isLeadRemarkVisible(lead, remark.createdAt, user.role)) return null
+          if (!content || !isLeadRemarkVisible(lead, remark.createdAt, user.role)) return []
 
-          return {
+          return [{
             id: remark.id,
             content,
             createdAt: remark.createdAt,
@@ -148,17 +151,16 @@ export async function GET(
               name: remark.createdBy.name,
             },
             source: 'workspace' as const,
-          }
-        })
-        .filter((remark): remark is MergedLeadRemark => remark !== null),
+          }]
+        }),
       ...legacyRemarks
-        .map((remark) => {
+        .flatMap((remark): MergedLeadRemark[] => {
           const content = normalizeLeadRemarkContent(remark.remarks)
-          if (!content || !isLeadRemarkVisible(lead, remark.updateDate, user.role)) return null
+          if (!content || !isLeadRemarkVisible(lead, remark.updateDate, user.role)) return []
 
           const mappedUser = remark.updateBy != null ? legacyUserMap.get(remark.updateBy) : null
 
-          return {
+          return [{
             id: `legacy-${remark.id}`,
             content,
             createdAt: remark.updateDate,
@@ -167,28 +169,46 @@ export async function GET(
               name: mappedUser?.name ?? 'Unknown user',
             },
             source: 'legacy' as const,
-          }
-        })
-        .filter((remark): remark is MergedLeadRemark => remark !== null),
+          }]
+        }),
     ]
 
     const normalizedExistingContents = new Set(
       mergedRemarks.map((remark) => normalizeLeadRemarkContent(remark.content))
     )
-    const leadRemarksFallback = getVisibleLeadRemarksFallbackContent(lead, lead.remarks, user.role)
+    let leadRemarksFallback = normalizeLeadRemarkContent(lead.remarks)
 
-    if (leadRemarksFallback && !normalizedExistingContents.has(leadRemarksFallback)) {
-      const fallbackAuthor = lead.updatedBy ?? lead.createdBy
-      mergedRemarks.push({
-        id: `lead-remarks-${lead.id}`,
-        content: leadRemarksFallback,
-        createdAt: lead.updatedDate ?? lead.createdDate,
-        createdBy: {
-          id: fallbackAuthor?.id ?? 'lead-remarks-legacy',
-          name: fallbackAuthor?.name ?? 'Unknown user',
-        },
-        source: 'lead',
-      })
+    for (const recordedContent of [...normalizedExistingContents].sort(
+      (left, right) => right.length - left.length
+    )) {
+      if (recordedContent && leadRemarksFallback.includes(recordedContent)) {
+        leadRemarksFallback = leadRemarksFallback.replace(recordedContent, '').trim()
+      }
+    }
+
+    if (leadRemarksFallback) {
+      const isCashFlowRemark = /\[(?:UPDATED )?CASH FLOW DETAILS\]/i.test(leadRemarksFallback)
+      const fallbackDate =
+        (isCashFlowRemark ? lead.admissionRecord?.initiatedAt : null) ?? lead.createdDate
+      const fallbackAuthor =
+        (isCashFlowRemark ? lead.admissionRecord?.initiatedBy : null) ?? lead.createdBy
+
+      if (!isLeadRemarkVisible(lead, fallbackDate, user.role)) {
+        leadRemarksFallback = ''
+      }
+
+      if (leadRemarksFallback) {
+        mergedRemarks.push({
+          id: `lead-remarks-${lead.id}`,
+          content: leadRemarksFallback,
+          createdAt: fallbackDate,
+          createdBy: {
+            id: fallbackAuthor?.id ?? 'lead-remarks-legacy',
+            name: fallbackAuthor?.name ?? 'Unknown user',
+          },
+          source: 'lead',
+        })
+      }
     }
 
     mergedRemarks.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

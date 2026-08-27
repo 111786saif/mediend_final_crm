@@ -1,7 +1,8 @@
-import { CaseStage, IpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
+import { CaseStage, FlowType, IpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
 import { hasLeadOpdDone } from '@/lib/lead-opd-workflow'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { prisma } from '@/lib/prisma'
+import { isCaseStageRegression } from '@/lib/case-stage-transition'
 
 const monitoringLeadSelect = {
   id: true,
@@ -590,6 +591,8 @@ export async function markDoctorAdminIpdAdmitted(leadId: string, actorUserId: st
     where: { id: leadId },
     select: {
       id: true,
+      caseStage: true,
+      flowType: true,
       ipdAdmissionDate: true,
       ipdHospital: true,
       updatedById: true,
@@ -604,6 +607,10 @@ export async function markDoctorAdminIpdAdmitted(leadId: string, actorUserId: st
   if (!lead) {
     throw new DoctorAdminMonitoringError('Lead not found', 404)
   }
+
+  const shouldAdvanceCaseStage =
+    lead.flowType !== FlowType.CASH &&
+    !isCaseStageRegression(lead.caseStage, CaseStage.ADMITTED)
 
   const admissionDate = lead.ipdAdmissionDate || new Date()
   const hospitalName = lead.ipdHospital || 'Pending hospital'
@@ -637,7 +644,7 @@ export async function markDoctorAdminIpdAdmitted(leadId: string, actorUserId: st
     data: {
       ipdAdmissionDate: admissionDate,
       updatedById: actorUserId,
-      caseStage: CaseStage.ADMITTED,
+      ...(shouldAdvanceCaseStage ? { caseStage: CaseStage.ADMITTED } : {}),
     },
   })
 

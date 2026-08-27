@@ -1228,6 +1228,7 @@ export const pipelineTableSelect = {
     },
   },
   bd: { select: { id: true, name: true } },
+  admissionRecord: { select: { surgeryDate: true } },
   plRecord: { select: { bdmName: true, managerName: true, doctorName: true, hospitalName: true } },
   dischargeSheet: { select: { doctorName: true, hospitalName: true } },
   kypSubmission: {

@@ -6,7 +6,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
-import { CaseStage, FlowType, Prisma, PipelineStage } from '@/generated/prisma/client'
+import { CaseStage, Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
 import { logCrmActivity } from '@/lib/crm-activity'
@@ -43,6 +43,7 @@ import {
 import { buildEffectiveOpdEntries, getEffectiveOpdCounts } from '@/lib/lead-opd-appointments'
 import { leadOpdAppointmentSelect } from '@/lib/lead-opd-records'
 import { resolveLeadCity } from '@/lib/lead-display'
+import { isCaseStageRegression } from '@/lib/case-stage-transition'
 
 function parseFollowUpDateInput(value: unknown) {
   if (value === undefined) return { provided: false, value: undefined as Date | null | undefined }
@@ -71,23 +72,6 @@ function getStartOfToday() {
 
 function normalizeStatusLabel(value: string | null | undefined) {
   return String(value ?? '').trim().toLowerCase()
-}
-
-function resolveCaseStageFromManualStatus(
-  status: string | null | undefined,
-  flowType: FlowType | null | undefined
-): CaseStage | undefined {
-  const normalized = normalizeStatusLabel(status)
-
-  if (normalized === 'opd_done' || normalized === 'opd done') {
-    return flowType === FlowType.CASH ? CaseStage.CASH_OPD_DONE : CaseStage.OPD_DONE
-  }
-
-  if (normalized === 'ipd_done' || normalized === 'ipd done') {
-    return flowType === FlowType.CASH ? CaseStage.CASH_IPD_DONE : CaseStage.IPD_DONE
-  }
-
-  return undefined
 }
 
 export async function GET(
@@ -582,7 +566,7 @@ export async function PATCH(
       return errorResponse('You do not have permission to update the lead status', 403)
     }
 
-    if (crmEditFollowUpValidation && statusChanged && isWorkflowManagedLeadStatus(requestedStatus)) {
+    if (statusChanged && isWorkflowManagedLeadStatus(requestedStatus)) {
       return errorResponse('OPD/IPD workflow statuses can only be changed from their respective case workflow.', 400)
     }
 
@@ -985,14 +969,6 @@ export async function PATCH(
       updateData.followUpDate = parsedFollowUpDateInput.value
     }
 
-    const autoCaseStageFromStatus = statusChanged
-      ? resolveCaseStageFromManualStatus(requestedStatus, lead.flowType)
-      : undefined
-
-    if (autoCaseStageFromStatus) {
-      updateData.caseStage = autoCaseStageFromStatus
-    }
-
     let churnAutomationResult:
       | Awaited<ReturnType<typeof planChurnLeadReassignment>>
       | null = null
@@ -1031,6 +1007,13 @@ export async function PATCH(
     const nextCaseStage =
       (updateData.caseStage as CaseStage | undefined) ?? lead.caseStage
     const caseStageChanged = nextCaseStage !== lead.caseStage
+
+    if (caseStageChanged && isCaseStageRegression(lead.caseStage, nextCaseStage)) {
+      return errorResponse(
+        'Case stage cannot move backward. Use the workflow reset action if a rollback is required.',
+        409,
+      )
+    }
 
     const { updatedLead, statusRemarkEntry } = await prisma.$transaction(async (tx) => {
       const updatedLead = await tx.lead.update({
@@ -1116,6 +1099,16 @@ export async function PATCH(
             })
           : null
 
+      if (remarksChanged && requestedRemarks) {
+        await tx.leadRemarkEntry.create({
+          data: {
+            leadId: lead.id,
+            content: requestedRemarks,
+            createdById: user.id,
+          },
+        })
+      }
+
       if (caseStageChanged) {
         await tx.caseStageHistory.create({
           data: {
@@ -1126,9 +1119,7 @@ export async function PATCH(
             note:
               typeof body.stageChangeNote === 'string' && body.stageChangeNote.trim()
                 ? body.stageChangeNote.trim()
-                : statusChanged
-                  ? `Case stage synced from lead status: ${requestedStatus}`
-                  : 'Case stage updated from lead edit',
+                : 'Case stage updated from lead edit',
           },
         })
       }

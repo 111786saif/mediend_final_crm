@@ -1,5 +1,6 @@
 import { CaseStage, IpdStatus, LeadOpdPhase, LeadOpdStatus, PipelineStage, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
+import { isCaseStageRegression } from '@/lib/case-stage-transition'
 import { uploadFileToS3 } from '@/lib/s3-client'
 import { DoctorAppSessionUser } from '@/lib/doctor-app/auth'
 import { assertDoctorAvailableOnDate, normalizeDoctorName } from '@/lib/doctor-availability'
@@ -463,10 +464,6 @@ function getCaseStageForDoctorMobileIpdStatus(
   status: DoctorMobileIpdStatus | string | null | undefined,
   isCashFlow: boolean
 ) {
-  if (status === 'surgery_done') {
-    return isCashFlow ? CaseStage.CASH_IPD_DONE : CaseStage.IPD_DONE
-  }
-
   if (status === 'admitted' && !isCashFlow) {
     return CaseStage.ADMITTED
   }
@@ -478,10 +475,6 @@ function getCaseStageForIpdEnumStatus(
   status: IpdStatus | null | undefined,
   isCashFlow: boolean
 ) {
-  if (status === IpdStatus.IPD_DONE) {
-    return isCashFlow ? CaseStage.CASH_IPD_DONE : CaseStage.IPD_DONE
-  }
-
   if (status === IpdStatus.ADMITTED_DONE && !isCashFlow) {
     return CaseStage.ADMITTED
   }
@@ -1426,9 +1419,16 @@ export async function updateDoctorIpdAppointment(
     'Selected doctor is on approved leave for this date.'
   )
 
+  const shouldPreserveCaseStageForIpdDone =
+    normalizedDoctorStatus === 'surgery_done' || effectiveIpdStatus === IpdStatus.IPD_DONE
+  const requestedCaseStage = shouldPreserveCaseStageForIpdDone
+    ? undefined
+    : getCaseStageForDoctorMobileIpdStatus(normalizedDoctorStatus, isCashFlow) ??
+      getCaseStageForIpdEnumStatus(effectiveIpdStatus, isCashFlow)
   const targetCaseStage =
-    getCaseStageForDoctorMobileIpdStatus(normalizedDoctorStatus, isCashFlow) ??
-    getCaseStageForIpdEnumStatus(effectiveIpdStatus, isCashFlow)
+    requestedCaseStage && !isCaseStageRegression(lead.caseStage, requestedCaseStage)
+      ? requestedCaseStage
+      : undefined
   const stageChanged = Boolean(targetCaseStage && targetCaseStage !== lead.caseStage)
   const stageChangedById = stageChanged ? admissionRecord.initiatedById : null
 

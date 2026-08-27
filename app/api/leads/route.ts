@@ -867,6 +867,7 @@ export async function POST(request: NextRequest) {
       : normalizeOptionalLeadText(campaignName)
 
     const effectiveStatus = duplicateLead ? DUPLICATE_LEAD_STATUS : (status || 'Hot Lead')
+    const initialRemarks = normalizeOptionalLeadText(remarks)
 
     const buildLeadData = (resolvedLeadRef: string) => ({
       leadRef: resolvedLeadRef,
@@ -887,15 +888,16 @@ export async function POST(request: NextRequest) {
       source: finalSource,
       campaignId: normalizedCampaignId,
       campaignName: finalCampaignName,
-      remarks,
+      remarks: initialRemarks,
       duplCount: 0,
       createdById: user.id,
       updatedById: user.id,
     });
 
-    const lead = leadRef
-      ? await prisma.lead.create({
-          data: buildLeadData(leadRef),
+    const createLead = (resolvedLeadRef: string) =>
+      prisma.$transaction(async (tx) => {
+        const createdLead = await tx.lead.create({
+          data: buildLeadData(resolvedLeadRef),
           include: {
             bd: {
               select: {
@@ -905,19 +907,23 @@ export async function POST(request: NextRequest) {
             },
           },
         })
-      : await withGeneratedManualLeadRef((generatedLeadRef) =>
-          prisma.lead.create({
-            data: buildLeadData(generatedLeadRef),
-            include: {
-              bd: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
+
+        if (initialRemarks) {
+          await tx.leadRemarkEntry.create({
+            data: {
+              leadId: createdLead.id,
+              content: initialRemarks,
+              createdById: user.id,
             },
           })
-        );
+        }
+
+        return createdLead
+      })
+
+    const lead = leadRef
+      ? await createLead(leadRef)
+      : await withGeneratedManualLeadRef(createLead);
 
     if (lead.bdId) {
       await createLeadAssignedNotification({
