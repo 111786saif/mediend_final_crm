@@ -390,6 +390,18 @@ export function PipelineStatusCards({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-2.5 w-full min-w-0">
       {CATEGORY_GROUPS.map((group) => {
         const isChurning = group.id === 'churning'
+
+        const groupTotal = group.items.reduce((sum, item) => {
+          const count =
+            bucketCounts[item.id] ??
+            (item.bucket && item.bucket !== 'all' ? bucketCounts[item.bucket] : 0) ??
+            0
+          return sum + count
+        }, 0)
+
+        const pctValue = (groupTotal / totalForPct) * 100
+        const groupPct = total > 0 ? (pctValue % 1 === 0 ? pctValue.toFixed(0) : pctValue.toFixed(1)) : '0'
+
         return (
           <div
             key={group.id}
@@ -403,15 +415,23 @@ export function PipelineStatusCards({
             )}
           >
             <div>
-              <div className="flex items-center justify-between px-1 mb-1.5">
+              <div className="flex items-center justify-between gap-1.5 px-1 mb-1.5 min-w-0">
                 <h3
                   className={cn(
-                    'text-[10px] font-extrabold uppercase tracking-widest',
+                    'text-[11px] font-extrabold uppercase tracking-wider truncate',
                     group.headerColorClass
                   )}
                 >
                   {group.title}
                 </h3>
+                <div className="flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded-md bg-white/85 dark:bg-slate-900/70 border border-inherit/50 font-bold tabular-nums shadow-2xs">
+                  <span className={cn('font-black text-[12px] leading-none', group.headerColorClass)}>
+                    {groupTotal.toLocaleString()}
+                  </span>
+                  <span className={cn('font-bold text-[11px] leading-none', group.headerColorClass)}>
+                    ({groupPct}%)
+                  </span>
+                </div>
               </div>
 
               <div

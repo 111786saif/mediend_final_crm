@@ -601,6 +601,7 @@ export function buildPipelineFiltersWhere(
           globalSearchWhere,
           { phoneNumber: { contains: phone.last10 } },
           { alternateNumber: { contains: phone.last10 } },
+          { whatsapp: { contains: phone.last10 } },
         ],
       })
     } else if (pureDigits.length > 0 && /^[\d\s+\-().]+$/.test(trimmedSearch)) {
@@ -610,6 +611,7 @@ export function buildPipelineFiltersWhere(
           globalSearchWhere,
           { phoneNumber: { contains: searchTarget } },
           { alternateNumber: { contains: searchTarget } },
+          { whatsapp: { contains: searchTarget } },
         ],
       })
     } else {
@@ -1060,6 +1062,7 @@ function buildPipelineGlobalSearchWhere(query: string): Prisma.LeadWhereInput {
   if (digitMatch.length >= 4) {
     or.push({ phoneNumber: { contains: digitMatch } })
     or.push({ alternateNumber: { contains: digitMatch } })
+    or.push({ whatsapp: { contains: digitMatch } })
   }
 
   if (numericWhere) {
@@ -1241,6 +1244,7 @@ export const pipelineTableSelect = {
   patientName: true,
   phoneNumber: true,
   alternateNumber: true,
+  whatsapp: true,
   age: true,
   sex: true,
   treatment: true,

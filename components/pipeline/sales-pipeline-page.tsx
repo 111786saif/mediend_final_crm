@@ -439,7 +439,7 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'preferredLocation', label: 'Preferred Location', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'profession', label: 'Profession', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'source', label: 'Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
-  { id: 'leadSource', label: 'Lead Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'leadSource', label: 'Campaign Name', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'createDate', label: 'Create Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyBy', label: 'Modify By', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyDate', label: 'Modified Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
@@ -1960,7 +1960,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       cell: ({ row }) => <span className="max-w-[120px] truncate text-sm">{normalizedText(row.original.source, '—')}</span>,
     })
     addCol('leadSource', {
-      header: () => <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />,
+      header: () => <HeaderCell label="Campaign Name" {...getHeaderFilterProps('leadSource')} />,
       cell: ({ row }) => <span className="whitespace-nowrap text-sm">{resolveLeadSourceDisplay(row.original)}</span>,
     })
     addCol('createDate', {
@@ -2560,7 +2560,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                   <div className="relative min-w-[220px] flex-1">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
                     <Input
-                      placeholder="Search all table columns… or phone / alternate number (digits or 91…) "
+                      placeholder="Search all table columns… or phone / alternate / WhatsApp number (digits or 91…) "
                       className="pl-9 h-9 text-xs bg-background/80 hover:bg-background focus:bg-background border-border/80 rounded-lg shadow-xs transition-colors"
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}

@@ -876,16 +876,20 @@ export function LeadEditDrawer({
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="drawer-whatsapp">WhatsApp</Label>
-                      <Input
-                        id="drawer-whatsapp"
-                        value={effectiveWhatsapp}
-                        onChange={(e) => setWhatsappDraft(e.target.value)}
-                        disabled={!canEditLeadProfile || saving}
-                        placeholder="Enter WhatsApp number"
-                      />
-                    </div>
+                    {isSuperAdmin ? (
+                      <div className="space-y-2">
+                        <Label htmlFor="drawer-whatsapp">WhatsApp</Label>
+                        <Input
+                          id="drawer-whatsapp"
+                          value={effectiveWhatsapp}
+                          onChange={(e) => setWhatsappDraft(e.target.value)}
+                          disabled={!canEditLeadProfile || saving}
+                          placeholder="Enter WhatsApp number"
+                        />
+                      </div>
+                    ) : (
+                      <ReadonlyField label="WhatsApp" value={formatMaskedPhone(lead.whatsapp)} />
+                    )}
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
@@ -1060,7 +1064,7 @@ export function LeadEditDrawer({
                         />
                       </div>
                     ) : (
-                      <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
+                      <ReadonlyField label="Alternate Phone" value={formatMaskedPhone(lead.alternateNumber)} />
                     )}
                     <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
                     <ReadonlyField label="Current Owner" value={currentAssigneeName} />
