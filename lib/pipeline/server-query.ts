@@ -16,9 +16,12 @@ import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import {
   normalizePipelineMonthValue,
   normalizePipelineSexValue,
+  resolvePipelineMonthValue,
 } from '@/lib/pipeline/filter-normalizers'
 import { getEmployeeByUserId, getSubordinates } from '@/lib/hierarchy'
 import { format } from 'date-fns'
+
+const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000 // UTC+5:30
 
 export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd' | 'followUpDate'
 export type PipelineSortDir = 'asc' | 'desc'
@@ -500,9 +503,11 @@ export function leadAgeWhere(age: LeadAgeFilter): Prisma.LeadWhereInput | undefi
   if (age === 'all') return undefined
   const now = new Date()
   const daysAgo = (n: number) => {
-    const d = new Date(now)
-    d.setDate(d.getDate() - n)
-    return d
+    const istTodayUtcMs = Date.UTC(
+      now.getFullYear(), now.getMonth(), now.getDate(),
+      0, 0, 0, 0
+    ) - IST_OFFSET_MS
+    return new Date(istTodayUtcMs - n * 86_400_000)
   }
 
   const receiptField = (range: Prisma.DateTimeFilter): Prisma.LeadWhereInput => ({
@@ -570,18 +575,18 @@ export function buildPipelineFiltersWhere(
   if (params.startDate || params.endDate) {
     const range: Prisma.DateTimeFilter = {}
     if (params.startDate) {
-      const from = new Date(params.startDate)
-      from.setHours(0, 0, 0, 0)
-      range.gte = from
+      const start = parseDateOnlyBoundary(params.startDate, false)
+      if (start) range.gte = start
     }
     if (params.endDate) {
-      const to = new Date(params.endDate)
-      to.setHours(23, 59, 59, 999)
-      range.lte = to
+      const end = parseDateOnlyBoundary(params.endDate, true)
+      if (end) range.lte = end
     }
-    and.push({
-      OR: [{ leadEntryDate: range }, { AND: [{ leadEntryDate: null }, { createdDate: range }] }],
-    })
+    if (range.gte || range.lte) {
+      and.push({
+        OR: [{ leadEntryDate: range }, { AND: [{ leadEntryDate: null }, { createdDate: range }] }],
+      })
+    }
   }
 
   if (params.search) {
@@ -620,16 +625,18 @@ export function buildPipelineFiltersWhere(
 
 function parseDateOnlyBoundary(value: string, endOfDay: boolean): Date | null {
   const trimmed = value.trim()
-  const dateOnlyMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed)
+  const dateOnlyMatch = /^(\d{4})-(\d{2})-(\d{2})/.exec(trimmed)
 
   if (dateOnlyMatch) {
     const year = Number(dateOnlyMatch[1])
     const month = Number(dateOnlyMatch[2]) - 1
     const day = Number(dateOnlyMatch[3])
 
-    return endOfDay
-      ? new Date(year, month, day, 23, 59, 59, 999)
-      : new Date(year, month, day, 0, 0, 0, 0)
+    const utcMs = endOfDay
+      ? Date.UTC(year, month, day, 23, 59, 59, 999)
+      : Date.UTC(year, month, day, 0, 0, 0, 0)
+
+    return new Date(utcMs - IST_OFFSET_MS)
   }
 
   const parsed = new Date(trimmed)
@@ -1080,7 +1087,7 @@ function buildPipelineMultiSelectWhere(
 ): Prisma.LeadWhereInput | undefined {
   switch (field) {
     case 'month':
-      return buildExactInsensitiveStringWhere('month', values)
+      return buildPipelineMonthFilterWhere(values)
     case 'circle':
       return buildExactInsensitiveStringWhere('circle', values)
     case 'category':
@@ -1113,6 +1120,68 @@ function buildPipelineMultiSelectWhere(
     default:
       return undefined
   }
+}
+
+function buildPipelineMonthFilterWhere(values: string[]): Prisma.LeadWhereInput | undefined {
+  const normalizedValues = [
+    ...new Set(
+      values
+        .map((v) => normalizePipelineMonthValue(v, v.trim()))
+        .filter((v) => v.length > 0)
+    ),
+  ]
+  if (normalizedValues.length === 0) return undefined
+
+  const orConditions: Prisma.LeadWhereInput[] = []
+
+  const monthMap: Record<string, { monthIndex: number; aliases: string[] }> = {
+    Jan: { monthIndex: 0, aliases: ['Jan', 'January', '01', '1'] },
+    Feb: { monthIndex: 1, aliases: ['Feb', 'February', '02', '2'] },
+    Mar: { monthIndex: 2, aliases: ['Mar', 'March', '03', '3'] },
+    Apr: { monthIndex: 3, aliases: ['Apr', 'April', '04', '4'] },
+    May: { monthIndex: 4, aliases: ['May', '05', '5'] },
+    Jun: { monthIndex: 5, aliases: ['Jun', 'June', '06', '6'] },
+    Jul: { monthIndex: 6, aliases: ['Jul', 'July', '07', '7'] },
+    Aug: { monthIndex: 7, aliases: ['Aug', 'August', '08', '8'] },
+    Sep: { monthIndex: 8, aliases: ['Sep', 'Sept', 'September', '09', '9'] },
+    Oct: { monthIndex: 9, aliases: ['Oct', 'October', '10'] },
+    Nov: { monthIndex: 10, aliases: ['Nov', 'November', '11'] },
+    Dec: { monthIndex: 11, aliases: ['Dec', 'December', '12'] },
+  }
+
+  const currentYear = new Date().getFullYear()
+  const years = [currentYear - 2, currentYear - 1, currentYear, currentYear + 1]
+
+  for (const val of normalizedValues) {
+    const info = monthMap[val]
+    if (info) {
+      for (const alias of info.aliases) {
+        orConditions.push({ month: { equals: alias, mode: 'insensitive' } })
+      }
+      orConditions.push({ month: { contains: val, mode: 'insensitive' } })
+
+      for (const y of years) {
+        const startUtc = Date.UTC(y, info.monthIndex, 1, 0, 0, 0, 0) - IST_OFFSET_MS
+        const endUtc = Date.UTC(y, info.monthIndex + 1, 0, 23, 59, 59, 999) - IST_OFFSET_MS
+        const range: Prisma.DateTimeFilter = {
+          gte: new Date(startUtc),
+          lte: new Date(endUtc),
+        }
+        orConditions.push({ leadEntryDate: range })
+        orConditions.push({
+          AND: [
+            { leadEntryDate: null },
+            { createdDate: range },
+          ],
+        })
+      }
+    } else {
+      orConditions.push({ month: { contains: val, mode: 'insensitive' } })
+    }
+  }
+
+  if (orConditions.length === 0) return undefined
+  return { OR: orConditions }
 }
 
 export function pipelineOrderBy(
@@ -1340,7 +1409,7 @@ function getPipelineLeadColumnFilterValue(
     case 'patient':
       return typeof lead.patientName === 'string' ? lead.patientName : '—'
     case 'month':
-      return normalizePipelineMonthValue(lead.month)
+      return resolvePipelineMonthValue(lead.month, lead.leadEntryDate ?? lead.createdDate)
     case 'age':
       return lead.age != null ? String(lead.age) : '—'
     case 'sex':

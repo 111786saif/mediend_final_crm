@@ -49,6 +49,27 @@ export function normalizePipelineMonthValue(value: unknown, fallback = '—') {
   return monthMap[normalized] ?? fallback
 }
 
+export function resolvePipelineMonthValue(
+  monthValue: unknown,
+  dateValue?: Date | string | null,
+  fallback = '—',
+): string {
+  const fromMonth = normalizePipelineMonthValue(monthValue, '')
+  if (fromMonth) return fromMonth
+
+  if (dateValue) {
+    const parsed = new Date(String(dateValue))
+    if (!Number.isNaN(parsed.getTime())) {
+      // In IST (UTC+5:30)
+      const istDate = new Date(parsed.getTime() + 5.5 * 60 * 60 * 1000)
+      const monthIdx = istDate.getUTCMonth()
+      return PIPELINE_MONTH_FILTER_OPTIONS[monthIdx] ?? fallback
+    }
+  }
+
+  return fallback
+}
+
 export function normalizePipelineSexValue(value: unknown, fallback = '—') {
   if (typeof value !== 'string') return fallback
 
