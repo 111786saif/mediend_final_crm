@@ -6,12 +6,16 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
-import { CaseStage, Prisma, PipelineStage } from '@/generated/prisma/client'
+import { CaseStage, FlowType, Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
-import { OPD_SCHEDULED_STATUS } from '@/lib/lead-opd-workflow'
+import {
+  hasLeadOpdDone,
+  hasLeadOpdScheduled,
+  OPD_SCHEDULED_STATUS,
+} from '@/lib/lead-opd-workflow'
 import { isWorkflowManagedLeadStatus } from '@/lib/lead-status-options'
 import {
   assertDoctorAvailableOnDate,
@@ -73,6 +77,18 @@ function getStartOfToday() {
 function normalizeStatusLabel(value: string | null | undefined) {
   return String(value ?? '').trim().toLowerCase()
 }
+
+const CASH_CONVERSION_SOURCE_STAGES = new Set<CaseStage>([
+  CaseStage.NEW_LEAD,
+  CaseStage.OPD_SCHEDULED,
+  CaseStage.OPD_DONE,
+  CaseStage.KYP_BASIC_COMPLETE,
+  CaseStage.HOSPITALS_SUGGESTED,
+  CaseStage.PREAUTH_RAISED,
+  CaseStage.PREAUTH_COMPLETE,
+  CaseStage.KYP_PENDING,
+  CaseStage.KYP_COMPLETE,
+])
 
 export async function GET(
   request: NextRequest,
@@ -1007,8 +1023,22 @@ export async function PATCH(
     const nextCaseStage =
       (updateData.caseStage as CaseStage | undefined) ?? lead.caseStage
     const caseStageChanged = nextCaseStage !== lead.caseStage
+    const expectedCashConversionStage = hasLeadOpdDone(lead)
+      ? CaseStage.CASH_OPD_DONE
+      : hasLeadOpdScheduled(lead)
+        ? CaseStage.CASH_OPD_SCHEDULED
+        : CaseStage.CASH_IPD_PENDING
+    const isValidCashFlowConversion =
+      lead.flowType !== FlowType.CASH &&
+      body.flowType === FlowType.CASH &&
+      CASH_CONVERSION_SOURCE_STAGES.has(lead.caseStage) &&
+      nextCaseStage === expectedCashConversionStage
 
-    if (caseStageChanged && isCaseStageRegression(lead.caseStage, nextCaseStage)) {
+    if (
+      caseStageChanged &&
+      !isValidCashFlowConversion &&
+      isCaseStageRegression(lead.caseStage, nextCaseStage)
+    ) {
       return errorResponse(
         'Case stage cannot move backward. Use the workflow reset action if a rollback is required.',
         409,
