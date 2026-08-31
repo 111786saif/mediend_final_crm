@@ -415,7 +415,7 @@ export default function MyTeamPage() {
     [entries, normEmployeeId]
   )
 
-  /** Dates past normalization deadline (week rule from Apr 2026, else 5th of next month). */
+  /** Dates past normalization deadline (August 2026 through 5 Sep, else week rule or 5th of next month). */
   const normalizationDisabledDateKeys = useMemo(
     () => getDisabledNormalizationDateKeys(from, to),
     [from, to]
@@ -900,8 +900,8 @@ export default function MyTeamPage() {
               <CardTitle>Apply for normalization (on behalf)</CardTitle>
               <CardDescription>
                 Select a team member and date range, then click days on the heatmap. Enter a separate reason (at least
-                15 characters) for each selected day. Deadline rules apply (same week from April 2026, or 5th of next
-                month before that). Applications go to HR for approval.
+                15 characters) for each selected day. August 2026 dates may be requested through 5 Sep 2026; other dates
+                follow the same-week rule (from May 2026). Applications go to HR for approval.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

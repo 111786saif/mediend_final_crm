@@ -356,7 +356,7 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
           <DialogDescription className="space-y-2">
             <span className="block">
               Request attendance normalization for specific days with a reason. HR will review and set full or half day.
-              From April 2026, requests must be within the same week.
+              August 2026 dates may be requested through 5 Sep 2026; other dates follow the same-week rule (from May 2026).
             </span>
             <span className="block text-xs text-muted-foreground">
               Use this when you need HR approval (e.g. days that do not meet self-normalization rules on your Attendance
@@ -1280,7 +1280,10 @@ function PoliciesTab() {
                 Request from HR with a mandatory reason (minimum {NORMALIZATION_REASON_MIN_CHARS} characters).
               </li>
               <li>HR reviews and approves as full day or half day.</li>
-              <li>From April 2026, requests must be within the same week (see deadline rules in-app).</li>
+              <li>
+                August 2026 dates may be requested through 5 Sep 2026; other dates follow the same-week rule (from May
+                2026).
+              </li>
             </ul>
           </section>
 

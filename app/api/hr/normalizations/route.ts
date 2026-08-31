@@ -33,11 +33,7 @@ export async function GET(request: NextRequest) {
 
     if (status === 'PENDING') {
       where.status = 'PENDING'
-      // Ready for HR: manager applied, or employee request after manager / skip-manager.
-      where.OR = [
-        { type: 'MANAGER' },
-        { type: 'EMPLOYEE_REQUEST', managerApprovedAt: { not: null } },
-      ]
+      where.type = { in: ['MANAGER', 'EMPLOYEE_REQUEST'] }
     } else if (status) {
       where.status = status
       where.type = { in: ['MANAGER', 'EMPLOYEE_REQUEST'] }

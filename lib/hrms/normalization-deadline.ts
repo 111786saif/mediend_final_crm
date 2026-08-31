@@ -1,6 +1,7 @@
 /**
  * Normalization deadline rules:
- * - From May 20, 2026: normalization must be applied within the same ISO week (Monday-Sunday)
+ * - August 2026 attendance dates: apply through 5 Sep 2026 (no same-week cutoff)
+ * - From May 20, 2026 (other months): normalization must be applied within the same ISO week (Monday-Sunday)
  * - Before May 20, 2026: deadline is end of 5th of next month
  */
 
@@ -31,13 +32,23 @@ function getMonthBasedDeadline(monthDate: Date): Date {
   return new Date(Date.UTC(y, m + 1, 5, 23, 59, 59, 999))
 }
 
+/** True when the attendance date falls in August 2026 (month-wide application window). */
+function isAugust2026AttendanceDate(dayStart: Date): boolean {
+  return dayStart.getUTCFullYear() === 2026 && dayStart.getUTCMonth() === 7 // August = 7
+}
+
 /**
  * Returns the deadline for applying normalization for a given date.
- * - For dates >= May 20, 2026: end of that date's ISO week (Sunday)
+ * - August 2026 attendance dates: end of 5 Sep 2026 UTC
+ * - For dates >= May 20, 2026 (other months): end of that date's ISO week (Sunday)
  * - For dates before May 20, 2026: end of 5th of next month
  */
 export function getNormalizationDeadline(date: Date): Date {
   const dayStart = toDayStart(date)
+  if (isAugust2026AttendanceDate(dayStart)) {
+    const monthStart = new Date(Date.UTC(2026, 7, 1, 0, 0, 0, 0))
+    return getMonthBasedDeadline(monthStart)
+  }
   if (dayStart >= WEEK_RULE_START) {
     return getWeekEnd(dayStart)
   }
