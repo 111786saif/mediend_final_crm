@@ -97,6 +97,7 @@ export async function GET(request: NextRequest) {
               patientName: true,
               phoneNumber: true,
               alternateNumber: true,
+              whatsapp: true,
               category: true,
               treatment: true,
               assignedDate: true,
@@ -130,7 +131,8 @@ export async function GET(request: NextRequest) {
     const canViewPhone = String(currentUser.role) === 'ADMIN'
     const isPhoneSearchColumn =
       parsed.data.searchColumn === 'normalizedPhone' ||
-      parsed.data.searchColumn === 'alternatePhone'
+      parsed.data.searchColumn === 'alternatePhone' ||
+      parsed.data.searchColumn === 'whatsapp'
     const phoneSearch =
       isPhoneSearchColumn && parsed.data.searchValue
         ? parsePhoneSearchQuery(parsed.data.searchValue)
@@ -166,6 +168,13 @@ export async function GET(request: NextRequest) {
               return (
                 last10DigitsFromStored(summary.alternatePhone) === phoneSearch.last10 ||
                 last10DigitsFromStored(processedLead?.alternateNumber) === phoneSearch.last10
+              )
+            }
+
+            if (parsed.data.searchColumn === 'whatsapp') {
+              return (
+                last10DigitsFromStored(summary.whatsapp) === phoneSearch.last10 ||
+                last10DigitsFromStored(processedLead?.whatsapp) === phoneSearch.last10
               )
             }
 
@@ -212,6 +221,7 @@ export async function GET(request: NextRequest) {
             ...summary,
             phone: canViewPhone ? summary.phone : maskPhoneNumber(summary.phone),
             alternatePhone: canViewPhone ? summary.alternatePhone : maskPhoneNumber(summary.alternatePhone),
+            whatsapp: canViewPhone ? summary.whatsapp : maskPhoneNumber(summary.whatsapp),
           },
           campaign: campaign
             ? {
@@ -231,6 +241,9 @@ export async function GET(request: NextRequest) {
                 alternateNumber: canViewPhone
                   ? processedLead.alternateNumber
                   : maskPhoneNumber(processedLead.alternateNumber),
+                whatsapp: canViewPhone
+                  ? processedLead.whatsapp
+                  : maskPhoneNumber(processedLead.whatsapp),
                 category: processedLead.category,
                 treatment: processedLead.treatment,
                 assignedDate: processedLead.assignedDate,

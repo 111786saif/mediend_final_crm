@@ -10,6 +10,7 @@ export type IncomingLeadSummary = {
   patientName: string | null
   phone: string | null
   alternatePhone?: string | null
+  whatsapp?: string | null
   email: string | null
 }
 
@@ -159,6 +160,12 @@ export function extractIncomingLeadSummary(payload: unknown): IncomingLeadSummar
           mysqlLead.alternateNumber ??
           mysqlLead.altPhone,
       ),
+      whatsapp: toNullableString(
+        mysqlLead.Whatsapp ??
+          mysqlLead.whatsapp ??
+          mysqlLead.whatsApp ??
+          mysqlLead.WhatsApp,
+      ),
       email: toNullableString(mysqlLead.PatientEmail ?? mysqlLead.email),
     }
   }
@@ -188,6 +195,12 @@ export function extractIncomingLeadSummary(payload: unknown): IncomingLeadSummar
         record.alternatePhone ??
         record.alternateNumber ??
         record.altPhone,
+    ),
+    whatsapp: toNullableString(
+      record.Whatsapp ??
+        record.whatsapp ??
+        record.whatsApp ??
+        record.WhatsApp,
     ),
     email: toNullableString(record.email),
   }

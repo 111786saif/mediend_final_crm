@@ -60,6 +60,7 @@ import {
   PIPELINE_MONTH_FILTER_OPTIONS,
   normalizePipelineSexValue,
   normalizePipelineMonthValue,
+  resolvePipelineMonthValue,
 } from '@/lib/pipeline/filter-normalizers'
 import { normalizeModeOfPaymentLabel } from '@/lib/mode-of-payment'
 import { ColumnDef } from '@tanstack/react-table'
@@ -438,7 +439,7 @@ const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
   { id: 'preferredLocation', label: 'Preferred Location', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'profession', label: 'Profession', defaultVisible: { bd: true, 'team-lead': true } },
   { id: 'source', label: 'Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
-  { id: 'leadSource', label: 'Lead Source', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'leadSource', label: 'Campaign Name', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'createDate', label: 'Create Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyBy', label: 'Modify By', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
   { id: 'modifyDate', label: 'Modified Date', variants: ['team-lead'], defaultVisible: { bd: false, 'team-lead': true } },
@@ -631,10 +632,25 @@ function isPastFollowUpDate(value: unknown) {
   return parsed.getTime() < startOfToday.getTime()
 }
 
-function formatMonthCell(value: unknown) {
-  if (!value) return '—'
-  if (typeof value === 'string') return value.trim() || '—'
-  return formatTableDate(value)
+function parseLocalDate(dateStr: string | null | undefined): Date | undefined {
+  if (!dateStr) return undefined
+  const parts = dateStr.trim().split('-')
+  if (parts.length === 3) {
+    const y = parseInt(parts[0], 10)
+    const m = parseInt(parts[1], 10) - 1
+    const d = parseInt(parts[2], 10)
+    const date = new Date(y, m, d)
+    return Number.isNaN(date.getTime()) ? undefined : date
+  }
+  const parsed = new Date(dateStr)
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed
+}
+
+function formatMonthCell(value: unknown, dateFallback?: unknown) {
+  const resolved = resolvePipelineMonthValue(value, dateFallback as any)
+  if (resolved !== '—') return resolved
+  if (typeof value === 'string' && value.trim()) return value.trim()
+  return '—'
 }
 
 function getPipelineMonthDateRange(
@@ -769,7 +785,7 @@ function getPipelineColumnFilterValue(lead: Lead, columnId: PipelineColumnId): s
     case 'patient':
       return typeof lead.patientName === 'string' ? lead.patientName : '—'
     case 'month':
-      return normalizePipelineMonthValue(lead.month)
+      return resolvePipelineMonthValue(lead.month, lead.leadEntryDate || lead.createdDate)
     case 'age':
       return lead.age != null ? String(lead.age) : '—'
     case 'sex':
@@ -1131,15 +1147,18 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         }
 
         if (isPipelineDateFilterColumn(columnId)) {
-          if (selected.length !== 2 || !selected[0]) {
+          if (!selected || selected.length === 0 || !selected[0]) {
             return []
           }
+
+          const from = selected[0]
+          const to = selected[1] || selected[0]
 
           return [
             {
               field: columnId as any,
               operator: 'between' as const,
-              value: [selected[0], selected[1] || selected[0]] as [string, string],
+              value: [from, to] as [string, string],
             },
           ]
         }
@@ -1801,7 +1820,11 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
     addCol('month', {
       header: () => <HeaderCell label="Month" {...getHeaderFilterProps('month')} />,
-      cell: ({ row }) => <span className="whitespace-nowrap text-sm font-medium">{formatMonthCell(row.original.month)}</span>,
+      cell: ({ row }) => (
+        <span className="whitespace-nowrap text-sm font-medium">
+          {formatMonthCell(row.original.month, row.original.leadEntryDate || row.original.createdDate)}
+        </span>
+      ),
     })
     addCol('age', {
       header: 'Age',
@@ -1937,7 +1960,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
       cell: ({ row }) => <span className="max-w-[120px] truncate text-sm">{normalizedText(row.original.source, '—')}</span>,
     })
     addCol('leadSource', {
-      header: () => <HeaderCell label="Lead Source" {...getHeaderFilterProps('leadSource')} />,
+      header: () => <HeaderCell label="Campaign Name" {...getHeaderFilterProps('leadSource')} />,
       cell: ({ row }) => <span className="whitespace-nowrap text-sm">{resolveLeadSourceDisplay(row.original)}</span>,
     })
     addCol('createDate', {
@@ -2036,15 +2059,17 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   ])
 
 
-  const startDate = state.from ? new Date(state.from) : undefined
-  const endDate = state.to ? new Date(state.to) : undefined
+  const startDate = parseLocalDate(state.from)
+  const endDate = parseLocalDate(state.to)
 
   const selectedMonthValue = useMemo(() => {
     if (!state.from || !state.to) return 'all'
-    const fromYear = new Date(state.from).getFullYear()
+    const fromYear = parseInt(state.from.split('-')[0], 10) || new Date().getFullYear()
+    const stateFrom = state.from.slice(0, 10)
+    const stateTo = state.to.slice(0, 10)
     for (const m of PIPELINE_MONTH_FILTER_OPTIONS) {
       const range = getPipelineMonthDateRange(m, fromYear)
-      if (range && range.from === state.from && range.to === state.to) {
+      if (range && range.from === stateFrom && range.to === stateTo) {
         return m
       }
     }
@@ -2535,7 +2560,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                   <div className="relative min-w-[220px] flex-1">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
                     <Input
-                      placeholder="Search all table columns… or phone / alternate number (digits or 91…) "
+                      placeholder="Search all table columns… or phone / alternate / WhatsApp number (digits or 91…) "
                       className="pl-9 h-9 text-xs bg-background/80 hover:bg-background focus:bg-background border-border/80 rounded-lg shadow-xs transition-colors"
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}
