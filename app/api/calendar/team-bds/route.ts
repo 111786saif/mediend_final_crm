@@ -10,6 +10,10 @@ const TEAM_SCOPE_ROLES = new Set([
   'ASSISTANT_CATEGORY_MANAGER',
   'CATEGORY_MANAGER',
   'SALES_HEAD',
+  'EXECUTIVE_ASSISTANT',
+  'MD',
+  'ADMIN',
+  'SUPER_ADMIN',
 ])
 
 export type TeamBdOption = {
@@ -38,6 +42,19 @@ export async function GET(request: NextRequest) {
 
     if (!TEAM_SCOPE_ROLES.has(effectiveRole)) {
       return successResponse<TeamBdOption[]>([])
+    }
+
+    if (['EXECUTIVE_ASSISTANT', 'MD', 'ADMIN', 'SUPER_ADMIN'].includes(effectiveRole)) {
+      const allBds = await prisma.user.findMany({
+        where: { role: 'BD' },
+        select: {
+          id: true,
+          name: true,
+          profilePicture: true,
+        },
+        orderBy: { name: 'asc' },
+      })
+      return successResponse(allBds)
     }
 
     // In simulation mode there's no real Employee/hierarchy record tied to

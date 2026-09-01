@@ -1193,6 +1193,28 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     () => Object.values(columnFilters).filter((v) => v && v.length > 0).length,
     [columnFilters]
   )
+  const activeFilterCount = useMemo(() => {
+    let count = activeColumnFilterCount
+    if (Boolean(searchInput.trim() || state.q)) count++
+    if (Boolean(state.from || state.to)) count++
+    if (Boolean(state.bdId && state.bdId !== 'all' && state.bdId !== '')) count++
+    if (Boolean(state.status && state.status !== 'all')) count++
+    if (Boolean(state.category && state.category !== 'all')) count++
+    if (Boolean(state.circle && state.circle !== 'all')) count++
+    if (Boolean(state.age && state.age !== 'all')) count++
+    return count
+  }, [
+    activeColumnFilterCount,
+    searchInput,
+    state.q,
+    state.from,
+    state.to,
+    state.bdId,
+    state.status,
+    state.category,
+    state.circle,
+    state.age,
+  ])
   const clearColumnFilters = useCallback(() => {
     setColumnFilters({})
     try {
@@ -2364,7 +2386,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       title="Reset all search, date, and column filters"
                     >
                       <RotateCcw className="h-3.5 w-3.5" />
-                      Reset Filters
+                      <span>Reset Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}</span>
                     </Button>
                     {canCreateManualLead ? (
                       <Button

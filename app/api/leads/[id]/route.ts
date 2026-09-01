@@ -443,6 +443,7 @@ export async function GET(
       city: resolveLeadCity(fullLead),
       phoneNumber: canViewPhone ? fullLead.phoneNumber : (fullLead.phoneNumber ? maskPhoneNumber(fullLead.phoneNumber) : null),
       alternateNumber: canViewPhone ? fullLead.alternateNumber : (fullLead.alternateNumber ? maskPhoneNumber(fullLead.alternateNumber) : null),
+      whatsapp: canViewPhone ? fullLead.whatsapp : (fullLead.whatsapp ? maskPhoneNumber(fullLead.whatsapp) : null),
       caseStage: fullLead.caseStage,
       hospitalShare,
     }

@@ -39,8 +39,9 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get('endDate')
     const circle = searchParams.get('circle')
     const teamId = searchParams.get('teamId')
+    const tz = searchParams.get('tz')
 
-    const dateFilter: Prisma.DateTimeFilter = buildDateRange(startDate, endDate)
+    const dateFilter: Prisma.DateTimeFilter = buildDateRange(startDate, endDate, tz)
 
     const bdIdFilter = await getSalesDashboardBdIdFilter(user)
     const teamScope: Prisma.LeadWhereInput = bdIdFilter
