@@ -96,7 +96,7 @@ const STATUS_NORMALIZE: Record<string, string> = {
 }
 
 export function normalizeLeadStatus(status: string | null | undefined): string {
-  if (!status) return 'New'
+  if (!status) return ''
   if (isOpdScheduledStatus(status)) return OPD_SCHEDULED_LABEL
   if (isOpdDoneStatus(status)) return OPD_DONE_LABEL
   const mapped = mapStatusCode(status)
@@ -179,7 +179,7 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   ) {
     return 'nurture'
   }
-  // 9. New Lead (ONLY New Lead)
+  // 9. New Lead (ONLY New Lead — excluding null, empty, Hot Lead, Interested)
   if (
     [
       'New',
@@ -230,13 +230,11 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   ) {
     return 'dnp'
   }
-  // 16. Closed / Won
+  // 16. Closed / Won (ONLY Closed)
   if (
-    ['Closed', 'Call Done', 'C/W Done', 'WA Done', 'Scan Done', 'Order Booked', 'Policy Booked', 'Policy Issued', 'Fund Issued'].includes(s) ||
-    lower.includes('closed') ||
-    (lower.includes('done') && !lower.includes('ipd')) ||
-    lower.includes('booked') ||
-    ['25', '24', '38', '29', '30', '31', '32', '40'].includes(s)
+    s === 'Closed' ||
+    lower === 'closed' ||
+    s === '25'
   ) {
     return 'closed'
   }
@@ -254,7 +252,7 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
   ) {
     return 'lost'
   }
-  return 'follow_up'
+  return 'nurture'
 }
 
 export const PIPELINE_BUCKET_LABELS: Record<Exclude<PipelineStatusBucket, 'all'>, string> = {

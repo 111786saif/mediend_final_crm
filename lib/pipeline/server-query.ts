@@ -471,27 +471,9 @@ export function statusBucketWhere(
       }
     case 'closed':
       return {
-        AND: [
-          {
-            OR: [
-              contains('closed'),
-              contains('call done'),
-              contains('c/w done'),
-              contains('wa done'),
-              contains('scan done'),
-              contains('order booked'),
-              contains('policy booked'),
-              { status: '24' },
-              { status: '25' },
-              { status: '29' },
-              { status: '30' },
-              { status: '31' },
-              { status: '32' },
-              { status: '38' },
-              { status: '40' },
-            ],
-          },
-          { NOT: contains('ipd done') },
+        OR: [
+          { status: { equals: 'Closed', mode: 'insensitive' } },
+          { status: '25' },
         ],
       }
     default:

@@ -1317,7 +1317,7 @@ function BdPerformanceTab({
 
 function SourceCampaignTab({ dateParams, variant }: { dateParams: string; variant: DashboardVariant }) {
   const [view, setView] = useState<'source' | 'campaign'>('source')
-  const [timezone, setTimezone] = useState<'IST' | 'UTC'>('IST')
+  const [timezone, setTimezone] = useState<'IST' | 'UTC'>('UTC')
 
   const getQueryString = () => {
     const params = new URLSearchParams()
